@@ -2,43 +2,46 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
+  // output   = "../node_modules/.prisma/client"
 }
 
 model cad {
-  id          String    @id @default(cuid())
-  name        String    @db.VarChar(255)
-  owner       User      @relation(fields: [ownerId], references: [id])
-  ownerId     String
-  areaOfPlay  String?   @db.VarChar(255)
-  steamApiKey String?   @db.VarChar(255)
-  citizens    Citizen[]
-  users       User[]    @relation("UsersToCad")
+  id             String    @id @default(cuid())
+  name           String    @db.VarChar(255)
+  owner          User      @relation(fields: [ownerId], references: [id])
+  ownerId        String
+  areaOfPlay     String?   @db.VarChar(255)
+  steamApiKey    String?   @db.VarChar(255)
+  whitelisted    Boolean   @default(false)
+  towWhitelisted Boolean   @default(false)
+  citizens       Citizen[]
+  users          User[]    @relation("UsersToCad")
 }
 
 model User {
-  id           String    @id @default(cuid())
-  username     String    @unique @db.VarChar(255)
-  password     String    @db.Text
-  rank         Rank      @default(USER)
-  isLeo        Boolean   @default(false)
-  isSupervisor Boolean   @default(false)
-  isEmsFd      Boolean   @default(false)
-  isDispatch   Boolean   @default(false)
-  isTow        Boolean   @default(false)
-  banned       Boolean   @default(false)
-  banReason    Boolean?
-  avatarUrl    String?   @db.Text
-  steamId      String?   @db.VarChar(255)
-  citizens     Citizen[]
-  cads         cad[]
-  usersToCad   cad[]     @relation("UsersToCad")
+  id              String          @id @default(cuid())
+  username        String          @unique @db.VarChar(255)
+  password        String          @db.Text
+  rank            Rank            @default(USER)
+  isLeo           Boolean         @default(false)
+  isSupervisor    Boolean         @default(false)
+  isEmsFd         Boolean         @default(false)
+  isDispatch      Boolean         @default(false)
+  isTow           Boolean         @default(false)
+  banned          Boolean         @default(false)
+  banReason       Boolean?
+  avatarUrl       String?         @db.Text
+  steamId         String?         @db.VarChar(255)
+  whitelistStatus WhitelistStatus @default(ACCEPTED)
+  citizens        Citizen[]
+  cads            cad[]
+  usersToCad      cad[]           @relation("UsersToCad")
 }
 
 model Citizen {
@@ -71,4 +74,10 @@ enum Rank {
   ADMIN
   MODERATOR
   USER
+}
+
+enum WhitelistStatus {
+  ACCEPTED
+  PENDING
+  DECLINED
 }

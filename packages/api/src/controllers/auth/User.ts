@@ -1,10 +1,11 @@
 import { Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { Patch, Post } from "@tsed/schema";
+import { Delete, Patch, Post } from "@tsed/schema";
+import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 
-@Controller("/account")
+@Controller("/user")
 @UseBefore(IsAuth)
 export class AccountController {
   @Post("/")
@@ -15,5 +16,14 @@ export class AccountController {
   @Patch("/")
   async patchAuthUser() {
     console.log("TODO");
+  }
+
+  @Delete("/")
+  async deleteAuthUser(@Context() ctx: Context) {
+    await prisma.user.delete({
+      where: {
+        id: ctx.get("user").id,
+      },
+    });
   }
 }

@@ -9,8 +9,7 @@ const rootDir = __dirname;
 @Configuration({
   rootDir,
   mount: {
-    "/v1": [`${rootDir}/controllers/**/*.ts`, `!${rootDir}/controllers/cad/**/*.ts`],
-    "/v1/cad": [`${rootDir}/controllers/cad/**/*.ts`],
+    "/v1": [`${rootDir}/controllers/**/*.ts`],
   },
 })
 export class Server {

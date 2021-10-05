@@ -1,0 +1,15 @@
+export const userProperties = {
+  id: true,
+  username: true,
+  rank: true,
+  isLeo: true,
+  isSupervisor: true,
+  isEmsFd: true,
+  isDispatch: true,
+  isTow: true,
+  banned: true,
+  banReason: true,
+  avatarUrl: true,
+  steamId: true,
+  whitelistStatus: true,
+};
