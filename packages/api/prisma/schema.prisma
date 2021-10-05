@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -12,20 +12,20 @@ generator client {
 }
 
 model cad {
-  id          String    @id @default(uuid())
-  name        String
+  id          String    @id @default(cuid())
+  name        String    @db.VarChar(255)
   owner       User      @relation(fields: [ownerId], references: [id])
   ownerId     String
-  areaOfPlay  String?
-  steamApiKey String?
+  areaOfPlay  String?   @db.VarChar(255)
+  steamApiKey String?   @db.VarChar(255)
   citizens    Citizen[]
   users       User[]    @relation("UsersToCad")
 }
 
 model User {
-  id           String    @id @default(uuid())
-  username     String    @unique
-  password     String
+  id           String    @id @default(cuid())
+  username     String    @unique @db.VarChar(255)
+  password     String    @db.Text
   rank         Rank      @default(USER)
   isLeo        Boolean   @default(false)
   isSupervisor Boolean   @default(false)
@@ -34,34 +34,34 @@ model User {
   isTow        Boolean   @default(false)
   banned       Boolean   @default(false)
   banReason    Boolean?
-  avatarUrl    String?
-  steamId      String?
+  avatarUrl    String?   @db.Text
+  steamId      String?   @db.VarChar(255)
   citizens     Citizen[]
   cads         cad[]
   usersToCad   cad[]     @relation("UsersToCad")
 }
 
 model Citizen {
-  id             String   @id @default(uuid())
+  id             String   @id @default(cuid())
   user           User     @relation(fields: [userId], references: [id])
   cad            cad      @relation(fields: [cadId], references: [id])
   cadId          String
   userId         String
-  fullName       String
+  fullName       String   @db.VarChar(255)
   dateOfBirth    DateTime
-  gender         String
-  ethnicity      String
-  hairColor      String
-  eyeColor       String
-  address        String
-  height         String
-  weight         String
-  driversLicense String
-  weaponLicense  String
-  pilotLicense   String
-  ccw            String
-  imageId        String?
-  note           String?
+  gender         String   @db.VarChar(255)
+  ethnicity      String   @db.VarChar(255)
+  hairColor      String   @db.VarChar(255)
+  eyeColor       String   @db.VarChar(255)
+  address        String   @db.VarChar(255)
+  height         String   @db.VarChar(255)
+  weight         String   @db.VarChar(255)
+  driversLicense String   @db.VarChar(255)
+  weaponLicense  String   @db.VarChar(255)
+  pilotLicense   String   @db.VarChar(255)
+  ccw            String   @db.VarChar(255)
+  imageId        String?  @db.Text
+  note           String?  @db.Text
   dead           Boolean  @default(false)
   dateOfDead     DateTime
 }
