@@ -1,6 +1,6 @@
-# SnailyCADv3
+# SnailyCADv4
 
-<!-- [![Check ESlint](https://github.com/Dev-CasperTheGhost/snaily-cadv4/actions/workflows/lint.yml/badge.svg)](https://github.com/Dev-CasperTheGhost/snaily-cadv3/) -->
+<!-- [![Check ESlint](https://github.com/Dev-CasperTheGhost/snaily-cadv4/actions/workflows/lint.yml/badge.svg)](https://github.com/Dev-CasperTheGhost/snaily-cadv4/) -->
 
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
@@ -13,8 +13,8 @@ Built with next.js
 
 ## Table of contents
 
-- [Installation](https://github.com/SnailyCAD/snaily-cadv4/wiki/Installation-Guide)
-  - [Requirements](https://github.com/snailycad/snaily-cadv4/wiki/Installation-Guide#requirements)
+- [Installation](https://github.com/SnailyCAD/snaily-cadv3/wiki/Installation-Guide)
+  - [Requirements](https://github.com/snailycad/snaily-cadv3/wiki/Installation-Guide#requirements)
   - [Video Guides](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Installation-Guide#video-guides)
   - [Written Guides](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Installation-Guide#written-guides)
 - [Troubleshooting](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Troubleshooting)
@@ -38,7 +38,7 @@ Built with next.js
 
 ## Bugs
 
-You can report any bug [here](https://github.com/dev-caspertheghost/snaily-cadv3/issues)
+You can report any bug [here](https://github.com/SnailyCAD/snaily-cadv4/issues)
 
 ## Features
 
