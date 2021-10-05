@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+model cad {
+  id          String    @id @default(uuid())
+  name        String
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  areaOfPlay  String?
+  steamApiKey String?
+  citizens    Citizen[]
+  users       User[]    @relation("UsersToCad")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  password     String
+  rank         Rank      @default(USER)
+  isLeo        Boolean   @default(false)
+  isSupervisor Boolean   @default(false)
+  isEmsFd      Boolean   @default(false)
+  isDispatch   Boolean   @default(false)
+  isTow        Boolean   @default(false)
+  banned       Boolean   @default(false)
+  banReason    Boolean?
+  avatarUrl    String?
+  steamId      String?
+  citizens     Citizen[]
+  cads         cad[]
+  usersToCad   cad[]     @relation("UsersToCad")
+}
+
+model Citizen {
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
+  cad            cad      @relation(fields: [cadId], references: [id])
+  cadId          String
+  userId         String
+  fullName       String
+  dateOfBirth    DateTime
+  gender         String
+  ethnicity      String
+  hairColor      String
+  eyeColor       String
+  address        String
+  height         String
+  weight         String
+  driversLicense String
+  weaponLicense  String
+  pilotLicense   String
+  ccw            String
+  imageId        String?
+  note           String?
+  dead           Boolean  @default(false)
+  dateOfDead     DateTime
+}
+
+enum Rank {
+  OWNER
+  ADMIN
+  MODERATOR
+  USER
+}

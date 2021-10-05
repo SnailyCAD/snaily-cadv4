@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: "snaily-cad-postgres"
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    networks:
+      - web
+    volumes:
+      - ./.data:/var/lib/postgresql/data
+
+  api:
+    container_name: "snaily-cad-api"
+
+    user: node
+    image: node:16
+    command: "yarn workspace @snailycad/api dev"
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    volumes:
+      - .:/srv/api
+    env_file:
+      - .env
+    working_dir: /srv/api
+    depends_on:
+      - postgres
+    networks:
+      - web
+
+volumes:
+  redis-data:
+  redis-conf:
+
+networks:
+  web:
+    external: true
