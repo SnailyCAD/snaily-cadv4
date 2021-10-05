@@ -20,8 +20,6 @@ model cad {
   steamApiKey    String?   @db.VarChar(255)
   whitelisted    Boolean   @default(false)
   towWhitelisted Boolean   @default(false)
-  citizens       Citizen[]
-  users          User[]    @relation("UsersToCad")
 }
 
 model User {
@@ -41,32 +39,29 @@ model User {
   whitelistStatus WhitelistStatus @default(ACCEPTED)
   citizens        Citizen[]
   cads            cad[]
-  usersToCad      cad[]           @relation("UsersToCad")
 }
 
 model Citizen {
-  id             String   @id @default(cuid())
-  user           User     @relation(fields: [userId], references: [id])
-  cad            cad      @relation(fields: [cadId], references: [id])
-  cadId          String
+  id             String    @id @default(cuid())
+  user           User      @relation(fields: [userId], references: [id])
   userId         String
-  fullName       String   @db.VarChar(255)
+  fullName       String    @db.VarChar(255)
   dateOfBirth    DateTime
-  gender         String   @db.VarChar(255)
-  ethnicity      String   @db.VarChar(255)
-  hairColor      String   @db.VarChar(255)
-  eyeColor       String   @db.VarChar(255)
-  address        String   @db.VarChar(255)
-  height         String   @db.VarChar(255)
-  weight         String   @db.VarChar(255)
-  driversLicense String   @db.VarChar(255)
-  weaponLicense  String   @db.VarChar(255)
-  pilotLicense   String   @db.VarChar(255)
-  ccw            String   @db.VarChar(255)
-  imageId        String?  @db.Text
-  note           String?  @db.Text
-  dead           Boolean  @default(false)
-  dateOfDead     DateTime
+  gender         String    @db.VarChar(255)
+  ethnicity      String    @db.VarChar(255)
+  hairColor      String    @db.VarChar(255)
+  eyeColor       String    @db.VarChar(255)
+  address        String    @db.VarChar(255)
+  height         String    @db.VarChar(255)
+  weight         String    @db.VarChar(255)
+  driversLicense String?   @db.VarChar(255)
+  weaponLicense  String?   @db.VarChar(255)
+  pilotLicense   String?   @db.VarChar(255)
+  ccw            String?   @db.VarChar(255)
+  imageId        String?   @db.Text
+  note           String?   @db.Text
+  dead           Boolean?  @default(false)
+  dateOfDead     DateTime?
 }
 
 enum Rank {

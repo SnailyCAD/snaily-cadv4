@@ -61,7 +61,7 @@ export class AuthController {
       value: jwtToken,
     });
 
-    return { userId: user.id };
+    return res.json({ userId: user.id });
   }
 
   @Post("/register")

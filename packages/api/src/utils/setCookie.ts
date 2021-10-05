@@ -1,4 +1,5 @@
 import { Response } from "@tsed/common";
+import { serialize } from "cookie";
 
 interface SetCookieOptions {
   name: string;
@@ -8,9 +9,12 @@ interface SetCookieOptions {
 }
 
 export function setCookie(options: SetCookieOptions) {
-  options.res.cookie(options.name, options.value, {
-    httpOnly: true,
-    path: "/",
-    expires: new Date(Date.now() + options.expires),
-  });
+  options.res.setHeader(
+    "Set-Cookie",
+    serialize(options.name, options.value, {
+      httpOnly: true,
+      expires: new Date(Date.now() + options.expires),
+      path: "/",
+    }),
+  );
 }

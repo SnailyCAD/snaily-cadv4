@@ -19,7 +19,7 @@ const INITIAL_VALUES = {
 
 export default function Login() {
   const router = useRouter();
-  const { state, execute } = useFetch({ json: true });
+  const { state, execute } = useFetch();
 
   const validate = handleValidate(
     z.object({
@@ -30,7 +30,7 @@ export default function Login() {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const data = await execute("/auth/login", {
-      body: JSON.stringify(values),
+      data: values,
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -78,7 +78,7 @@ export default function Login() {
               </FormField>
 
               <div className="mt-3">
-                <Link href="/register">
+                <Link href="/auth/register">
                   <a className="underline inline-block mb-3">{"Don't have an account?"} Register</a>
                 </Link>
 

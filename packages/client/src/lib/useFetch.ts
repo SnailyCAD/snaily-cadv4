@@ -1,21 +1,19 @@
 import * as React from "react";
-
-interface Props {
-  json: boolean;
-}
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import { handleRequest } from "./fetch";
 
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 
-export default function useFetch(props: Props = {} as Props) {
+export default function useFetch() {
   const [state, setState] = React.useState<State | null>(null);
   const abortController = React.useRef<NullableAbortController>(null);
 
   const execute = async (
     path: string,
-    options: RequestInit,
+    options: AxiosRequestConfig,
   ): Promise<{
-    response: Response;
+    response: AxiosResponse<any>;
     json: any;
   }> => {
     let response;
@@ -23,10 +21,8 @@ export default function useFetch(props: Props = {} as Props) {
     setState("loading");
 
     try {
-      const url = `http://localhost:8080/v1${path}`;
-      response = await fetch(url, {
-        signal: abortController.current!.signal,
-        ...options,
+      response = await handleRequest(path, {
+        ...(options as any),
       });
     } catch (error) {
       setState("error");
@@ -35,30 +31,11 @@ export default function useFetch(props: Props = {} as Props) {
       });
     }
 
-    if (!response.ok) {
-      setState("error");
-
-      return Promise.reject({
-        response,
-        error: new Error(`Request failed: ${response.status}`),
-      });
-    }
-
-    if (!props.json) {
-      setState(null);
-
-      return Promise.resolve({
-        response,
-        json: {},
-      });
-    }
-
-    const json = await response.json();
     setState(null);
 
     return Promise.resolve({
       response,
-      json,
+      json: response.data,
     });
   };
 

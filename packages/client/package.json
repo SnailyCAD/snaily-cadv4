@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx,"
   },
   "dependencies": {
+    "axios": "^0.22.0",
     "formik": "^2.2.9",
     "next": "^11.1.2",
     "react": "^17.0.2",
