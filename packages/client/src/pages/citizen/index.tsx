@@ -5,16 +5,20 @@ import { Layout } from "components/Layout";
 import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
 import Head from "next/head";
+import { getTranslations } from "lib/getTranslation";
+import { useTranslations } from "use-intl";
 
 interface Props {
   citizens: Citizen[];
 }
 
 export default function CitizenPage({ citizens }: Props) {
+  const t = useTranslations("Citizen");
+
   return (
     <Layout>
       <Head>
-        <title>Citizens - SnailyCAD</title>
+        <title>{t("citizens")} - SnailyCAD</title>
       </Head>
 
       <h1 className="text-3xl font-semibold mb-3">Citizens</h1>
@@ -22,20 +26,20 @@ export default function CitizenPage({ citizens }: Props) {
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
         <Link href="/citizen/create">
           <a className="py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-            Create Citizen
+            {t("createCitizen")}
           </a>
         </Link>
         <button className="text-left py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-          Register Vehicle
+          {t("registerVehicle")}
         </button>
         <button className="text-left py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-          Register Weapon
+          {t("registerWeapon")}
         </button>
       </ul>
 
       <ul className="flex flex-col space-y-3">
         {citizens.length <= 0 ? (
-          <p className="text-gray-600 font-medium">{"You don't have any citizens."}</p>
+          <p className="text-gray-600 font-medium">{t("userNoCitizens")}</p>
         ) : (
           citizens.map((citizen) => (
             <li
@@ -55,7 +59,7 @@ export default function CitizenPage({ citizens }: Props) {
               <div>
                 <Link href={`/citizen/${citizen.id}`}>
                   <a className="py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-                    View Citizen
+                    {t("viewCitizen")}
                   </a>
                 </Link>
               </div>
@@ -67,7 +71,7 @@ export default function CitizenPage({ citizens }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const { data } = await handleRequest<any[]>("/citizen", {
     headers: req.headers,
   }).catch(() => ({ data: null }));
@@ -76,6 +80,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => 
     props: {
       citizens: data ?? [],
       session: await getSessionUser(req.headers),
+      messages: {
+        ...(await getTranslations(["citizen"], locale)),
+      },
     },
   };
 };

@@ -1,0 +1,22 @@
+{
+    "Citizen": {
+        "citizen": "Citizen",
+        "citizens": "Citizens",
+        "userNoCitizens": "You don't have any citizens",
+        "createCitizen": "Create Citizen",
+        "viewCitizen": "View Citizen",
+        "editCitizen": "Edit Citizen",
+        "deleteCitizen": "Delete Citizen",
+        "hairColor": "Hair Color",
+        "eyeColor": "Eye Color",
+        "registerVehicle": "Register Vehicle",
+        "registerWeapon": "Register Weapon",
+        "weight": "Weight",
+        "height": "Height",
+        "fullName": "Full Name",
+        "gender": "Gender",
+        "ethnicity": "Ethnicity",
+        "address": "Address",
+        "dateOfBirth": "Date of Birth"
+    }
+}

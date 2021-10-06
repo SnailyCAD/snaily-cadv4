@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useTranslations } from "use-intl";
 import { Citizen } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
@@ -11,6 +12,7 @@ import { Modal } from "components/modal/Modal";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
+import { getTranslations } from "lib/getTranslation";
 
 interface Props {
   citizen: Citizen | null;
@@ -19,6 +21,8 @@ interface Props {
 export default function CitizenId({ citizen }: Props) {
   const { execute, state } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
+  const t = useTranslations("Citizen");
+  const common = useTranslations("Common");
   const router = useRouter();
 
   async function handleDelete() {
@@ -101,14 +105,14 @@ export default function CitizenId({ citizen }: Props) {
             className="bg-green-500 hover:bg-green-600"
           >
             <Link href={`/citizen/${citizen.id}/edit`}>
-              <a>Edit Citizen</a>
+              <a>{t("editCitizen")}</a>
             </Link>
           </Button>
           <Button
             onClick={() => openModal("deleteCitizen")}
             className="bg-red-500 hover:bg-red-600"
           >
-            Delete Citizen
+            {t("deleteCitizen")}
           </Button>
         </div>
       </div>
@@ -138,14 +142,15 @@ export default function CitizenId({ citizen }: Props) {
         </p>
         <div className="mt-2 flex gap-2 items-center justify-end">
           <Button disabled={state === "loading"} onClick={() => closeModal("deleteCitizen")}>
-            Cancel
+            {common("cancel")}
           </Button>
           <Button
             disabled={state === "loading"}
             className="flex items-center bg-red-500 hover:bg-red-600"
             onClick={handleDelete}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null} Delete
+            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {common("delete")}
           </Button>
         </div>
       </Modal>
@@ -153,7 +158,7 @@ export default function CitizenId({ citizen }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
   const { data } = await handleRequest<Citizen>(`/citizen/${query.id}`, {
     headers: req.headers,
   }).catch(() => ({ data: null }));
@@ -162,6 +167,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req }) => 
     props: {
       session: await getSessionUser(req.headers),
       citizen: data,
+      messages: {
+        ...(await getTranslations(["citizen", "common"], locale)),
+      },
     },
   };
 };

@@ -83,6 +83,45 @@
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
 
+"@formatjs/ecma402-abstract@1.9.9":
+  version "1.9.9"
+  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.9.9.tgz#f556782fc12398af283ae2f8be64e938f969d240"
+  integrity sha512-w2HpUW17Ev8UN8G1fSvl0skCLP+HkhGZii0ALaBXYc7rd3osD2s8EF2ihSNkeEeC6aySX1IAkRm0f4lnE8Jeaw==
+  dependencies:
+    "@formatjs/intl-localematcher" "0.2.21"
+    tslib "^2.1.0"
+
+"@formatjs/fast-memoize@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@formatjs/fast-memoize/-/fast-memoize-1.2.0.tgz#1123bfcc5d21d761f15d8b1c32d10e1b6530355d"
+  integrity sha512-fObitP9Tlc31SKrPHgkPgQpGo4+4yXfQQITTCNH8AZdEqB7Mq4nPrjpUL/tNGN3lEeJcFxDbi0haX8HM7QvQ8w==
+  dependencies:
+    tslib "^2.1.0"
+
+"@formatjs/icu-messageformat-parser@2.0.12":
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.0.12.tgz#0e03b2c83c03d4f95debb51a727934cb8d8fdbea"
+  integrity sha512-X/tdbKLfVBc2yJRX+xC3uqYxXkp9336FhSS1Hb6kU6pSOU+EseylS3a/vjFOKjol1qQ5BSIQd8YPWtOOt3KcWA==
+  dependencies:
+    "@formatjs/ecma402-abstract" "1.9.9"
+    "@formatjs/icu-skeleton-parser" "1.2.13"
+    tslib "^2.1.0"
+
+"@formatjs/icu-skeleton-parser@1.2.13":
+  version "1.2.13"
+  resolved "https://registry.yarnpkg.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.2.13.tgz#8360fd8b24f70e1894a891aa63566a19c8e9cffa"
+  integrity sha512-PHK4kdIcNTI15ASyn6dCA2cxzUPHE+UK/FsBkPULNpKgPWEZIYAFO9PgG0a9SDcIIr7Ta3SPPbUZGKRXT3d+ng==
+  dependencies:
+    "@formatjs/ecma402-abstract" "1.9.9"
+    tslib "^2.1.0"
+
+"@formatjs/intl-localematcher@0.2.21":
+  version "0.2.21"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-localematcher/-/intl-localematcher-0.2.21.tgz#39ef33d701fe8084f3d693cd3ff7cbe03cdd3a49"
+  integrity sha512-JTJeLiNwexN4Gy0cMxoUPvJbKhXdnSuo5jPrDafEZpnDWlJ5VDYta8zUVVozO/pwzEmFVHEUpgiEDj+39L4oMg==
+  dependencies:
+    tslib "^2.1.0"
+
 "@hapi/accept@5.0.2":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-5.0.2.tgz#ab7043b037e68b722f93f376afb05e85c0699523"
@@ -2503,6 +2542,15 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
+intl-messageformat@^9.3.18:
+  version "9.9.2"
+  resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-9.9.2.tgz#59a364ffbfc882660c9584a6198998c3d06e4eea"
+  integrity sha512-IR/bOP7XUrCxrlgFlZeHXixIT29BNd/1bOS8leElk5sQfvGvsDVoTGI+wLpvWG4INIBQNj8vjxgxlbquB12vog==
+  dependencies:
+    "@formatjs/fast-memoize" "1.2.0"
+    "@formatjs/icu-messageformat-parser" "2.0.12"
+    tslib "^2.1.0"
+
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
@@ -3174,6 +3222,13 @@ negotiator@0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
+
+next-intl@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/next-intl/-/next-intl-2.0.5.tgz#af9d8247284bddc4fcd58755bf18bc604c45f0c6"
+  integrity sha512-5oY4kPDARPI4HkeTGGvPXVHB7FIWD8boEGiUwrQn2VHQdeNvbo7K5N3tX92BAz2yeYRxMo6/Gola+hJo9ZoqzQ==
+  dependencies:
+    use-intl "^2.0.5"
 
 next@^11.1.2:
   version "11.1.2"
@@ -4616,7 +4671,7 @@ tslib@^1.10.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.3:
+tslib@^2.0.3, tslib@^2.1.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
@@ -4753,6 +4808,13 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-intl@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/use-intl/-/use-intl-2.0.5.tgz#436febab07dc3985be83be495e6cd64bfc0d62a5"
+  integrity sha512-akFJE2ElSxguSPRwnwk+Xj/f1Dv7i3i87UL9f9mspDeBzyNYU9iyyZHu6Nw+GFQXpHVuCXA5lBUANw03PiDyig==
+  dependencies:
+    intl-messageformat "^9.3.18"
 
 use-subscription@1.5.1:
   version "1.5.1"

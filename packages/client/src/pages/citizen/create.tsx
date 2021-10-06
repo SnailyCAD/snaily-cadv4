@@ -1,6 +1,8 @@
 import { Formik } from "formik";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
+import { useTranslations } from "use-intl";
+import Link from "next/link";
 
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -13,6 +15,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
+import { getTranslations } from "lib/getTranslation";
 
 const INITIAL_VALUES = {
   fullName: "",
@@ -29,6 +32,8 @@ const INITIAL_VALUES = {
 export default function CreateCitizen() {
   const { state, execute } = useFetch();
   const router = useRouter();
+  const t = useTranslations("Citizen");
+  const common = useTranslations("Common");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/citizen", {
@@ -55,12 +60,12 @@ export default function CreateCitizen() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label="Full Name">
+            <FormField label={t("fullName")}>
               <Input hasError={!!errors.fullName} onChange={handleChange} name="fullName" />
               <Error>{errors.fullName}</Error>
             </FormField>
 
-            <FormField label="Date Of Birth">
+            <FormField label={t("dateOfBirth")}>
               <Input
                 type="date"
                 hasError={!!errors.dateOfBirth}
@@ -76,42 +81,42 @@ export default function CreateCitizen() {
             </FormField>
 
             <FormRow>
-              <FormField label="Gender">
+              <FormField label={t("gender")}>
                 <Input hasError={!!errors.gender} onChange={handleChange} name="gender" />
                 <Error>{errors.gender}</Error>
               </FormField>
 
-              <FormField label="Ethnicity">
+              <FormField label={t("ethnicity")}>
                 <Input hasError={!!errors.ethnicity} onChange={handleChange} name="ethnicity" />
                 <Error>{errors.ethnicity}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label="Eye Color">
+              <FormField label={t("eyeColor")}>
                 <Input hasError={!!errors.hairColor} onChange={handleChange} name="hairColor" />
                 <Error>{errors.hairColor}</Error>
               </FormField>
 
-              <FormField label="Hair Color">
+              <FormField label={t("hairColor")}>
                 <Input hasError={!!errors.eyeColor} onChange={handleChange} name="eyeColor" />
                 <Error>{errors.eyeColor}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label="Weight">
+              <FormField label={t("weight")}>
                 <Input hasError={!!errors.weight} onChange={handleChange} name="weight" />
                 <Error>{errors.weight}</Error>
               </FormField>
 
-              <FormField label="Height">
+              <FormField label={t("height")}>
                 <Input hasError={!!errors.height} onChange={handleChange} name="height" />
                 <Error>{errors.height}</Error>
               </FormField>
             </FormRow>
 
-            <FormField label="Address">
+            <FormField label={t("address")}>
               <Input hasError={!!errors.address} onChange={handleChange} name="address" />
               <Error>{errors.address}</Error>
             </FormField>
@@ -136,13 +141,19 @@ export default function CreateCitizen() {
               </FormField>
             </FormRow> */}
 
-            <Button
-              className="flex items-center gap-2"
-              type="submit"
-              disabled={!isValid || state === "loading"}
-            >
-              {state === "loading" ? <Loader /> : null} Create Citizen
-            </Button>
+            <div className="flex items-center justify-end">
+              <Link href="/citizen">
+                <a className="mr-2 underline">{common("cancel")}</a>
+              </Link>
+
+              <Button
+                className="flex items-center gap-2"
+                type="submit"
+                disabled={!isValid || state === "loading"}
+              >
+                {state === "loading" ? <Loader /> : null} {t("createCitizen")}
+              </Button>
+            </div>
           </form>
         )}
       </Formik>
@@ -150,10 +161,13 @@ export default function CreateCitizen() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   return {
     props: {
       session: await getSessionUser(req.headers),
+      messages: {
+        ...(await getTranslations(["citizen", "common"], locale)),
+      },
     },
   };
 };
