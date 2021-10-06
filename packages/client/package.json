@@ -9,10 +9,14 @@
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx,"
   },
   "dependencies": {
+    "@casper124578/utils": "^1.3.0",
+    "@headlessui/react": "^1.4.1",
+    "@snailycad/schemas": "0.0.2-dev",
     "axios": "^0.22.0",
     "formik": "^2.2.9",
     "next": "^11.1.2",
     "react": "^17.0.2",
+    "react-bootstrap-icons": "^1.5.0",
     "react-dom": "^17.0.2",
     "zod": "^3.9.5"
   },

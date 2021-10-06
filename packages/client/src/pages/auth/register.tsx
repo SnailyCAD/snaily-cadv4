@@ -1,8 +1,8 @@
 import { Formik, FormikHelpers } from "formik";
 import Head from "next/head";
-import { z } from "zod";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { AUTH_SCHEMA } from "@snailycad/schemas";
 
 import useFetch from "lib/useFetch";
 
@@ -22,12 +22,7 @@ export default function Register() {
   const router = useRouter();
   const { state, execute } = useFetch();
 
-  const validate = handleValidate(
-    z.object({
-      username: z.string().min(3).max(255),
-      password: z.string().min(8).max(255),
-    }),
-  );
+  const validate = handleValidate(AUTH_SCHEMA);
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,

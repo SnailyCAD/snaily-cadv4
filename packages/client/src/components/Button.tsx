@@ -8,12 +8,9 @@ export const Button = ({ className, small, ...rest }: Props) => {
       className={`
           ${small ? "p-0.5 px-2" : "p-1 px-4"}
 
-          bg-white dark:bg-black rounded-md
-          text-dark-gray dark:text-white
-          border-[1.2px] hover:border-dark-gray dark:hover:border-white dark:border-gray-800
-          border-gray-300 transition-all
+          text-white bg-gray-500 rounded-md transition-all
           disabled:opacity-60 disabled:cursor-not-allowed
-
+          hover:bg-gray-600
           ${className}
       `}
       {...rest}

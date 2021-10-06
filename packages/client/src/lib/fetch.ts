@@ -8,19 +8,19 @@ interface Options extends AxiosRequestConfig {
   data?: RequestData;
 }
 
-export function handleRequest<T = any>(path: string, options: Options): Promise<AxiosResponse<T>> {
+export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
   const url = "http://localhost:8080/v1";
 
   return axios({
     url: `${url}${path}`,
-    method: options.method ?? "GET",
-    data: options.data,
+    method: options?.method ?? "GET",
+    data: options?.data,
     withCredentials: true,
     ...options,
     headers: {
-      Cookie: options.data?.cookie ?? "",
+      Cookie: options?.data?.cookie ?? "",
       "Content-Type": "application/json",
-      ...options.headers,
+      ...(options?.headers ?? {}),
     },
   });
 }

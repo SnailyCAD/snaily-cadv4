@@ -1,13 +1,12 @@
 interface Props {
-  className: string;
+  className?: string;
 }
 
-export const Loader = ({ className }: Props) => {
+export const Loader = ({ className = "" }: Props) => {
   return (
-    <div className="loader">
-      <span className={className} />
-      <span className={className} />
-      <span className={className} />
-    </div>
+    <div
+      style={{ borderTopColor: "transparent" }}
+      className={`w-5 h-5 border-2  border-gray-400  border-solid rounded-full animate-spin ${className}`}
+    />
   );
 };

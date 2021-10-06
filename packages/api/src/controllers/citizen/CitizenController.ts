@@ -1,24 +1,11 @@
-import * as yup from "yup";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Get, JsonRequestBody, Post } from "@tsed/schema";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
-import { validateSchema } from "@casper124578/utils";
 import { BadRequest } from "@tsed/exceptions";
-
-const citizenSchema = {
-  fullName: yup.string().required().max(255),
-  address: yup.string().required().max(255),
-  ethnicity: yup.string().required().max(255),
-  gender: yup.string().required().max(255),
-  dateOfBirth: yup.date().required(),
-  hairColor: yup.string().required().max(255),
-  eyeColor: yup.string().required().max(255),
-  height: yup.string().required().max(255),
-  weight: yup.string().required().max(255),
-};
+import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -36,9 +23,12 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const [error] = await validateSchema(citizenSchema, body);
+    const error = validate(CREATE_CITIZEN_SCHEMA(true), body.toJSON(), true);
+
+    console.log(error);
+
     if (error) {
-      return new BadRequest(error.message);
+      return new BadRequest(error);
     }
 
     const {

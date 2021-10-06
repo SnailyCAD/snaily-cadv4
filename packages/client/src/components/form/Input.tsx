@@ -8,7 +8,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ hasError, ...r
   <input
     ref={ref}
     className={`
-    w-full p-2 px-3 bg-white rounded-md border-[1.5px] border-gray-200
+    w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200
     outline-none focus:border-gray-800
     hover:border-dark-gray
     transition-all ${rest.className} ${hasError && "border-red-500"} `}

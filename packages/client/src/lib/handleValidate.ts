@@ -1,4 +1,4 @@
-import { ZodError, ZodObject, ZodRawShape } from "zod";
+import { ZodObject, ZodRawShape } from "zod";
 
 export const handleValidate =
   <Values = any, T extends ZodRawShape = any>(schema: ZodObject<T>) =>
@@ -7,13 +7,10 @@ export const handleValidate =
 
     try {
       schema.parse(values);
-    } catch (e) {
-      const zodError = e instanceof ZodError ? e : null;
-      if (zodError) {
-        for (const error of zodError.errors) {
-          const [path] = error.path;
-          errors[path as string] = error.message;
-        }
+    } catch (e: any) {
+      for (const error of e.errors) {
+        const [path] = error.path;
+        errors[path as string] = error.message;
       }
     }
 

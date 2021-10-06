@@ -1,8 +1,6 @@
-import * as yup from "yup";
 import { User, WhitelistStatus, Rank } from ".prisma/client";
 import { JsonRequestBody } from "@tsed/schema";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
-import { validateSchema } from "@casper124578/utils";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
@@ -10,19 +8,15 @@ import { setCookie } from "../../utils/setCookie";
 import { signJWT } from "../../utils/jwt";
 import { Cookie } from "../../config";
 import { findOrCreateCAD } from "../../lib/cad";
-
-const schema = {
-  username: yup.string().required(),
-  password: yup.string().required().min(8),
-};
+import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 
 @Controller("/auth")
 export class AuthController {
   @Post("/login")
   async login(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const [error] = await validateSchema(schema, body.toJSON());
+    const error = validate(AUTH_SCHEMA, body.toJSON(), true);
     if (error) {
-      throw new BadRequest(error.message);
+      throw new BadRequest(error);
     }
 
     const user = await prisma.user.findUnique({
@@ -66,9 +60,9 @@ export class AuthController {
 
   @Post("/register")
   async register(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const [error] = await validateSchema(schema, body.toJSON());
+    const error = validate(AUTH_SCHEMA, body.toJSON(), true);
     if (error) {
-      throw new BadRequest(error.message);
+      throw new BadRequest(error);
     }
 
     const existing = await prisma.user.findUnique({

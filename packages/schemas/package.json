@@ -1,0 +1,14 @@
+{
+  "name": "@snailycad/schemas",
+  "version": "0.0.2-dev",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "zod": "^3.9.5"
+  }
+}
