@@ -1,10 +1,10 @@
 import { UseBeforeEach, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
-import { BodyParams } from "@tsed/platform-params";
+import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
+import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 
 @Controller("/citizen")
@@ -19,6 +19,34 @@ export class CitizenController {
     });
 
     return citizens;
+  }
+
+  @Get("/:id")
+  async getCitizen(@Context() ctx: Context, @QueryParams("id") citizenId: string) {
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: citizenId,
+        userId: ctx.get("user").id,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("Citizen not found");
+    }
+
+    return citizen;
+  }
+
+  @Delete("/:id")
+  async deleteCitizen(@Context() ctx: Context, @QueryParams("id") citizenId: string) {
+    await prisma.citizen.deleteMany({
+      where: {
+        id: citizenId,
+        userId: ctx.get("user").id,
+      },
+    });
+
+    return true;
   }
 
   @Post("/")
@@ -58,6 +86,6 @@ export class CitizenController {
       },
     });
 
-    return { citizen };
+    return citizen;
   }
 }

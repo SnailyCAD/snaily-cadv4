@@ -80,9 +80,9 @@ export default function Login() {
                 <button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-3"
                 >
-                  {state === "loading" ? <Loader className="bg-gray-300" /> : "Login"}
+                  {state === "loading" ? <Loader  /> : null} Login
                 </button>
               </div>
             </form>

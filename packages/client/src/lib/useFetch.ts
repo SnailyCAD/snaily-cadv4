@@ -5,9 +5,15 @@ import { handleRequest } from "./fetch";
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 
-export default function useFetch() {
+export default function useFetch(
+  { overwriteState }: { overwriteState: State | null } = { overwriteState: null },
+) {
   const [state, setState] = React.useState<State | null>(null);
   const abortController = React.useRef<NullableAbortController>(null);
+
+  React.useEffect(() => {
+    setState(overwriteState);
+  }, [overwriteState]);
 
   const execute = async (
     path: string,
