@@ -1,0 +1,22 @@
+{
+    "Citizen": {
+        "citizen": "Гражданин",
+        "citizens": "Граждане",
+        "userNoCitizens": "У вас нет граждан",
+        "createCitizen": "Создать",
+        "viewCitizen": "Просмотр граждан",
+        "editCitizen": "Редактировать",
+        "deleteCitizen": "Удалить",
+        "hairColor": "Цвет волос",
+        "eyeColor": "Цвет глаз",
+        "registerVehicle": "Зарегистрировать ТС",
+        "registerWeapon": "Зарегистрировать оружие",
+        "weight": "Вес",
+        "height": "Рост",
+        "fullName": "Полное имя",
+        "gender": "Пол",
+        "ethnicity": "Этническая принадлежность",
+        "address": "Адрес",
+        "dateOfBirth": "Дата рождения"
+    }
+}
