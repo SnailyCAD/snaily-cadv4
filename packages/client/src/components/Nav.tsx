@@ -13,7 +13,7 @@ export const Nav = () => {
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
             <h1 className="text-2xl">
-              <a href="/" className="flex items-center py-3 font-bold text-gray-800">
+              <a href="/citizen" className="flex items-center py-3 font-bold text-gray-800">
                 SnailyCAD
               </a>
             </h1>

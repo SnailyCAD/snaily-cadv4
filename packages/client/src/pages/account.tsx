@@ -38,10 +38,10 @@ export default function Account() {
           <Tab.Panel className="bg-white rounded-xl p-3">
             <h3 className="text-2xl font-semibold">Account Info</h3>
 
-            <div>
+            <div className="mt-2">
               {Object.entries(user).map(([key, value]) => {
                 return (
-                  <p>
+                  <p key={key}>
                     <span className="capitalize font-semibold">{key}: </span> {String(value)}
                   </p>
                 );
