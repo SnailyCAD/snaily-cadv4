@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Layout } from "components/Layout";
 import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
+import Head from "next/head";
 
 interface Props {
   citizens: Citizen[];
@@ -12,6 +13,10 @@ interface Props {
 export default function CitizenPage({ citizens }: Props) {
   return (
     <Layout>
+      <Head>
+        <title>Citizens - SnailyCAD</title>
+      </Head>
+
       <h1 className="text-3xl font-semibold mb-3">Citizens</h1>
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">

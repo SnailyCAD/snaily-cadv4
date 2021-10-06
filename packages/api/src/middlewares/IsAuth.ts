@@ -2,6 +2,7 @@ import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie } from "../config";
+import { userProperties } from "../lib/auth";
 import { prisma } from "../lib/prisma";
 import { verifyJWT } from "../utils/jwt";
 
@@ -25,12 +26,16 @@ export class IsAuth implements MiddlewareMethods {
       where: {
         id: jwtPayload.userId,
       },
+      select: userProperties,
     });
 
     if (!user) {
       throw new NotFound("User not found");
     }
 
+    const cad = await prisma.cad.findFirst();
+
+    ctx.set("cad", cad);
     ctx.set("user", user);
   }
 }
