@@ -13,11 +13,14 @@
         "registerWeapon": "Register Weapon",
         "weight": "Weight",
         "height": "Height",
+        "name": "Name",
+        "surname": "Surname",
         "fullName": "Full Name",
         "gender": "Gender",
         "ethnicity": "Ethnicity",
         "address": "Address",
         "dateOfBirth": "Date of Birth",
+        "image": "Image",
         "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone!"
     }
 }

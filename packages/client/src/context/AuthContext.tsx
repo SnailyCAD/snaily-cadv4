@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
 import { User } from "types/prisma";
 
@@ -16,9 +17,16 @@ interface ProviderProps {
 
 export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const [user, setUser] = React.useState<User | null>(null);
+  const router = useRouter();
 
   const handleGetUser = React.useCallback(async () => {
-    getSessionUser().then(setUser);
+    getSessionUser().then((u) => {
+      if (!u) {
+        router.push("/auth/login");
+      }
+
+      setUser(u);
+    });
   }, []);
 
   React.useEffect(() => {

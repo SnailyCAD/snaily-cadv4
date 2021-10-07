@@ -40,7 +40,8 @@ export type User = {
 export type Citizen = {
   id: string;
   userId: string;
-  fullName: string;
+  name: string;
+  surname: string;
   dateOfBirth: Date;
   gender: string;
   ethnicity: string;

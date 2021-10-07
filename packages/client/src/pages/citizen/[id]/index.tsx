@@ -53,14 +53,15 @@ export default function CitizenId({ citizen }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{citizen.fullName} - SnailyCAD</title>
+        <title>
+          {citizen.name} {citizen.surname} - SnailyCAD
+        </title>
       </Head>
 
       <div className="card bg-gray-200/60 p-4 rounded-md flex items-start justify-between">
         <div className="flex flex-col sm:flex-row items-start">
           <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
             <img
-
               className="rounded-full w-[100px] h-[100px]"
               src="https://qmusic.caspertheghost.me/_next/image?url=https%3A%2F%2Fstatic1.qmusic.medialaancdn.be%2Fweb_list%2Fitemlist_small_desktop%2F%2F3%2F92%2F6e%2F22%2F1488477%2F2d504b2dd9b3dbe79829de55c4923bd3.1000x1000x1.jpg&w=256&q=75"
             />
@@ -69,7 +70,7 @@ export default function CitizenId({ citizen }: Props) {
           <div className="sm:ml-3 mt-2 sm:mt-0 flex flex-col">
             <p>
               <span className="font-semibold">{t("fullName")}: </span>
-              {citizen.fullName}
+              {citizen.name} {citizen.surname}
             </p>
             <p>
               <span className="font-semibold">{t("gender")}: </span>
@@ -124,7 +125,7 @@ export default function CitizenId({ citizen }: Props) {
       </div>
 
       <Modal
-        title={citizen.fullName}
+        title={`${citizen.name} ${citizen.surname}`}
         onClose={() => closeModal("citizenImage")}
         isOpen={isOpen("citizenImage")}
       >
@@ -144,7 +145,7 @@ export default function CitizenId({ citizen }: Props) {
       >
         <p className="my-3">
           {t.rich("alert_deleteCitizen", {
-            citizen: citizen.fullName,
+            citizen: `${citizen.name} ${citizen.surname}`,
             span: (children) => {
               return <span className="font-semibold">{children}</span>;
             },

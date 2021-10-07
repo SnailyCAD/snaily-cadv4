@@ -68,13 +68,15 @@ export class CitizenController {
       eyeColor,
       dateOfBirth,
       ethnicity,
-      fullName,
+      name,
+      surname,
       gender,
     } = body.toJSON();
 
     const existing = await prisma.citizen.findFirst({
       where: {
-        fullName,
+        name,
+        surname,
       },
     });
 
@@ -91,7 +93,8 @@ export class CitizenController {
         hairColor,
         dateOfBirth,
         ethnicity,
-        fullName,
+        name,
+        surname,
         gender,
         eyeColor,
       },
@@ -116,6 +119,7 @@ export class CitizenController {
       throw new NotFound("Not Found");
     }
 
+    // "image/png" -> "png"
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/citizens/${citizen.id}.${extension}`;
     console.log({ path });

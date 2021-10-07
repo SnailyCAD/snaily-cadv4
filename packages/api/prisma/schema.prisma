@@ -45,7 +45,8 @@ model Citizen {
   id             String    @id @default(cuid())
   user           User      @relation(fields: [userId], references: [id])
   userId         String
-  fullName       String    @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  surname       String    @db.VarChar(255)
   dateOfBirth    DateTime
   gender         String    @db.VarChar(255)
   ethnicity      String    @db.VarChar(255)

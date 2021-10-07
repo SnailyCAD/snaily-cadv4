@@ -19,7 +19,8 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 
 const INITIAL_VALUES = {
-  fullName: "",
+  name: "",
+  surname: "",
   dateOfBirth: "",
   gender: "",
   ethnicity: "",
@@ -88,17 +89,41 @@ export default function CreateCitizen() {
       <h1 className="text-3xl mb-3 font-semibold">Create citizen</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, isValid }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField label={t("fullName")}>
-              <Input onChange={handleChange} type="file" name="image" />
+            <FormField label={t("image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={handleChange}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  type="button"
+                  className="bg-red-400 hover:bg-red-500"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
               <Error>{errors.image}</Error>
             </FormField>
 
-            <FormField label={t("fullName")}>
-              <Input hasError={!!errors.fullName} onChange={handleChange} name="fullName" />
-              <Error>{errors.fullName}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={t("name")}>
+                <Input hasError={!!errors.name} onChange={handleChange} name="name" />
+                <Error>{errors.name}</Error>
+              </FormField>
+
+              <FormField label={t("surname")}>
+                <Input hasError={!!errors.surname} onChange={handleChange} name="surname" />
+                <Error>{errors.surname}</Error>
+              </FormField>
+            </FormRow>
 
             <FormField label={t("dateOfBirth")}>
               <Input

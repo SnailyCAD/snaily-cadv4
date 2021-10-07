@@ -59,7 +59,9 @@ export default function CitizenPage({ citizens }: Props) {
                   src="https://yt3.ggpht.com/yJ9oovZC3P9YSil0Wjk7UgnYnLORTSwP_wFjAvqJ_m-z08zpTwll2rnWqYsXUVGb-Dlh_fqeaw=s88-c-k-c0x00ffffff-no-nd-rj"
                 />
 
-                <p className="text-xl font-semibold">{citizen.fullName}</p>
+                <p className="text-xl font-semibold">
+                  {citizen.name} {citizen.surname}
+                </p>
               </div>
 
               <div>

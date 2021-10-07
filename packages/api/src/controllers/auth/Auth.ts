@@ -91,8 +91,6 @@ export class AuthController {
       ownerId: user.id,
     });
 
-    console.log(JSON.stringify(cad, null, 2));
-
     const extraUserData: Partial<User> =
       userCount <= 0
         ? {
