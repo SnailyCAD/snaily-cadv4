@@ -9,7 +9,7 @@ interface Props {
 
 export const TabsContainer = ({ children, tabs }: Props) => {
   return (
-    <div className="w-full max-w-md px-2 sm:px-0">
+    <div className="w-full px-2 sm:px-0">
       <Tab.Group>
         <Tab.List className="flex p-1 space-x-1 bg-gray-100 rounded-xl">
           {tabs.map((tab) => (

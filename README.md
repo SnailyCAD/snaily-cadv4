@@ -11,38 +11,15 @@
 this is a web based integration for communities who love police roleplaying and dispatching.
 Built with next.js
 
-## Table of contents
+**This is currently in development.**
 
-- [Installation](https://github.com/SnailyCAD/snaily-cadv3/wiki/Installation-Guide)
-  - [Requirements](https://github.com/snailycad/snaily-cadv3/wiki/Installation-Guide#requirements)
-  - [Video Guides](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Installation-Guide#video-guides)
-  - [Written Guides](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Installation-Guide#written-guides)
-- [Troubleshooting](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Troubleshooting)
-- [Features](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/%E2%9C%A8-Features)
-- [Contributing](#contributing)
-- [Changelog](./docs/CHANGELOG.md)
-- [Bugs](#bugs)
-- [License](#license)
+<!-- ## Contributing
 
-## Installation
-
-**Installation guide has been moved to the [SnailyCAD wiki](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Installation-Guide)**
-
-## Troubleshooting
-
-**Troubleshooting guide has been moved to the [SnailyCAD wiki](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/Troubleshooting)**
-
-## Contributing
-
-[View CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+[View CONTRIBUTING.md](./docs/CONTRIBUTING.md) -->
 
 ## Bugs
 
 You can report any bug [here](https://github.com/SnailyCAD/snaily-cadv4/issues)
-
-## Features
-
-**Features list has been moved to the [SnailyCAD wiki](https://github.com/Dev-CasperTheGhost/snaily-cadv3/wiki/%E2%9C%A8-Features)**
 
 ## Supporting SnailyCAD
 

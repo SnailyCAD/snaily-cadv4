@@ -37,7 +37,13 @@ export default function CitizenPage({ citizens }: Props) {
         </button>
       </ul>
 
-      <ul className="flex flex-col space-y-3">
+      <ul
+        className={
+          citizens.length <= 0
+            ? "flex flex-col space-y-3"
+            : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"
+        }
+      >
         {citizens.length <= 0 ? (
           <p className="text-gray-600 font-medium">{t("userNoCitizens")}</p>
         ) : (

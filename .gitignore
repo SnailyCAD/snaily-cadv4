@@ -4,3 +4,8 @@ yarn-error.log
 dist
 .env
 .data
+
+packages/api/public/**/*.png
+packages/api/public/**/*.svg
+packages/api/public/**/*.jpg
+packages/api/public/**/*.jpeg

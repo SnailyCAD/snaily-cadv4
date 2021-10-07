@@ -5,8 +5,12 @@ import Link from "next/link";
 import { useAuth } from "src/context/AuthContext";
 import { logout } from "lib/auth";
 import { useRouter } from "next/router";
+import { classNames } from "lib/classNames";
 
 export const Nav = () => {
+  const router = useRouter();
+  const isActive = (route: string) => router.pathname.includes(route);
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
@@ -20,19 +24,47 @@ export const Nav = () => {
 
             <ul className="hidden md:flex items-center space-x-1">
               <Link href="/citizen">
-                <a className="py-3 px-2 text-gray-700 font-semibold">Citizen</a>
+                <a
+                  className={classNames(
+                    "py-3 px-2 text-gray-700",
+                    isActive("/citizen") && "font-semibold",
+                  )}
+                >
+                  Citizen
+                </a>
               </Link>
 
               <Link href="/officer">
-                <a className="py-3 px-2 text-gray-700 transition duration-300">Officer</a>
+                <a
+                  className={classNames(
+                    "py-3 px-2 text-gray-700 transition duration-300",
+                    isActive("/officer") && "font-semibold",
+                  )}
+                >
+                  Officer
+                </a>
               </Link>
 
               <Link href="/ems-fd">
-                <a className="py-3 px-2 text-gray-700 transition duration-300">EMS/FD</a>
+                <a
+                  className={classNames(
+                    "py-3 px-2 text-gray-700 transition duration-300",
+                    isActive("/ems-fd") && "font-semibold",
+                  )}
+                >
+                  EMS/FD
+                </a>
               </Link>
 
               <Link href="/admin">
-                <a className="py-3 px-2 text-gray-700 transition duration-300">Admin</a>
+                <a
+                  className={classNames(
+                    "py-3 px-2 text-gray-700 transition duration-300",
+                    isActive("/admin") && "font-semibold",
+                  )}
+                >
+                  Admin
+                </a>
               </Link>
             </ul>
           </div>

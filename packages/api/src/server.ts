@@ -11,6 +11,13 @@ const rootDir = __dirname;
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
   },
+  statics: {
+    "/statics": [
+      {
+        root: `${rootDir}/public`,
+      },
+    ],
+  },
 })
 export class Server {
   @Inject()

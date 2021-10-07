@@ -17,6 +17,7 @@
         "gender": "Gender",
         "ethnicity": "Ethnicity",
         "address": "Address",
-        "dateOfBirth": "Date of Birth"
+        "dateOfBirth": "Date of Birth",
+        "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone!"
     }
 }

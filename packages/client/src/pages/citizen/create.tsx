@@ -1,4 +1,5 @@
-import { Formik } from "formik";
+import * as React from "react";
+import { Formik, FormikHelpers } from "formik";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
@@ -27,21 +28,50 @@ const INITIAL_VALUES = {
   hairColor: "",
   eyeColor: "",
   address: "",
+  image: null,
 };
+
+// TODO: move to `@snailycad/config`
+const allowedFileExtensions = ["image/png", "image/gif", "image/jpeg", "image/svg+xml"] as const;
 
 export default function CreateCitizen() {
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
+  const formRef = React.useRef<HTMLFormElement>(null);
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
+
+    if (image && image.size && image.name) {
+      if (!allowedFileExtensions.includes(image.type as typeof allowedFileExtensions[number])) {
+        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+      }
+    }
+
+    console.log({ values });
+    console.log(fd?.get("image"));
+
     const { json } = await execute("/citizen", {
       method: "POST",
       data: values,
     });
 
     if (json?.id) {
+      const uploadRes = await execute(`/citizen/${json.id}`, {
+        method: "POST",
+        data: fd,
+      }).catch(() => null);
+
+      if (!uploadRes?.json) {
+        // todo: alert here that something failed; but continue
+      }
+
       const path = `/citizen/${json.id}`;
       router.push(path);
 
@@ -59,7 +89,12 @@ export default function CreateCitizen() {
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, isValid }) => (
-          <form onSubmit={handleSubmit}>
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <FormField label={t("fullName")}>
+              <Input onChange={handleChange} type="file" name="image" />
+              <Error>{errors.image}</Error>
+            </FormField>
+
             <FormField label={t("fullName")}>
               <Input hasError={!!errors.fullName} onChange={handleChange} name="fullName" />
               <Error>{errors.fullName}</Error>

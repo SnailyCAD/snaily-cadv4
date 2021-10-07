@@ -2,6 +2,7 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
+import Head from "next/head";
 import { Citizen } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
@@ -51,49 +52,54 @@ export default function CitizenId({ citizen }: Props) {
 
   return (
     <Layout>
+      <Head>
+        <title>{citizen.fullName} - SnailyCAD</title>
+      </Head>
+
       <div className="card bg-gray-200/60 p-4 rounded-md flex items-start justify-between">
         <div className="flex flex-col sm:flex-row items-start">
           <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
             <img
-              className="rounded-full"
-              src="https://yt3.ggpht.com/yJ9oovZC3P9YSil0Wjk7UgnYnLORTSwP_wFjAvqJ_m-z08zpTwll2rnWqYsXUVGb-Dlh_fqeaw=s88-c-k-c0x00ffffff-no-nd-rj"
+
+              className="rounded-full w-[100px] h-[100px]"
+              src="https://qmusic.caspertheghost.me/_next/image?url=https%3A%2F%2Fstatic1.qmusic.medialaancdn.be%2Fweb_list%2Fitemlist_small_desktop%2F%2F3%2F92%2F6e%2F22%2F1488477%2F2d504b2dd9b3dbe79829de55c4923bd3.1000x1000x1.jpg&w=256&q=75"
             />
           </button>
 
           <div className="sm:ml-3 mt-2 sm:mt-0 flex flex-col">
             <p>
-              <span className="font-semibold">Full name: </span>
+              <span className="font-semibold">{t("fullName")}: </span>
               {citizen.fullName}
             </p>
             <p>
-              <span className="font-semibold">Gender: </span>
+              <span className="font-semibold">{t("gender")}: </span>
               {citizen.gender}
             </p>
             <p>
-              <span className="font-semibold">Ethnicity: </span>
+              <span className="font-semibold">{t("ethnicity")}: </span>
               {citizen.ethnicity}
             </p>
             <p>
-              <span className="font-semibold">Hair Color: </span>
+              <span className="font-semibold">{t("hairColor")}: </span>
               {citizen.hairColor}
             </p>
             <p>
-              <span className="font-semibold">Eye Color: </span>
+              <span className="font-semibold">{t("eyeColor")}: </span>
               {citizen.eyeColor}
             </p>
           </div>
 
           <div className="sm:ml-5 flex flex-col">
             <p>
-              <span className="font-semibold">Weight: </span>
+              <span className="font-semibold">{t("weight")}: </span>
               {citizen.weight}
             </p>
             <p>
-              <span className="font-semibold">Height: </span>
+              <span className="font-semibold">{t("height")}: </span>
               {citizen.height}
             </p>
             <p>
-              <span className="font-semibold">Address: </span>
+              <span className="font-semibold">{t("address")}: </span>
               {citizen.address}
             </p>
           </div>
@@ -124,8 +130,8 @@ export default function CitizenId({ citizen }: Props) {
       >
         <div className="mt-10 flex items-center justify-center">
           <img
-            className="rounded-full w-[20em] h-[20em]"
-            src="https://yt3.ggpht.com/yJ9oovZC3P9YSil0Wjk7UgnYnLORTSwP_wFjAvqJ_m-z08zpTwll2rnWqYsXUVGb-Dlh_fqeaw=s88-c-k-c0x00ffffff-no-nd-rj"
+            className="rounded-full w-[30em] h-[30em]"
+            src="https://qmusic.caspertheghost.me/_next/image?url=https%3A%2F%2Fstatic1.qmusic.medialaancdn.be%2Fweb_list%2Fitemlist_small_desktop%2F%2F3%2F92%2F6e%2F22%2F1488477%2F2d504b2dd9b3dbe79829de55c4923bd3.1000x1000x1.jpg&w=256&q=75"
           />
         </div>
         {/* todo: add ability to edit image from here */}
@@ -137,8 +143,12 @@ export default function CitizenId({ citizen }: Props) {
         isOpen={isOpen("deleteCitizen")}
       >
         <p className="my-3">
-          Are you sure you want to delete <span className="font-semibold">{citizen.fullName}</span>?
-          This action cannot be undone.
+          {t.rich("alert_deleteCitizen", {
+            citizen: citizen.fullName,
+            span: (children) => {
+              return <span className="font-semibold">{children}</span>;
+            },
+          })}
         </p>
         <div className="mt-2 flex gap-2 items-center justify-end">
           <Button disabled={state === "loading"} onClick={() => closeModal("deleteCitizen")}>
