@@ -1,11 +1,11 @@
 {
-    "Common": {
-        "delete": "Delete",
-        "edit": "Edit",
-        "save": "Save",
-        "cancel": "Cancel",
-        "actions": "Actions",
-        "type": "Type",
-        "description": "Description"
-    }
+  "Common": {
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "actions": "Actions",
+    "type": "Type",
+    "description": "Description"
+  }
 }

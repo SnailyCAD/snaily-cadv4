@@ -1,7 +1,7 @@
 import { $log } from "@tsed/logger";
 import { sign, verify } from "jsonwebtoken";
 
-export function signJWT(value: any, expiresInSeconds: number|string) {
+export function signJWT(value: any, expiresInSeconds: number | string) {
   const secret = process.env.JWT_SECRET ?? "NONE";
 
   if (secret === "NONE") {

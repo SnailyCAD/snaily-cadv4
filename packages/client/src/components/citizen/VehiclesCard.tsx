@@ -9,7 +9,7 @@ import { useTranslations } from "use-intl";
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
   const common = useTranslations("common");
-  const t= useTranslations("Vehicle")
+  const t = useTranslations("Vehicle");
 
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);

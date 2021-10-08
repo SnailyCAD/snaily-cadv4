@@ -4,10 +4,10 @@ import { Button } from "components/Button";
 import { Citizen } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import {ManageLicensesModal} from "./ManageLicensesModal"
+import { ManageLicensesModal } from "./ManageLicensesModal";
 
 export const LicensesCard = ({ citizen }: { citizen: Citizen }) => {
-  const { openModal,  } = useModal();
+  const { openModal } = useModal();
   const t = useTranslations("Citizen");
 
   const types = ["driversLicense", "weaponLicense", "pilotLicense", "ccw"] as const;
@@ -32,7 +32,7 @@ export const LicensesCard = ({ citizen }: { citizen: Citizen }) => {
         </div>
       </div>
 
-      <ManageLicensesModal/>
+      <ManageLicensesModal />
     </>
   );
 };

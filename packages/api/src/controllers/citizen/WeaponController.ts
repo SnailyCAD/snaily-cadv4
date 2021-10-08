@@ -1,5 +1,5 @@
 import { User } from ".prisma/client";
-import { validate, WEAPON_SCHEMA} from "@snailycad/schemas";
+import { validate, WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";

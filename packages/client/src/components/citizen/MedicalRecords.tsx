@@ -11,7 +11,7 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
   const common = useTranslations("Common");
 
   const [medicalRecords, setMedicalRecords] = React.useState<MedicalRecord[]>(props.medicalRecords);
-//   const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
+  //   const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
 
   return (
     <>
