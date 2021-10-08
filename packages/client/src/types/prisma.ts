@@ -61,25 +61,47 @@ export type Citizen = {
 };
 
 /**
+ * Model Value
+ */
+
+export type Value = {
+  id: string;
+  type: ValueType;
+  value: string;
+  isDefault: boolean;
+};
+
+/**
  * Enums
  */
 
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-export const Rank = {
+export const rank = {
   OWNER: "OWNER",
   ADMIN: "ADMIN",
   MODERATOR: "MODERATOR",
   USER: "USER",
-};
+} as const;
 
-export type Rank = typeof Rank[keyof typeof Rank];
+export type Rank = typeof rank[keyof typeof rank];
 
-export const WhitelistStatus = {
+export const whitelistStatus = {
   ACCEPTED: "ACCEPTED",
   PENDING: "PENDING",
   DECLINED: "DECLINED",
-};
+} as const;
 
-export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
+export type WhitelistStatus = typeof whitelistStatus[keyof typeof whitelistStatus];
+
+export const valueType = {
+  LICENSE: "LICENSE",
+  GENDER: "GENDER",
+  ETHNICITY: "ETHNICITY",
+  VEHICLE: "VEHICLE",
+  WEAPON: "WEAPON",
+  BLOOD_GROUP: "BLOOD_GROUP",
+} as const;
+
+export type ValueType = typeof valueType[keyof typeof valueType];

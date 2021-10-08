@@ -6,7 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { setCookie } from "../../utils/setCookie";
 import { signJWT } from "../../utils/jwt";
-import { Cookie } from "../../config";
+import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD } from "../../lib/cad";
 import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 

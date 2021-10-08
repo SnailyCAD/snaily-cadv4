@@ -4,6 +4,7 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
+import { allowedFileExtensions, AllowedFileExtension } from "@snailycad/config";
 
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -17,6 +18,9 @@ import useFetch from "lib/useFetch";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
+import { handleRequest } from "lib/fetch";
+import { Value, ValueType } from "types/prisma";
+import { Select } from "components/form/Select";
 
 const INITIAL_VALUES = {
   name: "",
@@ -32,15 +36,22 @@ const INITIAL_VALUES = {
   image: null,
 };
 
-// TODO: move to `@snailycad/config`
-const allowedFileExtensions = ["image/png", "image/gif", "image/jpeg", "image/svg+xml"] as const;
+interface Props {
+  values: {
+    type: ValueType;
+    values: Value[];
+  }[];
+}
 
-export default function CreateCitizen() {
+export default function CreateCitizen({ values }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
+
+  const genders = values.find((v) => v.type === "GENDER")?.values ?? [];
+  const ethnicities = values.find((v) => v.type === "ETHNICITY")?.values ?? [];
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -50,7 +61,7 @@ export default function CreateCitizen() {
     const image = fd?.get("image") as File;
 
     if (image && image.size && image.name) {
-      if (!allowedFileExtensions.includes(image.type as typeof allowedFileExtensions[number])) {
+      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
         helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
       }
     }
@@ -142,12 +153,31 @@ export default function CreateCitizen() {
 
             <FormRow>
               <FormField label={t("gender")}>
-                <Input hasError={!!errors.gender} onChange={handleChange} name="gender" />
+                <Select
+                  name="gender"
+                  value={values.gender}
+                  onChange={handleChange}
+                  hasError={!!errors.gender}
+                  values={genders.map((gender) => ({
+                    label: gender.value,
+                    value: gender.value,
+                  }))}
+                />
                 <Error>{errors.gender}</Error>
               </FormField>
 
               <FormField label={t("ethnicity")}>
-                <Input hasError={!!errors.ethnicity} onChange={handleChange} name="ethnicity" />
+                <Select
+                  name="ethnicity"
+                  value={values.ethnicity}
+                  onChange={handleChange}
+                  hasError={!!errors.ethnicity}
+                  values={ethnicities.map((ethnicity) => ({
+                    label: ethnicity.value,
+                    value: ethnicity.value,
+                  }))}
+                />
+
                 <Error>{errors.ethnicity}</Error>
               </FormField>
             </FormRow>
@@ -222,8 +252,16 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  // todo: update when needed, only gender and ethnicity are needed rn.
+  const { data: values } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
+    () => ({ data: null }),
+  );
+
+  console.log(values);
+
   return {
     props: {
+      values: values ?? [],
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "common"], locale)),

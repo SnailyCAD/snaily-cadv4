@@ -12,57 +12,61 @@ generator client {
 }
 
 model cad {
-  id             String    @id @default(cuid())
-  name           String    @db.VarChar(255)
-  owner          User      @relation(fields: [ownerId], references: [id])
+  id             String  @id @default(cuid())
+  name           String  @db.VarChar(255)
+  owner          User    @relation(fields: [ownerId], references: [id])
   ownerId        String
-  areaOfPlay     String?   @db.VarChar(255)
-  steamApiKey    String?   @db.VarChar(255)
-  whitelisted    Boolean   @default(false)
-  towWhitelisted Boolean   @default(false)
+  areaOfPlay     String? @db.VarChar(255)
+  steamApiKey    String? @db.VarChar(255)
+  whitelisted    Boolean @default(false)
+  towWhitelisted Boolean @default(false)
 }
 
 model User {
-  id              String          @id @default(cuid())
-  username        String          @unique @db.VarChar(255)
-  password        String          @db.Text
-  rank            Rank            @default(USER)
-  isLeo           Boolean         @default(false)
-  isSupervisor    Boolean         @default(false)
-  isEmsFd         Boolean         @default(false)
-  isDispatch      Boolean         @default(false)
-  isTow           Boolean         @default(false)
-  banned          Boolean         @default(false)
+  id              String              @id @default(cuid())
+  username        String              @unique @db.VarChar(255)
+  password        String              @db.Text
+  rank            Rank                @default(USER)
+  isLeo           Boolean             @default(false)
+  isSupervisor    Boolean             @default(false)
+  isEmsFd         Boolean             @default(false)
+  isDispatch      Boolean             @default(false)
+  isTow           Boolean             @default(false)
+  banned          Boolean             @default(false)
   banReason       Boolean?
-  avatarUrl       String?         @db.Text
-  steamId         String?         @db.VarChar(255)
-  whitelistStatus WhitelistStatus @default(ACCEPTED)
+  avatarUrl       String?             @db.Text
+  steamId         String?             @db.VarChar(255)
+  whitelistStatus WhitelistStatus     @default(ACCEPTED)
   citizens        Citizen[]
   cads            cad[]
+  vehicles        RegisteredVehicle[]
+  weapons         Weapon[]
 }
 
 model Citizen {
-  id             String    @id @default(cuid())
-  user           User      @relation(fields: [userId], references: [id])
+  id             String              @id @default(cuid())
+  user           User                @relation(fields: [userId], references: [id])
   userId         String
-  name       String    @db.VarChar(255)
-  surname       String    @db.VarChar(255)
+  name           String              @db.VarChar(255)
+  surname        String              @db.VarChar(255)
   dateOfBirth    DateTime
-  gender         String    @db.VarChar(255)
-  ethnicity      String    @db.VarChar(255)
-  hairColor      String    @db.VarChar(255)
-  eyeColor       String    @db.VarChar(255)
-  address        String    @db.VarChar(255)
-  height         String    @db.VarChar(255)
-  weight         String    @db.VarChar(255)
-  driversLicense String?   @db.VarChar(255)
-  weaponLicense  String?   @db.VarChar(255)
-  pilotLicense   String?   @db.VarChar(255)
-  ccw            String?   @db.VarChar(255)
-  imageId        String?   @db.Text
-  note           String?   @db.Text
-  dead           Boolean?  @default(false)
+  gender         String              @db.VarChar(255)
+  ethnicity      String              @db.VarChar(255)
+  hairColor      String              @db.VarChar(255)
+  eyeColor       String              @db.VarChar(255)
+  address        String              @db.VarChar(255)
+  height         String              @db.VarChar(255)
+  weight         String              @db.VarChar(255)
+  driversLicense String?             @db.VarChar(255)
+  weaponLicense  String?             @db.VarChar(255)
+  pilotLicense   String?             @db.VarChar(255)
+  ccw            String?             @db.VarChar(255)
+  imageId        String?             @db.Text
+  note           String?             @db.Text
+  dead           Boolean?            @default(false)
   dateOfDead     DateTime?
+  vehicles       RegisteredVehicle[]
+  weapons        Weapon[]
 }
 
 enum Rank {
@@ -76,4 +80,47 @@ enum WhitelistStatus {
   ACCEPTED
   PENDING
   DECLINED
+}
+
+model RegisteredVehicle {
+  id                 String   @id @default(cuid())
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String
+  citizen            Citizen  @relation(fields: [citizenId], references: [id])
+  citizenId          String
+  vinNumber          String   @unique @db.VarChar(255)
+  brand              String   @db.Text
+  color              String   @db.VarChar(255)
+  createdAt          DateTime @default(now())
+  registrationStatus String   @db.VarChar(255)
+  insuranceStatus    String   @db.VarChar(255)
+}
+
+model Weapon {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  citizen   Citizen @relation(fields: [citizenId], references: [id])
+  citizenId String
+
+  serialNumber       String @unique @db.VarChar(255)
+  registrationStatus String @db.VarChar(255)
+  model              String @db.VarChar(255)
+}
+
+// admin values
+model Value {
+  id        String    @id @default(cuid())
+  type      ValueType
+  value     String    @db.VarChar(255)
+  isDefault Boolean
+}
+
+enum ValueType {
+  LICENSE
+  GENDER
+  ETHNICITY
+  VEHICLE
+  WEAPON
+  BLOOD_GROUP
 }
