@@ -89,7 +89,8 @@ model RegisteredVehicle {
   citizen            Citizen  @relation(fields: [citizenId], references: [id])
   citizenId          String
   vinNumber          String   @unique @db.VarChar(255)
-  brand              String   @db.Text
+  plate              String   @unique @db.VarChar(255)
+  model              String   @db.Text
   color              String   @db.VarChar(255)
   createdAt          DateTime @default(now())
   registrationStatus String   @db.VarChar(255)

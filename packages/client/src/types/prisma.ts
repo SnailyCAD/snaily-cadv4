@@ -68,6 +68,7 @@ export type RegisteredVehicle = {
   id: string;
   userId: string;
   citizenId: string;
+  plate: string;
   vinNumber: string;
   model: string;
   color: string;

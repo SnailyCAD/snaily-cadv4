@@ -1,3 +1,5 @@
+import { classNames } from "lib/classNames";
+
 type Props = JSX.IntrinsicElements["button"] & {
   small?: boolean;
   variant?: keyof typeof variants;
@@ -5,21 +7,23 @@ type Props = JSX.IntrinsicElements["button"] & {
 
 const variants = {
   small: "p-0.5 px-2",
+  default: "bg-gray-500 hover:bg-gray-600 text-white",
   cancel: "bg-transparent hover:bg-transparent text-gray-800",
-  danger: "bg-red-500 hover:bg-red-600",
-  success: "bg-green-500 hover:bg-green-500",
+  danger: "bg-red-500 hover:bg-red-600 text-white",
+  success: "bg-green-500 hover:bg-green-500 text-white",
 };
 
-export const Button = ({ className, variant, ...rest }: Props) => {
+export const Button = ({ className, variant = "default", ...rest }: Props) => {
   return (
     <button
-      className={`
-          p-1 px-4
-          text-white bg-gray-500 rounded-md transition-all
-          disabled:opacity-60 disabled:cursor-not-allowed
-          hover:bg-gray-600
-          ${variant ? variants[variant] : ""} ${className}
-      `}
+      className={classNames(
+        `
+        p-1 px-4
+      rounded-md transition-all
+        disabled:opacity-60 disabled:cursor-not-allowed`,
+        variant && variants[variant],
+        className,
+      )}
       {...rest}
     />
   );

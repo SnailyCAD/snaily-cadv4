@@ -26,6 +26,9 @@
     "Vehicles": {
         "model": "Model",
         "registrationStatus": "Registration Status",
-        "insuranceStatus": "Insurance Status"
+        "insuranceStatus": "Insurance Status",
+        "owner": "Owner",
+        "color": "Color",
+        "plate": "Plate"
     }
 }

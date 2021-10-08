@@ -12,9 +12,18 @@ interface Props extends Pick<JSX.IntrinsicElements["input"], "onChange" | "name"
   values: SelectValue[];
   hasError?: boolean;
   isClearable?: boolean;
+  disabled?: boolean;
 }
 
-export const Select = ({ hasError, values, value, isClearable, name, onChange }: Props) => {
+export const Select = ({
+  hasError,
+  values,
+  value,
+  isClearable,
+  disabled = true,
+  name,
+  onChange,
+}: Props) => {
   const [selected, setSelected] = React.useState<SelectValue | null>(null);
 
   React.useEffect(() => {
@@ -28,8 +37,6 @@ export const Select = ({ hasError, values, value, isClearable, name, onChange }:
   }, [value, values]);
 
   function handleChange(value: SelectValue | null) {
-    console.log("here");
-
     onChange?.({ target: { name, value: value?.value ?? null } } as any);
   }
 
@@ -40,8 +47,9 @@ export const Select = ({ hasError, values, value, isClearable, name, onChange }:
           className={`
             w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200
             outline-none focus:border-gray-800
-            hover:border-dark-gray cursor-default text-left
+            hover:border-dark-gray cursor-default text-left z-0
             transition-all ${hasError && "border-red-500"} `}
+          disabled={disabled}
         >
           <span className="block truncate">{selected ? selected.label : "None"}</span>
 
@@ -66,15 +74,15 @@ export const Select = ({ hasError, values, value, isClearable, name, onChange }:
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute w-full p-1 mt-1 overflow-auto text-base bg-gray-100 rounded-md shadow-lg max-h-60 sm:text-sm">
+          <Listbox.Options className="absolute z-20 w-full p-1 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
             {values.map((value, idx) => (
               <Listbox.Option
                 key={idx}
                 value={value}
                 className={({ active }) =>
                   `${
-                    active ? "bg-gray-200" : "text-gray-900"
-                  } cursor-default select-none relative p-1.5 px-4 rounded-md`
+                    active ? "bg-gray-400" : "text-gray-900"
+                  } cursor-default select-none relative p-1 px-4 rounded-md`
                 }
               >
                 {({ selected }) => (

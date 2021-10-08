@@ -32,6 +32,7 @@ export const PasswordInput = (props: Exclude<Props, "type">) => {
     <div className="relative">
       <Input ref={ref} type={type} {...(props as any)} />
       <button
+        type="button"
         onClick={handleClick}
         className="p-1 px-3 rounded-md absolute top-1/2 right-2 -translate-y-1/2 bg-gray-300"
       >

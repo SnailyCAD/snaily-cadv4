@@ -9,7 +9,7 @@ services:
     ports:
       - "5433:5432"
     networks:
-      - web
+      - cad_web
     volumes:
       - ./.data:/var/lib/postgresql/data
 
@@ -31,12 +31,12 @@ services:
     depends_on:
       - postgres
     networks:
-      - web
+      - cad_web
 
 volumes:
   redis-data:
   redis-conf:
 
 networks:
-  web:
+  cad_web:
     external: true

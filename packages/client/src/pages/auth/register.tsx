@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
+import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
 
@@ -11,6 +12,8 @@ import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
+import { GetStaticProps } from "next";
+import { getTranslations } from "lib/getTranslation";
 
 const INITIAL_VALUES = {
   username: "",
@@ -21,6 +24,7 @@ const INITIAL_VALUES = {
 export default function Register() {
   const router = useRouter();
   const { state, execute } = useFetch();
+  const t = useTranslations("Auth");
 
   const validate = handleValidate(AUTH_SCHEMA);
 
@@ -51,16 +55,16 @@ export default function Register() {
   return (
     <>
       <Head>
-        <title>Register - SnailyCAD</title>
+        <title>{t("register")} - SnailyCAD</title>
       </Head>
 
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
-              <h1 className="text-2xl text-gray-800 font-semibold mb-3">Register</h1>
+              <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("register")}</h1>
 
-              <FormField fieldId="username" label="username">
+              <FormField fieldId="username" label={t("username")}>
                 <Input
                   hasError={!!errors.username}
                   id="username"
@@ -71,7 +75,7 @@ export default function Register() {
                 <Error>{errors.username}</Error>
               </FormField>
 
-              <FormField fieldId="password" label="Password">
+              <FormField fieldId="password" label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
                   id="password"
@@ -81,7 +85,7 @@ export default function Register() {
                 <Error>{errors.password}</Error>
               </FormField>
 
-              <FormField fieldId="confirmPassword" label="Confirm Password">
+              <FormField fieldId="confirmPassword" label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
                   id="confirmPassword"
@@ -93,7 +97,7 @@ export default function Register() {
 
               <div className="mt-3">
                 <Link href="/auth/login">
-                  <a className="underline inline-block mb-3">Already have an account? Login</a>
+                  <a className="underline inline-block mb-3">{t("hasAccount")}</a>
                 </Link>
 
                 <button
@@ -101,7 +105,7 @@ export default function Register() {
                   type="submit"
                   className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {state === "loading" ? <Loader className="bg-gray-300" /> : "Register"}
+                  {state === "loading" ? <Loader className="bg-gray-300" /> : null} {t("register")}
                 </button>
               </div>
             </form>
@@ -111,3 +115,11 @@ export default function Register() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      messages: await getTranslations(["auth"], locale),
+    },
+  };
+};

@@ -18,7 +18,7 @@ interface Props {
 
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   return (
     <Layout>
@@ -81,7 +81,11 @@ export default function CitizenPage({ citizens }: Props) {
         )}
       </ul>
 
-      <RegisterVehicleModal vehicle={null} />
+      <RegisterVehicleModal
+        onCreate={() => closeModal(ModalIds.RegisterVehicle)}
+        citizens={citizens}
+        vehicle={null}
+      />
     </Layout>
   );
 }
@@ -91,8 +95,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
     headers: req.headers,
   }).catch(() => ({ data: null }));
 
+  const { data: values = [] } = await handleRequest(
+    "/admin/values/weapon?paths=license,vehicle",
+  ).catch(() => ({ data: null }));
+
   return {
     props: {
+      values,
       citizens: data ?? [],
       session: await getSessionUser(req.headers),
       messages: {

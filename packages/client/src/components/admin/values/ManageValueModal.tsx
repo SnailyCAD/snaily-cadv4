@@ -60,7 +60,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
 
   return (
     <Modal
-      minWidth="min-w-[600px]"
+      className="min-w-[600px]"
       title={title}
       onClose={() => closeModal("manageValue")}
       isOpen={isOpen("manageValue")}

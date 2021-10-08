@@ -11,6 +11,9 @@ import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
+import { useTranslations } from "use-intl";
+import { GetStaticProps } from "next";
+import { getTranslations } from "lib/getTranslation";
 
 const INITIAL_VALUES = {
   username: "",
@@ -20,6 +23,7 @@ const INITIAL_VALUES = {
 export default function Login() {
   const router = useRouter();
   const { state, execute } = useFetch();
+  const t = useTranslations("Auth");
 
   const validate = handleValidate(AUTH_SCHEMA);
 
@@ -49,9 +53,9 @@ export default function Login() {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
-              <h1 className="text-2xl text-gray-800 font-semibold mb-3">Login</h1>
+              <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("login")}</h1>
 
-              <FormField fieldId="username" label="username">
+              <FormField fieldId="username" label={t("username")}>
                 <Input
                   hasError={!!errors.username}
                   id="username"
@@ -62,7 +66,7 @@ export default function Login() {
                 <Error>{errors.username}</Error>
               </FormField>
 
-              <FormField fieldId="password" label="Password">
+              <FormField fieldId="password" label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
                   id="password"
@@ -74,7 +78,7 @@ export default function Login() {
 
               <div className="mt-3">
                 <Link href="/auth/register">
-                  <a className="underline inline-block mb-3">{"Don't have an account?"} Register</a>
+                  <a className="underline inline-block mb-3">{t("noAccount")}</a>
                 </Link>
 
                 <button
@@ -82,7 +86,7 @@ export default function Login() {
                   type="submit"
                   className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-3"
                 >
-                  {state === "loading" ? <Loader  /> : null} Login
+                  {state === "loading" ? <Loader /> : null} {t("login")}
                 </button>
               </div>
             </form>
@@ -92,3 +96,11 @@ export default function Login() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      messages: await getTranslations(["auth"], locale),
+    },
+  };
+};

@@ -107,18 +107,12 @@ export default function CitizenId({ citizen }: Props) {
         </div>
 
         <div className="flex gap-2">
-          <Button
-            onClick={() => router.push(`/citizen/${citizen.id}/edit`)}
-            className="bg-green-500 hover:bg-green-600"
-          >
+          <Button onClick={() => router.push(`/citizen/${citizen.id}/edit`)} variant="success">
             <Link href={`/citizen/${citizen.id}/edit`}>
               <a>{t("editCitizen")}</a>
             </Link>
           </Button>
-          <Button
-            onClick={() => openModal("deleteCitizen")}
-            className="bg-red-500 hover:bg-red-600"
-          >
+          <Button onClick={() => openModal("deleteCitizen")} variant="danger">
             {t("deleteCitizen")}
           </Button>
         </div>
@@ -152,12 +146,17 @@ export default function CitizenId({ citizen }: Props) {
           })}
         </p>
         <div className="mt-2 flex gap-2 items-center justify-end">
-          <Button disabled={state === "loading"} onClick={() => closeModal("deleteCitizen")}>
+          <Button
+            variant="cancel"
+            disabled={state === "loading"}
+            onClick={() => closeModal("deleteCitizen")}
+          >
             {common("cancel")}
           </Button>
           <Button
             disabled={state === "loading"}
-            className="flex items-center bg-red-500 hover:bg-red-600"
+            variant="danger"
+            className="flex items-center"
             onClick={handleDelete}
           >
             {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
