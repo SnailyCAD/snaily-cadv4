@@ -1,3 +1,4 @@
+/* eslint-disable promise/always-return */
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
@@ -20,14 +21,16 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const router = useRouter();
 
   const handleGetUser = React.useCallback(async () => {
-    getSessionUser().then((u) => {
-      if (!u && !router.asPath.includes("/auth")) {
-        router.push("/auth/login");
-      }
+    getSessionUser()
+      .then((u) => {
+        if (!u && !router.asPath.includes("/auth")) {
+          router.push("/auth/login");
+        }
 
-      setUser(u);
-    });
-  }, [router.pathname]);
+        setUser(u);
+      })
+      .catch(() => void 0);
+  }, [router]);
 
   React.useEffect(() => {
     handleGetUser();

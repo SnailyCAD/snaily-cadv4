@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CREATE_CITIZEN_SCHEMA = (isServer: boolean = false) =>
+export const CREATE_CITIZEN_SCHEMA = (isServer = false) =>
   z.object({
     name: z.string().min(3).max(255),
     surname: z.string().min(3).max(255),

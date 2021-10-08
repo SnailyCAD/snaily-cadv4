@@ -31,7 +31,7 @@ export const Modal = ({ title, children, isOpen, className, onClose }: Props) =>
         <div className="min-h-screen px-4 text-center">
           <Dialog.Overlay className="fixed inset-0 bg-black/10" />
 
-          {/* This element is to trick the browser into centering the modal contents. */}
+          {/* this element is to trick the browser into centering the modal contents. */}
           <span className="inline-block h-screen align-middle" aria-hidden="true">
             &#8203;
           </span>

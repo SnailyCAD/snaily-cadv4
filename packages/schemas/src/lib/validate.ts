@@ -13,7 +13,7 @@ export function validate<TObj extends ZodRawShape, Values = any>(
 export function validate<TObj extends ZodRawShape, Values = any>(
   schema: ZodObject<TObj>,
   values: Values,
-  oneError: boolean = false,
+  oneError = false,
 ): Record<string, string> | string {
   const errors: Record<string, string> = {};
 
