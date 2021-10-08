@@ -16,6 +16,29 @@ li {
   @apply text-lg;
 }
 
+table {
+  @apply w-full max-w-full overflow-auto;
+}
+
+th {
+  @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-black lg:table-cell text-left select-none;
+
+  &:first-child {
+    @apply rounded-tl-md rounded-bl-md;
+  }
+  &:last-child {
+    @apply rounded-tr-md rounded-br-md;
+  }
+}
+
+tr {
+  @apply table-row text-left;
+}
+
+td {
+  @apply p-2 px-3;
+}
+
 // animation from https://ui-snippets.dev
 .loader {
   span {

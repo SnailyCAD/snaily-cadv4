@@ -53,12 +53,12 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
   const bloodGroups = values.find((v) => v.type === "BLOOD_GROUP");
 
   const value = {
-    genders: genders ?? [],
-    ethnicities: ethnicities ?? [],
-    licenses: licenses ?? [],
-    vehicles: vehicles ?? [],
-    weapons: weapons ?? [],
-    bloodGroups: bloodGroups ?? [],
+    genders: genders ?? { values: [] },
+    ethnicities: ethnicities ?? { values: [] },
+    licenses: licenses ?? { values: [] },
+    vehicles: vehicles ?? { values: [] },
+    weapons: weapons ?? { values: [] },
+    bloodGroups: bloodGroups ?? { values: [] },
   } as Context;
 
   React.useEffect(() => {

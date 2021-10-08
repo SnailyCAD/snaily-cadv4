@@ -7,7 +7,6 @@ type Props = JSX.IntrinsicElements["button"] & {
 };
 
 const variants = {
-  small: "p-0.5 px-2",
   default: "bg-gray-500 hover:bg-gray-600 text-white",
   cancel: "bg-transparent hover:bg-transparent text-gray-800",
   danger: "bg-red-500 hover:bg-red-600 text-white",
@@ -15,13 +14,12 @@ const variants = {
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, Props>(
-  ({ variant = "default", className = "", ...rest }, ref) => (
+  ({ variant = "default", small, className = "", ...rest }, ref) => (
     <button
       className={classNames(
-        `
-    p-1 px-4
-  rounded-md transition-all
-    disabled:opacity-60 disabled:cursor-not-allowed`,
+        `${
+          small ? "p-0.5 px-2" : "p-1 px-4"
+        } rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed`,
         variant && variants[variant],
         className,
       )}

@@ -29,6 +29,10 @@ export class CitizenController {
         id: citizenId,
         userId: ctx.get("user").id,
       },
+      include: {
+        vehicles: true,
+        weapons: true,
+      },
     });
 
     if (!citizen) {
@@ -53,8 +57,6 @@ export class CitizenController {
   @Post("/")
   async createCitizen(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(CREATE_CITIZEN_SCHEMA(true), body.toJSON(), true);
-
-    console.log(error);
 
     if (error) {
       return new BadRequest(error);

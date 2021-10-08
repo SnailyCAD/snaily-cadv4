@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
-import { useModal } from "src/hooks/useModal";
+import { useModal } from "context/ModalContext";
 import { Value, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";

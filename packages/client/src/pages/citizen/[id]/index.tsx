@@ -3,20 +3,25 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
-import { Citizen } from "types/prisma";
+import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { Layout } from "components/Layout";
-import { useModal } from "src/hooks/useModal";
+import { useModal } from "context/ModalContext";
 import { Modal } from "components/modal/Modal";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { getTranslations } from "lib/getTranslation";
+import { VehiclesCard } from "components/citizen/VehiclesCard";
+import { WeaponsCard } from "components/citizen/WeaponsCard";
+import { LicensesCard } from "components/citizen/LicensesCard";
+
+type CitizenWithVehAndWep = Citizen & { weapons: Weapon[]; vehicles: RegisteredVehicle[] };
 
 interface Props {
-  citizen: Citizen | null;
+  citizen: CitizenWithVehAndWep | null;
 }
 
 export default function CitizenId({ citizen }: Props) {
@@ -118,6 +123,12 @@ export default function CitizenId({ citizen }: Props) {
         </div>
       </div>
 
+      <div className="mt-3 gap-2 grid grid-cols-1 md:grid-cols-2">
+        <LicensesCard citizen={citizen} />
+        <VehiclesCard vehicles={citizen.vehicles} />
+        <WeaponsCard weapons={citizen.weapons} />
+      </div>
+
       <Modal
         title={`${citizen.name} ${citizen.surname}`}
         onClose={() => closeModal("citizenImage")}
@@ -173,10 +184,15 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
     headers: req.headers,
   }).catch(() => ({ data: null }));
 
+  const { data: values = [] } = await handleRequest(
+    "/admin/values/weapon?paths=license,vehicle",
+  ).catch(() => ({ data: null }));
+
   return {
     props: {
       session: await getSessionUser(req.headers),
       citizen: data,
+      values,
       messages: {
         ...(await getTranslations(["citizen", "common"], locale)),
       },

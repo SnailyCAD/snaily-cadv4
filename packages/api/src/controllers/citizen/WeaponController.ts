@@ -1,5 +1,5 @@
 import { User } from ".prisma/client";
-import { validate, VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { validate, WEAPON_SCHEMA} from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -8,12 +8,12 @@ import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { generateString } from "../../utils/generateString";
 
-@Controller("/vehicles")
+@Controller("/weapons")
 @UseBeforeEach(IsAuth)
-export class VehiclesController {
+export class WeaponController {
   @Post("/")
-  async registerVehicle(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(VEHICLE_SCHEMA, body.toJSON(), true);
+  async registerWeapon(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
+    const error = validate(WEAPON_SCHEMA, body.toJSON(), true);
     const user = ctx.get("user") as User;
 
     if (error) {
@@ -26,36 +26,20 @@ export class VehiclesController {
       },
     });
 
-    console.log({ citizen });
-
     if (!citizen || citizen.userId !== user.id) {
       throw new NotFound("Citizen not found");
     }
 
-    const existing = await prisma.registeredVehicle.findUnique({
-      where: {
-        plate: body.get("plate"),
-      },
-    });
-
-    if (existing) {
-      throw new BadRequest("Vehicle with that plate already exists");
-    }
-
-    const vehicle = await prisma.registeredVehicle.create({
+    const weapon = await prisma.weapon.create({
       data: {
-        plate: body.get("plate"),
-        color: body.get("color"),
         citizenId: citizen.id,
         model: body.get("model"),
         registrationStatus: body.get("registrationStatus"),
-        // todo
-        insuranceStatus: "TEST",
-        vinNumber: generateString(17),
+        serialNumber: generateString(10),
         userId: user.id,
       },
     });
 
-    return vehicle;
+    return weapon;
   }
 }

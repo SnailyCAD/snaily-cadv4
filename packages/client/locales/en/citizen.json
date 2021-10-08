@@ -21,6 +21,10 @@
         "address": "Address",
         "dateOfBirth": "Date of Birth",
         "image": "Image",
+        "driversLicense": "Drivers License",
+        "weaponLicense": "Firearms License",
+        "pilotLicense": "Pilot License",
+        "ccw": "CCW",
         "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone!"
     },
     "Vehicles": {

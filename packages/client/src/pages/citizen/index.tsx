@@ -9,8 +9,9 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "src/hooks/useModal";
+import { useModal } from "context/ModalContext";
 import { RegisterVehicleModal } from "components/citizen/RegisterVehicleModal";
+import { RegisterWeaponModal } from "components/citizen/RegisterWeaponModal";
 
 interface Props {
   citizens: Citizen[];
@@ -86,6 +87,12 @@ export default function CitizenPage({ citizens }: Props) {
         citizens={citizens}
         vehicle={null}
       />
+
+      <RegisterWeaponModal
+        onCreate={() => closeModal(ModalIds.RegisterWeapon)}
+        citizens={citizens}
+        weapon={null}
+      />
     </Layout>
   );
 }
@@ -105,7 +112,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
       citizens: data ?? [],
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["citizen"], locale)),
+        ...(await getTranslations(["citizen", "common"], locale)),
       },
     },
   };

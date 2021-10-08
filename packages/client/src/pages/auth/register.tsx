@@ -14,6 +14,7 @@ import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import { GetStaticProps } from "next";
 import { getTranslations } from "lib/getTranslation";
+import { Button } from "components/Button";
 
 const INITIAL_VALUES = {
   username: "",
@@ -100,13 +101,13 @@ export default function Register() {
                   <a className="underline inline-block mb-3">{t("hasAccount")}</a>
                 </Link>
 
-                <button
+                <Button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="flex items-center justify-center w-full py-1.5"
                 >
-                  {state === "loading" ? <Loader className="bg-gray-300" /> : null} {t("register")}
-                </button>
+                  {state === "loading" ? <Loader className="mr-3" /> : null} {t("register")}
+                </Button>
               </div>
             </form>
           )}

@@ -13,3 +13,16 @@ export const CREATE_CITIZEN_SCHEMA = (isServer: boolean = false) =>
     eyeColor: z.string().min(2).max(255),
     address: z.string().min(2).max(255),
   });
+
+export const VEHICLE_SCHEMA = z.object({
+  model: z.string().min(2),
+  color: z.string().min(2).max(255),
+  registrationStatus: z.string().min(2).max(255),
+  citizenId: z.string().min(2).max(255),
+});
+
+export const WEAPON_SCHEMA = z.object({
+  model: z.string().min(2),
+  registrationStatus: z.string().min(2).max(255),
+  citizenId: z.string().min(2).max(255),
+});

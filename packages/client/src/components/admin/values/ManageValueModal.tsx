@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { useModal } from "src/hooks/useModal";
+import { useModal } from "context/ModalContext";
 import { Value, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 

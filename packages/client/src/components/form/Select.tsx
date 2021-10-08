@@ -74,7 +74,7 @@ export const Select = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options className="absolute z-20 w-full p-1 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
+          <Listbox.Options className="absolute z-20 w-full p-1.5 px-0 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
             {values.map((value, idx) => (
               <Listbox.Option
                 key={idx}
@@ -82,7 +82,7 @@ export const Select = ({
                 className={({ active }) =>
                   `${
                     active ? "bg-gray-400" : "text-gray-900"
-                  } cursor-default select-none relative p-1 px-4 rounded-md`
+                  } cursor-default select-none relative p-1 px-4`
                 }
               >
                 {({ selected }) => (
