@@ -1,5 +1,14 @@
 {
+    "Management": {
+        "management": "Management",
+        "MANAGE_CITIZENS": "Manage Citizens",
+        "MANAGE_COMPANIES": "Manage Companies",
+        "viewInfo": "View Info",
+        "noCitizens": "There are no citizens for this CAD yet.",
+        "user": "User"
+    },
     "Values": {
+        "values": "Values",
         "MANAGE_GENDER": "Manage Genders",
         "MANAGE_WEAPON": "Manage Weapons",
         "MANAGE_VEHICLE": "Manage Vehicles",

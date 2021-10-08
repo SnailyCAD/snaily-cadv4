@@ -10,6 +10,7 @@ const rootDir = __dirname;
   rootDir,
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
+    "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
   },
   statics: {
     "/statics": [

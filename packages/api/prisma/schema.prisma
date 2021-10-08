@@ -23,24 +23,26 @@ model cad {
 }
 
 model User {
-  id              String              @id @default(cuid())
-  username        String              @unique @db.VarChar(255)
-  password        String              @db.Text
-  rank            Rank                @default(USER)
-  isLeo           Boolean             @default(false)
-  isSupervisor    Boolean             @default(false)
-  isEmsFd         Boolean             @default(false)
-  isDispatch      Boolean             @default(false)
-  isTow           Boolean             @default(false)
-  banned          Boolean             @default(false)
-  banReason       Boolean?
-  avatarUrl       String?             @db.Text
-  steamId         String?             @db.VarChar(255)
-  whitelistStatus WhitelistStatus     @default(ACCEPTED)
-  citizens        Citizen[]
-  cads            cad[]
-  vehicles        RegisteredVehicle[]
-  weapons         Weapon[]
+  id                   String              @id @default(cuid())
+  username             String              @unique @db.VarChar(255)
+  password             String              @db.Text
+  rank                 Rank                @default(USER)
+  isLeo                Boolean             @default(false)
+  isSupervisor         Boolean             @default(false)
+  isEmsFd              Boolean             @default(false)
+  isDispatch           Boolean             @default(false)
+  isTow                Boolean             @default(false)
+  banned               Boolean             @default(false)
+  banReason            Boolean?
+  avatarUrl            String?             @db.Text
+  steamId              String?             @db.VarChar(255)
+  whitelistStatus      WhitelistStatus     @default(ACCEPTED)
+  citizens             Citizen[]
+  cads                 cad[]
+  vehicles             RegisteredVehicle[]
+  weapons              Weapon[]
+  notifications        Notification[]
+  executedNotifictions Notification[]      @relation("executor")
 }
 
 model Citizen {
@@ -124,4 +126,15 @@ enum ValueType {
   VEHICLE
   WEAPON
   BLOOD_GROUP
+}
+
+// notifications
+model Notification {
+  id          String @id @default(uuid())
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String
+  executor    User   @relation("executor", fields: [executorId], references: [id])
+  executorId  String
+  title       String
+  description String
 }

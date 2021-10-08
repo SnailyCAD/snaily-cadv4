@@ -21,13 +21,13 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   const handleGetUser = React.useCallback(async () => {
     getSessionUser().then((u) => {
-      if (!u) {
+      if (!u && !router.asPath.includes("/auth")) {
         router.push("/auth/login");
       }
 
       setUser(u);
     });
-  }, []);
+  }, [router.pathname]);
 
   React.useEffect(() => {
     handleGetUser();

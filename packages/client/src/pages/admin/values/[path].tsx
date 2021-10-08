@@ -12,6 +12,7 @@ import { Value, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
+import { AdminLayout } from "components/admin/AdminLayout";
 
 interface Props {
   values: { type: ValueType; values: Value[] };
@@ -56,6 +57,10 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   }
 
   React.useEffect(() => {
+    setValues(data);
+  }, [data]);
+
+  React.useEffect(() => {
     // reset form values
     if (!isOpen("manageValue") && !isOpen("deleteValue")) {
       // timeout: wait for modal to close
@@ -72,13 +77,13 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   }
 
   return (
-    <Layout>
+    <AdminLayout>
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t(`MANAGE_${type}`)}</h1>
         <Button onClick={() => openModal("manageValue")}>{t(`CREATE_${type}`)}</Button>
       </header>
       {values.length <= 0 ? (
-        <p>There are no values yet for this type.</p>
+        <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <ul className="mt-5">
           {values.map((value, idx) => (
@@ -152,13 +157,15 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
         value={tempValue}
         type={type}
       />
-    </Layout>
+    </AdminLayout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = query.path;
-  const { data: values = [] } = await handleRequest(`/admin/values/${path}`).catch(() => ({
+  const { data: values = [] } = await handleRequest(`/admin/values/${path}`, {
+    headers: req.headers,
+  }).catch(() => ({
     data: null,
   }));
 
@@ -167,7 +174,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
       values: values?.[0] ?? {},
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["values", "common"], locale)),
+        ...(await getTranslations(["admin", "common"], locale)),
       },
     },
   };

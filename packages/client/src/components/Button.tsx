@@ -1,3 +1,4 @@
+import * as React from "react";
 import { classNames } from "lib/classNames";
 
 type Props = JSX.IntrinsicElements["button"] & {
@@ -13,18 +14,19 @@ const variants = {
   success: "bg-green-500 hover:bg-green-500 text-white",
 };
 
-export const Button = ({ className, variant = "default", ...rest }: Props) => {
-  return (
+export const Button = React.forwardRef<HTMLButtonElement, Props>(
+  ({ variant = "default", className = "", ...rest }, ref) => (
     <button
       className={classNames(
         `
-        p-1 px-4
-      rounded-md transition-all
-        disabled:opacity-60 disabled:cursor-not-allowed`,
+    p-1 px-4
+  rounded-md transition-all
+    disabled:opacity-60 disabled:cursor-not-allowed`,
         variant && variants[variant],
         className,
       )}
       {...rest}
+      ref={ref}
     />
-  );
-};
+  ),
+);
