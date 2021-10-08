@@ -7,6 +7,10 @@ import { getSessionUser } from "lib/auth";
 import Head from "next/head";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
+import { Button } from "components/Button";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "src/hooks/useModal";
+import { RegisterVehicleModal } from "components/citizen/RegisterVehicleModal";
 
 interface Props {
   citizens: Citizen[];
@@ -14,6 +18,7 @@ interface Props {
 
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
+  const { openModal } = useModal();
 
   return (
     <Layout>
@@ -29,12 +34,12 @@ export default function CitizenPage({ citizens }: Props) {
             {t("createCitizen")}
           </a>
         </Link>
-        <button className="text-left py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
+        <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
           {t("registerVehicle")}
-        </button>
-        <button className="text-left py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
+        </Button>
+        <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
           {t("registerWeapon")}
-        </button>
+        </Button>
       </ul>
 
       <ul
@@ -75,6 +80,8 @@ export default function CitizenPage({ citizens }: Props) {
           ))
         )}
       </ul>
+
+      <RegisterVehicleModal vehicle={null} />
     </Layout>
   );
 }

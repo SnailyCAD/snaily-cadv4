@@ -22,5 +22,10 @@
         "dateOfBirth": "Date of Birth",
         "image": "Image",
         "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone!"
+    },
+    "Vehicles": {
+        "model": "Model",
+        "registrationStatus": "Registration Status",
+        "insuranceStatus": "Insurance Status"
     }
 }

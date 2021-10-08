@@ -6,10 +6,11 @@ interface Props {
   title: string;
   children: React.ReactNode;
   isOpen: boolean;
+  minWidth?: string;
   onClose: () => void;
 }
 
-export const Modal = ({ title, children, isOpen, onClose }: Props) => {
+export const Modal = ({ title, children, isOpen, minWidth: width, onClose }: Props) => {
   return (
     <Transition
       show={isOpen}
@@ -35,7 +36,9 @@ export const Modal = ({ title, children, isOpen, onClose }: Props) => {
             &#8203;
           </span>
 
-          <div className="inline-block p-4 px-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+          <div
+            className={`inline-block p-4 px-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${width}`}
+          >
             <Dialog.Title
               as="h3"
               className="text-xl font-semibold text-gray-900 flex items-center justify-between mb-2"

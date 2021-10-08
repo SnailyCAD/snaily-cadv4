@@ -253,15 +253,13 @@ export default function CreateCitizen({ values }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   // todo: update when needed, only gender and ethnicity are needed rn.
-  const { data: values } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
+  const { data: values = [] } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
     () => ({ data: null }),
   );
 
-  console.log(values);
-
   return {
     props: {
-      values: values ?? [],
+      values,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "common"], locale)),

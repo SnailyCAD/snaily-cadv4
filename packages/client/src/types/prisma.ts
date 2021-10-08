@@ -61,6 +61,35 @@ export type Citizen = {
 };
 
 /**
+ * Model RegisteredVehicle
+ */
+
+export type RegisteredVehicle = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  vinNumber: string;
+  model: string;
+  color: string;
+  createdAt: Date;
+  registrationStatus: string;
+  insuranceStatus: string;
+};
+
+/**
+ * Model Weapon
+ */
+
+export type Weapon = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  serialNumber: string;
+  registrationStatus: string;
+  model: string;
+};
+
+/**
  * Model Value
  */
 

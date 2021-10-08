@@ -1,6 +1,14 @@
 import * as React from "react";
 
-export function useModal() {
+interface Context {
+  isOpen: (id: string) => boolean;
+  closeModal: (id: string) => void;
+  openModal: (id: string) => void;
+}
+
+const ModalContext = React.createContext<Context | undefined>(undefined);
+
+export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState<string[]>([]);
 
   function isOpen(id: string) {
@@ -19,9 +27,21 @@ export function useModal() {
     setOpen((p) => p.filter((v) => v !== id));
   }
 
-  return {
+  const value = {
     isOpen,
     openModal,
     closeModal,
   };
+
+  return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
+}
+
+export function useModal() {
+  const context = React.useContext(ModalContext);
+
+  if (!context) {
+    throw new Error("`useModal` must be used within a `ModalProvider`");
+  }
+
+  return context;
 }

@@ -9,7 +9,7 @@ import {
   BodyParams,
   QueryParams,
 } from "@tsed/common";
-import { JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
 import { ValidPath } from "@snailycad/config";
 import { prisma } from "../../lib/prisma";
 import { IsAdmin } from "../../middlewares/Permissions";
@@ -67,6 +67,39 @@ export class ValuesController {
     });
 
     return value;
+  }
+
+  @UseBefore(IsAdmin)
+  @Delete("/:id")
+  async deleteValueByPathAndId(@PathParams("id") id: string) {
+    await prisma.value.delete({
+      where: {
+        id,
+      },
+    });
+
+    return true;
+  }
+
+  @UseBefore(IsAdmin)
+  @Patch("/:id")
+  async patchValueByPathAndId(@BodyParams() body: JsonRequestBody, @PathParams("id") id: string) {
+    const error = validate(VALUE_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      return { error };
+    }
+
+    const updated = await prisma.value.update({
+      where: {
+        id,
+      },
+      data: {
+        value: body.get("value"),
+      },
+    });
+
+    return updated;
   }
 
   private getTypeFromPath(path: ValidPath): ValueType {
