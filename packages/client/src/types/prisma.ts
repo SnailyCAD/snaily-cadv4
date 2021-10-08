@@ -91,6 +91,18 @@ export type Weapon = {
 };
 
 /**
+ * Model MedicalRecord
+ */
+
+export type MedicalRecord = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  type: string;
+  description: string;
+};
+
+/**
  * Model Value
  */
 

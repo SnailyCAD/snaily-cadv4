@@ -5,5 +5,16 @@
   "workspaces": [
     "packages/**"
   ],
-  "license": "MIT"
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
+      "lint": "eslint . --ext .ts,.js,.tsx,.jsx"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@casper124578/eslint-config": "^1.0.0",
+    "@casper124578/eslint-config-next": "^0.1.1",
+    "@casper124578/eslint-config-react": "^0.1.2",
+    "eslint": "^7.32.0",
+    "prettier": "^2.4.1"
+  }
 }

@@ -3,6 +3,9 @@
         "delete": "Delete",
         "edit": "Edit",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "actions": "Actions",
+        "type": "Type",
+        "description": "Description"
     }
 }

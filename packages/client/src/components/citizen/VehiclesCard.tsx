@@ -4,9 +4,12 @@ import { RegisteredVehicle } from "types/prisma";
 import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { useTranslations } from "use-intl";
 
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
+  const common = useTranslations("common");
+  const t= useTranslations("Vehicle")
 
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
@@ -15,24 +18,24 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
     <>
       <div className="bg-gray-200/60 p-4 rounded-md">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Your vehicles</h1>
+          <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
           <Button onClick={() => openModal(ModalIds.RegisterVehicle)} small>
-            Add vehicle
+            {t("addVehicle")}
           </Button>
         </header>
 
         {vehicles.length <= 0 ? (
-          <p className="text-gray-600">You do not have any vehicles registered yet.</p>
+          <p className="text-gray-600">{t("noVehicles")}</p>
         ) : (
           <table className="table max-h-64 mt-5">
             <thead>
               <tr>
-                <th>Plate</th>
-                <th>Model</th>
-                <th>Color</th>
-                <th>Registration Status</th>
-                <th>Actions</th>
+                <th>{t("plate")}</th>
+                <th>{t("model")}</th>
+                <th>{t("color")}</th>
+                <th>{t("registrationStatus")}</th>
+                <th>{common("actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -44,7 +47,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                   <td>{vehicle.registrationStatus}</td>
                   <td>
                     <Button small variant="danger">
-                      Delete
+                      {common("delete")}
                     </Button>
                   </td>
                 </tr>

@@ -17,6 +17,7 @@ import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
 import { LicensesCard } from "components/citizen/LicensesCard";
+import { MedicalRecords } from "components/citizen/MedicalRecords";
 
 type CitizenWithVehAndWep = Citizen & { weapons: Weapon[]; vehicles: RegisteredVehicle[] };
 
@@ -125,6 +126,7 @@ export default function CitizenId({ citizen }: Props) {
 
       <div className="mt-3 gap-2 grid grid-cols-1 md:grid-cols-2">
         <LicensesCard citizen={citizen} />
+        <MedicalRecords medicalRecords={[]} />
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
       </div>

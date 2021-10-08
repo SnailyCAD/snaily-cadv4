@@ -33,6 +33,14 @@
         "insuranceStatus": "Insurance Status",
         "owner": "Owner",
         "color": "Color",
-        "plate": "Plate"
+        "plate": "Plate",
+        "yourVehicles": "Your Vehicles",
+        "addVehicle": "Add Vehicle",
+        "noVehicles": "You do not have any vehicles registered yet."
+    },
+    "MedicalRecords": {
+        "yourMedicalRecords": "Your medical records",
+        "addMedicalRecord": "Add Medical Record",
+        "noMedicalRecords": "You do not have any medical records yet."
     }
 }

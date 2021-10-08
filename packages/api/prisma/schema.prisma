@@ -43,6 +43,7 @@ model User {
   weapons              Weapon[]
   notifications        Notification[]
   executedNotifictions Notification[]      @relation("executor")
+  medicalRecords       MedicalRecord[]
 }
 
 model Citizen {
@@ -69,6 +70,7 @@ model Citizen {
   dateOfDead     DateTime?
   vehicles       RegisteredVehicle[]
   weapons        Weapon[]
+  medicalRecords MedicalRecord[]
 }
 
 enum Rank {
@@ -109,6 +111,17 @@ model Weapon {
   serialNumber       String @unique @db.VarChar(255)
   registrationStatus String @db.VarChar(255)
   model              String @db.VarChar(255)
+}
+
+model MedicalRecord {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  citizen   Citizen @relation(fields: [citizenId], references: [id])
+  citizenId String
+
+  type        String @db.VarChar(255)
+  description String @db.Text
 }
 
 // admin values
