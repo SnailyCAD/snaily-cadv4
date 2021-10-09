@@ -1,5 +1,7 @@
+import { useAuth } from "context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { rank } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 const management = ["USERS", "CITIZENS", "COMPANIES"];
@@ -9,6 +11,7 @@ export const AdminSidebar = () => {
   const t = useTranslations("Values");
   const man = useTranslations("Management");
   const router = useRouter();
+  const { user } = useAuth();
 
   const isMActive = (path: string) => {
     return router.pathname === path;
@@ -40,6 +43,20 @@ export const AdminSidebar = () => {
                 </Link>
               </li>
             ))}
+
+            {user?.rank === rank.OWNER ? (
+              <li className="px-2">
+                <Link href={"/admin/manage/cad-settings"}>
+                  <a
+                    className={`transition-colors rounded-md block px-4 py-1.5 hover:bg-gray-300 ${
+                      isMActive("/admin/manage/cad-settings") && "bg-gray-300"
+                    }`}
+                  >
+                    {man("MANAGE_CAD_SETTINGS")}
+                  </a>
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </section>
 

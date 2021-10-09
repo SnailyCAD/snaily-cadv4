@@ -21,6 +21,7 @@ import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
 import { makeImageUrl } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 export default function CitizenId() {
   const { execute, state } = useFetch();
@@ -28,7 +29,8 @@ export default function CitizenId() {
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const router = useRouter();
-  const { citizen } = useCitizen();
+  const { citizen, setCurrentCitizen } = useCitizen();
+  const fileRef = React.useRef<HTMLInputElement>(null);
 
   async function handleDelete() {
     if (!citizen) return;
@@ -40,6 +42,42 @@ export default function CitizenId() {
       closeModal("deleteCitizen");
       router.push("/citizen");
     }
+  }
+
+  function handleEditImageClick() {
+    if (fileRef.current) {
+      fileRef.current.click();
+    }
+  }
+
+  async function onImageSelectClick(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.files);
+    const file = e.target.files?.item(0) ?? null;
+    const fd = new FormData();
+
+    if (!file) return;
+    if (!citizen) return;
+
+    if (!allowedFileExtensions.includes(file.type as AllowedFileExtension)) {
+      return;
+      // todo: add alert here
+      // helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+    }
+
+    fd.append("image", file, file.name);
+
+    const { json } = await execute(`/citizen/${citizen.id}`, {
+      method: "POST",
+      data: fd,
+    });
+
+    if (json.imageId) {
+      // `v` is to update the state. imageId will 80% be the same
+      const v = Math.floor(Math.random() * 100);
+      setCurrentCitizen({ ...citizen, imageId: `${json.imageId}?v=${v}` });
+    }
+
+    // todo: add alert
   }
 
   React.useEffect(() => {
@@ -145,11 +183,16 @@ export default function CitizenId() {
       >
         <div className="mt-10 flex items-center justify-center">
           <img
+            draggable={false}
             className="rounded-full w-[30em] h-[30em]"
-            src={`http://localhost:8080/citizens/${citizen.imageId}`}
+            src={makeImageUrl("citizens", citizen.imageId!)}
           />
         </div>
-        {/* todo: add ability to edit image from here */}
+
+        <div className="mt-5 flex justify-center w-full">
+          <input onChange={onImageSelectClick} className="hidden" type="file" ref={fileRef} />
+          <Button onClick={handleEditImageClick}>Edit Image</Button>
+        </div>
       </Modal>
 
       <Modal

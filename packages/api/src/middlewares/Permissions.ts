@@ -16,3 +16,18 @@ export class IsAdmin implements MiddlewareMethods {
     }
   }
 }
+
+@Middleware()
+export class IsOwner implements MiddlewareMethods {
+  async use(@Req() req: Req) {
+    const user = await getSessionUser(req);
+
+    if (!user) {
+      throw new Forbidden("Invalid Permissions");
+    }
+
+    if (user.rank !== "OWNER") {
+      throw new Forbidden("Invalid Permissions");
+    }
+  }
+}

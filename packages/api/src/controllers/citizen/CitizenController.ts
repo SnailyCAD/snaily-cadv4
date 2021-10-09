@@ -128,15 +128,18 @@ export class CitizenController {
 
     await fs.writeFileSync(path, file.buffer);
 
-    await prisma.citizen.update({
+    const data = await prisma.citizen.update({
       where: {
         id: citizenId,
       },
       data: {
         imageId: `${citizen.id}.${extension}`,
       },
+      select: {
+        imageId: true,
+      },
     });
 
-    return true;
+    return data;
   }
 }

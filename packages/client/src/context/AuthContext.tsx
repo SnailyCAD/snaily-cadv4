@@ -2,11 +2,14 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
-import { User } from "types/prisma";
+import { cad as CAD, User } from "types/prisma";
 
 interface Context {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+
+  cad: CAD | null;
+  setCad: React.Dispatch<React.SetStateAction<CAD | null>>;
 }
 
 const AuthContext = React.createContext<Context | undefined>(undefined);
@@ -17,7 +20,8 @@ interface ProviderProps {
 }
 
 export const AuthProvider = ({ initialData, children }: ProviderProps) => {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
+  const [cad, setCad] = React.useState<CAD | null>(null);
   const router = useRouter();
 
   const handleGetUser = React.useCallback(async () => {
@@ -39,10 +43,15 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   React.useEffect(() => {
     if (initialData.session) {
       setUser(initialData.session);
+
+      if ("cad" in initialData.session) {
+        // @ts-expect-error ignore
+        setCad(initialData.session.cad);
+      }
     }
   }, [initialData.session]);
 
-  const value = { user, setUser };
+  const value = { user, cad, setCad, setUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

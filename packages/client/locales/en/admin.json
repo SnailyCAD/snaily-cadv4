@@ -4,6 +4,7 @@
     "MANAGE_CITIZENS": "Manage Citizens",
     "MANAGE_COMPANIES": "Manage Companies",
     "MANAGE_USERS": "Manage Users",
+    "MANAGE_CAD_SETTINGS": "CAD Settings",
     "viewInfo": "View Info",
     "noCitizens": "There are no citizens for this CAD yet.",
     "user": "User"

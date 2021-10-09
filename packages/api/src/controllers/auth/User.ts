@@ -12,7 +12,7 @@ import { setCookie } from "../../utils/setCookie";
 export class AccountController {
   @Post("/")
   async getAuthUser(@Context() ctx: Context) {
-    return ctx.get("user");
+    return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
   }
 
   @Patch("/")
