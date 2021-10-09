@@ -1,13 +1,17 @@
 import * as React from "react";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
+import toast from "react-hot-toast";
+import { useTranslations } from "use-intl";
 
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
+export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
 export default function useFetch(
   { overwriteState }: { overwriteState: State | null } = { overwriteState: null },
 ) {
+  const t = useTranslations("Errors");
   const [state, setState] = React.useState<State | null>(null);
   const abortController = React.useRef<NullableAbortController>(null);
 
@@ -15,34 +19,36 @@ export default function useFetch(
     setState(overwriteState);
   }, [overwriteState]);
 
-  const execute = async (
-    path: string,
-    options: AxiosRequestConfig,
-  ): Promise<{
-    response: AxiosResponse<any>;
-    json: any;
-  }> => {
-    let response;
-    abortController.current = new AbortController();
+  const execute = async (path: string, options: AxiosRequestConfig) => {
     setState("loading");
+    abortController.current = new AbortController();
 
-    try {
-      response = await handleRequest(path, {
-        ...(options as any),
+    const response = await toast
+      .promise(
+        handleRequest(path, {
+          ...{ ...(options as any), signal: abortController.current.signal },
+        }),
+        {
+          error: (res) => {
+            const error = parseError(res as AxiosError);
+
+            return t(error);
+          },
+          loading: null,
+          success: null,
+        },
+      )
+      .catch((e) => {
+        setState("error");
+        return e;
       });
-    } catch (error) {
-      setState("error");
-      return Promise.reject({
-        error,
-      });
-    }
 
     setState(null);
 
-    return Promise.resolve({
-      response,
-      json: response.data,
-    });
+    return {
+      json: response?.data ?? {},
+      error: response instanceof Error ? parseError(response as AxiosError) : null,
+    };
   };
 
   React.useEffect(() => {
@@ -54,4 +60,8 @@ export default function useFetch(
   }, []);
 
   return { execute, state };
+}
+
+function parseError(error: AxiosError<any>): ErrorMessage | "unknown" {
+  return error.response?.data?.message ?? "unknown";
 }

@@ -30,7 +30,7 @@ export class LicensesController {
     });
 
     if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("Citizen not found");
+      throw new NotFound("notFound");
     }
 
     const updated = await prisma.citizen.update({

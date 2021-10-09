@@ -30,21 +30,16 @@ export class AuthController {
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {
-      return {
-        error: "whitelist_pending",
-      };
+      throw new BadRequest("whitelistPending");
     }
 
     if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-      return {
-        error: "whitelist_declined",
-      };
+      throw new BadRequest("whitelistDeclined");
     }
 
     const isPasswordCorrect = compareSync(body.get("password"), user.password);
-
     if (!isPasswordCorrect) {
-      throw new BadRequest("Password is incorrect");
+      throw new BadRequest("passwordIncorrect");
     }
 
     const jwtToken = signJWT({ userId: user.id }, 60 * 60);
@@ -72,7 +67,7 @@ export class AuthController {
     });
 
     if (existing) {
-      throw new BadRequest("User already exists with that username");
+      throw new BadRequest("userAlreadyExists");
     }
 
     const userCount = await prisma.user.count();
@@ -116,9 +111,7 @@ export class AuthController {
     });
 
     if (extraUserData.rank === Rank.USER && cad.whitelisted) {
-      return {
-        error: "cad_whitelisted_pending",
-      };
+      throw new BadRequest("whitelistPending");
     }
 
     const jwtToken = signJWT({ userId: user.id }, 60 * 60);

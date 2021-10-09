@@ -66,31 +66,20 @@ export default function CreateCitizen({ values }: Props) {
       }
     }
 
-    console.log({ values });
-    console.log(fd?.get("image"));
-
     const { json } = await execute("/citizen", {
       method: "POST",
       data: values,
     });
 
     if (json?.id) {
-      const uploadRes = await execute(`/citizen/${json.id}`, {
+      await execute(`/citizen/${json.id}`, {
         method: "POST",
         data: fd,
-      }).catch(() => null);
-
-      if (!uploadRes?.json) {
-        // todo: alert here that something failed; but continue
-      }
+      });
 
       const path = `/citizen/${json.id}`;
       router.push(path);
-
-      return;
     }
-
-    // todo: add error alert
   }
 
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA());

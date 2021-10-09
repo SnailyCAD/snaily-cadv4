@@ -37,7 +37,7 @@ export class VehiclesController {
     });
 
     if (existing) {
-      throw new BadRequest("Vehicle with that plate already exists");
+      throw new BadRequest("plateAlreadyInUse");
     }
 
     const vehicle = await prisma.registeredVehicle.create({
@@ -76,7 +76,7 @@ export class VehiclesController {
     });
 
     if (!vehicle || vehicle.userId !== ctx.get("user").id) {
-      throw new NotFound("Vehicle not found");
+      throw new NotFound("notFound");
     }
 
     const updated = await prisma.registeredVehicle.update({
@@ -102,7 +102,7 @@ export class VehiclesController {
     });
 
     if (!vehicle || vehicle.userId !== ctx.get("user").id) {
-      throw new NotFound("Vehicle not found");
+      throw new NotFound("notFound");
     }
 
     await prisma.registeredVehicle.delete({

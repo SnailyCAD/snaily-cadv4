@@ -55,36 +55,38 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
         {weapons.length <= 0 ? (
           <p className="text-gray-600">{t("noWeapons")}</p>
         ) : (
-          <table className="table max-h-64 mt-3">
-            <thead>
-              <tr>
-                <th>{t("model")}</th>
-                <th>{t("registrationStatus")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {weapons.map((weapon) => (
-                <tr key={weapon.id}>
-                  <td>{weapon.model}</td>
-                  <td>{weapon.registrationStatus}</td>
-                  <td>
-                    <Button onClick={() => handleEditClick(weapon)} small variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      className="ml-2"
-                      onClick={() => handleDeleteClick(weapon)}
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
+          <div className="overflow-x-auto w-full">
+            <table className="table-auto max-h-64 mt-3">
+              <thead>
+                <tr>
+                  <th>{t("model")}</th>
+                  <th>{t("registrationStatus")}</th>
+                  <th>{common("actions")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {weapons.map((weapon) => (
+                  <tr key={weapon.id}>
+                    <td>{weapon.model}</td>
+                    <td>{weapon.registrationStatus}</td>
+                    <td className="w-[30%]">
+                      <Button onClick={() => handleEditClick(weapon)} small variant="success">
+                        {common("edit")}
+                      </Button>
+                      <Button
+                        className="ml-2"
+                        onClick={() => handleDeleteClick(weapon)}
+                        small
+                        variant="danger"
+                      >
+                        {common("delete")}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

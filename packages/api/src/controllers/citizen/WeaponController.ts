@@ -62,7 +62,7 @@ export class WeaponController {
     });
 
     if (!weapon || weapon.userId !== ctx.get("user").id) {
-      throw new NotFound("Weapon not found");
+      throw new NotFound("notFound");
     }
 
     const updated = await prisma.weapon.update({
@@ -87,7 +87,7 @@ export class WeaponController {
     });
 
     if (!weapon || weapon.userId !== ctx.get("user").id) {
-      throw new NotFound("Weapon not found");
+      throw new NotFound("notFound");
     }
 
     await prisma.weapon.delete({

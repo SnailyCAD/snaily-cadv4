@@ -83,7 +83,7 @@ export class CitizenController {
     });
 
     if (existing) {
-      throw new BadRequest("Name has already been taken.");
+      throw new BadRequest("nameAlreadyTaken");
     }
 
     const citizen = await prisma.citizen.create({

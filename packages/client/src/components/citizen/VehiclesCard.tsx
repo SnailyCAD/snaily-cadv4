@@ -55,40 +55,42 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
         {vehicles.length <= 0 ? (
           <p className="text-gray-600">{t("noVehicles")}</p>
         ) : (
-          <table className="table max-h-64 mt-5">
-            <thead>
-              <tr>
-                <th>{t("plate")}</th>
-                <th>{t("model")}</th>
-                <th>{t("color")}</th>
-                <th>{t("registrationStatus")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vehicles.map((vehicle) => (
-                <tr key={vehicle.id}>
-                  <td>{vehicle.plate.toUpperCase()}</td>
-                  <td>{vehicle.model}</td>
-                  <td>{vehicle.color}</td>
-                  <td>{vehicle.registrationStatus}</td>
-                  <td>
-                    <Button onClick={() => handleEditClick(vehicle)} small variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      className="ml-2"
-                      onClick={() => handleDeleteClick(vehicle)}
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
+          <div className="overflow-x-auto w-full mt-3">
+            <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
+              <thead>
+                <tr>
+                  <th>{t("plate")}</th>
+                  <th>{t("model")}</th>
+                  <th>{t("color")}</th>
+                  <th>{t("registrationStatus")}</th>
+                  <th>{common("actions")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {vehicles.map((vehicle) => (
+                  <tr key={vehicle.id}>
+                    <td>{vehicle.plate.toUpperCase()}</td>
+                    <td>{vehicle.model}</td>
+                    <td>{vehicle.color}</td>
+                    <td>{vehicle.registrationStatus}</td>
+                    <td className="w-[30%]">
+                      <Button onClick={() => handleEditClick(vehicle)} small variant="success">
+                        {common("edit")}
+                      </Button>
+                      <Button
+                        className="ml-2"
+                        onClick={() => handleDeleteClick(vehicle)}
+                        small
+                        variant="danger"
+                      >
+                        {common("delete")}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
