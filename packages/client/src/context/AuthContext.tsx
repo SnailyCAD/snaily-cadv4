@@ -9,7 +9,7 @@ interface Context {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-const SettingsContext = React.createContext<Context | undefined>(undefined);
+const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
@@ -44,11 +44,11 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   const value = { user, setUser };
 
-  return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export function useAuth() {
-  const context = React.useContext(SettingsContext);
+  const context = React.useContext(AuthContext);
   if (typeof context === "undefined") {
     throw new Error("`useAuth` must be used within an `AuthProvider`");
   }

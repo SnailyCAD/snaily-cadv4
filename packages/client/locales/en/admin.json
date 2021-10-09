@@ -3,6 +3,7 @@
     "management": "Management",
     "MANAGE_CITIZENS": "Manage Citizens",
     "MANAGE_COMPANIES": "Manage Companies",
+    "MANAGE_USERS": "Manage Users",
     "viewInfo": "View Info",
     "noCitizens": "There are no citizens for this CAD yet.",
     "user": "User"

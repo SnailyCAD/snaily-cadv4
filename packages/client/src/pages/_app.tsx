@@ -4,6 +4,7 @@ import "styles/globals.scss";
 import { NextIntlProvider } from "next-intl";
 import { ModalProvider } from "context/ModalContext";
 import { ValuesProvider } from "src/context/ValuesContext";
+import { CitizenProvider } from "context/CitizenContext";
 
 export default function App({ Component, router, pageProps }: AppProps) {
   return (
@@ -11,7 +12,9 @@ export default function App({ Component, router, pageProps }: AppProps) {
       <NextIntlProvider locale={router.locale ?? "en"} messages={pageProps.messages}>
         <ModalProvider>
           <ValuesProvider initialData={pageProps}>
-            <Component {...pageProps} />
+            <CitizenProvider initialData={pageProps}>
+              <Component {...pageProps} />
+            </CitizenProvider>
           </ValuesProvider>
         </ModalProvider>
       </NextIntlProvider>

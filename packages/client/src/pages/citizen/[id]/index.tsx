@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
-import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
+import { PersonFill } from "react-bootstrap-icons";
+import { Citizen } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
@@ -18,27 +19,22 @@ import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
 import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
+import { makeImageUrl } from "lib/utils";
+import { useCitizen } from "context/CitizenContext";
 
-type CitizenWithVehAndWep = Citizen & { weapons: Weapon[]; vehicles: RegisteredVehicle[] };
-
-interface Props {
-  citizen: CitizenWithVehAndWep | null;
-}
-
-export default function CitizenId({ citizen }: Props) {
+export default function CitizenId() {
   const { execute, state } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const router = useRouter();
+  const { citizen } = useCitizen();
 
   async function handleDelete() {
     if (!citizen) return;
     const data = await execute(`/citizen/${citizen.id}`, {
       method: "DELETE",
     });
-
-    console.log({ data });
 
     if (data.json) {
       closeModal("deleteCitizen");
@@ -47,9 +43,15 @@ export default function CitizenId({ citizen }: Props) {
   }
 
   React.useEffect(() => {
-    if (!citizen) {
-      router.push("/404");
-    }
+    const timeout = setTimeout(() => {
+      if (!citizen?.id) {
+        router.push("/404");
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [router, citizen]);
 
   if (!citizen) {
@@ -66,12 +68,17 @@ export default function CitizenId({ citizen }: Props) {
 
       <div className="card bg-gray-200/60 p-4 rounded-md flex items-start justify-between">
         <div className="flex flex-col sm:flex-row items-start">
-          <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
-            <img
-              className="rounded-full w-[100px] h-[100px]"
-              src="https://qmusic.caspertheghost.me/_next/image?url=https%3A%2F%2Fstatic1.qmusic.medialaancdn.be%2Fweb_list%2Fitemlist_small_desktop%2F%2F3%2F92%2F6e%2F22%2F1488477%2F2d504b2dd9b3dbe79829de55c4923bd3.1000x1000x1.jpg&w=256&q=75"
-            />
-          </button>
+          {citizen.imageId ? (
+            <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
+              <img
+                className="rounded-full w-[100px] h-[100px]"
+                draggable={false}
+                src={makeImageUrl("citizens", citizen.imageId)}
+              />
+            </button>
+          ) : (
+            <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+          )}
 
           <div className="sm:ml-3 mt-2 sm:mt-0 flex flex-col">
             <p>
@@ -124,8 +131,8 @@ export default function CitizenId({ citizen }: Props) {
         </div>
       </div>
 
-      <div className="mt-3 gap-2 grid grid-cols-1 md:grid-cols-2">
-        <LicensesCard citizen={citizen} />
+      <div className="mt-3 gap-2 gap-y-3 grid grid-cols-1 md:grid-cols-2">
+        <LicensesCard />
         <MedicalRecords medicalRecords={[]} />
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
@@ -139,7 +146,7 @@ export default function CitizenId({ citizen }: Props) {
         <div className="mt-10 flex items-center justify-center">
           <img
             className="rounded-full w-[30em] h-[30em]"
-            src="https://qmusic.caspertheghost.me/_next/image?url=https%3A%2F%2Fstatic1.qmusic.medialaancdn.be%2Fweb_list%2Fitemlist_small_desktop%2F%2F3%2F92%2F6e%2F22%2F1488477%2F2d504b2dd9b3dbe79829de55c4923bd3.1000x1000x1.jpg&w=256&q=75"
+            src={`http://localhost:8080/citizens/${citizen.imageId}`}
           />
         </div>
         {/* todo: add ability to edit image from here */}

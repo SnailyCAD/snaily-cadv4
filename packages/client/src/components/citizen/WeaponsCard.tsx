@@ -4,33 +4,58 @@ import { Weapon } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { RegisterWeaponModal } from "./RegisterWeaponModal";
+import { useTranslations } from "use-intl";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 export const WeaponsCard = (props: { weapons: Weapon[] }) => {
   const { openModal, closeModal } = useModal();
+  const { state, execute } = useFetch();
+  const common = useTranslations("Common");
+  const t = useTranslations("Weapons");
 
   const [weapons, setWeapons] = React.useState<Weapon[]>(props.weapons);
   const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
+
+  async function handleDelete() {
+    if (!tempWeapon) return;
+
+    const { json } = await execute(`/weapons/${tempWeapon.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      setWeapons((p) => p.filter((v) => v.id !== tempWeapon.id));
+      setTempWeapon(null);
+      closeModal(ModalIds.AlertDeleteWeapon);
+    }
+  }
+
+  function handleDeleteClick(vehicle: Weapon) {
+    setTempWeapon(vehicle);
+    openModal(ModalIds.AlertDeleteWeapon);
+  }
 
   return (
     <>
       <div className="bg-gray-200/60 p-4 rounded-md">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Your weapons</h1>
+          <h1 className="text-2xl font-semibold">{t("yourWeapons")}</h1>
 
           <Button onClick={() => openModal(ModalIds.RegisterWeapon)} small>
-            Add weapon
+            {t("addWeapon")}
           </Button>
         </header>
 
         {weapons.length <= 0 ? (
-          <p className="text-gray-600">You do not have any weapons registered yet.</p>
+          <p className="text-gray-600">{t("noWeapons")}</p>
         ) : (
           <table className="table max-h-64 mt-3">
             <thead>
               <tr>
-                <th>Model</th>
-                <th>Registration Status</th>
-                <th>Actions</th>
+                <th>{t("model")}</th>
+                <th>{t("registrationStatus")}</th>
+                <th>{common("actions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -39,8 +64,8 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
                   <td>{weapon.model}</td>
                   <td>{weapon.registrationStatus}</td>
                   <td>
-                    <Button small variant="danger">
-                      Delete
+                    <Button onClick={() => handleDeleteClick(weapon)} small variant="danger">
+                      {common("delete")}
                     </Button>
                   </td>
                 </tr>
@@ -63,8 +88,18 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
           });
           closeModal(ModalIds.RegisterWeapon);
         }}
-        weapon={null}
+        weapon={tempWeapon}
         citizens={[]}
+      />
+
+      <AlertModal
+        className="min-w-[600px]"
+        title={t("deleteWeapon")}
+        id={ModalIds.AlertDeleteWeapon}
+        description={t("alert_deleteWeapon")}
+        onDeleteClick={handleDelete}
+        state={state}
+        onClose={() => setTempWeapon(null)}
       />
     </>
   );

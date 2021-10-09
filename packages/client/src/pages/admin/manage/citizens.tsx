@@ -1,6 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { Disclosure } from "@headlessui/react";
+import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -67,6 +68,10 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
   return (
     <AdminLayout>
+      <Head>
+        <title>{t("MANAGE_CITIZENS")}</title>
+      </Head>
+
       <h1 className="text-3xl font-semibold">{t("MANAGE_CITIZENS")}</h1>
 
       {citizens.length <= 0 ? (

@@ -26,3 +26,10 @@ export const WEAPON_SCHEMA = z.object({
   registrationStatus: z.string().min(2).max(255),
   citizenId: z.string().min(2).max(255),
 });
+
+export const LICENSE_SCHEMA = z.object({
+  driversLicense: z.string().min(2).max(255),
+  weaponLicense: z.string().min(2).max(255),
+  pilotLicense: z.string().min(2).max(255),
+  ccw: z.string().min(2).max(255),
+});

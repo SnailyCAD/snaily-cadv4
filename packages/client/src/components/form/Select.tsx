@@ -20,7 +20,7 @@ export const Select = ({
   values,
   value,
   isClearable,
-  disabled = true,
+  disabled = false,
   name,
   onChange,
 }: Props) => {
@@ -48,7 +48,9 @@ export const Select = ({
             w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200
             outline-none focus:border-gray-800
             hover:border-dark-gray cursor-default text-left z-0
-            transition-all ${hasError && "border-red-500"} `}
+            transition-all ${disabled && "cursor-not-allowed opacity-80"} ${
+            hasError && "border-red-500"
+          } `}
           disabled={disabled}
         >
           <span className="block truncate">{selected ? selected.label : "None"}</span>
@@ -68,32 +70,36 @@ export const Select = ({
             </span>
           ) : null}
         </Listbox.Button>
-        <Transition
-          as={React.Fragment}
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <Listbox.Options className="absolute z-20 w-full p-1.5 px-0 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
-            {values.map((value, idx) => (
-              <Listbox.Option
-                key={idx}
-                value={value}
-                className={({ active }) =>
-                  `${
-                    active ? "bg-gray-400" : "text-gray-900"
-                  } cursor-default select-none relative p-1 px-4`
-                }
-              >
-                {({ selected }) => (
-                  <span className={`${selected ? "font-semibold" : "font-normal"}  block truncate`}>
-                    {value.label}
-                  </span>
-                )}
-              </Listbox.Option>
-            ))}
-          </Listbox.Options>
-        </Transition>
+        {disabled ? null : (
+          <Transition
+            as={React.Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute z-20 w-full p-1.5 px-0 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
+              {values.map((value, idx) => (
+                <Listbox.Option
+                  key={idx}
+                  value={value}
+                  className={({ active }) =>
+                    `${
+                      active ? "bg-gray-400" : "text-gray-900"
+                    } cursor-default select-none relative p-1 px-4`
+                  }
+                >
+                  {({ selected }) => (
+                    <span
+                      className={`${selected ? "font-semibold" : "font-normal"}  block truncate`}
+                    >
+                      {value.label}
+                    </span>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
+        )}
       </div>
     </Listbox>
   );

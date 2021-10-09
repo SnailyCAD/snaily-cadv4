@@ -5,14 +5,36 @@ import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
-  const common = useTranslations("common");
-  const t = useTranslations("Vehicle");
+  const common = useTranslations("Common");
+  const t = useTranslations("Vehicles");
+  const { state, execute } = useFetch();
 
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
+
+  async function handleDelete() {
+    if (!tempVehicle) return;
+
+    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      setVehicles((p) => p.filter((v) => v.id !== tempVehicle.id));
+      setTempVehicle(null);
+      closeModal(ModalIds.AlertDeleteVehicle);
+    }
+  }
+
+  function handleDeleteClick(vehicle: RegisteredVehicle) {
+    setTempVehicle(vehicle);
+    openModal(ModalIds.AlertDeleteVehicle);
+  }
 
   return (
     <>
@@ -46,7 +68,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                   <td>{vehicle.color}</td>
                   <td>{vehicle.registrationStatus}</td>
                   <td>
-                    <Button small variant="danger">
+                    <Button onClick={() => handleDeleteClick(vehicle)} small variant="danger">
                       {common("delete")}
                     </Button>
                   </td>
@@ -59,7 +81,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
 
       <RegisterVehicleModal
         onCreate={(weapon) => {
-          closeModal(ModalIds.RegisterWeapon);
+          closeModal(ModalIds.RegisterVehicle);
           setVehicles((p) => [...p, weapon]);
         }}
         onUpdate={(old, newW) => {
@@ -68,11 +90,20 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
             p[idx] = newW;
             return p;
           });
-          closeModal(ModalIds.RegisterWeapon);
+          closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
-        // todo
         citizens={[]}
+      />
+
+      <AlertModal
+        className="min-w-[600px]"
+        title={t("deleteVehicle")}
+        id={ModalIds.AlertDeleteVehicle}
+        description={t("alert_deleteVehicle")}
+        onDeleteClick={handleDelete}
+        state={state}
+        onClose={() => setTempVehicle(null)}
       />
     </>
   );

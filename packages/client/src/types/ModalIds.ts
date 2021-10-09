@@ -5,4 +5,6 @@ export const enum ModalIds {
   ManageMedicalRecords = "ManageMedicalRecords",
 
   AlertDeleteCitizen = "alert_DeleteCitizen",
+  AlertDeleteVehicle = "alert_DeleteVehicle",
+  AlertDeleteWeapon = "alert_DeleteWeapon",
 }

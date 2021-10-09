@@ -12,6 +12,8 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { RegisterVehicleModal } from "components/citizen/RegisterVehicleModal";
 import { RegisterWeaponModal } from "components/citizen/RegisterWeaponModal";
+import { PersonFill } from "react-bootstrap-icons";
+import { makeImageUrl } from "lib/utils";
 
 interface Props {
   citizens: Citizen[];
@@ -59,11 +61,15 @@ export default function CitizenPage({ citizens }: Props) {
               className="p-3  bg-gray-200 rounded-md flex justify-between items-center"
             >
               <div className="flex items-center space-x-3">
-                <img
-                  draggable={false}
-                  className="rounded-full w-14"
-                  src="https://yt3.ggpht.com/yJ9oovZC3P9YSil0Wjk7UgnYnLORTSwP_wFjAvqJ_m-z08zpTwll2rnWqYsXUVGb-Dlh_fqeaw=s88-c-k-c0x00ffffff-no-nd-rj"
-                />
+                {citizen.imageId ? (
+                  <img
+                    draggable={false}
+                    className="rounded-full w-14"
+                    src={makeImageUrl("citizens", citizen.imageId)}
+                  />
+                ) : (
+                  <PersonFill className="text-gray-500/60 w-12 h-12" />
+                )}
 
                 <p className="text-xl font-semibold">
                   {citizen.name} {citizen.surname}

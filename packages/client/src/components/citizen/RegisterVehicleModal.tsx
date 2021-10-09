@@ -14,6 +14,8 @@ import { ModalIds } from "types/ModalIds";
 import { Citizen, RegisteredVehicle } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
+import { useCitizen } from "context/CitizenContext";
+import { useRouter } from "next/router";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -28,9 +30,12 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
   const common = useTranslations("Common");
+  const { citizen } = useCitizen(false);
+  const router = useRouter();
 
   const { vehicles, licenses } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
+  const isDisabled = router.pathname === "/citizen/[id]";
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (vehicle) {
@@ -59,7 +64,7 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatus ?? "",
     registrationStatus: vehicle?.registrationStatus ?? "",
-    citizenId: vehicle?.citizenId ?? "",
+    citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
   };
 
@@ -100,13 +105,18 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
             <FormField fieldId="citizenId" label={tVehicle("owner")}>
               <Select
                 hasError={!!errors.citizenId}
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.citizenId}
+                values={
+                  isDisabled
+                    ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
+                    : citizens.map((citizen) => ({
+                        label: `${citizen.name} ${citizen.surname}`,
+                        value: citizen.id,
+                      }))
+                }
+                value={isDisabled ? citizen.id : values.citizenId}
                 name="citizenId"
                 onChange={handleChange}
+                disabled={isDisabled}
               />
               <Error>{errors.citizenId}</Error>
             </FormField>

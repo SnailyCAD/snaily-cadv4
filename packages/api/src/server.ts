@@ -13,9 +13,9 @@ const rootDir = __dirname;
     "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
   },
   statics: {
-    "/statics": [
+    "/": [
       {
-        root: `${rootDir}/public`,
+        root: `${process.cwd()}/public`,
       },
     ],
   },

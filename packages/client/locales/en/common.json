@@ -6,6 +6,7 @@
     "cancel": "Cancel",
     "actions": "Actions",
     "type": "Type",
-    "description": "Description"
+    "description": "Description",
+    "manage": "Manage"
   }
 }

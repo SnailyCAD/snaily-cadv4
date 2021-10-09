@@ -1,9 +1,9 @@
 import { User } from ".prisma/client";
 import { validate, WEAPON_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams } from "@tsed/common";
+import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { JsonRequestBody, Post } from "@tsed/schema";
+import { JsonRequestBody, Post, Delete } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { generateString } from "../../utils/generateString";
@@ -41,5 +41,26 @@ export class WeaponController {
     });
 
     return weapon;
+  }
+
+  @Delete("/:id")
+  async deleteWeapon(@Context() ctx: Context, @PathParams("id") weaponId: string) {
+    const weapon = await prisma.weapon.findUnique({
+      where: {
+        id: weaponId,
+      },
+    });
+
+    if (!weapon || weapon.userId !== ctx.get("user").id) {
+      throw new NotFound("Weapon not found");
+    }
+
+    await prisma.weapon.delete({
+      where: {
+        id: weapon.id,
+      },
+    });
+
+    return true;
   }
 }

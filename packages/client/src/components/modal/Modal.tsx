@@ -2,7 +2,7 @@ import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "react-bootstrap-icons";
 
-interface Props {
+export interface ModalProps {
   title: string;
   children: React.ReactNode;
   isOpen: boolean;
@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const Modal = ({ title, children, isOpen, className, onClose }: Props) => {
+export const Modal = ({ title, children, isOpen, className, onClose }: ModalProps) => {
   return (
     <Transition
       show={isOpen}
@@ -37,7 +37,7 @@ export const Modal = ({ title, children, isOpen, className, onClose }: Props) =>
           </span>
 
           <div
-            className={`inline-block p-4 px-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
+            className={`inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
           >
             <Dialog.Title
               as="h3"

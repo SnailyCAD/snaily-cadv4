@@ -13,6 +13,8 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
+import { useRouter } from "next/router";
+import { useCitizen } from "context/CitizenContext";
 
 interface Props {
   weapon: Weapon | null;
@@ -24,11 +26,15 @@ interface Props {
 export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
+  const { pathname } = useRouter();
+
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
 
+  const { citizen } = useCitizen(false);
   const { weapons, licenses } = useValues();
   const validate = handleValidate(WEAPON_SCHEMA);
+  const isDisabled = pathname === "/citizen/[id]";
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (weapon) {
@@ -55,7 +61,7 @@ export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate 
   const INITIAL_VALUES = {
     model: weapon?.model ?? "",
     registrationStatus: weapon?.registrationStatus ?? "",
-    citizenId: weapon?.citizenId ?? "",
+    citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
   };
 
   return (
@@ -85,13 +91,18 @@ export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate 
             <FormField fieldId="citizenId" label={tVehicle("owner")}>
               <Select
                 hasError={!!errors.citizenId}
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.citizenId}
+                values={
+                  isDisabled
+                    ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
+                    : citizens.map((citizen) => ({
+                        label: `${citizen.name} ${citizen.surname}`,
+                        value: citizen.id,
+                      }))
+                }
+                value={isDisabled ? citizen.id : values.citizenId}
                 name="citizenId"
                 onChange={handleChange}
+                disabled={isDisabled}
               />
               <Error>{errors.citizenId}</Error>
             </FormField>

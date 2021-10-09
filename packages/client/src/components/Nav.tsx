@@ -56,7 +56,7 @@ export const Nav = () => {
                 </a>
               </Link>
 
-              <Link href="/admin">
+              <Link href="/admin/manage/users">
                 <a
                   className={classNames(
                     "py-3 px-2 text-gray-700 transition duration-300",

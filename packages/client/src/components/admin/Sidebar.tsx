@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 
-const management = ["CITIZENS", "COMPANIES"];
+const management = ["USERS", "CITIZENS", "COMPANIES"];
 const types = ["GENDER", "ETHNICITY", "LICENSE", "WEAPON", "VEHICLE"];
 
 export const AdminSidebar = () => {
@@ -10,7 +10,11 @@ export const AdminSidebar = () => {
   const man = useTranslations("Management");
   const router = useRouter();
 
-  const isActive = (type: string) => {
+  const isMActive = (path: string) => {
+    return router.pathname === path;
+  };
+
+  const isValueActive = (type: string) => {
     return typeof router.query.path === "string" && router.query.path.toUpperCase() === type;
   };
 
@@ -28,7 +32,7 @@ export const AdminSidebar = () => {
                 <Link href={`/admin/manage/${type.toLowerCase()}`}>
                   <a
                     className={`transition-colors rounded-md block px-4 py-1.5 hover:bg-gray-300 ${
-                      isActive(type) && "bg-gray-300"
+                      isMActive(`/admin/manage/${type.toLowerCase()}`) && "bg-gray-300"
                     }`}
                   >
                     {man(`MANAGE_${type}`)}
@@ -47,7 +51,7 @@ export const AdminSidebar = () => {
                 <Link href={`/admin/values/${type.toLowerCase()}`}>
                   <a
                     className={`transition-colors rounded-md block px-4 py-1 hover:bg-gray-300 ${
-                      isActive(type) && "bg-gray-300"
+                      isValueActive(type) && "bg-gray-300"
                     }`}
                   >
                     {t(`MANAGE_${type}`)}
