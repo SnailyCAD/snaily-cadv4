@@ -22,9 +22,16 @@ interface Props {
   citizens: Citizen[];
   onCreate?: (newV: RegisteredVehicle) => void;
   onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
+  onClose?: () => void;
 }
 
-export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdate }: Props) => {
+export const RegisterVehicleModal = ({
+  citizens = [],
+  vehicle,
+  onClose,
+  onCreate,
+  onUpdate,
+}: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Citizen");
@@ -36,6 +43,11 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
   const { vehicles, licenses } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
+
+  function handleClose() {
+    closeModal(ModalIds.RegisterVehicle);
+    onClose?.();
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (vehicle) {
@@ -71,7 +83,7 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
   return (
     <Modal
       title={t("registerVehicle")}
-      onClose={() => closeModal(ModalIds.RegisterVehicle)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.RegisterVehicle)}
       className="min-w-[600px] min-h-[400px]"
     >
@@ -80,6 +92,7 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
           <form onSubmit={handleSubmit}>
             <FormField fieldId="plate" label={tVehicle("plate")}>
               <Input
+                disabled={!!vehicle}
                 hasError={!!errors.plate}
                 onChange={handleChange}
                 id="plate"
@@ -159,7 +172,7 @@ export const RegisterVehicleModal = ({ citizens = [], vehicle, onCreate, onUpdat
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("registerVehicle")}
+                {vehicle ? common("save") : t("registerVehicle")}
               </Button>
             </footer>
           </form>

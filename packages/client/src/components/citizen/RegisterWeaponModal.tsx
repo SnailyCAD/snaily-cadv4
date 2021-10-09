@@ -21,20 +21,33 @@ interface Props {
   citizens: Citizen[];
   onCreate?: (newV: Weapon) => void;
   onUpdate?: (old: Weapon, newV: Weapon) => void;
+  onClose?: () => void;
 }
 
-export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate }: Props) => {
+export const RegisterWeaponModal = ({
+  citizens = [],
+  weapon,
+  onClose,
+  onCreate,
+  onUpdate,
+}: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
+  const common = useTranslations("Common");
 
   const { citizen } = useCitizen(false);
   const { weapons, licenses } = useValues();
   const validate = handleValidate(WEAPON_SCHEMA);
   const isDisabled = pathname === "/citizen/[id]";
+
+  function handleClose() {
+    closeModal(ModalIds.RegisterWeapon);
+    onClose?.();
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (weapon) {
@@ -67,7 +80,7 @@ export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate 
   return (
     <Modal
       title={t("registerWeapon")}
-      onClose={() => closeModal(ModalIds.RegisterWeapon)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.RegisterWeapon)}
       className="min-w-[600px] min-h-[400px]"
     >
@@ -135,7 +148,7 @@ export const RegisterWeaponModal = ({ citizens = [], weapon, onCreate, onUpdate 
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("registerWeapon")}
+                {weapon ? common("save") : t("registerWeapon")}
               </Button>
             </footer>
           </form>

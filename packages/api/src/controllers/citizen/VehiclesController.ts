@@ -3,7 +3,7 @@ import { validate, VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Delete, JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { generateString } from "../../utils/generateString";
@@ -25,8 +25,6 @@ export class VehiclesController {
         id: body.get("citizenId"),
       },
     });
-
-    console.log({ citizen });
 
     if (!citizen || citizen.userId !== user.id) {
       throw new NotFound("Citizen not found");
@@ -57,6 +55,42 @@ export class VehiclesController {
     });
 
     return vehicle;
+  }
+
+  @Put("/:id")
+  async updateVehicle(
+    @Context() ctx: Context,
+    @PathParams("id") vehicleId: string,
+    @BodyParams() body: JsonRequestBody,
+  ) {
+    const error = validate(VEHICLE_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      return new BadRequest(error);
+    }
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: {
+        id: vehicleId,
+      },
+    });
+
+    if (!vehicle || vehicle.userId !== ctx.get("user").id) {
+      throw new NotFound("Vehicle not found");
+    }
+
+    const updated = await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.id,
+      },
+      data: {
+        model: body.get("model"),
+        color: body.get("color"),
+        registrationStatus: body.get("registrationStatus"),
+      },
+    });
+
+    return updated;
   }
 
   @Delete("/:id")

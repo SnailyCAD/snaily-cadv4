@@ -36,6 +36,11 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
     openModal(ModalIds.AlertDeleteVehicle);
   }
 
+  function handleEditClick(vehicle: RegisteredVehicle) {
+    setTempVehicle(vehicle);
+    openModal(ModalIds.RegisterVehicle);
+  }
+
   return (
     <>
       <div className="bg-gray-200/60 p-4 rounded-md">
@@ -68,7 +73,15 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                   <td>{vehicle.color}</td>
                   <td>{vehicle.registrationStatus}</td>
                   <td>
-                    <Button onClick={() => handleDeleteClick(vehicle)} small variant="danger">
+                    <Button onClick={() => handleEditClick(vehicle)} small variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(vehicle)}
+                      small
+                      variant="danger"
+                    >
                       {common("delete")}
                     </Button>
                   </td>
@@ -94,6 +107,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
         }}
         vehicle={tempVehicle}
         citizens={[]}
+        onClose={() => setTempVehicle(null)}
       />
 
       <AlertModal

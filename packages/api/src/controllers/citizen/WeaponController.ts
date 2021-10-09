@@ -3,7 +3,7 @@ import { validate, WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { JsonRequestBody, Post, Delete } from "@tsed/schema";
+import { JsonRequestBody, Post, Delete, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { generateString } from "../../utils/generateString";
@@ -41,6 +41,41 @@ export class WeaponController {
     });
 
     return weapon;
+  }
+
+  @Put("/:id")
+  async updateWeapon(
+    @Context() ctx: Context,
+    @PathParams("id") weaponId: string,
+    @BodyParams() body: JsonRequestBody,
+  ) {
+    const error = validate(WEAPON_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      return new BadRequest(error);
+    }
+
+    const weapon = await prisma.weapon.findUnique({
+      where: {
+        id: weaponId,
+      },
+    });
+
+    if (!weapon || weapon.userId !== ctx.get("user").id) {
+      throw new NotFound("Weapon not found");
+    }
+
+    const updated = await prisma.weapon.update({
+      where: {
+        id: weapon.id,
+      },
+      data: {
+        model: body.get("model"),
+        registrationStatus: body.get("registrationStatus"),
+      },
+    });
+
+    return updated;
   }
 
   @Delete("/:id")

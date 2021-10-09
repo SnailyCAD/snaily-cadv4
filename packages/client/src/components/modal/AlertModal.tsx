@@ -30,11 +30,7 @@ export const AlertModal = (props: Props) => {
     >
       <p className="my-3">{props.description}</p>
       <div className="mt-2 flex gap-2 items-center justify-end">
-        <Button
-          variant="cancel"
-          disabled={props.state === "loading"}
-          onClick={() => closeModal(props.id)}
-        >
+        <Button variant="cancel" disabled={props.state === "loading"} onClick={handleClose}>
           {common("cancel")}
         </Button>
         <Button

@@ -31,8 +31,13 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
     }
   }
 
-  function handleDeleteClick(vehicle: Weapon) {
-    setTempWeapon(vehicle);
+  function handleEditClick(weapon: Weapon) {
+    setTempWeapon(weapon);
+    openModal(ModalIds.RegisterWeapon);
+  }
+
+  function handleDeleteClick(weapon: Weapon) {
+    setTempWeapon(weapon);
     openModal(ModalIds.AlertDeleteWeapon);
   }
 
@@ -64,7 +69,15 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
                   <td>{weapon.model}</td>
                   <td>{weapon.registrationStatus}</td>
                   <td>
-                    <Button onClick={() => handleDeleteClick(weapon)} small variant="danger">
+                    <Button onClick={() => handleEditClick(weapon)} small variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(weapon)}
+                      small
+                      variant="danger"
+                    >
                       {common("delete")}
                     </Button>
                   </td>
@@ -90,6 +103,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
         }}
         weapon={tempWeapon}
         citizens={[]}
+        onClose={() => setTempWeapon(null)}
       />
 
       <AlertModal

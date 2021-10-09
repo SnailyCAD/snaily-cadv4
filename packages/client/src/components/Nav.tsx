@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
 
 export const Nav = () => {
+  const { user, cad } = useAuth();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.includes(route);
 
@@ -18,7 +19,7 @@ export const Nav = () => {
           <div className="flex space-x-7">
             <h1 className="text-2xl">
               <a href="/citizen" className="flex items-center py-3 font-bold text-gray-800">
-                SnailyCAD
+                {cad?.name || "SnailyCAD"}
               </a>
             </h1>
 
@@ -56,16 +57,18 @@ export const Nav = () => {
                 </a>
               </Link>
 
-              <Link href="/admin/manage/users">
-                <a
-                  className={classNames(
-                    "py-3 px-2 text-gray-700 transition duration-300",
-                    isActive("/admin") && "font-semibold",
-                  )}
-                >
-                  Admin
-                </a>
-              </Link>
+              {user?.rank !== "USER" ? (
+                <Link href="/admin/manage/users">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 transition duration-300",
+                      isActive("/admin") && "font-semibold",
+                    )}
+                  >
+                    Admin
+                  </a>
+                </Link>
+              ) : null}
             </ul>
           </div>
 
