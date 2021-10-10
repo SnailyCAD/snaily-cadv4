@@ -34,3 +34,9 @@ export const LICENSE_SCHEMA = z.object({
   pilotLicense: z.string().min(2).max(255),
   ccw: z.string().min(2).max(255),
 });
+
+export const MEDICAL_RECORD_SCHEMA = z.object({
+  type: z.string().min(2).max(255),
+  description: z.string().min(5),
+  citizenId: z.string().min(2).max(255),
+});

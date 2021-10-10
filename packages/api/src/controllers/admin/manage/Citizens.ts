@@ -38,7 +38,7 @@ export class ManageCitizensController {
     });
 
     if (!citizen) {
-      throw new NotFound("Citizen not found");
+      throw new NotFound("notFound");
     }
 
     await prisma.notification.create({

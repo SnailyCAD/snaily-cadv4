@@ -43,7 +43,6 @@
   "Weapons": {
     "model": "Model",
     "registrationStatus": "Registration Status",
-
     "yourWeapons": "Your Weapons",
     "addWeapon": "Add Weapon",
     "noWeapons": "You do not have any weapons registered yet.",
@@ -53,6 +52,9 @@
   "MedicalRecords": {
     "yourMedicalRecords": "Your medical records",
     "addMedicalRecord": "Add Medical Record",
-    "noMedicalRecords": "You do not have any medical records yet."
+    "editMedicalRecord": "Edit Medical Record",
+    "noMedicalRecords": "You do not have any medical records yet.",
+    "deleteMedicalRecord": "Delete Medical Record",
+    "alert_deleteMedicalRecord": "Are you sure you want to delete this medical record? This action cannot be undone."
   }
 }

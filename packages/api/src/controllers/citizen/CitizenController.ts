@@ -33,11 +33,12 @@ export class CitizenController {
       include: {
         vehicles: true,
         weapons: true,
+        medicalRecords: true,
       },
     });
 
     if (!citizen) {
-      throw new NotFound("Citizen not found");
+      throw new NotFound("notFound");
     }
 
     return citizen;

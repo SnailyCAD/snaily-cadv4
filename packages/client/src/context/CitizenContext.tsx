@@ -1,7 +1,11 @@
 import * as React from "react";
-import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
+import { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "types/prisma";
 
-export type CitizenWithVehAndWep = Citizen & { weapons: Weapon[]; vehicles: RegisteredVehicle[] };
+export type CitizenWithVehAndWep = Citizen & {
+  weapons: Weapon[];
+  vehicles: RegisteredVehicle[];
+  medicalRecords: MedicalRecord[];
+};
 
 interface Context<CitizenNull extends boolean = true> {
   citizen: CitizenNull extends true ? CitizenWithVehAndWep | null : CitizenWithVehAndWep;

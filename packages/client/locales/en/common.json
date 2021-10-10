@@ -11,7 +11,8 @@
     "on": "On",
     "off": "Off",
     "error": "An unexpected error occurred",
-    "view": "View"
+    "view": "View",
+    "create": "Create"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

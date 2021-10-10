@@ -27,7 +27,7 @@ export class VehiclesController {
     });
 
     if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("Citizen not found");
+      throw new NotFound("notFound");
     }
 
     const existing = await prisma.registeredVehicle.findUnique({

@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Weapon } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { RegisterWeaponModal } from "./RegisterWeaponModal";
+import { RegisterWeaponModal } from "./modals/RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

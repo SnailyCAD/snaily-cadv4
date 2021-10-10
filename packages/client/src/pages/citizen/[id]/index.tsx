@@ -162,7 +162,7 @@ export default function CitizenId() {
 
       <div className="mt-3 gap-2 gap-y-3 grid grid-cols-1 md:grid-cols-2">
         <LicensesCard />
-        <MedicalRecords medicalRecords={[]} />
+        <MedicalRecords medicalRecords={citizen.medicalRecords} />
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
         {/* <ViolationsCard weapons={[]} /> */}

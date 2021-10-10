@@ -10,8 +10,8 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { RegisterVehicleModal } from "components/citizen/RegisterVehicleModal";
-import { RegisterWeaponModal } from "components/citizen/RegisterWeaponModal";
+import { RegisterVehicleModal } from "components/citizen/modals/RegisterVehicleModal";
+import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponModal";
 import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
 

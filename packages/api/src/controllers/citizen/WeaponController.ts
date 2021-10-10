@@ -27,7 +27,7 @@ export class WeaponController {
     });
 
     if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("Citizen not found");
+      throw new NotFound("notFound");
     }
 
     const weapon = await prisma.weapon.create({

@@ -1,17 +1,45 @@
 import * as React from "react";
+import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { MedicalRecord } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { useTranslations } from "use-intl";
+import { ManageMedicalRecordsModal } from "./modals/ManageMedicalRecordsModal";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
-  const { openModal } = useModal();
+  const { state, execute } = useFetch();
+  const { openModal, closeModal } = useModal();
   const t = useTranslations("MedicalRecords");
   const common = useTranslations("Common");
 
-  const [medicalRecords] = React.useState<MedicalRecord[]>(props.medicalRecords);
-  //   const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
+  const [medicalRecords, setMedicalRecords] = React.useState<MedicalRecord[]>(props.medicalRecords);
+  const [tempRecord, setTempRecord] = React.useState<MedicalRecord | null>(null);
+
+  async function handleDelete() {
+    if (!tempRecord) return;
+
+    const { json } = await execute(`/medical-records/${tempRecord.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      setMedicalRecords((p) => p.filter((v) => v.id !== tempRecord.id));
+      closeModal(ModalIds.AlertDeleteMedicalRecord);
+      setTempRecord(null);
+    }
+  }
+
+  function handleDeleteClick(record: MedicalRecord) {
+    setTempRecord(record);
+    openModal(ModalIds.AlertDeleteMedicalRecord);
+  }
+
+  function handleEditClick(record: MedicalRecord) {
+    setTempRecord(record);
+    openModal(ModalIds.ManageMedicalRecords);
+  }
 
   return (
     <>
@@ -36,12 +64,20 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
               </tr>
             </thead>
             <tbody>
-              {medicalRecords.map((vehicle) => (
-                <tr key={vehicle.id}>
-                  <td>{vehicle.type}</td>
-                  <td>{vehicle.description}</td>
-                  <td>
-                    <Button small variant="danger">
+              {medicalRecords.map((record) => (
+                <tr key={record.id}>
+                  <td>{record.type}</td>
+                  <td>{record.description}</td>
+                  <td className="w-[30%]">
+                    <Button onClick={() => handleEditClick(record)} small variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(record)}
+                      small
+                      variant="danger"
+                    >
                       {common("delete")}
                     </Button>
                   </td>
@@ -51,6 +87,32 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
           </table>
         )}
       </div>
+
+      <ManageMedicalRecordsModal
+        onCreate={(record) => {
+          setMedicalRecords((p) => [...p, record]);
+          closeModal(ModalIds.ManageMedicalRecords);
+        }}
+        onUpdate={(old, newR) => {
+          setMedicalRecords((p) => {
+            const idx = p.indexOf(old);
+            p[idx] = newR;
+            return p;
+          });
+          closeModal(ModalIds.ManageMedicalRecords);
+        }}
+        medicalRecord={tempRecord}
+        onClose={() => setTempRecord(null)}
+      />
+
+      <AlertModal
+        onDeleteClick={handleDelete}
+        description={t("alert_deleteMedicalRecord")}
+        id={ModalIds.AlertDeleteMedicalRecord}
+        title={t("deleteMedicalRecord")}
+        state={state}
+        onClose={() => setTempRecord(null)}
+      />
     </>
   );
 };

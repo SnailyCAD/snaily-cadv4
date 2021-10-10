@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { ManageLicensesModal } from "./ManageLicensesModal";
+import { ManageLicensesModal } from "./modals/ManageLicensesModal";
 import { useCitizen } from "context/CitizenContext";
 
 export const LicensesCard = () => {

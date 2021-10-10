@@ -43,7 +43,7 @@ export async function getSessionUser(req: Req) {
   });
 
   if (!user) {
-    throw new NotFound("User not found");
+    throw new NotFound("notFound");
   }
 
   return user;

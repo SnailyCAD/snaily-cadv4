@@ -23,7 +23,7 @@ export const AlertModal = (props: Props) => {
 
   return (
     <Modal
-      className={props.className}
+      className={`w-[550px] ${props.className}`}
       title={props.title}
       onClose={handleClose}
       isOpen={isOpen(props.id)}
