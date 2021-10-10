@@ -57,6 +57,17 @@ export const Nav = () => {
                 </a>
               </Link>
 
+              <Link href="/bleeter">
+                <a
+                  className={classNames(
+                    "py-3 px-2 text-gray-700 transition duration-300",
+                    isActive("/bleeter") && "font-semibold",
+                  )}
+                >
+                  Bleeter
+                </a>
+              </Link>
+
               {user?.rank !== "USER" ? (
                 <Link href="/admin/manage/users">
                   <a

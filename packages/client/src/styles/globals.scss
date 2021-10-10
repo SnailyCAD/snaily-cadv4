@@ -38,3 +38,18 @@ tr {
 td {
   @apply p-2 px-3;
 }
+
+.bleet-reset {
+  h1 {
+    @apply font-semibold text-3xl mb-2;
+  }
+  h2 {
+    @apply font-semibold text-2xl mb-2;
+  }
+  h3 {
+    @apply font-semibold text-xl mb-1;
+  }
+  h4 {
+    @apply text-lg;
+  }
+}

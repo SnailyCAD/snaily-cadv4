@@ -48,6 +48,7 @@ model User {
   notifications        Notification[]
   executedNotifictions Notification[]      @relation("executor")
   medicalRecords       MedicalRecord[]
+  bleeterPosts         BleeterPost[]
 }
 
 model Citizen {
@@ -154,4 +155,15 @@ model Notification {
   executorId  String
   title       String
   description String
+}
+
+// bleeter
+model BleeterPost {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  body      String
+  imageId   String?
+  createdAt DateTime @default(now())
 }

@@ -168,8 +168,6 @@ export class CitizenController {
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
       throw new BadRequest("invalidImageType");
-      // todo: add alert here
-      // helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
     }
 
     // "image/png" -> "png"

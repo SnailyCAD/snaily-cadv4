@@ -21,7 +21,6 @@ export type cad = {
 export type User = {
   id: string;
   username: string;
-  password: string;
   rank: Rank;
   isLeo: boolean;
   isSupervisor: boolean;
@@ -113,6 +112,18 @@ export type Value = {
   type: ValueType;
   value: string;
   isDefault: boolean;
+};
+
+/**
+ * Model BleeterPost
+ */
+
+export type BleeterPost = {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  imageId: string | null;
 };
 
 /**

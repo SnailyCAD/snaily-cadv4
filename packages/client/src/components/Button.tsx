@@ -10,7 +10,7 @@ const variants = {
   default: "bg-gray-500 hover:bg-gray-600 text-white",
   cancel: "bg-transparent hover:bg-transparent text-gray-800",
   danger: "bg-red-500 hover:bg-red-600 text-white",
-  success: "bg-green-500 hover:bg-green-500 text-white",
+  success: "bg-green-500 hover:bg-green-600 text-white",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, Props>(
