@@ -8,6 +8,10 @@ const rootDir = __dirname;
 
 @Configuration({
   rootDir,
+  logger: {
+    debug: true,
+    level: "off",
+  },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
     "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],

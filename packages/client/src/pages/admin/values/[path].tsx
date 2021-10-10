@@ -1,5 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
+import { useRouter } from "next/router";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { Modal } from "components/modal/Modal";
@@ -8,7 +9,7 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { Value, ValueType } from "types/prisma";
+import { Value, valueType, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
@@ -20,6 +21,8 @@ interface Props {
 
 export default function ValuePath({ values: { type, values: data } }: Props) {
   const [values, setValues] = React.useState<Value[]>(data);
+  const router = useRouter();
+  const path = (router.query.path as string).toUpperCase();
 
   const [tempValue, setTempValue] = React.useState<Value | null>(null);
   const { state, execute } = useFetch();
@@ -68,7 +71,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
     }
   }, [isOpen]);
 
-  if (!type) {
+  if (!Object.keys(valueType).includes(path)) {
     return (
       <Layout>
         <p>Path not found</p>
@@ -163,11 +166,15 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = query.path;
+
   const { data: values = [] } = await handleRequest(`/admin/values/${path}`, {
     headers: req.headers,
-  }).catch(() => ({
-    data: null,
-  }));
+  }).catch((e) => {
+    console.error("ere", e);
+    return { data: [] };
+  });
+
+  console.log({ values });
 
   return {
     props: {

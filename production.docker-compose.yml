@@ -49,7 +49,7 @@ services:
       - .env
     working_dir: /srv/client
     depends_on:
-      - postgres
+      - api
     networks:
       - cad_web
 
@@ -59,4 +59,4 @@ volumes:
 
 networks:
   cad_web:
-    external: true
+    driver: bridge

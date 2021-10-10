@@ -1,3 +1,4 @@
+import { Rank } from ".prisma/client";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { getSessionUser } from "../lib/auth";
 import { prisma } from "../lib/prisma";
@@ -15,6 +16,9 @@ export class IsAuth implements MiddlewareMethods {
         towWhitelisted: true,
         whitelisted: true,
         // features: true,
+        liveMapSocketURl: user.rank === Rank.OWNER,
+        registrationCode: user.rank === Rank.OWNER,
+        steamApiKey: user.rank === Rank.OWNER,
       },
     });
 

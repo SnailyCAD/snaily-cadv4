@@ -19,8 +19,8 @@ import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { handleRequest } from "lib/fetch";
-import { Value, ValueType } from "types/prisma";
 import { Select } from "components/form/Select";
+import { useValues } from "context/ValuesContext";
 
 const INITIAL_VALUES = {
   name: "",
@@ -36,22 +36,14 @@ const INITIAL_VALUES = {
   image: null,
 };
 
-interface Props {
-  values: {
-    type: ValueType;
-    values: Value[];
-  }[];
-}
-
-export default function CreateCitizen({ values }: Props) {
+export default function CreateCitizen() {
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const genders = values.find((v) => v.type === "GENDER")?.values ?? [];
-  const ethnicities = values.find((v) => v.type === "ETHNICITY")?.values ?? [];
+  const { genders, ethnicities } = useValues();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -147,7 +139,7 @@ export default function CreateCitizen({ values }: Props) {
                   value={values.gender}
                   onChange={handleChange}
                   hasError={!!errors.gender}
-                  values={genders.map((gender) => ({
+                  values={genders.values.map((gender) => ({
                     label: gender.value,
                     value: gender.value,
                   }))}
@@ -161,7 +153,7 @@ export default function CreateCitizen({ values }: Props) {
                   value={values.ethnicity}
                   onChange={handleChange}
                   hasError={!!errors.ethnicity}
-                  values={ethnicities.map((ethnicity) => ({
+                  values={ethnicities.values.map((ethnicity) => ({
                     label: ethnicity.value,
                     value: ethnicity.value,
                   }))}

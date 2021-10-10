@@ -4,11 +4,11 @@ import { Server } from "./server";
 
 async function bootstrap() {
   try {
-    $log.debug("Start server...");
+    $log.debug("Starting server...");
     const platform = await PlatformExpress.bootstrap(Server);
 
     await platform.listen();
-    $log.debug("Server initialized");
+    console.info("SnailyCADv4 is running");
   } catch (er) {
     $log.error(er);
   }
