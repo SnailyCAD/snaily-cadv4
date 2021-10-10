@@ -10,7 +10,7 @@ const rootDir = __dirname;
   rootDir,
   logger: {
     debug: true,
-    level: "off",
+    level: process.env.NODE_ENV === "production" ? "off" : undefined,
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],

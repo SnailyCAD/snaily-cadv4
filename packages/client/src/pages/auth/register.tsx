@@ -139,8 +139,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
     data: null,
   }));
 
-  console.log({ data });
-
   return {
     props: {
       cad: data ?? {},

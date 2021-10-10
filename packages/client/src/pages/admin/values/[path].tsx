@@ -169,12 +169,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
 
   const { data: values = [] } = await handleRequest(`/admin/values/${path}`, {
     headers: req.headers,
-  }).catch((e) => {
-    console.error("ere", e);
-    return { data: [] };
-  });
-
-  console.log({ values });
+  }).catch(() => ({ data: [] }));
 
   return {
     props: {

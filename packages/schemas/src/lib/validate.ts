@@ -29,9 +29,5 @@ export function validate<TObj extends ZodRawShape, Values = any>(
     }
   }
 
-  console.log("errors", errors);
-  console.log("values", Object.values(errors));
-  console.log("entries", Object.entries(errors));
-
   return oneError ? Object.values(errors)[0]! : errors;
 }

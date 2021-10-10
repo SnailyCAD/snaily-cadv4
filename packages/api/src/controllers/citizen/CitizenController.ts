@@ -175,7 +175,6 @@ export class CitizenController {
     // "image/png" -> "png"
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/citizens/${citizen.id}.${extension}`;
-    console.log({ path });
 
     await fs.writeFileSync(path, file.buffer);
 

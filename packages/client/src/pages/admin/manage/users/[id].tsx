@@ -54,7 +54,9 @@ export default function ManageCitizens(props: Props) {
       data: values,
     });
 
-    console.log(json);
+    if (json.id) {
+      setUser({ ...user, ...json });
+    }
   }
 
   const INITIAL_VALUES = {

@@ -30,6 +30,8 @@ services:
     working_dir: /srv/api
     depends_on:
       - postgres
+    environment:
+      NODE_ENV: production
     networks:
       - cad_web
 
@@ -59,4 +61,4 @@ volumes:
 
 networks:
   cad_web:
-    driver: bridge
+    external: true
