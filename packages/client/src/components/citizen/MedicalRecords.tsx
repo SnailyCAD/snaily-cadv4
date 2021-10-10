@@ -55,36 +55,38 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
         {medicalRecords.length <= 0 ? (
           <p className="text-gray-600">{t("noMedicalRecords")}</p>
         ) : (
-          <table className="table max-h-64 mt-5">
-            <thead>
-              <tr>
-                <th>{common("type")}</th>
-                <th>{common("description")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {medicalRecords.map((record) => (
-                <tr key={record.id}>
-                  <td>{record.type}</td>
-                  <td>{record.description}</td>
-                  <td className="w-[30%]">
-                    <Button onClick={() => handleEditClick(record)} small variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      className="ml-2"
-                      onClick={() => handleDeleteClick(record)}
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
+          <div className="overflow-x-auto w-full mt-3">
+            <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
+              <thead>
+                <tr>
+                  <th>{common("type")}</th>
+                  <th>{common("description")}</th>
+                  <th>{common("actions")}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {medicalRecords.map((record) => (
+                  <tr key={record.id}>
+                    <td>{record.type}</td>
+                    <td>{record.description}</td>
+                    <td className="w-[30%]">
+                      <Button onClick={() => handleEditClick(record)} small variant="success">
+                        {common("edit")}
+                      </Button>
+                      <Button
+                        className="ml-2"
+                        onClick={() => handleDeleteClick(record)}
+                        small
+                        variant="danger"
+                      >
+                        {common("delete")}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

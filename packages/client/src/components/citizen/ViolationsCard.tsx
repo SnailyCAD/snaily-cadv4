@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO ^
 import * as React from "react";
 import { Button } from "components/Button";
 import { Weapon } from "types/prisma";

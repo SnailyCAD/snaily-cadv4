@@ -55,8 +55,8 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
         {weapons.length <= 0 ? (
           <p className="text-gray-600">{t("noWeapons")}</p>
         ) : (
-          <div className="overflow-x-auto w-full">
-            <table className="table-auto max-h-64 mt-3">
+          <div className="overflow-x-auto w-full mt-3">
+            <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
               <thead>
                 <tr>
                   <th>{t("model")}</th>

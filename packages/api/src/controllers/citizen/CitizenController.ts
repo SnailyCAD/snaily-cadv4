@@ -1,6 +1,6 @@
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
@@ -105,6 +105,49 @@ export class CitizenController {
     });
 
     return citizen;
+  }
+
+  @Put("/:id")
+  async updateCitizen(
+    @PathParams("id") citizenId: string,
+    @Context() ctx: Context,
+    @BodyParams() body: JsonRequestBody,
+  ) {
+    const error = validate(CREATE_CITIZEN_SCHEMA(true), body.toJSON(), true);
+    if (error) {
+      return new BadRequest(error);
+    }
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: citizenId,
+      },
+    });
+
+    if (!citizen || citizen.userId !== ctx.get("user").id) {
+      throw new NotFound("Not Found");
+    }
+
+    const { address, weight, height, hairColor, eyeColor, dateOfBirth, ethnicity, gender } =
+      body.toJSON();
+
+    const updated = await prisma.citizen.update({
+      where: {
+        id: citizen.id,
+      },
+      data: {
+        address,
+        weight,
+        height,
+        hairColor,
+        dateOfBirth,
+        ethnicity,
+        gender,
+        eyeColor,
+      },
+    });
+
+    return updated;
   }
 
   @Post("/:id")

@@ -11,7 +11,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik } from "formik";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input, PasswordInput } from "components/form/Input";
 import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
@@ -83,12 +83,12 @@ export default function CadSettings() {
             </FormField>
 
             <FormField label="Steam API Key" fieldId="steamApiKey">
-              <Input onChange={handleChange} value={values.steamApiKey} id="steamApiKey" />
+              <PasswordInput onChange={handleChange} value={values.steamApiKey} id="steamApiKey" />
               <Error>{errors.steamApiKey}</Error>
             </FormField>
 
             <FormField label="Registration Code" fieldId="registrationCode">
-              <Input
+              <PasswordInput
                 onChange={handleChange}
                 value={values.registrationCode}
                 id="registrationCode"
