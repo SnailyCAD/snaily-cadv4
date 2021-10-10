@@ -95,7 +95,7 @@ const NavDropdown = () => {
 
   return (
     <>
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu as="div" className="relative inline-block text-left z-50">
         <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           <PersonCircle fill="#2f2f2f" width={20} height={20} />
         </Menu.Button>

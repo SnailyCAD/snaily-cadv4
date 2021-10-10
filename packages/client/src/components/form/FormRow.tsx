@@ -15,7 +15,7 @@ export const FormRow = ({
   ...rest
 }: Props) => {
   const cols = Array.isArray(children)
-    ? `grid grid-cols-1 sm:grid-cols-${children.length / 2} md:grid-cols-${children.length}`
+    ? `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${children.length}`
     : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4";
 
   return (

@@ -37,6 +37,10 @@ export class AuthController {
       throw new BadRequest("whitelistDeclined");
     }
 
+    if (user.banned) {
+      throw new BadRequest("userBanned");
+    }
+
     const isPasswordCorrect = compareSync(body.get("password"), user.password);
     if (!isPasswordCorrect) {
       throw new BadRequest("passwordIncorrect");

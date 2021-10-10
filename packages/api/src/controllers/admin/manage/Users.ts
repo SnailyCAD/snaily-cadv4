@@ -3,11 +3,11 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { userProperties } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
-import { BAN_SCHEMA, validate } from "@snailycad/schemas";
+import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
 
 @UseBeforeEach(IsAuth, IsAdmin)
 @Controller("/users")
@@ -26,17 +26,41 @@ export class ManageUsersController {
     return user;
   }
 
-  @Post("/:id")
+  @Put("/:id")
   async updateUserById(@PathParams("id") userId: string, @BodyParams() body: JsonRequestBody) {
+    const error = validate(UPDATE_USER_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      throw new BadRequest(error);
+    }
+
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    body;
+
     if (!user) {
       throw new NotFound("notFound");
     }
 
-    return "TODO";
+    if (user.rank === Rank.OWNER && body.get("rank") !== Rank.OWNER) {
+      throw new BadRequest("cannotUpdateOwnerRank");
+    }
 
-    // return user;
+    const updated = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        isLeo: body.get("isLeo"),
+        isSupervisor: body.get("isSupervisor"),
+        isDispatch: body.get("isDispatch"),
+        isEmsFd: body.get("isEmsFd"),
+        isTow: body.get("isTow"),
+        steamId: body.get("steamId"),
+        rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[body.get("rank") as Rank],
+      },
+      select: userProperties,
+    });
+
+    return updated;
   }
 
   @Post("/:id/:type")
@@ -58,7 +82,6 @@ export class ManageUsersController {
     }
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
-
     if (!user) {
       throw new NotFound("notFound");
     }

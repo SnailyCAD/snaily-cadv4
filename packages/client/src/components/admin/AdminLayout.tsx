@@ -11,7 +11,7 @@ export const AdminLayout = ({ className, children }: Props) => {
     <>
       <Nav />
 
-      <main className={`relative mt-5 px-4 container max-w-6xl mx-auto flex ${className}`}>
+      <main className={`relative z-10 mt-5 px-4 container max-w-6xl mx-auto flex ${className}`}>
         <div className="w-60">
           <AdminSidebar />
         </div>

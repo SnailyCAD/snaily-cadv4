@@ -3,13 +3,14 @@ import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { Formik } from "formik";
+import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Error } from "components/form/Error";
@@ -20,6 +21,8 @@ import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { BanArea } from "components/admin/manage/BanArea";
+import { handleValidate } from "lib/handleValidate";
+import { Input } from "components/form/Input";
 
 interface Props {
   user: User | null;
@@ -58,11 +61,14 @@ export default function ManageCitizens(props: Props) {
     rank: user.rank,
     isDispatch: user.isDispatch,
     isLeo: user.isLeo,
+    isSupervisor: user.isSupervisor,
     isEmsFd: user.isEmsFd,
     isTow: user.isTow,
+    steamId: user.steamId ?? "",
   };
 
   const isRankDisabled = user.rank === "OWNER" || user.id === session?.id;
+  const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
     <AdminLayout>
@@ -73,7 +79,7 @@ export default function ManageCitizens(props: Props) {
       <h1 className="text-3xl font-semibold">{user?.username}</h1>
 
       <div className="mt-5">
-        <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+        <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, handleSubmit, isValid, values, errors }) => (
             <form onSubmit={handleSubmit}>
               <FormField label="Rank">
@@ -95,11 +101,21 @@ export default function ManageCitizens(props: Props) {
                 <Error>{errors.rank}</Error>
               </FormField>
 
-              <FormRow className="mt-5">
+              <FormRow flexLike className="mt-5">
                 <FormField label="Leo Access">
                   <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
 
                   <Error>{errors.isLeo}</Error>
+                </FormField>
+
+                <FormField label="LEO Supervisor">
+                  <Toggle
+                    name="isSupervisor"
+                    onClick={handleChange}
+                    toggled={values.isSupervisor}
+                  />
+
+                  <Error>{errors.isSupervisor}</Error>
                 </FormField>
 
                 <FormField label="Dispatch Access">
@@ -120,6 +136,12 @@ export default function ManageCitizens(props: Props) {
                   <Error>{errors.isTow}</Error>
                 </FormField>
               </FormRow>
+
+              <FormField label="Steam ID">
+                <Input name="steamId" onChange={handleChange} value={values.steamId} />
+
+                <Error>{errors.steamId}</Error>
+              </FormField>
 
               <div className="flex justify-end">
                 <Link href="/admin/manage/users">
