@@ -14,6 +14,7 @@
     "@snailycad/config": "0.0.0",
     "@snailycad/schemas": "0.0.2-dev",
     "axios": "^0.22.0",
+    "date-fns": "^2.25.0",
     "formik": "^2.2.9",
     "next": "^11.1.2",
     "next-intl": "^2.0.5",

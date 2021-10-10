@@ -3,6 +3,7 @@ import { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
 import toast from "react-hot-toast";
 import { useTranslations } from "use-intl";
+import Common from "../../locales/en/common.json";
 
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
@@ -33,8 +34,11 @@ export default function useFetch(
     const error = response instanceof Error ? parseError(response as AxiosError) : null;
 
     if (error) {
+      const hasKey = Object.keys(Common.Errors).some((e) => e === error);
+      const key = hasKey ? error : "unknown";
+
       setState("error");
-      toast.error(t(error));
+      toast.error(t(key));
 
       return {
         json: {},

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { PersonFill } from "react-bootstrap-icons";
+import format from "date-fns/format";
 import { Citizen } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
@@ -19,7 +20,7 @@ import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
 import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
-import { makeImageUrl } from "lib/utils";
+import { calculateAge, makeImageUrl } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 // import { ViolationsCard } from "components/citizen/ViolationsCard";
 
@@ -113,6 +114,11 @@ export default function CitizenId() {
             <p>
               <span className="font-semibold">{t("fullName")}: </span>
               {citizen.name} {citizen.surname}
+            </p>
+            <p>
+              <span className="font-semibold">{t("dateOfBirth")}: </span>
+              {format(new Date(citizen.dateOfBirth), "yyyy-MM-dd")} ({t("age")}:{" "}
+              {calculateAge(citizen.dateOfBirth)})
             </p>
             <p>
               <span className="font-semibold">{t("gender")}: </span>

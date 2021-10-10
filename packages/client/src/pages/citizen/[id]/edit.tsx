@@ -76,7 +76,7 @@ export default function EditCitizen({ values }: Props) {
     }
   }
 
-  const validate = handleValidate(CREATE_CITIZEN_SCHEMA(true));
+  const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
   return (
     <Layout>

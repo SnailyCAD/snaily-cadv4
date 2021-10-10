@@ -1,21 +1,32 @@
+import { classNames } from "lib/classNames";
 import type * as React from "react";
 
-interface Props {
+type Props = JSX.IntrinsicElements["div"] & {
   children: React.ReactNode;
   justify?: boolean;
   flexLike?: boolean;
-}
+};
 
-export const FormRow = ({ justify = true, flexLike = false, children }: Props) => {
+export const FormRow = ({
+  justify = true,
+  flexLike = false,
+  children,
+  className = "",
+  ...rest
+}: Props) => {
   const cols = Array.isArray(children)
-    ? `grid grid-cols-1 sm:grid-cols-${children.length}`
+    ? `grid grid-cols-1 sm:grid-cols-${children.length / 2} md:grid-cols-${children.length}`
     : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4";
 
   return (
     <div
-      className={`mb-3 w-full ${flexLike ? "grid grid-cols-1 sm:flex" : cols} gap-2 ${
-        justify && "justify-between"
-      }`}
+      {...rest}
+      className={classNames(
+        "mb-3 w-full gap-2",
+        flexLike ? "grid grid-cols-1 sm:flex" : cols,
+        justify && "justify-between",
+        className,
+      )}
     >
       {children}
     </div>

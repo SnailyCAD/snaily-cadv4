@@ -8,3 +8,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   whitelisted: z.boolean(),
   registrationCode: z.string().min(2).max(255),
 });
+
+export const BAN_SCHEMA = z.object({
+  reason: z.string().min(2).max(255),
+});

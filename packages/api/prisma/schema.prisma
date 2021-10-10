@@ -37,7 +37,7 @@ model User {
   isDispatch           Boolean             @default(false)
   isTow                Boolean             @default(false)
   banned               Boolean             @default(false)
-  banReason            Boolean?
+  banReason            String?
   avatarUrl            String?             @db.Text
   steamId              String?             @db.VarChar(255)
   whitelistStatus      WhitelistStatus     @default(ACCEPTED)

@@ -21,6 +21,7 @@
     "address": "Address",
     "dateOfBirth": "Date of Birth",
     "image": "Image",
+    "age": "Age",
     "driversLicense": "Drivers License",
     "weaponLicense": "Firearms License",
     "pilotLicense": "Pilot License",

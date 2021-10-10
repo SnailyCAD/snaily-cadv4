@@ -82,7 +82,7 @@ export default function CreateCitizen({ values }: Props) {
     }
   }
 
-  const validate = handleValidate(CREATE_CITIZEN_SCHEMA());
+  const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
   return (
     <Layout>
