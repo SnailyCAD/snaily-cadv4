@@ -23,6 +23,7 @@ model cad {
   maxPlateLength   Int     @default(8)
   liveMapSocketURl String? @db.VarChar(255)
   logoId           String?
+  registrationCode String?
 }
 
 model User {

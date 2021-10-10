@@ -7,6 +7,7 @@ import { IsAuth } from "../../middlewares/IsAuth";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -119,6 +120,12 @@ export class CitizenController {
 
     if (!citizen || citizen.userId !== ctx.get("user").id) {
       throw new NotFound("Not Found");
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new BadRequest("invalidImageType");
+      // todo: add alert here
+      // helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
     }
 
     // "image/png" -> "png"

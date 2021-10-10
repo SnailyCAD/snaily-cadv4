@@ -23,31 +23,30 @@ export default function useFetch(
     setState("loading");
     abortController.current = new AbortController();
 
-    const response = await toast
-      .promise(
-        handleRequest(path, {
-          ...{ ...(options as any), signal: abortController.current.signal },
-        }),
-        {
-          error: (res) => {
-            const error = parseError(res as AxiosError);
+    const response = await handleRequest(path, {
+      ...{ ...(options as any), signal: abortController.current.signal },
+    }).catch((e) => {
+      setState("error");
+      return e;
+    });
 
-            return t(error);
-          },
-          loading: null,
-          success: null,
-        },
-      )
-      .catch((e) => {
-        setState("error");
-        return e;
-      });
+    const error = response instanceof Error ? parseError(response as AxiosError) : null;
+
+    if (error) {
+      setState("error");
+      toast.error(t(error));
+
+      return {
+        json: {},
+        error: response instanceof Error ? parseError(response as AxiosError) : null,
+      };
+    }
 
     setState(null);
 
     return {
       json: response?.data ?? {},
-      error: response instanceof Error ? parseError(response as AxiosError) : null,
+      error: null,
     };
   };
 

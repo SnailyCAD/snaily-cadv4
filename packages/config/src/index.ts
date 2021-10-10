@@ -3,12 +3,7 @@ export enum Cookie {
 }
 
 export type AllowedFileExtension = typeof allowedFileExtensions[number];
-export const allowedFileExtensions = [
-  "image/png",
-  "image/gif",
-  "image/jpeg",
-  "image/svg+xml",
-] as const;
+export const allowedFileExtensions = ["image/png", "image/gif", "image/jpeg", "image/jpg"] as const;
 
 export type ValidPath = typeof validPaths[number];
 export const validPaths = [

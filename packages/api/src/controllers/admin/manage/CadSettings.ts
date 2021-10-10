@@ -1,16 +1,29 @@
-import { validate } from "@snailycad/schemas";
+import { validate, CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { JsonRequestBody, Put } from "@tsed/schema";
+import { Get, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsOwner } from "../../../middlewares";
-import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { BadRequest } from "@tsed/exceptions";
+import { UseBefore } from "@tsed/common";
 
-@UseBeforeEach(IsAuth, IsOwner)
+// @UseBeforeEach(IsAuth, IsOwner)
 @Controller("/cad-settings")
 export class ManageCitizensController {
+  @Get("/")
+  async getCadSettings() {
+    const cad = await prisma.cad.findFirst({
+      select: {
+        name: true,
+        areaOfPlay: true,
+        registrationCode: true,
+      },
+    });
+
+    return { ...cad, registrationCode: !!cad!.registrationCode };
+  }
+
+  @UseBefore(IsAuth, IsOwner)
   @Put("/")
   async updateCadSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(CAD_SETTINGS_SCHEMA, body.toJSON(), true);
@@ -29,6 +42,7 @@ export class ManageCitizensController {
         steamApiKey: body.get("steamApiKey"),
         towWhitelisted: body.get("towWhitelisted"),
         whitelisted: body.get("whitelisted"),
+        registrationCode: body.get("registrationCode"),
       },
     });
 

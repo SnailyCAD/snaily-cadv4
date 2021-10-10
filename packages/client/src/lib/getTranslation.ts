@@ -4,7 +4,8 @@ import path from "node:path";
 const cwd = process.cwd();
 
 export async function getTranslations(types: string[], locale = "en") {
-  const paths = types.map((type) => path.join(cwd, `locales/${locale}/${type}.json`));
+  const typesWithCommon = [...new Set(["common", ...types])];
+  const paths = typesWithCommon.map((type) => path.join(cwd, `locales/${locale}/${type}.json`));
 
   let data = {};
 

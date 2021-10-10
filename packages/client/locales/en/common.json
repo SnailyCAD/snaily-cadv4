@@ -10,15 +10,19 @@
     "manage": "Manage",
     "on": "On",
     "off": "Off",
-    "error": "An unexpected error occurred"
+    "error": "An unexpected error occurred",
+    "view": "View"
   },
   "Errors": {
+    "unknown": "An unexpected error occurred",
+    "userNotFound": "That user was not found.",
     "nameAlreadyTaken": "A citizen with that full name is already in use.",
     "whitelistPending": "This account is still pending access to the CAD.",
     "whitelistDeclined": "This account was declined access to the CAD.",
     "passwordIncorrect": "The password you entered was not correct.",
     "userAlreadyExists": "A user with that username already exists.",
     "notFound": "The requested item was not found.",
-    "plateAlreadyInUse": "That plate is already being used on a vehicle."
+    "plateAlreadyInUse": "That plate is already being used on a vehicle.",
+    "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/jpg are supported"
   }
 }

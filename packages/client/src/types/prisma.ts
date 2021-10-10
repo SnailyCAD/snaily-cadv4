@@ -9,6 +9,7 @@ export type cad = {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
+  registrationCode: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
 };

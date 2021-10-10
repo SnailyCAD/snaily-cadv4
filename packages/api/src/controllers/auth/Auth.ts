@@ -26,7 +26,7 @@ export class AuthController {
     });
 
     if (!user) {
-      throw new NotFound("User was not found");
+      throw new NotFound("userNotFound");
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {

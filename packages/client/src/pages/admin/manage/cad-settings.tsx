@@ -58,6 +58,7 @@ export default function CadSettings() {
     steamApiKey: cad.steamApiKey ?? "",
     towWhitelisted: cad.towWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
+    registrationCode: cad.registrationCode ?? "",
   };
 
   return (
@@ -84,6 +85,15 @@ export default function CadSettings() {
             <FormField label="Steam API Key" fieldId="steamApiKey">
               <Input onChange={handleChange} value={values.steamApiKey} id="steamApiKey" />
               <Error>{errors.steamApiKey}</Error>
+            </FormField>
+
+            <FormField label="Registration Code" fieldId="registrationCode">
+              <Input
+                onChange={handleChange}
+                value={values.registrationCode}
+                id="registrationCode"
+              />
+              <Error>{errors.registrationCode}</Error>
             </FormField>
 
             <FormRow>

@@ -21,7 +21,7 @@ import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
 import { makeImageUrl } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+// import { ViolationsCard } from "components/citizen/ViolationsCard";
 
 export default function CitizenId() {
   const { execute, state } = useFetch();
@@ -51,18 +51,11 @@ export default function CitizenId() {
   }
 
   async function onImageSelectClick(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.files);
     const file = e.target.files?.item(0) ?? null;
     const fd = new FormData();
 
     if (!file) return;
     if (!citizen) return;
-
-    if (!allowedFileExtensions.includes(file.type as AllowedFileExtension)) {
-      return;
-      // todo: add alert here
-      // helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
-    }
 
     fd.append("image", file, file.name);
 
@@ -76,8 +69,6 @@ export default function CitizenId() {
       const v = Math.floor(Math.random() * 100);
       setCurrentCitizen({ ...citizen, imageId: `${json.imageId}?v=${v}` });
     }
-
-    // todo: add alert
   }
 
   React.useEffect(() => {
@@ -174,6 +165,7 @@ export default function CitizenId() {
         <MedicalRecords medicalRecords={[]} />
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
+        {/* <ViolationsCard weapons={[]} /> */}
       </div>
 
       <Modal

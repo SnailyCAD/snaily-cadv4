@@ -12,17 +12,24 @@ import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
-import { GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
+import type { cad } from "types/prisma";
+import { handleRequest } from "lib/fetch";
 
 const INITIAL_VALUES = {
   username: "",
   password: "",
   confirmPassword: "",
+  registrationCode: "",
 };
 
-export default function Register() {
+interface Props {
+  cad: Pick<cad, "registrationCode">;
+}
+
+export default function Register({ cad }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
@@ -45,12 +52,10 @@ export default function Register() {
       },
     });
 
-    // todo: redirect to /admin/cad-settings if "isNew"
+    // todo: redirect to /admin/manage/cad-settings if "isNew"
     if (data.json?.userId) {
       router.push("/citizen");
     }
-
-    // todo: add react-hot-toast.
   }
 
   return (
@@ -96,6 +101,18 @@ export default function Register() {
                 <Error>{errors.confirmPassword}</Error>
               </FormField>
 
+              {cad.registrationCode ? (
+                <FormField fieldId="registrationCode" label={t("registrationCode")}>
+                  <Input
+                    hasError={!!errors.registrationCode}
+                    id="registrationCode"
+                    name="registrationCode"
+                    onChange={handleChange}
+                  />
+                  <Error>{errors.registrationCode}</Error>
+                </FormField>
+              ) : null}
+
               <div className="mt-3">
                 <Link href="/auth/login">
                   <a className="underline inline-block mb-3">{t("hasAccount")}</a>
@@ -117,9 +134,16 @@ export default function Register() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const { data } = await handleRequest<cad | null>("/admin/manage/cad-settings").catch(() => ({
+    data: null,
+  }));
+
+  console.log({ data });
+
   return {
     props: {
+      cad: data ?? {},
       messages: await getTranslations(["auth"], locale),
     },
   };

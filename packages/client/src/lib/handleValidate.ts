@@ -1,7 +1,5 @@
-import { ZodObject, ZodRawShape } from "zod";
-
 export const handleValidate =
-  <Values = any, T extends ZodRawShape = any>(schema: ZodObject<T>) =>
+  <Values = any>(schema: any) =>
   (values: Values) => {
     const errors: Record<string, string> = {};
 

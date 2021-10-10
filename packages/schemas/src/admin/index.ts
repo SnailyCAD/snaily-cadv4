@@ -6,4 +6,5 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   steamApiKey: z.string().max(255),
   towWhitelisted: z.boolean(),
   whitelisted: z.boolean(),
+  registrationCode: z.string().min(2).max(255),
 });

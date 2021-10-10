@@ -15,6 +15,7 @@ export const CREATE_CITIZEN_SCHEMA = (isServer = false) =>
   });
 
 export const VEHICLE_SCHEMA = z.object({
+  plate: z.string().min(2),
   model: z.string().min(2),
   color: z.string().min(2).max(255),
   registrationStatus: z.string().min(2).max(255),
