@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "prisma migrate dev && prisma generate && nodemon --watch \"src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
-    "start": "yarn workspace @snailycad/schemas build && yarn workspace @snailycad/config build && prisma migrate deploy && prisma generate && ts-node src/main.ts",
+    "start": "yarn workspace @snailycad/schemas build && yarn workspace @snailycad/config build && npx prisma migrate deploy && ts-node src/main.ts",
     "format": "prisma format",
     "generate": "prisma generate"
   },
