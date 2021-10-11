@@ -1,7 +1,12 @@
 {
   "Tow": {
+    "tow": "Tow",
+    "noTowCalls": "There are no tow calls yet.",
+    "assignToCall": "Assign to call",
     "assignedUnit": "Assigned Unit",
     "location": "Location",
-    "caller": "Caller"
+    "caller": "Caller",
+    "createTowCall": "Create Tow Call",
+    "editTowCall": "Edit Tow Call"
   }
 }

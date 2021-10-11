@@ -1,7 +1,7 @@
-import { Controller, BodyParams, Context, UseBefore } from "@tsed/common";
+import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
 import { Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
-import { validate, TOW_SCHEMA } from "@snailycad/schemas";
+import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "../../middlewares";
 import { CadSocketService } from "../../services/SocketService";
@@ -61,8 +61,43 @@ export class TowController {
     return call;
   }
 
+  @UseBefore(IsAuth)
   @Put("/:id")
-  async updateCall() {
-    return "todo";
+  async updateCall(@PathParams("id") callId: string, @BodyParams() body: JsonRequestBody) {
+    const error = validate(UPDATE_TOW_SCHEMA, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const call = await prisma.towCall.findUnique({
+      where: {
+        id: callId,
+      },
+    });
+
+    if (!call) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.towCall.update({
+      where: {
+        id: callId,
+      },
+      data: {
+        description: body.get("description"),
+        location: body.get("location"),
+        assignedUnit: body.get("assignedUnitId")
+          ? { connect: { id: body.get("assignedUnitId") } }
+          : undefined,
+      },
+      include: {
+        creator: true,
+        assignedUnit: true,
+      },
+    });
+
+    await this.socket.emitUpdateTowCall(updated);
+
+    return updated;
   }
 }

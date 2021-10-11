@@ -14,7 +14,7 @@ import { RegisterVehicleModal } from "components/citizen/modals/RegisterVehicleM
 import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponModal";
 import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
-import { CreateTowCallModal } from "components/citizen/modals/CreateTowCall";
+import { ManageTowCallModal } from "components/citizen/tow/ManageTowCall";
 
 interface Props {
   citizens: Citizen[];
@@ -47,7 +47,7 @@ export default function CitizenPage({ citizens }: Props) {
       </ul>
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
-        <Button onClick={() => openModal(ModalIds.CreateTowCall)} className="text-left">
+        <Button onClick={() => openModal(ModalIds.ManageTowCall)} className="text-left">
           {t("createTowCall")}
         </Button>
       </ul>
@@ -106,7 +106,7 @@ export default function CitizenPage({ citizens }: Props) {
         citizens={citizens}
         weapon={null}
       />
-      <CreateTowCallModal />
+      <ManageTowCallModal call={null} />
     </Layout>
   );
 }
@@ -126,7 +126,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
       citizens: data ?? [],
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "tow", "common"], locale)),
       },
     },
   };

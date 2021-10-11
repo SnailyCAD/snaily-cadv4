@@ -16,6 +16,10 @@ export class CadSocketService {
 
   async emitTowCall(call: TowCall) {
     this.io;
-    this.nsp.emit(SocketEvents.CreateTowCall, { data: call });
+    this.nsp.emit(SocketEvents.CreateTowCall, call);
+  }
+
+  async emitUpdateTowCall(call: TowCall) {
+    this.nsp.emit(SocketEvents.UpdateTowCall, call);
   }
 }

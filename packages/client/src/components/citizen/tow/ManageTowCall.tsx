@@ -15,40 +15,60 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import toast from "react-hot-toast";
 import { ModalIds } from "types/ModalIds";
+import { TowCall } from "types/prisma";
 import { useTranslations } from "use-intl";
 
-export const CreateTowCallModal = () => {
+interface Props {
+  call: TowCall | null;
+  onUpdate?: (old: TowCall, newC: TowCall) => void;
+}
+
+export const ManageTowCallModal = ({ onUpdate, call }: Props) => {
   const common = useTranslations("Common");
+  const t = useTranslations("Tow");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/tow", {
-      method: "POST",
-      data: values,
-    });
+    if (call) {
+      console.log({ call });
 
-    if (json.id) {
-      // todo: add translation
-      toast.success("Created.");
-      closeModal(ModalIds.CreateTowCall);
+      const { json } = await execute(`/tow/${call.id}`, {
+        method: "PUT",
+        data: { ...call, ...values, assignedUnitId: (call as any).assignedUnit?.id ?? "" },
+      });
+
+      // todo: onUpdate
+      onUpdate?.(call, json);
+    } else {
+      const { json } = await execute("/tow", {
+        method: "POST",
+        data: values,
+      });
+
+      if (json.id) {
+        // todo: add translation
+        toast.success("Created.");
+      }
     }
+
+    closeModal(ModalIds.ManageTowCall);
   }
 
   const INITIAL_VALUES = {
-    location: "",
-    creatorId: "",
-    description: "",
+    location: call?.location ?? "",
+    creatorId: call?.creatorId ?? "",
+    description: call?.description ?? "",
   };
 
   const validate = handleValidate(TOW_SCHEMA);
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.CreateTowCall)}
-      title={"Create Tow Call"}
-      isOpen={isOpen(ModalIds.CreateTowCall)}
+      onClose={() => closeModal(ModalIds.ManageTowCall)}
+      title={call ? t("editTowCall") : t("createTowCall")}
+      isOpen={isOpen(ModalIds.ManageTowCall)}
       className="min-w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -57,6 +77,7 @@ export const CreateTowCallModal = () => {
             <FormRow>
               <FormField label={"Citizen"}>
                 <Select
+                  disabled={!!call}
                   name="creatorId"
                   onChange={handleChange}
                   values={citizens.map((citizen) => ({
@@ -82,7 +103,7 @@ export const CreateTowCallModal = () => {
             <footer className="mt-5 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CreateTowCall)}
+                onClick={() => closeModal(ModalIds.ManageTowCall)}
                 variant="cancel"
               >
                 {common("cancel")}
@@ -93,7 +114,7 @@ export const CreateTowCallModal = () => {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("create")}
+                {call ? common("save") : common("create")}
               </Button>
             </footer>
           </form>

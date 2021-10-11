@@ -1,3 +1,4 @@
 export enum SocketEvents {
-  CreateTowCall = "CreateTowCall",
+  CreateTowCall = "CREATE_TOW_CALL",
+  UpdateTowCall = "UPDATE_TOW_CALL",
 }

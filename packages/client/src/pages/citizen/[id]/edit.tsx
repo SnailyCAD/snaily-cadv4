@@ -54,8 +54,8 @@ export default function EditCitizen({ values }: Props) {
     name: citizen.name,
     surname: citizen.surname,
     dateOfBirth: citizen.dateOfBirth,
-    gender: citizen.gender,
-    ethnicity: citizen.ethnicity,
+    gender: citizen.genderId,
+    ethnicity: citizen.ethnicityId,
     weight: citizen.weight,
     height: citizen.height,
     hairColor: citizen.hairColor,
@@ -139,7 +139,7 @@ export default function EditCitizen({ values }: Props) {
                   hasError={!!errors.gender}
                   values={genders.map((gender) => ({
                     label: gender.value,
-                    value: gender.value,
+                    value: gender.id,
                   }))}
                 />
                 <Error>{errors.gender}</Error>
@@ -153,7 +153,7 @@ export default function EditCitizen({ values }: Props) {
                   hasError={!!errors.ethnicity}
                   values={ethnicities.map((ethnicity) => ({
                     label: ethnicity.value,
-                    value: ethnicity.value,
+                    value: ethnicity.id,
                   }))}
                 />
 

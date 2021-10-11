@@ -145,7 +145,7 @@ export type TowCall = {
   id: string;
   createdAt: Date;
   userId: string;
-  citizenId: string | null;
+  assignedUnitId: string | null;
   location: string;
   description: string;
   creatorId: string;

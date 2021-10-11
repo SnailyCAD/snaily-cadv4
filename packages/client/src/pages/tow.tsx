@@ -10,21 +10,64 @@ import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useListener } from "context/SocketContext";
 import { SocketEvents } from "@snailycad/config";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
+import { AssignToCallModal } from "components/citizen/tow/AssignToTowCall";
+import { ManageTowCallModal } from "components/citizen/tow/ManageTowCall";
 
-type FullTowCall = TowCall & { assignedUnit: Citizen | null; creator: Citizen };
+export type FullTowCall = TowCall & { assignedUnit: Citizen | null; creator: Citizen };
 
 interface Props {
   calls: FullTowCall[];
 }
 
 export default function Tow(props: Props) {
+  const { openModal } = useModal();
   const [calls, setCalls] = React.useState<FullTowCall[]>(props.calls);
   const common = useTranslations("Common");
   const t = useTranslations("Tow");
 
-  useListener(SocketEvents.CreateTowCall, (data) => {
-    setCalls((p) => [...p, data.data]);
+  const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
+
+  useListener(SocketEvents.CreateTowCall, (data: FullTowCall) => {
+    setCalls((p) => [...p, data]);
   });
+
+  useListener(SocketEvents.UpdateTowCall, (data: FullTowCall) => {
+    const old = calls.find((v) => v.id === data.id);
+
+    if (old) {
+      setCalls((p) => {
+        const removed = p.filter((v) => v.id !== data.id);
+
+        return [data, ...removed];
+      });
+    }
+  });
+
+  function onCreateClick() {
+    setTempCall(null);
+    openModal(ModalIds.ManageTowCall);
+  }
+
+  function assignClick(call: FullTowCall) {
+    openModal(ModalIds.AssignToTowCall);
+    setTempCall(call);
+  }
+
+  function editClick(call: FullTowCall) {
+    openModal(ModalIds.ManageTowCall);
+    setTempCall(call);
+  }
+
+  function updateCalls(old: TowCall, newC: TowCall) {
+    setTempCall(null);
+    setCalls((p) => {
+      const idx = p.findIndex((v) => v.id === old.id);
+      p[idx] = newC as FullTowCall;
+      return p;
+    });
+  }
 
   const assignedUnit = (call: FullTowCall) =>
     call.assignedUnit ? (
@@ -42,13 +85,17 @@ export default function Tow(props: Props) {
   return (
     <Layout>
       <Head>
-        <title>{"Tow"} - SnailyCAD</title>
+        <title>{t("tow")} - SnailyCAD</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold">{"Tow"}</h1>
+      <header className="flex items-center justify-between mb-5">
+        <h1 className="text-3xl font-semibold">{t("tow")}</h1>
+
+        <Button onClick={onCreateClick}>{t("createTowCall")}</Button>
+      </header>
 
       {calls.length <= 0 ? (
-        <p className="mt-5">{"There are no tow calls yet."}</p>
+        <p className="mt-5">{t("noTowCalls")}</p>
       ) : (
         <div className="overflow-x-auto w-full mt-3">
           <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
@@ -69,22 +116,13 @@ export default function Tow(props: Props) {
                   <td className="capitalize">
                     {call.creator.name} {call.creator.surname}
                   </td>
-                  <td>{assignedUnit(call)}</td>
-                  <td className="w-[30%]">
-                    <Button
-                      //  onClick={() => handleEditClick(vehicle)}
-                      small
-                      variant="success"
-                    >
+                  <td className="capitalize">{assignedUnit(call)}</td>
+                  <td className="w-36">
+                    <Button onClick={() => editClick(call)} small variant="success">
                       {common("edit")}
                     </Button>
-                    <Button
-                      className="ml-2"
-                      // onClick={() => handleDeleteClick(vehicle)}
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
+                    <Button className="ml-2" onClick={() => assignClick(call)} small>
+                      {t("assignToCall")}
                     </Button>
                   </td>
                 </tr>
@@ -93,11 +131,18 @@ export default function Tow(props: Props) {
           </table>
         </div>
       )}
+
+      <AssignToCallModal onSuccess={updateCalls} call={tempCall} />
+      <ManageTowCallModal onUpdate={updateCalls} call={tempCall} />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const { data: citizens } = await handleRequest<any[]>("/citizen", {
+    headers: req.headers,
+  }).catch(() => ({ data: [] }));
+
   const { data } = await handleRequest("/tow", {
     headers: req.headers,
   }).catch(() => ({ data: [] }));
@@ -105,6 +150,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       calls: data,
+      citizens,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["tow", "common"], locale)),
