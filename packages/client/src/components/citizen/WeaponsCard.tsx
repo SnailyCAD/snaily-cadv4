@@ -56,7 +56,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
           <p className="text-gray-600">{t("noWeapons")}</p>
         ) : (
           <div className="overflow-x-auto w-full mt-3">
-            <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
+            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
               <thead>
                 <tr>
                   <th>{t("model")}</th>
@@ -67,9 +67,9 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
               <tbody>
                 {weapons.map((weapon) => (
                   <tr key={weapon.id}>
-                    <td>{weapon.model}</td>
-                    <td>{weapon.registrationStatus}</td>
-                    <td className="w-[30%]">
+                    <td>{weapon.model.value}</td>
+                    <td>{weapon.registrationStatus.value}</td>
+                    <td className="w-36">
                       <Button onClick={() => handleEditClick(weapon)} small variant="success">
                         {common("edit")}
                       </Button>

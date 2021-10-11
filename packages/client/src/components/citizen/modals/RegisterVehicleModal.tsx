@@ -72,10 +72,10 @@ export const RegisterVehicleModal = ({
   }
 
   const INITIAL_VALUES = {
-    model: vehicle?.model ?? "",
+    model: vehicle?.modelId ?? "",
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatus ?? "",
-    registrationStatus: vehicle?.registrationStatus ?? "",
+    registrationStatus: vehicle?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
   };
@@ -106,7 +106,7 @@ export const RegisterVehicleModal = ({
                 hasError={!!errors.model}
                 values={vehicles.values.map((vehicle) => ({
                   label: vehicle.value,
-                  value: vehicle.value,
+                  value: vehicle.id,
                 }))}
                 value={values.model}
                 name="model"
@@ -139,7 +139,7 @@ export const RegisterVehicleModal = ({
                 hasError={!!errors.registrationStatus}
                 values={licenses.values.map((license) => ({
                   label: license.value,
-                  value: license.value,
+                  value: license.id,
                 }))}
                 value={values.registrationStatus}
                 name="registrationStatus"

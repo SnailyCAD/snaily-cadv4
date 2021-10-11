@@ -14,9 +14,9 @@ interface ProviderProps {
 }
 
 export const SocketProvider = ({ url, options, children }: ProviderProps) => {
-  const [socket] = React.useState(io(url, options));
+  const socket = React.useRef(io(url, options));
 
-  const value = { socket };
+  const value = { socket: socket.current };
 
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };

@@ -64,10 +64,12 @@ export default function CreateCitizen() {
     });
 
     if (json?.id) {
-      await execute(`/citizen/${json.id}`, {
-        method: "POST",
-        data: fd,
-      });
+      if (image && image.size && image.name) {
+        await execute(`/citizen/${json.id}`, {
+          method: "POST",
+          data: fd,
+        });
+      }
 
       const path = `/citizen/${json.id}`;
       router.push(path);
@@ -141,7 +143,7 @@ export default function CreateCitizen() {
                   hasError={!!errors.gender}
                   values={genders.values.map((gender) => ({
                     label: gender.value,
-                    value: gender.value,
+                    value: gender.id,
                   }))}
                 />
                 <Error>{errors.gender}</Error>
@@ -155,7 +157,7 @@ export default function CreateCitizen() {
                   hasError={!!errors.ethnicity}
                   values={ethnicities.values.map((ethnicity) => ({
                     label: ethnicity.value,
-                    value: ethnicity.value,
+                    value: ethnicity.id,
                   }))}
                 />
 

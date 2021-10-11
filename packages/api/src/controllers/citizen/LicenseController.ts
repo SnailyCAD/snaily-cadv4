@@ -38,10 +38,16 @@ export class LicensesController {
         id: citizen.id,
       },
       data: {
-        ccw: body.get("ccw"),
-        driversLicense: body.get("driversLicense"),
-        pilotLicense: body.get("pilotLicense"),
-        weaponLicense: body.get("weaponLicense"),
+        ccwId: body.get("ccw"),
+        driversLicenseId: body.get("driversLicense"),
+        pilotLicenseId: body.get("pilotLicense"),
+        weaponLicenseId: body.get("weaponLicense"),
+      },
+      include: {
+        weaponLicense: true,
+        driversLicense: true,
+        ccw: true,
+        pilotLicense: true,
       },
     });
 

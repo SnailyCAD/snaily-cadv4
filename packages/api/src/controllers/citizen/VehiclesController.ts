@@ -45,12 +45,16 @@ export class VehiclesController {
         plate: body.get("plate").toUpperCase(),
         color: body.get("color"),
         citizenId: citizen.id,
-        model: body.get("model"),
-        registrationStatus: body.get("registrationStatus"),
+        modelId: body.get("model"),
+        registrationStatusId: body.get("registrationStatus"),
         // todo
         insuranceStatus: "TEST",
         vinNumber: generateString(17),
         userId: user.id,
+      },
+      include: {
+        model: true,
+        registrationStatus: true,
       },
     });
 
@@ -84,9 +88,13 @@ export class VehiclesController {
         id: vehicle.id,
       },
       data: {
-        model: body.get("model"),
+        modelId: body.get("model"),
         color: body.get("color"),
-        registrationStatus: body.get("registrationStatus"),
+        registrationStatusId: body.get("registrationStatus"),
+      },
+      include: {
+        model: true,
+        registrationStatus: true,
       },
     });
 

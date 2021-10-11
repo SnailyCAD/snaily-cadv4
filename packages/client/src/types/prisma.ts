@@ -45,17 +45,23 @@ export type Citizen = {
   name: string;
   surname: string;
   dateOfBirth: Date;
-  gender: string;
-  ethnicity: string;
+  genderId: string;
+  gender: Value<"GENDER">;
+  ethnicityId: string;
+  ethnicity: Value<"ETHNICITY">;
   hairColor: string;
   eyeColor: string;
   address: string;
   height: string;
   weight: string;
-  driversLicense: string | null;
-  weaponLicense: string | null;
-  pilotLicense: string | null;
-  ccw: string | null;
+  driversLicenseId: string | null;
+  driversLicense: Value<"LICENSE"> | null;
+  weaponLicenseId: string | null;
+  weaponLicense: Value<"LICENSE"> | null;
+  pilotLicenseId: string | null;
+  pilotLicense: Value<"LICENSE"> | null;
+  ccwId: string | null;
+  ccw: Value<"LICENSE"> | null;
   imageId: string | null;
   note: string | null;
   dead: boolean | null;
@@ -72,10 +78,12 @@ export type RegisteredVehicle = {
   citizenId: string;
   plate: string;
   vinNumber: string;
-  model: string;
+  modelId: string;
+  model: Value<"VEHICLE">;
   color: string;
   createdAt: Date;
-  registrationStatus: string;
+  registrationStatus: Value<"LICENSE">;
+  registrationStatusId: string;
   insuranceStatus: string;
 };
 
@@ -88,8 +96,10 @@ export type Weapon = {
   userId: string;
   citizenId: string;
   serialNumber: string;
-  registrationStatus: string;
-  model: string;
+  registrationStatus: Value<"LICENSE">;
+  registrationStatusId: string;
+  model: Value<"VEHICLE">;
+  modelId: string;
 };
 
 /**
@@ -108,9 +118,9 @@ export type MedicalRecord = {
  * Model Value
  */
 
-export type Value = {
+export type Value<Type extends ValueType = ValueType> = {
   id: string;
-  type: ValueType;
+  type: Type;
   value: string;
   isDefault: boolean;
 };

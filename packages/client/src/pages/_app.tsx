@@ -22,7 +22,13 @@ export default function App({ Component, router, pageProps }: AppProps) {
         <ModalProvider>
           <ValuesProvider initialData={pageProps}>
             <CitizenProvider initialData={pageProps}>
-              <SocketProvider url="http://localhost:8080" options={{}}>
+              <SocketProvider
+                url="http://localhost:8080"
+                options={{
+                  reconnectionDelay: 5_000,
+                  reconnectionAttempts: 50,
+                }}
+              >
                 <Component {...pageProps} />
                 <Toaster
                   position="top-right"

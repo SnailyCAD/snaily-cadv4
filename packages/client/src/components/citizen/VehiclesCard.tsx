@@ -56,7 +56,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
           <p className="text-gray-600">{t("noVehicles")}</p>
         ) : (
           <div className="overflow-x-auto w-full mt-3">
-            <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
+            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
               <thead>
                 <tr>
                   <th>{t("plate")}</th>
@@ -70,10 +70,10 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                 {vehicles.map((vehicle) => (
                   <tr key={vehicle.id}>
                     <td>{vehicle.plate.toUpperCase()}</td>
-                    <td>{vehicle.model}</td>
+                    <td>{vehicle.model.value}</td>
                     <td>{vehicle.color}</td>
-                    <td>{vehicle.registrationStatus}</td>
-                    <td className="w-[30%]">
+                    <td>{vehicle.registrationStatus.value}</td>
+                    <td className="w-36">
                       <Button onClick={() => handleEditClick(vehicle)} small variant="success">
                         {common("edit")}
                       </Button>

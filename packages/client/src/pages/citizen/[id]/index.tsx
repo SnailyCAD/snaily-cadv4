@@ -122,11 +122,11 @@ export default function CitizenId() {
             </p>
             <p>
               <span className="font-semibold">{t("gender")}: </span>
-              {citizen.gender}
+              {citizen.gender.value}
             </p>
             <p>
               <span className="font-semibold">{t("ethnicity")}: </span>
-              {citizen.ethnicity}
+              {citizen.ethnicity.value}
             </p>
             <p>
               <span className="font-semibold">{t("hairColor")}: </span>
@@ -169,9 +169,12 @@ export default function CitizenId() {
       <div className="mt-3 gap-2 gap-y-3 grid grid-cols-1 md:grid-cols-2">
         <LicensesCard />
         <MedicalRecords medicalRecords={citizen.medicalRecords} />
+        {/* <ViolationsCard weapons={[]} /> */}
+      </div>
+
+      <div className="mt-3 space-y-3">
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
-        {/* <ViolationsCard weapons={[]} /> */}
       </div>
 
       <Modal

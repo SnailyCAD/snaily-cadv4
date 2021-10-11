@@ -31,9 +31,25 @@ export class CitizenController {
         userId: ctx.get("user").id,
       },
       include: {
-        vehicles: true,
-        weapons: true,
+        vehicles: {
+          include: {
+            model: true,
+            registrationStatus: true,
+          },
+        },
+        weapons: {
+          include: {
+            model: true,
+            registrationStatus: true,
+          },
+        },
         medicalRecords: true,
+        ethnicity: true,
+        gender: true,
+        weaponLicense: true,
+        driversLicense: true,
+        ccw: true,
+        pilotLicense: true,
       },
     });
 
@@ -96,11 +112,19 @@ export class CitizenController {
         height,
         hairColor,
         dateOfBirth,
-        ethnicity,
+        ethnicityId: ethnicity,
         name,
         surname,
-        gender,
+        genderId: gender,
         eyeColor,
+      },
+      include: {
+        gender: true,
+        ethnicity: true,
+        weaponLicense: true,
+        driversLicense: true,
+        ccw: true,
+        pilotLicense: true,
       },
     });
 
@@ -144,6 +168,10 @@ export class CitizenController {
         ethnicity,
         gender,
         eyeColor,
+      },
+      include: {
+        gender: true,
+        ethnicity: true,
       },
     });
 

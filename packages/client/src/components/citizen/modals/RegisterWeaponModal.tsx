@@ -1,5 +1,6 @@
 import { useTranslations } from "use-intl";
 import { Formik } from "formik";
+import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -13,7 +14,6 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
-import { useRouter } from "next/router";
 import { useCitizen } from "context/CitizenContext";
 
 interface Props {
@@ -72,8 +72,8 @@ export const RegisterWeaponModal = ({
   }
 
   const INITIAL_VALUES = {
-    model: weapon?.model ?? "",
-    registrationStatus: weapon?.registrationStatus ?? "",
+    model: weapon?.modelId ?? "",
+    registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
   };
 
@@ -92,7 +92,7 @@ export const RegisterWeaponModal = ({
                 hasError={!!errors.model}
                 values={weapons.values.map((weapon) => ({
                   label: weapon.value,
-                  value: weapon.value,
+                  value: weapon.id,
                 }))}
                 value={values.model}
                 name="model"
@@ -125,7 +125,7 @@ export const RegisterWeaponModal = ({
                 hasError={!!errors.registrationStatus}
                 values={licenses.values.map((license) => ({
                   label: license.value,
-                  value: license.value,
+                  value: license.id,
                 }))}
                 value={values.registrationStatus}
                 name="registrationStatus"

@@ -33,10 +33,14 @@ export class WeaponController {
     const weapon = await prisma.weapon.create({
       data: {
         citizenId: citizen.id,
-        model: body.get("model"),
-        registrationStatus: body.get("registrationStatus"),
+        modelId: body.get("model"),
+        registrationStatusId: body.get("registrationStatus"),
         serialNumber: generateString(10),
         userId: user.id,
+      },
+      include: {
+        model: true,
+        registrationStatus: true,
       },
     });
 
@@ -70,8 +74,12 @@ export class WeaponController {
         id: weapon.id,
       },
       data: {
-        model: body.get("model"),
-        registrationStatus: body.get("registrationStatus"),
+        modelId: body.get("model"),
+        registrationStatusId: body.get("registrationStatus"),
+      },
+      include: {
+        model: true,
+        registrationStatus: true,
       },
     });
 

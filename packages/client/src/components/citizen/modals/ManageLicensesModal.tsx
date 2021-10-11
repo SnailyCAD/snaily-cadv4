@@ -39,10 +39,10 @@ export const ManageLicensesModal = () => {
 
   const validate = handleValidate(LICENSE_SCHEMA);
   const INITIAL_VALUES = {
-    driversLicense: citizen.driversLicense ?? "",
-    pilotLicense: citizen.pilotLicense ?? "",
-    weaponLicense: citizen.weaponLicense ?? "",
-    ccw: citizen.ccw ?? "",
+    driversLicense: citizen.driversLicenseId ?? "",
+    pilotLicense: citizen.pilotLicenseId ?? "",
+    weaponLicense: citizen.weaponLicenseId ?? "",
+    ccw: citizen.ccwId ?? "",
   };
 
   return (
@@ -58,9 +58,9 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="driversLicense" label={"driversLicense"}>
               <Select
                 hasError={!!errors.driversLicense}
-                values={licenses.values.map((weapon) => ({
-                  label: weapon.value,
-                  value: weapon.value,
+                values={licenses.values.map((license) => ({
+                  label: license.value,
+                  value: license.id,
                 }))}
                 value={values.driversLicense}
                 name="driversLicense"
@@ -72,9 +72,9 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="weaponLicense" label={"weaponLicense"}>
               <Select
                 hasError={!!errors.weaponLicense}
-                values={licenses.values.map((weapon) => ({
-                  label: weapon.value,
-                  value: weapon.value,
+                values={licenses.values.map((license) => ({
+                  label: license.value,
+                  value: license.id,
                 }))}
                 value={values.weaponLicense}
                 name="weaponLicense"
@@ -85,9 +85,9 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="pilotLicense" label={"pilotLicense"}>
               <Select
                 hasError={!!errors.pilotLicense}
-                values={licenses.values.map((weapon) => ({
-                  label: weapon.value,
-                  value: weapon.value,
+                values={licenses.values.map((license) => ({
+                  label: license.value,
+                  value: license.id,
                 }))}
                 value={values.pilotLicense}
                 name="pilotLicense"
@@ -98,9 +98,9 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="ccw" label={"ccw"}>
               <Select
                 hasError={!!errors.ccw}
-                values={licenses.values.map((weapon) => ({
-                  label: weapon.value,
-                  value: weapon.value,
+                values={licenses.values.map((license) => ({
+                  label: license.value,
+                  value: license.id,
                 }))}
                 value={values.ccw}
                 name="ccw"

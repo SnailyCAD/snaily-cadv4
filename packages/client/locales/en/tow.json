@@ -1,7 +1,7 @@
 {
-    "Tow": {
-        "assignedUnit": "Assigned Unit",
-        "location": "Location",
-        "caller": "Caller"
-    }
+  "Tow": {
+    "assignedUnit": "Assigned Unit",
+    "location": "Location",
+    "caller": "Caller"
+  }
 }

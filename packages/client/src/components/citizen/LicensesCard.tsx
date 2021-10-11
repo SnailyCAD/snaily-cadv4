@@ -9,6 +9,7 @@ import { useCitizen } from "context/CitizenContext";
 export const LicensesCard = () => {
   const { openModal } = useModal();
   const t = useTranslations("Citizen");
+  const common = useTranslations("Common");
   const { citizen } = useCitizen(false);
 
   const types = ["driversLicense", "weaponLicense", "pilotLicense", "ccw"] as const;
@@ -27,7 +28,8 @@ export const LicensesCard = () => {
         <div>
           {types.map((type) => (
             <p key={type}>
-              <span className="font-semibold">{t(type)}: </span> {citizen[type]}
+              <span className="font-semibold">{t(type)}: </span>{" "}
+              {citizen[type]?.value ?? common("none")}
             </p>
           ))}
         </div>
