@@ -14,3 +14,5 @@ export const validPaths = [
   "vehicle",
   "weapon",
 ] as const;
+
+export * from "./socket-events";

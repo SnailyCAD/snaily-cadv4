@@ -241,7 +241,7 @@ const CitizenDropdown = () => {
                 return (
                   <Menu.Item key={item}>
                     {({ active }) => (
-                      <Link href={lower}>
+                      <Link href={`/${lower}`}>
                         <a
                           className={`${
                             active ? "bg-gray-200" : "text-gray-900"

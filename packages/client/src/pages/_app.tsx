@@ -6,6 +6,7 @@ import { ModalProvider } from "context/ModalContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
+import { SocketProvider } from "context/SocketContext";
 
 const styles: React.CSSProperties = {
   minWidth: "20em",
@@ -21,13 +22,15 @@ export default function App({ Component, router, pageProps }: AppProps) {
         <ModalProvider>
           <ValuesProvider initialData={pageProps}>
             <CitizenProvider initialData={pageProps}>
-              <Component {...pageProps} />
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  style: styles,
-                }}
-              />
+              <SocketProvider url="http://localhost:8080" options={{}}>
+                <Component {...pageProps} />
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    style: styles,
+                  }}
+                />
+              </SocketProvider>
             </CitizenProvider>
           </ValuesProvider>
         </ModalProvider>

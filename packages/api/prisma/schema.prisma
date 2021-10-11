@@ -50,33 +50,36 @@ model User {
   executedNotifictions Notification[]      @relation("executor")
   medicalRecords       MedicalRecord[]
   bleeterPosts         BleeterPost[]
+  towCalls             TowCall[]
 }
 
 model Citizen {
-  id             String              @id @default(cuid())
-  user           User                @relation(fields: [userId], references: [id])
-  userId         String
-  name           String              @db.VarChar(255)
-  surname        String              @db.VarChar(255)
-  dateOfBirth    DateTime
-  gender         String              @db.VarChar(255)
-  ethnicity      String              @db.VarChar(255)
-  hairColor      String              @db.VarChar(255)
-  eyeColor       String              @db.VarChar(255)
-  address        String              @db.VarChar(255)
-  height         String              @db.VarChar(255)
-  weight         String              @db.VarChar(255)
-  driversLicense String?             @db.VarChar(255)
-  weaponLicense  String?             @db.VarChar(255)
-  pilotLicense   String?             @db.VarChar(255)
-  ccw            String?             @db.VarChar(255)
-  imageId        String?             @db.Text
-  note           String?             @db.Text
-  dead           Boolean?            @default(false)
-  dateOfDead     DateTime?
-  vehicles       RegisteredVehicle[]
-  weapons        Weapon[]
-  medicalRecords MedicalRecord[]
+  id              String              @id @default(cuid())
+  user            User                @relation(fields: [userId], references: [id])
+  userId          String
+  name            String              @db.VarChar(255)
+  surname         String              @db.VarChar(255)
+  dateOfBirth     DateTime
+  gender          String              @db.VarChar(255)
+  ethnicity       String              @db.VarChar(255)
+  hairColor       String              @db.VarChar(255)
+  eyeColor        String              @db.VarChar(255)
+  address         String              @db.VarChar(255)
+  height          String              @db.VarChar(255)
+  weight          String              @db.VarChar(255)
+  driversLicense  String?             @db.VarChar(255)
+  weaponLicense   String?             @db.VarChar(255)
+  pilotLicense    String?             @db.VarChar(255)
+  ccw             String?             @db.VarChar(255)
+  imageId         String?             @db.Text
+  note            String?             @db.Text
+  dead            Boolean?            @default(false)
+  dateOfDead      DateTime?
+  vehicles        RegisteredVehicle[]
+  weapons         Weapon[]
+  medicalRecords  MedicalRecord[]
+  towCalls        TowCall[]
+  createdTowCalls TowCall[]           @relation("towCallCreator")
 }
 
 enum Rank {
@@ -163,10 +166,24 @@ model BleeterPost {
   id        String   @id @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  title     String
-  body      String
-  imageId   String?
+  title     String   @db.VarChar(255)
+  body      String   @db.Text
+  imageId   String?  @db.VarChar(255)
   createdAt DateTime @default(now())
+}
+
+// tow
+model TowCall {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  assignedUnit Citizen? @relation(fields: [citizenId], references: [id])
+  citizenId    String?
+  location     String   @db.VarChar(255)
+  description  String   @db.Text
+  creator      Citizen  @relation("towCallCreator", fields: [creatorId], references: [id])
+  creatorId    String
 }
 
 enum Feature {

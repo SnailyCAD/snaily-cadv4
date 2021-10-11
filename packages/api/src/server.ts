@@ -1,5 +1,6 @@
 import { Configuration, Inject, PlatformApplication } from "@tsed/common";
 import { json } from "express";
+import "@tsed/socketio";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -22,6 +23,12 @@ const rootDir = __dirname;
         root: `${process.cwd()}/public`,
       },
     ],
+  },
+  socketIO: {
+    cors: {
+      credentials: true,
+      origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",
+    },
   },
 })
 export class Server {

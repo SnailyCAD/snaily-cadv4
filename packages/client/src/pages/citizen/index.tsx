@@ -14,6 +14,7 @@ import { RegisterVehicleModal } from "components/citizen/modals/RegisterVehicleM
 import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponModal";
 import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
+import { CreateTowCallModal } from "components/citizen/modals/CreateTowCall";
 
 interface Props {
   citizens: Citizen[];
@@ -42,6 +43,12 @@ export default function CitizenPage({ citizens }: Props) {
         </Button>
         <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
           {t("registerWeapon")}
+        </Button>
+      </ul>
+
+      <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
+        <Button onClick={() => openModal(ModalIds.CreateTowCall)} className="text-left">
+          {t("createTowCall")}
         </Button>
       </ul>
 
@@ -99,6 +106,7 @@ export default function CitizenPage({ citizens }: Props) {
         citizens={citizens}
         weapon={null}
       />
+      <CreateTowCallModal />
     </Layout>
   );
 }

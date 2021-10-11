@@ -128,6 +128,20 @@ export type BleeterPost = {
 };
 
 /**
+ * Model TowCall
+ */
+
+export type TowCall = {
+  id: string;
+  createdAt: Date;
+  userId: string;
+  citizenId: string | null;
+  location: string;
+  description: string;
+  creatorId: string;
+};
+
+/**
  * Enums
  */
 
