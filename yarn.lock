@@ -102,6 +102,14 @@
     eslint-plugin-promise "^5.1.0"
     prettier "^2.4.0"
 
+"@casper124578/use-socket.io@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@casper124578/use-socket.io/-/use-socket.io-1.0.1.tgz#27b3598e86e32d218e558a06323d45c6eb2cecc7"
+  integrity sha512-8lsCw2orHF/yrzCmvLFZS6lfQoxnen8KDeA/ZcPrWmn18STl9zxD4OYQN6kTuCoMHPxIPT5T1vcHqyhhTFVj5w==
+  dependencies:
+    react "^17.0.2"
+    socket.io-client "^4.2.0"
+
 "@casper124578/utils@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@casper124578/utils/-/utils-1.3.0.tgz#ba0cd6c2b3fd5976331fa69e9c1c3f7afc05bcad"

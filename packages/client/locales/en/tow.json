@@ -7,6 +7,8 @@
     "location": "Location",
     "caller": "Caller",
     "createTowCall": "Create Tow Call",
-    "editTowCall": "Edit Tow Call"
+    "editTowCall": "Edit Tow Call",
+    "endCall": "End Call",
+    "selectCitizen": "Select Citizen"
   }
 }

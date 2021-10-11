@@ -22,6 +22,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
+  const t = useTranslations("Tow");
   const { citizens } = useCitizen();
 
   const INITIAL_VALUES = {
@@ -60,7 +61,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ values, errors, isValid, handleChange }) => (
           <Form>
-            <FormField label="Select Citizen">
+            <FormField label={t("selectCitizen")}>
               <Select
                 isClearable
                 hasError={!!errors.assignedUnitId}

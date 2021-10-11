@@ -8,7 +8,7 @@ import { Citizen, TowCall } from "types/prisma";
 import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
-import { useListener } from "context/SocketContext";
+import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -29,21 +29,31 @@ export default function Tow(props: Props) {
 
   const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
 
-  useListener(SocketEvents.CreateTowCall, (data: FullTowCall) => {
-    setCalls((p) => [...p, data]);
-  });
+  useListener(
+    SocketEvents.CreateTowCall,
+    (data: FullTowCall) => {
+      setCalls((p) => [...p, data]);
+    },
+    "tow",
+  );
 
-  useListener(SocketEvents.UpdateTowCall, (data: FullTowCall) => {
-    const old = calls.find((v) => v.id === data.id);
+  useListener(SocketEvents.EndTowCall, handleCallEnd, "tow");
 
-    if (old) {
-      setCalls((p) => {
-        const removed = p.filter((v) => v.id !== data.id);
+  useListener(
+    SocketEvents.UpdateTowCall,
+    (data: FullTowCall) => {
+      const old = calls.find((v) => v.id === data.id);
 
-        return [data, ...removed];
-      });
-    }
-  });
+      if (old) {
+        setCalls((p) => {
+          const removed = p.filter((v) => v.id !== data.id);
+
+          return [data, ...removed];
+        });
+      }
+    },
+    "tow",
+  );
 
   function onCreateClick() {
     setTempCall(null);
@@ -58,6 +68,10 @@ export default function Tow(props: Props) {
   function editClick(call: FullTowCall) {
     openModal(ModalIds.ManageTowCall);
     setTempCall(call);
+  }
+
+  function handleCallEnd(call: TowCall) {
+    setCalls((p) => p.filter((v) => v.id !== call.id));
   }
 
   function updateCalls(old: TowCall, newC: TowCall) {
@@ -133,7 +147,7 @@ export default function Tow(props: Props) {
       )}
 
       <AssignToCallModal onSuccess={updateCalls} call={tempCall} />
-      <ManageTowCallModal onUpdate={updateCalls} call={tempCall} />
+      <ManageTowCallModal onDelete={handleCallEnd} onUpdate={updateCalls} call={tempCall} />
     </Layout>
   );
 }

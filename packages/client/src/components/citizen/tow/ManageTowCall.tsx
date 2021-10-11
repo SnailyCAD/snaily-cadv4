@@ -21,26 +21,39 @@ import { useTranslations } from "use-intl";
 interface Props {
   call: TowCall | null;
   onUpdate?: (old: TowCall, newC: TowCall) => void;
+  onDelete?: (call: TowCall) => void;
 }
 
-export const ManageTowCallModal = ({ onUpdate, call }: Props) => {
+export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
   const common = useTranslations("Common");
   const t = useTranslations("Tow");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
 
+  async function handleDelete() {
+    if (!call) return;
+
+    const { json } = await execute(`/tow/${call.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      onDelete?.(call);
+      closeModal(ModalIds.ManageTowCall);
+    }
+  }
+
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (call) {
-      console.log({ call });
-
       const { json } = await execute(`/tow/${call.id}`, {
         method: "PUT",
         data: { ...call, ...values, assignedUnitId: (call as any).assignedUnit?.id ?? "" },
       });
 
-      // todo: onUpdate
-      onUpdate?.(call, json);
+      if (json.id) {
+        onUpdate?.(call, json);
+      }
     } else {
       const { json } = await execute("/tow", {
         method: "POST",
@@ -100,22 +113,36 @@ export const ManageTowCallModal = ({ onUpdate, call }: Props) => {
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageTowCall)}
-                variant="cancel"
-              >
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {call ? common("save") : common("create")}
-              </Button>
+            <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
+              {call ? (
+                <Button
+                  variant="danger"
+                  className="flex items-center mr-2"
+                  disabled={state === "loading"}
+                  type="button"
+                  onClick={handleDelete}
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {t("endCall")}
+                </Button>
+              ) : null}
+              <div className="flex items-center">
+                <Button
+                  type="reset"
+                  onClick={() => closeModal(ModalIds.ManageTowCall)}
+                  variant="cancel"
+                >
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {call ? common("save") : common("create")}
+                </Button>
+              </div>
             </footer>
           </form>
         )}

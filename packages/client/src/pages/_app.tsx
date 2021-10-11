@@ -6,7 +6,7 @@ import { ModalProvider } from "context/ModalContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
-import { SocketProvider } from "context/SocketContext";
+import { SocketProvider } from "@casper124578/use-socket.io";
 
 const styles: React.CSSProperties = {
   minWidth: "20em",
@@ -23,7 +23,8 @@ export default function App({ Component, router, pageProps }: AppProps) {
           <ValuesProvider initialData={pageProps}>
             <CitizenProvider initialData={pageProps}>
               <SocketProvider
-                url="http://localhost:8080"
+                uri="http://localhost:8080"
+                namespaces={["tow"]}
                 options={{
                   reconnectionDelay: 5_000,
                   reconnectionAttempts: 50,

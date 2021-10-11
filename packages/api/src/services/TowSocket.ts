@@ -3,16 +3,14 @@ import { Nsp, SocketService } from "@tsed/socketio";
 import * as SocketIO from "socket.io";
 import { SocketEvents } from "@snailycad/config";
 
-@SocketService("/")
-export class CadSocketService {
+@SocketService("/tow")
+export class TowSocket {
   @Nsp nsp!: SocketIO.Namespace;
   private io: SocketIO.Server;
 
   constructor(io: SocketIO.Server) {
     this.io = io;
   }
-
-  //   $onConnection(@Socket socket: SocketIO.Socket, @SocketSession session: SocketSession) {}
 
   async emitTowCall(call: TowCall) {
     this.io;
@@ -21,5 +19,9 @@ export class CadSocketService {
 
   async emitUpdateTowCall(call: TowCall) {
     this.nsp.emit(SocketEvents.UpdateTowCall, call);
+  }
+
+  async emitCallDelete(call: TowCall) {
+    this.nsp.emit(SocketEvents.EndTowCall, call);
   }
 }

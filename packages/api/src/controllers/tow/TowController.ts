@@ -1,15 +1,15 @@
 import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
-import { Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "../../middlewares";
-import { CadSocketService } from "../../services/SocketService";
+import { TowSocket } from "../../services/TowSocket";
 
 @Controller("/tow")
 export class TowController {
-  private socket: CadSocketService;
-  constructor(socket: CadSocketService) {
+  private socket: TowSocket;
+  constructor(socket: TowSocket) {
     this.socket = socket;
   }
 
@@ -79,6 +79,16 @@ export class TowController {
       throw new NotFound("notFound");
     }
 
+    const rawAssignedUnitId = body.get("assignedUnitId");
+    const assignedUnitId =
+      rawAssignedUnitId === null
+        ? {
+            disconnect: true,
+          }
+        : body.get("assignedUnitId")
+        ? { connect: { id: body.get("assignedUnitId") } }
+        : undefined;
+
     const updated = await prisma.towCall.update({
       where: {
         id: callId,
@@ -86,9 +96,7 @@ export class TowController {
       data: {
         description: body.get("description"),
         location: body.get("location"),
-        assignedUnit: body.get("assignedUnitId")
-          ? { connect: { id: body.get("assignedUnitId") } }
-          : undefined,
+        assignedUnit: assignedUnitId,
       },
       include: {
         creator: true,
@@ -99,5 +107,29 @@ export class TowController {
     await this.socket.emitUpdateTowCall(updated);
 
     return updated;
+  }
+
+  @UseBefore(IsAuth)
+  @Delete("/:id")
+  async deleteTowCall(@PathParams("id") callId: string) {
+    const call = await prisma.towCall.findUnique({
+      where: {
+        id: callId,
+      },
+    });
+
+    if (!call) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.towCall.delete({
+      where: {
+        id: call.id,
+      },
+    });
+
+    await this.socket.emitCallDelete(call);
+
+    return true;
   }
 }
