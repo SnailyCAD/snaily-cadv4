@@ -2,14 +2,15 @@ import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "react-bootstrap-icons";
 
-interface Props {
+export interface ModalProps {
   title: string;
   children: React.ReactNode;
   isOpen: boolean;
+  className?: string;
   onClose: () => void;
 }
 
-export const Modal = ({ title, children, isOpen, onClose }: Props) => {
+export const Modal = ({ title, children, isOpen, className, onClose }: ModalProps) => {
   return (
     <Transition
       show={isOpen}
@@ -30,12 +31,14 @@ export const Modal = ({ title, children, isOpen, onClose }: Props) => {
         <div className="min-h-screen px-4 text-center">
           <Dialog.Overlay className="fixed inset-0 bg-black/10" />
 
-          {/* This element is to trick the browser into centering the modal contents. */}
+          {/* this element is to trick the browser into centering the modal contents. */}
           <span className="inline-block h-screen align-middle" aria-hidden="true">
             &#8203;
           </span>
 
-          <div className="inline-block w-full max-w-md p-4 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+          <div
+            className={`inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
+          >
             <Dialog.Title
               as="h3"
               className="text-xl font-semibold text-gray-900 flex items-center justify-between mb-2"

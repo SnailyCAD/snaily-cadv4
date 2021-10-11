@@ -16,34 +16,40 @@ li {
   @apply text-lg;
 }
 
-// animation from https://ui-snippets.dev
-.loader {
-  span {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    animation: flashing 1.4s infinite linear;
-    margin: 0 4px;
-    display: inline-block;
+table {
+  @apply w-full max-w-full overflow-auto;
+}
 
-    &:nth-child(2) {
-      animation-delay: 0.2s;
-    }
+th {
+  @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-black lg:table-cell text-left select-none;
 
-    &:nth-child(3) {
-      animation-delay: 0.4s;
-    }
+  &:first-child {
+    @apply rounded-tl-md rounded-bl-md;
+  }
+  &:last-child {
+    @apply rounded-tr-md rounded-br-md;
   }
 }
 
-@keyframes flashing {
-  0% {
-    opacity: 0.2;
+tr {
+  @apply table-row text-left;
+}
+
+td {
+  @apply p-2 px-3;
+}
+
+.bleet-reset {
+  h1 {
+    @apply font-semibold text-3xl mb-2;
   }
-  20% {
-    opacity: 1;
+  h2 {
+    @apply font-semibold text-2xl mb-2;
   }
-  100% {
-    opacity: 0.2;
+  h3 {
+    @apply font-semibold text-xl mb-1;
+  }
+  h4 {
+    @apply text-lg;
   }
 }

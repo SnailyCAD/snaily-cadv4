@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: "snaily-cad-postgres"
+    image: postgres
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    networks:
+      - cad_web
+    volumes:
+      - ./.data:/var/lib/postgresql/data
+
+  api:
+    container_name: "snaily-cad-api"
+
+    user: node
+    image: node:16
+    command: "yarn workspace @snailycad/api start"
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    volumes:
+      - .:/srv/api
+    env_file:
+      - .env
+    working_dir: /srv/api
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production
+    networks:
+      - cad_web
+
+  client:
+    container_name: "snaily-cad-client"
+
+    user: node
+    image: node:16
+    command: "yarn workspace @snailycad/client start"
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    volumes:
+      - .:/srv/client
+    env_file:
+      - .env
+    working_dir: /srv/client
+    depends_on:
+      - api
+    networks:
+      - cad_web
+
+volumes:
+  redis-data:
+  redis-conf:
+
+networks:
+  cad_web:
+    external: true

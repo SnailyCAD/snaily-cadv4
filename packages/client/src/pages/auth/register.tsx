@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
+import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
 
@@ -11,16 +12,27 @@ import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
+import type { GetServerSideProps } from "next";
+import { getTranslations } from "lib/getTranslation";
+import { Button } from "components/Button";
+import type { cad } from "types/prisma";
+import { handleRequest } from "lib/fetch";
 
 const INITIAL_VALUES = {
   username: "",
   password: "",
   confirmPassword: "",
+  registrationCode: "",
 };
 
-export default function Register() {
+interface Props {
+  cad: Pick<cad, "registrationCode">;
+}
+
+export default function Register({ cad }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
+  const t = useTranslations("Auth");
 
   const validate = handleValidate(AUTH_SCHEMA);
 
@@ -40,27 +52,25 @@ export default function Register() {
       },
     });
 
-    // todo: redirect to /admin/cad-settings if "isNew"
+    // todo: redirect to /admin/manage/cad-settings if "isNew"
     if (data.json?.userId) {
       router.push("/citizen");
     }
-
-    // todo: add react-hot-toast.
   }
 
   return (
     <>
       <Head>
-        <title>Register - SnailyCAD</title>
+        <title>{t("register")} - SnailyCAD</title>
       </Head>
 
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
-              <h1 className="text-2xl text-gray-800 font-semibold mb-3">Register</h1>
+              <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("register")}</h1>
 
-              <FormField fieldId="username" label="username">
+              <FormField fieldId="username" label={t("username")}>
                 <Input
                   hasError={!!errors.username}
                   id="username"
@@ -71,7 +81,7 @@ export default function Register() {
                 <Error>{errors.username}</Error>
               </FormField>
 
-              <FormField fieldId="password" label="Password">
+              <FormField fieldId="password" label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
                   id="password"
@@ -81,7 +91,7 @@ export default function Register() {
                 <Error>{errors.password}</Error>
               </FormField>
 
-              <FormField fieldId="confirmPassword" label="Confirm Password">
+              <FormField fieldId="confirmPassword" label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
                   id="confirmPassword"
@@ -91,18 +101,30 @@ export default function Register() {
                 <Error>{errors.confirmPassword}</Error>
               </FormField>
 
+              {cad.registrationCode ? (
+                <FormField fieldId="registrationCode" label={t("registrationCode")}>
+                  <Input
+                    hasError={!!errors.registrationCode}
+                    id="registrationCode"
+                    name="registrationCode"
+                    onChange={handleChange}
+                  />
+                  <Error>{errors.registrationCode}</Error>
+                </FormField>
+              ) : null}
+
               <div className="mt-3">
                 <Link href="/auth/login">
-                  <a className="underline inline-block mb-3">Already have an account? Login</a>
+                  <a className="underline inline-block mb-3">{t("hasAccount")}</a>
                 </Link>
 
-                <button
+                <Button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="flex items-center justify-center w-full py-1.5"
                 >
-                  {state === "loading" ? <Loader className="bg-gray-300" /> : "Register"}
-                </button>
+                  {state === "loading" ? <Loader className="mr-3" /> : null} {t("register")}
+                </Button>
               </div>
             </form>
           )}
@@ -111,3 +133,16 @@ export default function Register() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const { data } = await handleRequest<cad | null>("/admin/manage/cad-settings").catch(() => ({
+    data: null,
+  }));
+
+  return {
+    props: {
+      cad: data ?? {},
+      messages: await getTranslations(["auth"], locale),
+    },
+  };
+};

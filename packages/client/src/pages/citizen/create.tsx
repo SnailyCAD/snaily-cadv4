@@ -1,8 +1,10 @@
-import { Formik } from "formik";
+import * as React from "react";
+import { Formik, FormikHelpers } from "formik";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
+import { allowedFileExtensions, AllowedFileExtension } from "@snailycad/config";
 
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -16,9 +18,13 @@ import useFetch from "lib/useFetch";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
+import { handleRequest } from "lib/fetch";
+import { Select } from "components/form/Select";
+import { useValues } from "context/ValuesContext";
 
 const INITIAL_VALUES = {
-  fullName: "",
+  name: "",
+  surname: "",
   dateOfBirth: "",
   gender: "",
   ethnicity: "",
@@ -27,6 +33,7 @@ const INITIAL_VALUES = {
   hairColor: "",
   eyeColor: "",
   address: "",
+  image: null,
 };
 
 export default function CreateCitizen() {
@@ -34,36 +41,81 @@ export default function CreateCitizen() {
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
+  const formRef = React.useRef<HTMLFormElement>(null);
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  const { genders, ethnicities } = useValues();
+
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
+
+    if (image && image.size && image.name) {
+      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
+        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+      }
+    }
+
     const { json } = await execute("/citizen", {
       method: "POST",
       data: values,
     });
 
     if (json?.id) {
+      await execute(`/citizen/${json.id}`, {
+        method: "POST",
+        data: fd,
+      });
+
       const path = `/citizen/${json.id}`;
       router.push(path);
-
-      return;
     }
-
-    // todo: add error alert
   }
 
-  const validate = handleValidate(CREATE_CITIZEN_SCHEMA());
+  const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
   return (
     <Layout>
       <h1 className="text-3xl mb-3 font-semibold">Create citizen</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, isValid }) => (
-          <form onSubmit={handleSubmit}>
-            <FormField label={t("fullName")}>
-              <Input hasError={!!errors.fullName} onChange={handleChange} name="fullName" />
-              <Error>{errors.fullName}</Error>
+        {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <FormField label={t("image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={handleChange}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  type="button"
+                  className="bg-red-400 hover:bg-red-500"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
+              <Error>{errors.image}</Error>
             </FormField>
+
+            <FormRow>
+              <FormField label={t("name")}>
+                <Input hasError={!!errors.name} onChange={handleChange} name="name" />
+                <Error>{errors.name}</Error>
+              </FormField>
+
+              <FormField label={t("surname")}>
+                <Input hasError={!!errors.surname} onChange={handleChange} name="surname" />
+                <Error>{errors.surname}</Error>
+              </FormField>
+            </FormRow>
 
             <FormField label={t("dateOfBirth")}>
               <Input
@@ -82,12 +134,31 @@ export default function CreateCitizen() {
 
             <FormRow>
               <FormField label={t("gender")}>
-                <Input hasError={!!errors.gender} onChange={handleChange} name="gender" />
+                <Select
+                  name="gender"
+                  value={values.gender}
+                  onChange={handleChange}
+                  hasError={!!errors.gender}
+                  values={genders.values.map((gender) => ({
+                    label: gender.value,
+                    value: gender.value,
+                  }))}
+                />
                 <Error>{errors.gender}</Error>
               </FormField>
 
               <FormField label={t("ethnicity")}>
-                <Input hasError={!!errors.ethnicity} onChange={handleChange} name="ethnicity" />
+                <Select
+                  name="ethnicity"
+                  value={values.ethnicity}
+                  onChange={handleChange}
+                  hasError={!!errors.ethnicity}
+                  values={ethnicities.values.map((ethnicity) => ({
+                    label: ethnicity.value,
+                    value: ethnicity.value,
+                  }))}
+                />
+
                 <Error>{errors.ethnicity}</Error>
               </FormField>
             </FormRow>
@@ -162,8 +233,14 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  // todo: update when needed, only gender and ethnicity are needed rn.
+  const { data: values = [] } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
+    () => ({ data: null }),
+  );
+
   return {
     props: {
+      values,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "common"], locale)),

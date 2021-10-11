@@ -1,3 +1,4 @@
+/* eslint-disable capitalized-comments */
 /**
  * Model cad
  */
@@ -8,8 +9,10 @@ export type cad = {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
+  registrationCode: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
+  disabledFeatures: Feature[];
 };
 
 /**
@@ -19,7 +22,6 @@ export type cad = {
 export type User = {
   id: string;
   username: string;
-  password: string;
   rank: Rank;
   isLeo: boolean;
   isSupervisor: boolean;
@@ -40,7 +42,8 @@ export type User = {
 export type Citizen = {
   id: string;
   userId: string;
-  fullName: string;
+  name: string;
+  surname: string;
   dateOfBirth: Date;
   gender: string;
   ethnicity: string;
@@ -60,25 +63,126 @@ export type Citizen = {
 };
 
 /**
+ * Model RegisteredVehicle
+ */
+
+export type RegisteredVehicle = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  plate: string;
+  vinNumber: string;
+  model: string;
+  color: string;
+  createdAt: Date;
+  registrationStatus: string;
+  insuranceStatus: string;
+};
+
+/**
+ * Model Weapon
+ */
+
+export type Weapon = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  serialNumber: string;
+  registrationStatus: string;
+  model: string;
+};
+
+/**
+ * Model MedicalRecord
+ */
+
+export type MedicalRecord = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  type: string;
+  description: string;
+};
+
+/**
+ * Model Value
+ */
+
+export type Value = {
+  id: string;
+  type: ValueType;
+  value: string;
+  isDefault: boolean;
+};
+
+/**
+ * Model BleeterPost
+ */
+
+export type BleeterPost = {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  imageId: string | null;
+};
+
+/**
+ * Model TowCall
+ */
+
+export type TowCall = {
+  id: string;
+  createdAt: Date;
+  userId: string;
+  citizenId: string | null;
+  location: string;
+  description: string;
+  creatorId: string;
+};
+
+/**
  * Enums
  */
 
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-export const Rank = {
+export const rank = {
   OWNER: "OWNER",
   ADMIN: "ADMIN",
   MODERATOR: "MODERATOR",
   USER: "USER",
-};
+} as const;
 
-export type Rank = typeof Rank[keyof typeof Rank];
+export type Rank = typeof rank[keyof typeof rank];
 
-export const WhitelistStatus = {
+export const whitelistStatus = {
   ACCEPTED: "ACCEPTED",
   PENDING: "PENDING",
   DECLINED: "DECLINED",
-};
+} as const;
 
-export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
+export type WhitelistStatus = typeof whitelistStatus[keyof typeof whitelistStatus];
+
+export const valueType = {
+  LICENSE: "LICENSE",
+  GENDER: "GENDER",
+  ETHNICITY: "ETHNICITY",
+  VEHICLE: "VEHICLE",
+  WEAPON: "WEAPON",
+  BLOOD_GROUP: "BLOOD_GROUP",
+} as const;
+
+export type ValueType = typeof valueType[keyof typeof valueType];
+
+export const feature = {
+  BLEETER: "BLEETER",
+  TOW: "TOW",
+  TAXI: "TAXI",
+  COURTHOUSE: "COURTHOUSE",
+  TRUCK_LOGS: "TRUCK_LOGS",
+  AOP: "AOP",
+} as const;
+
+export type Feature = typeof feature[keyof typeof feature];

@@ -1,13 +1,18 @@
 import * as React from "react";
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
+import toast from "react-hot-toast";
+import { useTranslations } from "use-intl";
+import Common from "../../locales/en/common.json";
 
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
+export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
 export default function useFetch(
   { overwriteState }: { overwriteState: State | null } = { overwriteState: null },
 ) {
+  const t = useTranslations("Errors");
   const [state, setState] = React.useState<State | null>(null);
   const abortController = React.useRef<NullableAbortController>(null);
 
@@ -15,34 +20,38 @@ export default function useFetch(
     setState(overwriteState);
   }, [overwriteState]);
 
-  const execute = async (
-    path: string,
-    options: AxiosRequestConfig,
-  ): Promise<{
-    response: AxiosResponse<any>;
-    json: any;
-  }> => {
-    let response;
-    abortController.current = new AbortController();
+  const execute = async (path: string, options: AxiosRequestConfig) => {
     setState("loading");
+    abortController.current = new AbortController();
 
-    try {
-      response = await handleRequest(path, {
-        ...(options as any),
-      });
-    } catch (error) {
+    const response = await handleRequest(path, {
+      ...{ ...(options as any), signal: abortController.current.signal },
+    }).catch((e) => {
       setState("error");
-      return Promise.reject({
-        error,
-      });
+      return e;
+    });
+
+    const error = response instanceof Error ? parseError(response as AxiosError) : null;
+
+    if (error) {
+      const hasKey = Object.keys(Common.Errors).some((e) => e === error);
+      const key = hasKey ? error : "unknown";
+
+      setState("error");
+      toast.error(t(key));
+
+      return {
+        json: {},
+        error: response instanceof Error ? parseError(response as AxiosError) : null,
+      };
     }
 
     setState(null);
 
-    return Promise.resolve({
-      response,
-      json: response.data,
-    });
+    return {
+      json: response?.data ?? {},
+      error: null,
+    };
   };
 
   React.useEffect(() => {
@@ -54,4 +63,8 @@ export default function useFetch(
   }, []);
 
   return { execute, state };
+}
+
+function parseError(error: AxiosError<any>): ErrorMessage | "unknown" {
+  return error.response?.data?.message ?? "unknown";
 }

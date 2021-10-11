@@ -6,7 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { setCookie } from "../../utils/setCookie";
 import { signJWT } from "../../utils/jwt";
-import { Cookie } from "../../config";
+import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD } from "../../lib/cad";
 import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 
@@ -26,25 +26,24 @@ export class AuthController {
     });
 
     if (!user) {
-      throw new NotFound("User was not found");
+      throw new NotFound("userNotFound");
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {
-      return {
-        error: "whitelist_pending",
-      };
+      throw new BadRequest("whitelistPending");
     }
 
     if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-      return {
-        error: "whitelist_declined",
-      };
+      throw new BadRequest("whitelistDeclined");
+    }
+
+    if (user.banned) {
+      throw new BadRequest("userBanned");
     }
 
     const isPasswordCorrect = compareSync(body.get("password"), user.password);
-
     if (!isPasswordCorrect) {
-      throw new BadRequest("Password is incorrect");
+      throw new BadRequest("passwordIncorrect");
     }
 
     const jwtToken = signJWT({ userId: user.id }, 60 * 60);
@@ -72,7 +71,7 @@ export class AuthController {
     });
 
     if (existing) {
-      throw new BadRequest("User already exists with that username");
+      throw new BadRequest("userAlreadyExists");
     }
 
     const userCount = await prisma.user.count();
@@ -90,8 +89,6 @@ export class AuthController {
     const cad = await findOrCreateCAD({
       ownerId: user.id,
     });
-
-    console.log(JSON.stringify(cad, null, 2));
 
     const extraUserData: Partial<User> =
       userCount <= 0
@@ -118,9 +115,7 @@ export class AuthController {
     });
 
     if (extraUserData.rank === Rank.USER && cad.whitelisted) {
-      return {
-        error: "cad_whitelisted_pending",
-      };
+      throw new BadRequest("whitelistPending");
     }
 
     const jwtToken = signJWT({ userId: user.id }, 60 * 60);

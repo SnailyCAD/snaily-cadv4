@@ -2,7 +2,7 @@ import { Context, Res } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { Delete, Patch, Post } from "@tsed/schema";
-import { Cookie } from "../../config";
+import { Cookie } from "@snailycad/config";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { setCookie } from "../../utils/setCookie";
@@ -12,7 +12,7 @@ import { setCookie } from "../../utils/setCookie";
 export class AccountController {
   @Post("/")
   async getAuthUser(@Context() ctx: Context) {
-    return ctx.get("user");
+    return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
   }
 
   @Patch("/")

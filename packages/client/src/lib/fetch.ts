@@ -9,7 +9,7 @@ interface Options extends AxiosRequestConfig {
 }
 
 export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
-  const url = "http://localhost:8080/v1";
+  const url = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
 
   return axios({
     url: `${url}${path}`,
