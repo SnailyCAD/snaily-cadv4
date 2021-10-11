@@ -10,6 +10,8 @@
     "manage": "Manage",
     "on": "On",
     "off": "Off",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "error": "An unexpected error occurred",
     "view": "View",
     "create": "Create",

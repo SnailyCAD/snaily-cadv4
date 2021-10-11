@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import * as React from "react";
 
 interface Context {
@@ -10,6 +11,7 @@ const ModalContext = React.createContext<Context | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState<string[]>([]);
+  const router = useRouter();
 
   function isOpen(id: string) {
     return open.includes(id);
@@ -32,6 +34,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     openModal,
     closeModal,
   };
+
+  React.useEffect(() => {
+    setOpen([]);
+  }, [router.pathname]);
 
   return <ModalContext.Provider value={value}>{children}</ModalContext.Provider>;
 }

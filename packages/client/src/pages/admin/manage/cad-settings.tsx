@@ -18,6 +18,11 @@ import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
+import { DisabledFeaturesArea } from "components/admin/manage/DisabledFeatures";
+import { TabsContainer } from "components/tabs/TabsContainer";
+import { Tab } from "@headlessui/react";
+
+const SETTINGS_TABS = ["GENERAL_SETTINGS", "FEATURES", "MISC_SETTINGS"];
 
 export default function CadSettings() {
   const { state, execute } = useFetch();
@@ -67,58 +72,76 @@ export default function CadSettings() {
         <title>{t("MANAGE_CAD_SETTINGS")}</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
+      <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CAD_SETTINGS")}</h1>
 
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
-          <form className="mt-3" onSubmit={handleSubmit}>
-            <FormField label="CAD Name" fieldId="name">
-              <Input onChange={handleChange} value={values.name} id="name" />
-              <Error>{errors.name}</Error>
-            </FormField>
+      <TabsContainer tabs={SETTINGS_TABS}>
+        <Tab.Panel className="mt-3">
+          <h2 className="text-2xl font-semibold">General Settings</h2>
 
-            <FormField label="Area of Play" fieldId="areaOfPlay">
-              <Input onChange={handleChange} value={values.areaOfPlay} id="areaOfPlay" />
-              <Error>{errors.areaOfPlay}</Error>
-            </FormField>
+          <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+            {({ handleSubmit, handleChange, values, errors }) => (
+              <form className="mt-3" onSubmit={handleSubmit}>
+                <FormField label="CAD Name" fieldId="name">
+                  <Input onChange={handleChange} value={values.name} id="name" />
+                  <Error>{errors.name}</Error>
+                </FormField>
 
-            <FormField label="Steam API Key" fieldId="steamApiKey">
-              <PasswordInput onChange={handleChange} value={values.steamApiKey} id="steamApiKey" />
-              <Error>{errors.steamApiKey}</Error>
-            </FormField>
+                <FormField label="Area of Play" fieldId="areaOfPlay">
+                  <Input onChange={handleChange} value={values.areaOfPlay} id="areaOfPlay" />
+                  <Error>{errors.areaOfPlay}</Error>
+                </FormField>
 
-            <FormField label="Registration Code" fieldId="registrationCode">
-              <PasswordInput
-                onChange={handleChange}
-                value={values.registrationCode}
-                id="registrationCode"
-              />
-              <Error>{errors.registrationCode}</Error>
-            </FormField>
+                <FormField label="Steam API Key" fieldId="steamApiKey">
+                  <PasswordInput
+                    onChange={handleChange}
+                    value={values.steamApiKey}
+                    id="steamApiKey"
+                  />
+                  <Error>{errors.steamApiKey}</Error>
+                </FormField>
 
-            <FormRow>
-              <FormField label="Tow Whitelisted" fieldId="towWhitelisted">
-                <Toggle
-                  name="towWhitelisted"
-                  onClick={handleChange}
-                  toggled={values.towWhitelisted}
-                />
-                <Error>{errors.towWhitelisted}</Error>
-              </FormField>
+                <FormField label="Registration Code" fieldId="registrationCode">
+                  <PasswordInput
+                    onChange={handleChange}
+                    value={values.registrationCode}
+                    id="registrationCode"
+                  />
+                  <Error>{errors.registrationCode}</Error>
+                </FormField>
 
-              <FormField label="CAD Whitelisted" fieldId="whitelisted">
-                <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
-                <Error>{errors.whitelisted}</Error>
-              </FormField>
-            </FormRow>
+                <FormRow>
+                  <FormField label="Tow Whitelisted" fieldId="towWhitelisted">
+                    <Toggle
+                      name="towWhitelisted"
+                      onClick={handleChange}
+                      toggled={values.towWhitelisted}
+                    />
+                    <Error>{errors.towWhitelisted}</Error>
+                  </FormField>
 
-            <Button disabled={state === "loading"} className="flex items-center" type="submit">
-              {state === "loading" ? <Loader className="mr-3" /> : null}
-              {common("save")}
-            </Button>
-          </form>
-        )}
-      </Formik>
+                  <FormField label="CAD Whitelisted" fieldId="whitelisted">
+                    <Toggle
+                      name="whitelisted"
+                      onClick={handleChange}
+                      toggled={values.whitelisted}
+                    />
+                    <Error>{errors.whitelisted}</Error>
+                  </FormField>
+                </FormRow>
+
+                <Button disabled={state === "loading"} className="flex items-center" type="submit">
+                  {state === "loading" ? <Loader className="mr-3" /> : null}
+                  {common("save")}
+                </Button>
+              </form>
+            )}
+          </Formik>
+        </Tab.Panel>
+
+        <Tab.Panel>
+          <DisabledFeaturesArea />
+        </Tab.Panel>
+      </TabsContainer>
     </AdminLayout>
   );
 }

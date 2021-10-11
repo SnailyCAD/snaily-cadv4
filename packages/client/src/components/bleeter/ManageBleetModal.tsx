@@ -13,6 +13,9 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { BleeterPost } from "types/prisma";
 import { Textarea } from "components/form/Textarea";
+import { handleValidate } from "lib/handleValidate";
+import { BLEETER_SCHEMA } from "@snailycad/schemas";
+import { Error } from "components/form/Error";
 
 interface Props {
   post: BleeterPost | null;
@@ -67,6 +70,7 @@ export const ManageBleetModal = ({ post }: Props) => {
     closeModal(ModalIds.ManageBleetModal);
   }
 
+  const validate = handleValidate(BLEETER_SCHEMA);
   const INITIAL_VALUES = {
     title: post?.title ?? "",
     body: post?.body ?? "",
@@ -80,7 +84,7 @@ export const ManageBleetModal = ({ post }: Props) => {
       isOpen={isOpen(ModalIds.ManageBleetModal)}
       className="min-w-[700px]"
     >
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, isValid, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormField label={t("headerImage")}>
@@ -101,6 +105,7 @@ export const ManageBleetModal = ({ post }: Props) => {
                 hasError={!!errors.title}
                 onChange={handleChange}
               />
+              <Error>{errors.title}</Error>
             </FormField>
 
             <FormField label={t("bleetBody")}>
@@ -111,6 +116,7 @@ export const ManageBleetModal = ({ post }: Props) => {
                 onChange={handleChange}
                 className="min-h-[20em]"
               />
+              <Error>{errors.body}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

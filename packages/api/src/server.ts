@@ -36,6 +36,8 @@ export class Server {
       .use(cookieParser())
       .use(compress())
       .use(json())
-      .use(cors({ origin: "http://localhost:3000", credentials: true }));
+      .use(
+        cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
+      );
   }
 }

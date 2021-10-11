@@ -5,6 +5,7 @@ interface Props {
   toggled: boolean;
   onClick: (value: any) => void;
   name: string;
+  text?: "enable/disable" | "on/off";
 }
 
 enum Directions {
@@ -12,16 +13,23 @@ enum Directions {
   LEFT = 100,
 }
 
-export const Toggle = ({ toggled, name, onClick }: Props) => {
+export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
   const [x, setX] = React.useState(() => getDirection(toggled));
   const t = useTranslations("Common");
+
+  const trueText = text === "on/off" ? t("on") : t("enabled");
+  const falseText = text === "on/off" ? t("off") : t("disabled");
 
   React.useEffect(() => {
     setX(getDirection(toggled));
   }, [toggled]);
 
   return (
-    <div className="w-[100px] bg-gray-200 flex items-center justify-between rounded-lg relative overflow-hidden">
+    <div
+      className={`w-[100px] ${
+        text === "enable/disable" && "w-1/4 min-w-[206px]"
+      } bg-gray-200 flex items-center justify-between rounded-lg relative overflow-hidden`}
+    >
       <div
         style={{ transform: `translateX(${x}%)` }}
         className="absolute bg-dark-gray h-8 w-1/2 pointer-events-none transition-all duration-200"
@@ -34,7 +42,7 @@ export const Toggle = ({ toggled, name, onClick }: Props) => {
           toggled && "text-white font-semibold"
         }`}
       >
-        {t("on")}
+        {trueText}
       </button>
       <button
         onClick={() => onClick({ target: { name, value: false } })}
@@ -43,7 +51,7 @@ export const Toggle = ({ toggled, name, onClick }: Props) => {
           !toggled && "text-white font-semibold"
         }`}
       >
-        {t("off")}
+        {falseText}
       </button>
     </div>
   );

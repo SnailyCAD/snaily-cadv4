@@ -10,12 +10,13 @@ export class IsAuth implements MiddlewareMethods {
 
     const cad = await prisma.cad.findFirst({
       select: {
+        id: true,
         name: true,
         areaOfPlay: true,
         maxPlateLength: true,
         towWhitelisted: true,
         whitelisted: true,
-        // features: true,
+        disabledFeatures: true,
         liveMapSocketURl: user.rank === Rank.OWNER,
         registrationCode: user.rank === Rank.OWNER,
         steamApiKey: user.rank === Rank.OWNER,

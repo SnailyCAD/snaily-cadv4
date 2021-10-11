@@ -12,6 +12,7 @@ export type cad = {
   registrationCode: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
+  disabledFeatures: Feature[];
 };
 
 /**
@@ -160,3 +161,14 @@ export const valueType = {
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];
+
+export const feature = {
+  BLEETER: "BLEETER",
+  TOW: "TOW",
+  TAXI: "TAXI",
+  COURTHOUSE: "COURTHOUSE",
+  TRUCK_LOGS: "TRUCK_LOGS",
+  AOP: "AOP",
+} as const;
+
+export type Feature = typeof feature[keyof typeof feature];

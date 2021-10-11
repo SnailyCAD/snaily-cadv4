@@ -8,7 +8,11 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   steamApiKey: z.string().max(255),
   towWhitelisted: z.boolean(),
   whitelisted: z.boolean(),
-  registrationCode: z.string().min(2).max(255),
+  registrationCode: z.string().max(255),
+});
+
+export const DISABLED_FEATURES_SCHEMA = z.object({
+  features: z.array(z.string().regex(/BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP/)),
 });
 
 export const BAN_SCHEMA = z.object({

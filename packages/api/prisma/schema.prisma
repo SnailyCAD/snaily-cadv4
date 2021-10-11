@@ -12,18 +12,19 @@ generator client {
 }
 
 model cad {
-  id               String  @id @default(cuid())
-  name             String  @db.VarChar(255)
-  owner            User    @relation(fields: [ownerId], references: [id])
+  id               String    @id @default(cuid())
+  name             String    @db.VarChar(255)
+  owner            User      @relation(fields: [ownerId], references: [id])
   ownerId          String
-  areaOfPlay       String? @db.VarChar(255)
-  steamApiKey      String? @db.VarChar(255)
-  whitelisted      Boolean @default(false)
-  towWhitelisted   Boolean @default(false)
-  maxPlateLength   Int     @default(8)
-  liveMapSocketURl String? @db.VarChar(255)
+  areaOfPlay       String?   @db.VarChar(255)
+  steamApiKey      String?   @db.VarChar(255)
+  whitelisted      Boolean   @default(false)
+  towWhitelisted   Boolean   @default(false)
+  maxPlateLength   Int       @default(8)
+  liveMapSocketURl String?   @db.VarChar(255)
   logoId           String?
   registrationCode String?
+  disabledFeatures Feature[]
 }
 
 model User {
@@ -166,4 +167,13 @@ model BleeterPost {
   body      String
   imageId   String?
   createdAt DateTime @default(now())
+}
+
+enum Feature {
+  BLEETER
+  TOW
+  TAXI
+  COURTHOUSE
+  TRUCK_LOGS
+  AOP
 }

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { useAuth } from "context/AuthContext";
@@ -28,6 +29,12 @@ export default function BleetPost({ post }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Bleeter");
   const router = useRouter();
+
+  React.useEffect(() => {
+    if (!post) {
+      router.push("/404");
+    }
+  }, [post, router]);
 
   async function handleDelete() {
     if (!post) return;
@@ -99,7 +106,7 @@ export default function BleetPost({ post }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
   const { data } = await handleRequest(`/bleeter/${query.id}`, {
     headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  }).catch(() => ({ data: null }));
 
   return {
     props: {
