@@ -10,6 +10,8 @@ type Props = Pick<ModalProps, "title" | "className"> & {
   state?: any;
   onDeleteClick: () => void;
   onClose?: () => void;
+
+  deleteText?: string;
 };
 
 export const AlertModal = (props: Props) => {
@@ -40,7 +42,7 @@ export const AlertModal = (props: Props) => {
           onClick={props.onDeleteClick}
         >
           {props.state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
-          {common("delete")}
+          {props.deleteText ? props.deleteText : common("delete")}
         </Button>
       </div>
     </Modal>

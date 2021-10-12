@@ -1,0 +1,18 @@
+{
+  "Calls": {
+    "tow": "Tow",
+    "taxi": "Taxi",
+    "noTowCalls": "There are no tow calls yet.",
+    "noTaxiCalls": "There are no taxi calls yet.",
+    "assignToCall": "Assign to call",
+    "assignedUnit": "Assigned Unit",
+    "location": "Location",
+    "caller": "Caller",
+    "createTowCall": "Create tow call",
+    "createTaxiCall": "Create taxi call",
+    "editTowCall": "Edit tow call",
+    "endCall": "End call",
+    "selectCitizen": "Select citizen",
+    "alert_endTowCall": "Are you sure you want to end this call?"
+  }
+}

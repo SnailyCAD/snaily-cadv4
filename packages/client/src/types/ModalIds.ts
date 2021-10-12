@@ -1,16 +1,17 @@
 export const enum ModalIds {
   RegisterVehicle = "RegisterVehicleModal",
   RegisterWeapon = "RegisterWeaponModal",
-  ManageLicenses = "ManageLicenses",
+  ManageLicenses = "ManageLicensesModal",
   ManageMedicalRecords = "ManageMedicalRecords",
   ManageBleetModal = "ManageBleetModal",
   ManageTowCall = "ManageTowCallModal",
 
   AssignToTowCall = "AssignToTowCallModal",
 
-  AlertDeleteCitizen = "alert_DeleteCitizen",
-  AlertDeleteVehicle = "alert_DeleteVehicle",
-  AlertDeleteWeapon = "alert_DeleteWeapon",
-  AlertDeleteMedicalRecord = "alert_DeleteMedicalRecord",
-  AlertDeleteBleet = "alert_DeleteBleet",
+  AlertDeleteCitizen = "alert_DeleteCitizenModal",
+  AlertDeleteVehicle = "alert_DeleteVehicleModal",
+  AlertDeleteWeapon = "alert_DeleteWeaponModal",
+  AlertDeleteMedicalRecord = "alert_DeleteMedicalRecordModal",
+  AlertDeleteBleet = "alert_DeleteBleetModal",
+  AlertEndTowCall = "AlertEndTowCallModal",
 }

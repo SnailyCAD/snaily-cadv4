@@ -7,6 +7,7 @@ import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
+import { AlertModal } from "components/modal/AlertModal";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
@@ -26,12 +27,12 @@ interface Props {
 
 export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
   const common = useTranslations("Common");
-  const t = useTranslations("Tow");
-  const { isOpen, closeModal } = useModal();
+  const t = useTranslations("Calls");
+  const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
 
-  async function handleDelete() {
+  async function handleEndCall() {
     if (!call) return;
 
     const { json } = await execute(`/tow/${call.id}`, {
@@ -120,7 +121,7 @@ export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
                   className="flex items-center mr-2"
                   disabled={state === "loading"}
                   type="button"
-                  onClick={handleDelete}
+                  onClick={() => openModal(ModalIds.AlertEndTowCall)}
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
                   {t("endCall")}
@@ -147,6 +148,15 @@ export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
           </form>
         )}
       </Formik>
+
+      <AlertModal
+        title={t("endCall")}
+        description={t("alert_endTowCall")}
+        id={ModalIds.AlertEndTowCall}
+        onDeleteClick={handleEndCall}
+        deleteText={t("endCall")}
+        state={state}
+      />
     </Modal>
   );
 };

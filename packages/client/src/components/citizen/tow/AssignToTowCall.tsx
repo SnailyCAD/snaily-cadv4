@@ -22,7 +22,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
-  const t = useTranslations("Tow");
+  const t = useTranslations("Calls");
   const { citizens } = useCitizen();
 
   const INITIAL_VALUES = {

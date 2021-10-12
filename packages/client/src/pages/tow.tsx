@@ -25,7 +25,7 @@ export default function Tow(props: Props) {
   const { openModal } = useModal();
   const [calls, setCalls] = React.useState<FullTowCall[]>(props.calls);
   const common = useTranslations("Common");
-  const t = useTranslations("Tow");
+  const t = useTranslations("Calls");
 
   const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
 
@@ -167,7 +167,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       citizens,
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["tow", "common"], locale)),
+        ...(await getTranslations(["calls", "common"], locale)),
       },
     },
   };
