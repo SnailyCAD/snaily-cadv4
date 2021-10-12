@@ -8,6 +8,8 @@ export class IsValidPath implements MiddlewareMethods {
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 
+    console.log({ paths });
+
     for (const path of paths) {
       if (!validPaths.includes(path as ValidPath)) {
         throw new BadRequest(`Invalid Path. Valid paths: ${validPaths.join(", ")}`);

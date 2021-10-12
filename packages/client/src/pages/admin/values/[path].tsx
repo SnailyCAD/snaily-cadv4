@@ -22,7 +22,7 @@ interface Props {
 export default function ValuePath({ values: { type, values: data } }: Props) {
   const [values, setValues] = React.useState<Value[]>(data);
   const router = useRouter();
-  const path = (router.query.path as string).toUpperCase();
+  const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
   const [tempValue, setTempValue] = React.useState<Value | null>(null);
   const { state, execute } = useFetch();
@@ -45,9 +45,12 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
     if (!tempValue) return;
 
     try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
-        method: "DELETE",
-      });
+      const { json } = await execute(
+        `/admin/values/${type.replace("_", "-").toLowerCase()}/${tempValue.id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (json) {
         setValues((p) => p.filter((v) => v.id !== tempValue.id));

@@ -102,8 +102,10 @@
     eslint-plugin-promise "^5.1.0"
     prettier "^2.4.0"
 
-"@casper124578/use-socket.io@file:../../../personal/use-socket.io":
+"@casper124578/use-socket.io@1.0.1":
   version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@casper124578/use-socket.io/-/use-socket.io-1.0.1.tgz#27b3598e86e32d218e558a06323d45c6eb2cecc7"
+  integrity sha512-8lsCw2orHF/yrzCmvLFZS6lfQoxnen8KDeA/ZcPrWmn18STl9zxD4OYQN6kTuCoMHPxIPT5T1vcHqyhhTFVj5w==
   dependencies:
     react "^17.0.2"
     socket.io-client "^4.2.0"
@@ -6863,3 +6865,8 @@ zod@^3.9.8:
   version "3.9.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.9.8.tgz#562eda33925203542dea70100ce0d3766d04b0ab"
   integrity sha512-pTNhdJd45PPOBpdxO8x00Tv+HhknYGx3WdgFQndazp+G1Gd2Cxf81L5yMfCIIcd/SA3VqrcTv/G4bFcr+DsZhA==
+
+zustand@^3.5.13:
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.13.tgz#fd1af8c14a23ec7efdeb9ab167b8e69a8fc0980a"
+  integrity sha512-orO/XcYwSWffsrPVTdCtuKM/zkUaOIyKDasOk/lecsD3R0euELsj+cB65uKZ1KyinrK2STHIuUhRoLpH8QprQg==

@@ -20,6 +20,7 @@ export class IsAuth implements MiddlewareMethods {
         liveMapSocketURl: user.rank === Rank.OWNER,
         registrationCode: user.rank === Rank.OWNER,
         steamApiKey: user.rank === Rank.OWNER,
+        miscCadSettings: true,
       },
     });
 

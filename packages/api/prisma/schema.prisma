@@ -12,19 +12,35 @@ generator client {
 }
 
 model cad {
-  id               String    @id @default(cuid())
-  name             String    @db.VarChar(255)
-  owner            User      @relation(fields: [ownerId], references: [id])
-  ownerId          String
-  areaOfPlay       String?   @db.VarChar(255)
-  steamApiKey      String?   @db.VarChar(255)
-  whitelisted      Boolean   @default(false)
-  towWhitelisted   Boolean   @default(false)
-  maxPlateLength   Int       @default(8)
-  liveMapSocketURl String?   @db.VarChar(255)
-  logoId           String?
-  registrationCode String?
-  disabledFeatures Feature[]
+  id                String           @id @default(cuid())
+  name              String           @db.VarChar(255)
+  owner             User             @relation(fields: [ownerId], references: [id])
+  ownerId           String
+  areaOfPlay        String?          @db.VarChar(255)
+  steamApiKey       String?          @db.VarChar(255)
+  whitelisted       Boolean          @default(false)
+  towWhitelisted    Boolean          @default(false)
+  maxPlateLength    Int              @default(8)
+  liveMapSocketURl  String?          @db.VarChar(255)
+  logoId            String?
+  registrationCode  String?
+  disabledFeatures  Feature[]
+  miscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id])
+  miscCadSettingsId String?
+}
+
+model MiscCadSettings {
+  id String @id @default(cuid())
+
+  heightPrefix            String @default("cm") @db.VarChar(255)
+  weightPrefix            String @default("kg") @db.VarChar(255)
+  maxCitizensPerUser      Int?
+  maxPlateLength          Int    @default(8)
+  maxBusinessesPerCitizen Int?
+
+  assignedStatusCode String @default("10-97")
+  onDutyCode         String @default("10-8")
+  cad                cad[]
 }
 
 model User {
@@ -92,7 +108,6 @@ model Citizen {
   towCalls         TowCall[]
   createdTowCalls  TowCall[]           @relation("towCallCreator")
   businesses       Business[]
-  businessPosts    BusinessPost[]
   Employee         Employee[]
 }
 
@@ -235,7 +250,7 @@ model Business {
 }
 
 model Employee {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   user       User     @relation(fields: [userId], references: [id])
   userId     String
   citizen    Citizen  @relation(fields: [citizenId], references: [id])
@@ -243,17 +258,19 @@ model Employee {
   business   Business @relation(fields: [businessId], references: [id])
   businessId String
 
-  role               Value   @relation("employeeToValue", fields: [roleId], references: [id])
-  roleId             String
-  employeeOfTheMonth Boolean
+  role               Value?         @relation("employeeToValue", fields: [roleId], references: [id])
+  roleId             String?
+  employeeOfTheMonth Boolean        @default(false)
+  canCreatePosts     Boolean        @default(true)
+  businessPosts      BusinessPost[]
 }
 
 model BusinessPost {
   id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id])
   userId     String
-  citizen    Citizen  @relation(fields: [citizenId], references: [id])
-  citizenId  String
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  employeeId String
   business   Business @relation(fields: [businessId], references: [id])
   businessId String
 

@@ -25,7 +25,8 @@
     "react-hot-toast": "^2.1.1",
     "react-markdown": "^7.0.1",
     "socket.io-client": "^4.2.0",
-    "zod": "^3.9.8"
+    "zod": "^3.9.8",
+    "zustand": "^3.5.13"
   },
   "devDependencies": {
     "@types/react": "^17.0.27",

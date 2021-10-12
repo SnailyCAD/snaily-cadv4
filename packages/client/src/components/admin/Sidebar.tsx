@@ -5,7 +5,7 @@ import { rank } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 const management = ["USERS", "CITIZENS", "COMPANIES"];
-const types = ["GENDER", "ETHNICITY", "LICENSE", "WEAPON", "VEHICLE"];
+const types = ["GENDER", "ETHNICITY", "LICENSE", "WEAPON", "VEHICLE", "BUSINESS-ROLE"];
 
 export const AdminSidebar = () => {
   const t = useTranslations("Values");
@@ -71,7 +71,7 @@ export const AdminSidebar = () => {
                       isValueActive(type) && "bg-gray-300"
                     }`}
                   >
-                    {t(`MANAGE_${type}`)}
+                    {t(`MANAGE_${type.replace("-", "_")}`)}
                   </a>
                 </Link>
               </li>

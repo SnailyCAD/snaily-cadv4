@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { allowedFileExtensions, AllowedFileExtension } from "@snailycad/config";
+import Head from "next/head";
 
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -80,6 +81,9 @@ export default function CreateCitizen() {
 
   return (
     <Layout>
+      <Head>
+        <title>Create Citizen</title>
+      </Head>
       <h1 className="text-3xl mb-3 font-semibold">Create citizen</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

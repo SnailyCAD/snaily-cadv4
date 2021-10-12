@@ -30,16 +30,19 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (value) {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
-        method: "PATCH",
-        data: values,
-      });
+      const { json } = await execute(
+        `/admin/values/${type.replace("_", "-").toLowerCase()}/${value.id}`,
+        {
+          method: "PATCH",
+          data: values,
+        },
+      );
 
       if (json?.id) {
         onUpdate(value, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
+      const { json } = await execute(`/admin/values/${type.replace("_", "-").toLowerCase()}`, {
         method: "POST",
         data: values,
       });

@@ -13,6 +13,7 @@ export const validPaths = [
   "blood-group",
   "vehicle",
   "weapon",
+  "business-role",
 ] as const;
 
 export * from "./socket-events";

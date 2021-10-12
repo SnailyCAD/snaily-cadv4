@@ -152,6 +152,47 @@ export type TowCall = {
 };
 
 /**
+ * Model Business
+ */
+
+export type Business = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  name: string;
+  whitelisted: boolean;
+  address: string;
+  createdAt: Date;
+};
+
+/**
+ * Model Employee
+ */
+
+export type Employee = {
+  id: string;
+  userId: string;
+  citizenId: string;
+  businessId: string;
+  roleId: string;
+  employeeOfTheMonth: boolean;
+  canCreatePosts: boolean;
+};
+
+/**
+ * Model BusinessPost
+ */
+
+export type BusinessPost = {
+  id: string;
+  userId: string;
+  employeeId: string;
+  businessId: string;
+  title: string;
+  body: string;
+};
+
+/**
  * Enums
  */
 
@@ -182,6 +223,7 @@ export const valueType = {
   VEHICLE: "VEHICLE",
   WEAPON: "WEAPON",
   BLOOD_GROUP: "BLOOD_GROUP",
+  BUSINESS_ROLE: "BUSINESS_ROLE",
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];
