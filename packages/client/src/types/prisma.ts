@@ -13,6 +13,21 @@ export type cad = {
   whitelisted: boolean;
   towWhitelisted: boolean;
   disabledFeatures: Feature[];
+} & { miscCadSettings: MiscCadSettings };
+
+/**
+ * Model MiscCadSettings
+ */
+
+export type MiscCadSettings = {
+  id: string;
+  heightPrefix: string;
+  weightPrefix: string;
+  maxCitizensPerUser: number | null;
+  maxPlateLength: number;
+  maxBusinessesPerCitizen: number | null;
+  assignedStatusCode: string;
+  onDutyCode: string;
 };
 
 /**

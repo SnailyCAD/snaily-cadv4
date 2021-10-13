@@ -21,6 +21,7 @@ import { Loader } from "components/Loader";
 import { DisabledFeaturesArea } from "components/admin/manage/DisabledFeatures";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
+import { MiscFeatures } from "components/admin/manage/MiscFeatures";
 
 const SETTINGS_TABS = ["GENERAL_SETTINGS", "FEATURES", "MISC_SETTINGS"];
 
@@ -140,6 +141,10 @@ export default function CadSettings() {
 
         <Tab.Panel>
           <DisabledFeaturesArea />
+        </Tab.Panel>
+
+        <Tab.Panel>
+          <MiscFeatures />
         </Tab.Panel>
       </TabsContainer>
     </AdminLayout>

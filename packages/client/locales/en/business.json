@@ -1,24 +1,24 @@
 {
-    "Business": {
-        "owned": "Owned",
-        "joined": "Joined",
-        "noOwned": "You do not own any businesses",
-        "role": "Role",
-        "citizen": "Citizen",
-        "notEmployee": "You are not an employee at an other business",
-        "business": "Business",
-        "createBusiness": "Create Business",
-        "joinBusiness": "Join Business",
-        "owner": "Owner",
-        "name": "Name",
-        "address": "Address",
-        "whitelisted": "Whitelisted",
-        "deletePost": "Delete Post",
-        "createPost": "Create Post",
-        "editPost": "Edit Post",
-        "employees": "Employees",
-        "employeeOfTheMonth": "Employee of the month",
-        "publishedBy": "Published By",
-        "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone."
-    }
+  "Business": {
+    "owned": "Owned",
+    "joined": "Joined",
+    "noOwned": "You do not own any businesses",
+    "role": "Role",
+    "citizen": "Citizen",
+    "notEmployee": "You are not an employee at an other business",
+    "business": "Business",
+    "createBusiness": "Create Business",
+    "joinBusiness": "Join Business",
+    "owner": "Owner",
+    "name": "Name",
+    "address": "Address",
+    "whitelisted": "Whitelisted",
+    "deletePost": "Delete Post",
+    "createPost": "Create Post",
+    "editPost": "Edit Post",
+    "employees": "Employees",
+    "employeeOfTheMonth": "Employee of the month",
+    "publishedBy": "Published By",
+    "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone."
+  }
 }

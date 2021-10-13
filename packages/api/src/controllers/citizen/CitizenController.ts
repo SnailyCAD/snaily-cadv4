@@ -8,6 +8,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { MiscCadSettings } from ".prisma/client";
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -78,6 +79,19 @@ export class CitizenController {
 
     if (error) {
       return new BadRequest(error);
+    }
+
+    const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings;
+    if (miscSettings && miscSettings.maxCitizensPerUser) {
+      const count = await prisma.citizen.count({
+        where: {
+          userId: ctx.get("user").id,
+        },
+      });
+
+      if (count >= miscSettings.maxCitizensPerUser) {
+        throw new BadRequest("maxCitizensPerUserReached");
+      }
     }
 
     const {

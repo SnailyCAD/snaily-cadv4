@@ -15,6 +15,26 @@ export async function findOrCreateCAD({ ownerId }: Options) {
         ownerId: ownerId!,
       },
     });
+
+    const miscSettings = await prisma.miscCadSettings.create({
+      data: {},
+    });
+
+    cad = await prisma.cad.update({
+      where: {
+        id: cad.id,
+      },
+      data: {
+        miscCadSettings: {
+          connect: {
+            id: miscSettings.id,
+          },
+        },
+      },
+      include: {
+        miscCadSettings: true,
+      },
+    });
   }
 
   return cad as cad;
