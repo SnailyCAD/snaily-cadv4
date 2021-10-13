@@ -1,12 +1,13 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { IsAuth } from "../../middlewares";
 import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
   CREATE_COMPANY_POST_SCHEMA,
+  DELETE_COMPANY_POST_SCHEMA,
   validate,
 } from "@snailycad/schemas";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
@@ -16,6 +17,30 @@ import { MiscCadSettings } from ".prisma/client";
 @UseBeforeEach(IsAuth)
 @Controller("/businesses")
 export class BusinessController {
+  @Get("/")
+  async getBusinessesByUser(@Context() ctx: Context) {
+    const businesses = await prisma.employee.findMany({
+      where: {
+        userId: ctx.get("user").id,
+      },
+      include: {
+        citizen: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+          },
+        },
+        business: true,
+        role: true,
+      },
+    });
+
+    const joinableBusinesses = await prisma.business.findMany({});
+
+    return { businesses, joinableBusinesses };
+  }
+
   @Get("/:type/:citizenId")
   async getBusinesses(
     @Context() ctx: Context,
@@ -54,7 +79,11 @@ export class BusinessController {
           id,
         },
         include: {
-          businessPosts: true,
+          businessPosts: {
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
           employees: {
             include: {
               role: true,
@@ -105,7 +134,7 @@ export class BusinessController {
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("ownerId"),
+        id: body.get("citizenId"),
       },
     });
 
@@ -164,6 +193,27 @@ export class BusinessController {
         employees: {
           connect: {
             id: employee.id,
+          },
+        },
+      },
+      include: {
+        employees: {
+          include: {
+            role: true,
+            citizen: {
+              select: {
+                name: true,
+                surname: true,
+                id: true,
+              },
+            },
+          },
+        },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
           },
         },
       },
@@ -286,5 +336,91 @@ export class BusinessController {
     });
 
     return post;
+  }
+
+  @Put("/:id/posts/:postId")
+  async updatePost(
+    @BodyParams() body: JsonRequestBody,
+    @Context() ctx: Context,
+    @PathParams("id") id: string,
+    @PathParams("postId") postId: string,
+  ) {
+    const error = validate(CREATE_COMPANY_POST_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const employee = await prisma.employee.findUnique({
+      where: {
+        id: body.get("employeeId"),
+      },
+    });
+
+    if (!employee || employee.userId !== ctx.get("user").id || employee.businessId !== id) {
+      throw new NotFound("notFound");
+    }
+
+    if (!employee.canCreatePosts) {
+      throw new Forbidden("insufficientPermissions");
+    }
+
+    const post = await prisma.businessPost.findFirst({
+      where: {
+        id: postId,
+        businessId: employee.businessId,
+        employeeId: body.get("employeeId"),
+      },
+    });
+
+    if (!post) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.businessPost.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        body: body.get("body"),
+        title: body.get("title"),
+      },
+    });
+
+    return updated;
+  }
+
+  @Delete("/:id/posts/:postId")
+  async deletePost(
+    @BodyParams() body: JsonRequestBody,
+    @Context() ctx: Context,
+    @PathParams("id") id: string,
+    @PathParams("postId") postId: string,
+  ) {
+    const error = validate(DELETE_COMPANY_POST_SCHEMA, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const post = await prisma.businessPost.findFirst({
+      where: {
+        id: postId,
+        businessId: id,
+        userId: ctx.get("user").id,
+        employeeId: body.get("employeeId"),
+      },
+    });
+
+    if (!post) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.businessPost.delete({
+      where: {
+        id: postId,
+      },
+    });
+
+    return true;
   }
 }

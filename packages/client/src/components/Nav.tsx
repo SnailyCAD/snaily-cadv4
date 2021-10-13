@@ -230,6 +230,20 @@ const CitizenDropdown = () => {
                 )}
               </Menu.Item>
 
+              <Menu.Item>
+                {({ active }) => (
+                  <Link href="/business">
+                    <a
+                      className={`${
+                        active ? "bg-gray-200" : "text-gray-900"
+                      } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                    >
+                      Business
+                    </a>
+                  </Link>
+                )}
+              </Menu.Item>
+
               {items.map((item) => {
                 const upperCase = item.toUpperCase() as Feature;
                 const lower = item.toLowerCase();

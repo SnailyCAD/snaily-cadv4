@@ -14,6 +14,8 @@ import { ManageBusinessPostModal } from "components/business/ManagePostModal";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import { BusinessPost } from "types/prisma";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 interface Props {
   employee: FullEmployee | null;
@@ -21,14 +23,36 @@ interface Props {
 }
 
 export default function BusinessId(props: Props) {
-  const { openModal } = useModal();
+  const { state: fetchState, execute } = useFetch();
+  const { openModal, closeModal } = useModal();
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
   const common = useTranslations("Common");
+  const t = useTranslations("Business");
 
   const [tempPost, setTempPost] = React.useState<BusinessPost | null>(null);
 
+  async function handlePostDeletion() {
+    if (!tempPost) return;
+
+    const { json } = await execute(`/businesses/${currentBusiness?.id}/posts/${tempPost.id}`, {
+      method: "DELETE",
+      data: { employeeId: currentEmployee?.id },
+    });
+
+    if (json) {
+      state.setPosts(posts.filter((p) => p.id !== tempPost.id));
+      setTempPost(null);
+      closeModal(ModalIds.AlertDeleteBusinessPost);
+    }
+  }
+
   function handleEdit(post: BusinessPost) {
     openModal(ModalIds.ManageBusinessPost);
+    setTempPost(post);
+  }
+
+  function handleDelete(post: BusinessPost) {
+    openModal(ModalIds.AlertDeleteBusinessPost);
     setTempPost(post);
   }
 
@@ -53,13 +77,13 @@ export default function BusinessId(props: Props) {
         <div>
           {currentEmployee.canCreatePosts ? (
             <Button onClick={() => openModal(ModalIds.ManageBusinessPost)} className="mr-2">
-              Create Post
+              {t("createPost")}
             </Button>
           ) : null}
-          {owner?.citizenId === "ckuo93jc40345dupg1ezlbbx3" ? (
+          {owner?.citizenId === currentEmployee.citizenId ? (
             <Link href={`/business/${currentBusiness.id}/manage`}>
               <a>
-                <Button>Manage</Button>
+                <Button>{common("manage")}</Button>
               </a>
             </Link>
           ) : null}
@@ -82,7 +106,12 @@ export default function BusinessId(props: Props) {
                         <Button onClick={() => handleEdit(post)} small variant="success">
                           {common("edit")}
                         </Button>
-                        <Button className="ml-2" small variant="danger">
+                        <Button
+                          onClick={() => handleDelete(post)}
+                          className="ml-2"
+                          small
+                          variant="danger"
+                        >
                           {common("delete")}
                         </Button>
                       </div>
@@ -95,7 +124,7 @@ export default function BusinessId(props: Props) {
 
                   {publishedBy ? (
                     <footer className="bg-gray-200/30 px-4 py-2">
-                      <span className="font-semibold">Published by: </span>
+                      <span className="font-semibold">{t("publishedBy")}: </span>
                       <span>
                         {publishedBy?.citizen.name} {publishedBy?.citizen.surname}
                       </span>
@@ -108,7 +137,7 @@ export default function BusinessId(props: Props) {
         </section>
 
         <aside className="w-[15.5rem]">
-          <h3 className="text-xl font-semibold">Employees</h3>
+          <h3 className="text-xl font-semibold">{t("employees")}</h3>
 
           <ul className="flex flex-col space-y-2">
             {currentBusiness.employees
@@ -116,7 +145,7 @@ export default function BusinessId(props: Props) {
               .map((employee) => (
                 <li className="flex items-center" key={employee.id}>
                   {employee.employeeOfTheMonth ? (
-                    <span title={"Employee of the month"} className="mr-2">
+                    <span title={t("employeeOfTheMonth")} className="mr-2">
                       <Star className="text-yellow-500" />
                     </span>
                   ) : null}
@@ -138,6 +167,15 @@ export default function BusinessId(props: Props) {
           onClose={() => setTimeout(() => setTempPost(null), 100)}
         />
       ) : null}
+
+      <AlertModal
+        title={t("deletePost")}
+        description={t("alert_deletePost")}
+        id={ModalIds.AlertDeleteBusinessPost}
+        onDeleteClick={handlePostDeletion}
+        state={fetchState}
+        onClose={() => setTempPost(null)}
+      />
     </Layout>
   );
 }
@@ -151,12 +189,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   ).catch(() => ({ data: null }));
 
   return {
+    notFound: !business || !business?.employee,
     props: {
       business,
       employee: business?.employee ?? null,
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["common"], locale)),
+        ...(await getTranslations(["business", "common"], locale)),
       },
     },
   };

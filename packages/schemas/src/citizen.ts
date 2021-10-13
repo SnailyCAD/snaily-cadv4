@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const CREATE_CITIZEN_SCHEMA = z.object({
-  name: z.string().min(3).max(255),
+  name: z.string().min(2).max(255),
   surname: z.string().min(3).max(255),
   gender: z.string().min(2).max(255),
   ethnicity: z.string().min(2).max(255),
-  dateOfBirth: z.date().or(z.string()),
+  dateOfBirth: z.date().or(z.string().min(2)),
   weight: z.string().min(2).max(255),
   height: z.string().min(2).max(255),
   hairColor: z.string().min(2).max(255),

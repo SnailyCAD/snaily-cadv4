@@ -20,6 +20,9 @@ interface BusinessState {
 
   posts: BusinessPost[];
   setPosts: (posts: BusinessPost[]) => void;
+
+  joinableBusinesses: Business[];
+  setJoinableBusinesses: (businesses: Business[]) => void;
 }
 
 export const useBusinessState = create<BusinessState>((set) => ({
@@ -31,4 +34,7 @@ export const useBusinessState = create<BusinessState>((set) => ({
 
   posts: [],
   setPosts: (posts) => set({ posts }),
+
+  joinableBusinesses: [],
+  setJoinableBusinesses: (businesses) => set({ joinableBusinesses: businesses }),
 }));

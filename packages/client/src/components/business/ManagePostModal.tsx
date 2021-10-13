@@ -27,6 +27,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+  const t = useTranslations("Business");
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -38,10 +39,12 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!currentEmployee || !currentBusiness) return;
+
     if (post) {
-      const { json } = await execute(`/businesses/${currentBusiness?.id}/posts`, {
+      const { json } = await execute(`/businesses/${currentBusiness.id}/posts/${post.id}`, {
         method: "PUT",
-        data: { ...values, employeeId: currentEmployee?.id },
+        data: { ...values, employeeId: currentEmployee.id },
       });
 
       if (json.id) {
@@ -49,9 +52,9 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
         onUpdate(post, json);
       }
     } else {
-      const { json } = await execute(`/businesses/${currentBusiness?.id}/posts`, {
+      const { json } = await execute(`/businesses/${currentBusiness.id}/posts`, {
         method: "POST",
-        data: { ...values, employeeId: currentEmployee?.id },
+        data: { ...values, employeeId: currentEmployee.id },
       });
 
       if (json.id) {
@@ -65,14 +68,13 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
   const INITIAL_VALUES = {
     title: post?.title ?? "",
     body: post?.body ?? "",
-    businessId: currentBusiness.id,
     employeeId: currentEmployee.id,
   };
 
   return (
     <Modal
       className="min-w-[600px]"
-      title={post ? "Edit Business Post" : "Create Business Post"}
+      title={post ? t("editPost") : t("createPost")}
       isOpen={isOpen(ModalIds.ManageBusinessPost)}
       onClose={handleClose}
     >

@@ -44,13 +44,15 @@ export default function Account() {
               <Tab.Panel className="bg-white rounded-xl p-3">
                 <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
                 <div className="mt-2">
-                  {Object.entries(user).map(([key, value]) => {
-                    return (
-                      <p key={key}>
-                        <span className="capitalize font-semibold">{key}: </span> {String(value)}
-                      </p>
-                    );
-                  })}
+                  {Object.entries(user)
+                    .filter(([k]) => k !== "cad")
+                    .map(([key, value]) => {
+                      return (
+                        <p key={key}>
+                          <span className="capitalize font-semibold">{key}: </span> {String(value)}
+                        </p>
+                      );
+                    })}
                 </div>
               </Tab.Panel>
               <Tab.Panel className="bg-white rounded-xl p-3">

@@ -30,12 +30,6 @@ export default function BleetPost({ post }: Props) {
   const t = useTranslations("Bleeter");
   const router = useRouter();
 
-  React.useEffect(() => {
-    if (!post) {
-      router.push("/404");
-    }
-  }, [post, router]);
-
   async function handleDelete() {
     if (!post) return;
 
@@ -109,6 +103,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   }).catch(() => ({ data: null }));
 
   return {
+    notFound: !data,
     props: {
       post: data,
       session: await getSessionUser(req.headers),

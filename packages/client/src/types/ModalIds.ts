@@ -8,7 +8,10 @@ export const enum ModalIds {
 
   AssignToTowCall = "AssignToTowCallModal",
 
+  CreateBusiness = "CreateBusinessModal",
+  JoinBusiness = "JoinBusinessModal",
   ManageBusinessPost = "ManageBusinessPostModal",
+  CreateBusinessPost = "CreateBusinessPostModal",
 
   AlertDeleteCitizen = "alert_DeleteCitizenModal",
   AlertDeleteVehicle = "alert_DeleteVehicleModal",
@@ -16,4 +19,5 @@ export const enum ModalIds {
   AlertDeleteMedicalRecord = "alert_DeleteMedicalRecordModal",
   AlertDeleteBleet = "alert_DeleteBleetModal",
   AlertEndTowCall = "AlertEndTowCallModal",
+  AlertDeleteBusinessPost = "AlertDeleteBusinessPostModal",
 }

@@ -172,6 +172,8 @@ model Value {
   type      ValueType
   value     String    @db.VarChar(255)
   isDefault Boolean
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]           @relation("ethnicityToValue")
@@ -274,8 +276,9 @@ model BusinessPost {
   business   Business @relation(fields: [businessId], references: [id])
   businessId String
 
-  title String @db.VarChar(255)
-  body  String @db.Text
+  title     String   @db.VarChar(255)
+  body      String   @db.Text
+  createdAt DateTime @default(now())
 }
 
 enum Feature {
