@@ -26,8 +26,8 @@ export default function BusinessPage(props: Props) {
   const [businesses, setBusinesses] = React.useState(props.businesses);
   const setJoinableBusinesses = useBusinessState((s) => s.setJoinableBusinesses);
 
-  const ownedBusinesses = businesses.filter((em) => em.citizenId === em.business.citizenId);
-  const joinedBusinesses = businesses.filter((em) => em.citizenId !== em.business.citizenId);
+  const ownedBusinesses = businesses.filter((em) => em.citizenId === em.business?.citizenId);
+  const joinedBusinesses = businesses.filter((em) => em.citizenId !== em.business?.citizenId);
 
   React.useEffect(() => {
     setJoinableBusinesses(props.joinableBusinesses);

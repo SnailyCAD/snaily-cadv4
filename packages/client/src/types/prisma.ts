@@ -192,6 +192,7 @@ export type Employee = {
   roleId: string;
   employeeOfTheMonth: boolean;
   canCreatePosts: boolean;
+  whitelistStatus: WhitelistStatus;
 };
 
 /**

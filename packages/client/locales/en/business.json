@@ -26,6 +26,7 @@
     "canCreatePosts": "Can create posts",
     "fireEmployee": "Fire employee",
     "deleteBusiness": "Delete Business",
+    "businessIsWhitelisted": "This business is whitelisted. You will be able to view it once you're accepted.",
     "alert_fireEmployee": "Are you sure you want to fire <span>{employee}</span>? This action cannot be undone.",
     "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone.",
     "alert_deleteBusiness": "Are you sure you want to delete \"<span>{business}</span>\"? This action cannot be undone."

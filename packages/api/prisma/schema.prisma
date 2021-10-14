@@ -252,17 +252,18 @@ model Business {
 }
 
 model Employee {
-  id                 String         @id @default(cuid())
-  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                 String          @id @default(cuid())
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String
-  citizen            Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen            Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId          String
-  business           Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  business           Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId         String
-  role               EmployeeValue? @relation("employeeToValue", fields: [roleId], references: [id], onDelete: Restrict)
+  role               EmployeeValue?  @relation("employeeToValue", fields: [roleId], references: [id], onDelete: Restrict)
   roleId             String?
-  employeeOfTheMonth Boolean        @default(false)
-  canCreatePosts     Boolean        @default(true)
+  employeeOfTheMonth Boolean         @default(false)
+  canCreatePosts     Boolean         @default(true)
+  whitelistStatus    WhitelistStatus @default(ACCEPTED)
   businessPosts      BusinessPost[]
 }
 

@@ -17,7 +17,8 @@
     "create": "Create",
     "reason": "Reason",
     "none": "None",
-    "insufficientPermissions": "Insufficient Permissions"
+    "insufficientPermissions": "Insufficient Permissions",
+    "noOptions": "No Options"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

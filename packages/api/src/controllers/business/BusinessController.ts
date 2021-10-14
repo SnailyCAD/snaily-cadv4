@@ -11,7 +11,7 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { EmployeeAsEnum, MiscCadSettings } from ".prisma/client";
+import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
 
 @UseBeforeEach(IsAuth)
 @Controller("/")
@@ -44,102 +44,68 @@ export class BusinessController {
     return { businesses, joinableBusinesses };
   }
 
-  @Get("/:type/:employeeId")
+  @Get("/business/:employeeId")
   async getBusinesses(
     @Context() ctx: Context,
-    @PathParams("type") type: "citizen" | "business",
     @PathParams("employeeId") id: string,
     @QueryParams("employeeId") employeeId: string,
   ) {
-    if (type === "citizen") {
-      const businesses = await prisma.business.findMany({
-        where: {
-          citizenId: id,
-          userId: ctx.get("user").id,
+    const business = await prisma.business.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        businessPosts: {
+          orderBy: {
+            createdAt: "desc",
+          },
         },
-        include: {
-          employees: {
-            include: {
-              role: {
-                include: {
-                  value: true,
-                },
+        employees: {
+          include: {
+            role: {
+              include: {
+                value: true,
               },
-              citizen: {
-                select: {
-                  name: true,
-                  surname: true,
-                  id: true,
-                },
+            },
+            citizen: {
+              select: {
+                name: true,
+                surname: true,
+                id: true,
               },
             },
           },
         },
-      });
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
+      },
+    });
 
-      return businesses;
+    const employee = employeeId
+      ? await prisma.employee.findFirst({
+          where: {
+            id: employeeId,
+          },
+          include: {
+            role: {
+              include: {
+                value: true,
+              },
+            },
+          },
+        })
+      : null;
+
+    if (!employee || employee.userId !== ctx.get("user").id) {
+      throw new NotFound("employeeNotFound");
     }
 
-    if (type === "business") {
-      const business = await prisma.business.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          businessPosts: {
-            orderBy: {
-              createdAt: "desc",
-            },
-          },
-          employees: {
-            include: {
-              role: {
-                include: {
-                  value: true,
-                },
-              },
-              citizen: {
-                select: {
-                  name: true,
-                  surname: true,
-                  id: true,
-                },
-              },
-            },
-          },
-          citizen: {
-            select: {
-              name: true,
-              surname: true,
-              id: true,
-            },
-          },
-        },
-      });
-
-      const employee = employeeId
-        ? await prisma.employee.findFirst({
-            where: {
-              id: employeeId,
-            },
-            include: {
-              role: {
-                include: {
-                  value: true,
-                },
-              },
-            },
-          })
-        : null;
-
-      if (!employee || employee.userId !== ctx.get("user").id) {
-        throw new NotFound("employeeNotFound");
-      }
-
-      return { ...business, employee };
-    }
-
-    throw new NotFound("invalid type");
+    return { ...business, employee };
   }
 
   @Put("/:id")
@@ -305,6 +271,22 @@ export class BusinessController {
         employeeOfTheMonth: false,
         userId: ctx.get("user").id,
         roleId: employeeRole.id,
+        whitelistStatus: business.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+      },
+      include: {
+        citizen: {
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+          },
+        },
+        business: true,
+        role: {
+          include: {
+            value: true,
+          },
+        },
       },
     });
 
@@ -319,34 +301,9 @@ export class BusinessController {
           },
         },
       },
-      include: {
-        employees: {
-          include: {
-            role: {
-              include: {
-                value: true,
-              },
-            },
-            citizen: {
-              select: {
-                name: true,
-                surname: true,
-                id: true,
-              },
-            },
-          },
-        },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
     });
 
-    return business;
+    return employee;
   }
 
   @Post("/create")

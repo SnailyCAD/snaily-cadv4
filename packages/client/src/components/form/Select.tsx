@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDown, X } from "react-bootstrap-icons";
+import { useTranslations } from "use-intl";
 
 export interface SelectValue<Value = string> {
   label: string;
@@ -25,6 +26,7 @@ export const Select = ({
   onChange,
 }: Props) => {
   const [selected, setSelected] = React.useState<SelectValue | null>(null);
+  const common = useTranslations("Common");
 
   React.useEffect(() => {
     const v = values.find((v) => v.value === value);
@@ -78,25 +80,35 @@ export const Select = ({
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute z-20 w-full p-1.5 px-0 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
-              {values.map((value, idx) => (
+              {values.length <= 0 ? (
                 <Listbox.Option
-                  key={idx}
-                  value={value}
-                  className={({ active }) =>
-                    `${
-                      active ? "bg-gray-400" : "text-gray-900"
-                    } cursor-default select-none relative p-1 px-4`
-                  }
+                  disabled
+                  value={null}
+                  className="text-gray-900 cursor-default select-none relative p-1 px-4"
                 >
-                  {({ selected }) => (
-                    <span
-                      className={`${selected ? "font-semibold" : "font-normal"}  block truncate`}
-                    >
-                      {value.label}
-                    </span>
-                  )}
+                  <span className="block truncate">{common("noOptions")}</span>
                 </Listbox.Option>
-              ))}
+              ) : (
+                values.map((value, idx) => (
+                  <Listbox.Option
+                    key={idx}
+                    value={value}
+                    className={({ active }) =>
+                      `${
+                        active ? "bg-gray-400" : "text-gray-900"
+                      } cursor-default select-none relative p-1 px-4`
+                    }
+                  >
+                    {({ selected }) => (
+                      <span
+                        className={`${selected ? "font-semibold" : "font-normal"}  block truncate`}
+                      >
+                        {value.label}
+                      </span>
+                    )}
+                  </Listbox.Option>
+                ))
+              )}
             </Listbox.Options>
           </Transition>
         )}

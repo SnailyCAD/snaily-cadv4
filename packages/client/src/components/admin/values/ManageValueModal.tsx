@@ -99,9 +99,11 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
               <Error>{errors.value}</Error>
             </FormField>
 
-            <FormField fieldId="as" label="As (this is so the database knows what to use.)">
-              <Select values={VALUES} name="as" onChange={handleChange} value={values.as} />
-            </FormField>
+            {type === "BUSINESS_ROLE" ? (
+              <FormField fieldId="as" label="As (this is so the database knows what to use.)">
+                <Select values={VALUES} name="as" onChange={handleChange} value={values.as} />
+              </FormField>
+            ) : null}
 
             <footer className="mt-5 flex justify-end">
               <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
