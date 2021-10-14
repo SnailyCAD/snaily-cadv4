@@ -28,7 +28,7 @@ export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
     <div
       className={`w-[100px] ${
         text === "enable/disable" && "w-1/4 min-w-[206px]"
-      } bg-gray-200 flex items-center justify-between rounded-lg relative overflow-hidden`}
+      } bg-gray-200 flex items-center justify-between rounded-lg relative overflow-hidden mt-1`}
     >
       <div
         style={{ transform: `translateX(${x}%)` }}

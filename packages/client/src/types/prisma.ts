@@ -208,6 +208,17 @@ export type BusinessPost = {
 };
 
 /**
+ * Model EmployeeValue
+ */
+
+export type EmployeeValue = {
+  id: string;
+  valueId: string;
+  as: EmployeeAsEnum;
+  value: Value<"BUSINESS_ROLE">;
+};
+
+/**
  * Enums
  */
 
@@ -253,3 +264,11 @@ export const feature = {
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];
+
+export const EmployeeAsEnum = {
+  OWNER: "OWNER",
+  MANAGER: "MANAGER",
+  EMPLOYEE: "EMPLOYEE",
+} as const;
+
+export type EmployeeAsEnum = typeof EmployeeAsEnum[keyof typeof EmployeeAsEnum];

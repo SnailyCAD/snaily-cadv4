@@ -1,5 +1,6 @@
 {
   "Business": {
+    "businesses": "Businesses",
     "owned": "Owned",
     "joined": "Joined",
     "noOwned": "You do not own any businesses",
@@ -19,6 +20,14 @@
     "employees": "Employees",
     "employeeOfTheMonth": "Employee of the month",
     "publishedBy": "Published By",
-    "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone."
+    "fire": "Fire",
+    "manageEmployee": "Manage Employee",
+    "canManageEmployees": "Can manage employees",
+    "canCreatePosts": "Can create posts",
+    "fireEmployee": "Fire employee",
+    "deleteBusiness": "Delete Business",
+    "alert_fireEmployee": "Are you sure you want to fire <span>{employee}</span>? This action cannot be undone.",
+    "alert_deletePost": "Are you sure you want to delete this post? This action cannot be undone.",
+    "alert_deleteBusiness": "Are you sure you want to delete \"<span>{business}</span>\"? This action cannot be undone."
   }
 }

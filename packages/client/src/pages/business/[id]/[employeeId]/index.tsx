@@ -13,6 +13,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageBusinessPostModal } from "components/business/ManagePostModal";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
+import Head from "next/head";
 import { BusinessPost } from "types/prisma";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
@@ -71,6 +72,10 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout>
+      <Head>
+        <title>{currentBusiness.name}</title>
+      </Head>
+
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{currentBusiness.name}</h1>
 
@@ -81,7 +86,7 @@ export default function BusinessId(props: Props) {
             </Button>
           ) : null}
           {owner?.citizenId === currentEmployee.citizenId ? (
-            <Link href={`/business/${currentBusiness.id}/manage`}>
+            <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}>
               <a>
                 <Button>{common("manage")}</Button>
               </a>
@@ -136,7 +141,7 @@ export default function BusinessId(props: Props) {
           </ul>
         </section>
 
-        <aside className="w-[15.5rem]">
+        <aside className="w-[20rem]">
           <h3 className="text-xl font-semibold">{t("employees")}</h3>
 
           <ul className="flex flex-col space-y-2">

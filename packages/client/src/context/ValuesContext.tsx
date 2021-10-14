@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Value, ValueType } from "types/prisma";
+import { EmployeeValue, Value, ValueType } from "types/prisma";
 
 type Context = {
   genders: {
@@ -26,6 +26,10 @@ type Context = {
     type: ValueType;
     values: Value[];
   };
+  businessRoles: {
+    type: ValueType;
+    values: EmployeeValue[];
+  };
 };
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
@@ -51,6 +55,7 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
   const vehicles = values.find((v) => v.type === "VEHICLE");
   const weapons = values.find((v) => v.type === "WEAPON");
   const bloodGroups = values.find((v) => v.type === "BLOOD_GROUP");
+  const businessRoles = values.find((v) => v.type === "BUSINESS_ROLE") as any;
 
   const value = {
     genders: genders ?? { values: [] },
@@ -59,6 +64,7 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
     vehicles: vehicles ?? { values: [] },
     weapons: weapons ?? { values: [] },
     bloodGroups: bloodGroups ?? { values: [] },
+    businessRoles: businessRoles ?? { values: [] },
   } as Context;
 
   React.useEffect(() => {

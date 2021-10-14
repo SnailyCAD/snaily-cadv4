@@ -42,7 +42,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
     if (!currentEmployee || !currentBusiness) return;
 
     if (post) {
-      const { json } = await execute(`/businesses/${currentBusiness.id}/posts/${post.id}`, {
+      const { json } = await execute(`/businesses/posts/${currentBusiness.id}/${post.id}`, {
         method: "PUT",
         data: { ...values, employeeId: currentEmployee.id },
       });
@@ -52,7 +52,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
         onUpdate(post, json);
       }
     } else {
-      const { json } = await execute(`/businesses/${currentBusiness.id}/posts`, {
+      const { json } = await execute(`/businesses/posts/${currentBusiness.id}`, {
         method: "POST",
         data: { ...values, employeeId: currentEmployee.id },
       });

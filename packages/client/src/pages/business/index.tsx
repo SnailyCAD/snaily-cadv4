@@ -8,6 +8,7 @@ import { Business } from "types/prisma";
 import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
+import Head from "next/head";
 import { CreateBusinessModal } from "components/business/CreateBusinessModal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -34,14 +35,17 @@ export default function BusinessPage(props: Props) {
 
   return (
     <Layout>
+      <Head>
+        <title>{t("businesses")}</title>
+      </Head>
       <header className="flex items-center justify-between mb-3">
-        <h1 className="text-3xl font-semibold">{"Businesses"}</h1>
+        <h1 className="text-3xl font-semibold">{t("businesses")}</h1>
 
         <div>
-          <Button className="mr-2" onClick={() => openModal(ModalIds.JoinBusiness)}>
-            Join Business
+          <Button onClick={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>
+          <Button className="ml-2" onClick={() => openModal(ModalIds.CreateBusiness)}>
+            {t("createBusiness")}
           </Button>
-          <Button onClick={() => openModal(ModalIds.CreateBusiness)}>Create Business</Button>
         </div>
       </header>
 

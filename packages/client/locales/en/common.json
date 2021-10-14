@@ -16,7 +16,8 @@
     "view": "View",
     "create": "Create",
     "reason": "Reason",
-    "none": "None"
+    "none": "None",
+    "insufficientPermissions": "Insufficient Permissions"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -30,6 +31,7 @@
     "plateAlreadyInUse": "That plate is already being used on a vehicle.",
     "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/jpg are supported",
     "userBanned": "This account is banned from this CAD.",
-    "alreadyInThisBusiness": "You are already an employee at this business."
+    "alreadyInThisBusiness": "You are already an employee at this business.",
+    "insufficientPermissions": "Insufficient Permissions"
   }
 }

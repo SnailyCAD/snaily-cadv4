@@ -186,7 +186,7 @@ model Value {
   registrationStatusToValue       RegisteredVehicle[] @relation("registrationStatusToValue")
   weaponRegistrationStatusToValue Weapon[]            @relation("weaponRegistrationStatusToValue")
   weaponModelToValue              Weapon[]            @relation("weaponModelToValue")
-  employeeToValue                 Employee[]          @relation("employeeToValue")
+  EmployeeValue                   EmployeeValue[]
 }
 
 enum ValueType {
@@ -238,9 +238,9 @@ model TowCall {
 // businesses
 model Business {
   id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  citizen   Citizen @relation(fields: [citizenId], references: [id])
+  citizen   Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String
 
   name          String         @db.VarChar(255)
@@ -252,15 +252,14 @@ model Business {
 }
 
 model Employee {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  citizen    Citizen  @relation(fields: [citizenId], references: [id])
-  citizenId  String
-  business   Business @relation(fields: [businessId], references: [id])
-  businessId String
-
-  role               Value?         @relation("employeeToValue", fields: [roleId], references: [id])
+  id                 String         @id @default(cuid())
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  citizen            Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId          String
+  business           Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  businessId         String
+  role               EmployeeValue? @relation("employeeToValue", fields: [roleId], references: [id], onDelete: Restrict)
   roleId             String?
   employeeOfTheMonth Boolean        @default(false)
   canCreatePosts     Boolean        @default(true)
@@ -269,16 +268,30 @@ model Employee {
 
 model BusinessPost {
   id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  employee   Employee @relation(fields: [employeeId], references: [id])
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   employeeId String
-  business   Business @relation(fields: [businessId], references: [id])
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
   businessId String
 
   title     String   @db.VarChar(255)
   body      String   @db.Text
   createdAt DateTime @default(now())
+}
+
+model EmployeeValue {
+  id        String         @id @default(cuid())
+  value     Value          @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  valueId   String
+  as        EmployeeAsEnum @default(EMPLOYEE)
+  employees Employee[]     @relation("employeeToValue")
+}
+
+enum EmployeeAsEnum {
+  OWNER
+  MANAGER
+  EMPLOYEE
 }
 
 enum Feature {

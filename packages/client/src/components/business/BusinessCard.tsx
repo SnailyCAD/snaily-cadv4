@@ -25,11 +25,11 @@ export const BusinessCard = ({ employee }: Props) => {
           </span>
         </p>
         <p>
-          <span className="font-semibold">{t("role")}: </span> {employee.role?.value}
+          <span className="font-semibold">{t("role")}: </span> {employee.role?.value?.value}
         </p>
       </div>
 
-      <Link href={`/business/${employee.businessId}/${employee.citizenId}`}>
+      <Link href={`/business/${employee.businessId}/${employee.id}`}>
         <a>
           <Button>{common("view")}</Button>
         </a>

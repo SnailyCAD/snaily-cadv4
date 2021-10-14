@@ -9,15 +9,31 @@ import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
-import { Value, ValueType } from "types/prisma";
+import { EmployeeAsEnum, EmployeeValue, Value, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
+import { Select } from "components/form/Select";
 
 interface Props {
   type: ValueType;
-  value: Value | null;
-  onCreate: (newValue: Value) => void;
-  onUpdate: (oldValue: Value, newValue: Value) => void;
+  value: Value | EmployeeValue | null;
+  onCreate: (newValue: Value | EmployeeValue) => void;
+  onUpdate: (oldValue: Value | EmployeeValue, newValue: Value | EmployeeValue) => void;
 }
+
+const VALUES = [
+  {
+    value: EmployeeAsEnum.OWNER,
+    label: "Owner",
+  },
+  {
+    value: EmployeeAsEnum.MANAGER,
+    label: "Manager",
+  },
+  {
+    value: EmployeeAsEnum.EMPLOYEE,
+    label: "Employee",
+  },
+];
 
 export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => {
   const { state, execute } = useFetch();
@@ -39,6 +55,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
       );
 
       if (json?.id) {
+        closeModal("manageValue");
         onUpdate(value, json);
       }
     } else {
@@ -48,15 +65,15 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
       });
 
       if (json?.id) {
+        closeModal("manageValue");
         onCreate(json);
       }
     }
-
-    closeModal("manageValue");
   }
 
   const INITIAL_VALUES = {
-    value: value?.value ?? "",
+    value: typeof value?.value === "string" ? value.value : value?.value.value ?? "",
+    as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
   };
 
   const validate = handleValidate(VALUE_SCHEMA);
@@ -80,6 +97,10 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
                 value={values.value}
               />
               <Error>{errors.value}</Error>
+            </FormField>
+
+            <FormField fieldId="as" label="As (this is so the database knows what to use.)">
+              <Select values={VALUES} name="as" onChange={handleChange} value={values.as} />
             </FormField>
 
             <footer className="mt-5 flex justify-end">

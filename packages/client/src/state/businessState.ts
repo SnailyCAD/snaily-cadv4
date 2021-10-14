@@ -1,9 +1,9 @@
-import type { Business, BusinessPost, Citizen, Employee, Value } from "types/prisma";
+import type { Business, BusinessPost, Citizen, Employee, EmployeeValue } from "types/prisma";
 import create from "zustand";
 
 export type FullEmployee = Employee & {
   citizen: Pick<Citizen, "id" | "name" | "surname">;
-  role: Value<"BUSINESS_ROLE">;
+  role: EmployeeValue;
 };
 export type FullBusiness = Business & {
   employees: FullEmployee[];

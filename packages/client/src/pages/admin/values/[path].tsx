@@ -9,34 +9,34 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { Value, valueType, ValueType } from "types/prisma";
+import { EmployeeValue, Value, valueType, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 
 interface Props {
-  values: { type: ValueType; values: Value[] };
+  values: { type: ValueType; values: (Value | EmployeeValue)[] };
 }
 
 export default function ValuePath({ values: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<Value[]>(data);
+  const [values, setValues] = React.useState<(Value | EmployeeValue)[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
-  const [tempValue, setTempValue] = React.useState<Value | null>(null);
+  const [tempValue, setTempValue] = React.useState<Value | EmployeeValue | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
   const t = useTranslations("Values");
   const common = useTranslations("Common");
 
-  function handleDeleteClick(value: Value) {
+  function handleDeleteClick(value: Value | EmployeeValue) {
     setTempValue(value);
     openModal("deleteValue");
   }
 
-  function handleEditClick(value: Value) {
+  function handleEditClick(value: Value | EmployeeValue) {
     setTempValue(value);
     openModal("manageValue");
   }
@@ -99,7 +99,9 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
             >
               <div>
                 <span className="select-none text-gray-500">{++idx}.</span>
-                <span className="ml-2">{value.value}</span>
+                <span className="ml-2">
+                  {typeof value?.value === "string" ? value.value : value?.value.value}
+                </span>
               </div>
 
               <div>
@@ -122,7 +124,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
       >
         <p className="my-3">
           {t.rich("alert_deleteValue", {
-            value: tempValue && tempValue.value,
+            value: typeof tempValue?.value === "string" ? tempValue.value : tempValue?.value.value,
             span: (children) => {
               return <span className="font-semibold">{children}</span>;
             },

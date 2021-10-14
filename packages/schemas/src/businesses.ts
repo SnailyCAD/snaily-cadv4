@@ -21,3 +21,14 @@ export const CREATE_COMPANY_POST_SCHEMA = z.object({
 export const DELETE_COMPANY_POST_SCHEMA = z.object({
   employeeId: z.string().min(2).max(255),
 });
+
+export const UPDATE_EMPLOYEE_SCHEMA = z.object({
+  employeeId: z.string().min(2).max(255),
+  employeeOfTheMonth: z.boolean(),
+  canCreatePosts: z.boolean(),
+  roleId: z.string().min(2).max(255),
+});
+
+export const FIRE_EMPLOYEE_SCHEMA = z.object({
+  employeeId: z.string().min(2).max(255),
+});

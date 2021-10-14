@@ -14,8 +14,9 @@ const rootDir = __dirname;
     level: process.env.NODE_ENV === "production" ? "off" : undefined,
   },
   mount: {
-    "/v1": [`${rootDir}/controllers/**/*.ts`],
+    "/v1": [`${rootDir}/controllers/**/*.ts`, `!${rootDir}/controllers/business/*.ts`],
     "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
+    "/v1/businesses": [`${rootDir}/controllers/business/*.ts`],
   },
   statics: {
     "/": [

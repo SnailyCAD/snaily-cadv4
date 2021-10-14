@@ -14,6 +14,7 @@ import { ValidPath } from "@snailycad/config";
 import { prisma } from "../../lib/prisma";
 import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
+import { BadRequest } from "@tsed/exceptions";
 
 @Controller("/admin/values/:path")
 @UseBeforeEach(IsValidPath)
@@ -30,6 +31,17 @@ export class ValuesController {
     const values = await Promise.all(
       paths.map(async (path) => {
         const type = this.getTypeFromPath(path as ValidPath);
+
+        if (type === "BUSINESS_ROLE") {
+          return {
+            type,
+            values: await prisma.employeeValue.findMany({
+              include: {
+                value: true,
+              },
+            }),
+          };
+        }
 
         return {
           type,
@@ -65,6 +77,19 @@ export class ValuesController {
         isDefault: false,
       },
     });
+
+    if (type === "BUSINESS_ROLE") {
+      if (!body.get("as")) {
+        throw new BadRequest("asRequired");
+      }
+
+      await prisma.employeeValue.create({
+        data: {
+          as: body.get("as"),
+          valueId: value.id,
+        },
+      });
+    }
 
     return value;
   }
