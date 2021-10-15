@@ -18,7 +18,7 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
     <button
       className={classNames(
         `${
-          small ? "p-0.5 px-2" : "p-1 px-4"
+          small ? "p-0.5 px-2" : "p-1.5 px-4"
         } rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed`,
         variant && variants[variant],
         className,

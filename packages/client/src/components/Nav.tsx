@@ -28,38 +28,43 @@ export const Nav = () => {
             <ul className="hidden md:flex items-center space-x-1">
               <CitizenDropdown />
 
-              <Link href="/officer">
-                <a
-                  className={classNames(
-                    "py-3 px-2 text-gray-700 transition duration-300",
-                    isActive("/officer") && "font-semibold",
-                  )}
-                >
-                  Officer
-                </a>
-              </Link>
+              {user?.isLeo ? (
+                <Link href="/officer">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 transition duration-300",
+                      isActive("/officer") && "font-semibold",
+                    )}
+                  >
+                    Officer
+                  </a>
+                </Link>
+              ) : null}
 
-              <Link href="/dispatch">
-                <a
-                  className={classNames(
-                    "py-3 px-2 text-gray-700 transition duration-300",
-                    isActive("/ems-fd") && "font-semibold",
-                  )}
-                >
-                  Dispatch
-                </a>
-              </Link>
-
-              <Link href="/ems-fd">
-                <a
-                  className={classNames(
-                    "py-3 px-2 text-gray-700 transition duration-300",
-                    isActive("/ems-fd") && "font-semibold",
-                  )}
-                >
-                  EMS/FD
-                </a>
-              </Link>
+              {user?.isDispatch ? (
+                <Link href="/dispatch">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 transition duration-300",
+                      isActive("/ems-fd") && "font-semibold",
+                    )}
+                  >
+                    Dispatch
+                  </a>
+                </Link>
+              ) : null}
+              {user?.isEmsFd ? (
+                <Link href="/ems-fd">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 transition duration-300",
+                      isActive("/ems-fd") && "font-semibold",
+                    )}
+                  >
+                    EMS/FD
+                  </a>
+                </Link>
+              ) : null}
 
               {user?.rank !== "USER" ? (
                 <Link href="/admin/manage/users">

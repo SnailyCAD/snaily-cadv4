@@ -179,8 +179,8 @@ export class CitizenController {
         height,
         hairColor,
         dateOfBirth,
-        ethnicity,
-        gender,
+        ethnicityId: ethnicity,
+        genderId: gender,
         eyeColor,
       },
       include: {

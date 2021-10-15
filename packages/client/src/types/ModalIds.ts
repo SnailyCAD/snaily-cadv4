@@ -4,9 +4,11 @@ export const enum ModalIds {
   ManageLicenses = "ManageLicensesModal",
   ManageMedicalRecords = "ManageMedicalRecords",
   ManageBleetModal = "ManageBleetModal",
-  ManageTowCall = "ManageTowCallModal",
 
+  ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
+
+  ManageTaxiCall = "ManageTaxiCallModal",
 
   CreateBusiness = "CreateBusinessModal",
   JoinBusiness = "JoinBusinessModal",

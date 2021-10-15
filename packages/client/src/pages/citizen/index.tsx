@@ -50,6 +50,12 @@ export default function CitizenPage({ citizens }: Props) {
         <Button onClick={() => openModal(ModalIds.ManageTowCall)} className="text-left">
           {t("createTowCall")}
         </Button>
+        <Button disabled onClick={() => openModal(ModalIds.ManageTaxiCall)} className="text-left">
+          {t("createTaxiCall")}
+        </Button>
+        <Button disabled onClick={() => openModal(ModalIds.ManageTowCall)} className="text-left">
+          {t("create911Call")}
+        </Button>
       </ul>
 
       <ul
