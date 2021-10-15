@@ -57,7 +57,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   const value = { user, cad, setCad, setUser };
 
-  if (!user) {
+  if (!router.pathname.includes("auth") && !user) {
     return (
       <div id="unauthorized" className="fixed inset-0 grid place-items-center">
         <Loader className="w-14 h-14 border-[3px]" />
