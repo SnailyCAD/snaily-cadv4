@@ -8,6 +8,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   BLEETER: "/v1/bleeter",
   TAXI: "/v1/taxi",
   TRUCK_LOGS: "/v1/truck-logs",
+  BUSINESS: "/v1/businesses",
 };
 
 @Middleware()
@@ -23,7 +24,7 @@ export class IsEnabled implements MiddlewareMethods {
     for (const feature of cad.disabledFeatures) {
       const route = featuresRoute[feature];
 
-      if (req.baseUrl.includes(route!)) {
+      if (req.originalUrl.includes(route!) || req.baseUrl.includes(route!)) {
         throw new BadRequest("featureNotEnabled");
       }
     }

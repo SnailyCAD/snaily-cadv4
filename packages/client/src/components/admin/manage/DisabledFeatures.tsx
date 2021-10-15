@@ -135,6 +135,18 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
+            <FormField fieldId="business" label={"Businesses"}>
+              <Toggle
+                text="enable/disable"
+                toggled={values[feature.BUSINESS]}
+                onClick={handleChange}
+                name={feature.BUSINESS}
+              />
+              <small className="mt-2 text-base">
+                When enabled, citizens will be able to create and join businesses
+              </small>
+            </FormField>
+
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
               {common("save")}

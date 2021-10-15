@@ -302,4 +302,5 @@ enum Feature {
   COURTHOUSE
   TRUCK_LOGS
   AOP
+  BUSINESS
 }

@@ -1,18 +1,10 @@
-import {
-  Controller,
-  BodyParams,
-  Context,
-  UseBefore,
-  UseBeforeEach,
-  PathParams,
-} from "@tsed/common";
+import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "../../middlewares";
 import { TowSocket } from "../../services/TowSocket";
-import { IsEnabled } from "../../middlewares/IsEnabled";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -20,7 +12,6 @@ const CITIZEN_SELECTS = {
   id: true,
 };
 
-@UseBeforeEach(IsEnabled)
 @Controller("/tow")
 export class TowController {
   private socket: TowSocket;

@@ -100,7 +100,7 @@ const NavDropdown = () => {
   return (
     <>
       <Menu as="div" className="relative inline-block text-left z-50">
-        <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+        <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none">
           <PersonCircle fill="#2f2f2f" width={20} height={20} />
         </Menu.Button>
 
@@ -113,7 +113,7 @@ const NavDropdown = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
             {user ? (
               <>
                 <div className="px-1 py-1 ">
@@ -189,7 +189,7 @@ const CitizenDropdown = () => {
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
 
-  const items = ["Citizens", "Tow", "Taxi", "Bleeter", "Truck Logs", "Courthouse"];
+  const items = ["Citizens", "Tow", "Taxi", "Bleeter", "Truck Logs", "Courthouse", "Business"];
 
   return (
     <>
@@ -214,7 +214,7 @@ const CitizenDropdown = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute left-0 w-36 mt-0 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute left-0 w-36 mt-0 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
             <div className="px-1 py-1 ">
               <Menu.Item>
                 {({ active }) => (
@@ -230,7 +230,7 @@ const CitizenDropdown = () => {
                 )}
               </Menu.Item>
 
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <Link href="/business">
                     <a
@@ -242,7 +242,7 @@ const CitizenDropdown = () => {
                     </a>
                   </Link>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
 
               {items.map((item) => {
                 const upperCase = item.toUpperCase() as Feature;

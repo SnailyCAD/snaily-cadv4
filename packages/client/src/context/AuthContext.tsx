@@ -3,6 +3,8 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
 import { cad as CAD, User } from "types/prisma";
+import { Loader } from "components/Loader";
+import { useIsFeatureEnabled } from "lib/utils";
 
 interface Context {
   user: User | null;
@@ -23,6 +25,8 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(null);
   const router = useRouter();
+
+  const isEnabled = useIsFeatureEnabled(cad ?? {});
 
   const handleGetUser = React.useCallback(async () => {
     getSessionUser()
@@ -52,6 +56,22 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   }, [initialData.session]);
 
   const value = { user, cad, setCad, setUser };
+
+  if (!user) {
+    return (
+      <div id="unauthorized" className="fixed inset-0 grid place-items-center">
+        <Loader className="w-14 h-14 border-[3px]" />
+      </div>
+    );
+  }
+
+  if (cad && !isEnabled) {
+    return (
+      <main className="grid place-items-center h-screen">
+        <p>Feature is not enabled.</p>
+      </main>
+    );
+  }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

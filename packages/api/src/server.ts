@@ -4,6 +4,7 @@ import "@tsed/socketio";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { IsEnabled } from "./middlewares/IsEnabled";
 
 const rootDir = __dirname;
 
@@ -46,6 +47,7 @@ export class Server {
       .use(json())
       .use(
         cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
-      );
+      )
+      .use(IsEnabled);
   }
 }

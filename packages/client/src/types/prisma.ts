@@ -262,6 +262,7 @@ export const feature = {
   COURTHOUSE: "COURTHOUSE",
   TRUCK_LOGS: "TRUCK_LOGS",
   AOP: "AOP",
+  BUSINESS: "BUSINESS",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];
