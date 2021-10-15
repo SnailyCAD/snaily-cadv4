@@ -21,6 +21,9 @@ export class BusinessController {
     const businesses = await prisma.employee.findMany({
       where: {
         userId: ctx.get("user").id,
+        NOT: {
+          whitelistStatus: WhitelistStatus.DECLINED,
+        },
       },
       include: {
         citizen: {
@@ -44,10 +47,10 @@ export class BusinessController {
     return { businesses, joinableBusinesses };
   }
 
-  @Get("/business/:employeeId")
+  @Get("/business/:id")
   async getBusinesses(
     @Context() ctx: Context,
-    @PathParams("employeeId") id: string,
+    @PathParams("id") id: string,
     @QueryParams("employeeId") employeeId: string,
   ) {
     const business = await prisma.business.findUnique({
@@ -90,6 +93,9 @@ export class BusinessController {
       ? await prisma.employee.findFirst({
           where: {
             id: employeeId,
+            NOT: {
+              whitelistStatus: WhitelistStatus.DECLINED,
+            },
           },
           include: {
             role: {

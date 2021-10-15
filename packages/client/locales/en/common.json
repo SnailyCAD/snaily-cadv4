@@ -18,7 +18,9 @@
     "reason": "Reason",
     "none": "None",
     "insufficientPermissions": "Insufficient Permissions",
-    "noOptions": "No Options"
+    "noOptions": "No Options",
+    "accept": "Accept",
+    "decline": "Decline"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

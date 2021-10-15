@@ -14,7 +14,7 @@ import { ManageBusinessPostModal } from "components/business/ManagePostModal";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
-import { BusinessPost } from "types/prisma";
+import { BusinessPost, whitelistStatus } from "types/prisma";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
@@ -68,6 +68,14 @@ export default function BusinessId(props: Props) {
 
   if (!currentBusiness || !currentEmployee) {
     return null;
+  }
+
+  if (currentEmployee.whitelistStatus === whitelistStatus.PENDING) {
+    return (
+      <Layout>
+        <p>{t("businessIsWhitelisted")}</p>
+      </Layout>
+    );
   }
 
   return (
@@ -146,7 +154,8 @@ export default function BusinessId(props: Props) {
 
           <ul className="flex flex-col space-y-2">
             {currentBusiness.employees
-              .sort((a, b) => Number(a.employeeOfTheMonth) - Number(b.employeeOfTheMonth))
+              .filter((v) => v.whitelistStatus !== whitelistStatus.PENDING)
+              .sort((a, b) => Number(b.employeeOfTheMonth) - Number(a.employeeOfTheMonth))
               .map((employee) => (
                 <li className="flex items-center" key={employee.id}>
                   {employee.employeeOfTheMonth ? (

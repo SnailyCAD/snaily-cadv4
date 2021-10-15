@@ -92,6 +92,10 @@ export const EmployeesTab = () => {
                 <span className="font-semibold">{t("employeeOfTheMonth")}: </span>
                 {String(employee.employeeOfTheMonth)}
               </p>
+              <p>
+                <span className="font-semibold">{t("whitelistStatus")}: </span>
+                {String(employee.whitelistStatus)}
+              </p>
             </div>
 
             {employee.role.as !== EmployeeAsEnum.OWNER ? (

@@ -15,6 +15,7 @@ import { Toggle } from "components/form/Toggle";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { useValues } from "context/ValuesContext";
+import { EmployeeAsEnum } from "types/prisma";
 
 interface Props {
   onUpdate: (old: FullEmployee, newPost: FullEmployee) => void;
@@ -55,6 +56,11 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
     }
   }
 
+  const filteredRoles =
+    employee?.role.as === EmployeeAsEnum.OWNER
+      ? businessRoles.values
+      : businessRoles.values.filter((v) => v.as !== EmployeeAsEnum.OWNER);
+
   const validate = handleValidate(UPDATE_EMPLOYEE_SCHEMA);
   const INITIAL_VALUES = {
     employeeId: employee?.id ?? "",
@@ -78,7 +84,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
                 name="roleId"
                 onChange={handleChange}
                 value={values.roleId!}
-                values={businessRoles.values.map((v) => ({
+                values={filteredRoles.map((v) => ({
                   label: v.value?.value,
                   value: v.id,
                 }))}

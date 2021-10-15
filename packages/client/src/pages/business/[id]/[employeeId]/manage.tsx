@@ -12,6 +12,8 @@ import { useTranslations } from "use-intl";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
 import { ManageBusinessTab } from "components/business/manage/BusinessTab";
+import { PendingEmployeesTab } from "components/business/manage/PendingEmployeesTab";
+import { EmployeeAsEnum } from "types/prisma";
 
 interface Props {
   employee: FullEmployee | null;
@@ -21,6 +23,7 @@ interface Props {
 export default function BusinessId(props: Props) {
   const { currentBusiness, currentEmployee, ...state } = useBusinessState();
   const common = useTranslations("Common");
+  const t = useTranslations("Business");
 
   React.useEffect(() => {
     state.setCurrentBusiness(props.business);
@@ -40,11 +43,20 @@ export default function BusinessId(props: Props) {
     );
   }
 
+  const tabsObj = {
+    [t("allEmployees")]: true,
+    [t("pendingEmployees")]: currentBusiness.whitelisted,
+    [t("business")]: currentEmployee.role.as === EmployeeAsEnum.OWNER,
+  };
+
+  const tabs = Object.entries(tabsObj)
+    .map(([k, v]) => (v === true ? k : undefined))
+    .filter(Boolean) as string[];
+
   return (
     <Layout>
       <Head>
         <title>
-          {" "}
           {currentBusiness.name} - {common("manage")}
         </title>
       </Head>
@@ -56,9 +68,9 @@ export default function BusinessId(props: Props) {
       </header>
 
       <div className="mt-3">
-        <TabsContainer tabs={["Employees", "Business"]}>
+        <TabsContainer tabs={tabs}>
           <EmployeesTab />
-
+          {currentBusiness.whitelisted ? <PendingEmployeesTab /> : null}
           <ManageBusinessTab />
         </TabsContainer>
       </div>
