@@ -17,7 +17,7 @@ import { useCitizen } from "context/CitizenContext";
 export const ManageLicensesModal = () => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const { licenses } = useValues();
+  const { license } = useValues();
   const t = useTranslations("Common");
   const { citizen, setCurrentCitizen } = useCitizen();
 
@@ -58,7 +58,7 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="driversLicense" label={"driversLicense"}>
               <Select
                 hasError={!!errors.driversLicense}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
@@ -72,7 +72,7 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="weaponLicense" label={"weaponLicense"}>
               <Select
                 hasError={!!errors.weaponLicense}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
@@ -85,7 +85,7 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="pilotLicense" label={"pilotLicense"}>
               <Select
                 hasError={!!errors.pilotLicense}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
@@ -98,7 +98,7 @@ export const ManageLicensesModal = () => {
             <FormField fieldId="ccw" label={"ccw"}>
               <Select
                 hasError={!!errors.ccw}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}

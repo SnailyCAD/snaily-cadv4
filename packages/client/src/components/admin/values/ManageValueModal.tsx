@@ -9,18 +9,28 @@ import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
-import { EmployeeAsEnum, EmployeeValue, Value, ValueType } from "types/prisma";
+import {
+  EmployeeAsEnum,
+  EmployeeValue,
+  ShouldDoType,
+  StatusValue,
+  Value,
+  ValueType,
+} from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 
 interface Props {
   type: ValueType;
-  value: Value | EmployeeValue | null;
-  onCreate: (newValue: Value | EmployeeValue) => void;
-  onUpdate: (oldValue: Value | EmployeeValue, newValue: Value | EmployeeValue) => void;
+  value: Value | EmployeeValue | StatusValue | null;
+  onCreate: (newValue: Value | EmployeeValue | StatusValue) => void;
+  onUpdate: (
+    oldValue: Value | EmployeeValue | StatusValue,
+    newValue: Value | EmployeeValue | StatusValue,
+  ) => void;
 }
 
-const VALUES = [
+const BUSINESS_VALUES = [
   {
     value: EmployeeAsEnum.OWNER,
     label: "Owner",
@@ -35,31 +45,39 @@ const VALUES = [
   },
 ];
 
+const SHOULD_DO_VALUES = [
+  {
+    value: ShouldDoType.SET_STATUS,
+    label: "Set Status",
+  },
+  {
+    value: ShouldDoType.SET_OFF_DUTY,
+    label: "Set off duty",
+  },
+];
+
 export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const t = useTranslations("Values");
+  const t = useTranslations(type);
   const common = useTranslations("Common");
 
-  const title = !value ? t(`CREATE_${type}`) : t(`EDIT_${type}`);
-  const footerTitle = !value ? t(`CREATE_${type}`) : common("save");
+  const title = !value ? t("ADD") : t("EDIT");
+  const footerTitle = !value ? t("ADD") : common("save");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (value) {
-      const { json } = await execute(
-        `/admin/values/${type.replace("_", "-").toLowerCase()}/${value.id}`,
-        {
-          method: "PATCH",
-          data: values,
-        },
-      );
+      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
+        method: "PATCH",
+        data: values,
+      });
 
       if (json?.id) {
         closeModal("manageValue");
         onUpdate(value, json);
       }
     } else {
-      const { json } = await execute(`/admin/values/${type.replace("_", "-").toLowerCase()}`, {
+      const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
         data: values,
       });
@@ -74,6 +92,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
   const INITIAL_VALUES = {
     value: typeof value?.value === "string" ? value.value : value?.value.value ?? "",
     as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
+    shouldDo:
+      typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
   };
 
   const validate = handleValidate(VALUE_SCHEMA);
@@ -101,7 +121,23 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
 
             {type === "BUSINESS_ROLE" ? (
               <FormField fieldId="as" label="As (this is so the database knows what to use.)">
-                <Select values={VALUES} name="as" onChange={handleChange} value={values.as} />
+                <Select
+                  values={BUSINESS_VALUES}
+                  name="as"
+                  onChange={handleChange}
+                  value={values.as}
+                />
+              </FormField>
+            ) : null}
+
+            {type === "CODES_10" ? (
+              <FormField fieldId="as" label="Should Do">
+                <Select
+                  values={SHOULD_DO_VALUES}
+                  name="shouldDo"
+                  onChange={handleChange}
+                  value={values.shouldDo}
+                />
               </FormField>
             ) : null}
 

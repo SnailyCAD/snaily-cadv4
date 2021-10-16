@@ -220,6 +220,68 @@ export type EmployeeValue = {
 };
 
 /**
+ * Model Officer
+ */
+
+export type Officer = {
+  id: string;
+  name: string;
+  departmentId: string;
+  callsign: string;
+  rankId: string;
+  statusId: string | null;
+  status2Id: string | null;
+  suspended: boolean;
+  citizenId: string | null;
+  userId: string;
+  call911Id: string | null;
+};
+
+/**
+ * Model StatusValue
+ */
+
+export type StatusValue = {
+  id: string;
+  valueId: string;
+  value: Value<"CODES_10">;
+  shouldDo: ShouldDoType;
+  position: number | null;
+  whatPages: WhatPages[];
+};
+
+/**
+ * Model Call911
+ */
+
+export type Call911 = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  assignedUnitsId: string;
+  location: string;
+  description: string;
+  name: string;
+};
+
+/**
+ * Model Bolo
+ */
+
+export type Bolo = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  type: BoloType;
+  description: string;
+  plate: string | null;
+  name: string | null;
+  color: string | null;
+  officerId: string;
+};
+
+/**
  * Enums
  */
 
@@ -251,6 +313,10 @@ export const valueType = {
   WEAPON: "WEAPON",
   BLOOD_GROUP: "BLOOD_GROUP",
   BUSINESS_ROLE: "BUSINESS_ROLE",
+  CODES_10: "CODES_10",
+  PENAL_CODE: "PENAL_CODE",
+  DEPARTMENT: "DEPARTMENT",
+  OFFICER_RANK: "OFFICER_RANK",
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];
@@ -274,3 +340,26 @@ export const EmployeeAsEnum = {
 } as const;
 
 export type EmployeeAsEnum = typeof EmployeeAsEnum[keyof typeof EmployeeAsEnum];
+
+export const ShouldDoType = {
+  SET_OFF_DUTY: "SET_OFF_DUTY",
+  SET_STATUS: "SET_STATUS",
+} as const;
+
+export type ShouldDoType = typeof ShouldDoType[keyof typeof ShouldDoType];
+
+export const WhatPages = {
+  DISPATCH: "DISPATCH",
+  EMS_FD: "EMS_FD",
+  LEO: "LEO",
+} as const;
+
+export type WhatPages = typeof WhatPages[keyof typeof WhatPages];
+
+export const BoloType = {
+  VEHICLE: "VEHICLE",
+  PERSON: "PERSON",
+  OTHER: "OTHER",
+} as const;
+
+export type BoloType = typeof BoloType[keyof typeof BoloType];

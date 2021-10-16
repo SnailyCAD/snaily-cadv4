@@ -40,7 +40,7 @@ export const RegisterWeaponModal = ({
   const common = useTranslations("Common");
 
   const { citizen } = useCitizen(false);
-  const { weapons, licenses } = useValues();
+  const { weapon: weapons, license } = useValues();
   const validate = handleValidate(WEAPON_SCHEMA);
   const isDisabled = pathname === "/citizen/[id]";
 
@@ -123,7 +123,7 @@ export const RegisterWeaponModal = ({
             <FormField fieldId="registrationStatus" label={tVehicle("registrationStatus")}>
               <Select
                 hasError={!!errors.registrationStatus}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}

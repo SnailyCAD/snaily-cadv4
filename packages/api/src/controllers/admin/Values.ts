@@ -10,7 +10,6 @@ import {
   QueryParams,
 } from "@tsed/common";
 import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
-import { ValidPath } from "@snailycad/config";
 import { prisma } from "../../lib/prisma";
 import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
@@ -20,22 +19,30 @@ import { BadRequest } from "@tsed/exceptions";
 @UseBeforeEach(IsValidPath)
 export class ValuesController {
   @Get("/")
-  async getValueByPath(
-    @PathParams("path") path: ValidPath,
-    @QueryParams("paths") rawPaths: string,
-  ) {
+  async getValueByPath(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
     // allow more paths in one request
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 
     const values = await Promise.all(
       paths.map(async (path) => {
-        const type = this.getTypeFromPath(path as ValidPath);
+        const type = this.getTypeFromPath(path);
 
         if (type === "BUSINESS_ROLE") {
           return {
             type,
             values: await prisma.employeeValue.findMany({
+              include: {
+                value: true,
+              },
+            }),
+          };
+        }
+
+        if (type === "CODES_10") {
+          return {
+            type,
+            values: await prisma.statusValue.findMany({
               include: {
                 value: true,
               },
@@ -59,10 +66,7 @@ export class ValuesController {
 
   @UseBefore(IsAdmin)
   @Post("/")
-  async createValueByPath(
-    @BodyParams() body: JsonRequestBody,
-    @PathParams("path") path: ValidPath,
-  ) {
+  async createValueByPath(@BodyParams() body: JsonRequestBody, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
     const error = validate(VALUE_SCHEMA, body.toJSON(), true);
 
@@ -77,6 +81,20 @@ export class ValuesController {
         isDefault: false,
       },
     });
+
+    if (type === "CODES_10") {
+      if (!body.get("shouldDo")) {
+        throw new BadRequest("codes10FieldsRequired");
+      }
+
+      await prisma.statusValue.create({
+        data: {
+          whatPages: body.get("whatPages") ?? [],
+          shouldDo: body.get("shouldDo"),
+          valueId: value.id,
+        },
+      });
+    }
 
     if (type === "BUSINESS_ROLE") {
       if (!body.get("as")) {
@@ -127,7 +145,7 @@ export class ValuesController {
     return updated;
   }
 
-  private getTypeFromPath(path: ValidPath): ValueType {
+  private getTypeFromPath(path: string): ValueType {
     return path.replace("-", "_").toUpperCase() as ValueType;
   }
 }

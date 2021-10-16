@@ -1,36 +1,27 @@
 import * as React from "react";
-import { EmployeeValue, Value, ValueType } from "types/prisma";
+import { EmployeeValue, Value, valueType, ValueType } from "types/prisma";
 
-type Context = {
-  genders: {
-    type: ValueType;
-    values: Value[];
-  };
-  ethnicities: {
-    type: ValueType;
-    values: Value[];
-  };
-  licenses: {
-    type: ValueType;
-    values: Value[];
-  };
-  vehicles: {
-    type: ValueType;
-    values: Value[];
-  };
-  weapons: {
-    type: ValueType;
-    values: Value[];
-  };
-  bloodGroups: {
-    type: ValueType;
-    values: Value[];
-  };
-  businessRoles: {
+type ContextValue<T extends ValueType> = {
+  type: ValueType;
+  values: Value<T>[];
+};
+
+interface Context {
+  license: ContextValue<"LICENSE">;
+  gender: ContextValue<"GENDER">;
+  ethnicity: ContextValue<"ETHNICITY">;
+  vehicle: ContextValue<"VEHICLE">;
+  weapon: ContextValue<"WEAPON">;
+  bloodGroup: ContextValue<"BLOOD_GROUP">;
+  codes10: ContextValue<"CODES_10">;
+  penalCode: ContextValue<"PENAL_CODE">;
+  department: ContextValue<"DEPARTMENT">;
+  officerRank: ContextValue<"OFFICER_RANK">;
+  businessRole: {
     type: ValueType;
     values: EmployeeValue[];
   };
-};
+}
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
 
@@ -49,23 +40,14 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
     Array.isArray(initialData.values) ? initialData.values : [],
   );
 
-  const genders = values.find((v) => v.type === "GENDER");
-  const ethnicities = values.find((v) => v.type === "ETHNICITY");
-  const licenses = values.find((v) => v.type === "LICENSE");
-  const vehicles = values.find((v) => v.type === "VEHICLE");
-  const weapons = values.find((v) => v.type === "WEAPON");
-  const bloodGroups = values.find((v) => v.type === "BLOOD_GROUP");
-  const businessRoles = values.find((v) => v.type === "BUSINESS_ROLE") as any;
+  const data = React.useMemo(() => {
+    return Object.values(valueType).reduce((obj, value) => {
+      const v = values.find((v) => v.type === value) ?? { values: [], type: value };
+      return { ...obj, [normalizeValue(value)]: v };
+    }, {} as Context);
+  }, [values]);
 
-  const value = {
-    genders: genders ?? { values: [] },
-    ethnicities: ethnicities ?? { values: [] },
-    licenses: licenses ?? { values: [] },
-    vehicles: vehicles ?? { values: [] },
-    weapons: weapons ?? { values: [] },
-    bloodGroups: bloodGroups ?? { values: [] },
-    businessRoles: businessRoles ?? { values: [] },
-  } as Context;
+  const value = data;
 
   React.useEffect(() => {
     if (Array.isArray(initialData.values)) {
@@ -83,4 +65,22 @@ export function useValues() {
   }
 
   return context;
+}
+
+// transform: PENAL_CODES -> penalCodes
+// transform: DEPARTMENT  -> department
+function normalizeValue(value: ValueType) {
+  let split = value.toLowerCase().split(/_/);
+
+  if (split.length > 1) {
+    split = split.map((v, idx) => {
+      if (idx > 0) {
+        return [v[0]!.toUpperCase(), v.substr(1).toLowerCase()].join("");
+      }
+
+      return v.toLowerCase();
+    });
+  }
+
+  return split.join("");
 }

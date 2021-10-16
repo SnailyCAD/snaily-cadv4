@@ -163,7 +163,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       citizens: data,
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["admin", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], locale)),
       },
     },
   };

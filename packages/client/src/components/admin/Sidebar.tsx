@@ -5,10 +5,21 @@ import { rank } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 const management = ["USERS", "CITIZENS", "BUSINESSES"];
-const types = ["GENDER", "ETHNICITY", "LICENSE", "WEAPON", "VEHICLE", "BUSINESS-ROLE"];
+const types = [
+  "GENDER",
+  "ETHNICITY",
+  "LICENSE",
+  "WEAPON",
+  "VEHICLE",
+  "BUSINESS-ROLE",
+  "CODES-10",
+  "PENAL-CODE",
+  "DEPARTMENT",
+  "OFFICER-RANK",
+];
 
 export const AdminSidebar = () => {
-  const t = useTranslations("Values");
+  const t = useTranslations();
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
@@ -61,7 +72,7 @@ export const AdminSidebar = () => {
         </section>
 
         <section className="mt-3">
-          <h1 className="text-2xl font-semibold px-3">{t("values")}</h1>
+          <h1 className="text-2xl font-semibold px-3">{t("Values.values")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
             {types.map((type) => (
               <li key={type} className="px-2">
@@ -71,7 +82,7 @@ export const AdminSidebar = () => {
                       isValueActive(type) && "bg-gray-300"
                     }`}
                   >
-                    {t(`MANAGE_${type.replace("-", "_")}`)}
+                    {t(`${type.replace("-", "_")}.MANAGE`)}
                   </a>
                 </Link>
               </li>

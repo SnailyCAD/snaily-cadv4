@@ -40,7 +40,7 @@ export const RegisterVehicleModal = ({
   const { citizen } = useCitizen(false);
   const router = useRouter();
 
-  const { vehicles, licenses } = useValues();
+  const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
 
@@ -137,7 +137,7 @@ export const RegisterVehicleModal = ({
             <FormField fieldId="registrationStatus" label={tVehicle("registrationStatus")}>
               <Select
                 hasError={!!errors.registrationStatus}
-                values={licenses.values.map((license) => ({
+                values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}

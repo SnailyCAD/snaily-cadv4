@@ -30,7 +30,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
-  const { businessRoles } = useValues();
+  const { businessRole } = useValues();
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -58,8 +58,8 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
 
   const filteredRoles =
     employee?.role.as === EmployeeAsEnum.OWNER
-      ? businessRoles.values
-      : businessRoles.values.filter((v) => v.as !== EmployeeAsEnum.OWNER);
+      ? businessRole.values
+      : businessRole.values.filter((v) => v.as !== EmployeeAsEnum.OWNER);
 
   const validate = handleValidate(UPDATE_EMPLOYEE_SCHEMA);
   const INITIAL_VALUES = {

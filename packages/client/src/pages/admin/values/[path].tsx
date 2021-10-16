@@ -9,34 +9,37 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { EmployeeValue, Value, valueType, ValueType } from "types/prisma";
+import { EmployeeValue, StatusValue, Value, valueType, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 
 interface Props {
-  values: { type: ValueType; values: (Value | EmployeeValue)[] };
+  values: { type: ValueType; values: (Value | EmployeeValue | StatusValue)[] };
 }
 
 export default function ValuePath({ values: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<(Value | EmployeeValue)[]>(data);
+  const [values, setValues] = React.useState<(Value | EmployeeValue | StatusValue)[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
-  const [tempValue, setTempValue] = React.useState<Value | EmployeeValue | null>(null);
+  const [tempValue, setTempValue] = React.useState<Value | EmployeeValue | StatusValue | null>(
+    null,
+  );
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
   const t = useTranslations("Values");
+  const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
-  function handleDeleteClick(value: Value | EmployeeValue) {
+  function handleDeleteClick(value: Value | EmployeeValue | StatusValue) {
     setTempValue(value);
     openModal("deleteValue");
   }
 
-  function handleEditClick(value: Value | EmployeeValue) {
+  function handleEditClick(value: Value | EmployeeValue | StatusValue) {
     setTempValue(value);
     openModal("manageValue");
   }
@@ -45,12 +48,9 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
     if (!tempValue) return;
 
     try {
-      const { json } = await execute(
-        `/admin/values/${type.replace("_", "-").toLowerCase()}/${tempValue.id}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+        method: "DELETE",
+      });
 
       if (json) {
         setValues((p) => p.filter((v) => v.id !== tempValue.id));
@@ -85,8 +85,8 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   return (
     <AdminLayout>
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t(`MANAGE_${type}`)}</h1>
-        <Button onClick={() => openModal("manageValue")}>{t(`CREATE_${type}`)}</Button>
+        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
+        <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
       </header>
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
@@ -118,7 +118,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
       )}
 
       <Modal
-        title={t(`DELETE_${type}`)}
+        title={typeT("DELETE")}
         onClose={() => closeModal("deleteValue")}
         isOpen={isOpen("deleteValue")}
       >
@@ -170,7 +170,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const path = query.path;
+  const path = (query.path as string).replace("-", "_");
 
   const { data: values = [] } = await handleRequest(`/admin/values/${path}`, {
     headers: req.headers,
@@ -181,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
       values: values?.[0] ?? {},
       session: await getSessionUser(req.headers),
       messages: {
-        ...(await getTranslations(["admin", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], locale)),
       },
     },
   };

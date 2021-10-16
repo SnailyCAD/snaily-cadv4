@@ -44,7 +44,7 @@ export default function CreateCitizen() {
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const { genders, ethnicities } = useValues();
+  const { gender, ethnicity } = useValues();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -145,7 +145,7 @@ export default function CreateCitizen() {
                   value={values.gender}
                   onChange={handleChange}
                   hasError={!!errors.gender}
-                  values={genders.values.map((gender) => ({
+                  values={gender.values.map((gender) => ({
                     label: gender.value,
                     value: gender.id,
                   }))}
@@ -159,7 +159,7 @@ export default function CreateCitizen() {
                   value={values.ethnicity}
                   onChange={handleChange}
                   hasError={!!errors.ethnicity}
-                  values={ethnicities.values.map((ethnicity) => ({
+                  values={ethnicity.values.map((ethnicity) => ({
                     label: ethnicity.value,
                     value: ethnicity.id,
                   }))}
