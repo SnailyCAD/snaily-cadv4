@@ -229,8 +229,9 @@ export type Officer = {
   departmentId: string;
   callsign: string;
   rankId: string;
-  statusId: string | null;
+  status: StatusEnum;
   status2Id: string | null;
+  status2: StatusValue | null;
   suspended: boolean;
   citizenId: string | null;
   userId: string;
@@ -363,3 +364,10 @@ export const BoloType = {
 } as const;
 
 export type BoloType = typeof BoloType[keyof typeof BoloType];
+
+export const StatusEnum = {
+  ON_DUTY: "ON_DUTY",
+  OFF_DUTY: "OFF_DUTY",
+} as const;
+
+export type StatusEnum = typeof StatusEnum[keyof typeof StatusEnum];

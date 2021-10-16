@@ -1,4 +1,4 @@
-import { Res, Controller, UseBeforeEach } from "@tsed/common";
+import { Res, Controller, UseBeforeEach, Req } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -8,6 +8,8 @@ import { ShouldDoType } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
+import { parse } from "cookie";
+import { signJWT, verifyJWT } from "../../utils/jwt";
 
 // todo: check for leo permissions
 @Controller("/leo")
@@ -80,25 +82,32 @@ export class LeoController {
       throw new BadRequest("officerSuspended");
     }
 
-    const updatedOfficer = await prisma.officer.update({
+    const code = await prisma.statusValue.findFirst({
       where: {
-        id: officer.id,
-      },
-      data: {
-        statusId: body.get("status"),
-        status2Id: body.get("status2"),
-      },
-    });
-
-    const code = await prisma.statusValue.findUnique({
-      where: {
-        id: body.get("status"),
+        value: {
+          value: body.get("status2"),
+        },
       },
     });
 
     if (!code) {
       throw new NotFound("statusNotFound");
     }
+
+    const updatedOfficer = await prisma.officer.update({
+      where: {
+        id: officer.id,
+      },
+      data: {
+        status: body.get("status"),
+        status2Id: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
+      },
+      include: {
+        status2: {
+          include: { value: true },
+        },
+      },
+    });
 
     // todo: add officer logs here
 
@@ -114,12 +123,13 @@ export class LeoController {
       setCookie({
         res,
         name: Cookie.ActiveOfficer,
-        value: updatedOfficer.id,
+        value: signJWT({ officerId: updatedOfficer.id }, 60 * 60 * 3),
         expires: 60 * 60 * 1000 * 3,
       });
     }
 
-    // send webhook
+    // todo: send webhook
+    // todo: update sockets
 
     return updatedOfficer;
   }
@@ -144,5 +154,33 @@ export class LeoController {
     });
 
     return true;
+  }
+
+  @Get("/active-officer")
+  async getActiveOfficer(@Req() req: Req, @Context() ctx: Context) {
+    const header = req.headers.cookie;
+    if (!header) {
+      throw new BadRequest("noActiveOfficer");
+    }
+
+    const cookie = parse(header)[Cookie.ActiveOfficer];
+    const jwtPayload = verifyJWT(cookie!);
+
+    if (!jwtPayload) {
+      throw new BadRequest("noActiveOfficer");
+    }
+
+    const officer = await prisma.officer.findFirst({
+      where: {
+        userId: ctx.get("user").id,
+        id: jwtPayload.officerId,
+      },
+    });
+
+    if (!officer) {
+      throw new BadRequest("noActiveOfficer");
+    }
+
+    return officer;
   }
 }

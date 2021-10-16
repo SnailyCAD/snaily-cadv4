@@ -314,8 +314,7 @@ model Officer {
   callsign     String       @db.VarChar(255)
   rank         Value?       @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusValue? @relation("officerStatusToValue", fields: [statusId], references: [id])
-  statusId     String?
+  status       StatusEnum   @default(OFF_DUTY)
   status2      StatusValue? @relation("officer2StatusToValue", fields: [status2Id], references: [id])
   status2Id    String?
   suspended    Boolean      @default(false)
@@ -338,8 +337,12 @@ model StatusValue {
   whatPages WhatPages[]
 
 
-  officerStatusToValue  Officer[] @relation("officerStatusToValue")
   officer2StatusToValue Officer[] @relation("officer2StatusToValue")
+}
+
+enum StatusEnum {
+  ON_DUTY
+  OFF_DUTY
 }
 
 enum WhatPages {
@@ -361,7 +364,7 @@ model Call911 {
   user            User      @relation(fields: [userId], references: [id])
   userId          String
   assignedUnits   Officer[] @relation("call911ToOfficer")
-  assignedUnitsId String
+  assignedUnitsId String?
   location        String    @db.Text
   description     String    @db.Text
   name            String    @db.VarChar(255)

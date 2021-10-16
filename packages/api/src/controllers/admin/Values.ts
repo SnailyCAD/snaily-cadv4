@@ -114,7 +114,19 @@ export class ValuesController {
 
   @UseBefore(IsAdmin)
   @Delete("/:id")
-  async deleteValueByPathAndId(@PathParams("id") id: string) {
+  async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
+    const type = this.getTypeFromPath(path);
+
+    if (type === "CODES_10") {
+      await prisma.statusValue.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
     await prisma.value.delete({
       where: {
         id,

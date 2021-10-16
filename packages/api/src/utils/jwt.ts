@@ -11,7 +11,7 @@ export function signJWT(value: any, expiresInSeconds: number | string) {
   return sign(value, secret, { expiresIn: expiresInSeconds });
 }
 
-export function verifyJWT(value: string): { userId: string } | null {
+export function verifyJWT(value: string): { userId: string; officerId?: string } | null {
   const secret = process.env.JWT_SECRET ?? "NONE";
 
   if (secret === "NONE") {

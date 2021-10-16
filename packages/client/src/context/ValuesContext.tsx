@@ -1,5 +1,5 @@
 import * as React from "react";
-import { EmployeeValue, Value, valueType, ValueType } from "types/prisma";
+import { EmployeeValue, StatusValue, Value, valueType, ValueType } from "types/prisma";
 
 type ContextValue<T extends ValueType> = {
   type: ValueType;
@@ -13,13 +13,16 @@ interface Context {
   vehicle: ContextValue<"VEHICLE">;
   weapon: ContextValue<"WEAPON">;
   bloodGroup: ContextValue<"BLOOD_GROUP">;
-  codes10: ContextValue<"CODES_10">;
   penalCode: ContextValue<"PENAL_CODE">;
   department: ContextValue<"DEPARTMENT">;
   officerRank: ContextValue<"OFFICER_RANK">;
   businessRole: {
     type: ValueType;
     values: EmployeeValue[];
+  };
+  codes10: {
+    type: ValueType;
+    values: StatusValue[];
   };
 }
 
