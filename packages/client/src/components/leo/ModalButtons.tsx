@@ -58,7 +58,7 @@ export const ModalButtons = () => {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{"Active Officer"}: </span>{" "}
-          {`${activeOfficer?.callsign} ${activeOfficer?.name}`}
+          {`${activeOfficer.callsign} ${activeOfficer.name} (${activeOfficer.department?.value})`}
         </p>
       ) : null}
 

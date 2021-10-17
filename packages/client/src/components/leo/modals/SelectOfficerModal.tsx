@@ -61,7 +61,8 @@ export const SelectOfficerModal = () => {
                 name="officer"
                 onChange={handleChange}
                 values={officers.map((officer) => ({
-                  label: officer.name,
+                  // @ts-expect-error ignore, will fix later
+                  label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,
                   value: officer.id,
                 }))}
               />

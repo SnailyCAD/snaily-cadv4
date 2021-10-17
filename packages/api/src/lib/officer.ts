@@ -23,6 +23,15 @@ export async function getActiveOfficer(req: Req, userId: string) {
       userId,
       id: jwtPayload.officerId,
     },
+    include: {
+      rank: true,
+      department: true,
+      status2: {
+        include: {
+          value: true,
+        },
+      },
+    },
   });
 
   if (!officer) {

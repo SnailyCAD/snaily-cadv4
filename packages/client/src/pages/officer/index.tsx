@@ -6,17 +6,18 @@ import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
-import { useLeoState } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leoState";
 import { Officer } from "types/prisma";
-import { SelectOfficerModal } from "components/leo/SelectOfficerModal";
+import { SelectOfficerModal } from "components/leo/modals/SelectOfficerModal";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
+import { CreateWarrant } from "components/leo/CreateWarrant";
 
 interface Props {
   officers: Officer[];
-  activeOfficer: Officer | null;
+  activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: FullBolo[];
 }
@@ -44,7 +45,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   ]);
 
   return (
-    <Layout>
+    <Layout className="max-w-[100rem]">
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
         <header className="px-4 py-2 bg-gray-300 mb-2">
           <h3 className="text-xl font-semibold">
@@ -60,8 +61,15 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
         <StatusesArea />
       </div>
 
-      <ActiveCalls />
-      <ActiveBolos />
+      <div className="flex flex-col md:flex-row md:space-x-3 mt-3">
+        <div className="w-full">
+          <ActiveCalls />
+          <ActiveBolos />
+        </div>
+        <div className="w-full² md:w-96 mt-3 md:mt-0">
+          <CreateWarrant />
+        </div>
+      </div>
 
       <SelectOfficerModal />
     </Layout>

@@ -47,4 +47,8 @@ export class Socket {
   async emitDeleteBolo(bolo: Bolo) {
     this.io.sockets.emit(SocketEvents.DeleteBolo, bolo);
   }
+
+  emitUpdateAop(aop: string | null) {
+    this.io.sockets.emit(SocketEvents.UpdateAreaOfPlay, aop);
+  }
 }

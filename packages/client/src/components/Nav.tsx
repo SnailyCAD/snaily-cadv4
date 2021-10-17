@@ -9,14 +9,14 @@ import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./nav-dropdowns/CitizenDropdown";
 import { OfficerDropdown } from "./nav-dropdowns/OfficerDropdown";
 
-export const Nav = () => {
+export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
   const { user, cad } = useAuth();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   return (
     <nav className="bg-white shadow-sm">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className={`${maxWidth} mx-auto px-4`}>
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
             <h1 className="text-2xl">

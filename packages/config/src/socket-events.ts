@@ -14,4 +14,6 @@ export enum SocketEvents {
   CreateBolo = "CREATE_BOLO",
   UpdateBolo = "UPDATE_BOLO",
   DeleteBolo = "DELETE_BOLO",
+
+  UpdateAreaOfPlay = "UPDATE_AREA_OF_PLAY",
 }

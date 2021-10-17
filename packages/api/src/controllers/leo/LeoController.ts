@@ -4,7 +4,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { ShouldDoType } from ".prisma/client";
+import { ShouldDoType, StatusEnum } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -160,5 +160,26 @@ export class LeoController {
   @Get("/active-officer")
   async getActiveOfficer(@Context() ctx: Context) {
     return ctx.get("activeOfficer");
+  }
+
+  @Use(ActiveOfficer)
+  @Get("/active-officers")
+  async getActiveOfficers() {
+    const officers = await prisma.officer.findMany({
+      where: {
+        status: StatusEnum.ON_DUTY,
+      },
+      include: {
+        department: true,
+        rank: true,
+        status2: {
+          include: {
+            value: true,
+          },
+        },
+      },
+    });
+
+    return officers;
   }
 }

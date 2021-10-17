@@ -388,7 +388,7 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
   integrity sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==
 
-"@tsed/common@^6.73.9":
+"@tsed/common@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/common/-/common-6.75.0.tgz#08529e9da62bb302287de65f0cd1fe9b549c9eee"
   integrity sha512-RebiRyt8JfNJySXILU0LDM+gk6ehg3J1XyYHvfAiF2+HqwcmPWCY/+nDHYxJ9fXhbPZLpcYN0PjPg6ROypwy0w==
@@ -425,7 +425,7 @@
     normalize-path "3.0.0"
     tslib "2.2.0"
 
-"@tsed/core@6.75.0", "@tsed/core@^6.73.9":
+"@tsed/core@6.75.0", "@tsed/core@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/core/-/core-6.75.0.tgz#18728f85315eac3b5568f52c57e5420b35df32d6"
   integrity sha512-IPK3jxQrtjz2DyTC2kzBBjB3j7HJPzVUqSDqiJ7ozSzVETuGjONNATEzw96lqfwS9bU6BjNzSyo/3dacwH6/Kw==
@@ -433,7 +433,7 @@
     reflect-metadata "^0.1.13"
     tslib "2.2.0"
 
-"@tsed/di@6.75.0", "@tsed/di@^6.73.9":
+"@tsed/di@6.75.0", "@tsed/di@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/di/-/di-6.75.0.tgz#9db5970bf1c65e74f78749067a2690922b71e15e"
   integrity sha512-2HGeKHiXyKfgkVhsTdiRryHtV335GeK36Ls+7+M4qGo4FKHzAP35W3YMUgLFDWIxZNqfN0wdUJn2WxtpCOPvHw==
@@ -442,7 +442,7 @@
     chalk "4.1.0"
     tslib "2.2.0"
 
-"@tsed/exceptions@6.75.0", "@tsed/exceptions@^6.73.9":
+"@tsed/exceptions@6.75.0", "@tsed/exceptions@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/exceptions/-/exceptions-6.75.0.tgz#12d7f20602179cb6e62a83d6d0f3652b74c0f86b"
   integrity sha512-fzSZOGYmFSyVI9/PTh5yLwAC+tQJw8/FAGPfl+VNxP3uCWF316dDwdNKgLsrH71Qi2zeG5N1k4rdGV5NVcQGeQ==
@@ -450,7 +450,7 @@
     "@tsed/schema" "6.75.0"
     tslib "2.2.0"
 
-"@tsed/json-mapper@6.75.0", "@tsed/json-mapper@^6.73.9":
+"@tsed/json-mapper@6.75.0", "@tsed/json-mapper@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/json-mapper/-/json-mapper-6.75.0.tgz#b432e51c434a7992285335df08bfbd8c5ff10ec0"
   integrity sha512-gp40/2fBizvLUkyVMlpC/aBdEFeAiRCihGNlK0p03f2GoBBcMJ6V7TYHIWTrDvxnbOf18iWownPwD2SPpSjvMg==
@@ -500,7 +500,7 @@
   dependencies:
     tslib "2.2.0"
 
-"@tsed/platform-express@^6.73.9":
+"@tsed/platform-express@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/platform-express/-/platform-express-6.75.0.tgz#a8bfe26efe3cf9a27b861fadaf4ee8742139213a"
   integrity sha512-qqE40nmhztyDMyDDx4ldm4b7hHGlILvTJ2BiXCJHuRBm/ZSmhz0kvv6BU868N5bCzByJR20SGc+NTFBP4BBCnA==
@@ -546,7 +546,7 @@
     ejs "^3.1.5"
     tslib "2.2.0"
 
-"@tsed/schema@6.75.0", "@tsed/schema@^6.73.9":
+"@tsed/schema@6.75.0", "@tsed/schema@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/schema/-/schema-6.75.0.tgz#33c97bd3dd19b85acb90d9471aa01e3197060db3"
   integrity sha512-VH4g8QLGfvEqaXnAv1VSl1v03V+XxkHNeMQDJQ46e6VhUrmdu462hZZhLTzoGEzZ0k8EiMQkgtb2TbnC3DUmpg==
@@ -557,7 +557,7 @@
     micromatch "4.0.2"
     tslib "2.2.0"
 
-"@tsed/socketio@^6.73.9":
+"@tsed/socketio@^6.75.0":
   version "6.75.0"
   resolved "https://registry.yarnpkg.com/@tsed/socketio/-/socketio-6.75.0.tgz#5592d675362e843ed598473b152edcff6a10dda4"
   integrity sha512-fpYl/fm+9w6dSXFbDeS+VOhvEitNFOQhS9XPMW9U448y828OOaMc14ylmhF3MINUhlcN8OV7wcIi+kvTXuDrGQ==
@@ -2386,7 +2386,7 @@ esbuild-windows-arm64@0.13.8:
   resolved "https://registry.yarnpkg.com/esbuild-windows-arm64/-/esbuild-windows-arm64-0.13.8.tgz#e59ae004496fd8a5ab67bfc7945a2e47480d6fb9"
   integrity sha512-HW6Mtq5eTudllxY2YgT62MrVcn7oq2o8TAoAvDUhyiEmRmDY8tPwAhb1vxw5/cdkbukM3KdMYtksnUhF/ekWeg==
 
-esbuild@^0.13.4:
+esbuild@^0.13.8:
   version "0.13.8"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.13.8.tgz#bd7cc51b881ab067789f88e17baca74724c1ec4f"
   integrity sha512-A4af7G7YZLfG5OnARJRMtlpEsCkq/zHZQXewgPA864l9D6VjjbH1SuFYK/OSV6BtHwDGkdwyRrX0qQFLnMfUcw==
@@ -5725,7 +5725,7 @@ socket.io-parser@~4.1.1:
     "@socket.io/component-emitter" "~3.0.0"
     debug "~4.3.1"
 
-socket.io@*, socket.io@^4.2.0:
+socket.io@*, socket.io@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.3.1.tgz#c0aa14f3f916a8ab713e83a5bd20c16600245763"
   integrity sha512-HC5w5Olv2XZ0XJ4gOLGzzHEuOCfj3G0SmoW3jLHYYh34EVsIr3EkW9h6kgfW+K3TFEcmYy8JcPWe//KUkBp5jA==
@@ -6148,7 +6148,7 @@ trough@^2.0.0:
   resolved "https://registry.yarnpkg.com/trough/-/trough-2.0.2.tgz#94a3aa9d5ce379fc561f6244905b3f36b7458d96"
   integrity sha512-FnHq5sTMxC0sk957wHDzRnemFnNBvt/gSY99HzK8F7UP5WAbvP70yX5bd7CjEQkN+TjdxwI7g7lJ6podqrG2/w==
 
-ts-node@^10.2.1:
+ts-node@^10.3.0:
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.3.0.tgz#a797f2ed3ff50c9a5d814ce400437cb0c1c048b4"
   integrity sha512-RYIy3i8IgpFH45AX4fQHExrT8BxDeKTdC83QFJkNzkvt8uFB6QJ8XMyhynYiKMLxt9a7yuXaDBZNOYS3XjDcYw==

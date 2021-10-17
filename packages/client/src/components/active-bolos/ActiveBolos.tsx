@@ -34,6 +34,22 @@ export const ActiveBolos = () => {
     [setBolos, bolos],
   );
 
+  useListener(
+    SocketEvents.UpdateBolo,
+    (bolo: FullBolo) => {
+      setBolos(
+        bolos.map((v) => {
+          if (v.id === bolo.id) {
+            return bolo;
+          }
+
+          return v;
+        }),
+      );
+    },
+    [setBolos, bolos],
+  );
+
   async function handleDeleteBolo() {
     if (!tempBolo) return;
 

@@ -10,7 +10,7 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import { Officer, Value } from "types/prisma";
-import { ManageOfficerModal } from "components/leo/ManageOfficerModal";
+import { ManageOfficerModal } from "components/leo/modals/ManageOfficerModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 

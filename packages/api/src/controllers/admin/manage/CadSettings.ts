@@ -11,9 +11,15 @@ import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsOwner } from "../../../middlewares";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
+import { Socket } from "../../../services/SocketService";
 
 @Controller("/cad-settings")
 export class ManageCitizensController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/")
   async getCadSettings() {
     const cad = await prisma.cad.findFirst({
@@ -50,6 +56,8 @@ export class ManageCitizensController {
         registrationCode: body.get("registrationCode"),
       },
     });
+
+    this.socket.emitUpdateAop(updated.areaOfPlay);
 
     return updated;
   }

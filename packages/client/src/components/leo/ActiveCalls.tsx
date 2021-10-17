@@ -14,7 +14,7 @@ export const ActiveCalls = () => {
   );
 
   return (
-    <div className="mt-3 bg-gray-200/80 rounded-md overflow-hidden">
+    <div className="bg-gray-200/80 rounded-md overflow-hidden">
       <header className="bg-gray-300/50 px-4 p-2">
         <h3 className="text-xl font-semibold">{"Active 911 Calls"}</h3>
       </header>
