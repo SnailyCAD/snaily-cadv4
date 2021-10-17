@@ -4,15 +4,15 @@ import { CREATE_911_CALL, validate } from "@snailycad/schemas";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { Call911Socket } from "../../services/Call911Socket";
+import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "../../middlewares";
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
 export class Calls911Controller {
-  private socket: Call911Socket;
-  constructor(socket: Call911Socket) {
+  private socket: Socket;
+  constructor(socket: Socket) {
     this.socket = socket;
   }
 

@@ -10,4 +10,8 @@ export enum SocketEvents {
   Create911Call = "CREATE_911_CALL",
   Update911Call = "UPDATE_911_CALL",
   End911Call = "END_911_CALL",
+
+  CreateBolo = "CREATE_BOLO",
+  UpdateBolo = "UPDATE_BOLO",
+  DeleteBolo = "DELETE_BOLO",
 }

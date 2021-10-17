@@ -10,7 +10,7 @@ export const ActiveCalls = () => {
     (data) => {
       setCalls([data, ...calls]);
     },
-    "911-calls",
+    [calls, setCalls],
   );
 
   return (

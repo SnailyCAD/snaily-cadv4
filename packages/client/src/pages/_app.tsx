@@ -24,7 +24,6 @@ export default function App({ Component, router, pageProps }: AppProps) {
             <CitizenProvider initialData={pageProps}>
               <SocketProvider
                 uri="http://localhost:8080"
-                namespaces={["tow", "911-calls"]}
                 options={{
                   reconnectionDelay: 5_000,
                   reconnectionAttempts: 50,

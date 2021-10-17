@@ -7,14 +7,15 @@ import { prisma } from "../../lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "../../middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
+import { Socket } from "../../services/SocketService";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
 export class BoloController {
-  // private socket: Call911Socket;
-  // constructor(socket: Call911Socket) {
-  //   this.socket = socket;
-  // }
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
 
   @Get("/")
   async getBolos() {
@@ -49,7 +50,7 @@ export class BoloController {
       },
     });
 
-    // this.socket.emit911Call(call);
+    this.socket.emitCreateBolo(bolo);
 
     return bolo;
   }
@@ -90,7 +91,7 @@ export class BoloController {
       },
     });
 
-    // this.socket.emit911Call(call);
+    this.socket.emitUpdateBolo(updated);
 
     return updated;
   }
@@ -112,7 +113,7 @@ export class BoloController {
       },
     });
 
-    // this.socket.emit911Call(call);
+    this.socket.emitDeleteBolo(bolo);
 
     return true;
   }

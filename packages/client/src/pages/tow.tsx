@@ -29,31 +29,23 @@ export default function Tow(props: Props) {
 
   const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
 
-  useListener(
-    SocketEvents.CreateTowCall,
-    (data: FullTowCall) => {
-      setCalls((p) => [...p, data]);
-    },
-    "tow",
-  );
+  useListener(SocketEvents.CreateTowCall, (data: FullTowCall) => {
+    setCalls((p) => [...p, data]);
+  });
 
-  useListener(SocketEvents.EndTowCall, handleCallEnd, "tow");
+  useListener(SocketEvents.EndTowCall, handleCallEnd);
 
-  useListener(
-    SocketEvents.UpdateTowCall,
-    (data: FullTowCall) => {
-      const old = calls.find((v) => v.id === data.id);
+  useListener(SocketEvents.UpdateTowCall, (data: FullTowCall) => {
+    const old = calls.find((v) => v.id === data.id);
 
-      if (old) {
-        setCalls((p) => {
-          const removed = p.filter((v) => v.id !== data.id);
+    if (old) {
+      setCalls((p) => {
+        const removed = p.filter((v) => v.id !== data.id);
 
-          return [data, ...removed];
-        });
-      }
-    },
-    "tow",
-  );
+        return [data, ...removed];
+      });
+    }
+  });
 
   function onCreateClick() {
     setTempCall(null);

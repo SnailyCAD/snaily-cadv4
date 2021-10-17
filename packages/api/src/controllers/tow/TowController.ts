@@ -4,7 +4,7 @@ import { prisma } from "../../lib/prisma";
 import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "../../middlewares";
-import { TowSocket } from "../../services/TowSocket";
+import { Socket } from "../../services/SocketService";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -14,8 +14,8 @@ const CITIZEN_SELECTS = {
 
 @Controller("/tow")
 export class TowController {
-  private socket: TowSocket;
-  constructor(socket: TowSocket) {
+  private socket: Socket;
+  constructor(socket: Socket) {
     this.socket = socket;
   }
 

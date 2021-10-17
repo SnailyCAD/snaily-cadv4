@@ -1,3 +1,5 @@
+import { useListener } from "@casper124578/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
@@ -6,7 +8,7 @@ import * as React from "react";
 import { FullBolo, useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { BoloType, StatusEnum } from "types/prisma";
+import { Bolo, BoloType, StatusEnum } from "types/prisma";
 import { ManageBoloModal } from "./ManageBoloModal";
 
 export const ActiveBolos = () => {
@@ -15,6 +17,22 @@ export const ActiveBolos = () => {
   const { bolos, setBolos } = useDispatchState();
   const [tempBolo, setTempBolo] = React.useState<FullBolo | null>(null);
   const { activeOfficer } = useLeoState();
+
+  useListener(
+    SocketEvents.CreateBolo,
+    (data) => {
+      setBolos([...[...bolos], data]);
+    },
+    [setBolos, bolos],
+  );
+
+  useListener(
+    SocketEvents.DeleteBolo,
+    (bolo: Pick<Bolo, "id">) => {
+      setBolos(bolos.filter((v) => v.id !== bolo.id));
+    },
+    [setBolos, bolos],
+  );
 
   async function handleDeleteBolo() {
     if (!tempBolo) return;
