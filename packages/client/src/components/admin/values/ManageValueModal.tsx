@@ -56,6 +56,11 @@ const SHOULD_DO_VALUES = [
   },
 ];
 
+const POSITION_VALUES = new Array(10).fill(0).map((_, idx) => ({
+  value: String(idx + 1),
+  label: String(idx + 1),
+}));
+
 export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -94,6 +99,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
     as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
     shouldDo:
       typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
+    position:
+      typeof value?.value === "string" ? "" : value && "position" in value ? value.position : "",
   };
 
   const validate = handleValidate(VALUE_SCHEMA);
@@ -131,14 +138,25 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
             ) : null}
 
             {type === "CODES_10" ? (
-              <FormField fieldId="as" label="Should Do">
-                <Select
-                  values={SHOULD_DO_VALUES}
-                  name="shouldDo"
-                  onChange={handleChange}
-                  value={values.shouldDo}
-                />
-              </FormField>
+              <>
+                <FormField fieldId="shouldDo" label="Should Do">
+                  <Select
+                    values={SHOULD_DO_VALUES}
+                    name="shouldDo"
+                    onChange={handleChange}
+                    value={values.shouldDo}
+                  />
+                </FormField>
+
+                <FormField fieldId="position" label="Position">
+                  <Select
+                    values={POSITION_VALUES}
+                    name="position"
+                    onChange={handleChange}
+                    value={values.position!}
+                  />
+                </FormField>
+              </>
             ) : null}
 
             <footer className="mt-5 flex justify-end">

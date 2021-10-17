@@ -3,13 +3,13 @@ import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDown, X } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
 
-export interface SelectValue<Value = string> {
+export interface SelectValue<Value extends string | number = string> {
   label: string;
   value: Value;
 }
 
 interface Props extends Pick<JSX.IntrinsicElements["input"], "onChange" | "name"> {
-  value: string;
+  value: string | number;
   values: SelectValue[];
   hasError?: boolean;
   isClearable?: boolean;

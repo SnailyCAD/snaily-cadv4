@@ -10,42 +10,58 @@ import { useLeoState } from "state/leoState";
 import { Officer } from "types/prisma";
 import { SelectOfficerModal } from "components/leo/SelectOfficerModal";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
+import { ModalButtons } from "components/leo/ModalButtons";
+import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 
 interface Props {
   officers: Officer[];
   activeOfficer: Officer | null;
   calls: Full911Call[];
+  bolos: FullBolo[];
 }
 
-export default function OfficerDashboard({ officers, calls, activeOfficer }: Props) {
+export default function OfficerDashboard({ officers, bolos, calls, activeOfficer }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const state = useLeoState();
-  const { setCalls } = useDispatchState();
+  const { setCalls, setBolos } = useDispatchState();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
     state.setOfficers(officers);
     setCalls(calls);
+    setBolos(bolos);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.setActiveOfficer, state.setOfficers, setCalls, calls, officers, activeOfficer]);
+  }, [
+    state.setActiveOfficer,
+    state.setOfficers,
+    setBolos,
+    setCalls,
+    bolos,
+    calls,
+    officers,
+    activeOfficer,
+  ]);
 
   return (
     <Layout>
-      <div className="w-full p-4 bg-gray-200/80 rounded-md">
-        <header className="mb-2">
-          <h3 className="text-2xl font-semibold">
+      <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
+        <header className="px-4 py-2 bg-gray-300 mb-2">
+          <h3 className="text-xl font-semibold">
             {"Utility Panel"}
             {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
           </h3>
         </header>
 
-        <div>MODAL BUTTONS</div>
+        <div className="px-4">
+          <ModalButtons />
+        </div>
 
         <StatusesArea />
       </div>
 
       <ActiveCalls />
+      <ActiveBolos />
 
       <SelectOfficerModal />
     </Layout>
@@ -72,6 +88,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   }).catch(() => ({
     data: [],
   }));
+  const { data: bolos } = await handleRequest("/bolos", {
+    headers: req.headers,
+  }).catch(() => ({
+    data: [],
+  }));
 
   return {
     props: {
@@ -79,6 +100,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeOfficer,
       officers,
       calls,
+      bolos,
       values,
       messages: {
         ...(await getTranslations(["common"], locale)),

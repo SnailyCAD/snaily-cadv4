@@ -1,4 +1,4 @@
-import { Res, Controller, UseBeforeEach, Req } from "@tsed/common";
+import { Res, Controller, UseBeforeEach, Use } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -8,8 +8,8 @@ import { ShouldDoType } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
-import { parse } from "cookie";
-import { signJWT, verifyJWT } from "../../utils/jwt";
+import { signJWT } from "../../utils/jwt";
+import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 
 // todo: check for leo permissions
 @Controller("/leo")
@@ -156,31 +156,9 @@ export class LeoController {
     return true;
   }
 
+  @Use(ActiveOfficer)
   @Get("/active-officer")
-  async getActiveOfficer(@Req() req: Req, @Context() ctx: Context) {
-    const header = req.headers.cookie;
-    if (!header) {
-      throw new BadRequest("noActiveOfficer");
-    }
-
-    const cookie = parse(header)[Cookie.ActiveOfficer];
-    const jwtPayload = verifyJWT(cookie!);
-
-    if (!jwtPayload) {
-      throw new BadRequest("noActiveOfficer");
-    }
-
-    const officer = await prisma.officer.findFirst({
-      where: {
-        userId: ctx.get("user").id,
-        id: jwtPayload.officerId,
-      },
-    });
-
-    if (!officer) {
-      throw new BadRequest("noActiveOfficer");
-    }
-
-    return officer;
+  async getActiveOfficer(@Context() ctx: Context) {
+    return ctx.get("activeOfficer");
   }
 }

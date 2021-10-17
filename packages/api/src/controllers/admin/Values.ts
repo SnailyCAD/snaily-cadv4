@@ -138,11 +138,42 @@ export class ValuesController {
 
   @UseBefore(IsAdmin)
   @Patch("/:id")
-  async patchValueByPathAndId(@BodyParams() body: JsonRequestBody, @PathParams("id") id: string) {
+  async patchValueByPathAndId(
+    @BodyParams() body: JsonRequestBody,
+    @PathParams("id") id: string,
+    @PathParams("path") path: string,
+  ) {
     const error = validate(VALUE_SCHEMA, body.toJSON(), true);
+    const type = this.getTypeFromPath(path);
 
     if (error) {
       return { error };
+    }
+
+    if (type === "CODES_10") {
+      const updated = await prisma.statusValue.update({
+        where: {
+          id,
+        },
+        data: {
+          value: {
+            update: {
+              value: body.get("value"),
+            },
+          },
+          whatPages: body.get("whatPages") ?? [],
+          shouldDo: body.get("shouldDo"),
+          position: parseInt(body.get("position")),
+        },
+      });
+
+      const value = await prisma.value.findUnique({
+        where: {
+          id: updated.valueId,
+        },
+      });
+
+      return value;
     }
 
     const updated = await prisma.value.update({

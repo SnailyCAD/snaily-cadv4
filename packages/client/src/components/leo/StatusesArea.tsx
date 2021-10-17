@@ -39,7 +39,7 @@ export const StatusesArea = () => {
   }
 
   return (
-    <ul className="flex space-x-3 mt-2 pt-2 border-t-[1.5px] border-gray-400">
+    <ul className="flex space-x-3 mt-2 px-4 py-2 bg-gray-300/50">
       <li>
         <Button onClick={() => openModal(ModalIds.SelectOfficer)}>
           {cad?.miscCadSettings.onDutyCode ?? "10-8"}
