@@ -10,11 +10,17 @@ import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
+import { Socket } from "../../services/SocketService";
 
 // todo: check for leo permissions
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
 export class LeoController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/")
   async getUserOfficers(@Context() ctx: Context) {
     const officers = await prisma.officer.findMany({
@@ -42,7 +48,7 @@ export class LeoController {
         name: body.get("name"),
         callsign: body.get("callsign"),
         userId: ctx.get("user").id,
-        rankId: body.get("rank"),
+        // rankId: body.get("rank"),
         departmentId: body.get("department"),
       },
       include: {
@@ -174,6 +180,7 @@ export class LeoController {
 
     // todo: send webhook
     // todo: update sockets
+    this.socket.emitUpdateOfficerStatus();
 
     return updatedOfficer;
   }

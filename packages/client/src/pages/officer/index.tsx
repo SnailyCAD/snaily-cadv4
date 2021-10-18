@@ -1,4 +1,5 @@
 import * as React from "react";
+import dynamic from "next/dynamic";
 import { Layout } from "components/Layout";
 import { StatusesArea } from "components/leo/StatusesArea";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
@@ -8,13 +9,24 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import { Officer } from "types/prisma";
-import { SelectOfficerModal } from "components/leo/modals/SelectOfficerModal";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { CreateWarrant } from "components/leo/CreateWarrant";
 import { useTime } from "hooks/useTime";
+
+const NotepadModal = dynamic(async () => {
+  return (await import("components/modals/NotepadModal")).NotepadModal;
+});
+
+const SelectOfficerModal = dynamic(async () => {
+  return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
+});
+
+const ActiveOfficersModal = dynamic(async () => {
+  return (await import("components/leo/modals/ActiveOfficers")).ActiveOfficersModal;
+});
 
 interface Props {
   officers: Officer[];
@@ -70,12 +82,14 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
           <ActiveCalls />
           <ActiveBolos />
         </div>
-        <div className="w-full² md:w-96 mt-3 md:mt-0">
+        <div className="w-full md:w-96 mt-3 md:mt-0">
           <CreateWarrant />
         </div>
       </div>
 
       <SelectOfficerModal />
+      <NotepadModal />
+      <ActiveOfficersModal />
     </Layout>
   );
 }

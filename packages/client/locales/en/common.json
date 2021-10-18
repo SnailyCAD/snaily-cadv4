@@ -21,7 +21,8 @@
     "noOptions": "No Options",
     "accept": "Accept",
     "decline": "Decline",
-    "createdAt": "Created At"
+    "createdAt": "Created At",
+    "reset": "Reset"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

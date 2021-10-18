@@ -51,4 +51,8 @@ export class Socket {
   emitUpdateAop(aop: string | null) {
     this.io.sockets.emit(SocketEvents.UpdateAreaOfPlay, aop);
   }
+
+  emitUpdateOfficerStatus() {
+    this.io.sockets.emit(SocketEvents.UpdateOfficerStatus);
+  }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import * as React from "react";
 import { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
@@ -8,6 +9,12 @@ import Common from "../../locales/en/common.json";
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
+
+type Options = AxiosRequestConfig & { noToast?: boolean };
+type Return = {
+  json: any;
+  error: null | ErrorMessage | (string & {});
+};
 
 export default function useFetch(
   { overwriteState }: { overwriteState: State | null } = { overwriteState: null },
@@ -20,7 +27,7 @@ export default function useFetch(
     setState(overwriteState);
   }, [overwriteState]);
 
-  const execute = async (path: string, options: AxiosRequestConfig) => {
+  const execute = async (path: string, options: Options): Promise<Return> => {
     setState("loading");
     abortController.current = new AbortController();
 
@@ -33,7 +40,7 @@ export default function useFetch(
 
     const error = response instanceof Error ? parseError(response as AxiosError) : null;
 
-    if (error) {
+    if (error && !options.noToast) {
       const hasKey = Object.keys(Common.Errors).some((e) => e === error);
       const key = hasKey ? error : "unknown";
 

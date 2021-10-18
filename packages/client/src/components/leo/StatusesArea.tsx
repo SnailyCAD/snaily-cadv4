@@ -1,3 +1,5 @@
+import { useListener } from "@casper124578/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "context/ModalContext";
@@ -12,8 +14,29 @@ export const StatusesArea = () => {
   const { cad } = useAuth();
   const { activeOfficer, setActiveOfficer } = useLeoState();
   const { openModal } = useModal();
-
   const { execute } = useFetch();
+
+  async function getActiveOfficer() {
+    const { json, error } = await execute("/leo/active-officer", {
+      noToast: true,
+    });
+
+    if (json.id) {
+      setActiveOfficer({ ...activeOfficer, ...json });
+    }
+
+    if (error && error === "noActiveOfficer") {
+      setActiveOfficer(null);
+    }
+  }
+
+  useListener(
+    SocketEvents.UpdateOfficerStatus,
+    () => {
+      getActiveOfficer();
+    },
+    [setActiveOfficer, activeOfficer],
+  );
 
   const isButtonDisabled =
     !activeOfficer ||
@@ -38,7 +61,6 @@ export const StatusesArea = () => {
     }
   }
 
-  // todo
   const onDutyCode = codes10.values.find((v) => v.value.value === cad?.miscCadSettings?.onDutyCode);
   const isOnDutyActive = onDutyCode?.valueId === activeOfficer?.status2?.valueId;
 
