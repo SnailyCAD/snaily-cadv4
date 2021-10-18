@@ -115,7 +115,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       bolos,
       values,
       messages: {
-        ...(await getTranslations(["common"], locale)),
+        ...(await getTranslations(["leo", "common"], locale)),
       },
     },
   };

@@ -4,7 +4,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { ShouldDoType, StatusEnum } from ".prisma/client";
+import { ShouldDoType, StatusEnum, MiscCadSettings } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -88,11 +88,25 @@ export class LeoController {
           value: body.get("status2"),
         },
       },
+      include: {
+        value: true,
+      },
     });
 
     if (!code) {
       throw new NotFound("statusNotFound");
     }
+
+    // reset all officers for user
+    await prisma.officer.updateMany({
+      where: {
+        userId: ctx.get("user").id,
+      },
+      data: {
+        status: "OFF_DUTY",
+        status2Id: null,
+      },
+    });
 
     const updatedOfficer = await prisma.officer.update({
       where: {
@@ -110,7 +124,36 @@ export class LeoController {
       },
     });
 
-    // todo: add officer logs here
+    const { miscCadSettings } = ctx.get("cad") as { miscCadSettings: MiscCadSettings };
+    const officerLog = await prisma.officerLog.findFirst({
+      where: {
+        officerId: officer.id,
+        endedAt: null,
+      },
+    });
+
+    if ((miscCadSettings.onDutyCode ?? "10-8") === code.value.value) {
+      if (!officerLog) {
+        await prisma.officerLog.create({
+          data: {
+            officerId: officer.id,
+            userId: ctx.get("user").id,
+            startedAt: new Date(),
+          },
+        });
+      }
+    } else {
+      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY && officerLog) {
+        await prisma.officerLog.update({
+          where: {
+            id: officerLog.id,
+          },
+          data: {
+            endedAt: new Date(),
+          },
+        });
+      }
+    }
 
     if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
       setCookie({
@@ -155,6 +198,23 @@ export class LeoController {
     });
 
     return true;
+  }
+
+  @Get("/logs")
+  async getOfficerLogs(@Context() ctx: Context) {
+    const logs = await prisma.officerLog.findMany({
+      where: {
+        userId: ctx.get("user").id,
+      },
+      include: {
+        officer: true,
+      },
+      orderBy: {
+        startedAt: "desc",
+      },
+    });
+
+    return logs;
   }
 
   @Use(ActiveOfficer)

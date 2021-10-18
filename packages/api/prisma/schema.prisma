@@ -74,6 +74,7 @@ model User {
   Employee             Employee[]
   officers             Officer[]
   Call911              Call911[]
+  OfficerLog           OfficerLog[]
 }
 
 model Citizen {
@@ -332,6 +333,7 @@ model Officer {
   tickets       Ticket[]
   arrestReports ArrestReport[]
   warrants      Warrant[]
+  logs          OfficerLog[]
 }
 
 model StatusValue {
@@ -344,6 +346,16 @@ model StatusValue {
 
 
   officer2StatusToValue Officer[] @relation("officer2StatusToValue")
+}
+
+model OfficerLog {
+  id        String    @id @default(uuid())
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  officer   Officer   @relation(fields: [officerId], references: [id])
+  officerId String
 }
 
 enum StatusEnum {

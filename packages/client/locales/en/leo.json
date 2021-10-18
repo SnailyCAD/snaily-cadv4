@@ -1,15 +1,20 @@
 {
-    "Leo": {
-        "myOfficers": "My Officers",
-        "createOfficer": "Create Officer",
-        "editOfficer": "Edit Officer",
-        "deleteOfficer": "Delete Officer",
-        "callsign": "Callsign",
-        "department": "Department",
-        "officer": "Officer",
-        "officerName": "Officer Name",
-        "noOfficers": "You do not have any officers yet.",
-        "selectOfficer": "Select Officer",
-        "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
-    }
+  "Leo": {
+    "myOfficers": "My Officers",
+    "myOfficerLogs": "My Officer Logs",
+    "createOfficer": "Create Officer",
+    "editOfficer": "Edit Officer",
+    "deleteOfficer": "Delete Officer",
+    "callsign": "Callsign",
+    "department": "Department",
+    "officer": "Officer",
+    "officerName": "Officer Name",
+    "noOfficers": "You do not have any officers yet.",
+    "selectOfficer": "Select Officer",
+    "totalTime": "Total Time",
+    "startedAt": "Started At",
+    "endedAt": "Ended At",
+    "notEndedYet": "Not ended yet.",
+    "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
+  }
 }

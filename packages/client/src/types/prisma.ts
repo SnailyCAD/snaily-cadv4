@@ -239,6 +239,18 @@ export type Officer = {
 };
 
 /**
+ * Model OfficerLog
+ */
+
+export type OfficerLog = {
+  id: string;
+  startedAt: Date;
+  endedAt: Date | null;
+  userId: string;
+  officerId: string;
+};
+
+/**
  * Model StatusValue
  */
 
