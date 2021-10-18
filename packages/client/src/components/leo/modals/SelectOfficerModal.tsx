@@ -19,6 +19,7 @@ export const SelectOfficerModal = () => {
   const { officers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
 
   const { cad } = useAuth();
   const { state, execute } = useFetch();
@@ -46,7 +47,7 @@ export const SelectOfficerModal = () => {
 
   return (
     <Modal
-      title={"Select Officer"}
+      title={t("selectOfficer")}
       onClose={() => closeModal(ModalIds.SelectOfficer)}
       isOpen={isOpen(ModalIds.SelectOfficer)}
       className="min-w-[600px]"
@@ -54,7 +55,7 @@ export const SelectOfficerModal = () => {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={"Officer"}>
+            <FormField label={t("officer")}>
               <Select
                 value={values.officer}
                 hasError={!!errors.officer}

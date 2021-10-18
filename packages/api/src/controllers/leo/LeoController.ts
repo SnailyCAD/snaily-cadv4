@@ -103,6 +103,7 @@ export class LeoController {
         status2Id: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
+        department: true,
         status2: {
           include: { value: true },
         },

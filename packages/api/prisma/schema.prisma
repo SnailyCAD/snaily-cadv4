@@ -112,6 +112,9 @@ model Citizen {
   businesses       Business[]
   Employee         Employee[]
   officers         Officer[]
+  tickets          Ticket[]
+  arrestReports    ArrestReport[]
+  warrants         Warrant[]
 }
 
 enum Rank {
@@ -319,13 +322,16 @@ model Officer {
   status2Id    String?
   suspended    Boolean      @default(false)
 
-  citizen   Citizen? @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId String?
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  call911   Call911? @relation("call911ToOfficer", fields: [call911Id], references: [id])
-  call911Id String?
-  bolos     Bolo[]   @relation("bolosToOfficer")
+  citizen       Citizen?       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId     String?
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  call911       Call911?       @relation("call911ToOfficer", fields: [call911Id], references: [id])
+  call911Id     String?
+  bolos         Bolo[]         @relation("bolosToOfficer")
+  tickets       Ticket[]
+  arrestReports ArrestReport[]
+  warrants      Warrant[]
 }
 
 model StatusValue {
@@ -389,6 +395,48 @@ enum BoloType {
   OTHER
 }
 
+// tickets, arrest reports, warrants, written warnings
+model Ticket {
+  id         String   @id @default(uuid())
+  citizen    Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId  String
+  officer    Officer  @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId  String
+  violations String   @db.Text
+  createdAt  DateTime @default(now())
+  postal     String   @db.VarChar(255)
+  notes      String   @db.Text
+}
+
+model ArrestReport {
+  id        String   @id @default(uuid())
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  officer   Officer  @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId String
+  charges   String   @db.Text
+  createdAt DateTime @default(now())
+  postal    String   @db.VarChar(255)
+  notes     String   @db.Text
+}
+
+model Warrant {
+  id          String        @id @default(uuid())
+  citizen     Citizen       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId   String
+  officer     Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId   String
+  description String        @db.Text
+  status      WarrantStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+}
+
+enum WarrantStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// other
 enum Feature {
   BLEETER
   TOW

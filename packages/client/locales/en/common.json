@@ -20,7 +20,8 @@
     "insufficientPermissions": "Insufficient Permissions",
     "noOptions": "No Options",
     "accept": "Accept",
-    "decline": "Decline"
+    "decline": "Decline",
+    "createdAt": "Created At"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

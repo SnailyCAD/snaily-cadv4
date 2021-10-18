@@ -1,14 +1,46 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import format from "date-fns/format";
 import { useDispatchState } from "state/dispatchState";
+import { ActiveOfficer } from "state/leoState";
+import { Call911, Officer } from "types/prisma";
 
 export const ActiveCalls = () => {
   const { calls, setCalls } = useDispatchState();
+
+  const makeUnit = (officer: Officer) =>
+    `${officer.callsign} ${officer.name} ${
+      "department" in officer ? `(${(officer as ActiveOfficer).department.value})` : ""
+    }`;
 
   useListener(
     SocketEvents.Create911Call,
     (data) => {
       setCalls([data, ...calls]);
+    },
+    [calls, setCalls],
+  );
+
+  useListener(
+    SocketEvents.End911Call,
+    (data: Call911) => {
+      setCalls(calls.filter((v) => v.id !== data.id));
+    },
+    [calls, setCalls],
+  );
+
+  useListener(
+    SocketEvents.Update911Call,
+    (call) => {
+      setCalls(
+        calls.map((v) => {
+          if (v.id === call.id) {
+            return call;
+          }
+
+          return v;
+        }),
+      );
     },
     [calls, setCalls],
   );
@@ -30,6 +62,7 @@ export const ActiveCalls = () => {
                   <th className="bg-gray-300">{"caller"}</th>
                   <th className="bg-gray-300">{"location"}</th>
                   <th className="bg-gray-300">{"description"}</th>
+                  <th className="bg-gray-300">{"createdAt"}</th>
                   <th className="bg-gray-300">{"assignedUnits"}</th>
                 </tr>
               </thead>
@@ -39,7 +72,8 @@ export const ActiveCalls = () => {
                     <td>{call.name}</td>
                     <td>{call.location}</td>
                     <td>{call.description}</td>
-                    <td>{call.assignedUnits.map((unit) => unit.name).join(", ")}</td>
+                    <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
+                    <td>{call.assignedUnits.map(makeUnit).join(", ")}</td>
                   </tr>
                 ))}
               </tbody>

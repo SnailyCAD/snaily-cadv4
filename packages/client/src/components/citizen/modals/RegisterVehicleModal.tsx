@@ -16,6 +16,7 @@ import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
+import { useAuth } from "context/AuthContext";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -39,10 +40,12 @@ export const RegisterVehicleModal = ({
   const common = useTranslations("Common");
   const { citizen } = useCitizen(false);
   const router = useRouter();
+  const { cad } = useAuth();
 
   const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
+  const maxPlateLength = cad?.miscCadSettings.maxPlateLength ?? 8;
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);
@@ -96,7 +99,9 @@ export const RegisterVehicleModal = ({
                 hasError={!!errors.plate}
                 onChange={handleChange}
                 id="plate"
-                value={values.plate}
+                value={values.plate.toUpperCase()}
+                max={maxPlateLength}
+                maxLength={maxPlateLength}
               />
               <Error>{errors.plate}</Error>
             </FormField>

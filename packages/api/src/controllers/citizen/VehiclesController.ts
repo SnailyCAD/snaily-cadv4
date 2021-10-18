@@ -1,4 +1,4 @@
-import { User } from ".prisma/client";
+import { MiscCadSettings, User } from ".prisma/client";
 import { validate, VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -38,6 +38,12 @@ export class VehiclesController {
 
     if (existing) {
       throw new BadRequest("plateAlreadyInUse");
+    }
+
+    const cad = ctx.get("cad") as { miscCadSettings?: MiscCadSettings };
+    const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
+    if (body.get("plate").length > plateLength) {
+      throw new BadRequest("plateToLong");
     }
 
     const vehicle = await prisma.registeredVehicle.create({

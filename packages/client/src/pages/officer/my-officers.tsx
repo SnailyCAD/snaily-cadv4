@@ -22,6 +22,7 @@ interface Props {
 
 export default function MyOfficers({ officers: data }: Props) {
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
 
@@ -52,17 +53,17 @@ export default function MyOfficers({ officers: data }: Props) {
   return (
     <Layout>
       <Head>
-        <title>{"My Officers"} - SnailyCAD</title>
+        <title>{t("myOfficers")} - SnailyCAD</title>
       </Head>
 
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{"My Officers"}</h1>
+        <h1 className="text-3xl font-semibold">{t("myOfficers")}</h1>
 
-        <Button onClick={() => openModal(ModalIds.ManageOfficer)}>{"Create Officer"}</Button>
+        <Button onClick={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
       </header>
 
       {officers.length <= 0 ? (
-        <p className="mt-5">{"You do not have any officers yet."}</p>
+        <p className="mt-5">{t("noOfficers")}</p>
       ) : (
         <ul className="mt-5 space-y-3">
           {officers.map((officer) => (
@@ -72,13 +73,13 @@ export default function MyOfficers({ officers: data }: Props) {
             >
               <div>
                 <p>
-                  <span className="font-semibold">{"Officer"}: </span> {officer.name}
+                  <span className="font-semibold">{t("officer")}: </span> {officer.name}
                 </p>
                 <p>
-                  <span className="font-semibold">{"Callsign"}: </span> {officer.callsign}
+                  <span className="font-semibold">{t("callsign")}: </span> {officer.callsign}
                 </p>
                 <p>
-                  <span className="font-semibold">{"Department"}: </span>
+                  <span className="font-semibold">{t("department")}: </span>
                   {officer.department.value}
                 </p>
               </div>
@@ -106,8 +107,11 @@ export default function MyOfficers({ officers: data }: Props) {
       />
 
       <AlertModal
-        title={"Delete Officer"}
-        description="qsdqd"
+        title={t("deleteOfficer")}
+        description={t.rich("alert_deleteOfficer", {
+          span: (children) => <span className="font-semibold">{children}</span>,
+          officer: tempOfficer && tempOfficer.name,
+        })}
         id={ModalIds.AlertDeleteOfficer}
         onDeleteClick={handleDeleteOfficer}
         state={state}
@@ -133,7 +137,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       officers,
       values,
       messages: {
-        ...(await getTranslations(["common"], locale)),
+        ...(await getTranslations(["leo", "common"], locale)),
       },
     },
   };

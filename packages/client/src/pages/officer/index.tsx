@@ -14,6 +14,7 @@ import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { CreateWarrant } from "components/leo/CreateWarrant";
+import { useTime } from "hooks/useTime";
 
 interface Props {
   officers: Officer[];
@@ -26,6 +27,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const state = useLeoState();
   const { setCalls, setBolos } = useDispatchState();
+  const timeRef = useTime();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -47,11 +49,13 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   return (
     <Layout className="max-w-[100rem]">
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
-        <header className="px-4 py-2 bg-gray-300 mb-2">
+        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">
           <h3 className="text-xl font-semibold">
             {"Utility Panel"}
             {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
           </h3>
+
+          <span ref={timeRef} />
         </header>
 
         <div className="px-4">

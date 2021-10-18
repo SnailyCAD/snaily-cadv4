@@ -24,6 +24,7 @@ interface Props {
 export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
 
   const { state, execute } = useFetch();
   const { department } = useValues();
@@ -61,7 +62,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
 
   return (
     <Modal
-      title={"Manage Officer"}
+      title={officer ? t("editOfficer") : t("createOfficer")}
       onClose={() => closeModal(ModalIds.ManageOfficer)}
       isOpen={isOpen(ModalIds.ManageOfficer)}
       className="min-w-[600px]"
@@ -69,7 +70,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={"Officer Name"}>
+            <FormField label={t("officerName")}>
               <Input
                 value={values.name}
                 hasError={!!errors.name}
@@ -79,7 +80,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
               <Error>{errors.name}</Error>
             </FormField>
 
-            <FormField label={"Callsign"}>
+            <FormField label={t("callsign")}>
               <Input
                 value={values.callsign}
                 hasError={!!errors.callsign}
@@ -89,7 +90,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
               <Error>{errors.callsign}</Error>
             </FormField>
 
-            <FormField label={"Department"}>
+            <FormField label={t("department")}>
               <Select
                 value={values.department}
                 hasError={!!errors.department}

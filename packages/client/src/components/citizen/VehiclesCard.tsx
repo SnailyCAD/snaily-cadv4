@@ -7,6 +7,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import format from "date-fns/format";
 
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
@@ -63,6 +64,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                   <th>{t("model")}</th>
                   <th>{t("color")}</th>
                   <th>{t("registrationStatus")}</th>
+                  <th>{common("createdAt")}</th>
                   <th>{common("actions")}</th>
                 </tr>
               </thead>
@@ -73,6 +75,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                     <td>{vehicle.model.value}</td>
                     <td>{vehicle.color}</td>
                     <td>{vehicle.registrationStatus.value}</td>
+                    <td>{format(new Date(vehicle.createdAt), "yyyy-MM-dd")}</td>
                     <td className="w-36">
                       <Button onClick={() => handleEditClick(vehicle)} small variant="success">
                         {common("edit")}
