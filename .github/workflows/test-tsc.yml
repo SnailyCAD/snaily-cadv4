@@ -24,7 +24,7 @@ jobs:
         run: "yarn workspace @snailycad/config build"
 
       - name: Build schemas
-        run: "yarn workspace @snailycad/schema build"
+        run: "yarn workspace @snailycad/schemas build"
 
       - name: Run test-tsc
         run: "yarn workspace @snailycad/api tsc --noEmit"
@@ -49,7 +49,7 @@ jobs:
         run: "yarn workspace @snailycad/config build"
 
       - name: Build schemas
-        run: "yarn workspace @snailycad/schema build"
+        run: "yarn workspace @snailycad/schemas build"
 
       - name: Run test-tsc
         run: "yarn workspace @snailycad/client tsc --noEmit"
