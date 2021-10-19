@@ -9,3 +9,11 @@ packages/api/public/**/*.png
 packages/api/public/**/*.svg
 packages/api/public/**/*.jpg
 packages/api/public/**/*.jpeg
+
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
