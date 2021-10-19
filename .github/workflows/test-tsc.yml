@@ -20,6 +20,12 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Build config
+        run: "yarn workspace @snailycad/config build"
+
+      - name: Build schemas
+        run: "yarn workspace @snailycad/schema build"
+
       - name: Run test-tsc
         run: "yarn workspace @snailycad/api tsc --noEmit"
   tsc-client:
@@ -38,6 +44,12 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Build config
+        run: "yarn workspace @snailycad/config build"
+
+      - name: Build schemas
+        run: "yarn workspace @snailycad/schema build"
 
       - name: Run test-tsc
         run: "yarn workspace @snailycad/client tsc --noEmit"
