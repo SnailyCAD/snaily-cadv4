@@ -2,8 +2,10 @@
   "Calls": {
     "tow": "Tow",
     "taxi": "Taxi",
+    "active911Calls": "Active 911 Calls",
     "noTowCalls": "There are no tow calls yet.",
     "noTaxiCalls": "There are no taxi calls yet.",
+    "no911Calls": "There are no 911 calls yet.",
     "assignToCall": "Assign to call",
     "assignedUnit": "Assigned Unit",
     "location": "Location",
@@ -12,7 +14,9 @@
     "createTaxiCall": "Create taxi call",
     "editTowCall": "Edit tow call",
     "endCall": "End call",
+    "assignedUnits": "Assigned Units",
     "selectCitizen": "Select citizen",
     "alert_endTowCall": "Are you sure you want to end this call?"
+
   }
 }

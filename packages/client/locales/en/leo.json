@@ -24,6 +24,12 @@
     "createTicket": "Create Ticket",
     "createArrestReport": "Create Arrest Report",
     "createWrittenWarning": "Create Written Warning",
+    "createBolo": "Create Bolo",
+    "nameSearch": "Name Search",
+    "notepad": "Notepad",
+    "plateSearch": "Plate Search",
+    "weaponSearch": "Weapon Search",
+    "activeOfficers": "Active Officers",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

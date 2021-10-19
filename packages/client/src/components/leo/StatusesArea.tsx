@@ -62,7 +62,8 @@ export const StatusesArea = () => {
   }
 
   const onDutyCode = codes10.values.find((v) => v.value.value === cad?.miscCadSettings?.onDutyCode);
-  const isOnDutyActive = onDutyCode?.valueId === activeOfficer?.status2?.valueId;
+  const isOnDutyActive =
+    !isButtonDisabled && onDutyCode?.valueId === activeOfficer?.status2?.valueId;
 
   return (
     <ul className="grid grid-cols-11 gap-2 mt-2 px-4 py-2 bg-gray-300/50">

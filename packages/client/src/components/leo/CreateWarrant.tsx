@@ -51,7 +51,7 @@ export const CreateWarrant = () => {
                   name="status"
                   onChange={handleChange}
                   hasError={!!errors.status}
-                  value={null}
+                  value={values.status}
                 />
               </FormField>
 

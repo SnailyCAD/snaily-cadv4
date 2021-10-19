@@ -4,9 +4,12 @@ import format from "date-fns/format";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveOfficer } from "state/leoState";
 import { Call911, Officer } from "types/prisma";
+import { useTranslations } from "use-intl";
 
 export const ActiveCalls = () => {
   const { calls, setCalls } = useDispatchState();
+  const t = useTranslations("Calls");
+  const common = useTranslations("Common");
 
   const makeUnit = (officer: Officer) =>
     `${officer.callsign} ${officer.name} ${
@@ -48,22 +51,22 @@ export const ActiveCalls = () => {
   return (
     <div className="bg-gray-200/80 rounded-md overflow-hidden">
       <header className="bg-gray-300/50 px-4 p-2">
-        <h3 className="text-xl font-semibold">{"Active 911 Calls"}</h3>
+        <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
       </header>
 
       <div className="px-4">
         {calls.length <= 0 ? (
-          <p>{"There are no active calls."}</p>
+          <p className="py-2">{t("no911Calls")}</p>
         ) : (
           <div className="overflow-x-auto w-full  max-h-80 mt-3">
             <table className="overflow-hidden w-full whitespace-nowrap">
               <thead className="sticky top-0">
                 <tr>
-                  <th className="bg-gray-300">{"caller"}</th>
-                  <th className="bg-gray-300">{"location"}</th>
-                  <th className="bg-gray-300">{"description"}</th>
-                  <th className="bg-gray-300">{"createdAt"}</th>
-                  <th className="bg-gray-300">{"assignedUnits"}</th>
+                  <th className="bg-gray-300">{t("caller")}</th>
+                  <th className="bg-gray-300">{t("location")}</th>
+                  <th className="bg-gray-300">{t("description")}</th>
+                  <th className="bg-gray-300">{common("createdAt")}</th>
+                  <th className="bg-gray-300">{t("assignedUnits")}</th>
                 </tr>
               </thead>
               <tbody>

@@ -9,12 +9,15 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { Officer, Value } from "types/prisma";
+import { DivisionValue, Officer, Value } from "types/prisma";
 import { ManageOfficerModal } from "components/leo/modals/ManageOfficerModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
-export type OfficerWithDept = Officer & { department: Value<"DEPARTMENT"> };
+export type OfficerWithDept = Officer & {
+  division: DivisionValue;
+  department: Value<"DEPARTMENT">;
+};
 
 interface Props {
   officers: OfficerWithDept[];
@@ -81,6 +84,10 @@ export default function MyOfficers({ officers: data }: Props) {
                 <p>
                   <span className="font-semibold">{t("department")}: </span>
                   {officer.department.value}
+                </p>
+                <p>
+                  <span className="font-semibold">{t("division")}: </span>
+                  {officer.division?.value?.value}
                 </p>
               </div>
 

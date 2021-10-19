@@ -28,11 +28,12 @@ export class LeoController {
         userId: ctx.get("user").id,
       },
       include: {
-        department: {
+        division: {
           include: {
-            divisionToValue: true,
+            value: true,
           },
         },
+        department: true,
       },
     });
 

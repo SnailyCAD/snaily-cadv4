@@ -3,6 +3,7 @@ import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { StatusEnum } from "types/prisma";
 import { useModal } from "context/ModalContext";
+import { useTranslations } from "use-intl";
 
 interface MButton {
   nameKey: string;
@@ -51,6 +52,7 @@ const buttons: MButton[] = [
 export const ModalButtons = () => {
   const { activeOfficer } = useLeoState();
   const { openModal } = useModal();
+  const t = useTranslations("Leo");
 
   const isButtonDisabled =
     !activeOfficer ||
@@ -75,7 +77,7 @@ export const ModalButtons = () => {
             title={isButtonDisabled ? "Go on-duty before continuing" : button.nameKey}
             onClick={() => openModal(button.modalId)}
           >
-            {button.nameKey}
+            {t(button.nameKey)}
           </Button>
         ))}
       </ul>
