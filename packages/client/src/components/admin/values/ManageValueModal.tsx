@@ -9,7 +9,9 @@ import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
+import { useValues } from "context/ValuesContext";
 import {
+  DivisionValue,
   EmployeeAsEnum,
   EmployeeValue,
   ShouldDoType,
@@ -20,14 +22,13 @@ import {
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 
+type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
+
 interface Props {
   type: ValueType;
-  value: Value | EmployeeValue | StatusValue | null;
-  onCreate: (newValue: Value | EmployeeValue | StatusValue) => void;
-  onUpdate: (
-    oldValue: Value | EmployeeValue | StatusValue,
-    newValue: Value | EmployeeValue | StatusValue,
-  ) => void;
+  value: TValue | null;
+  onCreate: (newValue: TValue) => void;
+  onUpdate: (oldValue: TValue, newValue: TValue) => void;
 }
 
 const BUSINESS_VALUES = [
@@ -69,6 +70,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
+  const { department } = useValues();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (value) {
@@ -101,6 +103,12 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
       typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
     position:
       typeof value?.value === "string" ? "" : value && "position" in value ? value.position : "",
+    departmentId:
+      typeof value?.value === "string"
+        ? ""
+        : value && "departmentId" in value
+        ? value.departmentId
+        : "",
   };
 
   const validate = handleValidate(VALUE_SCHEMA);
@@ -137,6 +145,20 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
               </FormField>
             ) : null}
 
+            {type === "DIVISION" ? (
+              <FormField fieldId="departmentId" label="Department">
+                <Select
+                  values={department.values.map((v) => ({
+                    value: v.id,
+                    label: v.value,
+                  }))}
+                  name="departmentId"
+                  onChange={handleChange}
+                  value={values.departmentId}
+                />
+              </FormField>
+            ) : null}
+
             {type === "CODES_10" ? (
               <>
                 <FormField fieldId="shouldDo" label="Should Do">
@@ -153,7 +175,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
                     values={POSITION_VALUES}
                     name="position"
                     onChange={handleChange}
-                    value={values.position!}
+                    value={String(values.position)}
                   />
                 </FormField>
               </>

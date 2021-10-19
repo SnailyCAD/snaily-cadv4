@@ -27,7 +27,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
   const t = useTranslations("Leo");
 
   const { state, execute } = useFetch();
-  const { department } = useValues();
+  const { department, division } = useValues();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (officer) {
@@ -58,6 +58,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
     department: officer?.departmentId ?? "",
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
+    division: officer?.divisionId ?? "",
   };
 
   return (
@@ -102,6 +103,22 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
                 }))}
               />
               <Error>{errors.department}</Error>
+            </FormField>
+
+            <FormField label={t("division")}>
+              <Select
+                value={values.division}
+                hasError={!!errors.division}
+                name="division"
+                onChange={handleChange}
+                values={division.values
+                  .filter((v) => (values.department ? v.departmentId === values.department : true))
+                  .map((value) => ({
+                    label: value.value.value,
+                    value: value.id,
+                  }))}
+              />
+              <Error>{errors.division}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

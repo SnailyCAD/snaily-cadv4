@@ -41,9 +41,9 @@
   },
   "BUSINESS_ROLE": {
     "MANAGE": "Manage Business Roles",
-    "ADD": "Add Gender",
-    "DELETE": "Delete Gender",
-    "EDIT": "Edit Gender"
+    "ADD": "Add Business Role",
+    "DELETE": "Delete Business Role",
+    "EDIT": "Edit Business Role"
   },
   "DEPARTMENT": {
     "MANAGE": "Manage Departments",
@@ -68,5 +68,11 @@
     "ADD": "Add Penal Code",
     "DELETE": "Delete Penal Code",
     "EDIT": "Edit Penal Code"
+  },
+  "DIVISION": {
+    "MANAGE": "Manage Divisions",
+    "ADD": "Add Division",
+    "DELETE": "Delete Division",
+    "EDIT": "Edit Division"
   }
 }

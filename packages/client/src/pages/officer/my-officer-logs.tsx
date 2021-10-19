@@ -110,8 +110,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 };
 
 function filterLogs(filter: Filter, logs: OfficerLogWithOfficer[]) {
-  console.log({ filter });
-
   switch (filter) {
     case "startedAt": {
       return logs.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());

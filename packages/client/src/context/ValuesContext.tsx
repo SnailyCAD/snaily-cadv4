@@ -1,5 +1,13 @@
 import * as React from "react";
-import { EmployeeValue, PenalCode, StatusValue, Value, valueType, ValueType } from "types/prisma";
+import {
+  DivisionValue,
+  EmployeeValue,
+  PenalCode,
+  StatusValue,
+  Value,
+  valueType,
+  ValueType,
+} from "types/prisma";
 
 type ContextValue<T extends ValueType> = {
   type: ValueType;
@@ -15,6 +23,10 @@ interface Context {
   bloodGroup: ContextValue<"BLOOD_GROUP">;
   department: ContextValue<"DEPARTMENT">;
   officerRank: ContextValue<"OFFICER_RANK">;
+  division: {
+    type: ValueType;
+    values: DivisionValue[];
+  };
   businessRole: {
     type: ValueType;
     values: EmployeeValue[];
@@ -47,9 +59,10 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
   );
 
   const data = React.useMemo(() => {
-    return Object.values(valueType).reduce((obj, value) => {
-      const v = values.find((v) => v.type === value) ?? { values: [], type: value };
-      return { ...obj, [normalizeValue(value)]: v };
+    return Object.values(valueType).reduce((obj, valueType) => {
+      const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
+
+      return { ...obj, [normalizeValue(valueType)]: v };
     }, {} as Context);
   }, [values]);
 

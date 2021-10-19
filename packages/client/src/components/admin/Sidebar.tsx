@@ -1,22 +1,11 @@
 import { useAuth } from "context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { rank } from "types/prisma";
+import { rank, valueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 const management = ["USERS", "CITIZENS", "BUSINESSES"];
-const types = [
-  "GENDER",
-  "ETHNICITY",
-  "LICENSE",
-  "WEAPON",
-  "VEHICLE",
-  "BUSINESS-ROLE",
-  "CODES-10",
-  "PENAL-CODE",
-  "DEPARTMENT",
-  "OFFICER-RANK",
-];
+const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
 export const AdminSidebar = () => {
   const t = useTranslations();

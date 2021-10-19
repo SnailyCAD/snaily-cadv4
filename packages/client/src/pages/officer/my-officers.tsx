@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     headers: req.headers,
   }).catch(() => ({ data: [] }));
 
-  const { data: values } = await handleRequest("/admin/values/department?officer-rank").catch(
+  const { data: values } = await handleRequest("/admin/values/department?paths=division").catch(
     () => ({
       data: [],
     }),

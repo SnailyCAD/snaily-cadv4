@@ -138,6 +138,8 @@ export type Value<Type extends ValueType = ValueType> = {
   type: Type;
   value: string;
   isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 /**
@@ -227,6 +229,7 @@ export type Officer = {
   id: string;
   name: string;
   departmentId: string;
+  divisionId: string;
   callsign: string;
   rankId: string;
   status: StatusEnum;
@@ -321,6 +324,18 @@ export type Record = {
 };
 
 /**
+ * Model DivisionValue
+ */
+
+export type DivisionValue = {
+  id: string;
+  valueId: string;
+  value: Value<"DIVISION">;
+  departmentId: string | null;
+  department: Value<"DEPARTMENT">;
+};
+
+/**
  * Enums
  */
 
@@ -356,6 +371,7 @@ export const valueType = {
   PENAL_CODE: "PENAL_CODE",
   DEPARTMENT: "DEPARTMENT",
   OFFICER_RANK: "OFFICER_RANK",
+  DIVISION: "DIVISION",
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];

@@ -1,6 +1,7 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { Modal } from "components/modal/Modal";
@@ -9,24 +10,31 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { EmployeeValue, StatusValue, Value, valueType, ValueType } from "types/prisma";
+import {
+  DivisionValue,
+  EmployeeValue,
+  StatusValue,
+  Value,
+  valueType,
+  ValueType,
+} from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 
+type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
+
 interface Props {
-  values: { type: ValueType; values: (Value | EmployeeValue | StatusValue)[] };
+  pathValues: { type: ValueType; values: TValue[] };
 }
 
-export default function ValuePath({ values: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<(Value | EmployeeValue | StatusValue)[]>(data);
+export default function ValuePath({ pathValues: { type, values: data } }: Props) {
+  const [values, setValues] = React.useState<TValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
-  const [tempValue, setTempValue] = React.useState<Value | EmployeeValue | StatusValue | null>(
-    null,
-  );
+  const [tempValue, setTempValue] = React.useState<TValue | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -34,12 +42,12 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
-  function handleDeleteClick(value: Value | EmployeeValue | StatusValue) {
+  function handleDeleteClick(value: TValue) {
     setTempValue(value);
     openModal("deleteValue");
   }
 
-  function handleEditClick(value: Value | EmployeeValue | StatusValue) {
+  function handleEditClick(value: TValue) {
     setTempValue(value);
     openModal("manageValue");
   }
@@ -84,6 +92,10 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 
   return (
     <AdminLayout>
+      <Head>
+        <title>{typeT("MANAGE")} - SnailyCAD</title>
+      </Head>
+
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
         <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
@@ -152,7 +164,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 
       <ManageValueModal
         onCreate={(value) => {
-          setValues((p) => [...p, value]);
+          setValues((p) => [value, ...p]);
         }}
         onUpdate={(old, newV) => {
           setValues((p) => {
@@ -172,13 +184,14 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_");
 
-  const { data: values = [] } = await handleRequest(`/admin/values/${path}`, {
+  const { data: values = [] } = await handleRequest(`/admin/values/${path}?paths=department`, {
     headers: req.headers,
   }).catch(() => ({ data: [] }));
 
   return {
     props: {
-      values: values?.[0] ?? {},
+      values,
+      pathValues: values?.[0] ?? {},
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["admin", "values", "common"], locale)),

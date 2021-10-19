@@ -28,7 +28,11 @@ export class LeoController {
         userId: ctx.get("user").id,
       },
       include: {
-        department: true,
+        department: {
+          include: {
+            divisionToValue: true,
+          },
+        },
       },
     });
 
@@ -50,6 +54,7 @@ export class LeoController {
         userId: ctx.get("user").id,
         // rankId: body.get("rank"),
         departmentId: body.get("department"),
+        divisionId: body.get("division"),
       },
       include: {
         department: true,

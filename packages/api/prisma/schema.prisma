@@ -196,6 +196,8 @@ model Value {
   officerToValue                  Officer[]           @relation("officerDepartmentToValue")
   officerRankToValue              Officer[]           @relation("officerRankToValue")
   officerStatusValueToValue       StatusValue[]       @relation("officerStatusValueToValue")
+  departmentToValue               DivisionValue[]     @relation("departmentToValue")
+  divisionToValue                 DivisionValue[]     @relation("divisionToValue")
 }
 
 model PenalCode {
@@ -206,6 +208,15 @@ model PenalCode {
   description String   @db.Text
   record      Record?  @relation(fields: [recordId], references: [id])
   recordId    String?
+}
+
+model DivisionValue {
+  id           String    @id @default(cuid())
+  value        Value     @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId      String
+  department   Value?    @relation("departmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId String?
+  officers     Officer[] @relation("officerDivisionToDivision")
 }
 
 enum ValueType {
@@ -220,6 +231,7 @@ enum ValueType {
   PENAL_CODE
   DEPARTMENT
   OFFICER_RANK
+  DIVISION
 }
 
 // notifications
@@ -320,17 +332,19 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id           String       @id @default(cuid())
-  name         String       @db.VarChar(255)
-  department   Value        @relation("officerDepartmentToValue", fields: [departmentId], references: [id])
+  id           String        @id @default(cuid())
+  name         String        @db.VarChar(255)
+  department   Value         @relation("officerDepartmentToValue", fields: [departmentId], references: [id])
   departmentId String
-  callsign     String       @db.VarChar(255)
-  rank         Value?       @relation("officerRankToValue", fields: [rankId], references: [id])
+  callsign     String        @db.VarChar(255)
+  division     DivisionValue @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId   String
+  rank         Value?        @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusEnum   @default(OFF_DUTY)
-  status2      StatusValue? @relation("officer2StatusToValue", fields: [status2Id], references: [id])
+  status       StatusEnum    @default(OFF_DUTY)
+  status2      StatusValue?  @relation("officer2StatusToValue", fields: [status2Id], references: [id])
   status2Id    String?
-  suspended    Boolean      @default(false)
+  suspended    Boolean       @default(false)
   badgeNumber  Int?
 
   citizen   Citizen?     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -417,7 +431,6 @@ enum BoloType {
 }
 
 // tickets, arrest reports, warrants, written warnings
-
 model Record {
   id         String      @id @default(uuid())
   type       RecordType

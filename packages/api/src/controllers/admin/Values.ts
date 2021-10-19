@@ -57,6 +57,18 @@ export class ValuesController {
           };
         }
 
+        if (type === "DIVISION") {
+          return {
+            type,
+            values: await prisma.divisionValue.findMany({
+              include: {
+                value: true,
+                department: true,
+              },
+            }),
+          };
+        }
+
         return {
           type,
           values: await prisma.value.findMany({
@@ -112,13 +124,19 @@ export class ValuesController {
         throw new BadRequest("codes10FieldsRequired");
       }
 
-      await prisma.statusValue.create({
+      const status = await prisma.statusValue.create({
         data: {
           whatPages: body.get("whatPages") ?? [],
           shouldDo: body.get("shouldDo"),
           valueId: value.id,
+          position: Number(body.get("position")),
+        },
+        include: {
+          value: true,
         },
       });
+
+      return status;
     }
 
     if (type === "BUSINESS_ROLE") {
@@ -130,6 +148,23 @@ export class ValuesController {
         data: {
           as: body.get("as"),
           valueId: value.id,
+        },
+      });
+    }
+
+    if (type === "DIVISION") {
+      if (!body.get("departmentId")) {
+        throw new BadRequest("departmentIdRequired");
+      }
+
+      await prisma.divisionValue.create({
+        data: {
+          valueId: value.id,
+          departmentId: body.get("departmentId"),
+        },
+        include: {
+          value: true,
+          department: true,
         },
       });
     }
@@ -154,6 +189,16 @@ export class ValuesController {
 
     if (type === "PENAL_CODE") {
       await prisma.penalCode.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "DIVISION") {
+      await prisma.divisionValue.delete({
         where: {
           id,
         },
@@ -198,7 +243,35 @@ export class ValuesController {
           },
           whatPages: body.get("whatPages") ?? [],
           shouldDo: body.get("shouldDo"),
-          position: parseInt(body.get("position")),
+          position: Number(body.get("position")),
+        },
+        include: {
+          value: true,
+        },
+      });
+
+      return updated;
+    }
+
+    if (type === "DIVISION") {
+      if (!body.get("departmentId")) {
+        throw new BadRequest("departmentIdRequired");
+      }
+
+      const updated = await prisma.divisionValue.update({
+        where: {
+          id,
+        },
+        data: {
+          value: {
+            update: {
+              value: body.get("value"),
+            },
+          },
+        },
+        include: {
+          value: true,
+          department: true,
         },
       });
 
