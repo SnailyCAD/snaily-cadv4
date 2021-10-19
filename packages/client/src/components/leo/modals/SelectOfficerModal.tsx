@@ -61,6 +61,7 @@ export const SelectOfficerModal = () => {
                 hasError={!!errors.officer}
                 name="officer"
                 onChange={handleChange}
+                isClearable
                 values={officers.map((officer) => ({
                   // @ts-expect-error ignore, will fix later
                   label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,

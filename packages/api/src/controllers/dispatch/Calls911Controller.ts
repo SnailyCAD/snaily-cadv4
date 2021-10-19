@@ -22,6 +22,9 @@ export class Calls911Controller {
       include: {
         assignedUnits: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return calls;

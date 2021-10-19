@@ -1,5 +1,5 @@
 import { ValueType } from ".prisma/client";
-import { validate, VALUE_SCHEMA } from "@snailycad/schemas";
+import { CREATE_PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
 import {
   Get,
   Controller,
@@ -27,6 +27,13 @@ export class ValuesController {
     const values = await Promise.all(
       paths.map(async (path) => {
         const type = this.getTypeFromPath(path);
+
+        if (type === "PENAL_CODE") {
+          return {
+            type,
+            values: await prisma.penalCode.findMany(),
+          };
+        }
 
         if (type === "BUSINESS_ROLE") {
           return {
@@ -68,10 +75,28 @@ export class ValuesController {
   @Post("/")
   async createValueByPath(@BodyParams() body: JsonRequestBody, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
+
+    if (type === "PENAL_CODE") {
+      const error = validate(CREATE_PENAL_CODE_SCHEMA, body.toJSON(), true);
+
+      if (error) {
+        throw new BadRequest(error);
+      }
+
+      const code = await prisma.penalCode.create({
+        data: {
+          title: body.get("title"),
+          description: body.get("description"),
+        },
+      });
+
+      return code;
+    }
+
     const error = validate(VALUE_SCHEMA, body.toJSON(), true);
 
     if (error) {
-      return { error };
+      throw new BadRequest(error);
     }
 
     const value = await prisma.value.create({
@@ -119,6 +144,16 @@ export class ValuesController {
 
     if (type === "CODES_10") {
       await prisma.statusValue.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "PENAL_CODE") {
+      await prisma.penalCode.delete({
         where: {
           id,
         },

@@ -44,11 +44,14 @@ export const CreateWarrant = () => {
 
               <FormField label="Status">
                 <Select
-                  values={[{ label: "Active", value: "ACTIVE" }]}
+                  values={[
+                    { label: "Active", value: "ACTIVE" },
+                    { label: "Inactive", value: "INACTIVE" },
+                  ]}
                   name="status"
                   onChange={handleChange}
-                  value={values.status}
                   hasError={!!errors.status}
+                  value={null}
                 />
               </FormField>
 

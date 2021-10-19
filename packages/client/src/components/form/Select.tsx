@@ -1,118 +1,159 @@
 import * as React from "react";
-import { Listbox, Transition } from "@headlessui/react";
-import { ChevronDown, X } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
+import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
   value: Value;
 }
 
-interface Props extends Pick<JSX.IntrinsicElements["input"], "onChange" | "name"> {
-  value: string | number;
+interface Props extends Exclude<SelectProps, "options"> {
+  onChange: (event: any) => void;
+  value: SelectValue | SelectValue[] | string | null;
   values: SelectValue[];
   hasError?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
 }
 
-export const Select = ({
-  hasError,
-  values,
-  value,
-  isClearable,
-  disabled = false,
-  name,
-  onChange,
-}: Props) => {
-  const [selected, setSelected] = React.useState<SelectValue | null>(null);
+export const Select = ({ name, onChange, ...rest }: Props) => {
   const common = useTranslations("Common");
-
-  React.useEffect(() => {
-    const v = values.find((v) => v.value === value);
-
-    if (value && v) {
-      setSelected(v);
-    } else {
-      setSelected(null);
-    }
-  }, [value, values]);
+  const value =
+    typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
 
   function handleChange(value: SelectValue | null) {
-    onChange?.({ target: { name, value: value?.value ?? null } } as any);
+    onChange?.({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
   }
 
   return (
-    <Listbox value={selected} onChange={handleChange}>
-      <div className="relative mt-1">
-        <Listbox.Button
-          className={`
-            w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200
-            outline-none focus:border-gray-800
-            hover:border-dark-gray cursor-default text-left z-0
-            transition-all ${disabled && "cursor-not-allowed opacity-80"} ${
-            hasError && "border-red-500"
-          } `}
-          disabled={disabled}
-        >
-          <span className="block truncate">{selected ? selected.label : "None"}</span>
-
-          <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <ChevronDown className="text-gray-500" />
-          </span>
-          {isClearable ? (
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                handleChange(null);
-              }}
-              className="absolute inset-y-0 right-0 flex items-center pr-8 cursor-pointer"
-            >
-              <X height={20} width={20} className="text-gray-500" />
-            </span>
-          ) : null}
-        </Listbox.Button>
-        {disabled ? null : (
-          <Transition
-            as={React.Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Listbox.Options className="absolute z-20 w-full p-1.5 px-0 mt-1 overflow-auto text-base bg-gray-300 rounded-md shadow-lg max-h-60 sm:text-sm">
-              {values.length <= 0 ? (
-                <Listbox.Option
-                  disabled
-                  value={null}
-                  className="text-gray-900 cursor-default select-none relative p-1 px-4"
-                >
-                  <span className="block truncate">{common("noOptions")}</span>
-                </Listbox.Option>
-              ) : (
-                values.map((value, idx) => (
-                  <Listbox.Option
-                    key={idx}
-                    value={value}
-                    className={({ active }) =>
-                      `${
-                        active ? "bg-gray-400" : "text-gray-900"
-                      } cursor-default select-none relative p-1 px-4`
-                    }
-                  >
-                    {({ selected }) => (
-                      <span
-                        className={`${selected ? "font-semibold" : "font-normal"}  block truncate`}
-                      >
-                        {value.label}
-                      </span>
-                    )}
-                  </Listbox.Option>
-                ))
-              )}
-            </Listbox.Options>
-          </Transition>
-        )}
-      </div>
-    </Listbox>
+    <ReactSelect
+      {...rest}
+      isDisabled={rest.disabled ?? false}
+      value={value}
+      options={rest.values}
+      onChange={(v: any) => handleChange(v)}
+      noOptionsMessage={() => common("noOptions")}
+      styles={styles({})}
+      className="border-gray-500"
+      menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
+    />
   );
 };
+
+export interface SelectTheme {
+  backgroundColor?: string;
+  color?: string;
+}
+
+export const styles = ({
+  backgroundColor = "rgb(229, 231, 235)",
+  color = "var(--dark)",
+}: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
+  valueContainer: (base) => ({
+    ...base,
+    background: "#fff",
+    color,
+    ":hover": {
+      border: "none",
+    },
+  }),
+  option: (base) => ({
+    ...base,
+    padding: "0.5em",
+    width: "100%",
+    backgroundColor,
+    color,
+    cursor: "pointer",
+    transition: "filter 200ms",
+    borderRadius: "0.2rem",
+    marginTop: "0.2rem",
+    ":hover": {
+      filter: "brightness(80%)",
+    },
+  }),
+  menu: (prov) => ({
+    ...prov,
+    width: "100%",
+    color,
+    padding: "0.3rem",
+    backgroundColor,
+    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.5)",
+  }),
+  multiValue: (base) => ({
+    ...base,
+    color: "#000",
+    borderColor: "rgba(229, 231, 235, 0.5)",
+  }),
+  noOptionsMessage: (base) => ({
+    ...base,
+    color,
+  }),
+  multiValueLabel: (base) => ({
+    ...base,
+    backgroundColor: "#cccccc",
+    color,
+    padding: "0.2rem",
+    borderRadius: "2px 0 0 2px",
+  }),
+  multiValueRemove: (base) => ({
+    ...base,
+    backgroundColor: "#cccccc",
+    color,
+    borderRadius: "0 2px 2px 0",
+    cursor: "pointer",
+    ":hover": {
+      filter: "brightness(90%)",
+    },
+  }),
+  indicatorsContainer: (base) => ({
+    ...base,
+    backgroundColor: "#fff",
+    color,
+  }),
+  clearIndicator: (base) => ({
+    ...base,
+    cursor: "pointer",
+    color,
+    ":hover": {
+      color: "#222",
+    },
+  }),
+  dropdownIndicator: (base) => ({
+    ...base,
+    cursor: "pointer",
+    color,
+    ":hover": {
+      color: "#222",
+    },
+  }),
+  control: (base, state) => ({
+    ...base,
+    background: backgroundColor,
+    borderRadius: "0.375rem",
+    overflow: "hidden",
+    border: state.isFocused ? "1.5px solid rgb(107, 114, 128)" : `1.5px solid ${backgroundColor}`,
+    boxShadow: "none",
+    ":hover": {
+      boxShadow: "none",
+      borderColor: "#000",
+    },
+    ":focus": {
+      borderColor: "rgb(107, 114, 128)",
+      boxShadow: "none",
+    },
+  }),
+  placeholder: (base) => ({
+    ...base,
+    color,
+    opacity: "0.4",
+  }),
+  singleValue: (base) => ({
+    ...base,
+    color,
+  }),
+  input: (base) => ({
+    ...base,
+    color,
+  }),
+  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+});

@@ -16,6 +16,13 @@
     "endedAt": "Ended At",
     "notEndedYet": "Not ended yet.",
     "status": "Status",
+    "citizen": "Citizen",
+    "postal": "Postal",
+    "notes": "Notes",
+    "violations": "Violations",
+    "createTicket": "Create Ticket",
+    "createArrestReport": "Create Arrest Report",
+    "createWrittenWarning": "Create Written Warning",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

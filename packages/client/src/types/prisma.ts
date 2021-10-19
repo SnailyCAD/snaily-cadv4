@@ -295,6 +295,32 @@ export type Bolo = {
 };
 
 /**
+ * Model PenalCode
+ */
+
+export type PenalCode = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
+  description: string;
+};
+
+/**
+ * Model Record
+ */
+
+export type Record = {
+  id: string;
+  type: RecordType;
+  citizenId: string;
+  officerId: string;
+  createdAt: Date;
+  postal: string;
+  notes: string | null;
+};
+
+/**
  * Enums
  */
 
@@ -383,3 +409,11 @@ export const StatusEnum = {
 } as const;
 
 export type StatusEnum = typeof StatusEnum[keyof typeof StatusEnum];
+
+export const RecordType = {
+  ARREST_REPORT: "ARREST_REPORT",
+  TICKET: "TICKET",
+  WRITTEN_WARNING: "WRITTEN_WARNING",
+} as const;
+
+export type RecordType = typeof RecordType[keyof typeof RecordType];

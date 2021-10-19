@@ -8,7 +8,7 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { Officer } from "types/prisma";
+import { Officer, RecordType } from "types/prisma";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -26,6 +26,10 @@ const SelectOfficerModal = dynamic(async () => {
 
 const ActiveOfficersModal = dynamic(async () => {
   return (await import("components/leo/modals/ActiveOfficers")).ActiveOfficersModal;
+});
+
+const CreateTicketModal = dynamic(async () => {
+  return (await import("components/leo/modals/CreateTicketModal")).CreateTicketModal;
 });
 
 interface Props {
@@ -90,6 +94,12 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <SelectOfficerModal />
       <NotepadModal />
       <ActiveOfficersModal />
+
+      <div>
+        <CreateTicketModal type={RecordType.TICKET} />
+        <CreateTicketModal type={RecordType.ARREST_REPORT} />
+        <CreateTicketModal type={RecordType.WRITTEN_WARNING} />
+      </div>
     </Layout>
   );
 }
@@ -108,6 +118,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       data: [],
     }),
   );
+
+  const { data: citizens } = await handleRequest("/citizen", {
+    headers: req.headers,
+  }).catch(() => ({
+    data: [],
+  }));
 
   const { data: calls } = await handleRequest("/911-calls", {
     headers: req.headers,
@@ -128,6 +144,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       bolos,
       values,
+      citizens,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
       },

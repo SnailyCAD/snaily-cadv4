@@ -113,9 +113,8 @@ model Citizen {
   businesses       Business[]
   Employee         Employee[]
   officers         Officer[]
-  tickets          Ticket[]
-  arrestReports    ArrestReport[]
   warrants         Warrant[]
+  Record           Record[]
 }
 
 enum Rank {
@@ -197,6 +196,16 @@ model Value {
   officerToValue                  Officer[]           @relation("officerDepartmentToValue")
   officerRankToValue              Officer[]           @relation("officerRankToValue")
   officerStatusValueToValue       StatusValue[]       @relation("officerStatusValueToValue")
+}
+
+model PenalCode {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  record      Record?  @relation(fields: [recordId], references: [id])
+  recordId    String?
 }
 
 enum ValueType {
@@ -322,18 +331,18 @@ model Officer {
   status2      StatusValue? @relation("officer2StatusToValue", fields: [status2Id], references: [id])
   status2Id    String?
   suspended    Boolean      @default(false)
+  badgeNumber  Int?
 
-  citizen       Citizen?       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId     String?
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  call911       Call911?       @relation("call911ToOfficer", fields: [call911Id], references: [id])
-  call911Id     String?
-  bolos         Bolo[]         @relation("bolosToOfficer")
-  tickets       Ticket[]
-  arrestReports ArrestReport[]
-  warrants      Warrant[]
-  logs          OfficerLog[]
+  citizen   Citizen?     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String?
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  call911   Call911?     @relation("call911ToOfficer", fields: [call911Id], references: [id])
+  call911Id String?
+  bolos     Bolo[]       @relation("bolosToOfficer")
+  warrants  Warrant[]
+  logs      OfficerLog[]
+  Record    Record[]
 }
 
 model StatusValue {
@@ -408,28 +417,24 @@ enum BoloType {
 }
 
 // tickets, arrest reports, warrants, written warnings
-model Ticket {
-  id         String   @id @default(uuid())
-  citizen    Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+
+model Record {
+  id         String      @id @default(uuid())
+  type       RecordType
+  citizen    Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId  String
-  officer    Officer  @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer    Officer     @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId  String
-  violations String   @db.Text
-  createdAt  DateTime @default(now())
-  postal     String   @db.VarChar(255)
-  notes      String   @db.Text
+  violations PenalCode[]
+  createdAt  DateTime    @default(now())
+  postal     String      @db.VarChar(255)
+  notes      String?     @db.Text
 }
 
-model ArrestReport {
-  id        String   @id @default(uuid())
-  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId String
-  officer   Officer  @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId String
-  charges   String   @db.Text
-  createdAt DateTime @default(now())
-  postal    String   @db.VarChar(255)
-  notes     String   @db.Text
+enum RecordType {
+  ARREST_REPORT
+  TICKET
+  WRITTEN_WARNING
 }
 
 model Warrant {
