@@ -26,6 +26,9 @@ jobs:
       - name: Build schemas
         run: "yarn workspace @snailycad/schemas build"
 
+      - name: Generate Prisma types
+        run: "yarn workspace @snailycad/api generate"
+
       - name: Run test-tsc
         run: "yarn workspace @snailycad/api tsc --noEmit"
   tsc-client:
