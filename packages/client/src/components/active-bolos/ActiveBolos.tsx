@@ -10,9 +10,11 @@ import { FullBolo, useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { Bolo, BoloType, StatusEnum } from "types/prisma";
+import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 
 export const ActiveBolos = () => {
+  const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { bolos, setBolos } = useDispatchState();
@@ -115,12 +117,11 @@ export const ActiveBolos = () => {
                     ) : (
                       <p>{bolo.description}</p>
                     )}
-                    {"officer" in bolo ? (
-                      <p>
-                        <span className="font-semibold">{"Officer"}: </span>
-                        {bolo.officer.name}
-                      </p>
-                    ) : null}
+
+                    <p>
+                      <span className="font-semibold">{"Officer"}: </span>
+                      {bolo?.officer?.name ?? t("dispatch")}
+                    </p>
                   </div>
                 </div>
 

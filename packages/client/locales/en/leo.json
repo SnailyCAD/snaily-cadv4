@@ -35,6 +35,7 @@
     "updateAOP": "Update Area of Play",
     "utilityPanel": "Utility Panel",
     "noActiveOfficers": "There are no active officers",
+    "badgeNumber": "Badge Number",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

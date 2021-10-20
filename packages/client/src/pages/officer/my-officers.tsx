@@ -13,6 +13,7 @@ import { DivisionValue, Officer, Value } from "types/prisma";
 import { ManageOfficerModal } from "components/leo/modals/ManageOfficerModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { FullOfficer } from "state/dispatchState";
 
 export type OfficerWithDept = Officer & {
   division: DivisionValue;
@@ -20,7 +21,7 @@ export type OfficerWithDept = Officer & {
 };
 
 interface Props {
-  officers: OfficerWithDept[];
+  officers: FullOfficer[];
 }
 
 export default function MyOfficers({ officers: data }: Props) {
@@ -30,7 +31,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { state, execute } = useFetch();
 
   const [officers, setOfficers] = React.useState(data ?? []);
-  const [tempOfficer, setTempOfficer] = React.useState<OfficerWithDept | null>(null);
+  const [tempOfficer, setTempOfficer] = React.useState<FullOfficer | null>(null);
 
   async function handleDeleteOfficer() {
     if (!tempOfficer) return;
@@ -43,12 +44,12 @@ export default function MyOfficers({ officers: data }: Props) {
     }
   }
 
-  function handleEditClick(officer: OfficerWithDept) {
+  function handleEditClick(officer: FullOfficer) {
     setTempOfficer(officer);
     openModal(ModalIds.ManageOfficer);
   }
 
-  function handleDeleteClick(officer: OfficerWithDept) {
+  function handleDeleteClick(officer: FullOfficer) {
     setTempOfficer(officer);
     openModal(ModalIds.AlertDeleteOfficer);
   }
@@ -82,6 +83,10 @@ export default function MyOfficers({ officers: data }: Props) {
                   <span className="font-semibold">{t("callsign")}: </span> {officer.callsign}
                 </p>
                 <p>
+                  <span className="font-semibold">{t("badgeNumber")}: </span>
+                  {String(officer.badgeNumber)}
+                </p>
+                <p>
                   <span className="font-semibold">{t("department")}: </span>
                   {officer.department.value}
                 </p>
@@ -110,7 +115,16 @@ export default function MyOfficers({ officers: data }: Props) {
 
       <ManageOfficerModal
         onCreate={(officer) => setOfficers((p) => [officer, ...p])}
+        onUpdate={(old, newO) => {
+          setOfficers((p) => {
+            const idx = p.indexOf(old);
+            p[idx] = newO;
+
+            return p;
+          });
+        }}
         officer={tempOfficer}
+        onClose={() => setTempOfficer(null)}
       />
 
       <AlertModal

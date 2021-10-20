@@ -41,7 +41,7 @@ export class LeoController {
   }
 
   @Post("/")
-  async createOfficer(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
+  async createOfficer(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
 
     if (error) {
@@ -52,17 +52,68 @@ export class LeoController {
       data: {
         name: body.get("name"),
         callsign: body.get("callsign"),
-        userId: ctx.get("user").id,
-        // rankId: body.get("rank"),
+        userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
+        badgeNumber: parseInt(body.get("badgeNumber")),
       },
       include: {
         department: true,
+        division: {
+          include: {
+            value: true,
+          },
+        },
       },
     });
 
     return officer;
+  }
+
+  @Put("/:id")
+  async updateOfficer(
+    @PathParams("id") officerId: string,
+    @BodyParams() body: JsonRequestBody,
+    @Context("user") user: User,
+  ) {
+    const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const officer = await prisma.officer.findFirst({
+      where: {
+        id: officerId,
+        userId: user.id,
+      },
+    });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
+    const updated = await prisma.officer.update({
+      where: {
+        id: officer.id,
+      },
+      data: {
+        name: body.get("name"),
+        callsign: body.get("callsign"),
+        departmentId: body.get("department"),
+        divisionId: body.get("division"),
+        badgeNumber: parseInt(body.get("badgeNumber")),
+      },
+      include: {
+        department: true,
+        division: {
+          include: {
+            value: true,
+          },
+        },
+      },
+    });
+
+    return updated;
   }
 
   @Put("/:id/status")
@@ -143,7 +194,7 @@ export class LeoController {
       },
       data: {
         status,
-        status2Id: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
+        status2Id: status === StatusEnum.OFF_DUTY ? null : code.id,
       },
       include: {
         department: true,

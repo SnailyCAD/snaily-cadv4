@@ -35,6 +35,7 @@ export const ActiveOfficers = () => {
               <thead>
                 <tr>
                   <th>{t("officer")}</th>
+                  <th>{t("badgeNumber")}</th>
                   <th>{t("department")}</th>
                   <th>{t("division")}</th>
                   <th>{t("status")}</th>
@@ -47,6 +48,7 @@ export const ActiveOfficers = () => {
                     <td>
                       {officer.callsign} {officer.name}
                     </td>
+                    <td>{String(officer.badgeNumber)}</td>
                     <td>{officer.department.value}</td>
                     <td>{officer.division.value.value}</td>
                     <td>{officer.status2?.value?.value}</td>

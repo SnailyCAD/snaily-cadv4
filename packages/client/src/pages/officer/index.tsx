@@ -1,5 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
+import { useTranslations } from "use-intl";
+import Head from "next/head";
 import { Layout } from "components/Layout";
 import { StatusesArea } from "components/leo/StatusesArea";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
@@ -15,7 +17,6 @@ import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { CreateWarrant } from "components/leo/CreateWarrant";
 import { useTime } from "hooks/useTime";
-import { useTranslations } from "use-intl";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -66,6 +67,10 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
 
   return (
     <Layout className="max-w-[100rem]">
+      <Head>
+        <title>{t("officer")} - SnailyCAD</title>
+      </Head>
+
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">
           <h3 className="text-xl font-semibold">

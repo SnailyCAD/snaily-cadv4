@@ -239,6 +239,7 @@ export type Officer = {
   citizenId: string | null;
   userId: string;
   call911Id: string | null;
+  badgeNumber: number | null;
 };
 
 /**

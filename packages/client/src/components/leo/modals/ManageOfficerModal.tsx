@@ -11,23 +11,29 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { OfficerWithDept } from "src/pages/officer/my-officers";
+import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
-import { Officer } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 interface Props {
-  officer: Officer | null;
-  onCreate?: (officer: OfficerWithDept) => void;
+  officer: FullOfficer | null;
+  onCreate?: (officer: FullOfficer) => void;
+  onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
+  onClose?: () => void;
 }
 
-export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
+export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Props) => {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
+
+  function handleClose() {
+    closeModal(ModalIds.ManageOfficer);
+    onClose?.();
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (officer) {
@@ -37,7 +43,8 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
       });
 
       if (json.id) {
-        //   todo
+        onUpdate?.(officer, json);
+        closeModal(ModalIds.ManageOfficer);
       }
     } else {
       const { json } = await execute("/leo", {
@@ -59,12 +66,13 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
     division: officer?.divisionId ?? "",
+    badgeNumber: officer?.badgeNumber ?? "",
   };
 
   return (
     <Modal
       title={officer ? t("editOfficer") : t("createOfficer")}
-      onClose={() => closeModal(ModalIds.ManageOfficer)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageOfficer)}
       className="min-w-[600px]"
     >
@@ -79,6 +87,26 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
                 onChange={handleChange}
               />
               <Error>{errors.name}</Error>
+            </FormField>
+
+            <FormField label={t("badgeNumber")}>
+              <Input
+                type="number"
+                value={values.badgeNumber}
+                hasError={!!errors.badgeNumber}
+                id="badgeNumber"
+                onChange={(e) =>
+                  handleChange({
+                    ...e,
+                    target: {
+                      ...e.target,
+                      id: "badgeNumber",
+                      value: e.target.valueAsNumber,
+                    },
+                  })
+                }
+              />
+              <Error>{errors.badgeNumber}</Error>
             </FormField>
 
             <FormField label={t("callsign")}>
@@ -122,11 +150,7 @@ export const ManageOfficerModal = ({ officer, onCreate }: Props) => {
             </FormField>
 
             <footer className="mt-5 flex justify-end">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageOfficer)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
