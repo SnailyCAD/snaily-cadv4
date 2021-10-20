@@ -28,7 +28,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
   const router = useRouter();
   const { user } = useAuth();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
-  const { activeOfficers } = useDispatchState();
+  const { allOfficers } = useDispatchState();
 
   function handleClose() {
     onClose?.();
@@ -80,7 +80,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
 
   function makeLabel(value: string) {
     // todo: replace with all officers;
-    const officer = activeOfficers.find((v) => v.id === value);
+    const officer = allOfficers.find((v) => v.id === value);
     return `${officer?.callsign} ${officer?.name} (${officer?.department?.value})`;
   }
 
@@ -123,7 +123,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
                     label: makeLabel(value.value),
                     value: value.value,
                   }))}
-                  values={activeOfficers.map((officer) => ({
+                  values={allOfficers.map((officer) => ({
                     label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,
                     value: officer.id,
                   }))}

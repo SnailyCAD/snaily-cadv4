@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { JsonRequestBody, Post } from "@tsed/schema";
+import { Get, JsonRequestBody, Post } from "@tsed/schema";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
@@ -14,6 +14,27 @@ export class Calls911Controller {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
+  }
+
+  @Get("/")
+  async getDispatchData() {
+    const officers = await prisma.officer.findMany({
+      include: {
+        department: true,
+        status2: {
+          include: {
+            value: true,
+          },
+        },
+        division: {
+          include: {
+            value: true,
+          },
+        },
+      },
+    });
+
+    return officers;
   }
 
   @Post("/aop")

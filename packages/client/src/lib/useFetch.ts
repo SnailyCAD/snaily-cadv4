@@ -40,12 +40,15 @@ export default function useFetch(
 
     const error = response instanceof Error ? parseError(response as AxiosError) : null;
 
-    if (error && !options.noToast) {
+    if (error) {
       const hasKey = Object.keys(Common.Errors).some((e) => e === error);
       const key = hasKey ? error : "unknown";
 
+      if (!options.noToast) {
+        toast.error(t(key));
+      }
+
       setState("error");
-      toast.error(t(key));
 
       return {
         json: {},

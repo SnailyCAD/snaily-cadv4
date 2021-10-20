@@ -1,5 +1,6 @@
 {
   "Leo": {
+    "dispatch": "Dispatch",
     "myOfficers": "My Officers",
     "myOfficerLogs": "My Officer Logs",
     "createOfficer": "Create Officer",

@@ -25,6 +25,8 @@ export const StatusesArea = () => {
       setActiveOfficer({ ...activeOfficer, ...json });
     }
 
+    console.log({ error });
+
     if (error && error === "noActiveOfficer") {
       setActiveOfficer(null);
     }

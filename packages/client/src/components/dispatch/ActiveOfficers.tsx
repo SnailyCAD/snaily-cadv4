@@ -1,11 +1,24 @@
+import * as React from "react";
+import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useDispatchState } from "state/dispatchState";
-import { useTranslations } from "use-intl";
+import { ActiveOfficer } from "state/leoState";
+import { ManageUnitModal } from "./modals/ManageUnit";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useDispatchState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const { openModal } = useModal();
+
+  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | null>(null);
+
+  function handleEditClick(officer: ActiveOfficer) {
+    setTempUnit(officer);
+    openModal(ModalIds.ManageUnit);
+  }
 
   return (
     <div className="bg-gray-200/80 rounded-md overflow-hidden">
@@ -29,16 +42,16 @@ export const ActiveOfficers = () => {
                 </tr>
               </thead>
               <tbody>
-                {activeOfficers.map((vehicle) => (
-                  <tr key={vehicle.id}>
+                {activeOfficers.map((officer) => (
+                  <tr key={officer.id}>
                     <td>
-                      {vehicle.callsign} {vehicle.name}
+                      {officer.callsign} {officer.name}
                     </td>
-                    <td>{vehicle.department.value}</td>
-                    <td>{vehicle.division.value.value}</td>
-                    <td>{vehicle.status2.value?.value}</td>
+                    <td>{officer.department.value}</td>
+                    <td>{officer.division.value.value}</td>
+                    <td>{officer.status2?.value?.value}</td>
                     <td className="w-36">
-                      <Button small variant="success">
+                      <Button onClick={() => handleEditClick(officer)} small variant="success">
                         {common("manage")}
                       </Button>
                     </td>
@@ -50,19 +63,7 @@ export const ActiveOfficers = () => {
         )}
       </div>
 
-      {/* timeout: wait for modal to close */}
-      {/* <>
-        <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 100)} bolo={tempBolo} />
-
-        <AlertModal
-          title={"Delete Bolo"}
-          onDeleteClick={handleDeleteBolo}
-          description={"Are you sure you want to delete this bolo? This action cannot be undone"}
-          id={ModalIds.AlertDeleteBolo}
-          onClose={() => setTempBolo(null)}
-          state={state}
-        />
-      </> */}
+      <ManageUnitModal unit={tempUnit} />
     </div>
   );
 };

@@ -1,10 +1,10 @@
-import { Res, Controller, UseBeforeEach, Use } from "@tsed/common";
+import { Res, Controller, UseBeforeEach, Use, Req } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { ShouldDoType, StatusEnum, MiscCadSettings } from ".prisma/client";
+import { ShouldDoType, StatusEnum, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -69,8 +69,10 @@ export class LeoController {
   async setOfficerStatus(
     @PathParams("id") officerId: string,
     @BodyParams() body: JsonRequestBody,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Res() res: Res,
+    @Req() req: Req,
   ) {
     const error = validate(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON(), true);
 
@@ -78,10 +80,12 @@ export class LeoController {
       throw new BadRequest(error);
     }
 
+    const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
+    const isDispatch = isFromDispatch && user.isDispatch;
+
     const officer = await prisma.officer.findFirst({
       where: {
-        //   todo: allow dispatch to use this route
-        userId: ctx.get("user").id,
+        userId: isDispatch ? undefined : user.id,
         id: officerId,
       },
     });
@@ -112,7 +116,7 @@ export class LeoController {
     // reset all officers for user
     await prisma.officer.updateMany({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       data: {
         status: "OFF_DUTY",
@@ -120,12 +124,25 @@ export class LeoController {
       },
     });
 
+    let status: StatusEnum = StatusEnum.ON_DUTY;
+
+    if (code.shouldDo === ShouldDoType.SET_STATUS && body.get("status") === StatusEnum.OFF_DUTY) {
+      status = StatusEnum.OFF_DUTY;
+    } else if (
+      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
+      body.get("status") === StatusEnum.ON_DUTY
+    ) {
+      status = StatusEnum.OFF_DUTY;
+    } else {
+      status = StatusEnum.ON_DUTY;
+    }
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
       },
       data: {
-        status: body.get("status"),
+        status,
         status2Id: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
@@ -136,7 +153,7 @@ export class LeoController {
       },
     });
 
-    const { miscCadSettings } = ctx.get("cad") as { miscCadSettings: MiscCadSettings };
+    const { miscCadSettings } = cad;
     const officerLog = await prisma.officerLog.findFirst({
       where: {
         officerId: officer.id,
@@ -149,7 +166,7 @@ export class LeoController {
         await prisma.officerLog.create({
           data: {
             officerId: officer.id,
-            userId: ctx.get("user").id,
+            userId: user.id,
             startedAt: new Date(),
           },
         });

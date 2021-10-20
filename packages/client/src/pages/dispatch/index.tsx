@@ -1,5 +1,6 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { Layout } from "components/Layout";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
@@ -7,7 +8,7 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
+import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -25,21 +26,27 @@ const ActiveOfficersModal = dynamic(async () => {
 interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
+  officers: FullOfficer[];
 }
 
-export default function OfficerDashboard({ bolos, calls }: Props) {
+export default function OfficerDashboard({ bolos, calls, officers }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
-  const { setCalls, setBolos } = useDispatchState();
+  const { setCalls, setBolos, setAllOfficers } = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
 
   React.useEffect(() => {
     setCalls(calls);
     setBolos(bolos);
-  }, [setBolos, setCalls, bolos, calls]);
+    setAllOfficers(officers);
+  }, [setBolos, setCalls, setAllOfficers, bolos, calls, officers]);
 
   return (
     <Layout className="max-w-[100rem]">
+      <Head>
+        <title>{t("dispatch")} - SnailyCAD</title>
+      </Head>
+
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300">
           <h3 className="text-xl font-semibold">
@@ -77,7 +84,12 @@ export default function OfficerDashboard({ bolos, calls }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const paths = ["/admin/values/codes_10?paths=penal_code", "/911-calls", "/bolos"] as const;
+  const paths = [
+    "/admin/values/codes_10?paths=penal_code",
+    "/911-calls",
+    "/bolos",
+    "/dispatch",
+  ] as const;
 
   const handle = async (path: string) =>
     handleRequest(path, {
@@ -87,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       .then((v) => v.data)
       .catch(() => ({ data: [] }));
 
-  const [values, calls, bolos] = await Promise.all(paths.map(handle));
+  const [values, calls, bolos, officers] = await Promise.all(paths.map(handle));
 
   return {
     props: {
@@ -95,6 +107,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       bolos,
       values,
+      officers,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], locale)),
       },
