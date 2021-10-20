@@ -15,6 +15,7 @@ import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponMod
 import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
 import { ManageTowCallModal } from "components/citizen/tow/ManageTowCall";
+import { Manage911CallModal } from "components/modals/Manage911CallModal";
 
 interface Props {
   citizens: Citizen[];
@@ -53,7 +54,7 @@ export default function CitizenPage({ citizens }: Props) {
         <Button disabled onClick={() => openModal(ModalIds.ManageTaxiCall)} className="text-left">
           {t("createTaxiCall")}
         </Button>
-        <Button disabled onClick={() => openModal(ModalIds.ManageTowCall)} className="text-left">
+        <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
           {t("create911Call")}
         </Button>
       </ul>
@@ -110,6 +111,7 @@ export default function CitizenPage({ citizens }: Props) {
         citizens={citizens}
         weapon={null}
       />
+      <Manage911CallModal call={null} />
       <ManageTowCallModal call={null} />
     </Layout>
   );

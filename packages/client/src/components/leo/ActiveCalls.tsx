@@ -1,12 +1,17 @@
+import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { Button } from "components/Button";
+import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useAuth } from "context/AuthContext";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ActiveOfficer } from "state/leoState";
 import { Call911, Officer } from "types/prisma";
 import { useTranslations } from "use-intl";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 
 export const ActiveCalls = () => {
   const { calls, setCalls } = useDispatchState();
@@ -14,10 +19,10 @@ export const ActiveCalls = () => {
   const common = useTranslations("Common");
   const { user } = useAuth();
   const router = useRouter();
-
-  // todo
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
-  isDispatch;
+  const { openModal } = useModal();
+
+  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const makeUnit = (officer: Officer) =>
     `${officer.callsign} ${officer.name} ${
@@ -56,6 +61,11 @@ export const ActiveCalls = () => {
     [calls, setCalls],
   );
 
+  function handleManageClick(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.Manage911Call);
+  }
+
   return (
     <div className="bg-gray-200/80 rounded-md overflow-hidden">
       <header className="bg-gray-300/50 px-4 p-2">
@@ -72,9 +82,10 @@ export const ActiveCalls = () => {
                 <tr>
                   <th className="bg-gray-300">{t("caller")}</th>
                   <th className="bg-gray-300">{t("location")}</th>
-                  <th className="bg-gray-300">{t("description")}</th>
+                  <th className="bg-gray-300">{common("description")}</th>
                   <th className="bg-gray-300">{common("createdAt")}</th>
                   <th className="bg-gray-300">{t("assignedUnits")}</th>
+                  {isDispatch ? <th className="bg-gray-300">{common("actions")}</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -84,7 +95,14 @@ export const ActiveCalls = () => {
                     <td>{call.location}</td>
                     <td>{call.description}</td>
                     <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
-                    <td>{call.assignedUnits.map(makeUnit).join(", ")}</td>
+                    <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
+                    {isDispatch ? (
+                      <td>
+                        <Button small variant="success" onClick={() => handleManageClick(call)}>
+                          {common("manage")}
+                        </Button>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -92,6 +110,8 @@ export const ActiveCalls = () => {
           </div>
         )}
       </div>
+
+      <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
     </div>
   );
 };
