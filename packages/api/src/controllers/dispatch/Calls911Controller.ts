@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_911_CALL, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -136,5 +136,26 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(updated!);
 
     return updated;
+  }
+
+  @Delete("/:id")
+  async end911Call(@PathParams("id") id: string) {
+    const call = await prisma.call911.findUnique({
+      where: { id },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    await prisma.call911.delete({
+      where: {
+        id: call.id,
+      },
+    });
+
+    this.socket.emit911CallDelete(call);
+
+    return true;
   }
 }

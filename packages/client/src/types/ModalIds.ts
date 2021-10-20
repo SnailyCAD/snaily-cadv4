@@ -43,4 +43,5 @@ export const enum ModalIds {
   AlertFireEmployee = "AlertFireEmployeeModal",
   AlertDeleteOfficer = "AlertDeleteOfficerModal",
   AlertDeleteBolo = "AlertDeleteBoloModal",
+  AlertEnd911Call = "AlertEnd911CallModal",
 }

@@ -14,6 +14,7 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Select, SelectValue } from "components/form/Select";
+import { AlertModal } from "components/modal/AlertModal";
 
 interface Props {
   call: Full911Call | null;
@@ -21,8 +22,9 @@ interface Props {
 }
 
 export const Manage911CallModal = ({ call, onClose }: Props) => {
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
+  const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { setCalls, calls } = useDispatchState();
   const router = useRouter();
@@ -33,6 +35,19 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
   function handleClose() {
     onClose?.();
     closeModal(ModalIds.Manage911Call);
+  }
+
+  async function handleDelete() {
+    if (!call) return;
+
+    const { json } = await execute(`/911-calls/${call.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      closeModal(ModalIds.AlertEnd911Call);
+      closeModal(ModalIds.Manage911Call);
+    }
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -133,19 +148,38 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
               </FormField>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
-              <Button onClick={handleClose} type="button" variant="cancel">
-                {common("cancel")}
-              </Button>
-              <Button className="ml-2 flex items-center" type="submit">
+            <footer className="mt-5 flex justify-between">
+              <Button
+                onClick={() => openModal(ModalIds.AlertEnd911Call)}
+                type="button"
+                variant="danger"
+              >
                 {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
-
-                {call ? common("save") : common("create")}
+                {t("endCall")}
               </Button>
+
+              <div className="flex">
+                <Button onClick={handleClose} type="button" variant="cancel">
+                  {common("cancel")}
+                </Button>
+                <Button className="ml-2 flex items-center" type="submit">
+                  {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+
+                  {call ? common("save") : common("create")}
+                </Button>
+              </div>
             </footer>
           </Form>
         )}
       </Formik>
+
+      <AlertModal
+        id={ModalIds.AlertEnd911Call}
+        title={t("end911Call")}
+        description={t("alert_end911Call")}
+        onDeleteClick={handleDelete}
+        deleteText={t("endCall")}
+      />
     </Modal>
   );
 };
