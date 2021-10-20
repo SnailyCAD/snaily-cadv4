@@ -246,6 +246,11 @@ export class LeoController {
       include: {
         department: true,
         rank: true,
+        division: {
+          include: {
+            value: true,
+          },
+        },
         status2: {
           include: {
             value: true,

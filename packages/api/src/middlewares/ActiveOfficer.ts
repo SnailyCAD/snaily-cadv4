@@ -6,7 +6,7 @@ import { getActiveOfficer } from "../lib/officer";
 export class ActiveOfficer implements MiddlewareMethods {
   async use(@Req() req: Req, @Context() ctx: Context) {
     const user = await getSessionUser(req);
-    const officer = await getActiveOfficer(req, user.id);
+    const officer = await getActiveOfficer(req, user.id, ctx);
 
     ctx.set("activeOfficer", officer);
   }

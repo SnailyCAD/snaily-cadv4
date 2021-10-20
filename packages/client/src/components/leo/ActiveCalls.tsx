@@ -1,6 +1,8 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { useAuth } from "context/AuthContext";
 import format from "date-fns/format";
+import { useRouter } from "next/router";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveOfficer } from "state/leoState";
 import { Call911, Officer } from "types/prisma";
@@ -10,6 +12,12 @@ export const ActiveCalls = () => {
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
+  const { user } = useAuth();
+  const router = useRouter();
+
+  // todo
+  const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
+  isDispatch;
 
   const makeUnit = (officer: Officer) =>
     `${officer.callsign} ${officer.name} ${

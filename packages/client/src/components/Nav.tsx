@@ -35,7 +35,7 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
                   <a
                     className={classNames(
                       "py-3 px-2 text-gray-700 transition duration-300",
-                      isActive("/ems-fd") && "font-semibold",
+                      isActive("/dispatch") && "font-semibold",
                     )}
                   >
                     Dispatch

@@ -8,12 +8,14 @@ import { ActiveOfficer } from "state/leoState";
 import { useTranslations } from "use-intl";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { useDispatchState } from "state/dispatchState";
 
 export const ActiveOfficersModal = () => {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const [officers, setOfficers] = React.useState<ActiveOfficer[]>([]);
   const t = useTranslations("Leo");
+  const setActiveOfficers = useDispatchState((s) => s.setActiveOfficers);
 
   const getActiveOfficers = React.useCallback(async () => {
     const { json } = await execute("/leo/active-officers", {
@@ -22,8 +24,9 @@ export const ActiveOfficersModal = () => {
 
     if (json && Array.isArray(json)) {
       setOfficers(json);
+      setActiveOfficers(json);
     }
-  }, [execute]);
+  }, [execute, setActiveOfficers]);
 
   React.useEffect(() => {
     getActiveOfficers();
@@ -45,6 +48,8 @@ export const ActiveOfficersModal = () => {
         <div className="w-full min-h-[10em] h-full grid place-items-center">
           <Loader className="border-2 w-10 h-10" />
         </div>
+      ) : officers.length <= 0 ? (
+        <p>{t("noActiveOfficers")}</p>
       ) : (
         <ul className="max-h-[40em] overflow-y-auto space-y-2">
           {officers.map((officer) => (

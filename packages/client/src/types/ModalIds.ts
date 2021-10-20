@@ -21,6 +21,7 @@ export const enum ModalIds {
   SelectOfficer = "SelectOfficerModal",
   ManageBolo = "ManageBoloModal",
 
+  AddressSearch = "AddressSearchModal",
   NameSearch = "NameSearchModal",
   PlateSearch = "PlateSearchModal",
   WeaponSearch = "WeaponSearchModal",

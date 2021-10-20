@@ -4,6 +4,7 @@ import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
+import { useRouter } from "next/router";
 import * as React from "react";
 import { FullBolo, useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
@@ -17,6 +18,11 @@ export const ActiveBolos = () => {
   const { bolos, setBolos } = useDispatchState();
   const [tempBolo, setTempBolo] = React.useState<FullBolo | null>(null);
   const { activeOfficer } = useLeoState();
+  const { pathname } = useRouter();
+  const isDispatchRoute = pathname === "/dispatch";
+  const isDisabled = isDispatchRoute
+    ? false
+    : !activeOfficer || activeOfficer.status === StatusEnum.OFF_DUTY;
 
   useListener(
     SocketEvents.CreateBolo,
@@ -120,7 +126,7 @@ export const ActiveBolos = () => {
 
                 <div>
                   <Button
-                    disabled={!activeOfficer || activeOfficer.status === StatusEnum.OFF_DUTY}
+                    disabled={isDisabled}
                     onClick={() => handleEditClick(bolo)}
                     variant="success"
                   >
@@ -128,7 +134,7 @@ export const ActiveBolos = () => {
                   </Button>
                   <Button
                     className="ml-2"
-                    disabled={!activeOfficer || activeOfficer.status === StatusEnum.OFF_DUTY}
+                    disabled={isDisabled}
                     onClick={() => handleDeleteClick(bolo)}
                     variant="danger"
                   >
@@ -142,23 +148,18 @@ export const ActiveBolos = () => {
       </div>
 
       {/* timeout: wait for modal to close */}
-      {activeOfficer ? (
-        <>
-          <ManageBoloModal
-            onClose={() => setTimeout(() => setTempBolo(null), 100)}
-            bolo={tempBolo}
-          />
+      <>
+        <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 100)} bolo={tempBolo} />
 
-          <AlertModal
-            title={"Delete Bolo"}
-            onDeleteClick={handleDeleteBolo}
-            description={"Are you sure you want to delete this bolo? This action cannot be undone"}
-            id={ModalIds.AlertDeleteBolo}
-            onClose={() => setTempBolo(null)}
-            state={state}
-          />
-        </>
-      ) : null}
+        <AlertModal
+          title={"Delete Bolo"}
+          onDeleteClick={handleDeleteBolo}
+          description={"Are you sure you want to delete this bolo? This action cannot be undone"}
+          id={ModalIds.AlertDeleteBolo}
+          onClose={() => setTempBolo(null)}
+          state={state}
+        />
+      </>
     </div>
   );
 };

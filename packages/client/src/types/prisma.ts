@@ -294,7 +294,7 @@ export type Bolo = {
   plate: string | null;
   name: string | null;
   color: string | null;
-  officerId: string;
+  officerId: string | null;
 };
 
 /**

@@ -420,8 +420,8 @@ model Bolo {
   plate       String?  @db.VarChar(255)
   name        String?  @db.VarChar(255)
   color       String?  @db.VarChar(255)
-  officer     Officer  @relation("bolosToOfficer", fields: [officerId], references: [id])
-  officerId   String
+  officer     Officer? @relation("bolosToOfficer", fields: [officerId], references: [id])
+  officerId   String?
 }
 
 enum BoloType {

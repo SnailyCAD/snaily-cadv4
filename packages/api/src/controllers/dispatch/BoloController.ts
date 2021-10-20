@@ -43,7 +43,7 @@ export class BoloController {
         color: body.get("color") ?? null,
         name: body.get("name") ?? null,
         plate: body.get("plate") ?? null,
-        officerId: ctx.get("activeOfficer").id,
+        officerId: ctx.get("activeOfficer")?.id ?? null,
       },
       include: {
         officer: true,

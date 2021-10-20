@@ -5,6 +5,8 @@ const routeIds: Record<string, string> = {
   "/officer": "snaily-cad-notepad-officer",
   "/ems-fd": "snaily-cad-notepad-ems-fd",
   "/dispatch": "snaily-cad-notepad-dispatch",
+  "/tow": "snaily-cad-notepad-tow",
+  "/taxi": "snaily-cad-notepad-taxi",
 };
 
 export function useNotepad() {
