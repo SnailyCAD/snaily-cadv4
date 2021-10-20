@@ -2,6 +2,7 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
+import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
@@ -11,16 +12,26 @@ import { useTranslations } from "use-intl";
 
 export const CreateWarrant = () => {
   const { activeOfficer } = useLeoState();
-  const { state } = useFetch();
+  const { state, execute } = useFetch();
   const common = useTranslations("Common");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    values;
+    const { json } = await execute("/records/create-warrant", {
+      method: "POST",
+      data: values,
+    });
+
+    console.log({ json });
+
+    if (json.id) {
+      // todo
+    }
   }
 
   const INITIAL_VALUES = {
     name: "",
     status: "",
+    description: "",
   };
 
   return (
@@ -52,6 +63,16 @@ export const CreateWarrant = () => {
                   onChange={handleChange}
                   hasError={!!errors.status}
                   value={values.status}
+                />
+              </FormField>
+
+              <FormField label={common("description")}>
+                <Textarea
+                  className="h-14"
+                  id="description"
+                  onChange={handleChange}
+                  hasError={!!errors.description}
+                  value={values.description}
                 />
               </FormField>
 

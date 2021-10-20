@@ -63,8 +63,8 @@ export const ModalButtons = () => {
     <div className="py-2">
       {!isButtonDisabled ? (
         <p className="text-lg">
-          <span className="font-semibold">{"Active Officer"}: </span>{" "}
-          {`${activeOfficer.callsign} ${activeOfficer.name} (${activeOfficer.department?.value})`}
+          <span className="font-semibold">{"Active Officer"}: </span>
+          {`${activeOfficer.badgeNumber} - ${activeOfficer.callsign} ${activeOfficer.name} (${activeOfficer.department?.value})`}
         </p>
       ) : null}
 
