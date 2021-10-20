@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from "axios";
 import { IncomingMessage } from "connect";
 export type RequestData = Record<string, unknown>;
 export type AllowedMethods = "PATCH" | "PUT" | "DELETE" | "OPTIONS" | "GET" | "POST";
@@ -27,5 +27,5 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
       "is-from-dispatch": isDispatchUrl === "/dispatch",
       ...(options?.headers ?? {}),
     },
-  });
+  }) as AxiosPromise<T>;
 }
