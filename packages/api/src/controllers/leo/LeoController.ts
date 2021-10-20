@@ -184,6 +184,11 @@ export class LeoController {
       body.get("status") === StatusEnum.ON_DUTY
     ) {
       status = StatusEnum.OFF_DUTY;
+    } else if (
+      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
+      body.get("status") === StatusEnum.OFF_DUTY
+    ) {
+      status = StatusEnum.OFF_DUTY;
     } else {
       status = StatusEnum.ON_DUTY;
     }
