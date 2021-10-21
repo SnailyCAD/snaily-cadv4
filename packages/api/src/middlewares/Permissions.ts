@@ -31,3 +31,18 @@ export class IsOwner implements MiddlewareMethods {
     }
   }
 }
+
+@Middleware()
+export class IsDispatch implements MiddlewareMethods {
+  async use(@Req() req: Req) {
+    const user = await getSessionUser(req);
+
+    if (!user) {
+      throw new Forbidden("Invalid Permissions");
+    }
+
+    if (user.isDispatch) {
+      throw new Forbidden("Invalid Permissions");
+    }
+  }
+}

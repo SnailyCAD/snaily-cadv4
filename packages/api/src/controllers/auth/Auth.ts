@@ -126,6 +126,6 @@ export class AuthController {
       value: jwtToken,
     });
 
-    return { userId: user.id };
+    return { userId: user.id, isOwner: user.rank === Rank.OWNER };
   }
 }

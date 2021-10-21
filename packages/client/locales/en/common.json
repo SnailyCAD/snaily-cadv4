@@ -37,6 +37,7 @@
     "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/jpg are supported",
     "userBanned": "This account is banned from this CAD.",
     "alreadyInThisBusiness": "You are already an employee at this business.",
-    "insufficientPermissions": "Insufficient Permissions"
+    "insufficientPermissions": "Insufficient Permissions",
+    "maxBusinessesLength": "You have reached the maximum limit of businesses per citizen."
   }
 }

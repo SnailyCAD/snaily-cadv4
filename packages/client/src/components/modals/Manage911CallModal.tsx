@@ -94,7 +94,6 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
   };
 
   function makeLabel(value: string) {
-    // todo: replace with all officers;
     const officer = allOfficers.find((v) => v.id === value);
     return `${officer?.callsign} ${officer?.name} (${officer?.department?.value})`;
   }

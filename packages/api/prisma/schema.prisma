@@ -18,6 +18,7 @@ model cad {
   ownerId           String
   areaOfPlay        String?          @db.VarChar(255)
   steamApiKey       String?          @db.VarChar(255)
+  discordWebhookURL String?          @db.VarChar(255)
   whitelisted       Boolean          @default(false)
   towWhitelisted    Boolean          @default(false)
   maxPlateLength    Int              @default(8)

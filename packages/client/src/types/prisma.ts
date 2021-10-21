@@ -10,6 +10,7 @@ export type cad = {
   areaOfPlay: string | null;
   steamApiKey: string | null;
   registrationCode: string | null;
+  discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
   disabledFeatures: Feature[];

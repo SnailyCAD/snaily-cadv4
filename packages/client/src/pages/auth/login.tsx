@@ -39,8 +39,6 @@ export default function Login() {
     if (data.json?.userId) {
       router.push("/citizen");
     }
-
-    // todo: add react-hot-toast.
   }
 
   return (

@@ -105,6 +105,10 @@ export class CitizenController {
       name,
       surname,
       gender,
+      driversLicense,
+      weaponLicense,
+      pilotLicense,
+      ccw,
     } = body.toJSON();
 
     const existing = await prisma.citizen.findFirst({
@@ -131,6 +135,10 @@ export class CitizenController {
         surname,
         genderId: gender,
         eyeColor,
+        driversLicenseId: driversLicense || undefined,
+        weaponLicenseId: weaponLicense || undefined,
+        pilotLicenseId: pilotLicense || undefined,
+        ccwId: ccw || undefined,
       },
       include: {
         gender: true,

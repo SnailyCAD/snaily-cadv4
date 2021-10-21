@@ -4,8 +4,8 @@ import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { Socket } from "../../services/SocketService";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "../../middlewares";
+import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
+import { IsAuth, IsDispatch } from "../../middlewares";
 import { cad } from ".prisma/client";
 
 @Controller("/dispatch")
@@ -37,6 +37,7 @@ export class Calls911Controller {
     return officers;
   }
 
+  @UseBefore(IsDispatch)
   @Post("/aop")
   async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: JsonRequestBody) {
     if (!body.get("aop")) {

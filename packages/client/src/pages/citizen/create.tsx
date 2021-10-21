@@ -34,6 +34,10 @@ const INITIAL_VALUES = {
   hairColor: "",
   eyeColor: "",
   address: "",
+  driversLicense: "",
+  pilotLicense: "",
+  ccw: "",
+  weaponLicense: "",
   image: null,
 };
 
@@ -44,7 +48,7 @@ export default function CreateCitizen() {
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const { gender, ethnicity } = useValues();
+  const { gender, ethnicity, license } = useValues();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -198,25 +202,60 @@ export default function CreateCitizen() {
               <Error>{errors.address}</Error>
             </FormField>
 
-            {/* todo: setup select component */}
-            {/* <FormRow>
-              <FormField label="Driver License">
-                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-                <Error>{errors.address}</Error>
+            <FormRow className="mt-5">
+              <FormField label={t("driversLicense")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.driversLicense}
+                  hasError={!!errors.driversLicense}
+                  onChange={handleChange}
+                  name="driversLicense"
+                />
+                <Error>{errors.driversLicense}</Error>
               </FormField>
-              <FormField label="Firearms license">
-                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-                <Error>{errors.address}</Error>
+              <FormField label={t("weaponLicense")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.weaponLicense}
+                  hasError={!!errors.weaponLicense}
+                  onChange={handleChange}
+                  name="weaponLicense"
+                />
+                <Error>{errors.weaponLicense}</Error>
               </FormField>
-              <FormField label="Dmv">
-                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-                <Error>{errors.address}</Error>
+              <FormField label={t("pilotLicense")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.pilotLicense}
+                  hasError={!!errors.pilotLicense}
+                  onChange={handleChange}
+                  name="pilotLicense"
+                />
+                <Error>{errors.pilotLicense}</Error>
               </FormField>
-              <FormField label="Dmv">
-                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-                <Error>{errors.address}</Error>
+              <FormField label={t("ccw")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.ccw}
+                  hasError={!!errors.ccw}
+                  onChange={handleChange}
+                  name="ccw"
+                />
+                <Error>{errors.ccw}</Error>
               </FormField>
-            </FormRow> */}
+            </FormRow>
 
             <div className="flex items-center justify-end">
               <Link href="/citizen">
@@ -239,10 +278,9 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  // todo: update when needed, only gender and ethnicity are needed rn.
-  const { data: values = [] } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
-    () => ({ data: null }),
-  );
+  const { data: values = [] } = await handleRequest(
+    "/admin/values/gender?paths=ethnicity,license",
+  ).catch(() => ({ data: null }));
 
   return {
     props: {

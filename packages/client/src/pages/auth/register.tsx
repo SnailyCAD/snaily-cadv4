@@ -44,7 +44,7 @@ export default function Register({ cad }: Props) {
       return helpers.setFieldError("confirmPassword", "Passwords do not match");
     }
 
-    const data = await execute("/auth/register", {
+    const { json } = await execute("/auth/register", {
       data: values,
       method: "POST",
       headers: {
@@ -52,8 +52,9 @@ export default function Register({ cad }: Props) {
       },
     });
 
-    // todo: redirect to /admin/manage/cad-settings if "isNew"
-    if (data.json?.userId) {
+    if (json.isOwner) {
+      router.push("/admin/manage/cad-settings");
+    } else if (json.userId) {
       router.push("/citizen");
     }
   }

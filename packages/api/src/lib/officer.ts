@@ -1,6 +1,6 @@
 import { Cookie } from "@snailycad/config";
 import { Req, Context } from "@tsed/common";
-import { BadRequest, Unauthorized } from "@tsed/exceptions";
+import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { verifyJWT } from "../utils/jwt";
 import { getSessionUser } from "./auth";
@@ -12,11 +12,15 @@ export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
     throw new BadRequest("noActiveOfficer");
   }
 
+  const user = await getSessionUser(req);
+
+  if (user.isDispatch || !user.isLeo) {
+    throw new Forbidden("Invalid Permissions");
+  }
+
   // dispatch is allowed to use officer routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
-    const user = await getSessionUser(req);
-
     if (!user.isDispatch) {
       throw new Unauthorized("Must be dispatch to use this header.");
     } else {

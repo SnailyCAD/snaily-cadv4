@@ -54,6 +54,7 @@ export class ManageCitizensController {
         towWhitelisted: body.get("towWhitelisted"),
         whitelisted: body.get("whitelisted"),
         registrationCode: body.get("registrationCode"),
+        discordWebhookURL: body.get("discordWebhookURL"),
       },
     });
 

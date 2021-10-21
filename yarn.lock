@@ -637,16 +637,19 @@ __metadata:
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/jsonwebtoken": 8.5.5
+    "@types/node-fetch": ^3.0.3
     "@types/socket.io": ^3.0.2
     bcrypt: ^5.0.1
     compression: 1.7.4
     cookie: ^0.4.1
     cookie-parser: 1.4.5
     cors: 2.8.5
+    discord-api-types: ^0.24.0
     esbuild: ^0.13.8
     esbuild-register: ^3.0.0
     express: 4.17.1
     jsonwebtoken: 8.5.1
+    node-fetch: 2
     nodemon: ^2.0.14
     prisma: ^3.3.0
     socket.io: ^4.3.1
@@ -1236,6 +1239,15 @@ __metadata:
   version: 0.7.31
   resolution: "@types/ms@npm:0.7.31"
   checksum: daadd354aedde024cce6f5aa873fefe7b71b22cd0e28632a69e8b677aeb48ae8caa1c60e5919bb781df040d116b01cb4316335167a3fc0ef6a63fa3614c0f6da
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "@types/node-fetch@npm:3.0.3"
+  dependencies:
+    node-fetch: "*"
+  checksum: 1d46abfda354d7d423f5873f6bd07550f170c869ca33740b0e170265d3b65f76f9cac5f83fa0c4aa7afee66a6e1b14d4c4edd0297133fd186fef21fb53727413
   languageName: node
   linkType: hard
 
@@ -2939,7 +2951,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"data-uri-to-buffer@npm:3.0.1":
+"data-uri-to-buffer@npm:3.0.1, data-uri-to-buffer@npm:^3.0.1":
   version: 3.0.1
   resolution: "data-uri-to-buffer@npm:3.0.1"
   checksum: c59c3009686a78c071806b72f4810856ec28222f0f4e252aa495ec027ed9732298ceea99c50328cf59b151dd34cbc3ad6150bbb43e41fc56fa19f48c99e9fc30
@@ -3158,6 +3170,13 @@ __metadata:
   dependencies:
     path-type: ^4.0.0
   checksum: fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "discord-api-types@npm:0.24.0"
+  checksum: b1a17cb3be4ade974193cedb92fb37e51ba8f1832dfe3ec0d188ba41f255f3dab8359c9d618d32469f1e648126258f9d6ed8828dc1cb50b74d9fd9d875f3390a
   languageName: node
   linkType: hard
 
@@ -4151,6 +4170,15 @@ __metadata:
   dependencies:
     reusify: ^1.0.4
   checksum: 32cf15c29afe622af187d12fc9cd93e160a0cb7c31a3bb6ace86b7dea3b28e7b72acde89c882663f307b2184e14782c6c664fa315973c03626c7d4bff070bb0b
+  languageName: node
+  linkType: hard
+
+"fetch-blob@npm:^3.1.2":
+  version: 3.1.2
+  resolution: "fetch-blob@npm:3.1.2"
+  dependencies:
+    web-streams-polyfill: ^3.0.3
+  checksum: 3e3717cf30da9f204aee83dded63f1a9f9c8bda7a0dc59648f89eeb1e88ee592231f4d922e1f119e1390383520768594dd3a1fe5e844f2f2f014d17ce04213a5
   languageName: node
   linkType: hard
 
@@ -6599,19 +6627,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2.6.1":
-  version: 2.6.1
-  resolution: "node-fetch@npm:2.6.1"
-  checksum: 91075bedd57879117e310fbcc36983ad5d699e522edb1ebcdc4ee5294c982843982652925c3532729fdc86b2d64a8a827797a745f332040d91823c8752ee4d7c
+"node-fetch@npm:*":
+  version: 3.0.0
+  resolution: "node-fetch@npm:3.0.0"
+  dependencies:
+    data-uri-to-buffer: ^3.0.1
+    fetch-blob: ^3.1.2
+  checksum: 50224bf682a0bc3d44faee0f38df6269d8ae646de343595ef37f9d94b4322d3763a49819fb7b2df9330fcae16e0a20e5fb129dfed8725cf0e8f720277db7611c
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1":
+"node-fetch@npm:2, node-fetch@npm:^2.6.1":
   version: 2.6.5
   resolution: "node-fetch@npm:2.6.5"
   dependencies:
     whatwg-url: ^5.0.0
   checksum: 4e83db450718e70762882f00d96f647a7f2f3170035225934ddd5450cb1d91ef339ceb180d3687bcb0a6ed78c3fa5636ce8d3e44ec81ab59e0224ebf8965f65f
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2.6.1":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1"
+  checksum: 91075bedd57879117e310fbcc36983ad5d699e522edb1ebcdc4ee5294c982843982652925c3532729fdc86b2d64a8a827797a745f332040d91823c8752ee4d7c
   languageName: node
   linkType: hard
 
@@ -9566,6 +9604,13 @@ resolve@^2.0.0-next.3:
     glob-to-regexp: ^0.4.1
     graceful-fs: ^4.1.2
   checksum: 4a2d7ed1b441814b232db9c065beaee40ad0e37f77279331d663fa950b6b1926210a8dfa6009dc806b248f15d48826c9c6ce1a7fd6e6c94178d13c6c0a33f32c
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.0.3":
+  version: 3.1.1
+  resolution: "web-streams-polyfill@npm:3.1.1"
+  checksum: dac85f0a990fb1ddcd15e2eda8ce4696bc9bc567e34cfdaeb9e740e26417d8649a6f466468907f50fd6e09967c25e0cf1f296c30aef9650ab7b118d5f69fb176
   languageName: node
   linkType: hard
 

@@ -14,6 +14,7 @@ const CAD_SELECT = (user: Pick<User, "rank">) => ({
   liveMapSocketURl: user.rank === Rank.OWNER,
   registrationCode: user.rank === Rank.OWNER,
   steamApiKey: user.rank === Rank.OWNER,
+  discordWebhookURL: true,
   miscCadSettings: true,
 });
 @Middleware()

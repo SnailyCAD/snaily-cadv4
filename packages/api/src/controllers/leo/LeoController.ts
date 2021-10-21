@@ -4,13 +4,15 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { ShouldDoType, StatusEnum, MiscCadSettings, User } from ".prisma/client";
+import { cad, ShouldDoType, StatusEnum, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
+import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
+import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 
 // todo: check for leo permissions
 @Controller("/leo")
@@ -121,7 +123,7 @@ export class LeoController {
     @PathParams("id") officerId: string,
     @BodyParams() body: JsonRequestBody,
     @Context("user") user: User,
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
     @Res() res: Res,
     @Req() req: Req,
   ) {
@@ -257,8 +259,14 @@ export class LeoController {
       });
     }
 
-    // todo: send webhook
-    // todo: update sockets
+    if (cad.discordWebhookURL) {
+      const webhook = await getWebhookData(cad.discordWebhookURL);
+      if (!webhook) return;
+      const data = createWebhookData(webhook, updatedOfficer);
+
+      await sendDiscordWebhook(webhook, data);
+    }
+
     this.socket.emitUpdateOfficerStatus();
 
     return updatedOfficer;
@@ -334,4 +342,35 @@ export class LeoController {
 
     return officers;
   }
+}
+
+export function createWebhookData(webhook: APIWebhook, officer: any) {
+  console.log({ officer });
+
+  const status2 = officer.status2.value.value;
+  const department = officer.department.value;
+  const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
+
+  return {
+    avatar_url: webhook.avatar,
+    embeds: [
+      {
+        title: "Status Change",
+        type: "rich",
+        description: `Officer **${officerName}** has changed their status to ${status2}`,
+        fields: [
+          {
+            name: "ON/OFF duty",
+            value: officer.status,
+            inline: true,
+          },
+          {
+            name: "Status",
+            value: status2,
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
 }

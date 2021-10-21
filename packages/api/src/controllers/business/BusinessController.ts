@@ -216,7 +216,7 @@ export class BusinessController {
       });
 
       if (length > miscCadSettings.maxBusinessesPerCitizen) {
-        throw new BadRequest("TODO");
+        throw new BadRequest("maxBusinessesLength");
       }
     }
 
@@ -340,7 +340,7 @@ export class BusinessController {
       });
 
       if (length > miscCadSettings.maxBusinessesPerCitizen) {
-        throw new BadRequest("TODO");
+        throw new BadRequest("maxBusinessesLength");
       }
     }
 

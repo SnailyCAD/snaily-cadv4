@@ -62,6 +62,7 @@ export default function CadSettings() {
     name: cad.name ?? "",
     areaOfPlay: cad.areaOfPlay ?? "",
     steamApiKey: cad.steamApiKey ?? "",
+    discordWebhookURL: cad.discordWebhookURL ?? "",
     towWhitelisted: cad.towWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
@@ -99,6 +100,15 @@ export default function CadSettings() {
                     id="steamApiKey"
                   />
                   <Error>{errors.steamApiKey}</Error>
+                </FormField>
+
+                <FormField label="Discord webhook URL" fieldId="discordWebhookURL">
+                  <PasswordInput
+                    onChange={handleChange}
+                    value={values.discordWebhookURL}
+                    id="discordWebhookURL"
+                  />
+                  <Error>{errors.discordWebhookURL}</Error>
                 </FormField>
 
                 <FormField label="Registration Code" fieldId="registrationCode">

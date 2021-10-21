@@ -6,7 +6,8 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "../../middlewares";
+import { IsAuth, IsDispatch } from "../../middlewares";
+import { UseBefore } from "@tsed/common";
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
@@ -54,7 +55,7 @@ export class Calls911Controller {
     return call;
   }
 
-  // todo: add permissions
+  @UseBefore(IsDispatch)
   @Put("/:id")
   async update911Call(
     @PathParams("id") id: string,
@@ -79,7 +80,7 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    // reset assignedUnits. todo: find a better way to do this?
+    // reset assignedUnits. find a better way to do this?
     await prisma.officer.updateMany({
       where: {
         call911Id: call.id,
@@ -138,6 +139,7 @@ export class Calls911Controller {
     return updated;
   }
 
+  @UseBefore(IsDispatch)
   @Delete("/:id")
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
