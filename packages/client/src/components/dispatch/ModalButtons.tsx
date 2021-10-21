@@ -15,7 +15,7 @@ const buttons: MButton[] = [
   },
   {
     nameKey: "plateSearch",
-    modalId: ModalIds.PlateSearch,
+    modalId: ModalIds.VehicleSearch,
   },
   {
     nameKey: "weaponSearch",

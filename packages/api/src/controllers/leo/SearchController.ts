@@ -9,6 +9,45 @@ import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 @Controller("/search")
 @UseBeforeEach(IsAuth, ActiveOfficer)
 export class SearchController {
+  @Post("/name")
+  async searchName(@BodyParams("name") name: string) {
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        name,
+      },
+      include: {
+        businesses: true,
+        vehicles: {
+          include: {
+            model: true,
+            registrationStatus: true,
+          },
+        },
+        weapons: {
+          include: {
+            model: true,
+            registrationStatus: true,
+          },
+        },
+        medicalRecords: true,
+        ethnicity: true,
+        gender: true,
+        weaponLicense: true,
+        driversLicense: true,
+        ccw: true,
+        pilotLicense: true,
+        warrants: true,
+        Record: true,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    return citizen;
+  }
+
   @Post("/weapon")
   async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
     const weapon = await prisma.weapon.findFirst({

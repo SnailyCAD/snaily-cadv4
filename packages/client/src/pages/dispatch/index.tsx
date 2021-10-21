@@ -23,6 +23,14 @@ const ActiveOfficersModal = dynamic(async () => {
   return (await import("components/leo/modals/ActiveOfficers")).ActiveOfficersModal;
 });
 
+const WeaponSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+});
+
+const VehicleSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
+});
+
 interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
@@ -79,6 +87,8 @@ export default function OfficerDashboard({ bolos, calls, officers }: Props) {
 
       <NotepadModal />
       <ActiveOfficersModal />
+      <WeaponSearchModal />
+      <VehicleSearchModal />
     </Layout>
   );
 }
@@ -109,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "calls", "common"], locale)),
       },
     },
   };

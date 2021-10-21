@@ -42,6 +42,10 @@ const VehicleSearchModal = dynamic(async () => {
   return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
 });
 
+const NameSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/NameSearchModal")).NameSearchModal;
+});
+
 interface Props {
   officers: Officer[];
   activeOfficer: ActiveOfficer | null;
@@ -111,6 +115,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <ActiveOfficersModal />
       <WeaponSearchModal />
       <VehicleSearchModal />
+      <NameSearchModal />
 
       <div>
         <CreateTicketModal type={RecordType.TICKET} />

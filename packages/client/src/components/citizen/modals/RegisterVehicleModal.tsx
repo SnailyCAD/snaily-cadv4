@@ -88,7 +88,7 @@ export const RegisterVehicleModal = ({
       title={t("registerVehicle")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.RegisterVehicle)}
-      className="min-w-[600px] min-h-[400px]"
+      className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
