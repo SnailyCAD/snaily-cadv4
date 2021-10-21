@@ -38,6 +38,7 @@
     "owner": "Owner",
     "color": "Color",
     "plate": "Plate",
+    "vinNumber": "VIN Number",
     "yourVehicles": "Your Vehicles",
     "addVehicle": "Add Vehicle",
     "noVehicles": "You do not have any vehicles registered yet.",
@@ -47,6 +48,7 @@
   "Weapons": {
     "model": "Model",
     "registrationStatus": "Registration Status",
+    "serialNumber": "Serial Number",
     "yourWeapons": "Your Weapons",
     "addWeapon": "Add Weapon",
     "noWeapons": "You do not have any weapons registered yet.",

@@ -61,6 +61,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
                 <tr>
                   <th>{t("model")}</th>
                   <th>{t("registrationStatus")}</th>
+                  <th>{t("serialNumber")}</th>
                   <th>{common("actions")}</th>
                 </tr>
               </thead>
@@ -69,6 +70,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
                   <tr key={weapon.id}>
                     <td>{weapon.model.value}</td>
                     <td>{weapon.registrationStatus.value}</td>
+                    <td>{weapon.serialNumber}</td>
                     <td className="w-36">
                       <Button onClick={() => handleEditClick(weapon)} small variant="success">
                         {common("edit")}

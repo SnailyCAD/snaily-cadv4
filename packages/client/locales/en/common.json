@@ -22,7 +22,8 @@
     "accept": "Accept",
     "decline": "Decline",
     "createdAt": "Created At",
-    "reset": "Reset"
+    "reset": "Reset",
+    "search": "Search"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

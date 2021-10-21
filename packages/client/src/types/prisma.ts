@@ -114,7 +114,7 @@ export type Weapon = {
   serialNumber: string;
   registrationStatus: Value<"LICENSE">;
   registrationStatusId: string;
-  model: Value<"VEHICLE">;
+  model: Value<"WEAPON">;
   modelId: string;
 };
 

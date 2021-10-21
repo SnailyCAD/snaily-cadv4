@@ -34,6 +34,14 @@ const CreateTicketModal = dynamic(async () => {
   return (await import("components/leo/modals/CreateTicketModal")).CreateTicketModal;
 });
 
+const WeaponSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+});
+
+const VehicleSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
+});
+
 interface Props {
   officers: Officer[];
   activeOfficer: ActiveOfficer | null;
@@ -101,6 +109,8 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <SelectOfficerModal />
       <NotepadModal />
       <ActiveOfficersModal />
+      <WeaponSearchModal />
+      <VehicleSearchModal />
 
       <div>
         <CreateTicketModal type={RecordType.TICKET} />
@@ -153,7 +163,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       citizens,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "calls", "common"], locale)),
       },
     },
   };

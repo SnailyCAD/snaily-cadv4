@@ -46,6 +46,7 @@ export class Calls911Controller {
         userId: ctx.get("user").id,
       },
       include: {
+        events: true,
         assignedUnits: true,
       },
     });

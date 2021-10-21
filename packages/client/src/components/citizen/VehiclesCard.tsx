@@ -64,6 +64,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                   <th>{t("model")}</th>
                   <th>{t("color")}</th>
                   <th>{t("registrationStatus")}</th>
+                  <th>{t("vinNumber")}</th>
                   <th>{common("createdAt")}</th>
                   <th>{common("actions")}</th>
                 </tr>
@@ -75,6 +76,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                     <td>{vehicle.model.value}</td>
                     <td>{vehicle.color}</td>
                     <td>{vehicle.registrationStatus.value}</td>
+                    <td>{vehicle.vinNumber}</td>
                     <td>{format(new Date(vehicle.createdAt), "yyyy-MM-dd")}</td>
                     <td className="w-36">
                       <Button onClick={() => handleEditClick(vehicle)} small variant="success">

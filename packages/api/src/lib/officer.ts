@@ -14,7 +14,7 @@ export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
 
   const user = await getSessionUser(req);
 
-  if (user.isDispatch || !user.isLeo) {
+  if (!user.isDispatch || !user.isLeo) {
     throw new Forbidden("Invalid Permissions");
   }
 
