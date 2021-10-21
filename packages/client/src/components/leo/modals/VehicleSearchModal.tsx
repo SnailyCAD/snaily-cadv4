@@ -47,7 +47,7 @@ export const VehicleSearchModal = () => {
 
   return (
     <Modal
-      title={t("weaponSearch")}
+      title={t("plateSearch")}
       onClose={() => closeModal(ModalIds.VehicleSearch)}
       isOpen={isOpen(ModalIds.VehicleSearch)}
       className="min-w-[750px]"
