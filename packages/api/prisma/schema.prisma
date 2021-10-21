@@ -376,9 +376,9 @@ model OfficerLog {
   id        String    @id @default(uuid())
   startedAt DateTime  @default(now())
   endedAt   DateTime?
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  officer   Officer   @relation(fields: [officerId], references: [id])
+  officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId String
 }
 

@@ -69,48 +69,44 @@ export default function MyOfficers({ officers: data }: Props) {
       {officers.length <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <ul className="mt-5 space-y-3">
-          {officers.map((officer) => (
-            <li
-              key={officer.id}
-              className="p-4 rounded-md bg-gray-200 flex items-start justify-between"
-            >
-              <div>
-                <p>
-                  <span className="font-semibold">{t("officer")}: </span> {officer.name}
-                </p>
-                <p>
-                  <span className="font-semibold">{t("callsign")}: </span> {officer.callsign}
-                </p>
-                <p>
-                  <span className="font-semibold">{t("badgeNumber")}: </span>
-                  {String(officer.badgeNumber)}
-                </p>
-                <p>
-                  <span className="font-semibold">{t("department")}: </span>
-                  {officer.department.value}
-                </p>
-                <p>
-                  <span className="font-semibold">{t("division")}: </span>
-                  {officer.division?.value?.value}
-                </p>
-              </div>
-
-              <div>
-                <Button onClick={() => handleEditClick(officer)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button
-                  onClick={() => handleDeleteClick(officer)}
-                  className="ml-2"
-                  variant="danger"
-                >
-                  {common("delete")}
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-x-auto w-full mt-3">
+          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+            <thead>
+              <tr>
+                <th>{t("officer")}</th>
+                <th>{t("callsign")}</th>
+                <th>{t("badgeNumber")}</th>
+                <th>{t("department")}</th>
+                <th>{t("division")}</th>
+                <th>{common("actions")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {officers.map((officer) => (
+                <tr key={officer.id}>
+                  <td>{officer.name}</td>
+                  <td>{officer.callsign}</td>
+                  <td>{String(officer.badgeNumber)}</td>
+                  <td>{officer.department.value}</td>
+                  <td>{officer.division?.value?.value}</td>
+                  <td className="w-36">
+                    <Button small onClick={() => handleEditClick(officer)} variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteClick(officer)}
+                      className="ml-2"
+                      variant="danger"
+                      small
+                    >
+                      {common("delete")}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       <ManageOfficerModal
@@ -124,7 +120,7 @@ export default function MyOfficers({ officers: data }: Props) {
           });
         }}
         officer={tempOfficer}
-        onClose={() => setTempOfficer(null)}
+        onClose={() => setTimeout(() => setTempOfficer(null), 100)}
       />
 
       <AlertModal
