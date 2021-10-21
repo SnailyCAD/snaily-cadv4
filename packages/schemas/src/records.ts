@@ -11,3 +11,13 @@ export const CREATE_TICKET_SCHEMA = z.object({
   postal: z.string().min(1).max(255).nullable(),
   notes: z.string(),
 });
+
+export const CREATE_WARRANT_SCHEMA = z.object({
+  citizenId: z.string().min(2).max(255),
+  status: z
+    .string()
+    .min(1)
+    .max(255)
+    .regex(/ACTIVE|INACTIVE/),
+  description: z.string(),
+});

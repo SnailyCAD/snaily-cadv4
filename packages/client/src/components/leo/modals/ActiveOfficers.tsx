@@ -39,7 +39,7 @@ export const ActiveOfficersModal = () => {
 
   return (
     <Modal
-      title={"Active Officers"}
+      title={t("activeOfficers")}
       isOpen={isOpen(ModalIds.ActiveOfficers)}
       onClose={() => closeModal(ModalIds.ActiveOfficers)}
       className="min-w-[600px]"

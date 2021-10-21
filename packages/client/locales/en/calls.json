@@ -13,9 +13,11 @@
     "createTowCall": "Create tow call",
     "createTaxiCall": "Create taxi call",
     "editTowCall": "Edit tow call",
-    "endCall": "End call",
     "assignedUnits": "Assigned Units",
     "selectCitizen": "Select citizen",
+    "endCall": "End Call",
+    "end911Call": "End 911 Call",
+    "alert_end911Call": "Are you sure you want to end this call?",
     "alert_endTowCall": "Are you sure you want to end this call?"
   }
 }

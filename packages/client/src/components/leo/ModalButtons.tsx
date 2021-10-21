@@ -68,7 +68,7 @@ export const ModalButtons = () => {
         </p>
       ) : null}
 
-      <ul className="space-x-2 mt-3">
+      <ul className="modal-buttons-grid">
         {buttons.map((button, idx) => (
           <Button
             id={button.nameKey}

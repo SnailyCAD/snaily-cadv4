@@ -24,7 +24,7 @@ interface Props {
 export const Manage911CallModal = ({ call, onClose }: Props) => {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
-  const t = useTranslations("Leo");
+  const t = useTranslations("Calls");
   const { state, execute } = useFetch();
   const { setCalls, calls } = useDispatchState();
   const router = useRouter();

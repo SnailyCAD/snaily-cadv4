@@ -6,6 +6,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   callsign: z.string().min(2).max(255),
   rank: z.string().max(255).nullable(),
   badgeNumber: z.number().min(1),
+  division: z.string().min(2).max(255),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({

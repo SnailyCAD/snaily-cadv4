@@ -44,7 +44,7 @@ export const DispatchModalButtons = () => {
   const t = useTranslations("Leo");
 
   return (
-    <ul className="space-x-2 mt-3">
+    <ul className="modal-buttons-grid">
       {buttons.map((button, idx) => (
         <Button
           id={button.nameKey}

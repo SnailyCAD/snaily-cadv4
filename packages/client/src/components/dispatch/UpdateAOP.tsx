@@ -38,7 +38,7 @@ export const UpdateAreaOfPlay = () => {
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, values, errors, isValid }) => (
             <Form className="p-4">
-              <FormField fieldId="aop" label="Area of Play">
+              <FormField fieldId="aop" label={t("areaOfPlay")}>
                 <Input
                   id="aop"
                   onChange={handleChange}

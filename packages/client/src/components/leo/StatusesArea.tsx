@@ -66,10 +66,12 @@ export const StatusesArea = () => {
     !isButtonDisabled && onDutyCode?.valueId === activeOfficer?.status2?.valueId;
 
   return (
-    <ul className="grid grid-cols-11 gap-2 mt-2 px-4 py-2 bg-gray-300/50">
+    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50">
       <li>
         <Button
-          className={isOnDutyActive ? "bg-blue-500 hover:bg-blue-600 w-full" : "w-full"}
+          className={
+            isOnDutyActive ? "bg-blue-500 hover:bg-blue-600 w-full font-semibold" : "w-full"
+          }
           onClick={() => openModal(ModalIds.SelectOfficer)}
         >
           {cad?.miscCadSettings.onDutyCode ?? "10-8"}
@@ -89,7 +91,9 @@ export const StatusesArea = () => {
                 onClick={() => handleStatusUpdate(code)}
                 disabled={isButtonDisabled}
                 variant={variant}
-                className={isActive ? "bg-blue-500 hover:bg-blue-600 w-full" : "w-full"}
+                className={
+                  isActive ? "bg-blue-500 hover:bg-blue-600 w-full font-semibold" : "w-full"
+                }
               >
                 {code.value.value}
               </Button>
