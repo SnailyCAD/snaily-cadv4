@@ -19,6 +19,7 @@ export const userProperties = {
   avatarUrl: true,
   steamId: true,
   whitelistStatus: true,
+  isDarkTheme: true,
 };
 
 export async function getSessionUser(req: Req) {

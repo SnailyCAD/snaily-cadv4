@@ -30,18 +30,6 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
 
               {user?.isLeo ? <OfficerDropdown /> : null}
 
-              {user?.isDispatch ? (
-                <Link href="/dispatch">
-                  <a
-                    className={classNames(
-                      "py-3 px-2 text-gray-700 transition duration-300",
-                      isActive("/dispatch") && "font-semibold",
-                    )}
-                  >
-                    Dispatch
-                  </a>
-                </Link>
-              ) : null}
               {user?.isEmsFd ? (
                 <Link href="/ems-fd">
                   <a
@@ -51,6 +39,19 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
                     )}
                   >
                     EMS/FD
+                  </a>
+                </Link>
+              ) : null}
+
+              {user?.isDispatch ? (
+                <Link href="/dispatch">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 transition duration-300",
+                      isActive("/dispatch") && "font-semibold",
+                    )}
+                  >
+                    Dispatch
                   </a>
                 </Link>
               ) : null}

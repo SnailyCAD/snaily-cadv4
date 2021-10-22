@@ -41,6 +41,10 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   }, [router]);
 
   React.useEffect(() => {
+    _setBodyTheme(user?.isDarkTheme ?? true);
+  }, [user?.isDarkTheme]);
+
+  React.useEffect(() => {
     handleGetUser();
   }, [handleGetUser]);
 
@@ -83,4 +87,12 @@ export function useAuth() {
   }
 
   return context;
+}
+
+function _setBodyTheme(isDarkTheme: boolean) {
+  if (!isDarkTheme) return;
+  if (typeof window === "undefined") return;
+
+  true;
+  // window.document.body.classList.add("dark");
 }

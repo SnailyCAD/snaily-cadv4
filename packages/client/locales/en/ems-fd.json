@@ -1,0 +1,17 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Create Medical Record",
+    "searchMedicalRecord": "Search Medical Record",
+    "activeDeputies": "Active Deputies",
+    "selectDeputy": "Select Deputy",
+    "deputy": "Deputy",
+    "myDeputies": "My Deputies",
+    "createDeputy": "Create Deputy",
+    "editDeputy": "Edit Deputy",
+    "deputyName": "Deputy Name",
+    "deleteDeputy": "Delete Deputy",
+    "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone.",
+    "noDeputies": "You do not have any deputies"
+  }
+}

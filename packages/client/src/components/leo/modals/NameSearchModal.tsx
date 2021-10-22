@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
-import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
+import { Citizen, Record, RecordType, RegisteredVehicle, Weapon } from "types/prisma";
 import { calculateAge } from "lib/utils";
 import format from "date-fns/format";
 
@@ -175,7 +175,7 @@ export const NameSearchModal = () => {
                     </Button>
                   </div>
 
-                  <div>
+                  <>
                     {toggled === Toggled.VEHICLES ? (
                       <>
                         <section id="vehicles" className="mt-3">
@@ -235,7 +235,38 @@ export const NameSearchModal = () => {
                         </section>
                       </>
                     ) : null}
-                  </div>
+
+                    {toggled === Toggled.RECORDS ? (
+                      <>
+                        <section id="tickets" className="mt-5">
+                          <h3 className="text-xl font-semibold">{"Tickets"}</h3>
+
+                          <div className="overflow-x-auto w-full mt-3">
+                            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+                              <thead>
+                                <tr>
+                                  <th>{wT("")}</th>
+                                  <th>{wT("registrationStatus")}</th>
+                                  <th>{wT("serialNumber")}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {results.Record.filter((v) => v.type === RecordType.TICKET).map(
+                                  (weapon) => (
+                                    <tr key={weapon.id}>
+                                      <td>{weapon.postal}</td>
+                                      <td>{weapon.notes}</td>
+                                      {/* <td>{weapon}</td> */}
+                                    </tr>
+                                  ),
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </section>
+                      </>
+                    ) : null}
+                  </>
                 </div>
               </div>
             ) : null}
@@ -263,4 +294,5 @@ export const NameSearchModal = () => {
 interface NameSearchResult extends Citizen {
   vehicles: RegisteredVehicle[];
   weapons: Weapon[];
+  Record: Record[];
 }

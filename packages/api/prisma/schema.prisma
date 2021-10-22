@@ -59,6 +59,7 @@ model User {
   avatarUrl       String?         @db.Text
   steamId         String?         @db.VarChar(255)
   whitelistStatus WhitelistStatus @default(ACCEPTED)
+  isDarkTheme     Boolean         @default(true)
 
   // relational data
   citizens             Citizen[]
@@ -76,6 +77,7 @@ model User {
   officers             Officer[]
   Call911              Call911[]
   OfficerLog           OfficerLog[]
+  emsFdDeputies        EmsFdDeputy[]
 }
 
 model Citizen {
@@ -116,6 +118,7 @@ model Citizen {
   officers         Officer[]
   warrants         Warrant[]
   Record           Record[]
+  emsFdDeputies    EmsFdDeputy[]
 }
 
 enum Rank {
@@ -196,9 +199,11 @@ model Value {
   EmployeeValue                   EmployeeValue[]
   officerToValue                  Officer[]           @relation("officerDepartmentToValue")
   officerRankToValue              Officer[]           @relation("officerRankToValue")
-  officerStatusValueToValue       StatusValue[]       @relation("officerStatusValueToValue")
+  StatusValueToValue              StatusValue[]       @relation("StatusValueToValue")
   departmentToValue               DivisionValue[]     @relation("departmentToValue")
   divisionToValue                 DivisionValue[]     @relation("divisionToValue")
+  emsFdToValue                    EmsFdDeputy[]       @relation("emsFdDepartmentToValue")
+  emsFdRankToValue                EmsFdDeputy[]       @relation("emsFdRankToValue")
 }
 
 model PenalCode {
@@ -212,12 +217,13 @@ model PenalCode {
 }
 
 model DivisionValue {
-  id           String    @id @default(cuid())
-  value        Value     @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  id           String        @id @default(cuid())
+  value        Value         @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId      String
-  department   Value?    @relation("departmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  department   Value?        @relation("departmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId String?
-  officers     Officer[] @relation("officerDivisionToDivision")
+  officers     Officer[]     @relation("officerDivisionToDivision")
+  EmsFdDeputy  EmsFdDeputy[] @relation("emsFdDivisionToDivision")
 }
 
 enum ValueType {
@@ -362,14 +368,14 @@ model Officer {
 
 model StatusValue {
   id        String       @id @default(uuid())
-  value     Value        @relation("officerStatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  value     Value        @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId   String
   shouldDo  ShouldDoType @default(SET_STATUS)
   position  Int?
   whatPages WhatPages[]
 
-
-  officer2StatusToValue Officer[] @relation("officer2StatusToValue")
+  officer2StatusToValue Officer[]     @relation("officer2StatusToValue")
+  emsFdStatusToValue    EmsFdDeputy[] @relation("emsFdStatusToValue")
 }
 
 model OfficerLog {
@@ -473,6 +479,31 @@ model Warrant {
 enum WarrantStatus {
   ACTIVE
   INACTIVE
+}
+
+// ems-fd
+model EmsFdDeputy {
+  id           String        @id @default(cuid())
+  name         String        @db.VarChar(255)
+  department   Value         @relation("emsFdDepartmentToValue", fields: [departmentId], references: [id])
+  departmentId String
+  callsign     String        @db.VarChar(255)
+  division     DivisionValue @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId   String
+  rank         Value?        @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId       String?
+  status       StatusEnum    @default(OFF_DUTY)
+  status2      StatusValue?  @relation("emsFdStatusToValue", fields: [status2Id], references: [id])
+  status2Id    String?
+  suspended    Boolean       @default(false)
+  badgeNumber  Int?
+
+  citizen   Citizen? @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  // call911   Call911?     @relation("call911ToOfficer", fields: [call911Id], references: [id])
+  // call911Id String?
 }
 
 // other

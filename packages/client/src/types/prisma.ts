@@ -49,6 +49,7 @@ export type User = {
   avatarUrl: string | null;
   steamId: string | null;
   whitelistStatus: WhitelistStatus;
+  isDarkTheme: boolean;
 };
 
 /**
@@ -335,6 +336,25 @@ export type DivisionValue = {
   value: Value<"DIVISION">;
   departmentId: string | null;
   department: Value<"DEPARTMENT">;
+};
+
+/**
+ * Model EmsFdDeputy
+ */
+
+export type EmsFdDeputy = {
+  id: string;
+  name: string;
+  departmentId: string;
+  callsign: string;
+  divisionId: string;
+  rankId: string | null;
+  status: StatusEnum;
+  status2Id: string | null;
+  suspended: boolean;
+  badgeNumber: number | null;
+  citizenId: string | null;
+  userId: string;
 };
 
 /**

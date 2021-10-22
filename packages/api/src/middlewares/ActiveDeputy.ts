@@ -1,0 +1,13 @@
+import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
+import { getSessionUser } from "../lib/auth";
+import { getActiveDeputy } from "../lib/ems-fd";
+
+@Middleware()
+export class ActiveDeputy implements MiddlewareMethods {
+  async use(@Req() req: Req, @Context() ctx: Context) {
+    const user = await getSessionUser(req);
+    const officer = await getActiveDeputy(req, user.id, ctx);
+
+    ctx.set("activeDeputy", officer);
+  }
+}

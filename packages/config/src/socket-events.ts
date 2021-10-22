@@ -18,4 +18,5 @@ export enum SocketEvents {
   UpdateAreaOfPlay = "UPDATE_AREA_OF_PLAY",
 
   UpdateOfficerStatus = "UPDATE_OFFICER_STATUS",
+  UpdateEmsFdStatus = "UPDATE_EMS_FD_STATUS",
 }

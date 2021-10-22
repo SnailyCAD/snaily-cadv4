@@ -11,6 +11,10 @@ html {
   scroll-behavior: smooth;
 }
 
+#__next {
+  @apply min-h-screen dark:bg-dark-gray;
+}
+
 p,
 li {
   @apply text-lg;
