@@ -132,6 +132,7 @@ export default function MyOfficers({ officers: data }: Props) {
         id={ModalIds.AlertDeleteOfficer}
         onDeleteClick={handleDeleteOfficer}
         state={state}
+        onClose={() => setTimeout(() => setTempOfficer(null), 100)}
       />
     </Layout>
   );

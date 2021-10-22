@@ -131,6 +131,7 @@ export default function MyDeputies({ deputies: data }: Props) {
         })}
         id={ModalIds.AlertDeleteDeputy}
         onDeleteClick={handleDeleteOfficer}
+        onClose={() => setTimeout(() => setTempDeputy(null), 100)}
         state={state}
       />
     </Layout>
