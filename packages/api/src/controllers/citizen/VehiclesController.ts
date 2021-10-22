@@ -55,7 +55,7 @@ export class VehiclesController {
         registrationStatusId: body.get("registrationStatus"),
         // todo
         insuranceStatus: "TEST",
-        vinNumber: generateString(17),
+        vinNumber: body.get("vinNumber") || generateString(17),
         userId: user.id,
       },
       include: {
@@ -97,6 +97,7 @@ export class VehiclesController {
         modelId: body.get("model"),
         color: body.get("color"),
         registrationStatusId: body.get("registrationStatus"),
+        vinNumber: body.get("vinNumber") || vehicle.vinNumber,
       },
       include: {
         model: true,

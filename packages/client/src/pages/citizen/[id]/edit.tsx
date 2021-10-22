@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
@@ -22,6 +22,7 @@ import { handleRequest } from "lib/fetch";
 import { Citizen, Value, ValueType } from "types/prisma";
 import { Select } from "components/form/Select";
 import { useCitizen } from "context/CitizenContext";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 interface Props {
   values: {
@@ -35,6 +36,7 @@ export default function EditCitizen({ values }: Props) {
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const { citizen } = useCitizen();
   const genders = values.find((v) => v.type === "GENDER")?.values ?? [];
@@ -61,15 +63,35 @@ export default function EditCitizen({ values }: Props) {
     hairColor: citizen.hairColor,
     eyeColor: citizen.eyeColor,
     address: citizen.address,
+    image: undefined,
   };
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!citizen) return;
+
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
+
+    if (image && image.size && image.name) {
+      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
+        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+      }
+    }
 
     const { json } = await execute(`/citizen/${citizen.id}`, {
       method: "PUT",
       data: values,
     });
+
+    if (image && image.size && image.name) {
+      await execute(`/citizen/${citizen.id}`, {
+        method: "POST",
+        data: fd,
+      });
+    }
 
     if (json?.id) {
       router.push(`/citizen/${json.id}`);
@@ -88,8 +110,30 @@ export default function EditCitizen({ values }: Props) {
       <h1 className="text-3xl mb-3 font-semibold">{t("editCitizen")}</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <FormField label={t("image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={handleChange}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  type="button"
+                  className="bg-red-400 hover:bg-red-500"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
+              <Error>{errors.image}</Error>
+            </FormField>
+
             <FormRow>
               <FormField label={t("name")}>
                 <Input

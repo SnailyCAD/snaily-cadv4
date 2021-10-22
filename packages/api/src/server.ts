@@ -5,6 +5,7 @@ import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { IsEnabled } from "./middlewares/IsEnabled";
+import { join } from "node:path";
 
 const rootDir = __dirname;
 
@@ -20,9 +21,10 @@ const rootDir = __dirname;
     "/v1/businesses": [`${rootDir}/controllers/business/*.ts`],
   },
   statics: {
-    "/": [
+    "/static": [
       {
-        root: `${process.cwd()}/public`,
+        root: join(rootDir, "../", "public"),
+        hook: "$beforeRoutesInit",
       },
     ],
   },

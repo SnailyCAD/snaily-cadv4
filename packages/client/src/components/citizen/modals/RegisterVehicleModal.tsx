@@ -81,6 +81,7 @@ export const RegisterVehicleModal = ({
     registrationStatus: vehicle?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
+    vinNumber: vehicle?.vinNumber ?? "",
   };
 
   return (
@@ -104,6 +105,10 @@ export const RegisterVehicleModal = ({
                 maxLength={maxPlateLength}
               />
               <Error>{errors.plate}</Error>
+            </FormField>
+
+            <FormField fieldId="vinNumber" label={tVehicle("vinNumber")}>
+              <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 
             <FormField fieldId="model" label={tVehicle("model")}>

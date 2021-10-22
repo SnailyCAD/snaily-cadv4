@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { cad as CAD, Feature } from "types/prisma";
 
-const IMAGE_URL = "http://localhost:8080/";
+const IMAGE_URL = "http://localhost:8080/static/";
 
 export function makeImageUrl(type: "citizens" | "users" | "bleeter", id: string) {
   return `${IMAGE_URL}${type}/${id}`;

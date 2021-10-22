@@ -4,6 +4,7 @@ import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
+import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
 import { useEmsFdState } from "state/emsFdState";
 import { ModalIds } from "types/ModalIds";
@@ -67,9 +68,10 @@ export const StatusesArea = () => {
     <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50">
       <li>
         <Button
-          className={
-            isOnDutyActive ? "bg-blue-500 hover:bg-blue-600 w-full font-semibold" : "w-full"
-          }
+          className={classNames(
+            "w-full min-w-[5em]",
+            isOnDutyActive && "bg-blue-500 hover:bg-blue-600 font-semibold",
+          )}
           onClick={() => openModal(ModalIds.SelectDeputy)}
         >
           {cad?.miscCadSettings.onDutyCode ?? "10-8"}
@@ -89,9 +91,10 @@ export const StatusesArea = () => {
                 onClick={() => handleStatusUpdate(code)}
                 disabled={isButtonDisabled}
                 variant={variant}
-                className={
-                  isActive ? "bg-blue-500 hover:bg-blue-600 w-full font-semibold" : "w-full"
-                }
+                className={classNames(
+                  "w-full min-w-[5em]",
+                  isActive && "bg-blue-500 hover:bg-blue-600 font-semibold",
+                )}
               >
                 {code.value.value}
               </Button>

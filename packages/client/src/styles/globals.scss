@@ -64,6 +64,5 @@ td {
 }
 
 .status-buttons-grid {
-  @apply grid gap-1;
-  grid-template-columns: repeat(auto-fill, minmax(min(5rem, 100%), 1fr));
+  @apply flex gap-1 flex-grow flex-wrap;
 }
