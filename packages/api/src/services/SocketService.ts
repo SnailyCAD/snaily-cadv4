@@ -55,4 +55,8 @@ export class Socket {
   emitUpdateOfficerStatus() {
     this.io.sockets.emit(SocketEvents.UpdateOfficerStatus);
   }
+
+  emitUpdateDeputyStatus() {
+    this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus);
+  }
 }

@@ -11,7 +11,8 @@
     "editDeputy": "Edit Deputy",
     "deputyName": "Deputy Name",
     "deleteDeputy": "Delete Deputy",
-    "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone.",
-    "noDeputies": "You do not have any deputies"
+    "noDeputies": "You do not have any deputies",
+    "noActiveDeputies": "There are no active deputies",
+    "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
   }
 }

@@ -8,19 +8,23 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
+import {
+  Full911Call,
+  FullBolo,
+  FullDeputy,
+  FullOfficer,
+  useDispatchState,
+} from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { UpdateAreaOfPlay } from "components/dispatch/UpdateAOP";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
-});
-const ActiveOfficersModal = dynamic(async () => {
-  return (await import("components/leo/modals/ActiveOfficers")).ActiveOfficersModal;
 });
 
 const WeaponSearchModal = dynamic(async () => {
@@ -35,19 +39,31 @@ interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
   officers: FullOfficer[];
+  activeDeputies: FullDeputy[];
+  activeOfficers: FullOfficer[];
 }
 
-export default function OfficerDashboard({ bolos, calls, officers }: Props) {
+export default function OfficerDashboard(props: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
-  const { setCalls, setBolos, setAllOfficers } = useDispatchState();
+  const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
 
   React.useEffect(() => {
-    setCalls(calls);
-    setBolos(bolos);
-    setAllOfficers(officers);
-  }, [setBolos, setCalls, setAllOfficers, bolos, calls, officers]);
+    state.setCalls(props.calls);
+    state.setBolos(props.bolos);
+    state.setAllOfficers(props.officers);
+    state.setActiveDeputies(props.activeDeputies);
+    state.setActiveOfficers(props.activeOfficers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    state.setCalls,
+    state.setBolos,
+    state.setAllOfficers,
+    state.setActiveDeputies,
+    state.setActiveOfficers,
+    props,
+  ]);
 
   return (
     <Layout className="max-w-[100rem]">
@@ -73,6 +89,7 @@ export default function OfficerDashboard({ bolos, calls, officers }: Props) {
       <div className="flex flex-col md:flex-row md:space-x-3 mt-3">
         <div className="w-full">
           <ActiveOfficers />
+          <ActiveDeputies />
         </div>
 
         <div className="w-full md:w-96 mt-3 md:mt-0">
@@ -86,7 +103,6 @@ export default function OfficerDashboard({ bolos, calls, officers }: Props) {
       </div>
 
       <NotepadModal />
-      <ActiveOfficersModal />
       <WeaponSearchModal />
       <VehicleSearchModal />
     </Layout>
@@ -99,6 +115,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     "/911-calls",
     "/bolos",
     "/dispatch",
+    "/ems-fd/active-deputies",
+    "/leo/active-officers",
   ] as const;
 
   const handle = async (path: string) =>
@@ -109,7 +127,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       .then((v) => v.data)
       .catch(() => ({ data: [] }));
 
-  const [values, calls, bolos, officers] = await Promise.all(paths.map(handle));
+  const [values, calls, bolos, officers, activeDeputies, activeOfficers] = await Promise.all(
+    paths.map(handle),
+  );
 
   return {
     props: {
@@ -118,8 +138,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       bolos,
       values,
       officers,
+      activeDeputies,
+      activeOfficers,
       messages: {
-        ...(await getTranslations(["citizen", "leo", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "ems-fd", "leo", "calls", "common"], locale)),
       },
     },
   };

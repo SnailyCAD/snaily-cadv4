@@ -235,7 +235,7 @@ export class EmsFdController {
       await sendDiscordWebhook(webhook, data);
     }
 
-    this.socket.emitUpdateOfficerStatus();
+    this.socket.emitUpdateDeputyStatus();
 
     return updatedDeputy;
   }

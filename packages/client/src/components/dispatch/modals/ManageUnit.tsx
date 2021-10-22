@@ -13,9 +13,11 @@ import { ActiveOfficer } from "state/leoState";
 import { StatusEnum } from "types/prisma";
 import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
+import { ActiveDeputy } from "state/emsFdState";
 
 interface Props {
-  unit: ActiveOfficer | null;
+  type?: "ems-fd" | "leo";
+  unit: ActiveOfficer | ActiveDeputy | null;
   onClose?: () => void;
 }
 
@@ -29,7 +31,7 @@ const STATUS_VALUES = Object.values(StatusEnum).map((v) => ({
   label: labels[v],
 }));
 
-export const ManageUnitModal = ({ unit, onClose }: Props) => {
+export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -44,7 +46,7 @@ export const ManageUnitModal = ({ unit, onClose }: Props) => {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!unit) return;
 
-    if ("departmentId" in unit) {
+    if (type === "leo") {
       const { json } = await execute(`/leo/${unit.id}/status`, {
         method: "PUT",
         data: { ...values },
@@ -60,7 +62,16 @@ export const ManageUnitModal = ({ unit, onClose }: Props) => {
             return officer;
           }),
         );
-        closeModal(ModalIds.ManageUnit);
+        handleClose();
+      }
+    } else {
+      const { json } = await execute(`/ems-fd/${unit.id}/status`, {
+        method: "PUT",
+        data: { ...values },
+      });
+
+      if (json.id) {
+        handleClose();
       }
     }
   }

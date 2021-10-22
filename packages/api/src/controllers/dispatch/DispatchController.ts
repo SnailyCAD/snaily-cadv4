@@ -18,7 +18,7 @@ export class Calls911Controller {
 
   @Get("/")
   async getDispatchData() {
-    const officers = await prisma.officer.findMany({
+    const includeData = {
       include: {
         department: true,
         status2: {
@@ -32,6 +32,10 @@ export class Calls911Controller {
           },
         },
       },
+    };
+
+    const officers = await prisma.officer.findMany({
+      ...includeData,
     });
 
     return officers;

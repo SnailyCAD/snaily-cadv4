@@ -1,3 +1,4 @@
+import { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
 import { OfficerWithDept } from "src/pages/officer/my-officers";
 import type { Bolo, Call911, Officer, StatusValue } from "types/prisma";
 import create from "zustand";
@@ -5,6 +6,7 @@ import create from "zustand";
 export type Full911Call = Call911 & { assignedUnits: Officer[] };
 export type FullBolo = Bolo & { officer: Officer };
 export type FullOfficer = OfficerWithDept & { status2: StatusValue };
+export type FullDeputy = DeputyWithDept & { status2: StatusValue };
 
 interface DispatchState {
   calls: Full911Call[];
@@ -15,6 +17,9 @@ interface DispatchState {
 
   activeOfficers: FullOfficer[];
   setActiveOfficers: (officers: FullOfficer[]) => void;
+
+  activeDeputies: FullDeputy[];
+  setActiveDeputies: (deputies: FullDeputy[]) => void;
 
   allOfficers: FullOfficer[];
   setAllOfficers: (officers: FullOfficer[]) => void;
@@ -29,6 +34,9 @@ export const useDispatchState = create<DispatchState>((set) => ({
 
   activeOfficers: [],
   setActiveOfficers: (officers) => set({ activeOfficers: officers }),
+
+  activeDeputies: [],
+  setActiveDeputies: (deputies) => set({ activeDeputies: deputies }),
 
   allOfficers: [],
   setAllOfficers: (officers) => set({ allOfficers: officers }),

@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./nav-dropdowns/CitizenDropdown";
 import { OfficerDropdown } from "./nav-dropdowns/OfficerDropdown";
+import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
 
 export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
   const { user, cad } = useAuth();
@@ -30,18 +31,7 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
 
               {user?.isLeo ? <OfficerDropdown /> : null}
 
-              {user?.isEmsFd ? (
-                <Link href="/ems-fd">
-                  <a
-                    className={classNames(
-                      "py-3 px-2 text-gray-700 transition duration-300",
-                      isActive("/ems-fd") && "font-semibold",
-                    )}
-                  >
-                    EMS/FD
-                  </a>
-                </Link>
-              ) : null}
+              {user?.isEmsFd ? <EmsFdDropdown /> : null}
 
               {user?.isDispatch ? (
                 <Link href="/dispatch">
