@@ -35,7 +35,7 @@ export class WeaponController {
         citizenId: citizen.id,
         modelId: body.get("model"),
         registrationStatusId: body.get("registrationStatus"),
-        serialNumber: generateString(10),
+        serialNumber: body.get("serialNumber") || generateString(10),
         userId: user.id,
       },
       include: {
@@ -76,6 +76,7 @@ export class WeaponController {
       data: {
         modelId: body.get("model"),
         registrationStatusId: body.get("registrationStatus"),
+        serialNumber: body.get("serialNumber") || weapon.serialNumber,
       },
       include: {
         model: true,

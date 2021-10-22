@@ -15,6 +15,7 @@ import { ModalIds } from "types/ModalIds";
 import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
+import { Input } from "components/form/Input";
 
 interface Props {
   weapon: Weapon | null;
@@ -37,6 +38,7 @@ export const RegisterWeaponModal = ({
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
+  const tWeapon = useTranslations("Weapons");
   const common = useTranslations("Common");
 
   const { citizen } = useCitizen(false);
@@ -75,6 +77,7 @@ export const RegisterWeaponModal = ({
     model: weapon?.modelId ?? "",
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
+    serialNumber: weapon?.serialNumber ?? "",
   };
 
   return (
@@ -132,6 +135,16 @@ export const RegisterWeaponModal = ({
                 onChange={handleChange}
               />
               <Error>{errors.registrationStatus}</Error>
+            </FormField>
+
+            <FormField fieldId="serialNumber" label={tWeapon("serialNumber")}>
+              <Input
+                hasError={!!errors.serialNumber}
+                value={values.serialNumber}
+                name="serialNumber"
+                onChange={handleChange}
+              />
+              <Error>{errors.serialNumber}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">
