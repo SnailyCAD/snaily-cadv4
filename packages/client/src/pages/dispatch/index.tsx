@@ -22,7 +22,6 @@ import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { DispatchAOP } from "components/dispatch/DispatchAOP";
 
 const NotepadModal = dynamic(async () => {
@@ -50,7 +49,6 @@ export default function OfficerDashboard(props: Props) {
   const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { AOP: isAopEnabled } = useFeatureEnabled();
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -94,10 +92,6 @@ export default function OfficerDashboard(props: Props) {
           <ActiveOfficers />
           <ActiveDeputies />
         </div>
-
-        {isAopEnabled ? (
-          <div className="w-full md:w-96 mt-3 md:mt-0">{/* <UpdateAreaOfPlay /> */}</div>
-        ) : null}
       </div>
 
       <div className="mt-3">
