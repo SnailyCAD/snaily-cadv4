@@ -3,7 +3,7 @@ import { Layout } from "components/Layout";
 import { Tab } from "@headlessui/react";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 
 import { useAuth } from "src/context/AuthContext";
 import { FormField } from "components/form/FormField";
@@ -12,19 +12,30 @@ import { Error } from "components/form/Error";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
+import useFetch from "lib/useFetch";
+import { Toggle } from "components/form/Toggle";
+import { Button } from "components/Button";
 
 const TABS_TITLES = ["Account Info", "Account Settings"];
 
 export default function Account() {
   const { user } = useAuth();
   const t = useTranslations("Account");
+  const { execute, state } = useFetch();
+  const common = useTranslations("Common");
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
+    isDarkTheme: user?.isDarkTheme ?? true,
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    console.log({ data });
+    const { json } = await execute("/user", {
+      method: "PATCH",
+      data,
+    });
+
+    console.log({ json });
   }
 
   if (!user) {
@@ -58,8 +69,8 @@ export default function Account() {
               <Tab.Panel className="bg-white rounded-xl p-3">
                 <h3 className="text-2xl font-semibold">{t("accountSettings")}</h3>
                 <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-                  {({ handleSubmit, handleChange, values, errors }) => (
-                    <form className="mt-2" onSubmit={handleSubmit}>
+                  {({ handleChange, values, errors }) => (
+                    <Form className="mt-2">
                       <FormField label="Username">
                         <Input
                           hasError={!!errors.username}
@@ -69,7 +80,18 @@ export default function Account() {
                         />
                         <Error>{errors.username}</Error>
                       </FormField>
-                    </form>
+
+                      <FormField label="Dark Theme">
+                        <Toggle
+                          toggled={values.isDarkTheme}
+                          onClick={handleChange}
+                          name="isDarkTheme"
+                        />
+                        <Error>{errors.isDarkTheme}</Error>
+                      </FormField>
+
+                      <Button disabled={state === "loading"}>{common("save")}</Button>
+                    </Form>
                   )}
                 </Formik>
               </Tab.Panel>
