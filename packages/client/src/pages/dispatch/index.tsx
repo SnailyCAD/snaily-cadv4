@@ -36,6 +36,14 @@ const VehicleSearchModal = dynamic(async () => {
   return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
 });
 
+const AddressSearchModal = dynamic(async () => {
+  return (await import("components/dispatch/modals/AddressSearchModal")).AddressSearchModal;
+});
+
+const NameSearchModal = dynamic(async () => {
+  return (await import("components/leo/modals/NameSearchModal")).NameSearchModal;
+});
+
 interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
@@ -102,6 +110,8 @@ export default function OfficerDashboard(props: Props) {
       <NotepadModal />
       <WeaponSearchModal />
       <VehicleSearchModal />
+      <AddressSearchModal />
+      <NameSearchModal />
     </Layout>
   );
 }

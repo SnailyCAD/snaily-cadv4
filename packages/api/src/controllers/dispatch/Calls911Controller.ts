@@ -21,7 +21,17 @@ export class Calls911Controller {
   async get911Calls() {
     const calls = await prisma.call911.findMany({
       include: {
-        assignedUnits: true,
+        assignedUnits: {
+          include: {
+            department: true,
+            division: {
+              include: {
+                value: true,
+              },
+            },
+          },
+        },
+        events: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -47,7 +57,16 @@ export class Calls911Controller {
       },
       include: {
         events: true,
-        assignedUnits: true,
+        assignedUnits: {
+          include: {
+            department: true,
+            division: {
+              include: {
+                value: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -73,7 +92,16 @@ export class Calls911Controller {
         id,
       },
       include: {
-        assignedUnits: true,
+        assignedUnits: {
+          include: {
+            department: true,
+            division: {
+              include: {
+                value: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -122,6 +150,7 @@ export class Calls911Controller {
         id: call.id,
       },
       include: {
+        events: true,
         assignedUnits: {
           include: {
             department: true,
@@ -142,7 +171,7 @@ export class Calls911Controller {
 
   @UseBefore(IsDispatch)
   @Delete("/:id")
-  async end911Call(@PathParams("id") id: string) {
+  async end911Call(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
     const call = await prisma.call911.findUnique({
       where: { id },
     });
@@ -151,13 +180,28 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    await prisma.call911.delete({
-      where: {
-        id: call.id,
+    const event = await prisma.call911Event.create({
+      data: {
+        call911Id: call.id,
+        description: body.get("description"),
       },
     });
 
-    this.socket.emit911CallDelete(call);
+    // todo: update sockets
+
+    return event;
+  }
+
+  @UseBefore(IsDispatch)
+  @Post("/events/:callId")
+  async createCallEvent(@PathParams("callId") callId: string) {
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
 
     return true;
   }

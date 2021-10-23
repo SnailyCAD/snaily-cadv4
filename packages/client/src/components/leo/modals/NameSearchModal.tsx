@@ -5,7 +5,7 @@ import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
@@ -19,8 +19,23 @@ const enum Toggled {
   RECORDS,
 }
 
+const AutoSubmit = () => {
+  const { getPayload } = useModal();
+  const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
+  const { submitForm } = useFormikContext();
+
+  // if there's a name, auto-submit the form.
+  React.useEffect(() => {
+    if (payloadName) {
+      submitForm();
+    }
+  }, [payloadName, submitForm]);
+
+  return null;
+};
+
 export const NameSearchModal = () => {
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
   const vT = useTranslations("Vehicles");
@@ -30,6 +45,8 @@ export const NameSearchModal = () => {
 
   const [toggled, setToggled] = React.useState<Toggled | null>(null);
   const [results, setResults] = React.useState<NameSearchResult | null | boolean>(null);
+
+  const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.NameSearch)) {
@@ -59,7 +76,7 @@ export const NameSearchModal = () => {
   }
 
   const INITIAL_VALUES = {
-    name: "",
+    name: payloadName ?? "",
   };
 
   return (
@@ -284,6 +301,8 @@ export const NameSearchModal = () => {
                 {common("search")}
               </Button>
             </footer>
+
+            <AutoSubmit />
           </Form>
         )}
       </Formik>

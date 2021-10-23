@@ -34,10 +34,12 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
     if (!results || typeof results === "boolean") return;
 
     const { json } = await execute(`/ems-fd/declare/${results.id}`, {
-      method: "PUT",
+      method: "POST",
     });
 
-    console.log({ json });
+    if (json.id) {
+      setResults({ ...results, ...json });
+    }
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {

@@ -351,6 +351,32 @@ export class EmsFdController {
 
     return medicalRecord;
   }
+
+  @Use(ActiveDeputy)
+  @Post("/declare/:citizenId")
+  async declareCitizenDeadOrAlive(@PathParams("citizenId") citizenId: string) {
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.citizen.update({
+      where: {
+        id: citizen.id,
+      },
+      data: {
+        dead: !citizen.dead,
+        dateOfDead: citizen.dead ? null : new Date(),
+      },
+    });
+
+    return updated;
+  }
 }
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {

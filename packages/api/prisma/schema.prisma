@@ -273,8 +273,8 @@ model TowCall {
   assignedUnitId String?
   location       String   @db.VarChar(255)
   description    String   @db.Text
-  creator        Citizen  @relation("towCallCreator", fields: [creatorId], references: [id])
-  creatorId      String
+  creator        Citizen? @relation("towCallCreator", fields: [creatorId], references: [id])
+  creatorId      String?
 }
 
 // businesses

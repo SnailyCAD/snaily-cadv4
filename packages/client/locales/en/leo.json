@@ -43,6 +43,10 @@
     "owner": "Owner",
     "weaponNotFound": "Could not find that weapon.",
     "vehicleNotFound": "Could not find that vehicle.",
+    "fullAddress": "Full Address",
+    "viewInNameSearch": "View in Name Search",
+    "noResults": "No results found for that address",
+    "enterAddress": "Full or partial address",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

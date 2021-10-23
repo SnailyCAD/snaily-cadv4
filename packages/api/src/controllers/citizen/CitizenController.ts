@@ -184,6 +184,13 @@ export class CitizenController {
     const { address, weight, height, hairColor, eyeColor, dateOfBirth, ethnicity, gender } =
       body.toJSON();
 
+    const date = new Date(dateOfBirth).getTime();
+    const now = Date.now();
+
+    if (date > now) {
+      throw new BadRequest("dateLargerThanNow");
+    }
+
     const updated = await prisma.citizen.update({
       where: {
         id: citizen.id,
