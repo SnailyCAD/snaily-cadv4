@@ -14,6 +14,7 @@ import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
+import { useCitizen } from "context/CitizenContext";
 
 interface Props {
   onCreate?: (newV: MedicalRecord) => void;
@@ -25,6 +26,7 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
+  const { citizens } = useCitizen();
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 
@@ -34,13 +36,14 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/ems-fd/medical-records", {
+    const { json } = await execute("/ems-fd/medical-record", {
       method: "POST",
       data: values,
     });
 
     if (json?.id) {
       onCreate?.(json);
+      closeModal(ModalIds.CreateMedicalRecord);
     }
   }
 
@@ -62,10 +65,13 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
           <form onSubmit={handleSubmit}>
             <FormField fieldId="citizenId" label={t("citizen")}>
               <Select
-                values={[]}
+                values={citizens.map((citizen) => ({
+                  label: `${citizen.name} ${citizen.surname}`,
+                  value: citizen.id,
+                }))}
                 hasError={!!errors.citizenId}
                 onChange={handleChange}
-                id="citizenId"
+                name="citizenId"
                 value={values.citizenId}
               />
               <Error>{errors.citizenId}</Error>

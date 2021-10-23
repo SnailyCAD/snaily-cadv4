@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { cad as CAD, Feature } from "types/prisma";
+import { handleRequest } from "./fetch";
 
 const IMAGE_URL = "http://localhost:8080/static/";
 
@@ -49,4 +50,18 @@ export function useIsFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeatures">>)
   }, [checkEnabled, router]);
 
   return isEnabled;
+}
+
+type Config = [string, any?][];
+export async function requestAll(req: any, config: Config) {
+  return Promise.all(
+    config.map(async ([path, defaultValue = {}]) => {
+      return handleRequest(path, {
+        headers: req.headers,
+        req,
+      })
+        .then((v) => v.data)
+        .catch(() => ({ data: defaultValue }));
+    }),
+  );
 }

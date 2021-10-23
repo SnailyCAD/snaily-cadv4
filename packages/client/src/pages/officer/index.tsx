@@ -6,7 +6,6 @@ import { Layout } from "components/Layout";
 import { StatusesArea } from "components/leo/StatusesArea";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
@@ -17,6 +16,7 @@ import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { CreateWarrant } from "components/leo/CreateWarrant";
 import { useTime } from "hooks/useTime";
+import { requestAll } from "lib/utils";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -127,36 +127,13 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const { data: officers } = await handleRequest("/leo", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
-
-  const { data: activeOfficer } = await handleRequest("/leo/active-officer", {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
-
-  const { data: values } = await handleRequest("/admin/values/codes_10?paths=penal_code").catch(
-    () => ({
-      data: [],
-    }),
-  );
-
-  const { data: citizens } = await handleRequest("/citizen", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
-
-  const { data: calls } = await handleRequest("/911-calls", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
-  const { data: bolos } = await handleRequest("/bolos", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [{ officers, citizens }, activeOfficer, values, calls, bolos] = await requestAll(req, [
+    ["/leo", { officers: [], citizens: [] }],
+    ["/leo/active-officer", null],
+    ["/admin/values/codes_10?paths=penal_code", []],
+    ["/911-calls", []],
+    ["/bolos", []],
+  ]);
 
   return {
     props: {

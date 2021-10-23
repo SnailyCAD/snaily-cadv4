@@ -4,7 +4,6 @@ import Head from "next/head";
 import { Layout } from "components/Layout";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
@@ -23,6 +22,7 @@ import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { DispatchAOP } from "components/dispatch/DispatchAOP";
+import { requestAll } from "lib/utils";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -117,26 +117,14 @@ export default function OfficerDashboard(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const paths = [
-    "/admin/values/codes_10?paths=penal_code",
-    "/911-calls",
-    "/bolos",
-    "/dispatch",
-    "/ems-fd/active-deputies",
-    "/leo/active-officers",
-  ] as const;
-
-  const handle = async (path: string) =>
-    handleRequest(path, {
-      headers: req.headers,
-      req,
-    })
-      .then((v) => v.data)
-      .catch(() => ({ data: [] }));
-
-  const [values, calls, bolos, officers, activeDeputies, activeOfficers] = await Promise.all(
-    paths.map(handle),
-  );
+  const [values, calls, bolos, officers, activeDeputies, activeOfficers] = await requestAll(req, [
+    ["/admin/values/codes_10?paths=penal_code", []],
+    ["/911-calls", []],
+    ["/bolos", []],
+    ["/dispatch", []],
+    ["/ems-fd/active-deputies", []],
+    ["/leo/active-officers", []],
+  ]);
 
   return {
     props: {

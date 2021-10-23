@@ -46,6 +46,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
     const { json } = await execute("/search/medical-records", {
       method: "POST",
       data: values,
+      noToast: true,
     });
 
     if (json.id || json?.medicalRecords?.length > 0) {

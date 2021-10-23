@@ -5,7 +5,6 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
@@ -14,6 +13,7 @@ import { ManageOfficerModal } from "components/leo/modals/ManageOfficerModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
+import { requestAll } from "lib/utils";
 
 export type OfficerWithDept = Officer & {
   division: DivisionValue;
@@ -139,15 +139,10 @@ export default function MyOfficers({ officers: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const { data: officers } = await handleRequest("/leo", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
-
-  const { data: values } = await handleRequest("/admin/values/department?paths=division").catch(
-    () => ({
-      data: [],
-    }),
-  );
+  const [{ officers }, values] = await requestAll(req, [
+    ["/leo", { officers: [] }],
+    ["/admin/values/department?paths=division", []],
+  ]);
 
   return {
     props: {

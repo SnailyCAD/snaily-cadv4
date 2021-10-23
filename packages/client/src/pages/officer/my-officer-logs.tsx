@@ -3,7 +3,6 @@ import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { Officer, OfficerLog } from "types/prisma";
@@ -11,6 +10,7 @@ import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
+import { requestAll } from "lib/utils";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -103,9 +103,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const { data: logs } = await handleRequest("/leo/logs", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  const [logs] = await requestAll(req, [["/leo/logs", []]]);
 
   return {
     props: {

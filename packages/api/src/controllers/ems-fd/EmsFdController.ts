@@ -44,7 +44,15 @@ export class EmsFdController {
       },
     });
 
-    return deputies;
+    const citizens = await prisma.citizen.findMany({
+      select: {
+        name: true,
+        surname: true,
+        id: true,
+      },
+    });
+
+    return { deputies, citizens };
   }
 
   @Post("/")
@@ -380,8 +388,6 @@ export class EmsFdController {
 }
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {
-  console.log({ officer });
-
   const status2 = officer.status2.value.value;
   const department = officer.department.value;
   const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;

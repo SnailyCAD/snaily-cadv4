@@ -39,7 +39,15 @@ export class LeoController {
       },
     });
 
-    return officers;
+    const citizens = await prisma.citizen.findMany({
+      select: {
+        name: true,
+        surname: true,
+        id: true,
+      },
+    });
+
+    return { officers, citizens };
   }
 
   @Post("/")

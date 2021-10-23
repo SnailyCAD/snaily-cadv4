@@ -7,7 +7,6 @@ import { useTime } from "hooks/useTime";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
@@ -15,6 +14,7 @@ import { StatusesArea } from "components/ems-fd/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { DeputyWithDept } from "./my-deputies";
+import { requestAll } from "lib/utils";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -36,6 +36,10 @@ const CreateMedicalRecordModal = dynamic(async () => {
 
 const SearchMedicalRecordModal = dynamic(async () => {
   return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
+});
+
+const ActiveDeputiesModal = dynamic(async () => {
+  return (await import("components/ems-fd/modals/ActiveDeputiesModal")).ActiveDeputiesModal;
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
@@ -87,30 +91,18 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
       <NotepadModal />
       <CreateMedicalRecordModal />
       <SearchMedicalRecordModal />
+      <ActiveDeputiesModal />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const { data: deputies } = await handleRequest("/ems-fd", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
-
-  const { data: activeDeputy } = await handleRequest("/ems-fd/active-deputy", {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
-
-  const { data: values } = await handleRequest("/admin/values/codes_10?paths=penal_code").catch(
-    () => ({
-      data: [],
-    }),
-  );
-
-  const { data: calls } = await handleRequest("/911-calls", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [values, calls, { deputies, citizens }, activeDeputy] = await requestAll(req, [
+    ["/admin/values/codes_10?paths=penal_code", []],
+    ["/911-calls", []],
+    ["/ems-fd", { deputies: [], citizens: [] }],
+    ["/ems-fd/active-deputy", null],
+  ]);
 
   return {
     props: {
@@ -119,6 +111,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       deputies,
       calls,
       values,
+      citizens,
       messages: {
         ...(await getTranslations(["leo", "ems-fd", "citizen", "calls", "common"], locale)),
       },
