@@ -50,6 +50,17 @@ export class LeoController {
       throw new BadRequest(error);
     }
 
+    const division = await prisma.divisionValue.findFirst({
+      where: {
+        id: body.get("division"),
+        departmentId: body.get("department"),
+      },
+    });
+
+    if (!division) {
+      throw new BadRequest("divisionNotInDepartment");
+    }
+
     const officer = await prisma.officer.create({
       data: {
         name: body.get("name"),
@@ -92,6 +103,17 @@ export class LeoController {
 
     if (!officer) {
       throw new NotFound("officerNotFound");
+    }
+
+    const division = await prisma.divisionValue.findFirst({
+      where: {
+        id: body.get("division"),
+        departmentId: body.get("department"),
+      },
+    });
+
+    if (!division) {
+      throw new BadRequest("divisionNotInDepartment");
     }
 
     const updated = await prisma.officer.update({

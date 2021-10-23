@@ -56,6 +56,7 @@
     "alert_deleteWeapon": "Are you sure you want to delete this weapon? This action cannot be undone."
   },
   "MedicalRecords": {
+    "citizen": "Citizen",
     "yourMedicalRecords": "Your medical records",
     "addMedicalRecord": "Add Medical Record",
     "editMedicalRecord": "Edit Medical Record",

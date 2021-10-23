@@ -12,73 +12,65 @@ import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
-import { useCitizen } from "context/CitizenContext";
 import { Textarea } from "components/form/Textarea";
+import { Select } from "components/form/Select";
 
 interface Props {
-  medicalRecord: MedicalRecord | null;
   onCreate?: (newV: MedicalRecord) => void;
-  onUpdate?: (old: MedicalRecord, newV: MedicalRecord) => void;
   onClose?: () => void;
 }
 
-export const ManageMedicalRecordsModal = ({
-  medicalRecord,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) => {
+export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const { citizen } = useCitizen(false);
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 
   function handleClose() {
-    closeModal(ModalIds.ManageMedicalRecords);
+    closeModal(ModalIds.CreateMedicalRecord);
     onClose?.();
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (medicalRecord) {
-      const { json } = await execute(`/medical-records/${medicalRecord.id}`, {
-        method: "PUT",
-        data: values,
-      });
+    const { json } = await execute("/ems-fd/medical-records", {
+      method: "POST",
+      data: values,
+    });
 
-      if (json?.id) {
-        onUpdate?.(medicalRecord, json);
-      }
-    } else {
-      const { json } = await execute("/medical-records", {
-        method: "POST",
-        data: { ...values, citizenId: citizen.id },
-      });
-
-      if (json?.id) {
-        onCreate?.(json);
-      }
+    if (json?.id) {
+      onCreate?.(json);
     }
   }
 
   const INITIAL_VALUES = {
-    type: medicalRecord?.type ?? "",
-    description: medicalRecord?.description ?? "",
-    citizenId: citizen.id,
+    type: "",
+    description: "",
+    citizenId: "",
   };
 
   return (
     <Modal
-      title={medicalRecord ? t("editMedicalRecord") : t("addMedicalRecord")}
+      title={t("addMedicalRecord")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.ManageMedicalRecords)}
+      isOpen={isOpen(ModalIds.CreateMedicalRecord)}
       className="min-w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
+            <FormField fieldId="citizenId" label={t("citizen")}>
+              <Select
+                values={[]}
+                hasError={!!errors.citizenId}
+                onChange={handleChange}
+                id="citizenId"
+                value={values.citizenId}
+              />
+              <Error>{errors.citizenId}</Error>
+            </FormField>
+
             <FormField fieldId="type" label={common("type")}>
               <Input
                 hasError={!!errors.type}
@@ -102,7 +94,7 @@ export const ManageMedicalRecordsModal = ({
             <footer className="mt-5 flex justify-end">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageMedicalRecords)}
+                onClick={() => closeModal(ModalIds.CreateMedicalRecord)}
                 variant="cancel"
               >
                 {common("cancel")}
@@ -113,7 +105,7 @@ export const ManageMedicalRecordsModal = ({
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {medicalRecord ? common("save") : common("create")}
+                {common("create")}
               </Button>
             </footer>
           </form>

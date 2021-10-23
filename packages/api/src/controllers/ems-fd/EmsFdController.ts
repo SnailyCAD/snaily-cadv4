@@ -1,6 +1,11 @@
 import { Res, Controller, UseBeforeEach, Use, Req } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
+import {
+  CREATE_OFFICER_SCHEMA,
+  MEDICAL_RECORD_SCHEMA,
+  UPDATE_OFFICER_STATUS_SCHEMA,
+  validate,
+} from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
@@ -49,6 +54,17 @@ export class EmsFdController {
       throw new BadRequest(error);
     }
 
+    const division = await prisma.divisionValue.findFirst({
+      where: {
+        id: body.get("division"),
+        departmentId: body.get("department"),
+      },
+    });
+
+    if (!division) {
+      throw new BadRequest("divisionNotInDepartment");
+    }
+
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         name: body.get("name"),
@@ -91,6 +107,17 @@ export class EmsFdController {
 
     if (!deputy) {
       throw new NotFound("deputyNotFound");
+    }
+
+    const division = await prisma.divisionValue.findFirst({
+      where: {
+        id: body.get("division"),
+        departmentId: body.get("department"),
+      },
+    });
+
+    if (!division) {
+      throw new BadRequest("divisionNotInDepartment");
     }
 
     const updated = await prisma.emsFdDeputy.update({
@@ -292,6 +319,37 @@ export class EmsFdController {
     });
 
     return deputies;
+  }
+
+  @Use(ActiveDeputy)
+  @Post("/medical-record")
+  async createMedicalRecord(@BodyParams() body: JsonRequestBody) {
+    const error = validate(MEDICAL_RECORD_SCHEMA, body.toJSON(), true);
+
+    if (error) {
+      return new BadRequest(error);
+    }
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: body.get("citizenId"),
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const medicalRecord = await prisma.medicalRecord.create({
+      data: {
+        citizenId: citizen.id,
+        userId: citizen.userId,
+        type: body.get("type"),
+        description: body.get("description"),
+      },
+    });
+
+    return medicalRecord;
   }
 }
 

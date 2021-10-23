@@ -30,6 +30,14 @@ const SelectDeputyModal = dynamic(async () => {
   return (await import("components/ems-fd/modals/SelectDeputy")).SelectDeputyModal;
 });
 
+const CreateMedicalRecordModal = dynamic(async () => {
+  return (await import("components/ems-fd/modals/CreateMedicalRecord")).CreateMedicalRecordModal;
+});
+
+const SearchMedicalRecordModal = dynamic(async () => {
+  return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
+});
+
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const timeRef = useTime();
@@ -77,6 +85,8 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
       <SelectDeputyModal />
       <NotepadModal />
+      <CreateMedicalRecordModal />
+      <SearchMedicalRecordModal />
     </Layout>
   );
 }
@@ -110,7 +120,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       values,
       messages: {
-        ...(await getTranslations(["leo", "ems-fd", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "ems-fd", "citizen", "calls", "common"], locale)),
       },
     },
   };

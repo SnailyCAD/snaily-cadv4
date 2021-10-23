@@ -40,6 +40,7 @@
     "alreadyInThisBusiness": "You are already an employee at this business.",
     "insufficientPermissions": "Insufficient Permissions",
     "maxBusinessesLength": "You have reached the maximum limit of businesses per citizen.",
-    "dateLargerThanNow": "Please provide a date smaller than the current date."
+    "dateLargerThanNow": "Please provide a date smaller than the current date.",
+    "divisionNotInDepartment": "This division does not exist in this department."
   }
 }

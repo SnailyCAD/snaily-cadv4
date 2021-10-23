@@ -13,6 +13,7 @@
     "deleteDeputy": "Delete Deputy",
     "noDeputies": "You do not have any deputies",
     "noActiveDeputies": "There are no active deputies",
+    "citizenNoMedicalRecords": "This citizen doesn't have any medical records.",
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
   }
 }
