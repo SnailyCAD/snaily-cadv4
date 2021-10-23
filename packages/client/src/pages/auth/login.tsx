@@ -24,6 +24,13 @@ export default function Login() {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
+  const error = useTranslations("Errors");
+
+  const authMessages = {
+    banned: error("userBanned"),
+  } as const;
+
+  const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
 
   const validate = handleValidate(AUTH_SCHEMA);
 
@@ -52,6 +59,12 @@ export default function Login() {
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
               <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("login")}</h1>
+
+              {errorMessage ? (
+                <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
+                  {errorMessage}
+                </p>
+              ) : null}
 
               <FormField fieldId="username" label={t("username")}>
                 <Input

@@ -8,10 +8,16 @@ import { userProperties } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
+import { Socket } from "../../../services/SocketService";
 
 @UseBeforeEach(IsAuth, IsAdmin)
 @Controller("/users")
 export class ManageUsersController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/")
   async getUsers() {
     const users = await prisma.user.findMany();
@@ -100,6 +106,10 @@ export class ManageUsersController {
       },
       select: userProperties,
     });
+
+    if (banType === "ban") {
+      this.socket.emitUserBanned(user.id);
+    }
 
     return updated;
   }

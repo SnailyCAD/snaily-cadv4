@@ -17,18 +17,18 @@ const styles: React.CSSProperties = {
 
 export default function App({ Component, router, pageProps }: AppProps) {
   return (
-    <AuthProvider initialData={pageProps}>
-      <NextIntlProvider locale={router.locale ?? "en"} messages={pageProps.messages}>
-        <ModalProvider>
-          <ValuesProvider initialData={pageProps}>
-            <CitizenProvider initialData={pageProps}>
-              <SocketProvider
-                uri="http://localhost:8080"
-                options={{
-                  reconnectionDelay: 5_000,
-                  reconnectionAttempts: 50,
-                }}
-              >
+    <SocketProvider
+      uri="http://localhost:8080"
+      options={{
+        reconnectionDelay: 5_000,
+        reconnectionAttempts: 50,
+      }}
+    >
+      <AuthProvider initialData={pageProps}>
+        <NextIntlProvider locale={router.locale ?? "en"} messages={pageProps.messages}>
+          <ModalProvider>
+            <ValuesProvider initialData={pageProps}>
+              <CitizenProvider initialData={pageProps}>
                 <Component {...pageProps} />
                 <Toaster
                   position="top-right"
@@ -36,11 +36,11 @@ export default function App({ Component, router, pageProps }: AppProps) {
                     style: styles,
                   }}
                 />
-              </SocketProvider>
-            </CitizenProvider>
-          </ValuesProvider>
-        </ModalProvider>
-      </NextIntlProvider>
-    </AuthProvider>
+              </CitizenProvider>
+            </ValuesProvider>
+          </ModalProvider>
+        </NextIntlProvider>
+      </AuthProvider>
+    </SocketProvider>
   );
 }

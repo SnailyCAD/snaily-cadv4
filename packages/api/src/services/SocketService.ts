@@ -59,4 +59,8 @@ export class Socket {
   emitUpdateDeputyStatus() {
     this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus);
   }
+
+  emitUserBanned(userId: string) {
+    this.io.sockets.emit(SocketEvents.UserBanned, userId);
+  }
 }

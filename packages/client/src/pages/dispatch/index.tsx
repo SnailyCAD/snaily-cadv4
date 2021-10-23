@@ -18,11 +18,12 @@ import {
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
-import { UpdateAreaOfPlay } from "components/dispatch/UpdateAOP";
+// import { UpdateAreaOfPlay } from "components/dispatch/UpdateAOP";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { DispatchAOP } from "components/dispatch/DispatchAOP";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -45,7 +46,7 @@ interface Props {
 }
 
 export default function OfficerDashboard(props: Props) {
-  const { showAop, areaOfPlay } = useAreaOfPlay();
+  const { showAop } = useAreaOfPlay();
   const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
@@ -77,7 +78,7 @@ export default function OfficerDashboard(props: Props) {
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
-            {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
+            {showAop ? <DispatchAOP /> : null}
           </h3>
 
           <span ref={timeRef} />
@@ -95,9 +96,7 @@ export default function OfficerDashboard(props: Props) {
         </div>
 
         {isAopEnabled ? (
-          <div className="w-full md:w-96 mt-3 md:mt-0">
-            <UpdateAreaOfPlay />
-          </div>
+          <div className="w-full md:w-96 mt-3 md:mt-0">{/* <UpdateAreaOfPlay /> */}</div>
         ) : null}
       </div>
 

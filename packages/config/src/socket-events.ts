@@ -19,4 +19,6 @@ export enum SocketEvents {
 
   UpdateOfficerStatus = "UPDATE_OFFICER_STATUS",
   UpdateEmsFdStatus = "UPDATE_EMS_FD_STATUS",
+
+  UserBanned = "USER_BANNED",
 }

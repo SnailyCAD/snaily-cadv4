@@ -41,7 +41,7 @@ export class IsDispatch implements MiddlewareMethods {
       throw new Forbidden("Invalid Permissions");
     }
 
-    if (user.isDispatch) {
+    if (!user.isDispatch) {
       throw new Forbidden("Invalid Permissions");
     }
   }

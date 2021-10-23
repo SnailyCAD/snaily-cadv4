@@ -122,6 +122,13 @@ export class CitizenController {
       throw new BadRequest("nameAlreadyTaken");
     }
 
+    const date = new Date(dateOfBirth).getTime();
+    const now = Date.now();
+
+    if (date > now) {
+      throw new BadRequest("dateLargerThanNow");
+    }
+
     const citizen = await prisma.citizen.create({
       data: {
         userId: ctx.get("user").id,

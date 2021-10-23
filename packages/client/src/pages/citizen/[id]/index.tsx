@@ -185,7 +185,7 @@ export default function CitizenId() {
         <div className="mt-10 flex items-center justify-center">
           <img
             draggable={false}
-            className="rounded-full w-[30em] h-[30em]"
+            className="rounded-md w-[30em] h-[30em]"
             src={makeImageUrl("citizens", citizen.imageId!)}
           />
         </div>
