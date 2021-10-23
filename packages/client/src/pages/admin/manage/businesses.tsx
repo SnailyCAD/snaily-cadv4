@@ -5,7 +5,6 @@ import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
@@ -16,6 +15,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
+import { requestAll } from "lib/utils";
 
 type FullBusiness = Business & { user: User; citizen: Pick<Citizen, "id" | "name" | "surname"> };
 
@@ -163,11 +163,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data } = await handleRequest("/admin/manage/businesses", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [data] = await requestAll(req, [["/admin/manage/businesses", []]]);
 
   return {
     props: {

@@ -5,7 +5,6 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { Citizen, TowCall } from "types/prisma";
-import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useListener } from "@casper124578/use-socket.io";
@@ -14,6 +13,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { AssignToCallModal } from "components/citizen/tow/AssignToTowCall";
 import { ManageTowCallModal } from "components/citizen/tow/ManageTowCall";
+import { requestAll } from "lib/utils";
 
 export type FullTowCall = TowCall & { assignedUnit: Citizen | null; creator: Citizen };
 
@@ -145,13 +145,10 @@ export default function Tow(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data: citizens } = await handleRequest<any[]>("/citizen", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
-
-  const { data } = await handleRequest("/tow", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  const [data, citizens] = await requestAll(req, [
+    ["/tow", []],
+    ["/citizen", []],
+  ]);
 
   return {
     props: {

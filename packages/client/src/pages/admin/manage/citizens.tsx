@@ -5,7 +5,6 @@ import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
@@ -16,6 +15,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
+import { requestAll } from "lib/utils";
 
 interface Props {
   citizens: (Citizen & { user: User })[];
@@ -191,15 +191,11 @@ export default function ManageCitizens({ citizens: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data } = await handleRequest("/admin/manage/citizens", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [citizens] = await requestAll(req, [["/admin/manage/citizens", []]]);
 
   return {
     props: {
-      citizens: data,
+      citizens,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),

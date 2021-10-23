@@ -3,11 +3,11 @@ import { useTranslations } from "use-intl";
 import Link from "next/link";
 import Head from "next/head";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
+import { requestAll } from "lib/utils";
 
 interface Props {
   users: User[];
@@ -56,15 +56,11 @@ export default function ManageCitizens({ users: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data } = await handleRequest("/admin/manage/users", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [users] = await requestAll(req, [["/admin/manage/users", []]]);
 
   return {
     props: {
-      users: data,
+      users,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),

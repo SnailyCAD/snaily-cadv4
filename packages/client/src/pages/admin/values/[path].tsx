@@ -6,7 +6,6 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
@@ -22,6 +21,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
+import { requestAll } from "lib/utils";
 
 type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
 
@@ -184,9 +184,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_");
 
-  const { data: values = [] } = await handleRequest(`/admin/values/${path}?paths=department`, {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  const [values] = await requestAll(req, [[`/admin/values/${path}?paths=department`, []]]);
 
   return {
     props: {

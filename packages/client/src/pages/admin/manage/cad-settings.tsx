@@ -6,7 +6,6 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik } from "formik";
@@ -22,6 +21,7 @@ import { DisabledFeaturesArea } from "components/admin/manage/DisabledFeatures";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
 import { MiscFeatures } from "components/admin/manage/MiscFeatures";
+import { requestAll } from "lib/utils";
 
 const SETTINGS_TABS = ["GENERAL_SETTINGS", "FEATURES", "MISC_SETTINGS"];
 
@@ -162,11 +162,7 @@ export default function CadSettings() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data } = await handleRequest("/admin/manage/cad-settings", {
-    headers: req.headers,
-  }).catch(() => ({
-    data: [],
-  }));
+  const [data] = await requestAll(req, [["/admin/manage/cad-settings", []]]);
 
   return {
     props: {

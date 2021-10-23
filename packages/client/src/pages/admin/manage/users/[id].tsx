@@ -6,7 +6,6 @@ import Head from "next/head";
 import { Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
@@ -23,6 +22,7 @@ import { FormRow } from "components/form/FormRow";
 import { BanArea } from "components/admin/manage/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
+import { requestAll } from "lib/utils";
 
 interface Props {
   user: User | null;
@@ -173,13 +173,11 @@ export default function ManageCitizens(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
-  const { data } = await handleRequest(`/admin/manage/users/${query.id}`, {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
+  const [user] = await requestAll(req, [[`/admin/manage/users/${query.id}`, null]]);
 
   return {
     props: {
-      user: data,
+      user,
       session: await getSessionUser(req.headers),
       messages: {
         ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
