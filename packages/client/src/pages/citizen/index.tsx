@@ -17,6 +17,7 @@ import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
 import { ManageCallModal } from "components/citizen/tow/ManageTowCall";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   citizens: Citizen[];
@@ -26,6 +27,7 @@ export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
+  const { TOW, TAXI } = useFeatureEnabled();
 
   return (
     <Layout>
@@ -50,24 +52,28 @@ export default function CitizenPage({ citizens }: Props) {
       </ul>
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
-        <Button
-          onClick={() => {
-            setModal("tow");
-            openModal(ModalIds.ManageTowCall);
-          }}
-          className="text-left"
-        >
-          {t("createTowCall")}
-        </Button>
-        <Button
-          onClick={() => {
-            setModal("taxi");
-            openModal(ModalIds.ManageTowCall);
-          }}
-          className="text-left"
-        >
-          {t("createTaxiCall")}
-        </Button>
+        {TOW ? (
+          <Button
+            onClick={() => {
+              setModal("tow");
+              openModal(ModalIds.ManageTowCall);
+            }}
+            className="text-left"
+          >
+            {t("createTowCall")}
+          </Button>
+        ) : null}
+        {TAXI ? (
+          <Button
+            onClick={() => {
+              setModal("taxi");
+              openModal(ModalIds.ManageTowCall);
+            }}
+            className="text-left"
+          >
+            {t("createTaxiCall")}
+          </Button>
+        ) : null}
         <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
           {t("create911Call")}
         </Button>

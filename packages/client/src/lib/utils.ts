@@ -61,7 +61,7 @@ export async function requestAll(req: any, config: Config) {
         req,
       })
         .then((v) => v.data)
-        .catch(() => ({ data: defaultValue }));
+        .catch(() => defaultValue);
     }),
   );
 }

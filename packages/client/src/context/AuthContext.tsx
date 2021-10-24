@@ -2,7 +2,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
-import { cad as CAD, User } from "types/prisma";
+import { cad as CAD, rank, User } from "types/prisma";
 import { Loader } from "components/Loader";
 import { useIsFeatureEnabled } from "lib/utils";
 import { useListener } from "@casper124578/use-socket.io";
@@ -23,9 +23,19 @@ interface ProviderProps {
   initialData: { session?: User | null };
 }
 
+const PERMISSIONS: Record<string, (user: User) => boolean> = {
+  "/dispatch": (user) => user.isDispatch,
+  "/leo": (user) => user.isLeo,
+  "/ems-fd": (user) => user.isEmsFd,
+  "/admin/manage/cad-settings": (user) => user.rank === "OWNER",
+  "/admin": (user) => user.rank !== rank.USER,
+  "/tow": (user) => user.isTow,
+};
+
 export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(null);
+  const [isForbidden, setForbidden] = React.useState(false);
   const router = useRouter();
 
   const isEnabled = useIsFeatureEnabled(cad ?? {});
@@ -45,6 +55,17 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   React.useEffect(() => {
     _setBodyTheme(user?.isDarkTheme ?? true);
   }, [user?.isDarkTheme]);
+
+  React.useEffect(() => {
+    if (user) {
+      const p = hasPermissionForCurrentRoute(router.pathname, user);
+
+      if (!p) {
+        setForbidden(true);
+        router.push("/403");
+      }
+    }
+  }, [user, router]);
 
   React.useEffect(() => {
     handleGetUser();
@@ -72,7 +93,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   const value = { user, cad, setCad, setUser };
 
-  if (!router.pathname.includes("auth") && !user) {
+  if ((!router.pathname.includes("auth") && !user) || isForbidden) {
     return (
       <div id="unauthorized" className="fixed inset-0 grid place-items-center bg-transparent">
         <span aria-label="loading...">
@@ -108,4 +129,15 @@ function _setBodyTheme(isDarkTheme: boolean) {
 
   true;
   // window.document.body.classList.add("dark");
+}
+
+function hasPermissionForCurrentRoute(path: string, user: User) {
+  const key = Object.keys(PERMISSIONS).find((v) => path.startsWith(v));
+  if (!key) return true;
+
+  const pathPermission = PERMISSIONS[key];
+
+  if (typeof pathPermission !== "function") return true;
+
+  return pathPermission(user);
 }
