@@ -14,6 +14,7 @@ import { handleValidate } from "lib/handleValidate";
 import { useTranslations } from "use-intl";
 import { GetStaticProps } from "next";
 import { getTranslations } from "lib/getTranslation";
+import { Button } from "components/Button";
 
 const INITIAL_VALUES = {
   username: "",
@@ -57,8 +58,13 @@ export default function Login() {
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
-            <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
-              <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("login")}</h1>
+            <form
+              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-dark-gray shadow-md"
+              onSubmit={handleSubmit}
+            >
+              <h1 className="text-2xl text-gray-800 dark:text-white font-semibold mb-3">
+                {t("login")}
+              </h1>
 
               {errorMessage ? (
                 <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
@@ -89,16 +95,16 @@ export default function Login() {
 
               <div className="mt-3">
                 <Link href="/auth/register">
-                  <a className="underline inline-block mb-3">{t("noAccount")}</a>
+                  <a className="underline inline-block mb-3 dark:text-gray-200">{t("noAccount")}</a>
                 </Link>
 
-                <button
+                <Button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full p-1.5 px-4 rounded-md text-white bg-gray-800 hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-3"
+                  className="w-full flex items-center justify-center gap-3 dark:bg-dark-bg"
                 >
                   {state === "loading" ? <Loader /> : null} {t("login")}
-                </button>
+                </Button>
               </div>
             </form>
           )}

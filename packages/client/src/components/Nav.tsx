@@ -16,12 +16,15 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white dark:bg-dark-bg shadow-sm">
       <div className={`${maxWidth} mx-auto px-4`}>
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
             <h1 className="text-2xl">
-              <a href="/citizen" className="flex items-center py-3 font-bold text-gray-800">
+              <a
+                href="/citizen"
+                className="flex items-center py-3 font-bold text-gray-800 dark:text-white"
+              >
                 {cad?.name || "SnailyCAD"}
               </a>
             </h1>
@@ -37,7 +40,7 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
                 <Link href="/dispatch">
                   <a
                     className={classNames(
-                      "py-3 px-2 text-gray-700 transition duration-300",
+                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
                       isActive("/dispatch") && "font-semibold",
                     )}
                   >
@@ -50,7 +53,7 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
                 <Link href="/admin/manage/users">
                   <a
                     className={classNames(
-                      "py-3 px-2 text-gray-700 transition duration-300",
+                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
                       isActive("/admin") && "font-semibold",
                     )}
                   >
@@ -98,7 +101,7 @@ const NavDropdown = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white dark:bg-gray-4 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
             {user ? (
               <>
                 <div className="px-1 py-1 ">
@@ -107,8 +110,8 @@ const NavDropdown = () => {
                       <Link href="/account">
                         <a
                           className={`${
-                            active ? "bg-gray-200" : "text-gray-900"
-                          } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                            active ? "bg-gray-200" : "text-gray-900 dark:text-white"
+                          } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
                         >
                           Account
                         </a>
@@ -139,8 +142,8 @@ const NavDropdown = () => {
                     <Link href="/auth/login">
                       <a
                         className={`${
-                          active ? "bg-gray-200" : "text-gray-900"
-                        } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                          active ? "bg-gray-200" : "text-gray-900 dark:text-white"
+                        } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
                       >
                         Login
                       </a>
@@ -152,8 +155,8 @@ const NavDropdown = () => {
                     <Link href="/auth/register">
                       <a
                         className={`${
-                          active ? "bg-gray-200" : "text-gray-900"
-                        } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                          active ? "bg-gray-200" : "text-gray-900 dark:text-white"
+                        } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
                       >
                         Register
                       </a>

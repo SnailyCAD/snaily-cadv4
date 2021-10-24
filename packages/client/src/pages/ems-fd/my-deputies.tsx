@@ -82,19 +82,19 @@ export default function MyDeputies({ deputies: data }: Props) {
               </tr>
             </thead>
             <tbody>
-              {deputies.map((officer) => (
-                <tr key={officer.id}>
-                  <td>{officer.name}</td>
-                  <td>{officer.callsign}</td>
-                  <td>{String(officer.badgeNumber)}</td>
-                  <td>{officer.department.value}</td>
-                  <td>{officer.division?.value?.value}</td>
+              {deputies.map((deputy) => (
+                <tr key={deputy.id}>
+                  <td>{deputy.name}</td>
+                  <td>{deputy.callsign}</td>
+                  <td>{String(deputy.badgeNumber)}</td>
+                  <td>{deputy.department.value}</td>
+                  <td>{deputy.division?.value?.value}</td>
                   <td className="w-36">
-                    <Button small onClick={() => handleEditClick(officer)} variant="success">
+                    <Button small onClick={() => handleEditClick(deputy)} variant="success">
                       {common("edit")}
                     </Button>
                     <Button
-                      onClick={() => handleDeleteClick(officer)}
+                      onClick={() => handleDeleteClick(deputy)}
                       className="ml-2"
                       variant="danger"
                       small

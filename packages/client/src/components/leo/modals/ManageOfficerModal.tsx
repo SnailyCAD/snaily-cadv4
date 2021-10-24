@@ -6,6 +6,7 @@ import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
+import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
@@ -26,6 +27,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const { citizens } = useCitizen();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -67,6 +69,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
     callsign: officer?.callsign ?? "",
     division: officer?.divisionId ?? "",
     badgeNumber: officer?.badgeNumber ?? "",
+    citizenId: officer?.citizenId ?? "",
   };
 
   return (
@@ -147,6 +150,21 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
                   }))}
               />
               <Error>{errors.division}</Error>
+            </FormField>
+
+            <FormField label={t("citizen")}>
+              <Select
+                isClearable
+                value={values.citizenId}
+                hasError={!!errors.citizenId}
+                name="citizenId"
+                onChange={handleChange}
+                values={citizens.map((value) => ({
+                  label: `${value.name} ${value.surname}`,
+                  value: value.id,
+                }))}
+              />
+              <Error>{errors.citizenId}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

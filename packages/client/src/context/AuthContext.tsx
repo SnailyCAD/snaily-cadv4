@@ -74,7 +74,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   if (!router.pathname.includes("auth") && !user) {
     return (
-      <div id="unauthorized" className="fixed inset-0 grid place-items-center">
+      <div id="unauthorized" className="fixed inset-0 grid place-items-center bg-transparent">
         <span aria-label="loading...">
           <Loader className="w-14 h-14 border-[3px]" />
         </span>

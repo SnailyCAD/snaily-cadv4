@@ -78,6 +78,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 <th>{t("badgeNumber")}</th>
                 <th>{t("department")}</th>
                 <th>{t("division")}</th>
+                <th>{t("citizen")}</th>
                 <th>{common("actions")}</th>
               </tr>
             </thead>
@@ -89,6 +90,15 @@ export default function MyOfficers({ officers: data }: Props) {
                   <td>{String(officer.badgeNumber)}</td>
                   <td>{officer.department.value}</td>
                   <td>{officer.division?.value?.value}</td>
+                  <td>
+                    {officer.citizen ? (
+                      <>
+                        {officer.citizen.name} {officer.citizen.surname}
+                      </>
+                    ) : (
+                      common("none")
+                    )}
+                  </td>
                   <td className="w-36">
                     <Button small onClick={() => handleEditClick(officer)} variant="success">
                       {common("edit")}
@@ -139,7 +149,8 @@ export default function MyOfficers({ officers: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ officers }, values] = await requestAll(req, [
+  const [citizens, { officers }, values] = await requestAll(req, [
+    ["/citizen", []],
     ["/leo", { officers: [] }],
     ["/admin/values/department?paths=division", []],
   ]);
@@ -148,6 +159,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       session: await getSessionUser(req.headers),
       officers,
+      citizens,
       values,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
