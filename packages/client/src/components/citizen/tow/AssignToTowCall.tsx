@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { TowCall } from "types/prisma";
 import { useCitizen } from "context/CitizenContext";
 import { FullTowCall } from "src/pages/tow";
+import { useRouter } from "next/router";
 
 interface Props {
   call: FullTowCall | null;
@@ -24,6 +25,9 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { citizens } = useCitizen();
+  const router = useRouter();
+
+  const isTow = router.pathname === "/tow";
 
   const INITIAL_VALUES = {
     assignedUnitId: call?.assignedUnitId ?? "",
@@ -40,7 +44,8 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       return;
     }
 
-    const { json } = await execute(`/tow/${call.id}`, {
+    const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
+    const { json } = await execute(path, {
       method: "PUT",
       data: { ...call, ...values },
     });
@@ -53,7 +58,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
 
   return (
     <Modal
-      title="Select Tow Unit"
+      title={t("selectUnit")}
       isOpen={isOpen(ModalIds.AssignToTowCall)}
       onClose={() => closeModal(ModalIds.AssignToTowCall)}
       className="min-w-[500px]"

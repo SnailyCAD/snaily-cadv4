@@ -14,11 +14,13 @@
     "createTaxiCall": "Create taxi call",
     "create911Call": "Create 911 call",
     "editTowCall": "Edit tow call",
+    "editTaxiCall": "Edit taxi call",
     "assignedUnits": "Assigned Units",
     "selectCitizen": "Select citizen",
     "endCall": "End Call",
     "end911Call": "End 911 Call",
     "addEvent": "Add Event",
+    "selectUnit": "Select Unit",
     "noEvents": "This call does not have any events",
     "alert_end911Call": "Are you sure you want to end this call?",
     "alert_endTowCall": "Are you sure you want to end this call?"

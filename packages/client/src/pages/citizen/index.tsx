@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { GetServerSideProps } from "next";
 import type { Citizen } from "types/prisma";
 import Link from "next/link";
@@ -14,7 +15,7 @@ import { RegisterVehicleModal } from "components/citizen/modals/RegisterVehicleM
 import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponModal";
 import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
-import { ManageTowCallModal } from "components/citizen/tow/ManageTowCall";
+import { ManageCallModal } from "components/citizen/tow/ManageTowCall";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
   const { openModal, closeModal } = useModal();
+  const [modal, setModal] = React.useState<string | null>(null);
 
   return (
     <Layout>
@@ -48,10 +50,22 @@ export default function CitizenPage({ citizens }: Props) {
       </ul>
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
-        <Button onClick={() => openModal(ModalIds.ManageTowCall)} className="text-left">
+        <Button
+          onClick={() => {
+            setModal("tow");
+            openModal(ModalIds.ManageTowCall);
+          }}
+          className="text-left"
+        >
           {t("createTowCall")}
         </Button>
-        <Button disabled onClick={() => openModal(ModalIds.ManageTaxiCall)} className="text-left">
+        <Button
+          onClick={() => {
+            setModal("taxi");
+            openModal(ModalIds.ManageTowCall);
+          }}
+          className="text-left"
+        >
           {t("createTaxiCall")}
         </Button>
         <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
@@ -112,7 +126,7 @@ export default function CitizenPage({ citizens }: Props) {
         weapon={null}
       />
       <Manage911CallModal call={null} />
-      <ManageTowCallModal call={null} />
+      <ManageCallModal isTow={modal === "tow"} call={null} />
     </Layout>
   );
 }

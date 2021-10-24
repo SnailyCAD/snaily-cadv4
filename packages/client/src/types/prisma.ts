@@ -171,6 +171,20 @@ export type TowCall = {
 };
 
 /**
+ * Model TaxiCall
+ */
+
+export type TaxiCall = {
+  id: string;
+  createdAt: Date;
+  userId: string;
+  assignedUnitId: string | null;
+  location: string;
+  description: string;
+  creatorId: string;
+};
+
+/**
  * Model Business
  */
 

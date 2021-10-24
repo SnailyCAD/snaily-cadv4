@@ -14,6 +14,7 @@ import { useModal } from "context/ModalContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { ModalIds } from "types/ModalIds";
 import { TowCall } from "types/prisma";
@@ -21,21 +22,34 @@ import { useTranslations } from "use-intl";
 
 interface Props {
   call: TowCall | null;
+  isTow?: boolean;
   onUpdate?: (old: TowCall, newC: TowCall) => void;
   onDelete?: (call: TowCall) => void;
 }
 
-export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
+export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props) => {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
+  const router = useRouter();
+
+  const isTowPath = router.pathname === "/tow";
+  const isTow = typeof tow === "undefined" ? isTowPath : tow;
+  const title = isTow
+    ? call
+      ? t("editTowCall")
+      : t("createTowCall")
+    : call
+    ? t("editTaxiCall")
+    : t("createTaxiCall");
 
   async function handleEndCall() {
     if (!call) return;
 
-    const { json } = await execute(`/tow/${call.id}`, {
+    const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
+    const { json } = await execute(path, {
       method: "DELETE",
     });
 
@@ -47,7 +61,8 @@ export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (call) {
-      const { json } = await execute(`/tow/${call.id}`, {
+      const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
+      const { json } = await execute(path, {
         method: "PUT",
         data: { ...call, ...values, assignedUnitId: (call as any).assignedUnit?.id ?? "" },
       });
@@ -56,7 +71,7 @@ export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
         onUpdate?.(call, json);
       }
     } else {
-      const { json } = await execute("/tow", {
+      const { json } = await execute(isTow ? "/tow" : "/taxi", {
         method: "POST",
         data: values,
       });
@@ -81,7 +96,7 @@ export const ManageTowCallModal = ({ onDelete, onUpdate, call }: Props) => {
   return (
     <Modal
       onClose={() => closeModal(ModalIds.ManageTowCall)}
-      title={call ? t("editTowCall") : t("createTowCall")}
+      title={title}
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="min-w-[700px]"
     >

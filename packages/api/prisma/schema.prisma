@@ -78,6 +78,7 @@ model User {
   Call911              Call911[]
   OfficerLog           OfficerLog[]
   emsFdDeputies        EmsFdDeputy[]
+  TaxiCall             TaxiCall[]
 }
 
 model Citizen {
@@ -119,6 +120,8 @@ model Citizen {
   warrants         Warrant[]
   Record           Record[]
   emsFdDeputies    EmsFdDeputy[]
+  TaxiCall         TaxiCall[]
+  createdTaxiCalls TaxiCall[]          @relation("taxiCallCreator")
 }
 
 enum Rank {
@@ -274,6 +277,20 @@ model TowCall {
   location       String   @db.VarChar(255)
   description    String   @db.Text
   creator        Citizen? @relation("towCallCreator", fields: [creatorId], references: [id])
+  creatorId      String?
+}
+
+// taxi
+model TaxiCall {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         String
+  assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
+  assignedUnitId String?
+  location       String   @db.VarChar(255)
+  description    String   @db.Text
+  creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id])
   creatorId      String?
 }
 
