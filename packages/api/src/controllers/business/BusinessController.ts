@@ -44,6 +44,8 @@ export class BusinessController {
 
     const joinableBusinesses = await prisma.business.findMany({});
 
+    console.log("hereqldljqhsdlkjqhslkjdhqlskhdjlhk");
+
     return { businesses, joinableBusinesses };
   }
 

@@ -1,24 +1,34 @@
 import * as React from "react";
 import type { GetServerSideProps } from "next";
-import type { Citizen } from "types/prisma";
 import Link from "next/link";
+import Head from "next/head";
+import { PersonFill } from "react-bootstrap-icons";
+import dynamic from "next/dynamic";
+import { useTranslations } from "use-intl";
+import type { Citizen } from "types/prisma";
 import { Layout } from "components/Layout";
 import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
-import Head from "next/head";
 import { getTranslations } from "lib/getTranslation";
-import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { RegisterVehicleModal } from "components/citizen/modals/RegisterVehicleModal";
-import { RegisterWeaponModal } from "components/citizen/modals/RegisterWeaponModal";
-import { PersonFill } from "react-bootstrap-icons";
 import { makeImageUrl } from "lib/utils";
-import { ManageCallModal } from "components/citizen/tow/ManageTowCall";
-import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+
+const RegisterVehicleModal = dynamic(
+  async () => (await import("components/citizen/modals/RegisterVehicleModal")).RegisterVehicleModal,
+);
+const RegisterWeaponModal = dynamic(
+  async () => (await import("components/citizen/modals/RegisterWeaponModal")).RegisterWeaponModal,
+);
+const ManageCallModal = dynamic(
+  async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
+);
+const Manage911CallModal = dynamic(
+  async () => (await import("components/modals/Manage911CallModal")).Manage911CallModal,
+);
 
 interface Props {
   citizens: Citizen[];

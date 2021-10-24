@@ -5,10 +5,13 @@ CREATE TYPE "Rank" AS ENUM ('OWNER', 'ADMIN', 'MODERATOR', 'USER');
 CREATE TYPE "WhitelistStatus" AS ENUM ('ACCEPTED', 'PENDING', 'DECLINED');
 
 -- CreateEnum
-CREATE TYPE "ValueType" AS ENUM ('LICENSE', 'GENDER', 'ETHNICITY', 'VEHICLE', 'WEAPON', 'BLOOD_GROUP', 'BUSINESS_ROLE', 'CODES_10', 'PENAL_CODE', 'DEPARTMENT', 'OFFICER_RANK');
+CREATE TYPE "ValueType" AS ENUM ('LICENSE', 'GENDER', 'ETHNICITY', 'VEHICLE', 'WEAPON', 'BLOOD_GROUP', 'BUSINESS_ROLE', 'CODES_10', 'PENAL_CODE', 'DEPARTMENT', 'OFFICER_RANK', 'DIVISION');
 
 -- CreateEnum
 CREATE TYPE "EmployeeAsEnum" AS ENUM ('OWNER', 'MANAGER', 'EMPLOYEE');
+
+-- CreateEnum
+CREATE TYPE "StatusEnum" AS ENUM ('ON_DUTY', 'OFF_DUTY');
 
 -- CreateEnum
 CREATE TYPE "WhatPages" AS ENUM ('DISPATCH', 'EMS_FD', 'LEO');
@@ -20,6 +23,12 @@ CREATE TYPE "ShouldDoType" AS ENUM ('SET_OFF_DUTY', 'SET_STATUS');
 CREATE TYPE "BoloType" AS ENUM ('VEHICLE', 'PERSON', 'OTHER');
 
 -- CreateEnum
+CREATE TYPE "RecordType" AS ENUM ('ARREST_REPORT', 'TICKET', 'WRITTEN_WARNING');
+
+-- CreateEnum
+CREATE TYPE "WarrantStatus" AS ENUM ('ACTIVE', 'INACTIVE');
+
+-- CreateEnum
 CREATE TYPE "Feature" AS ENUM ('BLEETER', 'TOW', 'TAXI', 'COURTHOUSE', 'TRUCK_LOGS', 'AOP', 'BUSINESS');
 
 -- CreateTable
@@ -29,6 +38,7 @@ CREATE TABLE "cad" (
     "ownerId" TEXT NOT NULL,
     "areaOfPlay" VARCHAR(255),
     "steamApiKey" VARCHAR(255),
+    "discordWebhookURL" VARCHAR(255),
     "whitelisted" BOOLEAN NOT NULL DEFAULT false,
     "towWhitelisted" BOOLEAN NOT NULL DEFAULT false,
     "maxPlateLength" INTEGER NOT NULL DEFAULT 8,
@@ -71,6 +81,7 @@ CREATE TABLE "User" (
     "avatarUrl" TEXT,
     "steamId" VARCHAR(255),
     "whitelistStatus" "WhitelistStatus" NOT NULL DEFAULT E'ACCEPTED',
+    "isDarkTheme" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -153,6 +164,27 @@ CREATE TABLE "Value" (
 );
 
 -- CreateTable
+CREATE TABLE "PenalCode" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "title" VARCHAR(255) NOT NULL,
+    "description" TEXT NOT NULL,
+    "recordId" TEXT,
+
+    CONSTRAINT "PenalCode_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "DivisionValue" (
+    "id" TEXT NOT NULL,
+    "valueId" TEXT NOT NULL,
+    "departmentId" TEXT,
+
+    CONSTRAINT "DivisionValue_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Notification" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -183,9 +215,22 @@ CREATE TABLE "TowCall" (
     "assignedUnitId" TEXT,
     "location" VARCHAR(255) NOT NULL,
     "description" TEXT NOT NULL,
-    "creatorId" TEXT NOT NULL,
+    "creatorId" TEXT,
 
     CONSTRAINT "TowCall_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TaxiCall" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+    "assignedUnitId" TEXT,
+    "location" VARCHAR(255) NOT NULL,
+    "description" TEXT NOT NULL,
+    "creatorId" TEXT,
+
+    CONSTRAINT "TaxiCall_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -243,10 +288,12 @@ CREATE TABLE "Officer" (
     "name" VARCHAR(255) NOT NULL,
     "departmentId" TEXT NOT NULL,
     "callsign" VARCHAR(255) NOT NULL,
-    "rankId" TEXT NOT NULL,
-    "statusId" TEXT,
+    "divisionId" TEXT NOT NULL,
+    "rankId" TEXT,
+    "status" "StatusEnum" NOT NULL DEFAULT E'OFF_DUTY',
     "status2Id" TEXT,
     "suspended" BOOLEAN NOT NULL DEFAULT false,
+    "badgeNumber" INTEGER,
     "citizenId" TEXT,
     "userId" TEXT NOT NULL,
     "call911Id" TEXT,
@@ -266,17 +313,37 @@ CREATE TABLE "StatusValue" (
 );
 
 -- CreateTable
+CREATE TABLE "OfficerLog" (
+    "id" TEXT NOT NULL,
+    "startedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "endedAt" TIMESTAMP(3),
+    "userId" TEXT NOT NULL,
+    "officerId" TEXT NOT NULL,
+
+    CONSTRAINT "OfficerLog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Call911" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
-    "assignedUnitsId" TEXT NOT NULL,
     "location" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "name" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "Call911_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Call911Event" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "call911Id" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+
+    CONSTRAINT "Call911Event_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -289,9 +356,64 @@ CREATE TABLE "Bolo" (
     "plate" VARCHAR(255),
     "name" VARCHAR(255),
     "color" VARCHAR(255),
-    "officerId" TEXT NOT NULL,
+    "officerId" TEXT,
 
     CONSTRAINT "Bolo_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Record" (
+    "id" TEXT NOT NULL,
+    "type" "RecordType" NOT NULL,
+    "citizenId" TEXT NOT NULL,
+    "officerId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "postal" VARCHAR(255) NOT NULL,
+    "notes" TEXT,
+
+    CONSTRAINT "Record_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Warrant" (
+    "id" TEXT NOT NULL,
+    "citizenId" TEXT NOT NULL,
+    "officerId" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "status" "WarrantStatus" NOT NULL DEFAULT E'ACTIVE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Warrant_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "EmsFdDeputy" (
+    "id" TEXT NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "departmentId" TEXT NOT NULL,
+    "callsign" VARCHAR(255) NOT NULL,
+    "divisionId" TEXT NOT NULL,
+    "rankId" TEXT,
+    "status" "StatusEnum" NOT NULL DEFAULT E'OFF_DUTY',
+    "status2Id" TEXT,
+    "suspended" BOOLEAN NOT NULL DEFAULT false,
+    "badgeNumber" INTEGER,
+    "citizenId" TEXT,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "EmsFdDeputy_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TruckLog" (
+    "id" TEXT NOT NULL,
+    "citizenId" TEXT,
+    "userId" TEXT NOT NULL,
+    "vehicleId" TEXT,
+    "startedAt" VARCHAR(255) NOT NULL,
+    "endedAt" VARCHAR(255) NOT NULL,
+
+    CONSTRAINT "TruckLog_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -364,6 +486,15 @@ ALTER TABLE "MedicalRecord" ADD CONSTRAINT "MedicalRecord_userId_fkey" FOREIGN K
 ALTER TABLE "MedicalRecord" ADD CONSTRAINT "MedicalRecord_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "PenalCode" ADD CONSTRAINT "PenalCode_recordId_fkey" FOREIGN KEY ("recordId") REFERENCES "Record"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DivisionValue" ADD CONSTRAINT "DivisionValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DivisionValue" ADD CONSTRAINT "DivisionValue_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -379,7 +510,16 @@ ALTER TABLE "TowCall" ADD CONSTRAINT "TowCall_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "TowCall" ADD CONSTRAINT "TowCall_assignedUnitId_fkey" FOREIGN KEY ("assignedUnitId") REFERENCES "Citizen"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "TowCall" ADD CONSTRAINT "TowCall_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Citizen"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TowCall" ADD CONSTRAINT "TowCall_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Citizen"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TaxiCall" ADD CONSTRAINT "TaxiCall_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TaxiCall" ADD CONSTRAINT "TaxiCall_assignedUnitId_fkey" FOREIGN KEY ("assignedUnitId") REFERENCES "Citizen"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TaxiCall" ADD CONSTRAINT "TaxiCall_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "Citizen"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Business" ADD CONSTRAINT "Business_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -415,10 +555,10 @@ ALTER TABLE "EmployeeValue" ADD CONSTRAINT "EmployeeValue_valueId_fkey" FOREIGN 
 ALTER TABLE "Officer" ADD CONSTRAINT "Officer_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Officer" ADD CONSTRAINT "Officer_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Officer" ADD CONSTRAINT "Officer_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "DivisionValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Officer" ADD CONSTRAINT "Officer_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES "StatusValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Officer" ADD CONSTRAINT "Officer_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "Value"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Officer" ADD CONSTRAINT "Officer_status2Id_fkey" FOREIGN KEY ("status2Id") REFERENCES "StatusValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -433,10 +573,58 @@ ALTER TABLE "Officer" ADD CONSTRAINT "Officer_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Officer" ADD CONSTRAINT "Officer_call911Id_fkey" FOREIGN KEY ("call911Id") REFERENCES "Call911"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "StatusValue" ADD CONSTRAINT "StatusValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "StatusValue" ADD CONSTRAINT "StatusValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OfficerLog" ADD CONSTRAINT "OfficerLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OfficerLog" ADD CONSTRAINT "OfficerLog_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Call911" ADD CONSTRAINT "Call911_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Bolo" ADD CONSTRAINT "Bolo_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Call911Event" ADD CONSTRAINT "Call911Event_call911Id_fkey" FOREIGN KEY ("call911Id") REFERENCES "Call911"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Bolo" ADD CONSTRAINT "Bolo_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Record" ADD CONSTRAINT "Record_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Record" ADD CONSTRAINT "Record_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Warrant" ADD CONSTRAINT "Warrant_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Warrant" ADD CONSTRAINT "Warrant_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "DivisionValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "Value"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_status2Id_fkey" FOREIGN KEY ("status2Id") REFERENCES "StatusValue"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TruckLog" ADD CONSTRAINT "TruckLog_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TruckLog" ADD CONSTRAINT "TruckLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TruckLog" ADD CONSTRAINT "TruckLog_vehicleId_fkey" FOREIGN KEY ("vehicleId") REFERENCES "RegisteredVehicle"("id") ON DELETE SET NULL ON UPDATE CASCADE;

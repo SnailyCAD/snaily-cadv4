@@ -1,6 +1,5 @@
 import * as React from "react";
 import { GetServerSideProps } from "next";
-import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { FullEmployee, useBusinessState } from "state/businessState";
@@ -9,16 +8,24 @@ import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
-import { CreateBusinessModal } from "components/business/CreateBusinessModal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { JoinBusinessModal } from "components/business/JoinBusinessModal";
 import { BusinessCard } from "components/business/BusinessCard";
+import dynamic from "next/dynamic";
+import { requestAll } from "lib/utils";
 
 interface Props {
   businesses: (FullEmployee & { business: Business })[];
   joinableBusinesses: Business[];
 }
+
+const CreateBusinessModal = dynamic(
+  async () => (await import("components/business/CreateBusinessModal")).CreateBusinessModal,
+);
+
+const JoinBusinessModal = dynamic(
+  async () => (await import("components/business/JoinBusinessModal")).JoinBusinessModal,
+);
 
 export default function BusinessPage(props: Props) {
   const { openModal } = useModal();
@@ -82,18 +89,14 @@ export default function BusinessPage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data: data } = await handleRequest("/businesses", {
-    headers: req.headers,
-  }).catch(() => ({ data: {} }));
-
-  const { data: citizens } = await handleRequest("/citizen", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
-
+  const [data, citizens] = await requestAll(req, [
+    ["/businesses", { businesses: [], joinableBusinesses: [] }],
+    ["/citizen", []],
+  ]);
   return {
     props: {
-      businesses: data?.businesses ?? [],
-      joinableBusinesses: data?.joinableBusinesses ?? [],
+      businesses: data.businesses,
+      joinableBusinesses: data.joinableBusinesses,
       citizens,
       session: await getSessionUser(req.headers),
       messages: {

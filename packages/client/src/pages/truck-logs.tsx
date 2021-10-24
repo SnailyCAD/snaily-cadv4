@@ -1,8 +1,8 @@
 import * as React from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
-import { ManageTruckLogModal } from "components/truck-logs/ManageTruckLog";
 import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -11,8 +11,12 @@ import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
 import { useTranslations } from "use-intl";
-import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const ManageTruckLogModal = dynamic(
+  async () => (await import("components/truck-logs/ManageTruckLog")).ManageTruckLogModal,
+);
 
 export type FullTruckLog = TruckLog & {
   citizen: Citizen;

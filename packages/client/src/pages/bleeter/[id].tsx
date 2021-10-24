@@ -10,13 +10,18 @@ import { BleeterPost } from "types/prisma";
 import Head from "next/head";
 import { useTranslations } from "use-intl";
 import Markdown from "react-markdown";
-import { ManageBleetModal } from "components/bleeter/ManageBleetModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { makeImageUrl } from "lib/utils";
+import dynamic from "next/dynamic";
+
+const ManageBleetModal = dynamic(
+  async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+);
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 
 interface Props {
   post: BleeterPost | null;

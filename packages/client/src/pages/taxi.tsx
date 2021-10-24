@@ -1,5 +1,6 @@
 import * as React from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -11,9 +12,14 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { AssignToCallModal } from "components/citizen/tow/AssignToTowCall";
-import { ManageCallModal } from "components/citizen/tow/ManageTowCall";
 import { requestAll } from "lib/utils";
+
+const AssignToCallModal = dynamic(
+  async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
+);
+const ManageCallModal = dynamic(
+  async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
+);
 
 export type FullTaxiCall = TaxiCall & { assignedUnit: Citizen | null; creator: Citizen };
 

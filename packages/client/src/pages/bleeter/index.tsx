@@ -9,9 +9,13 @@ import { GetServerSideProps } from "next";
 import { BleeterPost, User } from "types/prisma";
 import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
-import { ManageBleetModal } from "components/bleeter/ManageBleetModal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
+import dynamic from "next/dynamic";
+
+const ManageBleetModal = dynamic(
+  async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
+);
 
 interface Props {
   posts: (BleeterPost & { user: Pick<User, "username"> })[];

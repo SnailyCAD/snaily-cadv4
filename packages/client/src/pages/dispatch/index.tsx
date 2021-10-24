@@ -17,7 +17,6 @@ import {
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
-// import { UpdateAreaOfPlay } from "components/dispatch/UpdateAOP";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";

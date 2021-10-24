@@ -4,21 +4,31 @@ import { GetServerSideProps } from "next";
 
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import { TabsContainer } from "components/tabs/TabsContainer";
-import { EmployeesTab } from "components/business/manage/EmployeesTab";
-import { ManageBusinessTab } from "components/business/manage/BusinessTab";
-import { PendingEmployeesTab } from "components/business/manage/PendingEmployeesTab";
 import { EmployeeAsEnum } from "types/prisma";
+import dynamic from "next/dynamic";
+import { requestAll } from "lib/utils";
 
 interface Props {
   employee: FullEmployee | null;
   business: FullBusiness | null;
 }
+
+const ManageBusinessTab = dynamic(
+  async () => (await import("components/business/manage/BusinessTab")).ManageBusinessTab,
+);
+
+const PendingEmployeesTab = dynamic(
+  async () => (await import("components/business/manage/PendingEmployeesTab")).PendingEmployeesTab,
+);
+
+const EmployeesTab = dynamic(
+  async () => (await import("components/business/manage/EmployeesTab")).EmployeesTab,
+);
 
 export default function BusinessId(props: Props) {
   const { currentBusiness, currentEmployee, ...state } = useBusinessState();
@@ -79,16 +89,10 @@ export default function BusinessId(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
-  const { data: business } = await handleRequest(
-    `/businesses/business/${query.id}?employeeId=${query.employeeId}`,
-    {
-      headers: req.headers,
-    },
-  ).catch((e) => ({ data: e }));
-
-  const { data: values } = await handleRequest("/admin/values/business-role", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  const [business, values] = await requestAll(req, [
+    [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
+    ["/admin/values/business-role", []],
+  ]);
 
   const notFound =
     !business || !business?.employee || business.employee.citizenId !== business.citizenId;

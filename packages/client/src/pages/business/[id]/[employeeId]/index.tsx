@@ -6,22 +6,26 @@ import ReactMarkdown from "react-markdown";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { ManageBusinessPostModal } from "components/business/ManagePostModal";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { BusinessPost, whitelistStatus } from "types/prisma";
-import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import dynamic from "next/dynamic";
+import { requestAll } from "lib/utils";
 
 interface Props {
   employee: FullEmployee | null;
   business: FullBusiness | null;
 }
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const ManageBusinessPostModal = dynamic(
+  async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
+);
 
 export default function BusinessId(props: Props) {
   const { state: fetchState, execute } = useFetch();
@@ -195,12 +199,9 @@ export default function BusinessId(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
-  const { data: business } = await handleRequest(
-    `/businesses/business/${query.id}?employeeId=${query.employeeId}`,
-    {
-      headers: req.headers,
-    },
-  ).catch(() => ({ data: null }));
+  const [business] = await requestAll(req, [
+    [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
+  ]);
 
   return {
     notFound: !business || !business?.employee,

@@ -163,7 +163,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [data] = await requestAll(req, [["/admin/manage/businesses", []]]);
+  const [data] = await requestAll(req, [["/admin/manage/businesses-admin", []]]);
 
   return {
     props: {

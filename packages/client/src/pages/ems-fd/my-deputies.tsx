@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";
@@ -9,11 +10,14 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import { DivisionValue, EmsFdDeputy, Value } from "types/prisma";
-import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { ManageDeputyModal } from "components/ems-fd/modals/ManageDeputyModal";
 import { requestAll } from "lib/utils";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const ManageDeputyModal = dynamic(
+  async () => (await import("components/ems-fd/modals/ManageDeputyModal")).ManageDeputyModal,
+);
 
 export type DeputyWithDept = EmsFdDeputy & {
   division: DivisionValue;

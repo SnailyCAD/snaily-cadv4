@@ -8,7 +8,7 @@ import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
 
 @UseBeforeEach(IsAuth, IsAdmin)
-@Controller("/businesses")
+@Controller("/businesses-admin")
 export class ManageBusinessesController {
   @Get("/")
   async getBusinesses() {
