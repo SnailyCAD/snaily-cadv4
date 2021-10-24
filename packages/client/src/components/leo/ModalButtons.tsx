@@ -6,45 +6,45 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 
 interface MButton {
-  nameKey: string;
+  nameKey: [string, string];
   modalId: string;
 }
 
 const buttons: MButton[] = [
   {
-    nameKey: "nameSearch",
+    nameKey: ["Leo", "nameSearch"],
     modalId: ModalIds.NameSearch,
   },
   {
-    nameKey: "plateSearch",
+    nameKey: ["Leo", "plateSearch"],
     modalId: ModalIds.VehicleSearch,
   },
   {
-    nameKey: "weaponSearch",
+    nameKey: ["Leo", "weaponSearch"],
     modalId: ModalIds.WeaponSearch,
   },
   {
-    nameKey: "createWrittenWarning",
+    nameKey: ["Leo", "createWrittenWarning"],
     modalId: ModalIds.CreateWrittenWarning,
   },
   {
-    nameKey: "createTicket",
+    nameKey: ["Leo", "createTicket"],
     modalId: ModalIds.CreateTicket,
   },
   {
-    nameKey: "createArrestReport",
+    nameKey: ["Leo", "createArrestReport"],
     modalId: ModalIds.CreateArrestReport,
   },
   {
-    nameKey: "createBolo",
+    nameKey: ["Leo", "createBolo"],
     modalId: ModalIds.ManageBolo,
   },
   {
-    nameKey: "notepad",
+    nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
   },
   {
-    nameKey: "activeOfficers",
+    nameKey: ["Leo", "activeOfficers"],
     modalId: ModalIds.ActiveOfficers,
   },
 ];
@@ -52,7 +52,7 @@ const buttons: MButton[] = [
 export const ModalButtons = () => {
   const { activeOfficer } = useLeoState();
   const { openModal } = useModal();
-  const t = useTranslations("Leo");
+  const t = useTranslations();
 
   const isButtonDisabled =
     !activeOfficer ||
@@ -71,13 +71,13 @@ export const ModalButtons = () => {
       <ul className="modal-buttons-grid mt-2">
         {buttons.map((button, idx) => (
           <Button
-            id={button.nameKey}
+            id={button.nameKey[1]}
             key={idx}
             disabled={isButtonDisabled}
-            title={isButtonDisabled ? "Go on-duty before continuing" : button.nameKey}
+            title={isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))}
             onClick={() => openModal(button.modalId)}
           >
-            {t(button.nameKey)}
+            {t(button.nameKey.join("."))}
           </Button>
         ))}
       </ul>

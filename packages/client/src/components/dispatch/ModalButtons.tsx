@@ -4,51 +4,67 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 
 interface MButton {
-  nameKey: string;
+  nameKey: [string, string];
   modalId: string;
 }
 
 const buttons: MButton[] = [
   {
-    nameKey: "nameSearch",
+    nameKey: ["Leo", "nameSearch"],
     modalId: ModalIds.NameSearch,
   },
   {
-    nameKey: "plateSearch",
+    nameKey: ["Leo", "plateSearch"],
     modalId: ModalIds.VehicleSearch,
   },
   {
-    nameKey: "weaponSearch",
+    nameKey: ["Leo", "weaponSearch"],
     modalId: ModalIds.WeaponSearch,
   },
   {
-    nameKey: "addressSearch",
-    modalId: ModalIds.AddressSearch,
+    nameKey: ["Leo", "createWrittenWarning"],
+    modalId: ModalIds.CreateWrittenWarning,
   },
   {
-    nameKey: "createBolo",
+    nameKey: ["Leo", "createTicket"],
+    modalId: ModalIds.CreateTicket,
+  },
+  {
+    nameKey: ["Leo", "createArrestReport"],
+    modalId: ModalIds.CreateArrestReport,
+  },
+  {
+    nameKey: ["Leo", "createBolo"],
     modalId: ModalIds.ManageBolo,
   },
   {
-    nameKey: "notepad",
+    nameKey: ["Calls", "create911Call"],
+    modalId: ModalIds.Manage911Call,
+  },
+  {
+    nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
+  },
+  {
+    nameKey: ["Leo", "activeOfficers"],
+    modalId: ModalIds.ActiveOfficers,
   },
 ];
 
 export const DispatchModalButtons = () => {
   const { openModal } = useModal();
-  const t = useTranslations("Leo");
+  const t = useTranslations();
 
   return (
     <ul className="modal-buttons-grid">
       {buttons.map((button, idx) => (
         <Button
-          id={button.nameKey}
+          id={button.nameKey[1]}
           key={idx}
-          title={button.nameKey}
+          title={t(button.nameKey.join("."))}
           onClick={() => openModal(button.modalId)}
         >
-          {t(button.nameKey)}
+          {t(button.nameKey.join("."))}
         </Button>
       ))}
     </ul>

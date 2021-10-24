@@ -358,6 +358,17 @@ export type EmsFdDeputy = {
 };
 
 /**
+ * Model Call911Event
+ */
+
+export type Call911Event = {
+  id: string;
+  createdAt: Date;
+  call911Id: string;
+  description: string;
+};
+
+/**
  * Enums
  */
 

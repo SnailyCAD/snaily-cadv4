@@ -23,7 +23,8 @@
     "decline": "Decline",
     "createdAt": "Created At",
     "reset": "Reset",
-    "search": "Search"
+    "search": "Search",
+    "events": "Events"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

@@ -1,7 +1,7 @@
 import { Nsp, SocketService } from "@tsed/socketio";
 import * as SocketIO from "socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { Call911, TowCall, Bolo } from ".prisma/client";
+import { Call911, TowCall, Bolo, Call911Event } from ".prisma/client";
 
 @SocketService("/")
 export class Socket {
@@ -62,5 +62,9 @@ export class Socket {
 
   emitUserBanned(userId: string) {
     this.io.sockets.emit(SocketEvents.UserBanned, userId);
+  }
+
+  emitAddCallEvent(event: Call911Event) {
+    this.io.sockets.emit(SocketEvents.AddCallEvent, event);
   }
 }
