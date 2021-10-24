@@ -53,8 +53,8 @@ export const CitizenDropdown = () => {
               </Menu.Item>
 
               {items.map((item) => {
-                const upperCase = item.toUpperCase() as Feature;
-                const lower = item.toLowerCase();
+                const upperCase = item.replace(/ +/g, "_").toUpperCase() as Feature;
+                const lower = item.replace(/ +/g, "-").toLowerCase();
 
                 if (!enabled[upperCase]) {
                   return null;

@@ -18,6 +18,7 @@ import { makeImageUrl } from "lib/utils";
 import { ManageCallModal } from "components/citizen/tow/ManageTowCall";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 
 interface Props {
   citizens: Citizen[];
@@ -28,6 +29,7 @@ export default function CitizenPage({ citizens }: Props) {
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
   const { TOW, TAXI } = useFeatureEnabled();
+  const { showAop, areaOfPlay } = useAreaOfPlay();
 
   return (
     <Layout>
@@ -35,7 +37,9 @@ export default function CitizenPage({ citizens }: Props) {
         <title>{t("citizens")} - SnailyCAD</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold mb-3">Citizens</h1>
+      <h1 className="text-3xl font-semibold mb-3">
+        Citizens{showAop ? <span> - AOP: {areaOfPlay}</span> : null}
+      </h1>
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
         <Link href="/citizen/create">

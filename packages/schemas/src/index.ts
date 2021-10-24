@@ -10,3 +10,4 @@ export * from "./dispatch";
 export * from "./leo";
 export * from "./records";
 export * from "./ems-fd";
+export * from "./truck-log";

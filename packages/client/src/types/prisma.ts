@@ -383,6 +383,19 @@ export type Call911Event = {
 };
 
 /**
+ * Model TruckLog
+ */
+
+export type TruckLog = {
+  id: string;
+  citizenId: string | null;
+  userId: string;
+  vehicleId: string | null;
+  startedAt: string;
+  endedAt: string;
+};
+
+/**
  * Enums
  */
 

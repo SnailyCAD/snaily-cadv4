@@ -40,6 +40,8 @@ export const enum ModalIds {
   ManageDeputy = "ManageDeputyModal",
   ManageAOP = "ManageAOPModal",
 
+  ManageTruckLog = "ManageTruckLogModal",
+
   AlertDeleteCitizen = "alert_DeleteCitizenModal",
   AlertDeleteVehicle = "alert_DeleteVehicleModal",
   AlertDeleteWeapon = "alert_DeleteWeaponModal",
@@ -52,4 +54,5 @@ export const enum ModalIds {
   AlertDeleteBolo = "AlertDeleteBoloModal",
   AlertEnd911Call = "AlertEnd911CallModal",
   AlertDeleteDeputy = "AlertDeleteDeputyModal",
+  AlertDeleteTruckLog = "AlertDeleteTruckLogModal",
 }
