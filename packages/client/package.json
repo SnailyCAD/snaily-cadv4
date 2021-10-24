@@ -26,7 +26,7 @@
     "react-markdown": "^7.1.0",
     "react-select": "^5.1.0",
     "socket.io-client": "^4.3.2",
-    "zod": "^3.10.3",
+    "zod": "^3.11.2",
     "zustand": "^3.6.0"
   },
   "devDependencies": {
