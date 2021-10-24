@@ -8,7 +8,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik, yupToFormErrors } from "formik";
+import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
