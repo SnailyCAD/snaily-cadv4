@@ -1,11 +1,10 @@
 import { User } from ".prisma/client";
-import { validate } from "@snailycad/schemas";
+import { validate, CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
-import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { IsAuth } from "../../middlewares";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 

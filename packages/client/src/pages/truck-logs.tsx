@@ -67,44 +67,48 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
         <Button onClick={() => openModal(ModalIds.ManageTruckLog)}>{t("createTruckLog")}</Button>
       </header>
 
-      <div className="overflow-x-auto w-full mt-3">
-        <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-          <thead>
-            <tr>
-              <th>{t("driver")}</th>
-              <th>{t("vehicle")}</th>
-              <th>{t("startedAt")}</th>
-              <th>{t("endedAt")}</th>
-              <th>{common("actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td>
-                  {log.citizen.name} {log.citizen.surname}
-                </td>
-                <td>{log.vehicle?.model.value}</td>
-                <td>{log.startedAt}</td>
-                <td>{log.endedAt}</td>
-                <td className="w-36">
-                  <Button onClick={() => handleEditClick(log)} small variant="success">
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteClick(log)}
-                    className="ml-2"
-                    small
-                    variant="danger"
-                  >
-                    {common("delete")}
-                  </Button>
-                </td>
+      {logs.length <= 0 ? (
+        <p className="mt-3">{t("noTruckLogs")}</p>
+      ) : (
+        <div className="overflow-x-auto w-full mt-3">
+          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+            <thead>
+              <tr>
+                <th>{t("driver")}</th>
+                <th>{t("vehicle")}</th>
+                <th>{t("startedAt")}</th>
+                <th>{t("endedAt")}</th>
+                <th>{common("actions")}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {logs.map((log) => (
+                <tr key={log.id}>
+                  <td>
+                    {log.citizen.name} {log.citizen.surname}
+                  </td>
+                  <td>{log.vehicle?.model.value}</td>
+                  <td>{log.startedAt}</td>
+                  <td>{log.endedAt}</td>
+                  <td className="w-36">
+                    <Button onClick={() => handleEditClick(log)} small variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteClick(log)}
+                      className="ml-2"
+                      small
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <ManageTruckLogModal
         onCreate={(log) => {
