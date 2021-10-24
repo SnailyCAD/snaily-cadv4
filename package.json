@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha",
   "packageManager": "yarn@3.0.2",
   "workspaces": [
     "packages/**"
@@ -10,13 +10,15 @@
     "format:quick": "pretty-quick --staged --pattern \"packages/**/*.{js,jsx,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "bump-version": "node scripts/bump-version.mjs"
   },
   "license": "MIT",
   "devDependencies": {
     "@casper124578/eslint-config": "^1.0.0",
     "@casper124578/eslint-config-next": "^0.1.1",
     "@casper124578/eslint-config-react": "^0.1.2",
+    "colorette": "2.0.16",
     "eslint": "^7.32.0",
     "husky": "^7.0.2",
     "prettier": "^2.4.1",
