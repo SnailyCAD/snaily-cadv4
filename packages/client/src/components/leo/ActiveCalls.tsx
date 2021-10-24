@@ -12,6 +12,11 @@ import { Call911, Officer } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
+import dynamic from "next/dynamic";
+
+const CallEventsModal = dynamic(
+  async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
+);
 
 export const ActiveCalls = () => {
   const { calls, setCalls } = useDispatchState();
@@ -85,7 +90,7 @@ export const ActiveCalls = () => {
                   <th className="bg-gray-300">{common("description")}</th>
                   <th className="bg-gray-300">{common("createdAt")}</th>
                   <th className="bg-gray-300">{t("assignedUnits")}</th>
-                  {isDispatch ? <th className="bg-gray-300">{common("actions")}</th> : null}
+                  <th className="bg-gray-300">{common("actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -96,13 +101,17 @@ export const ActiveCalls = () => {
                     <td>{call.description}</td>
                     <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
                     <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
-                    {isDispatch ? (
-                      <td>
+                    <td>
+                      {isDispatch ? (
                         <Button small variant="success" onClick={() => handleManageClick(call)}>
                           {common("manage")}
                         </Button>
-                      </td>
-                    ) : null}
+                      ) : (
+                        <Button small onClick={() => handleManageClick(call)}>
+                          {t("viewEvents")}
+                        </Button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -111,7 +120,11 @@ export const ActiveCalls = () => {
         )}
       </div>
 
-      <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
+      {isDispatch ? (
+        <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
+      ) : (
+        <CallEventsModal onClose={() => setTempCall(null)} call={tempCall} />
+      )}
     </div>
   );
 };

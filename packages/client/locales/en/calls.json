@@ -21,6 +21,8 @@
     "end911Call": "End 911 Call",
     "addEvent": "Add Event",
     "selectUnit": "Select Unit",
+    "viewEvents": "View Events",
+    "callEvents": "Call Events",
     "noEvents": "This call does not have any events",
     "alert_end911Call": "Are you sure you want to end this call?",
     "alert_endTowCall": "Are you sure you want to end this call?"

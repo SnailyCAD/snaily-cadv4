@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Post } from "@tsed/schema";
+import { JsonRequestBody, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
@@ -10,10 +10,18 @@ import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 @UseBeforeEach(IsAuth, ActiveOfficer)
 export class SearchController {
   @Post("/name")
-  async searchName(@BodyParams("name") name: string) {
+  async searchName(@BodyParams() body: JsonRequestBody) {
+    const [name, surname] = body.get("name").toString().toLowerCase().split(/ +/g);
+
     const citizen = await prisma.citizen.findFirst({
       where: {
-        name,
+        name: { equals: name, mode: "insensitive" },
+        OR: {
+          surname: {
+            equals: surname,
+            mode: "insensitive",
+          },
+        },
       },
       include: {
         businesses: true,

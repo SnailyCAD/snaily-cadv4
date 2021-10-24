@@ -55,6 +55,7 @@
     "tickets": "Tickets",
     "writtenWarnings": "Written Warnings",
     "arrestReports": "Arrest Reports",
+    "nameNotFound": "Could not find a citizen with that name",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

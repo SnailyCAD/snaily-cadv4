@@ -89,7 +89,7 @@ export const NameSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={"name"} fieldId="name">
+            <FormField label={cT("fullName")} fieldId="name">
               <Input
                 value={values.name}
                 hasError={!!errors.name}
@@ -99,9 +99,7 @@ export const NameSearchModal = () => {
               <Error>{errors.name}</Error>
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? (
-              <p>{cT("weaponNotFound")}</p>
-            ) : null}
+            {typeof results === "boolean" && results !== null ? <p>{t("nameNotFound")}</p> : null}
 
             {typeof results !== "boolean" && results ? (
               <div className="mt-3">

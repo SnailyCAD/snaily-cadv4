@@ -12,49 +12,60 @@ export interface ModalProps {
 
 export const Modal = ({ title, children, isOpen, className, onClose }: ModalProps) => {
   return (
-    <Transition
-      show={isOpen}
-      enter="transition ease-out duration-100"
-      enterFrom="transform opacity-0 scale-95"
-      enterTo="transform opacity-100 scale-100"
-      leave="transition ease-in duration-75"
-      leaveFrom="transform opacity-100 scale-100"
-      leaveTo="transform opacity-0 scale-95"
-      as={React.Fragment}
-    >
+    <Transition show={isOpen} appear as={React.Fragment}>
       <Dialog
         open={isOpen}
         as="div"
-        className="fixed inset-0 z-50 overflow-y-auto"
+        className="fixed inset-0 z-10 overflow-y-auto"
         onClose={onClose}
       >
         <div className="min-h-screen px-4 text-center">
-          <Dialog.Overlay className="fixed inset-0 bg-black/10" />
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-100"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="fixed inset-0 bg-black/10" />
+          </Transition.Child>
 
           {/* this element is to trick the browser into centering the modal contents. */}
           <span className="inline-block h-screen align-middle" aria-hidden="true">
             &#8203;
           </span>
 
-          <div
-            className={`inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-100"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="ease-in duration-100"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
           >
-            <Dialog.Title
-              as="h3"
-              className="text-xl font-semibold text-gray-900 flex items-center justify-between mb-2"
+            <div
+              className={`z-30 inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
             >
-              {title}
-
-              <button
-                onClick={onClose}
-                className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200"
+              <Dialog.Title
+                as="h3"
+                className="text-xl font-semibold text-gray-900 flex items-center justify-between mb-2"
               >
-                <X width={25} height={25} />
-              </button>
-            </Dialog.Title>
+                {title}
 
-            {children}
-          </div>
+                <button
+                  onClick={onClose}
+                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200"
+                >
+                  <X width={25} height={25} />
+                </button>
+              </Dialog.Title>
+
+              {children}
+            </div>
+          </Transition.Child>
         </div>
       </Dialog>
     </Transition>

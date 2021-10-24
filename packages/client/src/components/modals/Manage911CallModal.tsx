@@ -237,7 +237,12 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
               {({ handleChange, values, errors }) => (
                 <Form className="absolute bottom-0 w-full">
                   <FormField label="description">
-                    <Textarea id="description" value={values.description} onChange={handleChange} />
+                    <Textarea
+                      required
+                      id="description"
+                      value={values.description}
+                      onChange={handleChange}
+                    />
                     <Error>{errors.description}</Error>
                   </FormField>
 

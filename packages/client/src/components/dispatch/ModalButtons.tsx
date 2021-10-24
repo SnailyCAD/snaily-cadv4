@@ -22,18 +22,6 @@ const buttons: MButton[] = [
     modalId: ModalIds.WeaponSearch,
   },
   {
-    nameKey: ["Leo", "createWrittenWarning"],
-    modalId: ModalIds.CreateWrittenWarning,
-  },
-  {
-    nameKey: ["Leo", "createTicket"],
-    modalId: ModalIds.CreateTicket,
-  },
-  {
-    nameKey: ["Leo", "createArrestReport"],
-    modalId: ModalIds.CreateArrestReport,
-  },
-  {
     nameKey: ["Leo", "createBolo"],
     modalId: ModalIds.ManageBolo,
   },
@@ -44,10 +32,6 @@ const buttons: MButton[] = [
   {
     nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
-  },
-  {
-    nameKey: ["Leo", "activeOfficers"],
-    modalId: ModalIds.ActiveOfficers,
   },
 ];
 

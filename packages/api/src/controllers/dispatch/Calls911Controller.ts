@@ -186,6 +186,10 @@ export class Calls911Controller {
   @UseBefore(IsDispatch)
   @Post("/events/:callId")
   async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: JsonRequestBody) {
+    if (!body.get("description")) {
+      throw new BadRequest("descriptionRequired");
+    }
+
     const call = await prisma.call911.findUnique({
       where: { id: callId },
     });
