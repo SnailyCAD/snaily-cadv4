@@ -1,6 +1,6 @@
 name: Feature Request
 description: Request a feature or a change to improve SnailyCAD
-labels: "bug"
+labels: "enhancement"
 body:
   - type: textarea
     attributes:
