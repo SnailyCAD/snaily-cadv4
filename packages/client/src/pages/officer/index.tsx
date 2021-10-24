@@ -43,7 +43,7 @@ const VehicleSearchModal = dynamic(async () => {
 });
 
 const NameSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/NameSearchModal")).NameSearchModal;
+  return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
 });
 
 interface Props {

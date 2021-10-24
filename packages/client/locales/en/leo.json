@@ -47,6 +47,14 @@
     "viewInNameSearch": "View in Name Search",
     "noResults": "No results found for that address",
     "enterAddress": "Full or partial address",
+    "noVehiclesCitizen": "This citizen does not own any vehicles.",
+    "noWeaponsCitizen": "This citizen does not own any weapons.",
+    "noTicketsCitizen": "This citizen does not have any tickets.",
+    "noWrittenWarnings": "This citizen does not have any written warnings",
+    "noArrestReports": "This citizen does not have any arrest reports",
+    "tickets": "Tickets",
+    "writtenWarnings": "Written Warnings",
+    "arrestReports": "Arrest Reports",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

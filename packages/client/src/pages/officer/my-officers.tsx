@@ -96,9 +96,9 @@ export default function MyOfficers({ officers: data }: Props) {
                   <td>{officer.division?.value?.value}</td>
                   <td>
                     {officer.citizen ? (
-                      <>
+                      <span className="capitalize">
                         {officer.citizen.name} {officer.citizen.surname}
-                      </>
+                      </span>
                     ) : (
                       common("none")
                     )}

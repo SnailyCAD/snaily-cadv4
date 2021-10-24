@@ -57,7 +57,7 @@ const SHOULD_DO_VALUES = [
   },
 ];
 
-const POSITION_VALUES = new Array(10).fill(0).map((_, idx) => ({
+const POSITION_VALUES = new Array(50).fill(0).map((_, idx) => ({
   value: String(idx + 1),
   label: String(idx + 1),
 }));

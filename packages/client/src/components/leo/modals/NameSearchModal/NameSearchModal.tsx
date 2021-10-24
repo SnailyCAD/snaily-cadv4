@@ -10,9 +10,11 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
-import { Citizen, Record, RecordType, RegisteredVehicle, Weapon } from "types/prisma";
+import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
 import { calculateAge } from "lib/utils";
 import format from "date-fns/format";
+import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
+import { FullRecord, RecordsArea } from "./RecordsArea";
 
 const enum Toggled {
   VEHICLES,
@@ -38,8 +40,6 @@ export const NameSearchModal = () => {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
-  const vT = useTranslations("Vehicles");
-  const wT = useTranslations("Weapons");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
 
@@ -194,95 +194,13 @@ export const NameSearchModal = () => {
 
                   <>
                     {toggled === Toggled.VEHICLES ? (
-                      <>
-                        <section id="vehicles" className="mt-3">
-                          <h3 className="text-xl font-semibold">{"Register Vehicles"}</h3>
-
-                          <div className="overflow-x-auto w-full mt-3">
-                            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-                              <thead>
-                                <tr>
-                                  <th>{vT("plate")}</th>
-                                  <th>{vT("model")}</th>
-                                  <th>{vT("color")}</th>
-                                  <th>{vT("registrationStatus")}</th>
-                                  <th>{vT("vinNumber")}</th>
-                                  <th>{common("createdAt")}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {results.vehicles.map((vehicle) => (
-                                  <tr key={vehicle.id}>
-                                    <td>{vehicle.plate.toUpperCase()}</td>
-                                    <td>{vehicle.model.value}</td>
-                                    <td>{vehicle.color}</td>
-                                    <td>{vehicle.registrationStatus.value}</td>
-                                    <td>{vehicle.vinNumber}</td>
-                                    <td>{format(new Date(vehicle.createdAt), "yyyy-MM-dd")}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </section>
-
-                        <section id="weapons" className="mt-5">
-                          <h3 className="text-xl font-semibold">{"Register Weapons"}</h3>
-
-                          <div className="overflow-x-auto w-full mt-3">
-                            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-                              <thead>
-                                <tr>
-                                  <th>{wT("model")}</th>
-                                  <th>{wT("registrationStatus")}</th>
-                                  <th>{wT("serialNumber")}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {results.weapons.map((weapon) => (
-                                  <tr key={weapon.id}>
-                                    <td>{weapon.model.value}</td>
-                                    <td>{weapon.registrationStatus.value}</td>
-                                    <td>{weapon.serialNumber}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </section>
-                      </>
+                      <VehiclesAndWeaponsSection
+                        vehicles={results.vehicles}
+                        weapons={results.weapons}
+                      />
                     ) : null}
 
-                    {toggled === Toggled.RECORDS ? (
-                      <>
-                        <section id="tickets" className="mt-5">
-                          <h3 className="text-xl font-semibold">{"Tickets"}</h3>
-
-                          <div className="overflow-x-auto w-full mt-3">
-                            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-                              <thead>
-                                <tr>
-                                  <th>{wT("")}</th>
-                                  <th>{wT("registrationStatus")}</th>
-                                  <th>{wT("serialNumber")}</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {results.Record.filter((v) => v.type === RecordType.TICKET).map(
-                                  (weapon) => (
-                                    <tr key={weapon.id}>
-                                      <td>{weapon.postal}</td>
-                                      <td>{weapon.notes}</td>
-                                      {/* <td>{weapon}</td> */}
-                                    </tr>
-                                  ),
-                                )}
-                              </tbody>
-                            </table>
-                          </div>
-                        </section>
-                      </>
-                    ) : null}
+                    {toggled === Toggled.RECORDS ? <RecordsArea records={results.Record} /> : null}
                   </>
                 </div>
               </div>
@@ -313,5 +231,5 @@ export const NameSearchModal = () => {
 interface NameSearchResult extends Citizen {
   vehicles: RegisteredVehicle[];
   weapons: Weapon[];
-  Record: Record[];
+  Record: FullRecord[];
 }

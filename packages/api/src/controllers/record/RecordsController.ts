@@ -6,7 +6,6 @@ import { prisma } from "../../lib/prisma";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
-import { RecordType } from ".prisma/client";
 
 @UseBeforeEach(ActiveOfficer)
 @Controller("/records")
@@ -59,7 +58,7 @@ export class RecordsController {
 
     const ticket = await prisma.record.create({
       data: {
-        type: RecordType.TICKET,
+        type: body.get("type"),
         citizenId: citizen.id,
         officerId: ctx.get("activeOfficer").id,
         notes: body.get("notes"),
@@ -77,7 +76,7 @@ export class RecordsController {
             id: item,
           },
           data: {
-            record: {
+            records: {
               connect: {
                 id: ticket.id,
               },

@@ -37,7 +37,12 @@ export class SearchController {
         ccw: true,
         pilotLicense: true,
         warrants: true,
-        Record: true,
+        Record: {
+          include: {
+            officer: true,
+            violations: true,
+          },
+        },
       },
     });
 

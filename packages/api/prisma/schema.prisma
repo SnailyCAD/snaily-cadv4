@@ -218,7 +218,7 @@ model PenalCode {
   updatedAt   DateTime @updatedAt
   title       String   @db.VarChar(255)
   description String   @db.Text
-  record      Record?  @relation(fields: [recordId], references: [id])
+  records     Record[]
   recordId    String?
 }
 
