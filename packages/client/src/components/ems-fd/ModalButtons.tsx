@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { StatusEnum } from "types/prisma";
+import { ShouldDoType } from "types/prisma";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
@@ -35,7 +35,9 @@ export const ModalButtons = () => {
   const t = useTranslations();
 
   const isButtonDisabled =
-    !activeDeputy || activeDeputy.status === StatusEnum.OFF_DUTY || activeDeputy.status2 === null;
+    !activeDeputy ||
+    activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
+    activeDeputy.status2 === null;
 
   return (
     <div className="py-2">

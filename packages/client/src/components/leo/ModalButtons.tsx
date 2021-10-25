@@ -1,7 +1,7 @@
 import { Button } from "components/Button";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { StatusEnum } from "types/prisma";
+import { ShouldDoType } from "types/prisma";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 
@@ -60,7 +60,7 @@ export const ModalButtons = () => {
 
   const isButtonDisabled =
     !activeOfficer ||
-    activeOfficer.status === StatusEnum.OFF_DUTY ||
+    activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
     activeOfficer.status2 === null;
 
   return (

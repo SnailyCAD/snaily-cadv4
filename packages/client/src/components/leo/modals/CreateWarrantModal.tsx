@@ -7,15 +7,12 @@ import { Select } from "components/form/Select";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { useLeoState } from "state/leoState";
-import { StatusEnum } from "types/prisma";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 
 export const CreateWarrantModal = () => {
   const { isOpen, closeModal } = useModal();
-  const { activeOfficer } = useLeoState();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
 
@@ -83,12 +80,7 @@ export const CreateWarrantModal = () => {
 
             <Button
               className="flex items-center"
-              disabled={
-                !isValid ||
-                state === "loading" ||
-                !activeOfficer ||
-                activeOfficer.status === StatusEnum.OFF_DUTY
-              }
+              disabled={!isValid || state === "loading"}
               type="submit"
             >
               {state === "loading" ? <Loader className="mr-2" /> : null}

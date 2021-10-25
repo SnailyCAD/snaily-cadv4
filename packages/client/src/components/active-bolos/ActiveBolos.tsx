@@ -9,7 +9,7 @@ import * as React from "react";
 import { FullBolo, useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { Bolo, BoloType, StatusEnum } from "types/prisma";
+import { Bolo, BoloType, ShouldDoType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 
@@ -24,7 +24,7 @@ export const ActiveBolos = () => {
   const isDispatchRoute = pathname === "/dispatch";
   const isDisabled = isDispatchRoute
     ? false
-    : !activeOfficer || activeOfficer.status === StatusEnum.OFF_DUTY;
+    : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
   useListener(
     SocketEvents.CreateBolo,
