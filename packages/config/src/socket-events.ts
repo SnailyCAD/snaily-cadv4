@@ -23,4 +23,6 @@ export enum SocketEvents {
   UserBanned = "USER_BANNED",
 
   AddCallEvent = "ADD_CALL_EVENT",
+  UpdateCallEvent = "UPDATE_CALL_EVENT",
+  DeleteCallEvent = "DELETE_CALL_EVENT",
 }

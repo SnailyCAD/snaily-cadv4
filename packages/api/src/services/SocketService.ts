@@ -68,6 +68,14 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.AddCallEvent, event);
   }
 
+  emitUpdateCallEvent(event: Call911Event) {
+    this.io.sockets.emit(SocketEvents.UpdateCallEvent, event);
+  }
+
+  emitDeleteCallEvent(event: Call911Event) {
+    this.io.sockets.emit(SocketEvents.DeleteCallEvent, event);
+  }
+
   emitCreateTaxiCall(call: TaxiCall) {
     this.io.sockets.emit(SocketEvents.CreateTaxiCall, call);
   }

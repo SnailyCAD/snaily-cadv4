@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import { Error } from "components/form/Error";
@@ -13,19 +13,19 @@ import { Loader } from "components/Loader";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
-import format from "date-fns/format";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
-import compareDesc from "date-fns/compareDesc";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { CallEventsArea } from "./911Call/EventsArea";
 
 interface Props {
   call: Full911Call | null;
+  setCall?: React.Dispatch<React.SetStateAction<Full911Call | null>>;
   onClose?: () => void;
 }
 
-export const Manage911CallModal = ({ call, onClose }: Props) => {
+export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -41,12 +41,80 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
     (event) => {
       if (!call) return;
 
-      call.events.push(event);
+      setCall?.({
+        ...call,
+        events: [event, ...call.events],
+      });
 
       setCalls(
         calls.map((c) => {
           if (c.id === call.id) {
             return { ...c, events: [event, ...c.events] };
+          }
+
+          return c;
+        }),
+      );
+    },
+    [call, calls, setCalls],
+  );
+
+  useListener(
+    SocketEvents.UpdateCallEvent,
+    (event) => {
+      if (!call) return;
+
+      function update(c: Full911Call) {
+        if (c.id === call?.id) {
+          return {
+            ...c,
+            events: c.events.map((ev) => {
+              if (ev.id === event.id) {
+                return event;
+              }
+
+              return ev;
+            }),
+          };
+        }
+
+        return c;
+      }
+
+      setCall?.((p) => ({
+        ...(p ?? call),
+        events: update(p ?? call).events,
+      }));
+
+      setCalls(
+        calls.map((c) => {
+          if (c.id === call.id) {
+            return update(c);
+          }
+
+          return c;
+        }),
+      );
+    },
+    [call, calls, setCalls],
+  );
+
+  useListener(
+    SocketEvents.DeleteCallEvent,
+    (event) => {
+      if (!call) return;
+
+      console.log({ event });
+
+      setCall?.((p) => ({
+        ...(p ?? call),
+        events: (p ?? call).events.filter((v) => v.id !== event.id),
+      }));
+
+      setCalls(
+        calls.map((c) => {
+          if (c.id === call.id) {
+            return { ...c, events: c.events.filter((v) => v.id !== event.id) };
           }
 
           return c;
@@ -72,17 +140,6 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
       closeModal(ModalIds.AlertEnd911Call);
       closeModal(ModalIds.Manage911Call);
     }
-  }
-
-  async function onEventSubmit(values: { description: string }, helpers: FormikHelpers<any>) {
-    if (!call) return;
-
-    await execute(`/911-calls/events/${call.id}`, {
-      method: "POST",
-      data: values,
-    });
-
-    helpers.resetForm();
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -138,7 +195,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={"Manage 911 Call"}
-      className={call ? "min-w-[850px]" : "min-w-[650px]"}
+      className={call ? "min-w-[900px]" : "min-w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -208,56 +265,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
           )}
         </Formik>
 
-        {call ? (
-          <div className="w-96 ml-2 relative">
-            <h4 className="font-semibold text-xl">{common("events")}</h4>
-
-            <ul className="overflow-auto h-[210px]">
-              {(call?.events.length ?? 0) <= 0 ? (
-                <p className="mt-2">{t("noEvents")}</p>
-              ) : (
-                call?.events
-                  .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-                  .map((event) => {
-                    const formatted = format(new Date(event.createdAt), "HH:mm:ss");
-
-                    return (
-                      <li key={event.id}>
-                        <span className="select-none text-gray-800 mr-1 font-semibold">
-                          {formatted}:
-                        </span>
-                        <span>{event.description}</span>
-                      </li>
-                    );
-                  })
-              )}
-            </ul>
-
-            <Formik onSubmit={onEventSubmit} initialValues={{ description: "" }}>
-              {({ handleChange, values, errors }) => (
-                <Form className="absolute bottom-0 w-full">
-                  <FormField label="description">
-                    <Textarea
-                      required
-                      id="description"
-                      value={values.description}
-                      onChange={handleChange}
-                    />
-                    <Error>{errors.description}</Error>
-                  </FormField>
-
-                  <footer className="mt-5 flex justify-end">
-                    <Button className="ml-2 flex items-center" type="submit">
-                      {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
-
-                      {t("addEvent")}
-                    </Button>
-                  </footer>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        ) : null}
+        {call ? <CallEventsArea call={call} /> : null}
       </div>
 
       <AlertModal

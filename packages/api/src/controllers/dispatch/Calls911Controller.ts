@@ -223,4 +223,84 @@ export class Calls911Controller {
 
     return event;
   }
+
+  @UseBefore(IsDispatch)
+  @Put("/events/:callId/:eventId")
+  async updateCallEvent(
+    @PathParams("callId") callId: string,
+    @PathParams("eventId") eventId: string,
+    @BodyParams() body: JsonRequestBody,
+  ) {
+    if (!body.get("description")) {
+      throw new BadRequest("descriptionRequired");
+    }
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const event = await prisma.call911Event.findFirst({
+      where: {
+        id: eventId,
+        call911Id: callId,
+      },
+    });
+
+    if (!event) {
+      throw new NotFound("eventNotFound");
+    }
+
+    const updated = await prisma.call911Event.update({
+      where: {
+        id: event.id,
+      },
+      data: {
+        description: body.get("description"),
+      },
+    });
+
+    this.socket.emitUpdateCallEvent(updated);
+
+    return updated;
+  }
+
+  @UseBefore(IsDispatch)
+  @Delete("/events/:callId/:eventId")
+  async deleteCallEvent(
+    @PathParams("callId") callId: string,
+    @PathParams("eventId") eventId: string,
+  ) {
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const event = await prisma.call911Event.findFirst({
+      where: {
+        id: eventId,
+        call911Id: callId,
+      },
+    });
+
+    if (!event) {
+      throw new NotFound("eventNotFound");
+    }
+
+    await prisma.call911Event.delete({
+      where: {
+        id: event.id,
+      },
+    });
+
+    this.socket.emitDeleteCallEvent(event);
+
+    return true;
+  }
 }

@@ -121,7 +121,11 @@ export const ActiveCalls = () => {
       </div>
 
       {isDispatch ? (
-        <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
+        <Manage911CallModal
+          setCall={setTempCall}
+          onClose={() => setTempCall(null)}
+          call={tempCall}
+        />
       ) : (
         <CallEventsModal onClose={() => setTempCall(null)} call={tempCall} />
       )}
