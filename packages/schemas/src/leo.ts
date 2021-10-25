@@ -11,7 +11,6 @@ export const CREATE_OFFICER_SCHEMA = z.object({
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
-  status2: z.string().min(2).max(255),
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({

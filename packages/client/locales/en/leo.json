@@ -57,6 +57,8 @@
     "arrestReports": "Arrest Reports",
     "nameNotFound": "Could not find a citizen with that name",
     "createWarrant": "Create Warrant",
+    "citizenDead": "WARNING: This citizen dead on {date}",
+    "hasWarrants": "WARNING: This citizen has active warrants!",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

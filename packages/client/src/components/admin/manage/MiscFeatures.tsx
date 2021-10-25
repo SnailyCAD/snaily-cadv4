@@ -49,11 +49,9 @@ export const MiscFeatures = () => {
   const INITIAL_VALUES = {
     weightPrefix: miscSettings.weightPrefix,
     heightPrefix: miscSettings.heightPrefix,
-    assignedStatusCode: miscSettings.assignedStatusCode,
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
     maxCitizensPerUser: miscSettings.maxCitizensPerUser ?? Infinity,
     maxPlateLength: miscSettings.maxPlateLength,
-    onDutyCode: miscSettings.onDutyCode,
   };
 
   return (
@@ -119,28 +117,6 @@ export const MiscFeatures = () => {
               />
               <Error>{errors.maxPlateLength}</Error>
             </FormField>
-
-            <FormRow>
-              <FormField label="Assigned status code">
-                <Input
-                  name="assignedStatusCode"
-                  hasError={!!errors.assignedStatusCode}
-                  value={values.assignedStatusCode}
-                  onChange={handleChange}
-                />
-                <Error>{errors.assignedStatusCode}</Error>
-              </FormField>
-
-              <FormField label="On-duty code">
-                <Input
-                  name="onDutyCode"
-                  hasError={!!errors.onDutyCode}
-                  value={values.onDutyCode}
-                  onChange={handleChange}
-                />
-                <Error>{errors.onDutyCode}</Error>
-              </FormField>
-            </FormRow>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}

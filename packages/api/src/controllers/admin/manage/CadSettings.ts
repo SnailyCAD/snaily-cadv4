@@ -96,13 +96,11 @@ export class ManageCitizensController {
         id: ctx.get("cad")?.miscCadSettings?.id,
       },
       data: {
-        assignedStatusCode: body.get("assignedStatusCode"),
         heightPrefix: body.get("heightPrefix"),
         weightPrefix: body.get("weightPrefix"),
         maxBusinessesPerCitizen: body.get("maxBusinessesPerCitizen"),
         maxCitizensPerUser: body.get("maxCitizensPerUser"),
         maxPlateLength: body.get("maxPlateLength"),
-        onDutyCode: body.get("onDutyCode"),
       },
     });
 

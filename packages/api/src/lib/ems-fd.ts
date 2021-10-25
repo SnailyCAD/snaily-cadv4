@@ -47,7 +47,7 @@ export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
     include: {
       rank: true,
       department: true,
-      status2: {
+      status: {
         include: {
           value: true,
         },

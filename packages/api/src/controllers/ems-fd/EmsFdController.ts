@@ -9,7 +9,7 @@ import {
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { cad, ShouldDoType, StatusEnum, MiscCadSettings, User } from ".prisma/client";
+import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -167,6 +167,7 @@ export class EmsFdController {
       throw new BadRequest(error);
     }
 
+    const statusId = body.get("status");
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch = isFromDispatch && user.isDispatch;
 
@@ -187,9 +188,7 @@ export class EmsFdController {
 
     const code = await prisma.statusValue.findFirst({
       where: {
-        value: {
-          value: body.get("status2"),
-        },
+        id: statusId,
       },
       include: {
         value: true,
@@ -206,40 +205,20 @@ export class EmsFdController {
         userId: user.id,
       },
       data: {
-        status: "OFF_DUTY",
-        status2Id: null,
+        statusId: null,
       },
     });
-
-    let status: StatusEnum = StatusEnum.ON_DUTY;
-
-    if (code.shouldDo === ShouldDoType.SET_STATUS && body.get("status") === StatusEnum.OFF_DUTY) {
-      status = StatusEnum.OFF_DUTY;
-    } else if (
-      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
-      body.get("status") === StatusEnum.ON_DUTY
-    ) {
-      status = StatusEnum.OFF_DUTY;
-    } else if (
-      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
-      body.get("status") === StatusEnum.OFF_DUTY
-    ) {
-      status = StatusEnum.OFF_DUTY;
-    } else {
-      status = StatusEnum.ON_DUTY;
-    }
 
     const updatedDeputy = await prisma.emsFdDeputy.update({
       where: {
         id: deputy.id,
       },
       data: {
-        status,
-        status2Id: status === StatusEnum.OFF_DUTY ? null : code.id,
+        statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
         department: true,
-        status2: {
+        status: {
           include: { value: true },
         },
       },
@@ -308,7 +287,11 @@ export class EmsFdController {
   async getActiveDeputies() {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
-        status: StatusEnum.ON_DUTY,
+        status: {
+          NOT: {
+            shouldDo: ShouldDoType.SET_OFF_DUTY,
+          },
+        },
       },
       include: {
         department: true,
@@ -318,7 +301,7 @@ export class EmsFdController {
             value: true,
           },
         },
-        status2: {
+        status: {
           include: {
             value: true,
           },

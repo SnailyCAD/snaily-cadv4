@@ -10,7 +10,6 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
 import { ActiveOfficer } from "state/leoState";
-import { StatusEnum } from "types/prisma";
 import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveDeputy } from "state/emsFdState";
@@ -21,22 +20,13 @@ interface Props {
   onClose?: () => void;
 }
 
-const labels = {
-  ON_DUTY: "On Duty",
-  OFF_DUTY: "Off Duty",
-};
-
-const STATUS_VALUES = Object.values(StatusEnum).map((v) => ({
-  value: v,
-  label: labels[v],
-}));
-
 export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { codes10 } = useValues();
   const { activeOfficers, setActiveOfficers } = useDispatchState();
+  const t = useTranslations("Leo");
 
   function handleClose() {
     onClose?.();
@@ -81,8 +71,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
   }
 
   const INITIAL_VALUES = {
-    status: unit.status,
-    status2: unit.status2?.value?.value ?? null,
+    status: unit.status?.id ?? null,
   };
 
   return (
@@ -95,27 +84,17 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form>
-            <FormField label="Status">
+            <FormField label={t("status")}>
               <Select
                 name="status"
                 value={values.status}
-                values={STATUS_VALUES}
-                onChange={handleChange}
-              />
-              <Error>{errors.status}</Error>
-            </FormField>
-
-            <FormField label="Status2">
-              <Select
-                name="status2"
-                value={values.status2}
                 values={codes10.values.map((v) => ({
                   label: v.value.value,
-                  value: v.value.value,
+                  value: v.id,
                 }))}
                 onChange={handleChange}
               />
-              <Error>{errors.status2}</Error>
+              <Error>{errors.status}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

@@ -12,8 +12,8 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
-import { useAuth } from "context/AuthContext";
-import { StatusEnum } from "types/prisma";
+import { useValues } from "context/ValuesContext";
+import { ShouldDoType } from "types/prisma";
 
 export const SelectOfficerModal = () => {
   const { officers, setActiveOfficer } = useLeoState();
@@ -21,16 +21,18 @@ export const SelectOfficerModal = () => {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
-  const { cad } = useAuth();
+  const { codes10 } = useValues();
+  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
   const { state, execute } = useFetch();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!onDutyCode) return;
+
     const { json } = await execute(`/leo/${values.officer}/status`, {
       method: "PUT",
       data: {
         ...values,
-        status: StatusEnum.ON_DUTY,
-        status2: cad?.miscCadSettings.onDutyCode ?? "10-8",
+        status: onDutyCode.id,
       },
     });
 

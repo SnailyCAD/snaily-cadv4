@@ -40,7 +40,7 @@ export const ActiveOfficersModal = () => {
               </p>
               <p>
                 <span className="font-semibold">{t("status")}: </span>
-                {officer.status2?.value?.value}
+                {officer.status?.value?.value}
               </p>
             </li>
           ))}

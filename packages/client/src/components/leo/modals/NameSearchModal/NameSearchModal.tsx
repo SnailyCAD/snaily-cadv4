@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
-import { Citizen, RegisteredVehicle, Weapon } from "types/prisma";
+import { Citizen, RegisteredVehicle, Warrant, Weapon } from "types/prisma";
 import { calculateAge } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
@@ -75,6 +75,9 @@ export const NameSearchModal = () => {
     }
   }
 
+  const hasWarrants =
+    typeof results !== "boolean" &&
+    (results?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
   const INITIAL_VALUES = {
     name: payloadName ?? "",
   };
@@ -104,6 +107,21 @@ export const NameSearchModal = () => {
             {typeof results !== "boolean" && results ? (
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
+
+                {results.dead && results.dateOfDead ? (
+                  <div className="bg-yellow-500 p-2 rounded-md font-semibold mt-2">
+                    {t("citizenDead", {
+                      date: format(new Date(results.dateOfDead ?? new Date()), "MMMM do yyyy"),
+                    })}
+                  </div>
+                ) : null}
+
+                {hasWarrants ? (
+                  <div className="bg-red-500 p-2 rounded-md font-semibold mt-2">
+                    {t("hasWarrants")}
+                  </div>
+                ) : null}
+
                 <div className="flex">
                   <div className="w-full">
                     <div className="mt-2 flex flex-col">
@@ -230,4 +248,5 @@ interface NameSearchResult extends Citizen {
   vehicles: RegisteredVehicle[];
   weapons: Weapon[];
   Record: FullRecord[];
+  warrants: Warrant[];
 }

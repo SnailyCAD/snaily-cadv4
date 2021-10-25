@@ -51,7 +51,7 @@ export const ActiveOfficers = () => {
                     <td>{String(officer.badgeNumber)}</td>
                     <td>{officer.department.value}</td>
                     <td>{officer.division.value.value}</td>
-                    <td>{officer.status2?.value?.value}</td>
+                    <td>{officer.status?.value?.value}</td>
                     <td className="w-36">
                       <Button onClick={() => handleEditClick(officer)} small variant="success">
                         {common("manage")}

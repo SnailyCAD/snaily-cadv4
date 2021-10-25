@@ -4,7 +4,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { cad, ShouldDoType, StatusEnum, MiscCadSettings, User } from ".prisma/client";
+import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -97,7 +97,7 @@ export class LeoController {
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId"),
+        citizenId: body.get("citizenId") || null,
       },
       include: {
         department: true,
@@ -175,7 +175,7 @@ export class LeoController {
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId"),
+        citizenId: body.get("citizenId") || null,
       },
       include: {
         department: true,
@@ -212,6 +212,8 @@ export class LeoController {
       throw new BadRequest(error);
     }
 
+    const statusId = body.get("status");
+
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch = isFromDispatch && user.isDispatch;
 
@@ -232,9 +234,7 @@ export class LeoController {
 
     const code = await prisma.statusValue.findFirst({
       where: {
-        value: {
-          value: body.get("status2"),
-        },
+        id: statusId,
       },
       include: {
         value: true,
@@ -251,46 +251,25 @@ export class LeoController {
         userId: user.id,
       },
       data: {
-        status: "OFF_DUTY",
-        status2Id: null,
+        statusId: null,
       },
     });
-
-    let status: StatusEnum = StatusEnum.ON_DUTY;
-
-    if (code.shouldDo === ShouldDoType.SET_STATUS && body.get("status") === StatusEnum.OFF_DUTY) {
-      status = StatusEnum.OFF_DUTY;
-    } else if (
-      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
-      body.get("status") === StatusEnum.ON_DUTY
-    ) {
-      status = StatusEnum.OFF_DUTY;
-    } else if (
-      code.shouldDo === ShouldDoType.SET_OFF_DUTY &&
-      body.get("status") === StatusEnum.OFF_DUTY
-    ) {
-      status = StatusEnum.OFF_DUTY;
-    } else {
-      status = StatusEnum.ON_DUTY;
-    }
 
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
       },
       data: {
-        status,
-        status2Id: status === StatusEnum.OFF_DUTY ? null : code.id,
+        statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
         department: true,
-        status2: {
+        status: {
           include: { value: true },
         },
       },
     });
 
-    const { miscCadSettings } = cad;
     const officerLog = await prisma.officerLog.findFirst({
       where: {
         officerId: officer.id,
@@ -298,7 +277,7 @@ export class LeoController {
       },
     });
 
-    if ((miscCadSettings.onDutyCode ?? "10-8") === code.value.value) {
+    if (code.shouldDo === ShouldDoType.SET_ON_DUTY) {
       if (!officerLog) {
         await prisma.officerLog.create({
           data: {
@@ -413,7 +392,11 @@ export class LeoController {
   async getActiveOfficers() {
     const officers = await prisma.officer.findMany({
       where: {
-        status: StatusEnum.ON_DUTY,
+        status: {
+          NOT: {
+            shouldDo: ShouldDoType.SET_OFF_DUTY,
+          },
+        },
       },
       include: {
         department: true,
@@ -423,7 +406,7 @@ export class LeoController {
             value: true,
           },
         },
-        status2: {
+        status: {
           include: {
             value: true,
           },
@@ -431,13 +414,11 @@ export class LeoController {
       },
     });
 
-    return officers;
+    return Array.isArray(officers) ? officers : [officers];
   }
 }
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {
-  console.log({ officer });
-
   const status2 = officer.status2.value.value;
   const department = officer.department.value;
   const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;

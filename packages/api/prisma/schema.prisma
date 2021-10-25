@@ -38,10 +38,7 @@ model MiscCadSettings {
   maxCitizensPerUser      Int?
   maxPlateLength          Int    @default(8)
   maxBusinessesPerCitizen Int?
-
-  assignedStatusCode String @default("10-97")
-  onDutyCode         String @default("10-8")
-  cad                cad[]
+  cad                     cad[]
 }
 
 model User {
@@ -368,9 +365,8 @@ model Officer {
   divisionId   String
   rank         Value?        @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusEnum    @default(OFF_DUTY)
-  status2      StatusValue?  @relation("officer2StatusToValue", fields: [status2Id], references: [id])
-  status2Id    String?
+  status       StatusValue?  @relation("officerStatusToValue", fields: [statusId], references: [id])
+  statusId     String?
   suspended    Boolean       @default(false)
   badgeNumber  Int?
 
@@ -394,8 +390,8 @@ model StatusValue {
   position  Int?
   whatPages WhatPages[]
 
-  officer2StatusToValue Officer[]     @relation("officer2StatusToValue")
-  emsFdStatusToValue    EmsFdDeputy[] @relation("emsFdStatusToValue")
+  officerStatusToValue Officer[]     @relation("officerStatusToValue")
+  emsFdStatusToValue   EmsFdDeputy[] @relation("emsFdStatusToValue")
 }
 
 model OfficerLog {
@@ -421,6 +417,8 @@ enum WhatPages {
 
 enum ShouldDoType {
   SET_OFF_DUTY
+  SET_ON_DUTY
+  SET_ASSIGNED
   SET_STATUS
 }
 
@@ -512,9 +510,8 @@ model EmsFdDeputy {
   divisionId   String
   rank         Value?        @relation("emsFdRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusEnum    @default(OFF_DUTY)
-  status2      StatusValue?  @relation("emsFdStatusToValue", fields: [status2Id], references: [id])
-  status2Id    String?
+  status       StatusValue?  @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId     String?
   suspended    Boolean       @default(false)
   badgeNumber  Int?
 

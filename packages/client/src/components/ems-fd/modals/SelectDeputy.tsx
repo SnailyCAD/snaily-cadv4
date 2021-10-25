@@ -11,9 +11,9 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { useAuth } from "context/AuthContext";
-import { StatusEnum } from "types/prisma";
 import { useEmsFdState } from "state/emsFdState";
+import { useValues } from "context/ValuesContext";
+import { ShouldDoType } from "types/prisma";
 
 export const SelectDeputyModal = () => {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -21,16 +21,19 @@ export const SelectDeputyModal = () => {
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
 
-  const { cad } = useAuth();
   const { state, execute } = useFetch();
 
+  const { codes10 } = useValues();
+  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
+
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (!onDutyCode) return;
+
     const { json } = await execute(`/ems-fd/${values.deputy}/status`, {
       method: "PUT",
       data: {
         ...values,
-        status: StatusEnum.ON_DUTY,
-        status2: cad?.miscCadSettings.onDutyCode ?? "10-8",
+        status: onDutyCode.id,
       },
     });
 

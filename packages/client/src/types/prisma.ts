@@ -27,8 +27,6 @@ export type MiscCadSettings = {
   maxCitizensPerUser: number | null;
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
-  assignedStatusCode: string;
-  onDutyCode: string;
 };
 
 /**
@@ -248,9 +246,8 @@ export type Officer = {
   divisionId: string;
   callsign: string;
   rankId: string;
-  status: StatusEnum;
-  status2Id: string | null;
-  status2: StatusValue | null;
+  statusId: string | null;
+  status: StatusValue | null;
   suspended: boolean;
   citizenId: string | null;
   userId: string;
@@ -364,8 +361,8 @@ export type EmsFdDeputy = {
   callsign: string;
   divisionId: string;
   rankId: string | null;
-  status: StatusEnum;
-  status2Id: string | null;
+  status: StatusValue | null;
+  statusId: string | null;
   suspended: boolean;
   badgeNumber: number | null;
   citizenId: string | null;
@@ -394,6 +391,19 @@ export type TruckLog = {
   vehicleId: string | null;
   startedAt: string;
   endedAt: string;
+};
+
+/**
+ * Model Warrant
+ */
+
+export type Warrant = {
+  id: string;
+  citizenId: string;
+  officerId: string;
+  description: string;
+  status: WarrantStatus;
+  createdAt: Date;
 };
 
 /**
@@ -459,6 +469,8 @@ export type EmployeeAsEnum = typeof EmployeeAsEnum[keyof typeof EmployeeAsEnum];
 
 export const ShouldDoType = {
   SET_OFF_DUTY: "SET_OFF_DUTY",
+  SET_ON_DUTY: "SET_ON_DUTY",
+  SET_ASSIGNED: "SET_ASSIGNED",
   SET_STATUS: "SET_STATUS",
 } as const;
 
@@ -494,3 +506,10 @@ export const RecordType = {
 } as const;
 
 export type RecordType = typeof RecordType[keyof typeof RecordType];
+
+export const WarrantStatus = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+} as const;
+
+export type WarrantStatus = typeof WarrantStatus[keyof typeof WarrantStatus];

@@ -46,16 +46,17 @@ const BUSINESS_VALUES = [
   },
 ];
 
-const SHOULD_DO_VALUES = [
-  {
-    value: ShouldDoType.SET_STATUS,
-    label: "Set Status",
-  },
-  {
-    value: ShouldDoType.SET_OFF_DUTY,
-    label: "Set off duty",
-  },
-];
+const SHOULD_DO_LABELS = {
+  [ShouldDoType.SET_STATUS]: "Set Status",
+  [ShouldDoType.SET_OFF_DUTY]: "Set Off duty",
+  [ShouldDoType.SET_ON_DUTY]: "Set On duty",
+  [ShouldDoType.SET_ASSIGNED]: "Set Assigned",
+};
+
+const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
+  label: SHOULD_DO_LABELS[v],
+  value: v,
+}));
 
 const POSITION_VALUES = new Array(50).fill(0).map((_, idx) => ({
   value: String(idx + 1),

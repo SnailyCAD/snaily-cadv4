@@ -1,18 +1,16 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
-import { useAuth } from "context/AuthContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType, StatusEnum, StatusValue } from "types/prisma";
+import { ShouldDoType, StatusValue } from "types/prisma";
 
 export const StatusesArea = () => {
   const { codes10 } = useValues();
-  const { cad } = useAuth();
   const { activeOfficer, setActiveOfficer } = useLeoState();
   const { openModal } = useModal();
   const { execute } = useFetch();
@@ -41,19 +39,17 @@ export const StatusesArea = () => {
 
   const isButtonDisabled =
     !activeOfficer ||
-    activeOfficer.status === StatusEnum.OFF_DUTY ||
-    activeOfficer.status2 === null;
+    activeOfficer.status === null ||
+    activeOfficer.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
   async function handleStatusUpdate(status: StatusValue) {
     if (!activeOfficer) return;
-    if (status.id === activeOfficer?.status2Id) return;
+    if (status.id === activeOfficer.statusId) return;
 
     const { json } = await execute(`/leo/${activeOfficer.id}/status`, {
       method: "PUT",
       data: {
-        status:
-          status.shouldDo === ShouldDoType.SET_OFF_DUTY ? StatusEnum.OFF_DUTY : StatusEnum.ON_DUTY,
-        status2: status.value.value,
+        status: status.id,
       },
     });
 
@@ -62,9 +58,8 @@ export const StatusesArea = () => {
     }
   }
 
-  const onDutyCode = codes10.values.find((v) => v.value.value === cad?.miscCadSettings?.onDutyCode);
-  const isOnDutyActive =
-    !isButtonDisabled && onDutyCode?.valueId === activeOfficer?.status2?.valueId;
+  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
+  const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeOfficer?.status?.id;
 
   return (
     <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50">
@@ -76,16 +71,16 @@ export const StatusesArea = () => {
           )}
           onClick={() => openModal(ModalIds.SelectOfficer)}
         >
-          {cad?.miscCadSettings.onDutyCode ?? "10-8"}
+          {onDutyCode?.value.value}
         </Button>
       </li>
 
       {codes10.values
-        .filter((v) => v.value.value !== cad?.miscCadSettings.onDutyCode)
+        .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY)
         .sort((a, b) => Number(a.position) - Number(b.position))
         .map((code) => {
           const variant = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? "danger" : "default";
-          const isActive = code.valueId === activeOfficer?.status2?.valueId;
+          const isActive = code.id === activeOfficer?.statusId;
 
           return (
             <li key={code.id}>

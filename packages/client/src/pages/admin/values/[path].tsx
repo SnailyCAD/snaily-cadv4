@@ -22,6 +22,7 @@ import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
+import compareAsc from "date-fns/compareAsc";
 
 type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
 
@@ -41,6 +42,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const t = useTranslations("Values");
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
+
+  function findCreatedAt(value: TValue) {
+    if ("createdAt" in value) {
+      return new Date(value.createdAt);
+    }
+
+    return new Date(value.value.createdAt);
+  }
 
   function handleDeleteClick(value: TValue) {
     setTempValue(value);
@@ -104,31 +113,37 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <ul className="mt-5">
-          {values.map((value, idx) => (
-            <li
-              className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
-              key={value.id}
-            >
-              <div>
-                <span className="select-none text-gray-500">{++idx}.</span>
-                <span className="ml-2">
-                  {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                    <span>{(value as any).department.value} / </span>
-                  ) : null}
-                  {typeof value.value === "string" ? value.value : value.value.value}
-                </span>
-              </div>
+          {values
+            .sort((a, b) => compareAsc(findCreatedAt(a), findCreatedAt(b)))
+            .map((value, idx) => (
+              <li
+                className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
+                key={value.id}
+              >
+                <div>
+                  <span className="select-none text-gray-500">{++idx}.</span>
+                  <span className="ml-2">
+                    {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
+                      <span>{(value as any).department.value} / </span>
+                    ) : null}
+                    {typeof value.value === "string" ? value.value : value.value.value}
+                  </span>
+                </div>
 
-              <div>
-                <Button onClick={() => handleEditClick(value)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
-                  {common("delete")}
-                </Button>
-              </div>
-            </li>
-          ))}
+                <div>
+                  <Button onClick={() => handleEditClick(value)} variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteClick(value)}
+                    variant="danger"
+                    className="ml-2"
+                  >
+                    {common("delete")}
+                  </Button>
+                </div>
+              </li>
+            ))}
         </ul>
       )}
 

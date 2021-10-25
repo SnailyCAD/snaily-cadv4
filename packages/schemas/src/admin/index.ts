@@ -17,8 +17,6 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxCitizensPerUser: z.number().nullable(),
   maxBusinessesPerCitizen: z.number().nullable(),
   maxPlateLength: z.number().min(1),
-  assignedStatusCode: z.string().min(1).max(255),
-  onDutyCode: z.string().min(1).max(255),
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({

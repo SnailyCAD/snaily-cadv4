@@ -8,6 +8,7 @@ import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth, IsDispatch } from "../../middlewares";
 import { UseBefore } from "@tsed/common";
+import { ShouldDoType } from ".prisma/client";
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
@@ -137,7 +138,9 @@ export class Calls911Controller {
         const officer = await prisma.officer.findFirst({
           where: {
             id,
-            status: "ON_DUTY",
+            status: {
+              shouldDo: ShouldDoType.SET_ON_DUTY,
+            },
           },
         });
 
