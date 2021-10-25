@@ -40,6 +40,10 @@ const buttons: MButton[] = [
     modalId: ModalIds.ManageBolo,
   },
   {
+    nameKey: ["Leo", "createWarrant"],
+    modalId: ModalIds.CreateWarrant,
+  },
+  {
     nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
   },

@@ -65,7 +65,14 @@ export class SearchController {
   async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
     const weapon = await prisma.weapon.findFirst({
       where: {
-        serialNumber,
+        serialNumber: {
+          startsWith: serialNumber,
+        },
+        OR: {
+          serialNumber: {
+            equals: serialNumber,
+          },
+        },
       },
       include: {
         citizen: true,

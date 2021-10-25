@@ -2,11 +2,12 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import * as React from "react";
-import { FullOfficer } from "state/dispatchState";
+import { FullOfficer, useDispatchState } from "state/dispatchState";
 
 export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
   const [officers, setOfficers] = React.useState(initOfficers);
   const { state, execute } = useFetch();
+  const { setActiveOfficers } = useDispatchState();
 
   const getActiveOfficers = React.useCallback(async () => {
     const { json } = await execute("/leo/active-officers", {
@@ -15,8 +16,9 @@ export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
 
     if (json && Array.isArray(json)) {
       setOfficers(json);
+      setActiveOfficers(json);
     }
-  }, [execute]);
+  }, [execute, setActiveOfficers]);
 
   React.useEffect(() => {
     getActiveOfficers();

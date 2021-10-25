@@ -134,6 +134,17 @@ export class Calls911Controller {
     const units = (body.get("assignedUnits") ?? []) as string[];
     await Promise.all(
       units.map(async (id) => {
+        const officer = await prisma.officer.findFirst({
+          where: {
+            id,
+            status: "ON_DUTY",
+          },
+        });
+
+        if (!officer) {
+          throw new BadRequest("officerOffDuty");
+        }
+
         await prisma.officer.update({
           where: {
             id,

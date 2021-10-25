@@ -112,7 +112,10 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
               <div>
                 <span className="select-none text-gray-500">{++idx}.</span>
                 <span className="ml-2">
-                  {typeof value?.value === "string" ? value.value : value?.value.value}
+                  {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
+                    <span>{(value as any).department.value} / </span>
+                  ) : null}
+                  {typeof value.value === "string" ? value.value : value.value.value}
                 </span>
               </div>
 

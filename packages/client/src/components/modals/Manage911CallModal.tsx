@@ -34,7 +34,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
   const router = useRouter();
   const { user } = useAuth();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
-  const { allOfficers } = useDispatchState();
+  const { allOfficers, activeOfficers } = useDispatchState();
 
   useListener(
     SocketEvents.AddCallEvent,
@@ -173,7 +173,7 @@ export const Manage911CallModal = ({ call, onClose }: Props) => {
                       label: makeLabel(value.value),
                       value: value.value,
                     }))}
-                    values={allOfficers.map((officer) => ({
+                    values={activeOfficers.map((officer) => ({
                       label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,
                       value: officer.id,
                     }))}

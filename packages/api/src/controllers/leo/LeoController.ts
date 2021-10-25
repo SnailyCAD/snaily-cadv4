@@ -309,15 +309,27 @@ export class LeoController {
         });
       }
     } else {
-      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY && officerLog) {
-        await prisma.officerLog.update({
+      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        // unassign officer from call
+        await prisma.officer.update({
           where: {
-            id: officerLog.id,
+            id: officer.id,
           },
           data: {
-            endedAt: new Date(),
+            call911Id: null,
           },
         });
+
+        if (officerLog) {
+          await prisma.officerLog.update({
+            where: {
+              id: officerLog.id,
+            },
+            data: {
+              endedAt: new Date(),
+            },
+          });
+        }
       }
     }
 

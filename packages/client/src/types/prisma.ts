@@ -281,6 +281,7 @@ export type StatusValue = {
   shouldDo: ShouldDoType;
   position: number | null;
   whatPages: WhatPages[];
+  departmentId: string;
 };
 
 /**

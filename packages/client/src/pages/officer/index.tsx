@@ -14,7 +14,6 @@ import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
-import { CreateWarrant } from "components/leo/CreateWarrant";
 import { useTime } from "hooks/useTime";
 import { requestAll } from "lib/utils";
 
@@ -44,6 +43,10 @@ const VehicleSearchModal = dynamic(async () => {
 
 const NameSearchModal = dynamic(async () => {
   return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
+});
+
+const CreateWarrantModal = dynamic(async () => {
+  return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
 });
 
 interface Props {
@@ -82,8 +85,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <Head>
         <title>{t("officer")} - SnailyCAD</title>
       </Head>
-
-      <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
+      <div className="w-full bg-gray-200/80 rounded-md overflow-hidden mb-3">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
@@ -100,15 +102,8 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
         <StatusesArea />
       </div>
 
-      <div className="flex flex-col md:flex-row md:space-x-3 mt-3">
-        <div className="w-full">
-          <ActiveCalls />
-          <ActiveBolos />
-        </div>
-        <div className="w-full md:w-96 mt-3 md:mt-0">
-          <CreateWarrant />
-        </div>
-      </div>
+      <ActiveCalls />
+      <ActiveBolos />
 
       <SelectOfficerModal />
       <NotepadModal />
@@ -116,7 +111,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <WeaponSearchModal />
       <VehicleSearchModal />
       <NameSearchModal />
-
+      <CreateWarrantModal />
       <div>
         <CreateTicketModal type={RecordType.TICKET} />
         <CreateTicketModal type={RecordType.ARREST_REPORT} />

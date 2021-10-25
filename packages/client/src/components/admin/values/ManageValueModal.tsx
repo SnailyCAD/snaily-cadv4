@@ -123,6 +123,20 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
+            {type === "DIVISION" ? (
+              <FormField fieldId="departmentId" label="Department">
+                <Select
+                  values={department.values.map((v) => ({
+                    value: v.id,
+                    label: v.value,
+                  }))}
+                  name="departmentId"
+                  onChange={handleChange}
+                  value={values.departmentId}
+                />
+              </FormField>
+            ) : null}
+
             <FormField fieldId="value" label="Value">
               <Input
                 autoFocus
@@ -141,20 +155,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
                   name="as"
                   onChange={handleChange}
                   value={values.as}
-                />
-              </FormField>
-            ) : null}
-
-            {type === "DIVISION" ? (
-              <FormField fieldId="departmentId" label="Department">
-                <Select
-                  values={department.values.map((v) => ({
-                    value: v.id,
-                    label: v.value,
-                  }))}
-                  name="departmentId"
-                  onChange={handleChange}
-                  value={values.departmentId}
                 />
               </FormField>
             ) : null}
