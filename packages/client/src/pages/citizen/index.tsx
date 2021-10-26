@@ -110,7 +110,7 @@ export default function CitizenPage({ citizens }: Props) {
                 {citizen.imageId ? (
                   <img
                     draggable={false}
-                    className="rounded-full w-14"
+                    className="rounded-full w-14 h-14 object-cover"
                     src={makeImageUrl("citizens", citizen.imageId)}
                   />
                 ) : (
