@@ -83,7 +83,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
                 return (
                   <tr key={log.id}>
-                    <td>{log.officer.name}</td>
+                    <td className="capitalize">{log.officer.name}</td>
                     <td>{startedAt}</td>
                     <td>{log.endedAt !== null ? endedAt : t("notEndedYet")}</td>
                     <td>

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
+    "incremental": true,
 
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -14,9 +15,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-
     "strict": true,
-
     "baseUrl": ".",
     "paths": {
       "lib/*": ["./src/lib/*"],

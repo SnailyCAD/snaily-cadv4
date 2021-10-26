@@ -22,6 +22,7 @@ const ManageOfficerModal = dynamic(
 export type OfficerWithDept = Officer & {
   division: DivisionValue;
   department: Value<"DEPARTMENT">;
+  rank: Value<"OFFICER_RANK">;
 };
 
 interface Props {

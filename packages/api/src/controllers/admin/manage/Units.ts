@@ -1,8 +1,8 @@
-import { PathParams } from "@tsed/common";
+import { PathParams, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get } from "@tsed/schema";
+import { Get, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
 
@@ -45,7 +45,7 @@ export class ManageUnitsController {
   async getUnit(@PathParams("id") id: string) {
     let unit: any = await prisma.officer.findUnique({
       where: { id },
-      include,
+      include: { ...include, logs: true },
     });
 
     if (!unit) {
@@ -60,5 +60,41 @@ export class ManageUnitsController {
     }
 
     return unit;
+  }
+
+  @Put("/:id")
+  async updateUnit(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
+    body;
+
+    let type: "officer" | "emsFdDeputy" = "officer";
+    let unit: any = await prisma.officer.findUnique({
+      where: { id },
+      include,
+    });
+
+    if (!unit) {
+      type = "emsFdDeputy";
+      unit = await prisma.emsFdDeputy.findUnique({
+        where: { id },
+        include,
+      });
+    }
+
+    if (!unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    // @ts-expect-error ignore
+    const updated = await prisma[type].update({
+      where: { id: unit.id },
+      data: {
+        statusId: body.get("status"),
+        departmentId: body.get("department"),
+        divisionId: body.get("division"),
+        rankId: body.get("rank") || null,
+      },
+    });
+
+    return updated;
   }
 }

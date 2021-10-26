@@ -38,6 +38,8 @@ export default function SupervisorPanelPage({ units }: Props) {
               <th>{t("Leo.badgeNumber")}</th>
               <th>{t("Leo.department")}</th>
               <th>{t("Leo.division")}</th>
+              <th>{t("Leo.rank")}</th>
+              <th>{t("Leo.status")}</th>
               <th>{common("actions")}</th>
             </tr>
           </thead>
@@ -50,6 +52,8 @@ export default function SupervisorPanelPage({ units }: Props) {
                 <td>{String(unit.badgeNumber)}</td>
                 <td>{unit.department?.value}</td>
                 <td>{unit.division?.value?.value}</td>
+                <td>{unit.rank?.value ?? common("none")}</td>
+                <td>{unit.status?.value?.value ?? common("none")}</td>
                 <td className="w-36">
                   <Link href={`/admin/manage/units/${unit.id}`}>
                     <a>
