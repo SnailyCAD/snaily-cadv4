@@ -27,6 +27,8 @@ export type MiscCadSettings = {
   maxCitizensPerUser: number | null;
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
+  pairedUnitSymbol: string;
+  callsignTemplate: string;
 };
 
 /**
@@ -348,6 +350,7 @@ export type DivisionValue = {
   value: Value<"DIVISION">;
   departmentId: string | null;
   department: Value<"DEPARTMENT">;
+  callsign: string;
 };
 
 /**

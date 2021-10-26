@@ -13,7 +13,7 @@ import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 
 @Controller("/admin/values/:path")
 @UseBeforeEach(IsValidPath)
@@ -157,9 +157,10 @@ export class ValuesController {
         throw new BadRequest("departmentIdRequired");
       }
 
-      await prisma.divisionValue.create({
+      const division = await prisma.divisionValue.create({
         data: {
           valueId: value.id,
+          callsign: body.get("callsign") || null,
           departmentId: body.get("departmentId"),
         },
         include: {
@@ -167,6 +168,8 @@ export class ValuesController {
           department: true,
         },
       });
+
+      return division;
     }
 
     return value;
@@ -258,11 +261,30 @@ export class ValuesController {
         throw new BadRequest("departmentIdRequired");
       }
 
+      const current = await prisma.divisionValue.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          departmentId: true,
+        },
+      });
+      if (!current) {
+        throw new NotFound("divisionNotFound");
+      }
+
+      const departmentId = body.get("departmentId");
+      const department = !current.departmentId
+        ? { connect: { id: departmentId } }
+        : { update: { id: body.get("departmentId") } };
+
       const updated = await prisma.divisionValue.update({
         where: {
           id,
         },
         data: {
+          callsign: body.get("callsign") || null,
+          department,
           value: {
             update: {
               value: body.get("value"),
@@ -275,13 +297,7 @@ export class ValuesController {
         },
       });
 
-      const value = await prisma.value.findUnique({
-        where: {
-          id: updated.valueId,
-        },
-      });
-
-      return value;
+      return updated;
     }
 
     const updated = await prisma.value.update({

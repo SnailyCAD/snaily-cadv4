@@ -24,7 +24,8 @@
     "createdAt": "Created At",
     "reset": "Reset",
     "search": "Search",
-    "events": "Events"
+    "events": "Events",
+    "name": "Name"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

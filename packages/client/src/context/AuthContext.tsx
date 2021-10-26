@@ -28,6 +28,7 @@ const PERMISSIONS: Record<string, (user: User) => boolean> = {
   "/leo": (user) => user.isLeo,
   "/ems-fd": (user) => user.isEmsFd,
   "/admin/manage/cad-settings": (user) => user.rank === "OWNER",
+  "/admin/manage/units": (user) => user.rank !== "USER" || user.isSupervisor,
   "/admin": (user) => user.rank !== rank.USER,
   "/tow": (user) => user.isTow,
 };

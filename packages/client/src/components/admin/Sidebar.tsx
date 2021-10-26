@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { rank, valueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
-const management = ["USERS", "CITIZENS", "BUSINESSES"];
+const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES"];
 const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
 export const AdminSidebar = () => {

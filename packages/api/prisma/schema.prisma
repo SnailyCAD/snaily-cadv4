@@ -38,7 +38,10 @@ model MiscCadSettings {
   maxCitizensPerUser      Int?
   maxPlateLength          Int    @default(8)
   maxBusinessesPerCitizen Int?
-  cad                     cad[]
+  callsignTemplate        String @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  pairedUnitSymbol        String @default("A") @db.VarChar(255)
+
+  cad cad[]
 }
 
 model User {
@@ -225,6 +228,7 @@ model DivisionValue {
   valueId      String
   department   Value?        @relation("departmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId String?
+  callsign     String?
   officers     Officer[]     @relation("officerDivisionToDivision")
   EmsFdDeputy  EmsFdDeputy[] @relation("emsFdDivisionToDivision")
 }

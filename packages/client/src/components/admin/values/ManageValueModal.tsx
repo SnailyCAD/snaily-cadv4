@@ -110,6 +110,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
         : value && "departmentId" in value
         ? value.departmentId
         : "",
+    // @ts-expect-error shortcut
+    callsign: value?.callsign ?? "",
   };
 
   const validate = handleValidate(VALUE_SCHEMA);
@@ -148,6 +150,12 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
               />
               <Error>{errors.value}</Error>
             </FormField>
+
+            {type === "DIVISION" ? (
+              <FormField fieldId="callsign" label="Callsign">
+                <Input name="callsign" onChange={handleChange} value={values.callsign} />
+              </FormField>
+            ) : null}
 
             {type === "BUSINESS_ROLE" ? (
               <FormField fieldId="as" label="As (this is so the database knows what to use.)">

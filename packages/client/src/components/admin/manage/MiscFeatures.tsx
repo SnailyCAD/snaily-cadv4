@@ -52,6 +52,8 @@ export const MiscFeatures = () => {
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
     maxCitizensPerUser: miscSettings.maxCitizensPerUser ?? Infinity,
     maxPlateLength: miscSettings.maxPlateLength,
+    pairedUnitSymbol: miscSettings.pairedUnitSymbol,
+    callsignTemplate: miscSettings.callsignTemplate,
   };
 
   return (
@@ -117,6 +119,28 @@ export const MiscFeatures = () => {
               />
               <Error>{errors.maxPlateLength}</Error>
             </FormField>
+
+            <FormRow>
+              <FormField label="Paired unit symbol">
+                <Input
+                  id="pairedUnitSymbol"
+                  hasError={!!errors.pairedUnitSymbol}
+                  value={values.pairedUnitSymbol}
+                  onChange={handleChange}
+                />
+                <Error>{errors.pairedUnitSymbol}</Error>
+              </FormField>
+
+              <FormField label="Callsign Template">
+                <Input
+                  id="callsignTemplate"
+                  hasError={!!errors.callsignTemplate}
+                  value={values.callsignTemplate}
+                  onChange={handleChange}
+                />
+                <Error>{errors.callsignTemplate}</Error>
+              </FormField>
+            </FormRow>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
