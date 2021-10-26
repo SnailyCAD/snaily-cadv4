@@ -101,13 +101,13 @@ export default function CitizenId() {
           {citizen.imageId ? (
             <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
               <img
-                className="rounded-full w-[100px] h-[100px]"
+                className="rounded-full w-[150px] h-[150px] object-cover"
                 draggable={false}
                 src={makeImageUrl("citizens", citizen.imageId)}
               />
             </button>
           ) : (
-            <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+            <PersonFill className="text-gray-500/60 w-[150px] h-[150px]" />
           )}
 
           <div className="sm:ml-3 mt-2 sm:mt-0 flex flex-col">
@@ -185,7 +185,7 @@ export default function CitizenId() {
         <div className="mt-10 flex items-center justify-center">
           <img
             draggable={false}
-            className="rounded-md w-[30em] h-[30em]"
+            className="rounded-md w-[40em] h-[40em] object-cover"
             src={makeImageUrl("citizens", citizen.imageId!)}
           />
         </div>
