@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -9,7 +10,7 @@ import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
@@ -84,6 +85,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
           <Form>
             <FormField label={t("officerName")}>
               <Input
+                disabled={!!values.citizenId}
                 value={values.name}
                 hasError={!!errors.name}
                 id="name"
@@ -180,9 +182,30 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
                 {officer ? common("save") : common("create")}
               </Button>
             </footer>
+
+            <AutoSetName />
           </Form>
         )}
       </Formik>
     </Modal>
   );
+};
+
+const AutoSetName = () => {
+  const { citizens } = useCitizen();
+  const { values, setFieldValue } = useFormikContext<any>();
+
+  React.useEffect(() => {
+    if (values.citizenId) {
+      const citizen = citizens.find((v) => v.id === values.citizenId);
+
+      if (citizen) {
+        setFieldValue("name", `${citizen?.name} ${citizen?.surname}`);
+      }
+    } else {
+      setFieldValue("name", values.name);
+    }
+  }, [citizens, values.citizenId, values.name, setFieldValue]);
+
+  return null;
 };

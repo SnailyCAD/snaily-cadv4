@@ -4,7 +4,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
+import { cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -76,8 +76,9 @@ export class LeoController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
+    let citizen: null | Citizen = null;
     if (body.get("citizenId")) {
-      const citizen = await prisma.citizen.findFirst({
+      citizen = await prisma.citizen.findFirst({
         where: {
           id: body.get("citizenId"),
           userId: user.id,
@@ -91,13 +92,13 @@ export class LeoController {
 
     const officer = await prisma.officer.create({
       data: {
-        name: body.get("name"),
+        name: citizen ? `${citizen.name} ${citizen.surname}` : body.get("name"),
         callsign: body.get("callsign"),
         userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId") || null,
+        citizenId: citizen?.id ?? null,
       },
       include: {
         department: true,
@@ -152,8 +153,9 @@ export class LeoController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
+    let citizen: null | Citizen = null;
     if (body.get("citizenId")) {
-      const citizen = await prisma.citizen.findFirst({
+      citizen = await prisma.citizen.findFirst({
         where: {
           id: body.get("citizenId"),
           userId: user.id,
@@ -170,12 +172,12 @@ export class LeoController {
         id: officer.id,
       },
       data: {
-        name: body.get("name"),
         callsign: body.get("callsign"),
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId") || null,
+        name: citizen ? `${citizen.name} ${citizen.surname}` : body.get("name"),
+        citizenId: citizen?.id ?? null,
       },
       include: {
         department: true,

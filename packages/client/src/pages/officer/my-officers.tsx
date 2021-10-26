@@ -89,7 +89,7 @@ export default function MyOfficers({ officers: data }: Props) {
             <tbody>
               {officers.map((officer) => (
                 <tr key={officer.id}>
-                  <td>{officer.name}</td>
+                  <td className="capitalize">{officer.name}</td>
                   <td>{officer.callsign}</td>
                   <td>{String(officer.badgeNumber)}</td>
                   <td>{officer.department.value}</td>
