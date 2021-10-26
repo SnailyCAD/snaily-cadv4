@@ -129,7 +129,6 @@ model Citizen {
 enum Rank {
   OWNER
   ADMIN
-  MODERATOR
   USER
 }
 

@@ -29,6 +29,7 @@ export default function Login() {
 
   const authMessages = {
     banned: error("userBanned"),
+    deleted: error("userDeleted"),
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];

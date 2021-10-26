@@ -23,6 +23,7 @@ import { BanArea } from "components/admin/manage/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { requestAll } from "lib/utils";
+import { DangerZone } from "components/admin/manage/DangerZone";
 
 interface Props {
   user: User | null;
@@ -95,7 +96,6 @@ export default function ManageCitizens(props: Props) {
                       ? [{ value: user.rank, label: user.rank }]
                       : [
                           { value: "ADMIN", label: "Admin" },
-                          { value: "MODERATOR", label: "Moderator" },
                           { value: "USER", label: "User" },
                         ]
                   }
@@ -167,6 +167,7 @@ export default function ManageCitizens(props: Props) {
         </Formik>
 
         <BanArea setUser={setUser} user={user} />
+        {user.rank !== "OWNER" ? <DangerZone user={user} /> : null}
       </div>
     </AdminLayout>
   );

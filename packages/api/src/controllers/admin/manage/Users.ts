@@ -3,7 +3,7 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { userProperties } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
@@ -112,5 +112,31 @@ export class ManageUsersController {
     }
 
     return updated;
+  }
+
+  @Delete("/:id")
+  async deleteUserAccount(@PathParams("id") userId: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+        NOT: {
+          rank: "OWNER",
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
+
+    this.socket.emitUserDeleted(user.id);
+
+    return true;
   }
 }

@@ -419,7 +419,6 @@ export type Warrant = {
 export const rank = {
   OWNER: "OWNER",
   ADMIN: "ADMIN",
-  MODERATOR: "MODERATOR",
   USER: "USER",
 } as const;
 

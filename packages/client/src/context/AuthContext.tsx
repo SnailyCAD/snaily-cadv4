@@ -92,6 +92,15 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
     [user?.id],
   );
 
+  useListener(
+    SocketEvents.UserDeleted,
+    (userId) => {
+      if (userId !== user?.id) return;
+      router.push("/auth/login?error=deleted");
+    },
+    [user?.id],
+  );
+
   const value = { user, cad, setCad, setUser };
 
   if ((!router.pathname.includes("auth") && !user) || isForbidden) {

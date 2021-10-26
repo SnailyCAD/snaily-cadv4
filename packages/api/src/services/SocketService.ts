@@ -64,6 +64,10 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.UserBanned, userId);
   }
 
+  emitUserDeleted(userId: string) {
+    this.io.sockets.emit(SocketEvents.UserDeleted, userId);
+  }
+
   emitAddCallEvent(event: Call911Event) {
     this.io.sockets.emit(SocketEvents.AddCallEvent, event);
   }

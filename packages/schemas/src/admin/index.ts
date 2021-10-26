@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const RANK_REGEX = /OWNER|ADMIN|MODERATOR|USER/;
+const RANK_REGEX = /OWNER|ADMIN|USER/;
 
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
