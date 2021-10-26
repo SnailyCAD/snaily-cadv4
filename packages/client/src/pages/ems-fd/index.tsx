@@ -15,6 +15,8 @@ import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { DeputyWithDept } from "./my-deputies";
 import { requestAll } from "lib/utils";
+import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -36,10 +38,6 @@ const CreateMedicalRecordModal = dynamic(async () => {
 
 const SearchMedicalRecordModal = dynamic(async () => {
   return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
-});
-
-const ActiveDeputiesModal = dynamic(async () => {
-  return (await import("components/ems-fd/modals/ActiveDeputiesModal")).ActiveDeputiesModal;
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
@@ -87,11 +85,15 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         </div>
       </div>
 
+      <div className="mt-3">
+        <ActiveOfficers />
+        <ActiveDeputies />
+      </div>
+
       <SelectDeputyModal />
       <NotepadModal />
       <CreateMedicalRecordModal />
       <SearchMedicalRecordModal />
-      <ActiveDeputiesModal />
     </Layout>
   );
 }

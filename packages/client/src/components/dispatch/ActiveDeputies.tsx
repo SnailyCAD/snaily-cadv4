@@ -6,12 +6,16 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
+import { useRouter } from "next/router";
 
 export const ActiveDeputies = () => {
   const { activeDeputies } = useActiveDeputies();
   const t = useTranslations();
   const common = useTranslations("Common");
   const { openModal } = useModal();
+
+  const router = useRouter();
+  const isDispatch = router.pathname === "/dispatch";
 
   const [tempUnit, setTempUnit] = React.useState<ActiveDeputy | null>(null);
 
@@ -34,12 +38,12 @@ export const ActiveDeputies = () => {
             <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
               <thead>
                 <tr>
-                  <th>{t("Leo.officer")}</th>
+                  <th>{t("Ems.deputy")}</th>
                   <th>{t("Leo.badgeNumber")}</th>
                   <th>{t("Leo.department")}</th>
                   <th>{t("Leo.division")}</th>
                   <th>{t("Leo.status")}</th>
-                  <th>{common("actions")}</th>
+                  {isDispatch ? <th>{common("actions")}</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -52,11 +56,13 @@ export const ActiveDeputies = () => {
                     <td>{officer.department.value}</td>
                     <td>{officer.division.value.value}</td>
                     <td>{officer.status2?.value?.value}</td>
-                    <td className="w-36">
-                      <Button onClick={() => handleEditClick(officer)} small variant="success">
-                        {common("manage")}
-                      </Button>
-                    </td>
+                    {isDispatch ? (
+                      <td className="w-36">
+                        <Button onClick={() => handleEditClick(officer)} small variant="success">
+                          {common("manage")}
+                        </Button>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>

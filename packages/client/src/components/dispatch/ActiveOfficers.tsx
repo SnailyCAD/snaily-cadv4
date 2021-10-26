@@ -6,12 +6,16 @@ import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
+import { useRouter } from "next/router";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
+
+  const router = useRouter();
+  const isDispatch = router.pathname === "/dispatch";
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | null>(null);
 
@@ -31,15 +35,15 @@ export const ActiveOfficers = () => {
           <p className="py-2">{t("noActiveOfficers")}</p>
         ) : (
           <div className="overflow-x-auto w-full mt-3 pb-2">
-            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+            <table className="overflow-hidden w-full whitespace-nowrap">
               <thead>
                 <tr>
-                  <th>{t("officer")}</th>
-                  <th>{t("badgeNumber")}</th>
-                  <th>{t("department")}</th>
-                  <th>{t("division")}</th>
-                  <th>{t("status")}</th>
-                  <th>{common("actions")}</th>
+                  <th className="bg-gray-300">{t("officer")}</th>
+                  <th className="bg-gray-300">{t("badgeNumber")}</th>
+                  <th className="bg-gray-300">{t("department")}</th>
+                  <th className="bg-gray-300">{t("division")}</th>
+                  <th className="bg-gray-300">{t("status")}</th>
+                  {isDispatch ? <th className="bg-gray-300">{common("actions")}</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -52,11 +56,13 @@ export const ActiveOfficers = () => {
                     <td>{officer.department.value}</td>
                     <td>{officer.division.value.value}</td>
                     <td>{officer.status?.value?.value}</td>
-                    <td className="w-36">
-                      <Button onClick={() => handleEditClick(officer)} small variant="success">
-                        {common("manage")}
-                      </Button>
-                    </td>
+                    {isDispatch ? (
+                      <td className="w-36">
+                        <Button onClick={() => handleEditClick(officer)} small variant="success">
+                          {common("manage")}
+                        </Button>
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>

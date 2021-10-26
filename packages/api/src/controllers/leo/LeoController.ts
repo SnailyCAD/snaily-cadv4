@@ -389,7 +389,6 @@ export class LeoController {
     return ctx.get("activeOfficer");
   }
 
-  @Use(ActiveOfficer)
   @Get("/active-officers")
   async getActiveOfficers() {
     const officers = await prisma.officer.findMany({

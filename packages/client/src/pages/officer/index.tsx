@@ -16,6 +16,8 @@ import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/useTime";
 import { requestAll } from "lib/utils";
+import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
+import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -23,10 +25,6 @@ const NotepadModal = dynamic(async () => {
 
 const SelectOfficerModal = dynamic(async () => {
   return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
-});
-
-const ActiveOfficersModal = dynamic(async () => {
-  return (await import("components/leo/modals/ActiveOfficers")).ActiveOfficersModal;
 });
 
 const CreateTicketModal = dynamic(async () => {
@@ -105,13 +103,18 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <ActiveCalls />
       <ActiveBolos />
 
+      <div className="mt-3">
+        <ActiveOfficers />
+        <ActiveDeputies />
+      </div>
+
       <SelectOfficerModal />
       <NotepadModal />
-      <ActiveOfficersModal />
       <WeaponSearchModal />
       <VehicleSearchModal />
       <NameSearchModal />
       <CreateWarrantModal />
+
       <div>
         <CreateTicketModal type={RecordType.TICKET} />
         <CreateTicketModal type={RecordType.ARREST_REPORT} />
@@ -140,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       citizens,
       messages: {
-        ...(await getTranslations(["citizen", "leo", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "ems-fd", "calls", "common"], locale)),
       },
     },
   };

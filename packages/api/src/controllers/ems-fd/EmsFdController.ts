@@ -282,7 +282,6 @@ export class EmsFdController {
     return ctx.get("activeDeputy");
   }
 
-  @Use(ActiveDeputy)
   @Get("/active-deputies")
   async getActiveDeputies() {
     const deputies = await prisma.emsFdDeputy.findMany({
