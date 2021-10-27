@@ -13,18 +13,13 @@ import { Bolo, BoloType, ShouldDoType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 
+const BOLO_TYPES = Object.values(BoloType);
+
 export const ActiveBolos = () => {
-  const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { bolos, setBolos } = useDispatchState();
   const [tempBolo, setTempBolo] = React.useState<FullBolo | null>(null);
-  const { activeOfficer } = useLeoState();
-  const { pathname } = useRouter();
-  const isDispatchRoute = pathname === "/dispatch";
-  const isDisabled = isDispatchRoute
-    ? false
-    : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
   useListener(
     SocketEvents.CreateBolo,
@@ -83,7 +78,7 @@ export const ActiveBolos = () => {
   }
 
   return (
-    <div className="mt-3 bg-gray-200/80 rounded-md overflow-hidden">
+    <div className="mt-3 bg-gray-200/80 overflow-hidden rounded-md">
       <header className="bg-gray-300/50 px-4 p-2">
         <h3 className="text-xl font-semibold">{"Active Bolos"}</h3>
       </header>
@@ -92,59 +87,35 @@ export const ActiveBolos = () => {
         {bolos.length <= 0 ? (
           <p className="py-2">{"There are no active bolos."}</p>
         ) : (
-          <ul className="py-2 space-y-2">
-            {bolos.map((bolo, idx) => (
-              <li key={bolo.id} className="flex justify-between">
-                <div className="flex">
-                  <span className="select-none text-gray-500 mr-2">{idx + 1}. </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {BOLO_TYPES.map((boloType) => {
+              const items = bolos.filter((v) => v.type === boloType);
 
-                  <div>
-                    {bolo.type === BoloType.PERSON ? (
-                      <p id="description">
-                        {bolo.description} <br />
-                        <span className="font-semibold">{"Name"}: </span>
-                        {bolo.name}
-                      </p>
-                    ) : bolo.type === BoloType.VEHICLE ? (
-                      <p>
-                        {bolo.description} <br />
-                        <span className="font-semibold">{"Plate"}: </span>
-                        {bolo.plate?.toUpperCase()}
-                        <br />
-                        <span className="font-semibold">{"Color"}: </span>
-                        {bolo.color}
-                      </p>
+              return (
+                <div key={boloType}>
+                  <h1 className="font-semibold text-xl my-2 capitalize">
+                    {boloType.toLowerCase()} bolos
+                  </h1>
+
+                  <ul className="py-2 space-y-2 overflow-auto max-h-[30em]">
+                    {items.length <= 0 ? (
+                      <p>{`No active bolos for type: ${boloType.toLowerCase()}`}</p>
                     ) : (
-                      <p>{bolo.description}</p>
+                      items.map((bolo, idx) => (
+                        <BoloItem
+                          key={bolo.id}
+                          bolo={bolo}
+                          idx={idx}
+                          handleEdit={handleEditClick}
+                          handleDelete={handleDeleteClick}
+                        />
+                      ))
                     )}
-
-                    <p>
-                      <span className="font-semibold">{"Officer"}: </span>
-                      {bolo?.officer?.name ?? t("dispatch")}
-                    </p>
-                  </div>
+                  </ul>
                 </div>
-
-                <div>
-                  <Button
-                    disabled={isDisabled}
-                    onClick={() => handleEditClick(bolo)}
-                    variant="success"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    className="ml-2"
-                    disabled={isDisabled}
-                    onClick={() => handleDeleteClick(bolo)}
-                    variant="danger"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </li>
-            ))}
-          </ul>
+              );
+            })}
+          </div>
         )}
       </div>
 
@@ -162,5 +133,71 @@ export const ActiveBolos = () => {
         />
       </>
     </div>
+  );
+};
+
+interface BoloItemProps {
+  idx: number;
+  bolo: FullBolo;
+  handleEdit: (bolo: FullBolo) => void;
+  handleDelete: (bolo: FullBolo) => void;
+}
+
+const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
+  const t = useTranslations("Leo");
+  const { activeOfficer } = useLeoState();
+  const { pathname } = useRouter();
+  const isDispatchRoute = pathname === "/dispatch";
+  const isDisabled = isDispatchRoute
+    ? false
+    : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
+
+  return (
+    <li key={bolo.id} className="flex justify-between">
+      <div className="flex">
+        <span className="select-none text-gray-500 mr-2">{idx + 1}. </span>
+
+        <div>
+          {bolo.type === BoloType.PERSON ? (
+            <p id="description">
+              {bolo.description} <br />
+              <span className="font-semibold">{"Name"}: </span>
+              {bolo.name}
+            </p>
+          ) : bolo.type === BoloType.VEHICLE ? (
+            <p>
+              {bolo.description} <br />
+              <span className="font-semibold">{"Plate"}: </span>
+              {bolo.plate?.toUpperCase()}
+              <br />
+              <span className="font-semibold">{"Color"}: </span>
+              {bolo.color}
+            </p>
+          ) : (
+            <p>{bolo.description}</p>
+          )}
+
+          <p>
+            <span className="font-semibold">{"Officer"}: </span>
+            {bolo?.officer?.name ?? t("dispatch")}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <Button small disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
+          Edit
+        </Button>
+        <Button
+          small
+          className="ml-2"
+          disabled={isDisabled}
+          onClick={() => handleDelete(bolo)}
+          variant="danger"
+        >
+          Delete
+        </Button>
+      </div>
+    </li>
   );
 };

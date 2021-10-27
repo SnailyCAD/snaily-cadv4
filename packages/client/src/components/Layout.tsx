@@ -10,7 +10,7 @@ export const Layout = ({ children, className = "" }: Props) => {
     <>
       <Nav maxWidth={className.split(" ").find((v) => v.startsWith("max-w"))} />
 
-      <main className={`mt-5 px-4 container max-w-6xl mx-auto ${className}`}>{children}</main>
+      <main className={`mt-5 px-4 pb-5 container max-w-6xl mx-auto ${className}`}>{children}</main>
     </>
   );
 };
