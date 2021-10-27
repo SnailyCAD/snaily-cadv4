@@ -715,6 +715,8 @@ __metadata:
     "@snailycad/schemas": 0.2.0-alpha
     "@types/react": ^17.0.33
     "@types/react-dom": ^17.0.10
+    "@types/sortablejs": ^1.10.7
+    array-move: ^4.0.0
     autoprefixer: ^10.3.7
     axios: ^0.24.0
     date-fns: ^2.25.0
@@ -727,12 +729,15 @@ __metadata:
     react: ^17.0.2
     react-bootstrap-icons: ^1.6.1
     react-dom: ^17.0.2
+    react-easy-sort: ^1.3.2
     react-hot-toast: ^2.1.1
     react-markdown: ^7.1.0
     react-select: ^5.1.0
+    react-sortablejs: ^6.0.0
     react-use: ^17.3.1
     sass: ^1.43.3
     socket.io-client: ^4.3.2
+    sortablejs: ^1.14.0
     tailwindcss: ^2.2.17
     typescript: ^4.4.4
     zod: ^3.11.4
@@ -1414,6 +1419,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sortablejs@npm:^1.10.7":
+  version: 1.10.7
+  resolution: "@types/sortablejs@npm:1.10.7"
+  checksum: c0854b842f0d4b938cb8d0496159bae77b275ed5b5fae8a0faf8d016a51d16906e1b2343f3f09a859a9c6b7ab3409cd7c9577643b249367fbf1756ffe15e4cbb
+  languageName: node
+  linkType: hard
+
 "@types/unist@npm:*, @types/unist@npm:^2.0.0":
   version: 2.0.6
   resolution: "@types/unist@npm:2.0.6"
@@ -1797,6 +1809,20 @@ __metadata:
     get-intrinsic: ^1.1.1
     is-string: ^1.0.7
   checksum: 69967c38c52698f84b50a7aed5554aadc89c6ac6399b6d92ad061a5952f8423b4bba054c51d40963f791dfa294d7247cdd7988b6b1f2c5861477031c6386e1c0
+  languageName: node
+  linkType: hard
+
+"array-move@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "array-move@npm:3.0.1"
+  checksum: 4b550fe07f89750e5830be6e0b0165e5900a8d087ac51c4f7bf8cac6f87b4e96dfda05629cb962cdc33f64a3b0be49ee783595d74ccd2278e5a588fc436481d0
+  languageName: node
+  linkType: hard
+
+"array-move@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "array-move@npm:4.0.0"
+  checksum: 307e6716e83567918cf8dd0050cdb44ce500d9969cd734ecbf1f8ae547df151dbf10713255a9db6a8950ca917f4817a778f0116f6d13944c3f3cd1fd1845f13f
   languageName: node
   linkType: hard
 
@@ -2526,6 +2552,13 @@ __metadata:
   version: 2.2.6
   resolution: "classnames@npm:2.2.6"
   checksum: 09a4fda780158aa8399079898eabeeca0c48c28641d9e4de140db7412e5e346843039ded1af0152f755afc2cc246ff8c3d6f227bf0dcb004e070b7fa14ec54cc
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.2.6":
+  version: 2.3.1
+  resolution: "classnames@npm:2.3.1"
+  checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
   languageName: node
   linkType: hard
 
@@ -7826,6 +7859,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-easy-sort@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "react-easy-sort@npm:1.3.2"
+  dependencies:
+    array-move: ^3.0.1
+    tslib: 2.0.1
+  peerDependencies:
+    react: ">=16.4.0"
+    react-dom: ">=16.4.0"
+  checksum: 577b81eb60cb61e8e2e05b9d1efbb35311c7e6b17603f6622fee18e757411bb64746ea9bc349210129f92f4ecc6a9d2467ce7c23d799ec15fff2f1d41748d3c0
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^2.0.1":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -7906,6 +7952,21 @@ __metadata:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
   checksum: b811ec246dc68b2615ed623170ed52c035e239a2c90fdf742c18bed1d1bb1cb4098af1fde0d18ac8d73abaf9126f4030cb0a0f3e96c1c6f998820af5e681b3b5
+  languageName: node
+  linkType: hard
+
+"react-sortablejs@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-sortablejs@npm:6.0.0"
+  dependencies:
+    classnames: ^2.2.6
+    tiny-invariant: ^1.1.0
+  peerDependencies:
+    "@types/sortablejs": ^1.10.0
+    react: ^16.9.0
+    react-dom: ^16.9.0
+    sortablejs: ^1.10.0
+  checksum: 28c496b2e1618996ecf11e5cc3d5560e2f398b53e5a5f86f4e34f02dcca77f1c4cf52c1a2aca41ccd7b4392e82558481929759a11844bcd44727a58ba7b3bd49
   languageName: node
   linkType: hard
 
@@ -8615,6 +8676,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"sortablejs@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "sortablejs@npm:1.14.0"
+  checksum: 7b9d2cbb0331f3f259b8703a17174ff46a941b6d59c77c75ca05a5bd484bf2b409a9c1d21344f9c933939880450803b254825c7c7d7f88034e8c7e675420b389
+  languageName: node
+  linkType: hard
+
 "source-map-js@npm:^0.6.2":
   version: 0.6.2
   resolution: "source-map-js@npm:0.6.2"
@@ -9099,6 +9167,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"tiny-invariant@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "tiny-invariant@npm:1.1.0"
+  checksum: 27d29bbb9e1d1d86e25766711c28ad91af6d67c87d561167077ac7fbce5212b97bbfe875e70bc369808e075748c825864c9b61f0e9f8652275ec86bcf4dcc924
+  languageName: node
+  linkType: hard
+
 "tiny-warning@npm:^1.0.2":
   version: 1.0.3
   resolution: "tiny-warning@npm:1.0.3"
@@ -9252,6 +9327,13 @@ resolve@^2.0.0-next.3:
     minimist: ^1.2.0
     strip-bom: ^3.0.0
   checksum: e14aaa6883f316d611db41cbb0fc8779b59c66b31d1e045565ad4540c77ccd3d2bb66f7c261b74ff535d3cc6b4a1ce21dc84774bf2a2a603ed6b0fb96f7e0cc7
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.0.1":
+  version: 2.0.1
+  resolution: "tslib@npm:2.0.1"
+  checksum: 507f32fc24a614c5097d414b622373b6cbb99e305413517e7fd49bef1e63570c0dd15b417ae68152088c3496218e82a5d8c7cd6b48c7a32dcee1a3f7191fff74
   languageName: node
   linkType: hard
 

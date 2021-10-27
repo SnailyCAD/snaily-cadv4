@@ -2,6 +2,9 @@ import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import compareAsc from "date-fns/compareAsc";
+import { ReactSortable } from "react-sortablejs";
+import { ArrowsExpand } from "react-bootstrap-icons";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { Modal } from "components/modal/Modal";
@@ -22,7 +25,6 @@ import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
-import compareAsc from "date-fns/compareAsc";
 
 type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
 
@@ -43,12 +45,31 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
-  function findCreatedAt(value: TValue) {
-    if ("createdAt" in value) {
-      return new Date(value.createdAt);
-    }
+  async function setList(list: TValue[]) {
+    setValues((p) =>
+      list.map((v, idx) => {
+        const prev = p.find((a) => a.id === v.id);
 
-    return new Date(value.value.createdAt);
+        if (prev) {
+          if ("createdAt" in prev) {
+            prev.position = idx;
+          } else {
+            prev.value.position = idx;
+          }
+        }
+
+        return v;
+      }),
+    );
+
+    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+      method: "PUT",
+      data: {
+        ids: list.map((v) => {
+          return "createdAt" in v ? v.id : v.valueId;
+        }),
+      },
+    });
   }
 
   function handleDeleteClick(value: TValue) {
@@ -112,39 +133,37 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <ul className="mt-5">
-          {values
-            .sort((a, b) => compareAsc(findCreatedAt(a), findCreatedAt(b)))
-            .map((value, idx) => (
-              <li
-                className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
-                key={value.id}
-              >
-                <div>
-                  <span className="select-none text-gray-500">{++idx}.</span>
-                  <span className="ml-2">
-                    {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                      <span>{(value as any).department.value} / </span>
-                    ) : null}
-                    {typeof value.value === "string" ? value.value : value.value.value}
-                  </span>
-                </div>
+        <ReactSortable animation={200} className="mt-5" tag="ul" list={values} setList={setList}>
+          {sortValues(values).map((value, idx) => (
+            <li
+              className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
+              key={value.id}
+            >
+              <div className="flex items-center">
+                <span className="cursor-move">
+                  <ArrowsExpand className="text-gray-500 mr-2" width={15} />
+                </span>
 
-                <div>
-                  <Button onClick={() => handleEditClick(value)} variant="success">
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteClick(value)}
-                    variant="danger"
-                    className="ml-2"
-                  >
-                    {common("delete")}
-                  </Button>
-                </div>
-              </li>
-            ))}
-        </ul>
+                <span className="select-none text-gray-500">{++idx}.</span>
+                <span className="ml-2">
+                  {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
+                    <span>{(value as any).department.value} / </span>
+                  ) : null}
+                  {typeof value.value === "string" ? value.value : value.value.value}
+                </span>
+              </div>
+
+              <div>
+                <Button onClick={() => handleEditClick(value)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
+                  {common("delete")}
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ReactSortable>
       )}
 
       <Modal
@@ -215,3 +234,28 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
     },
   };
 };
+
+function sortValues(values: TValue[]) {
+  return values.sort((a, b) => {
+    const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
+    const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);
+
+    return typeof posA === "number" && typeof posB === "number"
+      ? posA - posB
+      : compareAsc(crA, crB);
+  });
+}
+
+function findCreatedAtAndPosition(value: TValue) {
+  if ("createdAt" in value) {
+    return {
+      createdAt: new Date(value.createdAt),
+      position: value.position,
+    };
+  }
+
+  return {
+    createdAt: new Date(value.value.createdAt),
+    position: value.value.position,
+  };
+}

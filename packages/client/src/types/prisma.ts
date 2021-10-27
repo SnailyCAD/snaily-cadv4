@@ -143,6 +143,7 @@ export type Value<Type extends ValueType = ValueType> = {
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
+  position: number | null;
 };
 
 /**

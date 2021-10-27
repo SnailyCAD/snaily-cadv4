@@ -9,7 +9,7 @@ import {
   BodyParams,
   QueryParams,
 } from "@tsed/common";
-import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
+import { Delete, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
@@ -74,6 +74,9 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: {
               type,
+            },
+            orderBy: {
+              position: "asc",
             },
           }),
         };
@@ -312,6 +315,29 @@ export class ValuesController {
     });
 
     return updated;
+  }
+
+  @Put("/positions")
+  @UseBefore(IsAdmin)
+  async updatePositions(@BodyParams() body: JsonRequestBody) {
+    const ids = body.get("ids");
+
+    if (!Array.isArray(ids)) {
+      throw new BadRequest("mustBeArray");
+    }
+
+    await Promise.all(
+      ids.map(async (id: string, idx) => {
+        await prisma.value.update({
+          where: {
+            id,
+          },
+          data: {
+            position: idx,
+          },
+        });
+      }),
+    );
   }
 
   private getTypeFromPath(path: string): ValueType {

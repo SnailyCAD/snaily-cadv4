@@ -190,6 +190,7 @@ model Value {
   isDefault Boolean
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  position  Int?
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]           @relation("ethnicityToValue")
