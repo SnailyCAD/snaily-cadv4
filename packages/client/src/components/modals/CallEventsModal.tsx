@@ -57,7 +57,7 @@ export const CallEventsModal = ({ call, onClose }: Props) => {
           call?.events
             .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
             .map((event) => {
-              const formatted = format(new Date(event.createdAt), "HH:mm:ss");
+              const formatted = format(new Date(event.createdAt), "yyyy-MM-dd HH:mm:ss");
 
               return (
                 <li key={event.id}>

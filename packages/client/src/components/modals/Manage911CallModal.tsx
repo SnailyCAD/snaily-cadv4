@@ -246,7 +246,6 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                   type="button"
                   variant="danger"
                 >
-                  {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
                   {t("endCall")}
                 </Button>
 

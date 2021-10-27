@@ -98,7 +98,9 @@ export const ActiveCalls = () => {
                   <tr key={call.id}>
                     <td>{call.name}</td>
                     <td>{call.location}</td>
-                    <td>{call.description}</td>
+                    <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                      {call.description}
+                    </td>
                     <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
                     <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
                     <td>
