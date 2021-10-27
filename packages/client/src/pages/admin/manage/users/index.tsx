@@ -8,6 +8,9 @@ import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
+import { TabsContainer } from "components/tabs/TabsContainer";
+import { Tab } from "@headlessui/react";
+import { PendingUsersTab } from "components/admin/manage/PendingUsersTab";
 
 interface Props {
   users: User[];
@@ -18,10 +21,13 @@ export default function ManageCitizens({ users: data }: Props) {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+  const pending = users.filter((v) => v.whitelistStatus === "PENDING");
 
   React.useEffect(() => {
     setUsers(data);
   }, [data]);
+
+  const tabs = [`${t("allUsers")} (${users.length})`, `${t("pendingUsers")} (${pending.length})`];
 
   return (
     <AdminLayout>
@@ -29,28 +35,37 @@ export default function ManageCitizens({ users: data }: Props) {
         <title>{t("MANAGE_USERS")}</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
+      <h1 className="text-3xl font-semibold mb-4">{t("MANAGE_USERS")}</h1>
 
-      <ul className="mt-5">
-        {users.map((user, idx) => (
-          <li className="my-1 bg-gray-200 py-3 px-4 rounded-md w-full flex flex-col" key={user.id}>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="select-none text-gray-500">{idx + 1}.</span>
-                <span className="ml-2">{user.username}</span>
-              </div>
+      <TabsContainer tabs={tabs}>
+        <Tab.Panel>
+          <ul className="mt-5">
+            {users.map((user, idx) => (
+              <li
+                className="my-1 bg-gray-200 py-3 px-4 rounded-md w-full flex flex-col"
+                key={user.id}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="select-none text-gray-500">{idx + 1}.</span>
+                    <span className="ml-2">{user.username}</span>
+                  </div>
 
-              <div>
-                <Link href={`/admin/manage/users/${user.id}`}>
-                  <a className="transition-colors text-white bg-gray-500 hover:bg-gray-600 p-1.5 px-3 rounded-md">
-                    {common("manage")}
-                  </a>
-                </Link>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+                  <div>
+                    <Link href={`/admin/manage/users/${user.id}`}>
+                      <a className="transition-colors text-white bg-gray-500 hover:bg-gray-600 p-1.5 px-3 rounded-md">
+                        {common("manage")}
+                      </a>
+                    </Link>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Tab.Panel>
+
+        <PendingUsersTab setUsers={setUsers} users={pending} />
+      </TabsContainer>
     </AdminLayout>
   );
 }

@@ -6,6 +6,8 @@
     "MANAGE_USERS": "Manage Users",
     "MANAGE_UNITS": "Manage Units",
     "MANAGE_CAD_SETTINGS": "CAD Settings",
+    "allUsers": "All Users",
+    "pendingUsers": "Pending Users",
     "viewInfo": "View Info",
     "noCitizens": "There are no citizens for this CAD yet.",
     "noBusinesses": "There are no businesses for this CAD yet.",

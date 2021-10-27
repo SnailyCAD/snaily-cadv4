@@ -1,4 +1,4 @@
-import { Rank } from ".prisma/client";
+import { Rank, WhitelistStatus } from ".prisma/client";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -136,6 +136,41 @@ export class ManageUsersController {
     });
 
     this.socket.emitUserDeleted(user.id);
+
+    return true;
+  }
+
+  @Post("/pending/:id/:type")
+  async acceptOrDeclineUser(
+    @PathParams("id") userId: string,
+    @PathParams("type") type: "accept" | "decline",
+  ) {
+    if (!["accept", "decline"].includes(type)) {
+      throw new BadRequest("invalidType");
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+        whitelistStatus: "PENDING",
+        NOT: {
+          rank: "OWNER",
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        whitelistStatus: type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
+      },
+    });
 
     return true;
   }
