@@ -51,6 +51,12 @@ export class CitizenController {
         driversLicense: true,
         ccw: true,
         pilotLicense: true,
+        Record: {
+          include: {
+            officer: true,
+            violations: true,
+          },
+        },
       },
     });
 

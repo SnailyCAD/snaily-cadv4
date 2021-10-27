@@ -1,10 +1,12 @@
 import * as React from "react";
+import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "types/prisma";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
   vehicles: RegisteredVehicle[];
   medicalRecords: MedicalRecord[];
+  Record: FullRecord[];
 };
 
 interface Context<CitizenNull extends boolean = true> {

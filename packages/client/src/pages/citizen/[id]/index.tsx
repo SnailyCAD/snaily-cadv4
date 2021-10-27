@@ -22,6 +22,7 @@ import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
 import { calculateAge, makeImageUrl } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
+import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 // import { ViolationsCard } from "components/citizen/ViolationsCard";
 
 export default function CitizenId() {
@@ -175,6 +176,7 @@ export default function CitizenId() {
       <div className="mt-3 space-y-3">
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
+        <RecordsArea records={citizen.Record} />
       </div>
 
       <Modal
@@ -247,7 +249,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
       citizen: data,
       values,
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "common"], locale)),
       },
     },
   };

@@ -1,5 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
+import { useRouter } from "next/router";
 import { Officer, PenalCode, Record, RecordType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
@@ -10,6 +11,8 @@ interface Props {
 
 export const RecordsArea = ({ records }: Props) => {
   const t = useTranslations();
+  const router = useRouter();
+  const isCitizen = router.pathname.startsWith("/citizen");
 
   const tickets = records.filter((v) => v.type === RecordType.TICKET);
   const writtenWarnings = records.filter((v) => v.type === RecordType.WRITTEN_WARNING);
@@ -22,7 +25,13 @@ export const RecordsArea = ({ records }: Props) => {
   ];
 
   return (
-    <>
+    <div className={isCitizen ? "bg-gray-200/60 p-4 rounded-md" : ""}>
+      {isCitizen ? (
+        <header className="flex items-center justify-between mb-3">
+          <h1 className="text-2xl font-semibold">{t("Leo.records")}</h1>
+        </header>
+      ) : null}
+
       {data.map(([title, noValuesText, data]) => (
         <section className="my-2 mb-5" key={title} id={title}>
           <h3 className="text-xl font-semibold">{title}</h3>
@@ -30,13 +39,15 @@ export const RecordsArea = ({ records }: Props) => {
           {data!.length <= 0 ? <p>{noValuesText}</p> : <Table data={data} />}
         </section>
       ))}
-    </>
+    </div>
   );
 };
 
 const Table = ({ data }: { data: FullRecord[] }) => {
   const common = useTranslations("Common");
   const t = useTranslations();
+  const router = useRouter();
+  const isCitizen = router.pathname.startsWith("/citizen");
 
   return (
     <div className="overflow-x-auto w-full mt-3 max-h-56">
@@ -48,7 +59,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
             <th>{t("Leo.officer")}</th>
             <th>{common("description")}</th>
             <th>{common("createdAt")}</th>
-            <th>{common("actions")}</th>
+            {isCitizen ? null : <th>{common("actions")}</th>}
           </tr>
         </thead>
         <tbody>
@@ -63,7 +74,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
                 </td>
                 <td>{value.notes}</td>
                 <td>{format(new Date(value.createdAt), "yyyy-MM-dd")}</td>
-                <td>{"TODO"}</td>
+                {isCitizen ? null : <td>{"TODO"}</td>}
               </tr>
             ))}
         </tbody>
