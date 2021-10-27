@@ -23,10 +23,6 @@ const buttons: MButton[] = [
     nameKey: ["Leo", "notepad"],
     modalId: ModalIds.Notepad,
   },
-  {
-    nameKey: ["Ems", "activeDeputies"],
-    modalId: ModalIds.ActiveDeputies,
-  },
 ];
 
 export const ModalButtons = () => {

@@ -30,13 +30,11 @@ export const enum ModalIds {
   CreateTicket = "CreateTicketModal",
   CreateArrestReport = "CreateArrestReportModal",
   Notepad = "NotepadModal",
-  ActiveOfficers = "ActiveOfficersModal",
   ManageUnit = "ManageUnitModal",
   CreateWarrant = "CreateWarrantModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
-  ActiveDeputies = "ActiveDeputiesModal",
   SelectDeputy = "SelectDeputyModal",
   ManageDeputy = "ManageDeputyModal",
   ManageAOP = "ManageAOPModal",
@@ -58,4 +56,5 @@ export const enum ModalIds {
   AlertDeleteTruckLog = "AlertDeleteTruckLogModal",
   AlertDeleteCallEvent = "AlertDeleteCallEventModal",
   AlertDeleteUser = "AlertDeleteUserModal",
+  AlertDeleteRecord = "AlertDeleteRecordModal",
 }

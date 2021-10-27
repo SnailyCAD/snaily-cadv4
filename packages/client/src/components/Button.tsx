@@ -12,6 +12,7 @@ const variants = {
   danger: "bg-red-500 hover:bg-red-600 text-black",
   success: "bg-green-500 hover:bg-green-600 text-black",
   transparent: "bg-transparent text-black",
+  link: "bg-transparent hover:bg-transparent text-gray-800 px-0 p-1 underline",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, Props>(

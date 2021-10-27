@@ -1,8 +1,15 @@
+import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
 import { Officer, PenalCode, Record, RecordType } from "types/prisma";
 import { useTranslations } from "use-intl";
+import { Button } from "components/Button";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
+import { useNameSearch } from "state/nameSearchState";
 
 export type FullRecord = Record & { officer: Officer; violations: PenalCode[] };
 interface Props {
@@ -44,10 +51,40 @@ export const RecordsArea = ({ records }: Props) => {
 };
 
 const Table = ({ data }: { data: FullRecord[] }) => {
+  const [tempItem, setTempItem] = React.useState<FullRecord | null>(null);
   const common = useTranslations("Common");
+  const { openModal, closeModal } = useModal();
   const t = useTranslations();
   const router = useRouter();
   const isCitizen = router.pathname.startsWith("/citizen");
+  const { state, execute } = useFetch();
+
+  const { results, setResults } = useNameSearch();
+
+  function handleDeleteClick(record: FullRecord) {
+    openModal(ModalIds.AlertDeleteRecord);
+    setTempItem(record);
+  }
+
+  async function handleDelete() {
+    if (!tempItem) return;
+
+    const { json } = await execute(`/records/${tempItem.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      if (typeof results === "object" && results) {
+        setResults({
+          ...results,
+          Record: results.Record.filter((v) => v.id !== tempItem.id),
+        });
+      }
+
+      setTempItem(null);
+      closeModal(ModalIds.AlertDeleteRecord);
+    }
+  }
 
   return (
     <div className="overflow-x-auto w-full mt-3 max-h-56">
@@ -74,11 +111,30 @@ const Table = ({ data }: { data: FullRecord[] }) => {
                 </td>
                 <td>{value.notes}</td>
                 <td>{format(new Date(value.createdAt), "yyyy-MM-dd")}</td>
-                {isCitizen ? null : <td>{"TODO"}</td>}
+                {isCitizen ? null : (
+                  <td>
+                    <Button
+                      type="button"
+                      onClick={() => handleDeleteClick(value)}
+                      small
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </td>
+                )}
               </tr>
             ))}
         </tbody>
       </table>
+
+      <AlertModal
+        id={ModalIds.AlertDeleteRecord}
+        onDeleteClick={handleDelete}
+        description={t("Leo.alert_deleteRecord")}
+        title={t("Leo.deleteRecord")}
+        state={state}
+      />
     </div>
   );
 };

@@ -10,11 +10,15 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
-import { Citizen, RegisteredVehicle, Warrant, Weapon } from "types/prisma";
-import { calculateAge } from "lib/utils";
+import { Citizen, RecordType } from "types/prisma";
+import { calculateAge, makeImageUrl } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
-import { FullRecord, RecordsArea } from "./RecordsArea";
+import { RecordsArea } from "./RecordsArea";
+import { useNameSearch } from "state/nameSearchState";
+import { normalizeValue } from "context/ValuesContext";
+import { useRouter } from "next/router";
+import { PersonFill } from "react-bootstrap-icons";
 
 const enum Toggled {
   VEHICLES,
@@ -42,17 +46,21 @@ export const NameSearchModal = () => {
   const cT = useTranslations("Citizen");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
+  const router = useRouter();
 
+  const { openModal } = useModal();
+  const isLeo = router.pathname === "/officer";
   const [toggled, setToggled] = React.useState<Toggled | null>(null);
-  const [results, setResults] = React.useState<NameSearchResult | null | boolean>(null);
+  const { results, setResults } = useNameSearch();
 
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.NameSearch)) {
       setResults(null);
+      setToggled(null);
     }
-  }, [isOpen]);
+  }, [isOpen, setResults]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/name", {
@@ -73,6 +81,18 @@ export const NameSearchModal = () => {
     } else {
       setToggled(toggle);
     }
+  }
+
+  function handleOpenCreateRecord(type: RecordType) {
+    if (typeof results === "boolean" || !results) return;
+
+    const modalId = {
+      [RecordType.ARREST_REPORT]: ModalIds.CreateArrestReport,
+      [RecordType.TICKET]: ModalIds.CreateTicket,
+      [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
+    };
+
+    openModal(modalId[type], { citizenId: results.id });
   }
 
   const hasWarrants =
@@ -123,6 +143,17 @@ export const NameSearchModal = () => {
                 ) : null}
 
                 <div className="flex">
+                  <div className="mr-2 min-w-[100px]">
+                    {results.imageId ? (
+                      <img
+                        className="rounded-full w-[100px] h-[100px] object-cover"
+                        draggable={false}
+                        src={makeImageUrl("citizens", results.imageId)}
+                      />
+                    ) : (
+                      <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+                    )}
+                  </div>
                   <div className="w-full">
                     <div className="mt-2 flex flex-col">
                       <p>
@@ -222,18 +253,40 @@ export const NameSearchModal = () => {
               </div>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
-              <Button type="reset" onClick={() => closeModal(ModalIds.NameSearch)} variant="cancel">
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("search")}
-              </Button>
+            <footer className={`mt-4 pt-3 flex ${isLeo ? "justify-between" : "justify-end"}`}>
+              {typeof results !== "boolean" && results && isLeo ? (
+                <div>
+                  {Object.values(RecordType).map((type) => (
+                    <Button
+                      key={type}
+                      type="button"
+                      onClick={() => handleOpenCreateRecord(type)}
+                      variant="cancel"
+                      className="px-1.5"
+                    >
+                      {t(normalizeValue(`CREATE_${type}`))}
+                    </Button>
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="flex">
+                <Button
+                  type="reset"
+                  onClick={() => closeModal(ModalIds.NameSearch)}
+                  variant="cancel"
+                >
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {common("search")}
+                </Button>
+              </div>
             </footer>
 
             <AutoSubmit />
@@ -243,10 +296,3 @@ export const NameSearchModal = () => {
     </Modal>
   );
 };
-
-interface NameSearchResult extends Citizen {
-  vehicles: RegisteredVehicle[];
-  weapons: Weapon[];
-  Record: FullRecord[];
-  warrants: Warrant[];
-}

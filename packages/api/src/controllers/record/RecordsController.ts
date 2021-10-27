@@ -1,9 +1,9 @@
-import { JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, JsonRequestBody, Post } from "@tsed/schema";
 import { CREATE_TICKET_SCHEMA, CREATE_WARRANT_SCHEMA, validate } from "@snailycad/schemas";
-import { BodyParams, Context } from "@tsed/platform-params";
+import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { UseBeforeEach } from "@tsed/platform-middlewares";
+import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 
@@ -87,5 +87,23 @@ export class RecordsController {
     );
 
     return ticket;
+  }
+
+  @UseBefore(ActiveOfficer)
+  @Delete("/:id")
+  async deleteRecord(@PathParams("id") id: string) {
+    const record = await prisma.record.findUnique({
+      where: { id },
+    });
+
+    if (!record) {
+      throw new NotFound("recordNotFound");
+    }
+
+    await prisma.record.delete({
+      where: { id },
+    });
+
+    return true;
   }
 }

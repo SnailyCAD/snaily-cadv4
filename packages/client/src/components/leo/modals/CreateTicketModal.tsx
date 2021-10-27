@@ -18,7 +18,7 @@ import { useCitizen } from "context/CitizenContext";
 import { RecordType } from "types/prisma";
 
 export const CreateTicketModal = ({ type }: { type: RecordType }) => {
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
@@ -59,7 +59,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
   const INITIAL_VALUES = {
     type,
-    citizenId: {} as SelectValue,
+    citizenId: getPayload<{ citizenId: string }>(data[type].id)?.citizenId ?? "",
     violations: [] as SelectValue[],
     postal: "",
     notes: "",
