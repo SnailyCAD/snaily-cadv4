@@ -22,7 +22,6 @@
     "tsconfig-paths": "^3.11.0"
   },
   "dependencies": {
-    "@casper124578/utils": "^1.4.0",
     "@prisma/client": "^3.3.0",
     "@snailycad/config": "0.2.0-alpha",
     "@snailycad/schemas": "0.2.0-alpha",

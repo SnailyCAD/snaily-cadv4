@@ -147,20 +147,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/utils@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@casper124578/utils@npm:1.4.0"
-  dependencies:
-    yup: 0.32.11
-  peerDependencies:
-    yup: 0.32.11
-  peerDependenciesMeta:
-    yup:
-      optional: true
-  checksum: ed95800f5eb13f165ad427528ed6c544006e351b5299d6383ec530995671b27de857cbbff542cf12e7da37f7db9e16bbc4c92acdd534172edfbaafca440cccaa
-  languageName: node
-  linkType: hard
-
 "@cspotcode/source-map-consumer@npm:0.8.0":
   version: 0.8.0
   resolution: "@cspotcode/source-map-consumer@npm:0.8.0"
@@ -662,7 +648,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/api@workspace:packages/api"
   dependencies:
-    "@casper124578/utils": ^1.4.0
     "@prisma/client": ^3.3.0
     "@snailycad/config": 0.2.0-alpha
     "@snailycad/schemas": 0.2.0-alpha
@@ -10009,7 +9994,7 @@ typescript@^4.4.4:
   languageName: node
   linkType: hard
 
-"yup@npm:0.32.11, yup@npm:^0.32.11":
+"yup@npm:^0.32.11":
   version: 0.32.11
   resolution: "yup@npm:0.32.11"
   dependencies:
