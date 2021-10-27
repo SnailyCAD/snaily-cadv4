@@ -37,7 +37,7 @@ export const ModalButtons = () => {
   const isButtonDisabled =
     !activeDeputy ||
     activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
-    activeDeputy.status2 === null;
+    activeDeputy.statusId === null;
 
   return (
     <div className="py-2">

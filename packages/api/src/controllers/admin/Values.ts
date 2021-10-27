@@ -130,6 +130,7 @@ export class ValuesController {
           shouldDo: body.get("shouldDo"),
           valueId: value.id,
           position: Number(body.get("position")),
+          color: body.get("color") || null,
         },
         include: {
           value: true,
@@ -247,6 +248,7 @@ export class ValuesController {
           whatPages: body.get("whatPages") ?? [],
           shouldDo: body.get("shouldDo"),
           position: Number(body.get("position")),
+          color: body.get("color") || null,
         },
         include: {
           value: true,

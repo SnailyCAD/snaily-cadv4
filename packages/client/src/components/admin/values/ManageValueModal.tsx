@@ -21,6 +21,7 @@ import {
 } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
+import hexColor from "hex-color-regex";
 
 type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
 
@@ -112,9 +113,22 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
         : "",
     // @ts-expect-error shortcut
     callsign: value?.callsign ?? "",
+    // @ts-expect-error shortcut
+    color: value?.color ?? "",
   };
 
-  const validate = handleValidate(VALUE_SCHEMA);
+  function validate(values: typeof INITIAL_VALUES) {
+    const errors = handleValidate(VALUE_SCHEMA);
+
+    if (values.color && !hexColor().test(values.color)) {
+      return {
+        ...errors,
+        color: "Must be a valid HEX color",
+      };
+    }
+
+    return errors;
+  }
 
   return (
     <Modal
@@ -186,6 +200,11 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
                     onChange={handleChange}
                     value={String(values.position)}
                   />
+                </FormField>
+
+                <FormField fieldId="color" label="Color">
+                  <Input name="color" onChange={handleChange} value={values.color} />
+                  <Error>{errors.color}</Error>
                 </FormField>
               </>
             ) : null}

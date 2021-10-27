@@ -1,5 +1,5 @@
-import { Nsp, SocketService } from "@tsed/socketio";
 import * as SocketIO from "socket.io";
+import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
 import { Call911, TowCall, Bolo, Call911Event, TaxiCall } from ".prisma/client";
 
@@ -90,5 +90,9 @@ export class Socket {
 
   emitDeleteTaxiCall(call: TaxiCall) {
     this.io.sockets.emit(SocketEvents.EndTaxiCall, call);
+  }
+
+  emitSignal100(value: boolean) {
+    this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 }

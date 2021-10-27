@@ -16,7 +16,9 @@ const CAD_SELECT = (user: Pick<User, "rank">) => ({
   steamApiKey: user.rank === Rank.OWNER,
   discordWebhookURL: true,
   miscCadSettings: true,
+  miscCadSettingsId: true,
 });
+
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
   async use(@Req() req: Req, @Context() ctx: Context) {

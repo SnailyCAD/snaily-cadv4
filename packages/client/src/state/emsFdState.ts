@@ -2,7 +2,7 @@ import { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
 import type { EmsFdDeputy, StatusValue, Value } from "types/prisma";
 import create from "zustand";
 
-export type ActiveDeputy = EmsFdDeputy & { department: Value<"DEPARTMENT">; status2: StatusValue };
+export type ActiveDeputy = EmsFdDeputy & { department: Value<"DEPARTMENT">; status: StatusValue };
 
 interface EmsFdState {
   activeDeputy: ActiveDeputy | null;

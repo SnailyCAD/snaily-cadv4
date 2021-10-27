@@ -21,7 +21,7 @@ export class Calls911Controller {
     const includeData = {
       include: {
         department: true,
-        status2: {
+        status: {
           include: {
             value: true,
           },
@@ -61,5 +61,26 @@ export class Calls911Controller {
     this.socket.emitUpdateAop(updated.areaOfPlay);
 
     return updated;
+  }
+
+  @UseBefore(IsDispatch)
+  @Post("/signal-100")
+  async setSignal100(@Context("cad") cad: cad, @BodyParams("value") value: boolean) {
+    if (typeof value !== "boolean") {
+      throw new BadRequest("body.valueIsRequired");
+    }
+
+    await prisma.miscCadSettings.update({
+      where: {
+        id: cad.miscCadSettingsId!,
+      },
+      data: {
+        signal100Enabled: value,
+      },
+    });
+
+    this.socket.emitSignal100(value);
+
+    return { value };
   }
 }

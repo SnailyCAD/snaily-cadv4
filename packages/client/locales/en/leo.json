@@ -61,6 +61,9 @@
     "hasWarrants": "WARNING: This citizen has active warrants!",
     "rank": "Rank",
     "officerLogs": "Officer Logs",
+    "disableSignal100": "Disable Signal 100",
+    "enableSignal100": "Enable Signal 100",
+    "signal100enabled": "Signal 100 is enabled",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
   }
 }

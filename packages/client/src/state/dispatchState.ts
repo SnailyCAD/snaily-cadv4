@@ -14,10 +14,10 @@ import create from "zustand";
 export type Full911Call = Call911 & { assignedUnits: Officer[]; events: Call911Event[] };
 export type FullBolo = Bolo & { officer: Officer };
 export type FullOfficer = OfficerWithDept & {
-  status2: StatusValue;
+  status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
 };
-export type FullDeputy = DeputyWithDept & { rank: Value<"OFFICER_RANK">; status2: StatusValue };
+export type FullDeputy = DeputyWithDept & { rank: Value<"OFFICER_RANK">; status: StatusValue };
 
 interface DispatchState {
   calls: Full911Call[];

@@ -308,9 +308,10 @@ export class EmsFdController {
       },
     });
 
-    return deputies;
-  }
+    console.log({ deputies });
 
+    return Array.isArray(deputies) ? deputies : [deputies];
+  }
   @Use(ActiveDeputy)
   @Post("/medical-record")
   async createMedicalRecord(@BodyParams() body: JsonRequestBody) {
@@ -370,7 +371,7 @@ export class EmsFdController {
 }
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {
-  const status2 = officer.status2.value.value;
+  const status = officer.status.value.value;
   const department = officer.department.value;
   const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
 
@@ -380,16 +381,11 @@ export function createWebhookData(webhook: APIWebhook, officer: any) {
       {
         title: "Status Change",
         type: "rich",
-        description: `Officer **${officerName}** has changed their status to ${status2}`,
+        description: `Officer **${officerName}** has changed their status to ${status}`,
         fields: [
           {
-            name: "ON/OFF duty",
-            value: officer.status,
-            inline: true,
-          },
-          {
             name: "Status",
-            value: status2,
+            value: status,
             inline: true,
           },
         ],

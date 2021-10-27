@@ -46,6 +46,7 @@ export const ManageAOPModal = () => {
           <Form>
             <FormField fieldId="aop" label={t("areaOfPlay")}>
               <Input
+                autoFocus
                 id="aop"
                 onChange={handleChange}
                 value={values.aop}

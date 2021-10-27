@@ -55,7 +55,13 @@ export const ActiveOfficers = () => {
                     <td>{String(officer.badgeNumber)}</td>
                     <td>{officer.department.value}</td>
                     <td>{officer.division.value.value}</td>
-                    <td>{officer.status?.value?.value}</td>
+                    <td className="flex items-center">
+                      <span
+                        style={{ background: officer.status?.color }}
+                        className="block w-3 h-3 rounded-full mr-2"
+                      />
+                      {officer.status?.value?.value}
+                    </td>
                     {isDispatch ? (
                       <td className="w-36">
                         <Button onClick={() => handleEditClick(officer)} small variant="success">

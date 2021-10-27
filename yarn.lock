@@ -719,6 +719,7 @@ __metadata:
     axios: ^0.24.0
     date-fns: ^2.25.0
     formik: ^2.2.9
+    hex-color-regex: ^1.1.0
     next: ^12.0.0
     next-intl: ^2.0.5
     postcss: ^8.3.11

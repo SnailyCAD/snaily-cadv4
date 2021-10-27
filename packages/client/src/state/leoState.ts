@@ -1,7 +1,7 @@
 import type { Officer, StatusValue, Value } from "types/prisma";
 import create from "zustand";
 
-export type ActiveOfficer = Officer & { department: Value<"DEPARTMENT">; status2: StatusValue };
+export type ActiveOfficer = Officer & { department: Value<"DEPARTMENT">; status: StatusValue };
 
 interface LeoState {
   activeOfficer: ActiveOfficer | null;

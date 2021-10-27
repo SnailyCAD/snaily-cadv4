@@ -26,4 +26,6 @@ export enum SocketEvents {
   AddCallEvent = "ADD_CALL_EVENT",
   UpdateCallEvent = "UPDATE_CALL_EVENT",
   DeleteCallEvent = "DELETE_CALL_EVENT",
+
+  Signal100 = "SIGNAL_100",
 }

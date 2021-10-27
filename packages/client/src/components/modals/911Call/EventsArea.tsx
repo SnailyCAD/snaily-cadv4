@@ -103,7 +103,7 @@ export const CallEventsArea = ({ call }: Props) => {
 
 const EventItem = ({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) => {
   const { openModal, closeModal } = useModal();
-  const formatted = format(new Date(event.createdAt), "HH:mm:ss");
+  const formatted = format(new Date(event.createdAt), "yyyy-MM-dd HH:mm:ss");
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
   const t = useTranslations("Calls");

@@ -29,6 +29,7 @@ export type MiscCadSettings = {
   maxBusinessesPerCitizen: number | null;
   pairedUnitSymbol: string;
   callsignTemplate: string;
+  signal100Enabled: boolean;
 };
 
 /**
@@ -281,6 +282,7 @@ export type StatusValue = {
   position: number | null;
   whatPages: WhatPages[];
   departmentId: string;
+  color?: string;
 };
 
 /**

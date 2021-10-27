@@ -18,6 +18,7 @@ import { useTime } from "hooks/useTime";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
+import { useSignal100 } from "hooks/useSignal100";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -60,6 +61,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   const { setCalls, setBolos } = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
+  const { signal100Enabled, hidden, setHidden, Component } = useSignal100();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -83,6 +85,9 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       <Head>
         <title>{t("officer")} - SnailyCAD</title>
       </Head>
+
+      {signal100Enabled && !hidden ? <Component setHidden={setHidden} /> : null}
+
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden mb-3">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">
           <h3 className="text-xl font-semibold">
