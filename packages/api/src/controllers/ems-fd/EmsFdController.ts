@@ -1,4 +1,12 @@
-import { Res, Controller, UseBeforeEach, Use, Req } from "@tsed/common";
+import {
+  Res,
+  Controller,
+  UseBeforeEach,
+  Use,
+  Req,
+  MultipartFile,
+  PlatformMulterFile,
+} from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import {
   CREATE_OFFICER_SCHEMA,
@@ -11,13 +19,14 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
-import { Cookie } from "@snailycad/config";
+import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { Socket } from "../../services/SocketService";
 import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { ActiveDeputy } from "../../middlewares/ActiveDeputy";
+import fs from "node:fs";
 
 // todo: check for EMS-FD permissions
 @Controller("/ems-fd")
@@ -367,6 +376,48 @@ export class EmsFdController {
     });
 
     return updated;
+  }
+
+  @Post("/image/:id")
+  async uploadImageToOfficer(
+    @Context("user") user: User,
+    @PathParams("id") deputyId: string,
+    @MultipartFile("image") file: PlatformMulterFile,
+  ) {
+    const deputy = await prisma.emsFdDeputy.findFirst({
+      where: {
+        userId: user.id,
+        id: deputyId,
+      },
+    });
+
+    if (!deputy) {
+      throw new NotFound("Not Found");
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new BadRequest("invalidImageType");
+    }
+
+    // "image/png" -> "png"
+    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
+    const path = `${process.cwd()}/public/units/${deputy.id}.${extension}`;
+
+    await fs.writeFileSync(path, file.buffer);
+
+    const data = await prisma.emsFdDeputy.update({
+      where: {
+        id: deputyId,
+      },
+      data: {
+        imageId: `${deputy.id}.${extension}`,
+      },
+      select: {
+        imageId: true,
+      },
+    });
+
+    return data;
   }
 }
 

@@ -3,9 +3,10 @@ import React from "react";
 import { cad as CAD, Feature } from "types/prisma";
 import { handleRequest } from "./fetch";
 
+// todo
 const IMAGE_URL = "http://localhost:8080/static/";
 
-export function makeImageUrl(type: "citizens" | "users" | "bleeter", id: string) {
+export function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {
   return `${IMAGE_URL}${type}/${id}`;
 }
 

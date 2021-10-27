@@ -7,6 +7,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
+import { makeImageUrl } from "lib/utils";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
@@ -49,7 +50,14 @@ export const ActiveOfficers = () => {
               <tbody>
                 {activeOfficers.map((officer) => (
                   <tr key={officer.id}>
-                    <td>
+                    <td className="capitalize flex items-center">
+                      {officer.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", officer.imageId)}
+                        />
+                      ) : null}
                       {officer.callsign} {officer.name}
                     </td>
                     <td>{String(officer.badgeNumber)}</td>

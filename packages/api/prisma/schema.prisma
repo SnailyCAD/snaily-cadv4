@@ -374,6 +374,7 @@ model Officer {
   statusId     String?
   suspended    Boolean       @default(false)
   badgeNumber  Int?
+  imageId      String?       @db.VarChar(255)
 
   citizen   Citizen?     @relation(fields: [citizenId], references: [id], onDelete: SetNull)
   citizenId String?
@@ -520,6 +521,7 @@ model EmsFdDeputy {
   statusId     String?
   suspended    Boolean       @default(false)
   badgeNumber  Int?
+  imageId      String?       @db.VarChar(255)
 
   citizen   Citizen? @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String?

@@ -257,6 +257,7 @@ export type Officer = {
   userId: string;
   call911Id: string | null;
   badgeNumber: number | null;
+  imageId: string | null;
 };
 
 /**
@@ -373,6 +374,7 @@ export type EmsFdDeputy = {
   badgeNumber: number | null;
   citizenId: string | null;
   userId: string;
+  imageId: string | null;
 };
 
 /**

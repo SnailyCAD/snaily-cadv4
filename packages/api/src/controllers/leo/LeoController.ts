@@ -1,4 +1,12 @@
-import { Res, Controller, UseBeforeEach, Use, Req } from "@tsed/common";
+import {
+  Res,
+  Controller,
+  UseBeforeEach,
+  Use,
+  Req,
+  PlatformMulterFile,
+  MultipartFile,
+} from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -6,13 +14,14 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
-import { Cookie } from "@snailycad/config";
+import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
 import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
+import fs from "node:fs";
 
 // todo: check for leo permissions
 @Controller("/leo")
@@ -416,6 +425,48 @@ export class LeoController {
     });
 
     return Array.isArray(officers) ? officers : [officers];
+  }
+
+  @Post("/image/:id")
+  async uploadImageToOfficer(
+    @Context("user") user: User,
+    @PathParams("id") officerId: string,
+    @MultipartFile("image") file: PlatformMulterFile,
+  ) {
+    const officer = await prisma.officer.findFirst({
+      where: {
+        userId: user.id,
+        id: officerId,
+      },
+    });
+
+    if (!officer) {
+      throw new NotFound("Not Found");
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new BadRequest("invalidImageType");
+    }
+
+    // "image/png" -> "png"
+    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
+    const path = `${process.cwd()}/public/units/${officer.id}.${extension}`;
+
+    await fs.writeFileSync(path, file.buffer);
+
+    const data = await prisma.officer.update({
+      where: {
+        id: officerId,
+      },
+      data: {
+        imageId: `${officer.id}.${extension}`,
+      },
+      select: {
+        imageId: true,
+      },
+    });
+
+    return data;
   }
 }
 

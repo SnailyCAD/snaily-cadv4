@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { requestAll } from "lib/utils";
+import { makeImageUrl, requestAll } from "lib/utils";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -90,7 +90,16 @@ export default function MyOfficers({ officers: data }: Props) {
             <tbody>
               {officers.map((officer) => (
                 <tr key={officer.id}>
-                  <td className="capitalize">{officer.name}</td>
+                  <td className="capitalize flex items-center">
+                    {officer.imageId ? (
+                      <img
+                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                        draggable={false}
+                        src={makeImageUrl("units", officer.imageId)}
+                      />
+                    ) : null}
+                    {officer.name}
+                  </td>
                   <td>{officer.callsign}</td>
                   <td>{String(officer.badgeNumber)}</td>
                   <td>{officer.department.value}</td>
@@ -135,7 +144,7 @@ export default function MyOfficers({ officers: data }: Props) {
           });
         }}
         officer={tempOfficer}
-        onClose={() => setTimeout(() => setTempOfficer(null), 100)}
+        onClose={() => setTempOfficer(null)}
       />
 
       <AlertModal
@@ -147,7 +156,7 @@ export default function MyOfficers({ officers: data }: Props) {
         id={ModalIds.AlertDeleteOfficer}
         onDeleteClick={handleDeleteOfficer}
         state={state}
-        onClose={() => setTimeout(() => setTempOfficer(null), 100)}
+        onClose={() => setTempOfficer(null)}
       />
     </Layout>
   );

@@ -7,6 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
+import { makeImageUrl } from "lib/utils";
 
 export const ActiveDeputies = () => {
   const { activeDeputies } = useActiveDeputies();
@@ -47,24 +48,31 @@ export const ActiveDeputies = () => {
                 </tr>
               </thead>
               <tbody>
-                {activeDeputies.map((officer) => (
-                  <tr key={officer.id}>
-                    <td>
-                      {officer.callsign} {officer.name}
+                {activeDeputies.map((deputy) => (
+                  <tr key={deputy.id}>
+                    <td className="capitalize flex items-center">
+                      {deputy.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", deputy.imageId)}
+                        />
+                      ) : null}
+                      {deputy.callsign} {deputy.name}
                     </td>
-                    <td>{String(officer.badgeNumber)}</td>
-                    <td>{officer.department.value}</td>
-                    <td>{officer.division.value.value}</td>
+                    <td>{String(deputy.badgeNumber)}</td>
+                    <td>{deputy.department.value}</td>
+                    <td>{deputy.division.value.value}</td>
                     <td className="flex items-center">
                       <span
-                        style={{ background: officer.status?.color }}
+                        style={{ background: deputy.status?.color }}
                         className="block w-3 h-3 rounded-full mr-2"
                       />
-                      {officer.status?.value?.value}
+                      {deputy.status?.value?.value}
                     </td>
                     {isDispatch ? (
                       <td className="w-36">
-                        <Button onClick={() => handleEditClick(officer)} small variant="success">
+                        <Button onClick={() => handleEditClick(deputy)} small variant="success">
                           {common("manage")}
                         </Button>
                       </td>

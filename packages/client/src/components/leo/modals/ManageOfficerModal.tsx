@@ -10,12 +10,13 @@ import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik, useFormikContext } from "formik";
+import { Formik, FormikHelpers, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 interface Props {
   officer: FullOfficer | null;
@@ -29,6 +30,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { citizens } = useCitizen();
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -38,16 +40,30 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
     onClose?.();
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
+
+    if (image && image.size && image.name) {
+      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
+        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+      }
+    }
+
+    let officerId;
     if (officer) {
       const { json } = await execute(`/leo/${officer.id}`, {
         method: "PUT",
         data: values,
       });
 
+      officerId = officer.id;
+
       if (json.id) {
         onUpdate?.(officer, json);
-        closeModal(ModalIds.ManageOfficer);
       }
     } else {
       const { json } = await execute("/leo", {
@@ -55,10 +71,22 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
         data: values,
       });
 
+      officerId = json.id;
+
       if (json.id) {
-        closeModal(ModalIds.ManageOfficer);
         onCreate?.(json);
       }
+    }
+
+    if (image && image.size && image.name) {
+      await execute(`/leo/image/${officerId}`, {
+        method: "POST",
+        data: fd,
+      });
+    }
+
+    if (officerId) {
+      closeModal(ModalIds.ManageOfficer);
     }
   }
 
@@ -71,6 +99,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
     division: officer?.divisionId ?? "",
     badgeNumber: officer?.badgeNumber ?? "",
     citizenId: officer?.citizenId ?? "",
+    image: undefined,
   };
 
   return (
@@ -81,8 +110,30 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
       className="min-w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
-          <Form>
+        {({ handleChange, handleSubmit, setFieldValue, errors, values, isValid }) => (
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <FormField label={t("image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={handleChange}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  type="button"
+                  className="bg-red-400 hover:bg-red-500"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
+              <Error>{errors.image}</Error>
+            </FormField>
+
             <FormField label={t("officerName")}>
               <Input
                 disabled={!!values.citizenId}
@@ -184,7 +235,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
             </footer>
 
             <AutoSetName />
-          </Form>
+          </form>
         )}
       </Formik>
     </Modal>

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
@@ -8,12 +9,13 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 interface Props {
   deputy: FullOfficer | null;
@@ -26,6 +28,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations();
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -35,16 +38,31 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
     onClose?.();
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
+
+    if (image && image.size && image.name) {
+      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
+        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+      }
+    }
+
+    let deputyId;
+
     if (deputy) {
       const { json } = await execute(`/ems-fd/${deputy.id}`, {
         method: "PUT",
         data: values,
       });
 
+      deputyId = deputy.id;
+
       if (json.id) {
         onUpdate?.(deputy, json);
-        closeModal(ModalIds.ManageDeputy);
       }
     } else {
       const { json } = await execute("/ems-fd", {
@@ -52,10 +70,22 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
         data: values,
       });
 
+      deputyId = json.id;
+
       if (json.id) {
-        closeModal(ModalIds.ManageDeputy);
         onCreate?.(json);
       }
+    }
+
+    if (image && image.size && image.name) {
+      await execute(`/ems-fd/image/${deputyId}`, {
+        method: "POST",
+        data: fd,
+      });
+    }
+
+    if (deputyId) {
+      closeModal(ModalIds.ManageDeputy);
     }
   }
 
@@ -67,6 +97,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     division: deputy?.divisionId ?? "",
     badgeNumber: deputy?.badgeNumber ?? "",
+    image: undefined,
   };
 
   return (
@@ -77,8 +108,30 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
       className="min-w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
-          <Form>
+        {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
+          <form ref={formRef} onSubmit={handleSubmit}>
+            <FormField label={t("Leo.image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={handleChange}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  type="button"
+                  className="bg-red-400 hover:bg-red-500"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
+              <Error>{errors.image}</Error>
+            </FormField>
+
             <FormField label={t("Ems.deputyName")}>
               <Input
                 value={values.name}
@@ -162,7 +215,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 {deputy ? common("save") : common("create")}
               </Button>
             </footer>
-          </Form>
+          </form>
         )}
       </Formik>
     </Modal>
