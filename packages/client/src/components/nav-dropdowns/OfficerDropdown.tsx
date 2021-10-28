@@ -3,10 +3,12 @@ import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
+import { useAuth } from "context/AuthContext";
 
 export const OfficerDropdown = () => {
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const { user } = useAuth();
 
   const items = ["My Officers", "My Officer Logs"];
 
@@ -68,6 +70,22 @@ export const OfficerDropdown = () => {
                   </Menu.Item>
                 );
               })}
+
+              {user?.isSupervisor ? (
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link href="/admin/manage/units">
+                      <a
+                        className={`${
+                          active ? "bg-gray-200" : "text-gray-900"
+                        } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                      >
+                        Manage Units
+                      </a>
+                    </Link>
+                  )}
+                </Menu.Item>
+              ) : null}
             </div>
           </Menu.Items>
         </Transition>

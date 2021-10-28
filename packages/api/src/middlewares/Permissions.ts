@@ -1,3 +1,4 @@
+import { User } from ".prisma/client";
 import { Middleware, MiddlewareMethods, Req } from "@tsed/common";
 import { Forbidden } from "@tsed/exceptions";
 import { getSessionUser } from "../lib/auth";
@@ -11,8 +12,23 @@ export class IsAdmin implements MiddlewareMethods {
       throw new Forbidden("Invalid Permissions");
     }
 
-    if (!["OWNER", "ADMIN"].includes(user.rank)) {
+    await admin(user);
+  }
+}
+
+@Middleware()
+export class IsSupervisor implements MiddlewareMethods {
+  async use(@Req() req: Req) {
+    const user = await getSessionUser(req);
+
+    if (!user) {
       throw new Forbidden("Invalid Permissions");
+    }
+
+    const isSupervisor = await supervisor(user);
+
+    if (!isSupervisor) {
+      await admin(user);
     }
   }
 }
@@ -45,4 +61,20 @@ export class IsDispatch implements MiddlewareMethods {
       throw new Forbidden("Invalid Permissions");
     }
   }
+}
+
+async function admin(user: Pick<User, "rank">) {
+  if (!["OWNER", "ADMIN"].includes(user.rank)) {
+    throw new Forbidden("Invalid Permissions");
+  }
+
+  return true;
+}
+
+async function supervisor(user: Pick<User, "isSupervisor">) {
+  if (!user.isSupervisor) {
+    throw new Forbidden("Invalid Permissions");
+  }
+
+  return true;
 }

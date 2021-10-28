@@ -4,7 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../../lib/prisma";
-import { IsAuth, IsAdmin } from "../../../middlewares";
+import { IsAuth, IsSupervisor } from "../../../middlewares";
 
 const include = {
   rank: true,
@@ -28,7 +28,7 @@ const include = {
   },
 };
 
-@UseBeforeEach(IsAuth, IsAdmin)
+@UseBeforeEach(IsAuth, IsSupervisor)
 @Controller("/units")
 export class ManageUnitsController {
   @Get("/")
