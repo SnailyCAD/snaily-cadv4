@@ -12,8 +12,7 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/ems-fd/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
-import { Full911Call, useDispatchState } from "state/dispatchState";
-import { DeputyWithDept } from "./my-deputies";
+import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
@@ -21,7 +20,7 @@ import { useSignal100 } from "hooks/useSignal100";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
-  deputies: DeputyWithDept[];
+  deputies: FullDeputy[];
   calls: Full911Call[];
 }
 

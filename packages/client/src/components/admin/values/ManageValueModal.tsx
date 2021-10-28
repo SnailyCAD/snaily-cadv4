@@ -10,20 +10,11 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import {
-  DivisionValue,
-  EmployeeAsEnum,
-  EmployeeValue,
-  ShouldDoType,
-  StatusValue,
-  Value,
-  ValueType,
-} from "types/prisma";
+import { EmployeeAsEnum, ShouldDoType, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-
-type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
+import { TValue } from "src/pages/admin/values/[path]";
 
 interface Props {
   type: ValueType;
@@ -145,7 +136,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
                 <Select
                   values={department.values.map((v) => ({
                     value: v.id,
-                    label: v.value,
+                    label: v.value.value,
                   }))}
                   name="departmentId"
                   onChange={handleChange}
@@ -165,8 +156,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
               <Error>{errors.value}</Error>
             </FormField>
 
-            {type === "DIVISION" ? (
-              <FormField fieldId="callsign" label="Callsign">
+            {["DEPARTMENT", "DIVISION"].includes(type) ? (
+              <FormField fieldId="callsign" label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
               </FormField>
             ) : null}

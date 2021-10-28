@@ -204,13 +204,11 @@ model Value {
   weaponRegistrationStatusToValue Weapon[]            @relation("weaponRegistrationStatusToValue")
   weaponModelToValue              Weapon[]            @relation("weaponModelToValue")
   EmployeeValue                   EmployeeValue[]
-  officerToValue                  Officer[]           @relation("officerDepartmentToValue")
   officerRankToValue              Officer[]           @relation("officerRankToValue")
   StatusValueToValue              StatusValue[]       @relation("StatusValueToValue")
-  departmentToValue               DivisionValue[]     @relation("departmentToValue")
   divisionToValue                 DivisionValue[]     @relation("divisionToValue")
-  emsFdToValue                    EmsFdDeputy[]       @relation("emsFdDepartmentToValue")
   emsFdRankToValue                EmsFdDeputy[]       @relation("emsFdRankToValue")
+  departmentToValue               DepartmentValue[]   @relation("departmentToValue")
 }
 
 model PenalCode {
@@ -224,14 +222,24 @@ model PenalCode {
 }
 
 model DivisionValue {
-  id           String        @id @default(cuid())
-  value        Value         @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  id           String           @id @default(cuid())
+  value        Value            @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId      String
-  department   Value?        @relation("departmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  department   DepartmentValue? @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId String?
   callsign     String?
-  officers     Officer[]     @relation("officerDivisionToDivision")
-  EmsFdDeputy  EmsFdDeputy[] @relation("emsFdDivisionToDivision")
+  officers     Officer[]        @relation("officerDivisionToDivision")
+  deputies     EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
+}
+
+model DepartmentValue {
+  id          String          @id @default(cuid())
+  value       Value           @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId     String
+  callsign    String?
+  EmsFdDeputy EmsFdDeputy[]   @relation("emsFdDepartmentToDepartment")
+  Officer     Officer[]       @relation("officerDepartmentToDepartment")
+  division    DivisionValue[] @relation("divisionDepartmentToValue")
 }
 
 enum ValueType {
@@ -361,20 +369,21 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id           String        @id @default(cuid())
-  name         String        @db.VarChar(255)
-  department   Value         @relation("officerDepartmentToValue", fields: [departmentId], references: [id])
+  id           String          @id @default(cuid())
+  name         String          @db.VarChar(255)
+  department   DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId String
-  callsign     String        @db.VarChar(255)
-  division     DivisionValue @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  callsign     String          @db.VarChar(255)
+  callsign2    String          @db.VarChar(255)
+  division     DivisionValue   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId   String
-  rank         Value?        @relation("officerRankToValue", fields: [rankId], references: [id])
+  rank         Value?          @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusValue?  @relation("officerStatusToValue", fields: [statusId], references: [id])
+  status       StatusValue?    @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId     String?
-  suspended    Boolean       @default(false)
+  suspended    Boolean         @default(false)
   badgeNumber  Int?
-  imageId      String?       @db.VarChar(255)
+  imageId      String?         @db.VarChar(255)
 
   citizen   Citizen?     @relation(fields: [citizenId], references: [id], onDelete: SetNull)
   citizenId String?
@@ -508,20 +517,21 @@ enum WarrantStatus {
 
 // ems-fd
 model EmsFdDeputy {
-  id           String        @id @default(cuid())
-  name         String        @db.VarChar(255)
-  department   Value         @relation("emsFdDepartmentToValue", fields: [departmentId], references: [id])
+  id           String          @id @default(cuid())
+  name         String          @db.VarChar(255)
+  department   DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId String
-  callsign     String        @db.VarChar(255)
-  division     DivisionValue @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  callsign     String          @db.VarChar(255)
+  callsign2    String          @db.VarChar(255)
+  division     DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
   divisionId   String
-  rank         Value?        @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rank         Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
   rankId       String?
-  status       StatusValue?  @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  status       StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
   statusId     String?
-  suspended    Boolean       @default(false)
+  suspended    Boolean         @default(false)
   badgeNumber  Int?
-  imageId      String?       @db.VarChar(255)
+  imageId      String?         @db.VarChar(255)
 
   citizen   Citizen? @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String?

@@ -9,10 +9,11 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { DivisionValue, Officer, Value } from "types/prisma";
+import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
 import { makeImageUrl, requestAll } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -21,7 +22,7 @@ const ManageOfficerModal = dynamic(
 
 export type OfficerWithDept = Officer & {
   division: DivisionValue;
-  department: Value<"DEPARTMENT">;
+  department: DepartmentValue;
   rank: Value<"OFFICER_RANK">;
 };
 
@@ -34,6 +35,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const t = useTranslations("Leo");
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
+  const generateCallsign = useGenerateCallsign();
 
   const [officers, setOfficers] = React.useState(data ?? []);
   const [tempOfficer, setTempOfficer] = React.useState<FullOfficer | null>(null);
@@ -100,9 +102,9 @@ export default function MyOfficers({ officers: data }: Props) {
                     ) : null}
                     {officer.name}
                   </td>
-                  <td>{officer.callsign}</td>
+                  <td>{generateCallsign(officer)}</td>
                   <td>{String(officer.badgeNumber)}</td>
-                  <td>{officer.department.value}</td>
+                  <td>{officer.department.value?.value}</td>
                   <td>{officer.division?.value?.value}</td>
                   <td>
                     {officer.citizen ? (

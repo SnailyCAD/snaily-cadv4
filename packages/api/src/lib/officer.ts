@@ -46,7 +46,8 @@ export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
     },
     include: {
       rank: true,
-      department: true,
+      department: { include: { value: true } },
+      division: { include: { value: true, department: true } },
       status: {
         include: {
           value: true,

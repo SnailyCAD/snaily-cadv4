@@ -11,7 +11,7 @@ import type {
 } from "types/prisma";
 import create from "zustand";
 
-export type Full911Call = Call911 & { assignedUnits: Officer[]; events: Call911Event[] };
+export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };
 export type FullBolo = Bolo & { officer: Officer };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;

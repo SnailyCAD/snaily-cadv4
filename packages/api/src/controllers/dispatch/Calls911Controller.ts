@@ -24,12 +24,8 @@ export class Calls911Controller {
       include: {
         assignedUnits: {
           include: {
-            department: true,
-            division: {
-              include: {
-                value: true,
-              },
-            },
+            department: { include: { value: true } },
+            division: { include: { value: true } },
           },
         },
         events: true,

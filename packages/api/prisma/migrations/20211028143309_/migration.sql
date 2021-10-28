@@ -61,6 +61,7 @@ CREATE TABLE "MiscCadSettings" (
     "maxBusinessesPerCitizen" INTEGER,
     "callsignTemplate" TEXT NOT NULL DEFAULT E'{department}{callsign1} - {callsign2}{division}',
     "pairedUnitSymbol" VARCHAR(255) NOT NULL DEFAULT E'A',
+    "signal100Enabled" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "MiscCadSettings_pkey" PRIMARY KEY ("id")
 );
@@ -159,6 +160,7 @@ CREATE TABLE "Value" (
     "isDefault" BOOLEAN NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "position" INTEGER,
 
     CONSTRAINT "Value_pkey" PRIMARY KEY ("id")
 );
@@ -183,6 +185,15 @@ CREATE TABLE "DivisionValue" (
     "callsign" TEXT,
 
     CONSTRAINT "DivisionValue_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "DepartmentValue" (
+    "id" TEXT NOT NULL,
+    "valueId" TEXT NOT NULL,
+    "callsign" TEXT,
+
+    CONSTRAINT "DepartmentValue_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -289,11 +300,13 @@ CREATE TABLE "Officer" (
     "name" VARCHAR(255) NOT NULL,
     "departmentId" TEXT NOT NULL,
     "callsign" VARCHAR(255) NOT NULL,
+    "callsign2" VARCHAR(255) NOT NULL,
     "divisionId" TEXT NOT NULL,
     "rankId" TEXT,
     "statusId" TEXT,
     "suspended" BOOLEAN NOT NULL DEFAULT false,
     "badgeNumber" INTEGER,
+    "imageId" VARCHAR(255),
     "citizenId" TEXT,
     "userId" TEXT NOT NULL,
     "call911Id" TEXT,
@@ -308,6 +321,7 @@ CREATE TABLE "StatusValue" (
     "shouldDo" "ShouldDoType" NOT NULL DEFAULT E'SET_STATUS',
     "position" INTEGER,
     "whatPages" "WhatPages"[],
+    "color" TEXT,
 
     CONSTRAINT "StatusValue_pkey" PRIMARY KEY ("id")
 );
@@ -392,11 +406,13 @@ CREATE TABLE "EmsFdDeputy" (
     "name" VARCHAR(255) NOT NULL,
     "departmentId" TEXT NOT NULL,
     "callsign" VARCHAR(255) NOT NULL,
+    "callsign2" VARCHAR(255) NOT NULL,
     "divisionId" TEXT NOT NULL,
     "rankId" TEXT,
     "statusId" TEXT,
     "suspended" BOOLEAN NOT NULL DEFAULT false,
     "badgeNumber" INTEGER,
+    "imageId" VARCHAR(255),
     "citizenId" TEXT,
     "userId" TEXT NOT NULL,
 
@@ -503,6 +519,9 @@ ALTER TABLE "DivisionValue" ADD CONSTRAINT "DivisionValue_valueId_fkey" FOREIGN 
 ALTER TABLE "DivisionValue" ADD CONSTRAINT "DivisionValue_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "DepartmentValue" ADD CONSTRAINT "DepartmentValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -560,7 +579,7 @@ ALTER TABLE "BusinessPost" ADD CONSTRAINT "BusinessPost_businessId_fkey" FOREIGN
 ALTER TABLE "EmployeeValue" ADD CONSTRAINT "EmployeeValue_valueId_fkey" FOREIGN KEY ("valueId") REFERENCES "Value"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Officer" ADD CONSTRAINT "Officer_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Officer" ADD CONSTRAINT "Officer_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "DepartmentValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Officer" ADD CONSTRAINT "Officer_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "DivisionValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -611,7 +630,7 @@ ALTER TABLE "Warrant" ADD CONSTRAINT "Warrant_citizenId_fkey" FOREIGN KEY ("citi
 ALTER TABLE "Warrant" ADD CONSTRAINT "Warrant_officerId_fkey" FOREIGN KEY ("officerId") REFERENCES "Officer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "DepartmentValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "EmsFdDeputy" ADD CONSTRAINT "EmsFdDeputy_divisionId_fkey" FOREIGN KEY ("divisionId") REFERENCES "DivisionValue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

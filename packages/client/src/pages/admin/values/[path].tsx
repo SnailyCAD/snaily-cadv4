@@ -13,6 +13,7 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
 import {
+  DepartmentValue,
   DivisionValue,
   EmployeeValue,
   StatusValue,
@@ -26,7 +27,7 @@ import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 
-type TValue = Value | EmployeeValue | StatusValue | DivisionValue;
+export type TValue = Value | EmployeeValue | StatusValue | DivisionValue | DepartmentValue;
 
 interface Props {
   pathValues: { type: ValueType; values: TValue[] };
@@ -147,7 +148,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
                 <span className="select-none text-gray-500">{++idx}.</span>
                 <span className="ml-2">
                   {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                    <span>{(value as any).department.value} / </span>
+                    <span>{(value as any).department.value?.value} / </span>
                   ) : null}
                   {typeof value.value === "string" ? value.value : value.value.value}
                 </span>

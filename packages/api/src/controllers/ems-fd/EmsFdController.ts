@@ -44,12 +44,8 @@ export class EmsFdController {
         userId: user.id,
       },
       include: {
-        department: true,
-        division: {
-          include: {
-            value: true,
-          },
-        },
+        department: { include: { value: true } },
+        division: { include: { value: true } },
       },
     });
 
@@ -86,18 +82,15 @@ export class EmsFdController {
       data: {
         name: body.get("name"),
         callsign: body.get("callsign"),
+        callsign2: body.get("callsign2"),
         userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
       },
       include: {
-        department: true,
-        division: {
-          include: {
-            value: true,
-          },
-        },
+        department: { include: { value: true } },
+        division: { include: { value: true } },
       },
     });
 
@@ -144,17 +137,14 @@ export class EmsFdController {
       data: {
         name: body.get("name"),
         callsign: body.get("callsign"),
+        callsign2: body.get("callsign2"),
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
       },
       include: {
-        department: true,
-        division: {
-          include: {
-            value: true,
-          },
-        },
+        department: { include: { value: true } },
+        division: { include: { value: true } },
       },
     });
 
@@ -226,7 +216,7 @@ export class EmsFdController {
         statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         status: {
           include: { value: true },
         },
@@ -302,13 +292,9 @@ export class EmsFdController {
         },
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         rank: true,
-        division: {
-          include: {
-            value: true,
-          },
-        },
+        division: { include: { value: true } },
         status: {
           include: {
             value: true,
@@ -423,7 +409,7 @@ export class EmsFdController {
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {
   const status = officer.status.value.value;
-  const department = officer.department.value;
+  const department = officer.department.value.value;
   const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
 
   return {

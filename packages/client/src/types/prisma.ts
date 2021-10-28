@@ -27,8 +27,8 @@ export type MiscCadSettings = {
   maxCitizensPerUser: number | null;
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
-  pairedUnitSymbol: string;
-  callsignTemplate: string;
+  pairedUnitSymbol: string | null;
+  callsignTemplate: string | null;
   signal100Enabled: boolean;
 };
 
@@ -249,6 +249,7 @@ export type Officer = {
   departmentId: string;
   divisionId: string;
   callsign: string;
+  callsign2: string;
   rankId: string;
   statusId: string | null;
   status: StatusValue | null;
@@ -354,7 +355,18 @@ export type DivisionValue = {
   value: Value<"DIVISION">;
   departmentId: string | null;
   department: Value<"DEPARTMENT">;
-  callsign: string;
+  callsign: string | null;
+};
+
+/**
+ * Model DepartmentValue
+ */
+
+export type DepartmentValue = {
+  id: string;
+  valueId: string;
+  value: Value<"DEPARTMENT">;
+  callsign: string | null;
 };
 
 /**
@@ -366,6 +378,7 @@ export type EmsFdDeputy = {
   name: string;
   departmentId: string;
   callsign: string;
+  callsign2: string;
   divisionId: string;
   rankId: string | null;
   status: StatusValue | null;

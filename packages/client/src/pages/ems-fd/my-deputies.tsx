@@ -9,10 +9,11 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { DivisionValue, EmsFdDeputy, Value } from "types/prisma";
+import { DepartmentValue, DivisionValue, EmsFdDeputy } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
 import { makeImageUrl, requestAll } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -21,7 +22,7 @@ const ManageDeputyModal = dynamic(
 
 export type DeputyWithDept = EmsFdDeputy & {
   division: DivisionValue;
-  department: Value<"DEPARTMENT">;
+  department: DepartmentValue;
 };
 
 interface Props {
@@ -33,6 +34,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const t = useTranslations();
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
+  const generateCallsign = useGenerateCallsign();
 
   const [deputies, setDeputies] = React.useState(data ?? []);
   const [tempDeputy, setTempDeputy] = React.useState<FullOfficer | null>(null);
@@ -98,9 +100,9 @@ export default function MyDeputies({ deputies: data }: Props) {
                     ) : null}
                     {deputy.name}
                   </td>
-                  <td>{deputy.callsign}</td>
+                  <td>{generateCallsign(deputy)}</td>
                   <td>{String(deputy.badgeNumber)}</td>
-                  <td>{deputy.department.value}</td>
+                  <td>{deputy.department.value?.value}</td>
                   <td>{deputy.division?.value?.value}</td>
                   <td className="w-36">
                     <Button small onClick={() => handleEditClick(deputy)} variant="success">

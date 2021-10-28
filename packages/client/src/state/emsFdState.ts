@@ -1,15 +1,14 @@
-import { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
-import type { EmsFdDeputy, StatusValue, Value } from "types/prisma";
 import create from "zustand";
+import type { FullDeputy } from "./dispatchState";
 
-export type ActiveDeputy = EmsFdDeputy & { department: Value<"DEPARTMENT">; status: StatusValue };
+export type ActiveDeputy = FullDeputy;
 
 interface EmsFdState {
   activeDeputy: ActiveDeputy | null;
   setActiveDeputy: (deputy: ActiveDeputy | null) => void;
 
-  deputies: DeputyWithDept[];
-  setDeputies: (deputies: DeputyWithDept[]) => void;
+  deputies: FullDeputy[];
+  setDeputies: (deputies: FullDeputy[]) => void;
 }
 
 export const useEmsFdState = create<EmsFdState>((set) => ({

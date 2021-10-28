@@ -14,12 +14,14 @@ import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
 import { ShouldDoType } from "types/prisma";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const SelectOfficerModal = () => {
   const { officers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const generateCallsign = useGenerateCallsign();
 
   const { codes10 } = useValues();
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
@@ -65,8 +67,7 @@ export const SelectOfficerModal = () => {
                 onChange={handleChange}
                 isClearable
                 values={officers.map((officer) => ({
-                  // @ts-expect-error ignore, will fix later
-                  label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,
+                  label: `${generateCallsign(officer)} ${officer.name}`,
                   value: officer.id,
                 }))}
               />

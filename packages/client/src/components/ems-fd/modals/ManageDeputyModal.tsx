@@ -179,7 +179,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 name="department"
                 onChange={handleChange}
                 values={department.values.map((value) => ({
-                  label: value.value,
+                  label: value.value.value,
                   value: value.id,
                 }))}
               />

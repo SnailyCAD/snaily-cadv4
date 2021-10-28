@@ -6,13 +6,13 @@ import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useAuth } from "context/AuthContext";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { Full911Call, useDispatchState } from "state/dispatchState";
-import { ActiveOfficer } from "state/leoState";
-import { Call911, Officer } from "types/prisma";
+import { Full911Call, FullOfficer, useDispatchState } from "state/dispatchState";
+import { Call911 } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -26,13 +26,11 @@ export const ActiveCalls = () => {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
   const { openModal } = useModal();
+  const generateCallsign = useGenerateCallsign();
 
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
-  const makeUnit = (officer: Officer) =>
-    `${officer.callsign} ${officer.name} ${
-      "department" in officer ? `(${(officer as ActiveOfficer).department.value})` : ""
-    }`;
+  const makeUnit = (officer: FullOfficer) => `${generateCallsign(officer)} ${officer.name}`;
 
   useListener(
     SocketEvents.Create911Call,

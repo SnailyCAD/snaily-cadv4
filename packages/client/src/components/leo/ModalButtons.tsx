@@ -4,6 +4,7 @@ import { ModalIds } from "types/ModalIds";
 import { ShouldDoType } from "types/prisma";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface MButton {
   nameKey: [string, string];
@@ -53,6 +54,7 @@ export const ModalButtons = () => {
   const { activeOfficer } = useLeoState();
   const { openModal } = useModal();
   const t = useTranslations();
+  const generateCallsign = useGenerateCallsign();
 
   const isButtonDisabled =
     !activeOfficer ||
@@ -64,7 +66,7 @@ export const ModalButtons = () => {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{"Active Officer"}: </span>
-          {`${activeOfficer.badgeNumber} - ${activeOfficer.callsign} ${activeOfficer.name} (${activeOfficer.department?.value})`}
+          {`${generateCallsign(activeOfficer)} ${activeOfficer.name}`}
         </p>
       ) : null}
 

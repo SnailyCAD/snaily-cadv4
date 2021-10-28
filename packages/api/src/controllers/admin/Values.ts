@@ -63,7 +63,22 @@ export class ValuesController {
             values: await prisma.divisionValue.findMany({
               include: {
                 value: true,
-                department: true,
+                department: {
+                  include: {
+                    value: true,
+                  },
+                },
+              },
+            }),
+          };
+        }
+
+        if (type === "DEPARTMENT") {
+          return {
+            type,
+            values: await prisma.departmentValue.findMany({
+              include: {
+                value: true,
               },
             }),
           };
@@ -169,11 +184,29 @@ export class ValuesController {
         },
         include: {
           value: true,
-          department: true,
+          department: {
+            include: {
+              value: true,
+            },
+          },
         },
       });
 
       return division;
+    }
+
+    if (type === "DEPARTMENT") {
+      const department = await prisma.departmentValue.create({
+        data: {
+          valueId: value.id,
+          callsign: body.get("callsign") || null,
+        },
+        include: {
+          value: true,
+        },
+      });
+
+      return department;
     }
 
     return value;
@@ -202,6 +235,10 @@ export class ValuesController {
       });
 
       return true;
+    }
+
+    if (type === "DEPARTMENT") {
+      // todo
     }
 
     if (type === "DIVISION") {
@@ -261,6 +298,27 @@ export class ValuesController {
       return updated;
     }
 
+    if (type === "DEPARTMENT") {
+      const updated = await prisma.departmentValue.update({
+        where: {
+          id,
+        },
+        data: {
+          value: {
+            update: {
+              value: body.get("value"),
+            },
+          },
+          callsign: body.get("callsign") || null,
+        },
+        include: {
+          value: true,
+        },
+      });
+
+      return updated;
+    }
+
     if (type === "DIVISION") {
       if (!body.get("departmentId")) {
         throw new BadRequest("departmentIdRequired");
@@ -298,7 +356,11 @@ export class ValuesController {
         },
         include: {
           value: true,
-          department: true,
+          department: {
+            include: {
+              value: true,
+            },
+          },
         },
       });
 

@@ -8,12 +8,14 @@ import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
 import { makeImageUrl } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
+  const generateCallsign = useGenerateCallsign();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -58,10 +60,10 @@ export const ActiveOfficers = () => {
                           src={makeImageUrl("units", officer.imageId)}
                         />
                       ) : null}
-                      {officer.callsign} {officer.name}
+                      {generateCallsign(officer)} {officer.name}
                     </td>
                     <td>{String(officer.badgeNumber)}</td>
-                    <td>{officer.department.value}</td>
+                    <td>{officer.department.value.value}</td>
                     <td>{officer.division.value.value}</td>
                     <td className="flex items-center">
                       <span

@@ -52,8 +52,8 @@ export const MiscFeatures = () => {
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
     maxCitizensPerUser: miscSettings.maxCitizensPerUser ?? Infinity,
     maxPlateLength: miscSettings.maxPlateLength,
-    pairedUnitSymbol: miscSettings.pairedUnitSymbol,
-    callsignTemplate: miscSettings.callsignTemplate,
+    pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
+    callsignTemplate: miscSettings.callsignTemplate ?? "",
   };
 
   return (

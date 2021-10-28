@@ -44,7 +44,7 @@ export class LeoController {
             value: true,
           },
         },
-        department: true,
+        department: { include: { value: true } },
         citizen: {
           select: {
             name: true,
@@ -103,6 +103,7 @@ export class LeoController {
       data: {
         name: citizen ? `${citizen.name} ${citizen.surname}` : body.get("name"),
         callsign: body.get("callsign"),
+        callsign2: body.get("callsign2"),
         userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
@@ -110,7 +111,7 @@ export class LeoController {
         citizenId: citizen?.id ?? null,
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         division: {
           include: {
             value: true,
@@ -182,6 +183,7 @@ export class LeoController {
       },
       data: {
         callsign: body.get("callsign"),
+        callsign2: body.get("callsign2"),
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
@@ -189,7 +191,7 @@ export class LeoController {
         citizenId: citizen?.id ?? null,
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         division: {
           include: {
             value: true,
@@ -274,7 +276,7 @@ export class LeoController {
         statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         status: {
           include: { value: true },
         },
@@ -409,7 +411,7 @@ export class LeoController {
         },
       },
       include: {
-        department: true,
+        department: { include: { value: true } },
         rank: true,
         division: {
           include: {
@@ -472,7 +474,7 @@ export class LeoController {
 
 export function createWebhookData(webhook: APIWebhook, officer: any) {
   const status = officer.status.value.value;
-  const department = officer.department.value;
+  const department = officer.department.value.value;
   const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
 
   return {

@@ -8,12 +8,14 @@ import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
 import { makeImageUrl } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const ActiveDeputies = () => {
   const { activeDeputies } = useActiveDeputies();
   const t = useTranslations();
   const common = useTranslations("Common");
   const { openModal } = useModal();
+  const generateCallsign = useGenerateCallsign();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -58,10 +60,11 @@ export const ActiveDeputies = () => {
                           src={makeImageUrl("units", deputy.imageId)}
                         />
                       ) : null}
-                      {deputy.callsign} {deputy.name}
+                      {generateCallsign(deputy)}
+                      {deputy.name}
                     </td>
                     <td>{String(deputy.badgeNumber)}</td>
-                    <td>{deputy.department.value}</td>
+                    <td>{deputy.department.value.value}</td>
                     <td>{deputy.division.value.value}</td>
                     <td className="flex items-center">
                       <span

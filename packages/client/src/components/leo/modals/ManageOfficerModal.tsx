@@ -17,6 +17,7 @@ import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   officer: FullOfficer | null;
@@ -96,6 +97,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
     department: officer?.departmentId ?? "",
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
+    callsign2: officer?.callsign2 ?? "",
     division: officer?.divisionId ?? "",
     badgeNumber: officer?.badgeNumber ?? "",
     citizenId: officer?.citizenId ?? "",
@@ -165,15 +167,27 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
               <Error>{errors.badgeNumber}</Error>
             </FormField>
 
-            <FormField label={t("callsign")}>
-              <Input
-                value={values.callsign}
-                hasError={!!errors.callsign}
-                id="callsign"
-                onChange={handleChange}
-              />
-              <Error>{errors.callsign}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={"Callsign Symbol 1"}>
+                <Input
+                  value={values.callsign}
+                  hasError={!!errors.callsign}
+                  id="callsign"
+                  onChange={handleChange}
+                />
+                <Error>{errors.callsign}</Error>
+              </FormField>
+
+              <FormField label={"Callsign Symbol 2"}>
+                <Input
+                  value={values.callsign2}
+                  hasError={!!errors.callsign2}
+                  id="callsign2"
+                  onChange={handleChange}
+                />
+                <Error>{errors.callsign2}</Error>
+              </FormField>
+            </FormRow>
 
             <FormField label={t("department")}>
               <Select
@@ -182,7 +196,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
                 name="department"
                 onChange={handleChange}
                 values={department.values.map((value) => ({
-                  label: value.value,
+                  label: value.value.value,
                   value: value.id,
                 }))}
               />

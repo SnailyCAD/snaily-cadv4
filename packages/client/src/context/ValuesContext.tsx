@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  DepartmentValue,
   DivisionValue,
   EmployeeValue,
   PenalCode,
@@ -21,7 +22,6 @@ interface Context {
   vehicle: ContextValue<"VEHICLE">;
   weapon: ContextValue<"WEAPON">;
   bloodGroup: ContextValue<"BLOOD_GROUP">;
-  department: ContextValue<"DEPARTMENT">;
   officerRank: ContextValue<"OFFICER_RANK">;
   division: {
     type: ValueType;
@@ -38,6 +38,10 @@ interface Context {
   penalCode: {
     type: ValueType;
     values: PenalCode[];
+  };
+  department: {
+    type: ValueType;
+    values: DepartmentValue[];
   };
 }
 

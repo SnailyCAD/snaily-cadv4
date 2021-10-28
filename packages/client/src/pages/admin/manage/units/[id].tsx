@@ -92,7 +92,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
                 onChange={handleChange}
                 value={values.department}
                 values={department.values.map((v) => ({
-                  label: v.value,
+                  label: v.value.value,
                   value: v.id,
                 }))}
               />
