@@ -60,8 +60,7 @@ export const ActiveDeputies = () => {
                           src={makeImageUrl("units", deputy.imageId)}
                         />
                       ) : null}
-                      {generateCallsign(deputy)}
-                      {deputy.name}
+                      {generateCallsign(deputy)} {deputy.name}
                     </td>
                     <td>{String(deputy.badgeNumber)}</td>
                     <td>{deputy.department.value.value}</td>

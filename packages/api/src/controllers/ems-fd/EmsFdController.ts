@@ -217,9 +217,9 @@ export class EmsFdController {
       },
       include: {
         department: { include: { value: true } },
-        status: {
-          include: { value: true },
-        },
+        rank: true,
+        division: { include: { value: true } },
+        status: { include: { value: true } },
       },
     });
 
@@ -295,15 +295,9 @@ export class EmsFdController {
         department: { include: { value: true } },
         rank: true,
         division: { include: { value: true } },
-        status: {
-          include: {
-            value: true,
-          },
-        },
+        status: { include: { value: true } },
       },
     });
-
-    console.log({ deputies });
 
     return Array.isArray(deputies) ? deputies : [deputies];
   }

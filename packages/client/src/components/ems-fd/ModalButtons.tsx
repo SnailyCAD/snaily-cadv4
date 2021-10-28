@@ -4,6 +4,7 @@ import { ShouldDoType } from "types/prisma";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface MButton {
   nameKey: [string, string];
@@ -29,6 +30,9 @@ export const ModalButtons = () => {
   const { activeDeputy } = useEmsFdState();
   const { openModal } = useModal();
   const t = useTranslations();
+  const generateCallsign = useGenerateCallsign();
+
+  console.log({ activeDeputy });
 
   const isButtonDisabled =
     !activeDeputy ||
@@ -40,7 +44,7 @@ export const ModalButtons = () => {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{"Active Deputy"}: </span>
-          {`${activeDeputy.badgeNumber} - ${activeDeputy.callsign} ${activeDeputy.name} (${activeDeputy.department?.value})`}
+          {`${generateCallsign(activeDeputy)} ${activeDeputy.name}`}
         </p>
       ) : null}
 

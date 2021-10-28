@@ -16,6 +16,7 @@ import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   deputy: FullOfficer | null;
@@ -95,6 +96,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
     department: deputy?.departmentId ?? "",
     rank: deputy?.rankId ?? "",
     callsign: deputy?.callsign ?? "",
+    callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
     badgeNumber: deputy?.badgeNumber ?? "",
     image: undefined,
@@ -162,15 +164,27 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
               <Error>{errors.badgeNumber}</Error>
             </FormField>
 
-            <FormField label={t("Leo.callsign")}>
-              <Input
-                value={values.callsign}
-                hasError={!!errors.callsign}
-                id="callsign"
-                onChange={handleChange}
-              />
-              <Error>{errors.callsign}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={"Callsign Symbol 1"}>
+                <Input
+                  value={values.callsign}
+                  hasError={!!errors.callsign}
+                  id="callsign"
+                  onChange={handleChange}
+                />
+                <Error>{errors.callsign}</Error>
+              </FormField>
+
+              <FormField label={"Callsign Symbol 2"}>
+                <Input
+                  value={values.callsign2}
+                  hasError={!!errors.callsign2}
+                  id="callsign2"
+                  onChange={handleChange}
+                />
+                <Error>{errors.callsign2}</Error>
+              </FormField>
+            </FormRow>
 
             <FormField label={t("Leo.department")}>
               <Select

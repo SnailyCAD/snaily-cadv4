@@ -46,12 +46,9 @@ export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
     },
     include: {
       rank: true,
-      department: true,
-      status: {
-        include: {
-          value: true,
-        },
-      },
+      department: { include: { value: true } },
+      status: { include: { value: true } },
+      division: { include: { value: true } },
     },
   });
 

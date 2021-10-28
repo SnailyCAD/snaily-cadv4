@@ -14,12 +14,14 @@ import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
 import { useValues } from "context/ValuesContext";
 import { ShouldDoType } from "types/prisma";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const SelectDeputyModal = () => {
   const { deputies, setActiveDeputy } = useEmsFdState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
+  const generateCallsign = useGenerateCallsign();
 
   const { state, execute } = useFetch();
 
@@ -66,7 +68,7 @@ export const SelectDeputyModal = () => {
                 onChange={handleChange}
                 isClearable
                 values={deputies.map((officer) => ({
-                  label: `${officer.name} (${officer.department?.value})`,
+                  label: `${generateCallsign(officer)} ${officer.name}`,
                   value: officer.id,
                 }))}
               />

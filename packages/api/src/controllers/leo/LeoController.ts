@@ -277,9 +277,9 @@ export class LeoController {
       },
       include: {
         department: { include: { value: true } },
-        status: {
-          include: { value: true },
-        },
+        rank: true,
+        division: { include: { value: true } },
+        status: { include: { value: true } },
       },
     });
 
@@ -413,16 +413,8 @@ export class LeoController {
       include: {
         department: { include: { value: true } },
         rank: true,
-        division: {
-          include: {
-            value: true,
-          },
-        },
-        status: {
-          include: {
-            value: true,
-          },
-        },
+        division: { include: { value: true } },
+        status: { include: { value: true } },
       },
     });
 
