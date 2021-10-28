@@ -26,6 +26,8 @@ import { Loader } from "components/Loader";
 import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
+import { Input } from "components/form/Input";
+import { FormField } from "components/form/FormField";
 
 export type TValue = Value | EmployeeValue | StatusValue | DivisionValue | DepartmentValue;
 
@@ -38,6 +40,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
+  const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<TValue | null>(null);
   const { state, execute } = useFetch();
 
@@ -128,42 +131,58 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       </Head>
 
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
+        <div>
+          <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
+          <h6 className="text-lg font-semibold">
+            {t("totalItems")}: <span className="font-normal">{values.length}</span>
+          </h6>
+        </div>
         <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
       </header>
+
+      <FormField label={common("search")} className="my-2">
+        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
+      </FormField>
+
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <ReactSortable animation={200} className="mt-5" tag="ul" list={values} setList={setList}>
-          {sortValues(values).map((value, idx) => (
-            <li
-              className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
-              key={value.id}
-            >
-              <div className="flex items-center">
-                <span className="cursor-move">
-                  <ArrowsExpand className="text-gray-500 mr-2" width={15} />
-                </span>
+          {sortValues(values)
+            .filter((v) => handleFilter(v, search))
+            .map((value, idx) => (
+              <li
+                className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
+                key={value.id}
+              >
+                <div className="flex items-center">
+                  <span className="cursor-move">
+                    <ArrowsExpand className="text-gray-500 mr-2" width={15} />
+                  </span>
 
-                <span className="select-none text-gray-500">{++idx}.</span>
-                <span className="ml-2">
-                  {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                    <span>{(value as any).department.value?.value} / </span>
-                  ) : null}
-                  {typeof value.value === "string" ? value.value : value.value.value}
-                </span>
-              </div>
+                  <span className="select-none text-gray-500">{++idx}.</span>
+                  <span className="ml-2">
+                    {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
+                      <span>{(value as any).department.value?.value} / </span>
+                    ) : null}
+                    {typeof value.value === "string" ? value.value : value.value.value}
+                  </span>
+                </div>
 
-              <div>
-                <Button onClick={() => handleEditClick(value)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
-                  {common("delete")}
-                </Button>
-              </div>
-            </li>
-          ))}
+                <div>
+                  <Button onClick={() => handleEditClick(value)} variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteClick(value)}
+                    variant="danger"
+                    className="ml-2"
+                  >
+                    {common("delete")}
+                  </Button>
+                </div>
+              </li>
+            ))}
         </ReactSortable>
       )}
 
@@ -259,4 +278,12 @@ function findCreatedAtAndPosition(value: TValue) {
     createdAt: new Date(value.value.createdAt),
     position: value.value.position,
   };
+}
+
+function handleFilter(value: TValue, search: string) {
+  if (!search) return true;
+  const str = "createdAt" in value ? value.value : value.value.value;
+
+  if (str.toLowerCase().includes(search.toLowerCase())) return true;
+  return false;
 }
