@@ -17,3 +17,5 @@ packages/api/public/**/*.jpeg
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+.vscode/settings.json
