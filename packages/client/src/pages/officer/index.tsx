@@ -61,7 +61,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   const { setCalls, setBolos } = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { signal100Enabled, hidden, setHidden, Component } = useSignal100();
+  const { signal100Enabled, Component } = useSignal100();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -86,7 +86,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
         <title>{t("officer")} - SnailyCAD</title>
       </Head>
 
-      {signal100Enabled && !hidden ? <Component setHidden={setHidden} /> : null}
+      {signal100Enabled ? <Component /> : null}
 
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden mb-3">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">

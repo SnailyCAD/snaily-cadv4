@@ -44,7 +44,7 @@ const SearchMedicalRecordModal = dynamic(async () => {
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const timeRef = useTime();
-  const { signal100Enabled, hidden, setHidden, Component } = useSignal100();
+  const { signal100Enabled, Component } = useSignal100();
 
   const state = useEmsFdState();
   const { setCalls } = useDispatchState();
@@ -64,7 +64,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         <title>{t("Ems.emsFd")} - SnailyCAD</title>
       </Head>
 
-      {signal100Enabled && !hidden ? <Component setHidden={setHidden} /> : null}
+      {signal100Enabled ? <Component /> : null}
 
       <div className="w-full bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3 dark:text-white dark:border-b-[1px] dark:border-dark-gray mb-2">
