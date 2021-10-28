@@ -104,8 +104,6 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
     (event) => {
       if (!call) return;
 
-      console.log({ event });
-
       setCall?.((p) => ({
         ...(p ?? call),
         events: (p ?? call).events.filter((v) => v.id !== event.id),

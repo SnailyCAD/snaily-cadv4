@@ -95,4 +95,8 @@ export class Socket {
   emitSignal100(value: boolean) {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
+
+  emitPanicButtonLeo(officer: any) {
+    this.io.sockets.emit(SocketEvents.PANIC_BUTTON, officer);
+  }
 }

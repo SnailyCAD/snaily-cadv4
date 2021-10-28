@@ -19,6 +19,7 @@ import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { useSignal100 } from "hooks/useSignal100";
+import { usePanicButton } from "hooks/usePanicButton";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -62,6 +63,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   const timeRef = useTime();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
+  const { unit, PanicButton } = usePanicButton();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -87,6 +89,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       </Head>
 
       {signal100Enabled ? <Component /> : null}
+      {unit ? <PanicButton unit={unit} /> : null}
 
       <div className="w-full bg-gray-200/80 rounded-md overflow-hidden mb-3">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">

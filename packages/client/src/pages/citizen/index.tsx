@@ -53,7 +53,7 @@ export default function CitizenPage({ citizens }: Props) {
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
         <Link href="/citizen/create">
-          <a className="py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
+          <a className="p-1 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
             {t("createCitizen")}
           </a>
         </Link>

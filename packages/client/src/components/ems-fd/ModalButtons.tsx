@@ -32,8 +32,6 @@ export const ModalButtons = () => {
   const t = useTranslations();
   const generateCallsign = useGenerateCallsign();
 
-  console.log({ activeDeputy });
-
   const isButtonDisabled =
     !activeDeputy ||
     activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||

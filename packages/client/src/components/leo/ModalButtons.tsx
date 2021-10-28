@@ -5,6 +5,7 @@ import { ShouldDoType } from "types/prisma";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import useFetch from "lib/useFetch";
 
 interface MButton {
   nameKey: [string, string];
@@ -56,6 +57,16 @@ export const ModalButtons = () => {
   const t = useTranslations();
   const generateCallsign = useGenerateCallsign();
 
+  const { execute } = useFetch();
+
+  async function handlePanic() {
+    if (!activeOfficer) return;
+
+    await execute("/leo/panic-button", {
+      method: "POST",
+    });
+  }
+
   const isButtonDisabled =
     !activeOfficer ||
     activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
@@ -82,6 +93,15 @@ export const ModalButtons = () => {
             {t(button.nameKey.join("."))}
           </Button>
         ))}
+
+        <Button
+          id={"panicButton"}
+          disabled={isButtonDisabled}
+          title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
+          onClick={handlePanic}
+        >
+          {t("Leo.panicButton")}
+        </Button>
       </ul>
     </div>
   );

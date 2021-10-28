@@ -12,7 +12,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
+import { Officer, cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
@@ -461,6 +461,24 @@ export class LeoController {
     });
 
     return data;
+  }
+
+  @Post("/panic-button")
+  @Use(ActiveOfficer)
+  async panicButton(@Context("activeOfficer") officer: Officer) {
+    const fullOfficer = await prisma.officer.findUnique({
+      where: {
+        id: officer.id,
+      },
+      include: {
+        department: { include: { value: true } },
+        rank: true,
+        division: { include: { value: true } },
+        status: { include: { value: true } },
+      },
+    });
+
+    this.socket.emitPanicButtonLeo(fullOfficer);
   }
 }
 
