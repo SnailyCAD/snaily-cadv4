@@ -15,6 +15,7 @@ import { useModal } from "context/ModalContext";
 import {
   DepartmentValue,
   DivisionValue,
+  DriversLicenseCategoryValue,
   EmployeeValue,
   StatusValue,
   Value,
@@ -29,7 +30,13 @@ import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 
-export type TValue = Value | EmployeeValue | StatusValue | DivisionValue | DepartmentValue;
+export type TValue =
+  | Value
+  | EmployeeValue
+  | StatusValue
+  | DivisionValue
+  | DepartmentValue
+  | DriversLicenseCategoryValue;
 
 interface Props {
   pathValues: { type: ValueType; values: TValue[] };
@@ -255,7 +262,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   };
 };
 
-function sortValues(values: TValue[]) {
+export function sortValues(values: TValue[]): any[] {
   return values.sort((a, b) => {
     const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
     const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);
@@ -266,7 +273,7 @@ function sortValues(values: TValue[]) {
   });
 }
 
-function findCreatedAtAndPosition(value: TValue) {
+export function findCreatedAtAndPosition(value: TValue) {
   if ("createdAt" in value) {
     return {
       createdAt: new Date(value.createdAt),
@@ -280,7 +287,7 @@ function findCreatedAtAndPosition(value: TValue) {
   };
 }
 
-function handleFilter(value: TValue, search: string) {
+export function handleFilter(value: TValue, search: string) {
   if (!search) return true;
   const str = "createdAt" in value ? value.value : value.value.value;
 

@@ -84,6 +84,8 @@ export type Citizen = {
   note: string | null;
   dead: boolean | null;
   dateOfDead: Date | null;
+  dlCategory: DriversLicenseCategoryValue[];
+  dlPilotCategory: DriversLicenseCategoryValue[];
 };
 
 /**
@@ -428,6 +430,17 @@ export type Warrant = {
 };
 
 /**
+ * Model DriversLicenseCategoryValue
+ */
+
+export type DriversLicenseCategoryValue = {
+  id: string;
+  value: Value<"DRIVERSLICENSE_CATEGORY">;
+  valueId: string;
+  type: DriversLicenseCategoryType;
+};
+
+/**
  * Enums
  */
 
@@ -463,6 +476,7 @@ export const valueType = {
   DEPARTMENT: "DEPARTMENT",
   OFFICER_RANK: "OFFICER_RANK",
   DIVISION: "DIVISION",
+  DRIVERSLICENSE_CATEGORY: "DRIVERSLICENSE_CATEGORY",
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];
@@ -492,6 +506,7 @@ export const ShouldDoType = {
   SET_ON_DUTY: "SET_ON_DUTY",
   SET_ASSIGNED: "SET_ASSIGNED",
   SET_STATUS: "SET_STATUS",
+  PANIC_BUTTON: "PANIC_BUTTON",
 } as const;
 
 export type ShouldDoType = typeof ShouldDoType[keyof typeof ShouldDoType];
@@ -533,3 +548,12 @@ export const WarrantStatus = {
 } as const;
 
 export type WarrantStatus = typeof WarrantStatus[keyof typeof WarrantStatus];
+
+export const DriversLicenseCategoryType = {
+  AUTOMOTIVE: "AUTOMOTIVE",
+  AVIATION: "AVIATION",
+  WATER: "WATER",
+} as const;
+
+export type DriversLicenseCategoryType =
+  typeof DriversLicenseCategoryType[keyof typeof DriversLicenseCategoryType];

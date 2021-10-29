@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   DepartmentValue,
   DivisionValue,
+  DriversLicenseCategoryValue,
   EmployeeValue,
   PenalCode,
   StatusValue,
@@ -42,6 +43,10 @@ interface Context {
   department: {
     type: ValueType;
     values: DepartmentValue[];
+  };
+  driverslicenseCategory: {
+    type: ValueType;
+    values: DriversLicenseCategoryValue[];
   };
 }
 

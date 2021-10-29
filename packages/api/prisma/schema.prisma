@@ -84,38 +84,40 @@ model User {
 }
 
 model Citizen {
-  id               String              @id @default(cuid())
-  user             User                @relation(fields: [userId], references: [id])
+  id               String                        @id @default(cuid())
+  user             User                          @relation(fields: [userId], references: [id])
   userId           String
-  name             String              @db.VarChar(255)
-  surname          String              @db.VarChar(255)
+  name             String                        @db.VarChar(255)
+  surname          String                        @db.VarChar(255)
   dateOfBirth      DateTime
-  gender           Value               @relation("genderToValue", fields: [genderId], references: [id])
+  gender           Value                         @relation("genderToValue", fields: [genderId], references: [id])
   genderId         String
-  ethnicity        Value               @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicity        Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
   ethnicityId      String
-  hairColor        String              @db.VarChar(255)
-  eyeColor         String              @db.VarChar(255)
-  address          String              @db.VarChar(255)
-  height           String              @db.VarChar(255)
-  weight           String              @db.VarChar(255)
-  driversLicense   Value?              @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
+  hairColor        String                        @db.VarChar(255)
+  eyeColor         String                        @db.VarChar(255)
+  address          String                        @db.VarChar(255)
+  height           String                        @db.VarChar(255)
+  weight           String                        @db.VarChar(255)
+  driversLicense   Value?                        @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
   driversLicenseId String?
-  weaponLicense    Value?              @relation("weaponLicenseToValue", fields: [weaponLicenseId], references: [id])
+  dlCategory       DriversLicenseCategoryValue[] @relation("dlCategoryToDLCategory")
+  weaponLicense    Value?                        @relation("weaponLicenseToValue", fields: [weaponLicenseId], references: [id])
   weaponLicenseId  String?
-  pilotLicense     Value?              @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
+  pilotLicense     Value?                        @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
   pilotLicenseId   String?
-  ccw              Value?              @relation("ccwToValue", fields: [ccwId], references: [id])
+  dlPilotCategory  DriversLicenseCategoryValue[] @relation("dlPilotCategoryToDLCategory")
+  ccw              Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId            String?
-  imageId          String?             @db.Text
-  note             String?             @db.Text
-  dead             Boolean?            @default(false)
+  imageId          String?                       @db.Text
+  note             String?                       @db.Text
+  dead             Boolean?                      @default(false)
   dateOfDead       DateTime?
   vehicles         RegisteredVehicle[]
   weapons          Weapon[]
   medicalRecords   MedicalRecord[]
   towCalls         TowCall[]
-  createdTowCalls  TowCall[]           @relation("towCallCreator")
+  createdTowCalls  TowCall[]                     @relation("towCallCreator")
   businesses       Business[]
   Employee         Employee[]
   officers         Officer[]
@@ -123,7 +125,7 @@ model Citizen {
   Record           Record[]
   emsFdDeputies    EmsFdDeputy[]
   TaxiCall         TaxiCall[]
-  createdTaxiCalls TaxiCall[]          @relation("taxiCallCreator")
+  createdTaxiCalls TaxiCall[]                    @relation("taxiCallCreator")
   truckLogs        TruckLog[]
 }
 
@@ -193,22 +195,23 @@ model Value {
   position  Int?
 
   // how to clean this up?!
-  ethnicityToValue                Citizen[]           @relation("ethnicityToValue")
-  genderToValue                   Citizen[]           @relation("genderToValue")
-  driversLicenseToValue           Citizen[]           @relation("driversLicenseToValue")
-  weaponLicenseToValue            Citizen[]           @relation("weaponLicenseToValue")
-  pilotLicenseToValue             Citizen[]           @relation("pilotLicenseToValue")
-  ccwToValue                      Citizen[]           @relation("ccwToValue")
-  modelToValue                    RegisteredVehicle[] @relation("modelToValue")
-  registrationStatusToValue       RegisteredVehicle[] @relation("registrationStatusToValue")
-  weaponRegistrationStatusToValue Weapon[]            @relation("weaponRegistrationStatusToValue")
-  weaponModelToValue              Weapon[]            @relation("weaponModelToValue")
+  ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
+  genderToValue                   Citizen[]                     @relation("genderToValue")
+  driversLicenseToValue           Citizen[]                     @relation("driversLicenseToValue")
+  weaponLicenseToValue            Citizen[]                     @relation("weaponLicenseToValue")
+  pilotLicenseToValue             Citizen[]                     @relation("pilotLicenseToValue")
+  ccwToValue                      Citizen[]                     @relation("ccwToValue")
+  modelToValue                    RegisteredVehicle[]           @relation("modelToValue")
+  registrationStatusToValue       RegisteredVehicle[]           @relation("registrationStatusToValue")
+  weaponRegistrationStatusToValue Weapon[]                      @relation("weaponRegistrationStatusToValue")
+  weaponModelToValue              Weapon[]                      @relation("weaponModelToValue")
   EmployeeValue                   EmployeeValue[]
-  officerRankToValue              Officer[]           @relation("officerRankToValue")
-  StatusValueToValue              StatusValue[]       @relation("StatusValueToValue")
-  divisionToValue                 DivisionValue[]     @relation("divisionToValue")
-  emsFdRankToValue                EmsFdDeputy[]       @relation("emsFdRankToValue")
-  departmentToValue               DepartmentValue[]   @relation("departmentToValue")
+  officerRankToValue              Officer[]                     @relation("officerRankToValue")
+  StatusValueToValue              StatusValue[]                 @relation("StatusValueToValue")
+  divisionToValue                 DivisionValue[]               @relation("divisionToValue")
+  emsFdRankToValue                EmsFdDeputy[]                 @relation("emsFdRankToValue")
+  departmentToValue               DepartmentValue[]             @relation("departmentToValue")
+  driversLicenseCategoryToValue   DriversLicenseCategoryValue[] @relation("driversLicenseCategoryToValue")
 }
 
 model PenalCode {
@@ -242,6 +245,15 @@ model DepartmentValue {
   division    DivisionValue[] @relation("divisionDepartmentToValue")
 }
 
+model DriversLicenseCategoryValue {
+  id               String                     @id @default(cuid())
+  valueId          String
+  value            Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type             DriversLicenseCategoryType
+  citizens         Citizen[]                  @relation("dlCategoryToDLCategory")
+  citizenToPilotDl Citizen[]                  @relation("dlPilotCategoryToDLCategory")
+}
+
 enum ValueType {
   LICENSE
   GENDER
@@ -255,6 +267,13 @@ enum ValueType {
   DEPARTMENT
   OFFICER_RANK
   DIVISION
+  DRIVERSLICENSE_CATEGORY
+}
+
+enum DriversLicenseCategoryType {
+  AUTOMOTIVE
+  AVIATION
+  WATER
 }
 
 // notifications

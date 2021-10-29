@@ -39,6 +39,8 @@ const INITIAL_VALUES = {
   ccw: "",
   weaponLicense: "",
   image: null,
+  driversLicenseCategory: "",
+  pilotLicenseCategory: "",
 };
 
 export default function CreateCitizen() {
@@ -48,7 +50,7 @@ export default function CreateCitizen() {
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
 
-  const { gender, ethnicity, license } = useValues();
+  const { gender, ethnicity, license, driverslicenseCategory } = useValues();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -65,7 +67,15 @@ export default function CreateCitizen() {
 
     const { json } = await execute("/citizen", {
       method: "POST",
-      data: values,
+      data: {
+        ...values,
+        driversLicenseCategory: Array.isArray(values.pilotLicenseCategory)
+          ? values.pilotLicenseCategory.map((v) => v.value)
+          : values.pilotLicenseCategory,
+        pilotLicenseCategory: Array.isArray(values.pilotLicenseCategory)
+          ? values.pilotLicenseCategory.map((v) => v.value)
+          : values.pilotLicenseCategory,
+      },
     });
 
     if (json?.id) {
@@ -215,6 +225,23 @@ export default function CreateCitizen() {
                   name="driversLicense"
                 />
                 <Error>{errors.driversLicense}</Error>
+
+                <FormField className="mt-2" label="Type">
+                  <Select
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === "AUTOMOTIVE")
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: v.id,
+                      }))}
+                    value={values.driversLicenseCategory}
+                    hasError={!!errors.driversLicenseCategory}
+                    onChange={handleChange}
+                    name="driversLicenseCategory"
+                    isMulti
+                    isClearable
+                  />
+                </FormField>
               </FormField>
               <FormField label={t("weaponLicense")}>
                 <Select
@@ -241,6 +268,23 @@ export default function CreateCitizen() {
                   name="pilotLicense"
                 />
                 <Error>{errors.pilotLicense}</Error>
+
+                <FormField className="mt-2" label="Type">
+                  <Select
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === "AVIATION")
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: v.id,
+                      }))}
+                    value={values.pilotLicenseCategory}
+                    hasError={!!errors.pilotLicenseCategory}
+                    onChange={handleChange}
+                    name="pilotLicenseCategory"
+                    isMulti
+                    isClearable
+                  />
+                </FormField>
               </FormField>
               <FormField label={t("ccw")}>
                 <Select
@@ -279,7 +323,7 @@ export default function CreateCitizen() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const { data: values = [] } = await handleRequest(
-    "/admin/values/gender?paths=ethnicity,license",
+    "/admin/values/gender?paths=ethnicity,license,driverslicense_category",
   ).catch(() => ({ data: null }));
 
   return {

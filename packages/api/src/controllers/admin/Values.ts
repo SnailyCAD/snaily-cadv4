@@ -73,6 +73,17 @@ export class ValuesController {
           };
         }
 
+        if (type === "DRIVERSLICENSE_CATEGORY") {
+          return {
+            type,
+            values: await prisma.driversLicenseCategoryValue.findMany({
+              include: {
+                value: true,
+              },
+            }),
+          };
+        }
+
         if (type === "DEPARTMENT") {
           return {
             type,
@@ -136,6 +147,22 @@ export class ValuesController {
         isDefault: false,
       },
     });
+
+    if (type === "DRIVERSLICENSE_CATEGORY") {
+      if (!body.get("type")) {
+        throw new BadRequest("typeIsRequired");
+      }
+
+      const dlCategory = await prisma.driversLicenseCategoryValue.create({
+        data: {
+          type: body.get("type"),
+          valueId: value.id,
+        },
+        include: { value: true },
+      });
+
+      return dlCategory;
+    }
 
     if (type === "CODES_10") {
       if (!body.get("shouldDo")) {
@@ -238,7 +265,23 @@ export class ValuesController {
     }
 
     if (type === "DEPARTMENT") {
-      // todo
+      await prisma.departmentValue.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "DRIVERSLICENSE_CATEGORY") {
+      await prisma.driversLicenseCategoryValue.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
     }
 
     if (type === "DIVISION") {
@@ -365,6 +408,28 @@ export class ValuesController {
       });
 
       return updated;
+    }
+
+    if (type === "DRIVERSLICENSE_CATEGORY") {
+      if (!body.get("type")) {
+        throw new BadRequest("typeIsRequired");
+      }
+
+      const dlCategory = await prisma.driversLicenseCategoryValue.update({
+        where: {
+          id,
+        },
+        data: {
+          value: {
+            update: {
+              value: body.get("value"),
+            },
+          },
+        },
+        include: { value: true },
+      });
+
+      return dlCategory;
     }
 
     const updated = await prisma.value.update({

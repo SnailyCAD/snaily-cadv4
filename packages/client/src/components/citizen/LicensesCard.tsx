@@ -26,12 +26,30 @@ export const LicensesCard = () => {
         </header>
 
         <div>
-          {types.map((type) => (
-            <p key={type}>
-              <span className="font-semibold">{t(type)}: </span>{" "}
-              {citizen[type]?.value ?? common("none")}
-            </p>
-          ))}
+          {types.map((type) => {
+            const category =
+              type === "driversLicense"
+                ? citizen.dlCategory
+                : type === "pilotLicense"
+                ? citizen.dlPilotCategory
+                : null;
+
+            return (
+              <div key={type}>
+                <p>
+                  <span className="font-semibold">{t(type)}: </span>
+                  {citizen[type]?.value ?? common("none")}
+                </p>
+
+                {category ? (
+                  <p className="pl-3">
+                    <span className="font-semibold">{common("categories")}: </span>
+                    {category.map((v) => v?.value?.value).join(", ")}
+                  </p>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -25,7 +25,8 @@
     "reset": "Reset",
     "search": "Search",
     "events": "Events",
-    "name": "Name"
+    "name": "Name",
+    "categories": "Categories"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

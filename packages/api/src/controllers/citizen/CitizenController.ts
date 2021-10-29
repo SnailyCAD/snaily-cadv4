@@ -51,6 +51,8 @@ export class CitizenController {
         driversLicense: true,
         ccw: true,
         pilotLicense: true,
+        dlCategory: { include: { value: true } },
+        dlPilotCategory: { include: { value: true } },
         Record: {
           include: {
             officer: true,
@@ -114,8 +116,14 @@ export class CitizenController {
       driversLicense,
       weaponLicense,
       pilotLicense,
+      driversLicenseCategory,
+      pilotLicenseCategory,
       ccw,
-    } = body.toJSON();
+    } = body.toJSON() as {
+      [key: string]: any;
+      driversLicenseCategory: string[];
+      pilotLicenseCategory: string[];
+    };
 
     const existing = await prisma.citizen.findFirst({
       where: {
@@ -162,6 +170,8 @@ export class CitizenController {
         pilotLicense: true,
       },
     });
+
+    await this.linkDlCategories(citizen.id, driversLicenseCategory, pilotLicenseCategory);
 
     return citizen;
   }
@@ -259,5 +269,49 @@ export class CitizenController {
     });
 
     return data;
+  }
+
+  private async linkDlCategories(
+    citizenId: string,
+    driversLicenseCategory?: string[],
+    pilotLicenseCategory?: string[],
+  ) {
+    if (driversLicenseCategory) {
+      await Promise.all(
+        driversLicenseCategory.map(async (id) => {
+          await prisma.citizen.update({
+            where: {
+              id: citizenId,
+            },
+            data: {
+              dlCategory: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          });
+        }),
+      );
+    }
+
+    if (pilotLicenseCategory) {
+      await Promise.all(
+        pilotLicenseCategory.map(async (id) => {
+          await prisma.citizen.update({
+            where: {
+              id: citizenId,
+            },
+            data: {
+              dlPilotCategory: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          });
+        }),
+      );
+    }
   }
 }

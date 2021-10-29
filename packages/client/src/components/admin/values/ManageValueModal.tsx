@@ -10,7 +10,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { EmployeeAsEnum, ShouldDoType, ValueType } from "types/prisma";
+import { DriversLicenseCategoryType, EmployeeAsEnum, ShouldDoType, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
@@ -19,6 +19,7 @@ import { TValue } from "src/pages/admin/values/[path]";
 interface Props {
   type: ValueType;
   value: TValue | null;
+  clType?: DriversLicenseCategoryType | null;
   onCreate: (newValue: TValue) => void;
   onUpdate: (oldValue: TValue, newValue: TValue) => void;
 }
@@ -43,6 +44,7 @@ const SHOULD_DO_LABELS = {
   [ShouldDoType.SET_OFF_DUTY]: "Set Off duty",
   [ShouldDoType.SET_ON_DUTY]: "Set On duty",
   [ShouldDoType.SET_ASSIGNED]: "Set Assigned",
+  [ShouldDoType.PANIC_BUTTON]: "Panic Button",
 };
 
 const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
@@ -55,7 +57,7 @@ const POSITION_VALUES = new Array(50).fill(0).map((_, idx) => ({
   label: String(idx + 1),
 }));
 
-export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => {
+export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, value }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -69,7 +71,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
     if (value) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
         method: "PATCH",
-        data: values,
+        data: { ...values, type: dlType },
       });
 
       if (json?.id) {
@@ -79,7 +81,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
     } else {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
-        data: values,
+        data: { ...values, type: dlType },
       });
 
       if (json?.id) {
@@ -106,6 +108,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, type, value }: Props) => 
     callsign: value?.callsign ?? "",
     // @ts-expect-error shortcut
     color: value?.color ?? "",
+    // @ts-expect-error shortcut
+    type: value?.type ?? "",
   };
 
   function validate(values: typeof INITIAL_VALUES) {

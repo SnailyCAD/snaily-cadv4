@@ -75,5 +75,11 @@
     "ADD": "Add Division",
     "DELETE": "Delete Division",
     "EDIT": "Edit Division"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Manage DL Categories",
+    "ADD": "Add Category",
+    "DELETE": "Delete Category",
+    "EDIT": "Edit Category"
   }
 }
