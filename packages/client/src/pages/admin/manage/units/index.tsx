@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });
 
@@ -18,6 +19,7 @@ interface Props {
 export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
+  const generateCallsign = useGenerateCallsign();
 
   const LABELS = {
     DEPUTY: t("Ems.deputy"),
@@ -48,9 +50,9 @@ export default function SupervisorPanelPage({ units }: Props) {
               <tr key={unit.id}>
                 <td>{LABELS[unit.type]}</td>
                 <td>{unit.name}</td>
-                <td>{unit.callsign}</td>
+                <td> {generateCallsign(unit)}</td>
                 <td>{String(unit.badgeNumber)}</td>
-                <td>{unit.department?.value}</td>
+                <td>{unit.department?.value?.value}</td>
                 <td>{unit.division?.value?.value}</td>
                 <td>{unit.rank?.value ?? common("none")}</td>
                 <td>{unit.status?.value?.value ?? common("none")}</td>

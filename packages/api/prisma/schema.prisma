@@ -436,6 +436,7 @@ enum ShouldDoType {
   SET_ON_DUTY
   SET_ASSIGNED
   SET_STATUS
+  PANIC_BUTTON
 }
 
 // 911 calls & bolos

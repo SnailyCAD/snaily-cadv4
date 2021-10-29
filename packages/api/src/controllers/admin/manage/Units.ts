@@ -8,22 +8,14 @@ import { IsAuth, IsSupervisor } from "../../../middlewares";
 
 const include = {
   rank: true,
-  department: true,
+  department: { include: { value: true } },
+  division: { include: { value: true } },
+  status: { include: { value: true } },
   citizen: {
     select: {
       id: true,
       name: true,
       surname: true,
-    },
-  },
-  division: {
-    include: {
-      value: true,
-    },
-  },
-  status: {
-    include: {
-      value: true,
     },
   },
 };

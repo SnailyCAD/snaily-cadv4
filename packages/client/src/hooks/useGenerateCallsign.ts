@@ -20,16 +20,18 @@ export function useGenerateCallsign() {
       division: division.callsign,
     };
 
-    const templateArr = template.split(/[{}]/);
+    const templateArr: (string | null)[] = template.split(/[{}]/);
     Object.entries(replacers).forEach(([replacer, value]) => {
       const idx = templateArr.indexOf(replacer);
 
       if (value) {
         templateArr[idx] = value;
+      } else {
+        templateArr[idx] = null;
       }
     });
 
-    return templateArr.join("");
+    return templateArr.filter((v) => v !== null).join("");
   }
 
   return generateCallsign;

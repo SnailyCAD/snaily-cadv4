@@ -111,11 +111,11 @@ export default function ManageCitizens({ citizens: data }: Props) {
                   </p>
                   <p>
                     <span className="font-semibold">{tCitizen("gender")}: </span>
-                    {citizen.gender}
+                    {citizen.gender.value}
                   </p>
                   <p>
                     <span className="font-semibold">{tCitizen("ethnicity")}: </span>
-                    {citizen.ethnicity}
+                    {citizen.ethnicity.value}
                   </p>
                   <p>
                     <span className="font-semibold">{tCitizen("hairColor")}: </span>

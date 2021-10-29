@@ -20,7 +20,7 @@ export class Calls911Controller {
   async getDispatchData() {
     const includeData = {
       include: {
-        department: true,
+        department: { include: { value: true } },
         status: {
           include: {
             value: true,

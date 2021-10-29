@@ -17,6 +17,8 @@ export class ManageCitizensController {
         user: {
           select: userProperties,
         },
+        gender: true,
+        ethnicity: true,
       },
     });
 

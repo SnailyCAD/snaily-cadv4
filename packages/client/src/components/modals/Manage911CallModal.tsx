@@ -18,6 +18,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   call: Full911Call | null;
@@ -35,6 +36,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const { user } = useAuth();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
   const { allOfficers, activeOfficers } = useDispatchState();
+  const generateCallsign = useGenerateCallsign();
 
   useListener(
     SocketEvents.AddCallEvent,
@@ -185,7 +187,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
 
   function makeLabel(value: string) {
     const officer = allOfficers.find((v) => v.id === value);
-    return `${officer?.callsign} ${officer?.name} (${officer?.department?.value})`;
+    return `${generateCallsign(officer!)} ${officer?.name}`;
   }
 
   return (
@@ -229,7 +231,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                       value: value.value,
                     }))}
                     values={activeOfficers.map((officer) => ({
-                      label: `${officer.callsign} ${officer.name} (${officer.department?.value})`,
+                      label: makeLabel(officer.id),
                       value: officer.id,
                     }))}
                     onChange={handleChange}
