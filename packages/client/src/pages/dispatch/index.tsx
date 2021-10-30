@@ -49,6 +49,7 @@ interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
   officers: FullOfficer[];
+  deputies: FullDeputy[];
   activeDeputies: FullDeputy[];
   activeOfficers: FullOfficer[];
 }
@@ -67,6 +68,7 @@ export default function OfficerDashboard(props: Props) {
     state.setAllOfficers(props.officers);
     state.setActiveDeputies(props.activeDeputies);
     state.setActiveOfficers(props.activeOfficers);
+    state.setAllDeputies(props.deputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     state.setCalls,
@@ -74,6 +76,7 @@ export default function OfficerDashboard(props: Props) {
     state.setAllOfficers,
     state.setActiveDeputies,
     state.setActiveOfficers,
+    state.setAllDeputies,
     props,
   ]);
 
@@ -123,14 +126,15 @@ export default function OfficerDashboard(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [values, calls, bolos, officers, activeDeputies, activeOfficers] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code", []],
-    ["/911-calls", []],
-    ["/bolos", []],
-    ["/dispatch", []],
-    ["/ems-fd/active-deputies", []],
-    ["/leo/active-officers", []],
-  ]);
+  const [values, calls, bolos, { officers, deputies }, activeDeputies, activeOfficers] =
+    await requestAll(req, [
+      ["/admin/values/codes_10?paths=penal_code", []],
+      ["/911-calls", []],
+      ["/bolos", []],
+      ["/dispatch", [{ deputies: [], officers: [] }]],
+      ["/ems-fd/active-deputies", []],
+      ["/leo/active-officers", []],
+    ]);
 
   return {
     props: {
@@ -139,6 +143,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       bolos,
       values,
       officers,
+      deputies,
       activeDeputies,
       activeOfficers,
       messages: {

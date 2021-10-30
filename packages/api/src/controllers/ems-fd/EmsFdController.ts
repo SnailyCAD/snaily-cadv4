@@ -233,6 +233,13 @@ export class EmsFdController {
         value: "",
         expires: -1,
       });
+
+      // unassign deputy from call
+      await prisma.assignedUnit.deleteMany({
+        where: {
+          emsFdDeputyId: deputy.id,
+        },
+      });
     } else {
       // expires after 3 hours.
       setCookie({

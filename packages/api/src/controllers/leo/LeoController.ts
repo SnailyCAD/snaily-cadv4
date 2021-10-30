@@ -307,12 +307,9 @@ export class LeoController {
     } else {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         // unassign officer from call
-        await prisma.officer.update({
+        await prisma.assignedUnit.deleteMany({
           where: {
-            id: officer.id,
-          },
-          data: {
-            call911Id: null,
+            officerId: officer.id,
           },
         });
 

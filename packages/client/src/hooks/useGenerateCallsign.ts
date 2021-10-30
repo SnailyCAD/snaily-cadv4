@@ -9,6 +9,7 @@ export function useGenerateCallsign() {
   const miscCadSettings = cad?.miscCadSettings;
 
   function generateCallsign(unit: FullUnit) {
+    if (!unit) return "NULL";
     const { callsign, callsign2, department, division } = unit;
     const template = miscCadSettings?.callsignTemplate ?? "";
 

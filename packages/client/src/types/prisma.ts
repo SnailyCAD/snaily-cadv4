@@ -3,6 +3,8 @@
  * Model cad
  */
 
+import { FullDeputy, FullOfficer } from "state/dispatchState";
+
 export type cad = {
   id: string;
   name: string;
@@ -300,7 +302,7 @@ export type Call911 = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  assignedUnitsId: string;
+  assignedUnits: AssignedUnit[];
   location: string;
   description: string;
   name: string;
@@ -439,6 +441,18 @@ export type DriversLicenseCategoryValue = {
   value: Value<"DRIVERSLICENSE_CATEGORY">;
   valueId: string;
   type: DriversLicenseCategoryType;
+};
+
+/**
+ * Model AssignedUnit
+ */
+
+export type AssignedUnit = {
+  id: string;
+  officerId: string | null;
+  emsFdDeputyId: string | null;
+  call911Id: string | null;
+  unit: FullDeputy | FullOfficer;
 };
 
 /**

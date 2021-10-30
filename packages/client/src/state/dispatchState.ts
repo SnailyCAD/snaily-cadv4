@@ -34,6 +34,9 @@ interface DispatchState {
 
   allOfficers: FullOfficer[];
   setAllOfficers: (officers: FullOfficer[]) => void;
+
+  allDeputies: FullDeputy[];
+  setAllDeputies: (deputies: FullDeputy[]) => void;
 }
 
 export const useDispatchState = create<DispatchState>((set) => ({
@@ -51,4 +54,7 @@ export const useDispatchState = create<DispatchState>((set) => ({
 
   allOfficers: [],
   setAllOfficers: (officers) => set({ allOfficers: officers }),
+
+  allDeputies: [],
+  setAllDeputies: (deputies) => set({ allDeputies: deputies }),
 }));

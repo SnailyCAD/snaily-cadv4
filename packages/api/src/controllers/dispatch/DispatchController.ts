@@ -38,7 +38,11 @@ export class Calls911Controller {
       ...includeData,
     });
 
-    return officers;
+    const deputies = await prisma.emsFdDeputy.findMany({
+      ...includeData,
+    });
+
+    return { deputies, officers };
   }
 
   @UseBefore(IsDispatch)

@@ -6,8 +6,8 @@ import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useAuth } from "context/AuthContext";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { Full911Call, FullOfficer, useDispatchState } from "state/dispatchState";
-import { Call911 } from "types/prisma";
+import { Full911Call, useDispatchState } from "state/dispatchState";
+import { AssignedUnit, Call911 } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -35,18 +35,16 @@ export const ActiveCalls = () => {
   const { execute } = useFetch();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
-  activeDeputy;
 
-  // todo: allow adding EmsFdDeputy to calls
   const unit =
     router.pathname === "/officer"
       ? activeOfficer
       : router.pathname === "/ems-fd"
-      ? /* activeDeputy */ null
+      ? activeDeputy
       : null;
 
   const isUnitAssigned = (call: Full911Call) => call.assignedUnits.some((v) => v.id === unit?.id);
-  const makeUnit = (officer: FullOfficer) => `${generateCallsign(officer)} ${officer.name}`;
+  const makeUnit = (unit: AssignedUnit) => `${generateCallsign(unit.unit)} ${unit.unit.name}`;
 
   useListener(
     SocketEvents.Create911Call,

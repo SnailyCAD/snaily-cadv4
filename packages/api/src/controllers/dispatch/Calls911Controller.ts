@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_911_CALL, validate } from "@snailycad/schemas";
@@ -8,7 +9,24 @@ import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth, IsDispatch } from "../../middlewares";
 import { UseBefore } from "@tsed/common";
-import { ShouldDoType } from ".prisma/client";
+import { ShouldDoType, Officer, EmsFdDeputy } from ".prisma/client";
+
+const assignedUnitsInclude = {
+  include: {
+    officer: {
+      include: {
+        department: { include: { value: true } },
+        division: { include: { value: true } },
+      },
+    },
+    deputy: {
+      include: {
+        department: { include: { value: true } },
+        division: { include: { value: true } },
+      },
+    },
+  },
+};
 
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
@@ -22,12 +40,7 @@ export class Calls911Controller {
   async get911Calls() {
     const calls = await prisma.call911.findMany({
       include: {
-        assignedUnits: {
-          include: {
-            department: { include: { value: true } },
-            division: { include: { value: true } },
-          },
-        },
+        assignedUnits: assignedUnitsInclude,
         events: true,
       },
       orderBy: {
@@ -35,7 +48,7 @@ export class Calls911Controller {
       },
     });
 
-    return calls;
+    return calls.map(this.officerOrDeputyToUnit);
   }
 
   @Post("/")
@@ -54,22 +67,13 @@ export class Calls911Controller {
       },
       include: {
         events: true,
-        assignedUnits: {
-          include: {
-            department: true,
-            division: {
-              include: {
-                value: true,
-              },
-            },
-          },
-        },
+        assignedUnits: assignedUnitsInclude,
       },
     });
 
-    this.socket.emit911Call(call);
+    this.socket.emit911Call(this.officerOrDeputyToUnit(call));
 
-    return call;
+    return this.officerOrDeputyToUnit(call);
   }
 
   @UseBefore(IsDispatch)
@@ -89,16 +93,7 @@ export class Calls911Controller {
         id,
       },
       include: {
-        assignedUnits: {
-          include: {
-            department: true,
-            division: {
-              include: {
-                value: true,
-              },
-            },
-          },
-        },
+        assignedUnits: assignedUnitsInclude,
       },
     });
 
@@ -107,14 +102,13 @@ export class Calls911Controller {
     }
 
     // reset assignedUnits. find a better way to do this?
-    await prisma.officer.updateMany({
-      where: {
-        call911Id: call.id,
-      },
-      data: {
-        call911Id: null,
-      },
-    });
+    await Promise.all(
+      call.assignedUnits.map(async ({ id }) => {
+        await prisma.assignedUnit.delete({
+          where: { id },
+        });
+      }),
+    );
 
     await prisma.call911.update({
       where: {
@@ -131,25 +125,33 @@ export class Calls911Controller {
     const units = (body.get("assignedUnits") ?? []) as string[];
     await Promise.all(
       units.map(async (id) => {
-        const officer = await prisma.officer.findFirst({
-          where: {
-            id,
-            status: {
-              shouldDo: ShouldDoType.SET_ON_DUTY,
-            },
+        const { unit, type } = await this.findUnit(
+          id,
+          {
+            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          },
+          true,
+        );
+
+        if (!unit) {
+          throw new BadRequest("unitOffDuty");
+        }
+
+        const assignedUnit = await prisma.assignedUnit.create({
+          data: {
+            call911Id: call.id,
+            [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
           },
         });
 
-        if (!officer) {
-          throw new BadRequest("officerOffDuty");
-        }
-
-        await prisma.officer.update({
+        await prisma.call911.update({
           where: {
-            id,
+            id: call.id,
           },
           data: {
-            call911Id: call.id,
+            assignedUnits: {
+              connect: { id: assignedUnit.id },
+            },
           },
         });
       }),
@@ -161,22 +163,13 @@ export class Calls911Controller {
       },
       include: {
         events: true,
-        assignedUnits: {
-          include: {
-            department: true,
-            division: {
-              include: {
-                value: true,
-              },
-            },
-          },
-        },
+        assignedUnits: assignedUnitsInclude,
       },
     });
 
-    this.socket.emitUpdate911Call(updated!);
+    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
 
-    return updated;
+    return this.officerOrDeputyToUnit(updated);
   }
 
   @UseBefore(IsDispatch)
@@ -335,37 +328,56 @@ export class Calls911Controller {
       },
       include: {
         events: true,
-        assignedUnits: {
-          include: {
-            department: true,
-            division: {
-              include: {
-                value: true,
-              },
-            },
-          },
-        },
+        assignedUnits: assignedUnitsInclude,
       },
     });
 
-    this.socket.emitUpdate911Call(updated);
+    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
 
-    return updated;
+    return this.officerOrDeputyToUnit(updated);
   }
 
-  private async findUnit(id: string) {
-    let unit: any = await prisma.officer.findUnique({
-      where: { id },
+  private async findUnit(
+    id: string,
+    extraFind?: any,
+    withType?: false,
+  ): Promise<Officer | EmsFdDeputy>;
+  private async findUnit(
+    id: string,
+    extraFind?: any,
+    withType?: true,
+  ): Promise<{ unit: Officer | EmsFdDeputy; type: "leo" | "ems-fd" }>;
+  private async findUnit(id: string, extraFind?: any, withType?: boolean) {
+    let type: "leo" | "ems-fd" = "leo";
+    let unit = await prisma.officer.findFirst({
+      where: { id, ...extraFind },
     });
 
     if (!unit) {
-      unit = await prisma.emsFdDeputy.findUnique({ where: { id } });
+      type = "ems-fd";
+      unit = await prisma.emsFdDeputy.findFirst({ where: { id, ...extraFind } });
     }
 
     if (!unit) {
       return null;
     }
 
+    if (withType) {
+      return { type, unit };
+    }
+
     return unit;
+  }
+
+  private officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
+    return {
+      ...call,
+      assignedUnits: call.assignedUnits.map((v: any) => ({
+        ...v,
+        officer: undefined,
+        deputy: undefined,
+        unit: v.officer ?? v.deputy,
+      })),
+    };
   }
 }

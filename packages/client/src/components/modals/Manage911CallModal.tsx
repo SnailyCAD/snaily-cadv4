@@ -35,8 +35,11 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const router = useRouter();
   const { user } = useAuth();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
-  const { allOfficers, activeOfficers } = useDispatchState();
+  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const generateCallsign = useGenerateCallsign();
+
+  const allUnits = [...allOfficers, ...allDeputies];
+  const units = [...activeOfficers, ...activeDeputies];
 
   useListener(
     SocketEvents.AddCallEvent,
@@ -179,15 +182,15 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
     location: call?.location ?? "",
     description: call?.description ?? "",
     assignedUnits:
-      call?.assignedUnits.map((officer) => ({
-        label: makeLabel(officer.id),
-        value: officer.id,
+      call?.assignedUnits.map((unit) => ({
+        label: makeLabel(unit.unit.id),
+        value: unit.unit.id,
       })) ?? ([] as SelectValue[]),
   };
 
   function makeLabel(value: string) {
-    const officer = allOfficers.find((v) => v.id === value);
-    return `${generateCallsign(officer!)} ${officer?.name}`;
+    const unit = allUnits.find((v) => v.id === value);
+    return `${generateCallsign(unit!)} ${unit?.name}`;
   }
 
   return (
@@ -230,9 +233,9 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                       label: makeLabel(value.value),
                       value: value.value,
                     }))}
-                    values={activeOfficers.map((officer) => ({
-                      label: makeLabel(officer.id),
-                      value: officer.id,
+                    values={units.map((unit) => ({
+                      label: makeLabel(unit.id),
+                      value: unit.id,
                     }))}
                     onChange={handleChange}
                   />
