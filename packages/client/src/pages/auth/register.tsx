@@ -47,9 +47,6 @@ export default function Register({ cad }: Props) {
     const { json } = await execute("/auth/register", {
       data: values,
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
     });
 
     if (json.isOwner) {
