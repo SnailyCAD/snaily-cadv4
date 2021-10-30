@@ -25,6 +25,7 @@
     "age": "Age",
     "driversLicense": "Drivers License",
     "weaponLicense": "Firearms License",
+    "phoneNumber": "Phone Number",
     "pilotLicense": "Pilot License",
     "ccw": "CCW",
     "createTaxiCall": "Create Taxi Call",

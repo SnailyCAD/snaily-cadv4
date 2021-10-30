@@ -64,6 +64,7 @@ export default function EditCitizen({ values }: Props) {
     eyeColor: citizen.eyeColor,
     address: citizen.address,
     image: undefined,
+    phoneNumber: citizen.phoneNumber,
   };
 
   async function onSubmit(
@@ -249,15 +250,27 @@ export default function EditCitizen({ values }: Props) {
               </FormField>
             </FormRow>
 
-            <FormField label={t("address")}>
-              <Input
-                value={values.address}
-                hasError={!!errors.address}
-                onChange={handleChange}
-                name="address"
-              />
-              <Error>{errors.address}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={t("address")}>
+                <Input
+                  value={values.address}
+                  hasError={!!errors.address}
+                  onChange={handleChange}
+                  name="address"
+                />
+                <Error>{errors.address}</Error>
+              </FormField>
+
+              <FormField label={t("phoneNumber")}>
+                <Input
+                  value={values.phoneNumber ?? ""}
+                  hasError={!!errors.phoneNumber}
+                  onChange={handleChange}
+                  name="phoneNumber"
+                />
+                <Error>{errors.phoneNumber}</Error>
+              </FormField>
+            </FormRow>
 
             <div className="flex items-center justify-end">
               <Link href={`/citizen/${citizen.id}`}>

@@ -112,6 +112,7 @@ model Citizen {
   imageId          String?                       @db.Text
   note             String?                       @db.Text
   dead             Boolean?                      @default(false)
+  phoneNumber      String?
   dateOfDead       DateTime?
   vehicles         RegisteredVehicle[]
   weapons          Weapon[]

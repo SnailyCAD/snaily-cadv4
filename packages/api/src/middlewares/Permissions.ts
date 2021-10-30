@@ -63,6 +63,36 @@ export class IsDispatch implements MiddlewareMethods {
   }
 }
 
+@Middleware()
+export class IsEmsFd implements MiddlewareMethods {
+  async use(@Req() req: Req) {
+    const user = await getSessionUser(req);
+
+    if (!user) {
+      throw new Forbidden("Invalid Permissions");
+    }
+
+    if (!user.isEmsFd) {
+      throw new Forbidden("Invalid Permissions");
+    }
+  }
+}
+
+@Middleware()
+export class IsLeo implements MiddlewareMethods {
+  async use(@Req() req: Req) {
+    const user = await getSessionUser(req);
+
+    if (!user) {
+      throw new Forbidden("Invalid Permissions");
+    }
+
+    if (!user.isLeo) {
+      throw new Forbidden("Invalid Permissions");
+    }
+  }
+}
+
 async function admin(user: Pick<User, "rank">) {
   if (!["OWNER", "ADMIN"].includes(user.rank)) {
     throw new Forbidden("Invalid Permissions");

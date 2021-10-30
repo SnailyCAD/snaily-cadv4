@@ -41,6 +41,7 @@ const INITIAL_VALUES = {
   image: null,
   driversLicenseCategory: "",
   pilotLicenseCategory: "",
+  phoneNumber: "",
 };
 
 export default function CreateCitizen() {
@@ -207,10 +208,17 @@ export default function CreateCitizen() {
               </FormField>
             </FormRow>
 
-            <FormField label={t("address")}>
-              <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-              <Error>{errors.address}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={t("address")}>
+                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
+                <Error>{errors.address}</Error>
+              </FormField>
+
+              <FormField label={t("phoneNumber")}>
+                <Input hasError={!!errors.phoneNumber} onChange={handleChange} name="phoneNumber" />
+                <Error>{errors.phoneNumber}</Error>
+              </FormField>
+            </FormRow>
 
             <FormRow className="mt-5">
               <FormField label={t("driversLicense")}>

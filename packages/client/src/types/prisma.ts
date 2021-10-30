@@ -86,6 +86,7 @@ export type Citizen = {
   dateOfDead: Date | null;
   dlCategory: DriversLicenseCategoryValue[];
   dlPilotCategory: DriversLicenseCategoryValue[];
+  phoneNumber: string | null;
 };
 
 /**

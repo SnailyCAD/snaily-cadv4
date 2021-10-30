@@ -152,6 +152,10 @@ export default function CitizenId() {
               <span className="font-semibold">{t("address")}: </span>
               {citizen.address}
             </p>
+            <p>
+              <span className="font-semibold">{t("phoneNumber")}: </span>
+              {citizen.phoneNumber ?? common("none")}
+            </p>
           </div>
         </div>
 

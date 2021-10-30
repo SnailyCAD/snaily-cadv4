@@ -119,6 +119,7 @@ export class CitizenController {
       driversLicenseCategory,
       pilotLicenseCategory,
       ccw,
+      phoneNumber,
     } = body.toJSON() as {
       [key: string]: any;
       driversLicenseCategory: string[];
@@ -160,6 +161,7 @@ export class CitizenController {
         weaponLicenseId: weaponLicense || undefined,
         pilotLicenseId: pilotLicense || undefined,
         ccwId: ccw || undefined,
+        phoneNumber: phoneNumber || null,
       },
       include: {
         gender: true,
@@ -197,8 +199,17 @@ export class CitizenController {
       throw new NotFound("Not Found");
     }
 
-    const { address, weight, height, hairColor, eyeColor, dateOfBirth, ethnicity, gender } =
-      body.toJSON();
+    const {
+      address,
+      weight,
+      height,
+      hairColor,
+      eyeColor,
+      dateOfBirth,
+      ethnicity,
+      gender,
+      phoneNumber,
+    } = body.toJSON();
 
     const date = new Date(dateOfBirth).getTime();
     const now = Date.now();
@@ -220,6 +231,7 @@ export class CitizenController {
         ethnicityId: ethnicity,
         genderId: gender,
         eyeColor,
+        phoneNumber: phoneNumber || null,
       },
       include: {
         gender: true,

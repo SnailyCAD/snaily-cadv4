@@ -6,6 +6,7 @@ import {
   Req,
   PlatformMulterFile,
   MultipartFile,
+  UseBefore,
 } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
@@ -15,7 +16,7 @@ import { prisma } from "../../lib/prisma";
 import { Officer, cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
-import { IsAuth } from "../../middlewares";
+import { IsAuth, IsLeo } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
@@ -32,6 +33,7 @@ export class LeoController {
     this.socket = socket;
   }
 
+  @UseBefore(IsLeo)
   @Get("/")
   async getUserOfficers(@Context() ctx: Context) {
     const officers = await prisma.officer.findMany({
@@ -66,6 +68,7 @@ export class LeoController {
     return { officers, citizens };
   }
 
+  @UseBefore(IsLeo)
   @Post("/")
   async createOfficer(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
@@ -130,6 +133,7 @@ export class LeoController {
     return officer;
   }
 
+  @UseBefore(IsLeo)
   @Put("/:id")
   async updateOfficer(
     @PathParams("id") officerId: string,
@@ -355,6 +359,7 @@ export class LeoController {
     return updatedOfficer;
   }
 
+  @UseBefore(IsLeo)
   @Delete("/:id")
   async deleteOfficer(@PathParams("id") officerId: string, @Context() ctx: Context) {
     const officer = await prisma.officer.findFirst({
@@ -377,6 +382,7 @@ export class LeoController {
     return true;
   }
 
+  @UseBefore(IsLeo)
   @Get("/logs")
   async getOfficerLogs(@Context() ctx: Context) {
     const logs = await prisma.officerLog.findMany({
@@ -421,6 +427,7 @@ export class LeoController {
     return Array.isArray(officers) ? officers : [officers];
   }
 
+  @UseBefore(IsLeo)
   @Post("/image/:id")
   async uploadImageToOfficer(
     @Context("user") user: User,
