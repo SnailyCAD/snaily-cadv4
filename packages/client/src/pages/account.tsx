@@ -15,14 +15,15 @@ import { getTranslations } from "lib/getTranslation";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
-
-const TABS_TITLES = ["Account Info", "Account Settings"];
+import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 
 export default function Account() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
+
+  const TABS_TITLES = [t("accountInfo"), t("accountSettings")];
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
@@ -94,6 +95,8 @@ export default function Account() {
                     </Form>
                   )}
                 </Formik>
+
+                <ChangePasswordArea />
               </Tab.Panel>
             </Tab.Panels>
           </TabsContainer>

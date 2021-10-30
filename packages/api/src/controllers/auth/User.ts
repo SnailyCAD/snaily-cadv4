@@ -7,7 +7,9 @@ import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
 import { setCookie } from "../../utils/setCookie";
 import { User } from ".prisma/client";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import { CHANGE_PASSWORD_SCHEMA, validate } from "@snailycad/schemas";
+import { compareSync, genSaltSync, hashSync } from "bcrypt";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -62,6 +64,42 @@ export class AccountController {
       name: Cookie.Session,
       expires: 0,
       value: "",
+    });
+
+    return true;
+  }
+
+  @Post("/password")
+  async updatePassword(@Context("user") user: User, @BodyParams() body: JsonRequestBody) {
+    const error = validate(CHANGE_PASSWORD_SCHEMA, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const u = await prisma.user.findUnique({ where: { id: user.id } });
+
+    if (!u) {
+      throw new NotFound("notFound");
+    }
+
+    const { currentPassword, newPassword, confirmPassword } = body.toJSON();
+    if (confirmPassword !== newPassword) {
+      throw new BadRequest("passwordsDoNotMatch");
+    }
+
+    const isCurrentPasswordCorrect = compareSync(currentPassword, u.password);
+    if (!isCurrentPasswordCorrect) {
+      throw new BadRequest("currentPasswordIncorrect");
+    }
+
+    const salt = genSaltSync();
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        password: hashSync(newPassword, salt),
+      },
     });
 
     return true;
