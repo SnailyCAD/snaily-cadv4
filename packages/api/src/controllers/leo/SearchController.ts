@@ -6,6 +6,36 @@ import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 
+const citizenSearchInclude = {
+  businesses: true,
+  vehicles: {
+    include: {
+      model: true,
+      registrationStatus: true,
+    },
+  },
+  weapons: {
+    include: {
+      model: true,
+      registrationStatus: true,
+    },
+  },
+  medicalRecords: true,
+  ethnicity: true,
+  gender: true,
+  weaponLicense: true,
+  driversLicense: true,
+  ccw: true,
+  pilotLicense: true,
+  warrants: true,
+  Record: {
+    include: {
+      officer: true,
+      violations: true,
+    },
+  },
+};
+
 @Controller("/search")
 @UseBeforeEach(IsAuth, ActiveOfficer)
 export class SearchController {
@@ -13,46 +43,53 @@ export class SearchController {
   async searchName(@BodyParams() body: JsonRequestBody) {
     const [name, surname] = body.get("name").toString().toLowerCase().split(/ +/g);
 
-    const citizen = await prisma.citizen.findFirst({
+    if (!name && !surname) {
+      return [];
+    }
+
+    let citizen = await prisma.citizen.findMany({
       where: {
-        name: { equals: name, mode: "insensitive" },
-        OR: {
-          surname: {
-            equals: surname,
-            mode: "insensitive",
-          },
-        },
+        name: { contains: name, mode: "insensitive" },
+        surname: { contains: surname, mode: "insensitive" },
       },
-      include: {
-        businesses: true,
-        vehicles: {
-          include: {
-            model: true,
-            registrationStatus: true,
-          },
-        },
-        weapons: {
-          include: {
-            model: true,
-            registrationStatus: true,
-          },
-        },
-        medicalRecords: true,
-        ethnicity: true,
-        gender: true,
-        weaponLicense: true,
-        driversLicense: true,
-        ccw: true,
-        pilotLicense: true,
-        warrants: true,
-        Record: {
-          include: {
-            officer: true,
-            violations: true,
-          },
-        },
-      },
+      include: citizenSearchInclude,
     });
+
+    if (!citizen) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          name: { contains: name, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (!citizen) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          surname: { contains: name, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (!citizen) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          name: { contains: surname, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (!citizen) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          surname: { contains: surname, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
 
     if (!citizen) {
       throw new NotFound("citizenNotFound");
@@ -63,15 +100,14 @@ export class SearchController {
 
   @Post("/weapon")
   async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
+    if (!serialNumber || serialNumber.length < 3) {
+      return null;
+    }
+
     const weapon = await prisma.weapon.findFirst({
       where: {
         serialNumber: {
           startsWith: serialNumber,
-        },
-        OR: {
-          serialNumber: {
-            equals: serialNumber,
-          },
         },
       },
       include: {
@@ -90,6 +126,10 @@ export class SearchController {
 
   @Post("/vehicle")
   async searchVehicle(@BodyParams("plateOrVin") plateOrVin: string) {
+    if (!plateOrVin || plateOrVin.length < 3) {
+      return null;
+    }
+
     // not using Prisma's `OR` since it doesn't seem to be working 🤔
     let vehicle = await prisma.registeredVehicle.findFirst({
       where: {

@@ -51,7 +51,7 @@ export const NameSearchModal = () => {
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
   const [toggled, setToggled] = React.useState<Toggled | null>(null);
-  const { results, setResults } = useNameSearch();
+  const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
 
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
 
@@ -59,8 +59,9 @@ export const NameSearchModal = () => {
     if (!isOpen(ModalIds.NameSearch)) {
       setResults(null);
       setToggled(null);
+      setCurrentResult(null);
     }
-  }, [isOpen, setResults]);
+  }, [isOpen, setCurrentResult, setResults]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/name", {
@@ -68,8 +69,13 @@ export const NameSearchModal = () => {
       data: values,
     });
 
-    if (json.id) {
-      setResults(json);
+    if (Array.isArray(json) && json.length <= 0) {
+      setResults(false);
+      return;
+    }
+
+    if (json && typeof json !== "boolean") {
+      setResults(Array.isArray(json) ? json : [json]);
     } else {
       setResults(false);
     }
@@ -92,12 +98,11 @@ export const NameSearchModal = () => {
       [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
     };
 
-    openModal(modalId[type], { citizenId: results.id });
+    openModal(modalId[type], { citizenId: currentResult?.id });
   }
 
   const hasWarrants =
-    typeof results !== "boolean" &&
-    (results?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+    (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
   const INITIAL_VALUES = {
     name: payloadName ?? "",
   };
@@ -122,16 +127,56 @@ export const NameSearchModal = () => {
               <Error>{errors.name}</Error>
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? <p>{t("nameNotFound")}</p> : null}
+            {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}
 
-            {typeof results !== "boolean" && results ? (
+            {Array.isArray(results) && !currentResult ? (
+              <ul className="space-y-2">
+                {results.map((result) => (
+                  <li className="flex items-center justify-between" key={result.id}>
+                    <div className="flex items-center">
+                      <div className="mr-2 min-w-[50px]">
+                        {result.imageId ? (
+                          <img
+                            className="rounded-md w-[50px] h-[50px] object-cover"
+                            draggable={false}
+                            src={makeImageUrl("citizens", result.imageId)}
+                          />
+                        ) : (
+                          <PersonFill className="text-gray-500/60 w-[50px] h-[50px]" />
+                        )}
+                      </div>
+                      <p>
+                        {result.name} {result.surname}
+                      </p>
+                    </div>
+
+                    <Button type="button" onClick={() => setCurrentResult(result)}>
+                      {common("view")}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {typeof results !== "boolean" && currentResult ? (
               <div className="mt-3">
-                <h3 className="text-2xl font-semibold">{t("results")}</h3>
+                <header className="flex justify-between mb-3">
+                  <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                {results.dead && results.dateOfDead ? (
+                  <div>
+                    <Button type="button" onClick={() => setCurrentResult(null)}>
+                      {t("viewAllResults")}
+                    </Button>
+                  </div>
+                </header>
+
+                {currentResult?.dead && currentResult?.dateOfDead ? (
                   <div className="bg-yellow-500 p-2 rounded-md font-semibold mt-2">
                     {t("citizenDead", {
-                      date: format(new Date(results.dateOfDead ?? new Date()), "MMMM do yyyy"),
+                      date: format(
+                        new Date(currentResult.dateOfDead ?? new Date()),
+                        "MMMM do yyyy",
+                      ),
                     })}
                   </div>
                 ) : null}
@@ -144,57 +189,57 @@ export const NameSearchModal = () => {
 
                 <div className="flex">
                   <div className="mr-2 min-w-[100px]">
-                    {results.imageId ? (
+                    {currentResult.imageId ? (
                       <img
                         className="rounded-full w-[100px] h-[100px] object-cover"
                         draggable={false}
-                        src={makeImageUrl("citizens", results.imageId)}
+                        src={makeImageUrl("citizens", currentResult.imageId)}
                       />
                     ) : (
                       <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
                     )}
                   </div>
                   <div className="w-full">
-                    <div className="mt-2 flex flex-col">
+                    <div className="flex flex-col">
                       <p>
                         <span className="font-semibold">{cT("fullName")}: </span>
-                        {results.name} {results.surname}
+                        {currentResult.name} {currentResult.surname}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("dateOfBirth")}: </span>
-                        {format(new Date(results.dateOfBirth), "yyyy-MM-dd")} ({cT("age")}:{" "}
-                        {calculateAge(results.dateOfBirth)})
+                        {format(new Date(currentResult.dateOfBirth), "yyyy-MM-dd")} ({cT("age")}:{" "}
+                        {calculateAge(currentResult.dateOfBirth)})
                       </p>
                       <p>
                         <span className="font-semibold">{cT("gender")}: </span>
-                        {results.gender.value}
+                        {currentResult.gender.value}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("ethnicity")}: </span>
-                        {results.ethnicity.value}
+                        {currentResult.ethnicity.value}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("hairColor")}: </span>
-                        {results.hairColor}
+                        {currentResult.hairColor}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("eyeColor")}: </span>
-                        {results.eyeColor}
+                        {currentResult.eyeColor}
                       </p>
                     </div>
 
                     <div className="flex flex-col">
                       <p>
                         <span className="font-semibold">{cT("weight")}: </span>
-                        {results.weight}
+                        {currentResult.weight}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("height")}: </span>
-                        {results.height}
+                        {currentResult.height}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("address")}: </span>
-                        {results.address}
+                        {currentResult.address}
                       </p>
                     </div>
                   </div>
@@ -203,19 +248,19 @@ export const NameSearchModal = () => {
                     <ul className="flex flex-col">
                       <li>
                         <span className="font-semibold">{cT("driversLicense")}: </span>
-                        {results.driversLicense?.value ?? common("none")}
+                        {currentResult.driversLicense?.value ?? common("none")}
                       </li>
                       <li>
                         <span className="font-semibold">{cT("weaponLicense")}: </span>
-                        {results.weaponLicense?.value ?? common("none")}
+                        {currentResult.weaponLicense?.value ?? common("none")}
                       </li>
                       <li>
                         <span className="font-semibold">{cT("pilotLicense")}: </span>
-                        {results.pilotLicense?.value ?? common("none")}
+                        {currentResult.pilotLicense?.value ?? common("none")}
                       </li>
                       <li>
                         <span className="font-semibold">{cT("ccw")}: </span>
-                        {results.ccw?.value ?? common("none")}
+                        {currentResult.ccw?.value ?? common("none")}
                       </li>
                     </ul>
                   </div>
@@ -242,19 +287,25 @@ export const NameSearchModal = () => {
                   <>
                     {toggled === Toggled.VEHICLES ? (
                       <VehiclesAndWeaponsSection
-                        vehicles={results.vehicles}
-                        weapons={results.weapons}
+                        vehicles={currentResult.vehicles}
+                        weapons={currentResult.weapons}
                       />
                     ) : null}
 
-                    {toggled === Toggled.RECORDS ? <RecordsArea records={results.Record} /> : null}
+                    {toggled === Toggled.RECORDS ? (
+                      <RecordsArea records={currentResult.Record} />
+                    ) : null}
                   </>
                 </div>
               </div>
             ) : null}
 
-            <footer className={`mt-4 pt-3 flex ${isLeo ? "justify-between" : "justify-end"}`}>
-              {typeof results !== "boolean" && results && isLeo ? (
+            <footer
+              className={`mt-4 pt-3 flex ${
+                currentResult && isLeo ? "justify-between" : "justify-end"
+              }`}
+            >
+              {currentResult && isLeo ? (
                 <div>
                   {Object.values(RecordType).map((type) => (
                     <Button

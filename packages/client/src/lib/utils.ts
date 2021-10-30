@@ -4,7 +4,7 @@ import { cad as CAD, Feature } from "types/prisma";
 import { handleRequest } from "./fetch";
 
 const url = (process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1").replace("/v1", "");
-const IMAGE_URL = `http://${url}static/`;
+const IMAGE_URL = `${url}/static/`;
 
 export function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {
   return `${IMAGE_URL}${type}/${id}`;

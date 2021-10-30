@@ -32,6 +32,7 @@ export const VehicleSearchModal = () => {
     const { json } = await execute("/search/vehicle", {
       method: "POST",
       data: values,
+      noToast: true,
     });
 
     if (json.id) {

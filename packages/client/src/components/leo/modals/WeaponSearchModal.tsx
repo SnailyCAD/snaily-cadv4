@@ -31,6 +31,7 @@ export const WeaponSearchModal = () => {
     const { json } = await execute("/search/weapon", {
       method: "POST",
       data: values,
+      noToast: true,
     });
 
     if (json.id) {
