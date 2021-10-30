@@ -299,4 +299,73 @@ export class Calls911Controller {
 
     return true;
   }
+
+  @Post("/assign-to/:callId")
+  async assignToCall(@PathParams("callId") callId: string, @BodyParams() body: JsonRequestBody) {
+    const { unit: rawUnit } = body.toJSON();
+
+    if (!rawUnit) {
+      throw new BadRequest("unitIsRequired");
+    }
+
+    const unit = await this.findUnit(rawUnit);
+
+    if (!unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const updated = await prisma.call911.update({
+      where: {
+        id: call.id,
+      },
+      data: {
+        assignedUnits: {
+          connect: {
+            id: unit.id,
+          },
+        },
+      },
+      include: {
+        events: true,
+        assignedUnits: {
+          include: {
+            department: true,
+            division: {
+              include: {
+                value: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    this.socket.emitUpdate911Call(updated);
+
+    return updated;
+  }
+
+  private async findUnit(id: string) {
+    let unit: any = await prisma.officer.findUnique({
+      where: { id },
+    });
+
+    if (!unit) {
+      unit = await prisma.emsFdDeputy.findUnique({ where: { id } });
+    }
+
+    if (!unit) {
+      return null;
+    }
+
+    return unit;
+  }
 }

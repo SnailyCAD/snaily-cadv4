@@ -13,12 +13,17 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import useFetch from "lib/useFetch";
+import { useLeoState } from "state/leoState";
+import { useEmsFdState } from "state/emsFdState";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
 );
 
 export const ActiveCalls = () => {
+  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
+
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
@@ -27,9 +32,20 @@ export const ActiveCalls = () => {
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
+  const { execute } = useFetch();
+  const { activeOfficer } = useLeoState();
+  const { activeDeputy } = useEmsFdState();
+  activeDeputy;
 
-  const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
+  // todo: allow adding EmsFdDeputy to calls
+  const unit =
+    router.pathname === "/officer"
+      ? activeOfficer
+      : router.pathname === "/ems-fd"
+      ? /* activeDeputy */ null
+      : null;
 
+  const isUnitAssigned = (call: Full911Call) => call.assignedUnits.some((v) => v.id === unit?.id);
   const makeUnit = (officer: FullOfficer) => `${generateCallsign(officer)} ${officer.name}`;
 
   useListener(
@@ -67,6 +83,13 @@ export const ActiveCalls = () => {
   function handleManageClick(call: Full911Call) {
     setTempCall(call);
     openModal(ModalIds.Manage911Call);
+  }
+
+  async function handleAssignToCall(call: Full911Call) {
+    await execute(`/911-calls/assign-to/${call.id}`, {
+      method: "POST",
+      data: { unit: unit?.id },
+    });
   }
 
   return (
@@ -107,9 +130,21 @@ export const ActiveCalls = () => {
                           {common("manage")}
                         </Button>
                       ) : (
-                        <Button small onClick={() => handleManageClick(call)}>
-                          {t("viewEvents")}
-                        </Button>
+                        <>
+                          <Button disabled={!unit} small onClick={() => handleManageClick(call)}>
+                            {t("viewEvents")}
+                          </Button>
+                          {isUnitAssigned(call) ? null : (
+                            <Button
+                              className="ml-2"
+                              disabled={!unit}
+                              small
+                              onClick={() => handleAssignToCall(call)}
+                            >
+                              {t("assignToCall")}
+                            </Button>
+                          )}
+                        </>
                       )}
                     </td>
                   </tr>
