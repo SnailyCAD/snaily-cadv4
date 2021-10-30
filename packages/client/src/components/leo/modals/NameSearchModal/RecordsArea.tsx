@@ -59,7 +59,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
   const isCitizen = router.pathname.startsWith("/citizen");
   const { state, execute } = useFetch();
 
-  const { results, setResults } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch();
 
   function handleDeleteClick(record: FullRecord) {
     openModal(ModalIds.AlertDeleteRecord);
@@ -74,10 +74,10 @@ const Table = ({ data }: { data: FullRecord[] }) => {
     });
 
     if (json) {
-      if (typeof results === "object" && results) {
-        setResults({
-          ...results,
-          Record: results.Record.filter((v) => v.id !== tempItem.id),
+      if (typeof currentResult === "object" && currentResult) {
+        setCurrentResult({
+          ...currentResult,
+          Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
         });
       }
 
