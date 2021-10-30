@@ -73,6 +73,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
     plate: bolo?.plate ?? "",
     color: bolo?.color ?? "",
     description: bolo?.description ?? "",
+    model: bolo?.model ?? "",
   };
 
   return (
@@ -88,6 +89,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
             <FormField label={"Type"}>
               <FormRow>
                 <Button
+                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.PERSON)}
                   className={classNames(
                     "flex justify-center",
@@ -99,6 +101,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   <Person width={30} height={30} />
                 </Button>
                 <Button
+                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.VEHICLE)}
                   className={classNames(
                     "flex justify-center",
@@ -118,6 +121,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   </svg>
                 </Button>
                 <Button
+                  disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.OTHER)}
                   className={classNames(
                     "flex justify-center",
@@ -142,6 +146,16 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                     value={values.plate}
                   />
                   <Error>{errors.plate}</Error>
+                </FormField>
+
+                <FormField label={"Model"}>
+                  <Input
+                    id="model"
+                    onChange={handleChange}
+                    hasError={!!errors.model}
+                    value={values.model}
+                  />
+                  <Error>{errors.model}</Error>
                 </FormField>
 
                 <FormField label={"Color"}>

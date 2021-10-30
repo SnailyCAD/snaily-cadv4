@@ -320,6 +320,7 @@ export type Bolo = {
   type: BoloType;
   description: string;
   plate: string | null;
+  model: string | null;
   name: string | null;
   color: string | null;
   officerId: string | null;

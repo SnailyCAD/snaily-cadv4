@@ -172,6 +172,9 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
               <br />
               <span className="font-semibold">{"Color"}: </span>
               {bolo.color}
+              <br />
+              <span className="font-semibold">{"Model"}: </span>
+              {bolo.model}
             </p>
           ) : (
             <p>{bolo.description}</p>

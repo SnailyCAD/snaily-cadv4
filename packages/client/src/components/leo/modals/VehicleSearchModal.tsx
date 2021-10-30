@@ -12,15 +12,20 @@ import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen, RegisteredVehicle, Value } from "types/prisma";
 import { format } from "date-fns";
+import { useRouter } from "next/router";
 
 export const VehicleSearchModal = () => {
+  const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
+
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-
-  const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
+  const router = useRouter();
+  const isLeo = router.pathname === "/officer";
+  const showMarkStolen =
+    results && typeof results !== "boolean" && isLeo && !results.reportedStolen;
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.VehicleSearch)) {
@@ -39,6 +44,20 @@ export const VehicleSearchModal = () => {
       setResults(json);
     } else {
       setResults(false);
+    }
+  }
+
+  async function handleMarkStolen() {
+    if (!results || typeof results === "boolean") return;
+
+    const { json } = await execute(`/bolos/mark-stolen/${results.id}`, {
+      method: "POST",
+      data: results,
+    });
+
+    if (json) {
+      // @ts-expect-error ignore
+      setResults((p) => ({ ...p, reportedStolen: true }));
     }
   }
 
@@ -115,22 +134,37 @@ export const VehicleSearchModal = () => {
               </div>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.VehicleSearch)}
-                variant="cancel"
-              >
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("search")}
-              </Button>
+            <footer className={`mt-5 flex ${showMarkStolen ? "justify-between" : "justify-end"}`}>
+              {showMarkStolen ? (
+                <div>
+                  <Button
+                    type="button"
+                    onClick={() => handleMarkStolen()}
+                    variant="cancel"
+                    className="px-1.5"
+                  >
+                    {"Mark as stolen"}
+                  </Button>
+                </div>
+              ) : null}
+
+              <div className="flex">
+                <Button
+                  type="reset"
+                  onClick={() => closeModal(ModalIds.VehicleSearch)}
+                  variant="cancel"
+                >
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {common("search")}
+                </Button>
+              </div>
             </footer>
           </Form>
         )}

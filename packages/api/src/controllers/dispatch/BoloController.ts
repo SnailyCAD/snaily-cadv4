@@ -43,6 +43,7 @@ export class BoloController {
         color: body.get("color") ?? null,
         name: body.get("name") ?? null,
         plate: body.get("plate") ?? null,
+        model: body.get("model") ?? null,
         officerId: ctx.get("activeOfficer")?.id ?? null,
       },
       include: {
@@ -57,11 +58,7 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Put("/:id")
-  async updateBolo(
-    @PathParams("id") id: string,
-    @BodyParams() body: JsonRequestBody,
-    @Context() ctx: Context,
-  ) {
+  async updateBolo(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
     const error = validate(CREATE_BOLO_SCHEMA, body.toJSON(), true);
     if (error) {
       throw new BadRequest(error);
@@ -84,7 +81,7 @@ export class BoloController {
         color: body.get("color") ?? null,
         name: body.get("name") ?? null,
         plate: body.get("plate") ?? null,
-        officerId: ctx.get("activeOfficer").id,
+        model: body.get("model") ?? null,
       },
       include: {
         officer: true,
@@ -116,5 +113,42 @@ export class BoloController {
     this.socket.emitDeleteBolo(bolo);
 
     return true;
+  }
+
+  @Use(ActiveOfficer)
+  @Post("/mark-stolen/:id")
+  async reportVehicleStolen(@BodyParams() body: JsonRequestBody) {
+    const { id, color, model, plate } = body.toJSON();
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("vehicleNotFound");
+    }
+
+    await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.id,
+      },
+      data: {
+        reportedStolen: true,
+      },
+    });
+
+    const bolo = await prisma.bolo.create({
+      data: {
+        description: "stolen",
+        type: "VEHICLE",
+        color: color || null,
+        model: model?.value || null,
+        plate: plate || null,
+      },
+    });
+
+    this.socket.emitCreateBolo(bolo);
+
+    return bolo;
   }
 }
