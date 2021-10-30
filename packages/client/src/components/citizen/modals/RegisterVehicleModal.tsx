@@ -17,6 +17,7 @@ import { Input } from "components/form/Input";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
+import { Toggle } from "components/form/Toggle";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -82,6 +83,7 @@ export const RegisterVehicleModal = ({
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
     vinNumber: vehicle?.vinNumber ?? "",
+    reportedStolen: vehicle?.reportedStolen ?? false,
   };
 
   return (
@@ -167,6 +169,17 @@ export const RegisterVehicleModal = ({
               />
               <Error>{errors.color}</Error>
             </FormField>
+
+            {vehicle ? (
+              <FormField fieldId="reportedStolen" label={tVehicle("reportAsStolen")}>
+                <Toggle
+                  onClick={handleChange}
+                  name="reportedStolen"
+                  toggled={values.reportedStolen}
+                />
+                <Error>{errors.reportedStolen}</Error>
+              </FormField>
+            ) : null}
 
             <footer className="mt-5 flex justify-end">
               <Button

@@ -98,6 +98,7 @@ export class VehiclesController {
         color: body.get("color"),
         registrationStatusId: body.get("registrationStatus"),
         vinNumber: body.get("vinNumber") || vehicle.vinNumber,
+        reportedStolen: body.get("reportedStolen") ?? false,
       },
       include: {
         model: true,

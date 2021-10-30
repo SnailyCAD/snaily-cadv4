@@ -108,6 +108,7 @@ export type RegisteredVehicle = {
   registrationStatus: Value<"LICENSE">;
   registrationStatusId: string;
   insuranceStatus: string;
+  reportedStolen: boolean;
 };
 
 /**

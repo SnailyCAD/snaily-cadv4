@@ -74,6 +74,12 @@ export const VehicleSearchModal = () => {
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
+                {results.reportedStolen ? (
+                  <div className="bg-yellow-500 p-2 rounded-md font-semibold mt-2">
+                    {t("vehicleReportedStolen")}
+                  </div>
+                ) : null}
+
                 <ul className="mt-2">
                   <li>
                     <span className="font-semibold">{vT("plate")}: </span>

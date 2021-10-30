@@ -157,6 +157,7 @@ model RegisteredVehicle {
   registrationStatus   Value      @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
   insuranceStatus      String     @db.VarChar(255)
+  reportedStolen       Boolean    @default(false)
   TruckLog             TruckLog[]
 }
 
@@ -568,7 +569,7 @@ model EmsFdDeputy {
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   AssignedUnit AssignedUnit[]
-  }
+}
 
 // truck logs
 model TruckLog {
