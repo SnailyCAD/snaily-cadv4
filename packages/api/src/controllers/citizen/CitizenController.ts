@@ -34,7 +34,7 @@ export class CitizenController {
       include: {
         vehicles: {
           include: {
-            model: true,
+            model: { include: { value: true } },
             registrationStatus: true,
           },
         },

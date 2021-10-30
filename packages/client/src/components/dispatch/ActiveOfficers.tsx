@@ -7,7 +7,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
-import { makeImageUrl } from "lib/utils";
+import { makeImageUrl, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const ActiveOfficers = () => {
@@ -60,7 +60,7 @@ export const ActiveOfficers = () => {
                           src={makeImageUrl("units", officer.imageId)}
                         />
                       ) : null}
-                      {generateCallsign(officer)} {officer.name}
+                      {generateCallsign(officer)} {makeUnitName(officer)}
                     </td>
                     <td>{String(officer.badgeNumber)}</td>
                     <td>{officer.department.value.value}</td>

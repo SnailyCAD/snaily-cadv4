@@ -10,6 +10,7 @@ import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
+import { makeUnitName } from "lib/utils";
 
 export type FullRecord = Record & { officer: Officer; violations: PenalCode[] };
 interface Props {
@@ -107,7 +108,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
                 <td>{value.violations.map((v) => v.title).join(", ")}</td>
                 <td>{value.postal}</td>
                 <td>
-                  {value.officer.callsign} {value.officer.name}
+                  {value.officer.callsign} {makeUnitName(value.officer)}
                 </td>
                 <td>{value.notes}</td>
                 <td>{format(new Date(value.createdAt), "yyyy-MM-dd")}</td>

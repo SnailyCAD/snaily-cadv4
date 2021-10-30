@@ -93,7 +93,6 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
 
   const validate = handleValidate(CREATE_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
-    name: officer?.name ?? "",
     department: officer?.departmentId ?? "",
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
@@ -136,15 +135,19 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
               <Error>{errors.image}</Error>
             </FormField>
 
-            <FormField label={t("officerName")}>
-              <Input
-                disabled={!!values.citizenId}
-                value={values.name}
-                hasError={!!errors.name}
-                id="name"
+            <FormField label={t("citizen")}>
+              <Select
+                isClearable
+                value={values.citizenId}
+                hasError={!!errors.citizenId}
+                name="citizenId"
                 onChange={handleChange}
+                values={citizens.map((value) => ({
+                  label: `${value.name} ${value.surname}`,
+                  value: value.id,
+                }))}
               />
-              <Error>{errors.name}</Error>
+              <Error>{errors.citizenId}</Error>
             </FormField>
 
             <FormField label={t("badgeNumber")}>
@@ -217,21 +220,6 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
                   }))}
               />
               <Error>{errors.division}</Error>
-            </FormField>
-
-            <FormField label={t("citizen")}>
-              <Select
-                isClearable
-                value={values.citizenId}
-                hasError={!!errors.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens.map((value) => ({
-                  label: `${value.name} ${value.surname}`,
-                  value: value.id,
-                }))}
-              />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

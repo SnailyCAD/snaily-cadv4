@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { cad as CAD, Feature } from "types/prisma";
+import { FullDeputy } from "state/dispatchState";
+import { cad as CAD, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
 
 const url = (process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1").replace("/v1", "");
@@ -65,4 +66,8 @@ export async function requestAll(req: any, config: Config) {
         .catch(() => defaultValue);
     }),
   );
+}
+
+export function makeUnitName(officer: Officer | FullDeputy) {
+  return `${officer.citizen.name} ${officer.citizen.surname}`;
 }

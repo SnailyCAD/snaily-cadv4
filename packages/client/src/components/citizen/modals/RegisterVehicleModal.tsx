@@ -117,7 +117,7 @@ export const RegisterVehicleModal = ({
               <Select
                 hasError={!!errors.model}
                 values={vehicles.values.map((vehicle) => ({
-                  label: vehicle.value,
+                  label: vehicle.value.value,
                   value: vehicle.id,
                 }))}
                 value={values.model}

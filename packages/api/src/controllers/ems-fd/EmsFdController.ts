@@ -47,6 +47,13 @@ export class EmsFdController {
       include: {
         department: { include: { value: true } },
         division: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -80,19 +87,37 @@ export class EmsFdController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: body.get("citizenId"),
+        userId: user.id,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
     const deputy = await prisma.emsFdDeputy.create({
       data: {
-        name: body.get("name"),
         callsign: body.get("callsign"),
         callsign2: body.get("callsign2"),
         userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
+        citizenId: body.get("citizenId"),
       },
       include: {
         department: { include: { value: true } },
         division: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -133,21 +158,39 @@ export class EmsFdController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: body.get("citizenId"),
+        userId: user.id,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
     const updated = await prisma.emsFdDeputy.update({
       where: {
         id: deputy.id,
       },
       data: {
-        name: body.get("name"),
         callsign: body.get("callsign"),
         callsign2: body.get("callsign2"),
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
+        citizenId: body.get("citizenId"),
       },
       include: {
         department: { include: { value: true } },
         division: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -223,6 +266,13 @@ export class EmsFdController {
         rank: true,
         division: { include: { value: true } },
         status: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -307,6 +357,13 @@ export class EmsFdController {
         rank: true,
         division: { include: { value: true } },
         status: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 

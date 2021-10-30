@@ -13,6 +13,7 @@ import { ActiveOfficer } from "state/leoState";
 import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveDeputy } from "state/emsFdState";
+import { makeUnitName } from "lib/utils";
 
 interface Props {
   type?: "ems-fd" | "leo";
@@ -78,7 +79,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
     <Modal
       isOpen={isOpen(ModalIds.ManageUnit)}
       onClose={handleClose}
-      title={`${common("manage")} ${unit.callsign} ${unit.name}`}
+      title={`${common("manage")} ${unit.callsign} ${makeUnitName(unit)}`}
       className="min-w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

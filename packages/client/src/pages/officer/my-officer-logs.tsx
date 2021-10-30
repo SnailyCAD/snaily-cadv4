@@ -10,7 +10,7 @@ import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
-import { requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -28,7 +28,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   const officers = logs.reduce(
     (ac, cv) => ({
       ...ac,
-      [cv.officerId]: cv.officer.name,
+      [cv.officerId]: makeUnitName(cv.officer),
     }),
     {},
   );
@@ -83,7 +83,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
                 return (
                   <tr key={log.id}>
-                    <td className="capitalize">{log.officer.name}</td>
+                    <td className="capitalize">{makeUnitName(log.officer)}</td>
                     <td>{startedAt}</td>
                     <td>{log.endedAt !== null ? endedAt : t("notEndedYet")}</td>
                     <td>

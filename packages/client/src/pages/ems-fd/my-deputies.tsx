@@ -11,8 +11,8 @@ import { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, EmsFdDeputy } from "types/prisma";
 import useFetch from "lib/useFetch";
-import { FullOfficer } from "state/dispatchState";
-import { makeImageUrl, requestAll } from "lib/utils";
+import { FullDeputy } from "state/dispatchState";
+import { makeImageUrl, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
@@ -26,7 +26,7 @@ export type DeputyWithDept = EmsFdDeputy & {
 };
 
 interface Props {
-  deputies: FullOfficer[];
+  deputies: FullDeputy[];
 }
 
 export default function MyDeputies({ deputies: data }: Props) {
@@ -37,7 +37,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const generateCallsign = useGenerateCallsign();
 
   const [deputies, setDeputies] = React.useState(data ?? []);
-  const [tempDeputy, setTempDeputy] = React.useState<FullOfficer | null>(null);
+  const [tempDeputy, setTempDeputy] = React.useState<FullDeputy | null>(null);
 
   async function handleDeleteOfficer() {
     if (!tempDeputy) return;
@@ -50,13 +50,13 @@ export default function MyDeputies({ deputies: data }: Props) {
     }
   }
 
-  function handleEditClick(officer: FullOfficer) {
-    setTempDeputy(officer);
+  function handleEditClick(deputy: FullDeputy) {
+    setTempDeputy(deputy);
     openModal(ModalIds.ManageDeputy);
   }
 
-  function handleDeleteClick(officer: FullOfficer) {
-    setTempDeputy(officer);
+  function handleDeleteClick(deputy: FullDeputy) {
+    setTempDeputy(deputy);
     openModal(ModalIds.AlertDeleteDeputy);
   }
 
@@ -98,7 +98,7 @@ export default function MyDeputies({ deputies: data }: Props) {
                         src={makeImageUrl("units", deputy.imageId)}
                       />
                     ) : null}
-                    {deputy.name}
+                    {makeUnitName(deputy)}
                   </td>
                   <td>{generateCallsign(deputy)}</td>
                   <td>{String(deputy.badgeNumber)}</td>
@@ -125,7 +125,7 @@ export default function MyDeputies({ deputies: data }: Props) {
       )}
 
       <ManageDeputyModal
-        onCreate={(officer) => setDeputies((p) => [officer, ...p])}
+        onCreate={(deputy) => setDeputies((p) => [deputy, ...p])}
         onUpdate={(old, newO) => {
           setDeputies((p) => {
             const idx = p.indexOf(old);
@@ -142,7 +142,7 @@ export default function MyDeputies({ deputies: data }: Props) {
         title={t("Ems.deleteDeputy")}
         description={t.rich("Ems.alert_deleteDeputy", {
           span: (children) => <span className="font-semibold">{children}</span>,
-          deputy: tempDeputy && tempDeputy.name,
+          deputy: tempDeputy && makeUnitName(tempDeputy),
         })}
         id={ModalIds.AlertDeleteDeputy}
         onDeleteClick={handleDeleteOfficer}
@@ -154,8 +154,8 @@ export default function MyDeputies({ deputies: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ deputies }, values] = await requestAll(req, [
-    ["/ems-fd", { deputies: [] }],
+  const [{ deputies, citizens }, values] = await requestAll(req, [
+    ["/ems-fd?createCitizen=true", { deputies: [] }],
     ["/admin/values/department?paths=division", []],
   ]);
 
@@ -164,6 +164,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req.headers),
       deputies,
       values,
+      citizens,
       messages: {
         ...(await getTranslations(["ems-fd", "leo", "common"], locale)),
       },

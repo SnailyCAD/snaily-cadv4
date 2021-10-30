@@ -59,7 +59,7 @@ export class VehiclesController {
         userId: user.id,
       },
       include: {
-        model: true,
+        model: { include: { value: true } },
         registrationStatus: true,
       },
     });
@@ -101,7 +101,7 @@ export class VehiclesController {
         reportedStolen: body.get("reportedStolen") ?? false,
       },
       include: {
-        model: true,
+        model: { include: { value: true } },
         registrationStatus: true,
       },
     });

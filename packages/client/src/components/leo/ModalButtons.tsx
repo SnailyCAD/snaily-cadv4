@@ -6,6 +6,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
+import { makeUnitName } from "lib/utils";
 
 interface MButton {
   nameKey: [string, string];
@@ -77,7 +78,7 @@ export const ModalButtons = () => {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{"Active Officer"}: </span>
-          {`${generateCallsign(activeOfficer)} ${activeOfficer.name}`}
+          {`${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`}
         </p>
       ) : null}
 

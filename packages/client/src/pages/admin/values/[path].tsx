@@ -21,6 +21,7 @@ import {
   Value,
   valueType,
   ValueType,
+  VehicleValue,
 } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
@@ -36,7 +37,8 @@ export type TValue =
   | StatusValue
   | DivisionValue
   | DepartmentValue
-  | DriversLicenseCategoryValue;
+  | DriversLicenseCategoryValue
+  | VehicleValue;
 
 interface Props {
   pathValues: { type: ValueType; values: TValue[] };

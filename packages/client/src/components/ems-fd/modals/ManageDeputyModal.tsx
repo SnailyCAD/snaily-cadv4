@@ -12,16 +12,17 @@ import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { FullOfficer } from "state/dispatchState";
+import { FullDeputy } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { FormRow } from "components/form/FormRow";
+import { useCitizen } from "context/CitizenContext";
 
 interface Props {
-  deputy: FullOfficer | null;
-  onCreate?: (officer: FullOfficer) => void;
-  onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
+  deputy: FullDeputy | null;
+  onCreate?: (officer: FullDeputy) => void;
+  onUpdate?: (old: FullDeputy, newO: FullDeputy) => void;
   onClose?: () => void;
 }
 
@@ -31,6 +32,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
 
+  const { citizens } = useCitizen();
   const { state, execute } = useFetch();
   const { department, division } = useValues();
 
@@ -92,7 +94,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
 
   const validate = handleValidate(CREATE_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
-    name: deputy?.name ?? "",
+    citizenId: deputy?.citizenId ?? "",
     department: deputy?.departmentId ?? "",
     rank: deputy?.rankId ?? "",
     callsign: deputy?.callsign ?? "",
@@ -134,14 +136,21 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
               <Error>{errors.image}</Error>
             </FormField>
 
-            <FormField label={t("Ems.deputyName")}>
-              <Input
-                value={values.name}
-                hasError={!!errors.name}
-                id="name"
+            <FormField label={t("Leo.citizen")}>
+              <Select
+                isClearable
+                value={values.citizenId}
+                hasError={!!errors.citizenId}
+                name="citizenId"
                 onChange={handleChange}
+                values={citizens
+                  .filter((v) => v)
+                  .map((value) => ({
+                    label: `${value.name} ${value.surname}`,
+                    value: value.id,
+                  }))}
               />
-              <Error>{errors.name}</Error>
+              <Error>{errors.citizenId}</Error>
             </FormField>
 
             <FormField label={t("Leo.badgeNumber")}>

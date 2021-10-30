@@ -19,6 +19,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { makeUnitName } from "lib/utils";
 
 interface Props {
   call: Full911Call | null;
@@ -190,7 +191,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
 
   function makeLabel(value: string) {
     const unit = allUnits.find((v) => v.id === value);
-    return `${generateCallsign(unit!)} ${unit?.name}`;
+    return `${generateCallsign(unit!)} ${makeUnitName(unit!)}`;
   }
 
   return (

@@ -19,3 +19,4 @@ packages/api/public/**/*.jpeg
 !.yarn/versions
 
 .vscode/settings.json
+tsconfig.tsbuildinfo

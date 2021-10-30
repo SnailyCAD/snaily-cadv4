@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { makeImageUrl, requestAll } from "lib/utils";
+import { makeImageUrl, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
@@ -85,7 +85,6 @@ export default function MyOfficers({ officers: data }: Props) {
                 <th>{t("badgeNumber")}</th>
                 <th>{t("department")}</th>
                 <th>{t("division")}</th>
-                <th>{t("citizen")}</th>
                 <th>{common("actions")}</th>
               </tr>
             </thead>
@@ -100,21 +99,12 @@ export default function MyOfficers({ officers: data }: Props) {
                         src={makeImageUrl("units", officer.imageId)}
                       />
                     ) : null}
-                    {officer.name}
+                    {makeUnitName(officer)}
                   </td>
                   <td>{generateCallsign(officer)}</td>
                   <td>{String(officer.badgeNumber)}</td>
                   <td>{officer.department.value?.value}</td>
                   <td>{officer.division?.value?.value}</td>
-                  <td>
-                    {officer.citizen ? (
-                      <span className="capitalize">
-                        {officer.citizen.name} {officer.citizen.surname}
-                      </span>
-                    ) : (
-                      common("none")
-                    )}
-                  </td>
                   <td className="w-36">
                     <Button small onClick={() => handleEditClick(officer)} variant="success">
                       {common("edit")}
@@ -153,7 +143,7 @@ export default function MyOfficers({ officers: data }: Props) {
         title={t("deleteOfficer")}
         description={t.rich("alert_deleteOfficer", {
           span: (children) => <span className="font-semibold">{children}</span>,
-          officer: tempOfficer && tempOfficer.name,
+          officer: tempOfficer && makeUnitName(tempOfficer),
         })}
         id={ModalIds.AlertDeleteOfficer}
         onDeleteClick={handleDeleteOfficer}

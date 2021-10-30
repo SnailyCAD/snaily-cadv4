@@ -15,6 +15,7 @@ import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
 import { ShouldDoType } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { makeUnitName } from "lib/utils";
 
 export const SelectOfficerModal = () => {
   const { officers, setActiveOfficer } = useLeoState();
@@ -67,7 +68,7 @@ export const SelectOfficerModal = () => {
                 onChange={handleChange}
                 isClearable
                 values={officers.map((officer) => ({
-                  label: `${generateCallsign(officer)} ${officer.name}`,
+                  label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
                 }))}
               />

@@ -15,6 +15,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { useValues } from "context/ValuesContext";
 import { ShouldDoType } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { makeUnitName } from "lib/utils";
 
 export const SelectDeputyModal = () => {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -67,9 +68,9 @@ export const SelectDeputyModal = () => {
                 name="deputy"
                 onChange={handleChange}
                 isClearable
-                values={deputies.map((officer) => ({
-                  label: `${generateCallsign(officer)} ${officer.name}`,
-                  value: officer.id,
+                values={deputies.map((deputy) => ({
+                  label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
+                  value: deputy.id,
                 }))}
               />
               <Error>{errors.deputy}</Error>

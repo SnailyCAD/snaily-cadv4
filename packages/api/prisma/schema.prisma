@@ -143,21 +143,21 @@ enum WhitelistStatus {
 }
 
 model RegisteredVehicle {
-  id                   String     @id @default(cuid())
-  user                 User       @relation(fields: [userId], references: [id])
+  id                   String       @id @default(cuid())
+  user                 User         @relation(fields: [userId], references: [id])
   userId               String
-  citizen              Citizen    @relation(fields: [citizenId], references: [id])
+  citizen              Citizen      @relation(fields: [citizenId], references: [id])
   citizenId            String
-  vinNumber            String     @unique @db.VarChar(255)
-  plate                String     @unique @db.VarChar(255)
-  model                Value      @relation("modelToValue", fields: [modelId], references: [id])
+  vinNumber            String       @unique @db.VarChar(255)
+  plate                String       @unique @db.VarChar(255)
+  model                VehicleValue @relation(fields: [modelId], references: [id])
   modelId              String
-  color                String     @db.VarChar(255)
-  createdAt            DateTime   @default(now())
-  registrationStatus   Value      @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
+  color                String       @db.VarChar(255)
+  createdAt            DateTime     @default(now())
+  registrationStatus   Value        @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  insuranceStatus      String     @db.VarChar(255)
-  reportedStolen       Boolean    @default(false)
+  insuranceStatus      String       @db.VarChar(255)
+  reportedStolen       Boolean      @default(false)
   TruckLog             TruckLog[]
 }
 
@@ -203,7 +203,6 @@ model Value {
   weaponLicenseToValue            Citizen[]                     @relation("weaponLicenseToValue")
   pilotLicenseToValue             Citizen[]                     @relation("pilotLicenseToValue")
   ccwToValue                      Citizen[]                     @relation("ccwToValue")
-  modelToValue                    RegisteredVehicle[]           @relation("modelToValue")
   registrationStatusToValue       RegisteredVehicle[]           @relation("registrationStatusToValue")
   weaponRegistrationStatusToValue Weapon[]                      @relation("weaponRegistrationStatusToValue")
   weaponModelToValue              Weapon[]                      @relation("weaponModelToValue")
@@ -214,6 +213,7 @@ model Value {
   emsFdRankToValue                EmsFdDeputy[]                 @relation("emsFdRankToValue")
   departmentToValue               DepartmentValue[]             @relation("departmentToValue")
   driversLicenseCategoryToValue   DriversLicenseCategoryValue[] @relation("driversLicenseCategoryToValue")
+  VehicleValue                    VehicleValue[]                @relation("vehicleValueToValue")
 }
 
 model PenalCode {
@@ -254,6 +254,14 @@ model DriversLicenseCategoryValue {
   type             DriversLicenseCategoryType
   citizens         Citizen[]                  @relation("dlCategoryToDLCategory")
   citizenToPilotDl Citizen[]                  @relation("dlPilotCategoryToDLCategory")
+}
+
+model VehicleValue {
+  id                String              @id @default(cuid())
+  valueId           String
+  value             Value               @relation("vehicleValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  hash              String?
+  RegisteredVehicle RegisteredVehicle[]
 }
 
 enum ValueType {
@@ -391,7 +399,6 @@ enum EmployeeAsEnum {
 // leo
 model Officer {
   id           String          @id @default(cuid())
-  name         String          @db.VarChar(255)
   department   DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId String
   callsign     String          @db.VarChar(255)
@@ -405,12 +412,11 @@ model Officer {
   suspended    Boolean         @default(false)
   badgeNumber  Int?
   imageId      String?         @db.VarChar(255)
-
-  citizen      Citizen?       @relation(fields: [citizenId], references: [id], onDelete: SetNull)
-  citizenId    String?
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  citizen      Citizen         @relation(fields: [citizenId], references: [id], onDelete: SetNull)
+  citizenId    String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  bolos        Bolo[]         @relation("bolosToOfficer")
+  bolos        Bolo[]          @relation("bolosToOfficer")
   warrants     Warrant[]
   logs         OfficerLog[]
   Record       Record[]
@@ -550,7 +556,6 @@ enum WarrantStatus {
 // ems-fd
 model EmsFdDeputy {
   id           String          @id @default(cuid())
-  name         String          @db.VarChar(255)
   department   DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId String
   callsign     String          @db.VarChar(255)
@@ -564,10 +569,9 @@ model EmsFdDeputy {
   suspended    Boolean         @default(false)
   badgeNumber  Int?
   imageId      String?         @db.VarChar(255)
-
-  citizen      Citizen?       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId    String?
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  citizen      Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId    String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   AssignedUnit AssignedUnit[]
 }

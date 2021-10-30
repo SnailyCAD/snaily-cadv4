@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
@@ -49,7 +49,7 @@ export default function SupervisorPanelPage({ units }: Props) {
             {units.map((unit) => (
               <tr key={unit.id}>
                 <td>{LABELS[unit.type]}</td>
-                <td>{unit.name}</td>
+                <td className="capitalize">{makeUnitName(unit)}</td>
                 <td> {generateCallsign(unit)}</td>
                 <td>{String(unit.badgeNumber)}</td>
                 <td>{unit.department?.value?.value}</td>

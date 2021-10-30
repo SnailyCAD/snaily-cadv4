@@ -16,6 +16,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
+import { makeUnitName } from "lib/utils";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -44,7 +45,8 @@ export const ActiveCalls = () => {
       : null;
 
   const isUnitAssigned = (call: Full911Call) => call.assignedUnits.some((v) => v.id === unit?.id);
-  const makeUnit = (unit: AssignedUnit) => `${generateCallsign(unit.unit)} ${unit.unit.name}`;
+  const makeUnit = (unit: AssignedUnit) =>
+    `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
   useListener(
     SocketEvents.Create911Call,

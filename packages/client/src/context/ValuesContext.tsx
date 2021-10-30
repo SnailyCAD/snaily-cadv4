@@ -9,6 +9,7 @@ import {
   Value,
   valueType,
   ValueType,
+  VehicleValue,
 } from "types/prisma";
 
 type ContextValue<T extends ValueType> = {
@@ -20,7 +21,6 @@ interface Context {
   license: ContextValue<"LICENSE">;
   gender: ContextValue<"GENDER">;
   ethnicity: ContextValue<"ETHNICITY">;
-  vehicle: ContextValue<"VEHICLE">;
   weapon: ContextValue<"WEAPON">;
   bloodGroup: ContextValue<"BLOOD_GROUP">;
   officerRank: ContextValue<"OFFICER_RANK">;
@@ -47,6 +47,10 @@ interface Context {
   driverslicenseCategory: {
     type: ValueType;
     values: DriversLicenseCategoryValue[];
+  };
+  vehicle: {
+    type: ValueType;
+    values: VehicleValue[];
   };
 }
 

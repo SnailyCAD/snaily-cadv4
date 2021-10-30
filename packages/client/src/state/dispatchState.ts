@@ -12,7 +12,7 @@ import type {
 import create from "zustand";
 
 export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };
-export type FullBolo = Bolo & { officer: Officer };
+export type FullBolo = Bolo & { officer: Officer | null };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;

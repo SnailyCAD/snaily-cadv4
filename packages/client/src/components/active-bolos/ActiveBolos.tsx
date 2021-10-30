@@ -4,6 +4,7 @@ import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
+import { makeUnitName } from "lib/utils";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { FullBolo, useDispatchState } from "state/dispatchState";
@@ -182,7 +183,7 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
 
           <p>
             <span className="font-semibold">{"Officer"}: </span>
-            {bolo?.officer?.name ?? t("dispatch")}
+            {bolo.officer ? makeUnitName(bolo.officer) : t("dispatch")}
           </p>
         </div>
       </div>

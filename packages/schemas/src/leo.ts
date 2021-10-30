@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const CREATE_OFFICER_SCHEMA = z.object({
-  name: z.string().min(2).max(255),
   department: z.string().min(2).max(255),
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),

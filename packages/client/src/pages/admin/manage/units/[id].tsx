@@ -2,7 +2,7 @@ import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
@@ -64,11 +64,11 @@ export default function SupervisorPanelPage({ unit }: Props) {
     <AdminLayout>
       <Head>
         <title>
-          {common("manage")} {unit.name} - SnailyCAD
+          {common("manage")} {makeUnitName(unit)} - SnailyCAD
         </title>
       </Head>
 
-      <h1 className="text-2xl font-semibold capitalize mb-3">{unit.name}</h1>
+      <h1 className="text-2xl font-semibold capitalize mb-3">{makeUnitName(unit)}</h1>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values }) => (

@@ -106,7 +106,7 @@ export const VehicleSearchModal = () => {
                   </li>
                   <li>
                     <span className="font-semibold">{vT("model")}: </span>
-                    {results.model.value}
+                    {results.model.value.value}
                   </li>
                   <li>
                     <span className="font-semibold">{vT("color")}: </span>
@@ -175,6 +175,5 @@ export const VehicleSearchModal = () => {
 
 interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;
-  model: Value<"VEHICLE">;
   registrationStatus: Value<"LICENSE">;
 }

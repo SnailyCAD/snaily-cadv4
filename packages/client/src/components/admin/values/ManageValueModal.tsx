@@ -110,6 +110,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     color: value?.color ?? "",
     // @ts-expect-error shortcut
     type: value?.type ?? "",
+    // @ts-expect-error shortcut
+    hash: value?.hash ?? "",
   };
 
   function validate(values: typeof INITIAL_VALUES) {
@@ -174,6 +176,12 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   onChange={handleChange}
                   value={values.as}
                 />
+              </FormField>
+            ) : null}
+
+            {type === "VEHICLE" ? (
+              <FormField fieldId="as" label="Game Hash">
+                <Input id="hash" onChange={handleChange} value={values.hash} />
               </FormField>
             ) : null}
 

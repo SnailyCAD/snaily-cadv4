@@ -102,7 +102,7 @@ export type RegisteredVehicle = {
   plate: string;
   vinNumber: string;
   modelId: string;
-  model: Value<"VEHICLE">;
+  model: VehicleValue;
   color: string;
   createdAt: Date;
   registrationStatus: Value<"LICENSE">;
@@ -251,7 +251,6 @@ export type EmployeeValue = {
 
 export type Officer = {
   id: string;
-  name: string;
   departmentId: string;
   divisionId: string;
   callsign: string;
@@ -260,7 +259,8 @@ export type Officer = {
   statusId: string | null;
   status: StatusValue | null;
   suspended: boolean;
-  citizenId: string | null;
+  citizen: Citizen;
+  citizenId: string;
   userId: string;
   call911Id: string | null;
   badgeNumber: number | null;
@@ -382,7 +382,6 @@ export type DepartmentValue = {
 
 export type EmsFdDeputy = {
   id: string;
-  name: string;
   departmentId: string;
   callsign: string;
   callsign2: string;
@@ -392,7 +391,8 @@ export type EmsFdDeputy = {
   statusId: string | null;
   suspended: boolean;
   badgeNumber: number | null;
-  citizenId: string | null;
+  citizen: Citizen;
+  citizenId: string;
   userId: string;
   imageId: string | null;
 };
@@ -455,6 +455,17 @@ export type AssignedUnit = {
   emsFdDeputyId: string | null;
   call911Id: string | null;
   unit: FullDeputy | FullOfficer;
+};
+
+/**
+ * Model VehicleValue
+ */
+
+export type VehicleValue = {
+  id: string;
+  valueId: string;
+  value: Value<"VEHICLE">;
+  hash: string | null;
 };
 
 /**

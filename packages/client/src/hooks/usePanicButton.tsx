@@ -4,6 +4,7 @@ import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useGenerateCallsign } from "./useGenerateCallsign";
+import { makeUnitName } from "lib/utils";
 
 export function usePanicButton() {
   const [unit, setUnit] = React.useState<FullDeputy | FullOfficer | null>(null);
@@ -23,7 +24,7 @@ const Component = ({ unit }: { unit: FullOfficer | FullDeputy }) => {
     <div role="alert" className="font-semibold text-white bg-red-500 p-2 px-3 rounded-md my-2">
       <p>
         {t.rich("panicButtonLeo", {
-          officer: `${generateCallsign(unit)} ${unit.name}`,
+          officer: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
         })}
       </p>
     </div>

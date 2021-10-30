@@ -116,7 +116,7 @@ export const ManageTruckLogModal = ({
                 name="vehicleId"
                 onChange={handleChange}
                 values={registeredVehicles.map((vehicle) => ({
-                  label: vehicle.model.value,
+                  label: vehicle.model.value.value,
                   value: vehicle.id,
                 }))}
                 value={values.vehicleId}

@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
-import { makeImageUrl } from "lib/utils";
+import { makeImageUrl, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export const ActiveDeputies = () => {
@@ -60,7 +60,7 @@ export const ActiveDeputies = () => {
                           src={makeImageUrl("units", deputy.imageId)}
                         />
                       ) : null}
-                      {generateCallsign(deputy)} {deputy.name}
+                      {generateCallsign(deputy)} {makeUnitName(deputy)}
                     </td>
                     <td>{String(deputy.badgeNumber)}</td>
                     <td>{deputy.department.value.value}</td>

@@ -13,7 +13,7 @@ import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { Officer, cad, ShouldDoType, MiscCadSettings, User, Citizen } from ".prisma/client";
+import { Officer, cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
 import { IsAuth, IsLeo } from "../../middlewares";
@@ -88,30 +88,26 @@ export class LeoController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
-    let citizen: null | Citizen = null;
-    if (body.get("citizenId")) {
-      citizen = await prisma.citizen.findFirst({
-        where: {
-          id: body.get("citizenId"),
-          userId: user.id,
-        },
-      });
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: body.get("citizenId"),
+        userId: user.id,
+      },
+    });
 
-      if (!citizen) {
-        throw new NotFound("citizenNotFound");
-      }
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
     }
 
     const officer = await prisma.officer.create({
       data: {
-        name: citizen ? `${citizen.name} ${citizen.surname}` : body.get("name"),
         callsign: body.get("callsign"),
         callsign2: body.get("callsign2"),
         userId: user.id,
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: citizen?.id ?? null,
+        citizenId: citizen.id,
       },
       include: {
         department: { include: { value: true } },
@@ -167,18 +163,15 @@ export class LeoController {
       throw new BadRequest("divisionNotInDepartment");
     }
 
-    let citizen: null | Citizen = null;
-    if (body.get("citizenId")) {
-      citizen = await prisma.citizen.findFirst({
-        where: {
-          id: body.get("citizenId"),
-          userId: user.id,
-        },
-      });
+    const citizen = await prisma.citizen.findFirst({
+      where: {
+        id: body.get("citizenId"),
+        userId: user.id,
+      },
+    });
 
-      if (!citizen) {
-        throw new NotFound("citizenNotFound");
-      }
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
     }
 
     const updated = await prisma.officer.update({
@@ -191,8 +184,7 @@ export class LeoController {
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
-        name: citizen ? `${citizen.name} ${citizen.surname}` : body.get("name"),
-        citizenId: citizen?.id ?? null,
+        citizenId: citizen.id,
       },
       include: {
         department: { include: { value: true } },
