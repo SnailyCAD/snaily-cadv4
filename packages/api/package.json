@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/api",
-  "version": "0.4.0-alpha",
+  "version": "0.5.0-alpha",
   "scripts": {
     "dev": "prisma migrate dev && prisma generate && nodemon --watch \"src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/main.ts",
     "start": "yarn workspace @snailycad/schemas build && yarn workspace @snailycad/config build && npx prisma migrate deploy && ts-node src/main.ts",
@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "@prisma/client": "^3.3.0",
-    "@snailycad/config": "0.4.0-alpha",
-    "@snailycad/schemas": "0.4.0-alpha",
+    "@snailycad/config": "0.5.0-alpha",
+    "@snailycad/schemas": "0.5.0-alpha",
     "@tsed/common": "^6.75.8",
     "@tsed/core": "^6.75.8",
     "@tsed/di": "^6.75.8",
