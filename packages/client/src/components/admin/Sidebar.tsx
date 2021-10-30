@@ -24,7 +24,7 @@ export const AdminSidebar = () => {
   return (
     <div className="w-60">
       <aside
-        style={{ height: "calc(100vh - 5rem)" }}
+        style={{ minHeight: "100vh" }}
         className="absolute w-60 left-0 -top-2 bg-gray-200 rounded-md py-2"
       >
         <section>

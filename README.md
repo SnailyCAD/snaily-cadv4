@@ -1,7 +1,5 @@
 # SnailyCADv4
 
-<!-- [![Check ESlint](https://github.com/Dev-CasperTheGhost/snaily-cadv4/actions/workflows/lint.yml/badge.svg)](https://github.com/Dev-CasperTheGhost/snaily-cadv4/) -->
-
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![stars](https://img.shields.io/github/stars/SnailyCAD/snaily-cadv4?style=flat-square&color=gr)
@@ -11,11 +9,15 @@
 this is a web based integration for communities who love police roleplaying and dispatching.
 Built with next.js
 
-**This is currently in development.**
+<a href="https://discord.gg/eGnrPqEH7U ">
+  <img src="http://invidget.switchblade.xyz/eGnrPqEH7U" />
+</a>
 
-<!-- ## Contributing
+**This is currently in beta.**
 
-[View CONTRIBUTING.md](./docs/CONTRIBUTING.md) -->
+## Contributing
+
+[View CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 
 ## Bugs
 
