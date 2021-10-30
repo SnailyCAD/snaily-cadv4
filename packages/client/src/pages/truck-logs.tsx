@@ -91,7 +91,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
                   <td>
                     {log.citizen.name} {log.citizen.surname}
                   </td>
-                  <td>{log.vehicle?.model.value}</td>
+                  <td>{log.vehicle?.model.value.value}</td>
                   <td>{log.startedAt}</td>
                   <td>{log.endedAt}</td>
                   <td className="w-36">
