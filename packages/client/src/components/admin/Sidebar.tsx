@@ -18,7 +18,7 @@ export const AdminSidebar = () => {
   };
 
   const isValueActive = (type: string) => {
-    return typeof router.query.path === "string" && router.query.path.toUpperCase() === type;
+    return router.asPath.includes(type.toLowerCase());
   };
 
   return (
