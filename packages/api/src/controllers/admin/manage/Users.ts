@@ -9,6 +9,8 @@ import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsAdmin } from "../../../middlewares";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
 import { Socket } from "../../../services/SocketService";
+import { nanoid } from "nanoid";
+import { genSaltSync, hashSync } from "bcrypt";
 
 @UseBeforeEach(IsAuth, IsAdmin)
 @Controller("/users")
@@ -67,6 +69,35 @@ export class ManageUsersController {
     });
 
     return updated;
+  }
+
+  @Post("/temp-password/:id")
+  async giveUserTempPassword(@PathParams("id") userId: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userId,
+        NOT: {
+          rank: "OWNER",
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    const password = nanoid();
+    const salt = genSaltSync();
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        tempPassword: hashSync(password, salt),
+      },
+    });
+
+    return password;
   }
 
   @Post("/:id/:type")

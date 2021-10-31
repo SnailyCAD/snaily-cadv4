@@ -37,7 +37,7 @@ export default function Login() {
   const validate = handleValidate(AUTH_SCHEMA);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const data = await execute("/auth/login", {
+    const { json } = await execute("/auth/login", {
       data: values,
       method: "POST",
       headers: {
@@ -45,7 +45,12 @@ export default function Login() {
       },
     });
 
-    if (data.json?.userId) {
+    if (json.hasTempPassword) {
+      router.push({
+        pathname: "/auth/temp-password",
+        query: { tp: values.password },
+      });
+    } else if (json?.userId) {
       router.push("/citizen");
     }
   }

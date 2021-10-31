@@ -87,7 +87,8 @@ export class AccountController {
       throw new BadRequest("passwordsDoNotMatch");
     }
 
-    const isCurrentPasswordCorrect = compareSync(currentPassword, u.password);
+    const userPassword = u.tempPassword ?? u.password;
+    const isCurrentPasswordCorrect = compareSync(currentPassword, userPassword);
     if (!isCurrentPasswordCorrect) {
       throw new BadRequest("currentPasswordIncorrect");
     }
@@ -99,6 +100,7 @@ export class AccountController {
       },
       data: {
         password: hashSync(newPassword, salt),
+        tempPassword: null,
       },
     });
 

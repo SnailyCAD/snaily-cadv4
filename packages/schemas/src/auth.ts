@@ -14,3 +14,8 @@ export const CHANGE_PASSWORD_SCHEMA = z.object({
   newPassword: z.string().min(8).max(255),
   confirmPassword: z.string().min(8).max(255),
 });
+
+export const TEMP_PASSWORD_SCHEMA = z.object({
+  newPassword: z.string().min(8).max(255),
+  confirmPassword: z.string().min(8).max(255),
+});

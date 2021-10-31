@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
+import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 
 interface Props {
   user: User;
@@ -14,7 +15,7 @@ interface Props {
 export const DangerZone = ({ user }: Props) => {
   const { state, execute } = useFetch();
   const router = useRouter();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   const formDisabled = user.rank === "OWNER";
 
@@ -34,15 +35,25 @@ export const DangerZone = ({ user }: Props) => {
     <div className="bg-gray-200 mt-10 rounded-md p-3">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
-      <div className="mt-1">
+      <div className="mt-3 flex">
         <Button
           variant="danger"
-          className="flex items-center mt-2"
+          className="flex items-center"
           disabled={state === "loading"}
           onClick={() => openModal(ModalIds.AlertDeleteUser)}
         >
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Delete User
+        </Button>
+
+        <Button
+          variant="danger"
+          className="flex items-center ml-2"
+          disabled={state === "loading"}
+          onClick={() => openModal(ModalIds.AlertGiveTempPassword)}
+        >
+          {state === "loading" ? <Loader className="mr-3" /> : null}
+          Temporary Password
         </Button>
       </div>
 
@@ -52,6 +63,19 @@ export const DangerZone = ({ user }: Props) => {
         description={`Are you sure you want to delete ${user.username}'s account? All their data will be lost.`}
         id={ModalIds.AlertDeleteUser}
       />
+
+      <AlertModal
+        onDeleteClick={() => {
+          closeModal(ModalIds.AlertGiveTempPassword);
+          openModal(ModalIds.GiveTempPassword);
+        }}
+        title="Give Temporary Password"
+        description={`Are you sure you want to give ${user.username} a temporary password? They will not be able to log in to their account with their previous password. They will only be able to login with the password provided in the next step.`}
+        id={ModalIds.AlertGiveTempPassword}
+        deleteText={"Yes, continue."}
+      />
+
+      <GiveTempPasswordModal user={user} />
     </div>
   );
 };

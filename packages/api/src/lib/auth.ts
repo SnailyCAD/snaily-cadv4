@@ -20,6 +20,7 @@ export const userProperties = {
   steamId: true,
   whitelistStatus: true,
   isDarkTheme: true,
+  tempPassword: true,
 };
 
 export async function getSessionUser(req: Req) {
@@ -47,5 +48,6 @@ export async function getSessionUser(req: Req) {
     throw new NotFound("notFound");
   }
 
-  return user;
+  const { tempPassword, ...rest } = user;
+  return { ...rest, hasTempPassword: !!tempPassword };
 }

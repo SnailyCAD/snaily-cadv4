@@ -41,7 +41,8 @@ export class AuthController {
       throw new BadRequest("userBanned");
     }
 
-    const isPasswordCorrect = compareSync(body.get("password"), user.password);
+    const userPassword = user.tempPassword ?? user.password;
+    const isPasswordCorrect = compareSync(body.get("password"), userPassword);
     if (!isPasswordCorrect) {
       throw new BadRequest("passwordIncorrect");
     }
@@ -53,6 +54,10 @@ export class AuthController {
       expires: 60 * 60 * 1000,
       value: jwtToken,
     });
+
+    if (user.tempPassword) {
+      return res.json({ hasTempPassword: true });
+    }
 
     return res.json({ userId: user.id });
   }

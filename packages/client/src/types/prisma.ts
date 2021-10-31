@@ -53,6 +53,7 @@ export type User = {
   steamId: string | null;
   whitelistStatus: WhitelistStatus;
   isDarkTheme: boolean;
+  hasTempPassword: boolean;
 };
 
 /**
