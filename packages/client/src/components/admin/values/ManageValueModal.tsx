@@ -10,7 +10,13 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { DriversLicenseCategoryType, EmployeeAsEnum, ShouldDoType, ValueType } from "types/prisma";
+import {
+  DepartmentType,
+  DriversLicenseCategoryType,
+  EmployeeAsEnum,
+  ShouldDoType,
+  ValueType,
+} from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
@@ -47,8 +53,18 @@ const SHOULD_DO_LABELS = {
   [ShouldDoType.PANIC_BUTTON]: "Panic Button",
 };
 
+const DEPARTMENT_LABELS = {
+  [DepartmentType.LEO]: "Leo",
+  [DepartmentType.EMS_FD]: "EMS/FD",
+};
+
 const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
   label: SHOULD_DO_LABELS[v],
+  value: v,
+}));
+
+const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
+  label: DEPARTMENT_LABELS[v],
   value: v,
 }));
 
@@ -71,7 +87,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     if (value) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
         method: "PATCH",
-        data: { ...values, type: dlType },
+        data: { ...values, type: dlType ? dlType : values.type },
       });
 
       if (json?.id) {
@@ -81,7 +97,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     } else {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
-        data: { ...values, type: dlType },
+        data: { ...values, type: dlType ? dlType : values.type },
       });
 
       if (json?.id) {
@@ -165,6 +181,17 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
               <FormField fieldId="callsign" label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
+              </FormField>
+            ) : null}
+
+            {type === "DEPARTMENT" ? (
+              <FormField fieldId="type" label="Type">
+                <Select
+                  values={DEPARTMENT_TYPES}
+                  name="type"
+                  onChange={handleChange}
+                  value={values.type}
+                />
               </FormField>
             ) : null}
 

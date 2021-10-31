@@ -201,10 +201,12 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 hasError={!!errors.department}
                 name="department"
                 onChange={handleChange}
-                values={department.values.map((value) => ({
-                  label: value.value.value,
-                  value: value.id,
-                }))}
+                values={department.values
+                  .filter((v) => v.type === "EMS_FD")
+                  .map((value) => ({
+                    label: value.value.value,
+                    value: value.id,
+                  }))}
               />
               <Error>{errors.department}</Error>
             </FormField>

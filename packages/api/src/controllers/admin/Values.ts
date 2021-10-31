@@ -273,6 +273,7 @@ export class ValuesController {
         data: {
           valueId: value.id,
           callsign: body.get("callsign") || null,
+          type: body.get("type"),
         },
         include: {
           value: true,
@@ -419,6 +420,7 @@ export class ValuesController {
             },
           },
           callsign: body.get("callsign") || null,
+          type: body.get("type"),
         },
         include: {
           value: true,

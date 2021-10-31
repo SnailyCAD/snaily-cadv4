@@ -244,6 +244,7 @@ model DepartmentValue {
   value       Value           @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId     String
   callsign    String?
+  type        DepartmentType  @default(LEO)
   EmsFdDeputy EmsFdDeputy[]   @relation("emsFdDepartmentToDepartment")
   Officer     Officer[]       @relation("officerDepartmentToDepartment")
   division    DivisionValue[] @relation("divisionDepartmentToValue")
@@ -272,6 +273,11 @@ model WeaponValue {
   value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash    String?
   weapon  Weapon[] @relation("weaponModelToValue")
+}
+
+enum DepartmentType {
+  LEO
+  EMS_FD
 }
 
 enum ValueType {

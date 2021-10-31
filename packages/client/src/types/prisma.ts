@@ -376,6 +376,7 @@ export type DepartmentValue = {
   valueId: string;
   value: Value<"DEPARTMENT">;
   callsign: string | null;
+  type: DepartmentType;
 };
 
 /**
@@ -588,3 +589,10 @@ export const DriversLicenseCategoryType = {
 
 export type DriversLicenseCategoryType =
   typeof DriversLicenseCategoryType[keyof typeof DriversLicenseCategoryType];
+
+export const DepartmentType = {
+  LEO: "LEO",
+  EMS_FD: "EMS_FD",
+} as const;
+
+export type DepartmentType = typeof DepartmentType[keyof typeof DepartmentType];
