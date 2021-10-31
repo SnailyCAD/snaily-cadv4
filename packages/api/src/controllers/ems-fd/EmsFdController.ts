@@ -28,6 +28,7 @@ import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { ActiveDeputy } from "../../middlewares/ActiveDeputy";
 import fs from "node:fs";
+import { unitProperties } from "../../lib/officer";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -44,17 +45,7 @@ export class EmsFdController {
       where: {
         userId: user.id,
       },
-      include: {
-        department: { include: { value: true } },
-        division: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     const citizens = await prisma.citizen.findMany({
@@ -108,17 +99,7 @@ export class EmsFdController {
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
       },
-      include: {
-        department: { include: { value: true } },
-        division: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return deputy;
@@ -181,17 +162,7 @@ export class EmsFdController {
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
       },
-      include: {
-        department: { include: { value: true } },
-        division: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return updated;
@@ -261,19 +232,7 @@ export class EmsFdController {
       data: {
         statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
-      include: {
-        department: { include: { value: true } },
-        rank: true,
-        division: { include: { value: true } },
-        status: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
@@ -352,19 +311,7 @@ export class EmsFdController {
           },
         },
       },
-      include: {
-        department: { include: { value: true } },
-        rank: true,
-        division: { include: { value: true } },
-        status: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return Array.isArray(deputies) ? deputies : [deputies];

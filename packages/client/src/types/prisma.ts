@@ -110,6 +110,7 @@ export type RegisteredVehicle = {
   registrationStatusId: string;
   insuranceStatus: string;
   reportedStolen: boolean;
+  impounded: boolean;
 };
 
 /**

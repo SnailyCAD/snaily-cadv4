@@ -37,8 +37,6 @@ export class TruckLogsController {
       },
     });
 
-    console.log({ registeredVehicles });
-
     return { logs, registeredVehicles };
   }
 

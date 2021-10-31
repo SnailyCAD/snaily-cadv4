@@ -4,8 +4,6 @@ import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
 
 export async function getWebhookData(url: string): Promise<APIWebhook | null> {
-  console.log({ url });
-
   try {
     const res = await fetch(url);
 

@@ -3,22 +3,11 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
+import { unitProperties } from "../../../lib/officer";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth, IsSupervisor } from "../../../middlewares";
 
-const include = {
-  rank: true,
-  department: { include: { value: true } },
-  division: { include: { value: true } },
-  status: { include: { value: true } },
-  citizen: {
-    select: {
-      id: true,
-      name: true,
-      surname: true,
-    },
-  },
-};
+const include = unitProperties;
 
 @UseBeforeEach(IsAuth, IsSupervisor)
 @Controller("/units")

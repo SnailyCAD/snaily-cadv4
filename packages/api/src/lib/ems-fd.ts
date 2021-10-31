@@ -4,6 +4,7 @@ import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { verifyJWT } from "../utils/jwt";
 import { getSessionUser } from "./auth";
+import { unitProperties } from "./officer";
 import { prisma } from "./prisma";
 
 export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
@@ -44,12 +45,7 @@ export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
       userId,
       id: jwtPayload?.deputyId,
     },
-    include: {
-      rank: true,
-      department: { include: { value: true } },
-      status: { include: { value: true } },
-      division: { include: { value: true } },
-    },
+    include: unitProperties,
   });
 
   if (!deputy) {

@@ -21,14 +21,13 @@ export class Calls911Controller {
     const includeData = {
       include: {
         department: { include: { value: true } },
-        status: {
-          include: {
-            value: true,
-          },
-        },
-        division: {
-          include: {
-            value: true,
+        status: { include: { value: true } },
+        division: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
           },
         },
       },

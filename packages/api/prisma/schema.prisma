@@ -159,6 +159,7 @@ model RegisteredVehicle {
   registrationStatusId String
   insuranceStatus      String       @db.VarChar(255)
   reportedStolen       Boolean      @default(false)
+  impounded            Boolean      @default(false)
   TruckLog             TruckLog[]
 }
 
@@ -311,16 +312,21 @@ model BleeterPost {
 
 // tow
 model TowCall {
-  id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
-  user           User     @relation(fields: [userId], references: [id])
-  userId         String
-  assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
-  assignedUnitId String?
-  location       String   @db.VarChar(255)
-  description    String   @db.Text
-  creator        Citizen? @relation("towCallCreator", fields: [creatorId], references: [id])
-  creatorId      String?
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id])
+  userId            String
+  assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
+  assignedUnitId    String?
+  location          String   @db.VarChar(255)
+  deliveryAddress   String?  @db.VarChar(255)
+  plate             String?  @db.VarChar(255)
+  model             String?  @db.VarChar(255)
+  description       String   @db.Text
+  creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id])
+  creatorId         String?
+  ended             Boolean  @default(false)
+  callCountyService Boolean  @default(false)
 }
 
 // taxi

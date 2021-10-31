@@ -23,6 +23,7 @@ import { Socket } from "../../services/SocketService";
 import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import fs from "node:fs";
+import { unitProperties } from "../../lib/officer";
 
 // todo: check for leo permissions
 @Controller("/leo")
@@ -40,21 +41,7 @@ export class LeoController {
       where: {
         userId: ctx.get("user").id,
       },
-      include: {
-        division: {
-          include: {
-            value: true,
-          },
-        },
-        department: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     const citizens = await prisma.citizen.findMany({
@@ -109,21 +96,7 @@ export class LeoController {
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
       },
-      include: {
-        department: { include: { value: true } },
-        division: {
-          include: {
-            value: true,
-          },
-        },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return officer;
@@ -186,21 +159,7 @@ export class LeoController {
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
       },
-      include: {
-        department: { include: { value: true } },
-        division: {
-          include: {
-            value: true,
-          },
-        },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return updated;
@@ -271,19 +230,7 @@ export class LeoController {
       data: {
         statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
       },
-      include: {
-        department: { include: { value: true } },
-        rank: true,
-        division: { include: { value: true } },
-        status: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     const officerLog = await prisma.officerLog.findFirst({
@@ -387,15 +334,7 @@ export class LeoController {
       },
       include: {
         officer: {
-          include: {
-            citizen: {
-              select: {
-                name: true,
-                surname: true,
-                id: true,
-              },
-            },
-          },
+          include: unitProperties,
         },
       },
       orderBy: {
@@ -422,19 +361,7 @@ export class LeoController {
           },
         },
       },
-      include: {
-        department: { include: { value: true } },
-        rank: true,
-        division: { include: { value: true } },
-        status: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     return Array.isArray(officers) ? officers : [officers];
@@ -490,19 +417,7 @@ export class LeoController {
       where: {
         id: officer.id,
       },
-      include: {
-        department: { include: { value: true } },
-        rank: true,
-        division: { include: { value: true } },
-        status: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
+      include: unitProperties,
     });
 
     this.socket.emitPanicButtonLeo(fullOfficer);

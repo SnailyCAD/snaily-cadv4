@@ -32,14 +32,10 @@ export default function TempPassword() {
 
   const validate = handleValidate(TEMP_PASSWORD_SCHEMA);
 
-  console.log(router.query);
-
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    console.log({ values });
-
     if (values.confirmPassword !== values.newPassword) {
       return helpers.setFieldError("confirmPassword", "Passwords do not match");
     }

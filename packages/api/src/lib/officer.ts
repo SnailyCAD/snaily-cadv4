@@ -6,6 +6,13 @@ import { verifyJWT } from "../utils/jwt";
 import { getSessionUser } from "./auth";
 import { prisma } from "./prisma";
 
+export const unitProperties = {
+  department: { include: { value: true } },
+  division: { include: { value: true, department: true } },
+  status: { include: { value: true } },
+  citizen: { select: { name: true, surname: true, id: true } },
+};
+
 export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
   const header = req.headers.cookie;
   if (!header) {
@@ -44,19 +51,7 @@ export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
       userId,
       id: jwtPayload?.officerId,
     },
-    include: {
-      rank: true,
-      department: { include: { value: true } },
-      division: { include: { value: true, department: true } },
-      status: { include: { value: true } },
-      citizen: {
-        select: {
-          name: true,
-          surname: true,
-          id: true,
-        },
-      },
-    },
+    include: unitProperties,
   });
 
   if (!officer) {

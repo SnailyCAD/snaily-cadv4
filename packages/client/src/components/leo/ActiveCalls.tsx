@@ -17,6 +17,7 @@ import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
+import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -85,6 +86,11 @@ export const ActiveCalls = () => {
     openModal(ModalIds.Manage911Call);
   }
 
+  function handleCallTow(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.ManageTowCall);
+  }
+
   async function handleAssignToCall(call: Full911Call) {
     await execute(`/911-calls/assign-to/${call.id}`, {
       method: "POST",
@@ -126,9 +132,11 @@ export const ActiveCalls = () => {
                     <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
                     <td>
                       {isDispatch ? (
-                        <Button small variant="success" onClick={() => handleManageClick(call)}>
-                          {common("manage")}
-                        </Button>
+                        <>
+                          <Button small variant="success" onClick={() => handleManageClick(call)}>
+                            {common("manage")}
+                          </Button>
+                        </>
                       ) : (
                         <>
                           <Button disabled={!unit} small onClick={() => handleManageClick(call)}>
@@ -146,6 +154,10 @@ export const ActiveCalls = () => {
                           )}
                         </>
                       )}
+
+                      <Button small className="ml-2" onClick={() => handleCallTow(call)}>
+                        {"Call Tow"}
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -154,6 +166,8 @@ export const ActiveCalls = () => {
           </div>
         )}
       </div>
+
+      <DispatchCallTowModal call={tempCall} />
 
       {isDispatch ? (
         <Manage911CallModal

@@ -11,6 +11,7 @@ import format from "date-fns/format";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -20,15 +21,16 @@ interface Props {
 
 export default function MyOfficersLogs({ logs: data }: Props) {
   const [logs, setLogs] = React.useState(data);
-  const t = useTranslations("Leo");
-
   const [officerId, setOfficerId] = React.useState<string | null>(null);
+
+  const t = useTranslations("Leo");
+  const generateCallsign = useGenerateCallsign();
 
   const filtered = logs.filter((v) => (officerId ? v.officerId === officerId : true));
   const officers = logs.reduce(
     (ac, cv) => ({
       ...ac,
-      [cv.officerId]: makeUnitName(cv.officer),
+      [cv.officerId]: `${generateCallsign(cv.officer as any)} ${makeUnitName(cv.officer)}`,
     }),
     {},
   );
@@ -47,7 +49,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
         <h1 className="text-3xl font-semibold">{t("myOfficerLogs")}</h1>
 
         <div className="flex">
-          <div className="w-40 ml-3">
+          <div className="w-52 ml-3">
             <FormField label="Group By Officer">
               <Select
                 isClearable
@@ -83,7 +85,9 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
                 return (
                   <tr key={log.id}>
-                    <td className="capitalize">{makeUnitName(log.officer)}</td>
+                    <td className="capitalize">
+                      {generateCallsign(log.officer as any)} {makeUnitName(log.officer)}
+                    </td>
                     <td>{startedAt}</td>
                     <td>{log.endedAt !== null ? endedAt : t("notEndedYet")}</td>
                     <td>

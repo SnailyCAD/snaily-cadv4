@@ -32,7 +32,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.UpdateTowCall, call);
   }
 
-  async emitCallDelete(call: TowCall) {
+  async emitTowCallEnd(call: TowCall) {
     this.io.sockets.emit(SocketEvents.EndTowCall, call);
   }
 

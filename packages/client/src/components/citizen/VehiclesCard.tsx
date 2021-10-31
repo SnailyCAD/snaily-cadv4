@@ -8,6 +8,7 @@ import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import format from "date-fns/format";
+import { classNames } from "lib/classNames";
 
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
@@ -71,7 +72,11 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
               </thead>
               <tbody>
                 {vehicles.map((vehicle) => (
-                  <tr key={vehicle.id}>
+                  <tr
+                    className={classNames(vehicle.impounded && "opacity-50")}
+                    aria-disabled={vehicle.impounded}
+                    key={vehicle.id}
+                  >
                     <td>{vehicle.plate.toUpperCase()}</td>
                     <td>{vehicle.model.value}</td>
                     <td>{vehicle.color}</td>

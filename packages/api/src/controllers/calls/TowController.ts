@@ -1,4 +1,4 @@
-import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
+import { Controller, QueryParams, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
@@ -20,8 +20,15 @@ export class TowController {
   }
 
   @Get("/")
-  async getTowCalls() {
+  async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
+      where: includingEnded
+        ? undefined
+        : {
+            NOT: {
+              ended: true,
+            },
+          },
       include: {
         assignedUnit: {
           select: CITIZEN_SELECTS,
@@ -140,13 +147,16 @@ export class TowController {
       throw new NotFound("notFound");
     }
 
-    await prisma.towCall.delete({
+    await prisma.towCall.update({
       where: {
         id: call.id,
       },
+      data: {
+        ended: true,
+      },
     });
 
-    await this.socket.emitCallDelete(call);
+    await this.socket.emitTowCallEnd(call);
 
     return true;
   }

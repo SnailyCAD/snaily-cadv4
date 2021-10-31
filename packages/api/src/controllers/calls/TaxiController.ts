@@ -83,8 +83,6 @@ export class TowController {
       throw new BadRequest(error);
     }
 
-    console.log({ callId });
-
     const call = await prisma.taxiCall.findUnique({
       where: {
         id: callId,
