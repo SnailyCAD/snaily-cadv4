@@ -84,6 +84,7 @@ export default function MyDeputies({ deputies: data }: Props) {
                 <th>{t("Leo.badgeNumber")}</th>
                 <th>{t("Leo.department")}</th>
                 <th>{t("Leo.division")}</th>
+                <th>{t("Leo.rank")}</th>
                 <th>{common("actions")}</th>
               </tr>
             </thead>
@@ -104,6 +105,7 @@ export default function MyDeputies({ deputies: data }: Props) {
                   <td>{String(deputy.badgeNumber)}</td>
                   <td>{deputy.department.value?.value}</td>
                   <td>{deputy.division?.value?.value}</td>
+                  <td>{deputy.rank?.value}</td>
                   <td className="w-36">
                     <Button small onClick={() => handleEditClick(deputy)} variant="success">
                       {common("edit")}

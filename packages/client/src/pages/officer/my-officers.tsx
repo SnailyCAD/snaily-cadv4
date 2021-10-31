@@ -85,6 +85,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 <th>{t("badgeNumber")}</th>
                 <th>{t("department")}</th>
                 <th>{t("division")}</th>
+                <th>{t("rank")}</th>
                 <th>{common("actions")}</th>
               </tr>
             </thead>
@@ -105,6 +106,7 @@ export default function MyOfficers({ officers: data }: Props) {
                   <td>{String(officer.badgeNumber)}</td>
                   <td>{officer.department.value?.value}</td>
                   <td>{officer.division?.value?.value}</td>
+                  <td>{officer.rank?.value ?? common("none")}</td>
                   <td className="w-36">
                     <Button small onClick={() => handleEditClick(officer)} variant="success">
                       {common("edit")}
