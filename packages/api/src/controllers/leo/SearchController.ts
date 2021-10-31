@@ -43,7 +43,7 @@ export class SearchController {
   async searchName(@BodyParams() body: JsonRequestBody) {
     const [name, surname] = body.get("name").toString().toLowerCase().split(/ +/g);
 
-    if (!name && !surname) {
+    if ((!name || name.length <= 3) && !surname) {
       return [];
     }
 
@@ -55,44 +55,32 @@ export class SearchController {
       include: citizenSearchInclude,
     });
 
-    if (!citizen) {
+    if (citizen.length <= 0) {
       citizen = await prisma.citizen.findMany({
         where: {
-          name: { contains: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude,
-      });
-    }
-
-    if (!citizen) {
-      citizen = await prisma.citizen.findMany({
-        where: {
+          name: { contains: surname, mode: "insensitive" },
           surname: { contains: name, mode: "insensitive" },
         },
         include: citizenSearchInclude,
       });
     }
 
-    if (!citizen) {
+    if (citizen.length <= 0 && (!name || !surname)) {
       citizen = await prisma.citizen.findMany({
         where: {
-          name: { contains: surname, mode: "insensitive" },
+          name: { startsWith: name, mode: "insensitive" },
         },
         include: citizenSearchInclude,
       });
     }
 
-    if (!citizen) {
+    if (citizen.length <= 0 && (!name || !surname)) {
       citizen = await prisma.citizen.findMany({
         where: {
-          surname: { contains: surname, mode: "insensitive" },
+          surname: { startsWith: name, mode: "insensitive" },
         },
         include: citizenSearchInclude,
       });
-    }
-
-    if (!citizen) {
-      throw new NotFound("citizenNotFound");
     }
 
     return citizen;
@@ -133,7 +121,9 @@ export class SearchController {
     // not using Prisma's `OR` since it doesn't seem to be working 🤔
     let vehicle = await prisma.registeredVehicle.findFirst({
       where: {
-        plate: plateOrVin.toUpperCase(),
+        plate: {
+          startsWith: plateOrVin.toUpperCase(),
+        },
       },
       include: {
         citizen: true,
@@ -145,7 +135,9 @@ export class SearchController {
     if (!vehicle) {
       vehicle = await prisma.registeredVehicle.findFirst({
         where: {
-          vinNumber: plateOrVin,
+          vinNumber: {
+            startsWith: plateOrVin,
+          },
         },
         include: {
           citizen: true,

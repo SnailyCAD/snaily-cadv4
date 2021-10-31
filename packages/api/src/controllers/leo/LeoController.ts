@@ -276,6 +276,13 @@ export class LeoController {
         rank: true,
         division: { include: { value: true } },
         status: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -379,7 +386,17 @@ export class LeoController {
         userId: ctx.get("user").id,
       },
       include: {
-        officer: true,
+        officer: {
+          include: {
+            citizen: {
+              select: {
+                name: true,
+                surname: true,
+                id: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         startedAt: "desc",
@@ -410,6 +427,13 @@ export class LeoController {
         rank: true,
         division: { include: { value: true } },
         status: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -471,6 +495,13 @@ export class LeoController {
         rank: true,
         division: { include: { value: true } },
         status: { include: { value: true } },
+        citizen: {
+          select: {
+            name: true,
+            surname: true,
+            id: true,
+          },
+        },
       },
     });
 
