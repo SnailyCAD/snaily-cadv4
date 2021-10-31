@@ -72,7 +72,14 @@
     "panicButtonLeo": "{officer} has pressed the panic button.",
     "viewAllResults": "View All Results",
     "vehicleReportedStolen": "WARNING: This vehicle was reported stolen.",
+    "impoundLot": "Impound Lot",
+    "noImpoundedVehicles": "There are no impounded vehicles",
+    "allowCheckout": "Allow Checkout",
+    "plate": "Plate",
+    "location": "Location",
+    "model": "Model",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
-    "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone."
+    "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
+    "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?"
   }
 }

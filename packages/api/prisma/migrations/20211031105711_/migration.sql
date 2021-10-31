@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "ValueType" ADD VALUE 'IMPOUND_LOT';

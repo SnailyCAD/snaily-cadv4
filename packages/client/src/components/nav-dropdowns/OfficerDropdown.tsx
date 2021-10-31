@@ -10,7 +10,7 @@ export const OfficerDropdown = () => {
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { user } = useAuth();
 
-  const items = ["My Officers", "My Officer Logs"];
+  const items = ["My Officers", "My Officer Logs", "Impound Lot"];
 
   return (
     <>

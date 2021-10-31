@@ -144,23 +144,24 @@ enum WhitelistStatus {
 }
 
 model RegisteredVehicle {
-  id                   String       @id @default(cuid())
-  user                 User         @relation(fields: [userId], references: [id])
+  id                   String             @id @default(cuid())
+  user                 User               @relation(fields: [userId], references: [id])
   userId               String
-  citizen              Citizen      @relation(fields: [citizenId], references: [id])
+  citizen              Citizen            @relation(fields: [citizenId], references: [id])
   citizenId            String
-  vinNumber            String       @unique @db.VarChar(255)
-  plate                String       @unique @db.VarChar(255)
-  model                VehicleValue @relation(fields: [modelId], references: [id])
+  vinNumber            String             @unique @db.VarChar(255)
+  plate                String             @unique @db.VarChar(255)
+  model                VehicleValue       @relation(fields: [modelId], references: [id])
   modelId              String
-  color                String       @db.VarChar(255)
-  createdAt            DateTime     @default(now())
-  registrationStatus   Value        @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
+  color                String             @db.VarChar(255)
+  createdAt            DateTime           @default(now())
+  registrationStatus   Value              @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  insuranceStatus      String       @db.VarChar(255)
-  reportedStolen       Boolean      @default(false)
-  impounded            Boolean      @default(false)
+  insuranceStatus      String             @db.VarChar(255)
+  reportedStolen       Boolean            @default(false)
+  impounded            Boolean            @default(false)
   TruckLog             TruckLog[]
+  ImpoundedVehicle     ImpoundedVehicle[]
 }
 
 model Weapon {
@@ -216,6 +217,8 @@ model Value {
   driversLicenseCategoryToValue   DriversLicenseCategoryValue[] @relation("driversLicenseCategoryToValue")
   VehicleValue                    VehicleValue[]                @relation("vehicleValueToValue")
   WeaponValue                     WeaponValue[]                 @relation("weaponValueToValue")
+  ImpoundedVehicle                ImpoundedVehicle[]
+  TowCall                         TowCall[]
 }
 
 model PenalCode {
@@ -334,7 +337,8 @@ model TowCall {
   assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
   assignedUnitId    String?
   location          String   @db.VarChar(255)
-  deliveryAddress   String?  @db.VarChar(255)
+  deliveryAddress   Value?    @relation(fields: [deliveryAddressId], references: [id])
+  deliveryAddressId String?
   plate             String?  @db.VarChar(255)
   model             String?  @db.VarChar(255)
   description       String   @db.Text
@@ -466,6 +470,14 @@ model OfficerLog {
   userId    String
   officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId String
+}
+
+model ImpoundedVehicle {
+  id                  String            @id @default(uuid())
+  vehicle             RegisteredVehicle @relation(fields: [registeredVehicleId], references: [id])
+  registeredVehicleId String
+  location            Value             @relation(fields: [valueId], references: [id])
+  valueId             String
 }
 
 enum StatusEnum {

@@ -59,10 +59,14 @@ export class TowController {
     if (creatorId) {
       const extraWhere = plate
         ? {
-            emsFdDeputies: { some: { citizenId: creatorId } },
-            OR: {
-              officers: { some: { citizenId: creatorId } },
-            },
+            OR: [
+              {
+                officers: { some: { citizenId: creatorId } },
+              },
+              {
+                emsFdDeputies: { some: { citizenId: creatorId } },
+              },
+            ],
           }
         : {};
 
@@ -92,6 +96,13 @@ export class TowController {
         throw new NotFound("vehicleNotFound");
       }
 
+      await prisma.impoundedVehicle.create({
+        data: {
+          valueId: deliveryAddress,
+          registeredVehicleId: vehicle.id,
+        },
+      });
+
       await prisma.registeredVehicle.update({
         where: {
           id: vehicle.id,
@@ -108,7 +119,7 @@ export class TowController {
         userId: user.id,
         description: body.get("description"),
         location: body.get("location"),
-        deliveryAddress: deliveryAddress || null,
+        deliveryAddressId: deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
       },

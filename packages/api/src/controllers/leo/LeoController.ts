@@ -2,7 +2,6 @@ import {
   Res,
   Controller,
   UseBeforeEach,
-  Use,
   Req,
   PlatformMulterFile,
   MultipartFile,
@@ -345,7 +344,7 @@ export class LeoController {
     return logs;
   }
 
-  @Use(ActiveOfficer)
+  @UseBefore(ActiveOfficer)
   @Get("/active-officer")
   async getActiveOfficer(@Context() ctx: Context) {
     return ctx.get("activeOfficer");
@@ -411,7 +410,7 @@ export class LeoController {
   }
 
   @Post("/panic-button")
-  @Use(ActiveOfficer)
+  @UseBefore(ActiveOfficer)
   async panicButton(@Context("activeOfficer") officer: Officer) {
     let fullOfficer = await prisma.officer.findUnique({
       where: {
@@ -440,6 +439,48 @@ export class LeoController {
 
     this.socket.emitUpdateOfficerStatus();
     this.socket.emitPanicButtonLeo(fullOfficer);
+  }
+
+  @UseBefore(IsLeo)
+  @Get("/impounded-vehicles")
+  async getImpoundedVehicles() {
+    const vehicles = await prisma.impoundedVehicle.findMany({
+      include: {
+        location: true,
+        vehicle: {
+          include: { model: { include: { value: true } } },
+        },
+      },
+    });
+
+    return vehicles;
+  }
+
+  @UseBefore(IsLeo)
+  @Delete("/impounded-vehicles/:id")
+  async checkoutImpoundedVehicle(@PathParams("id") id: string) {
+    const vehicle = await prisma.impoundedVehicle.findUnique({
+      where: { id },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("vehicleNotFound");
+    }
+
+    await prisma.impoundedVehicle.delete({
+      where: {
+        id,
+      },
+    });
+
+    await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.registeredVehicleId,
+      },
+      data: { impounded: false },
+    });
+
+    return true;
   }
 }
 

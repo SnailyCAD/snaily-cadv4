@@ -472,6 +472,18 @@ export type VehicleValue = {
 };
 
 /**
+ * Model ImpoundedVehicle
+ */
+
+export type ImpoundedVehicle = {
+  id: string;
+  registeredVehicleId: string;
+  valueId: string;
+  location: Value<"IMPOUND_LOT">;
+  vehicle: RegisteredVehicle;
+};
+
+/**
  * Enums
  */
 
