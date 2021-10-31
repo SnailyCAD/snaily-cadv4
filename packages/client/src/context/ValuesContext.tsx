@@ -12,46 +12,25 @@ import {
   VehicleValue,
 } from "types/prisma";
 
-type ContextValue<T extends ValueType> = {
+type ContextValue<T extends ValueType, Custom = Value<T>> = {
   type: ValueType;
-  values: Value<T>[];
+  values: Custom extends undefined ? Value<T>[] : Custom[];
 };
 
 interface Context {
   license: ContextValue<"LICENSE">;
   gender: ContextValue<"GENDER">;
   ethnicity: ContextValue<"ETHNICITY">;
-  weapon: ContextValue<"WEAPON">;
+  weapon: ContextValue<"WEAPON", VehicleValue>;
   bloodGroup: ContextValue<"BLOOD_GROUP">;
   officerRank: ContextValue<"OFFICER_RANK">;
-  division: {
-    type: ValueType;
-    values: DivisionValue[];
-  };
-  businessRole: {
-    type: ValueType;
-    values: EmployeeValue[];
-  };
-  codes10: {
-    type: ValueType;
-    values: StatusValue[];
-  };
-  penalCode: {
-    type: ValueType;
-    values: PenalCode[];
-  };
-  department: {
-    type: ValueType;
-    values: DepartmentValue[];
-  };
-  driverslicenseCategory: {
-    type: ValueType;
-    values: DriversLicenseCategoryValue[];
-  };
-  vehicle: {
-    type: ValueType;
-    values: VehicleValue[];
-  };
+  division: ContextValue<"DIVISION", DivisionValue>;
+  businessRole: ContextValue<"BUSINESS_ROLE", EmployeeValue>;
+  codes10: ContextValue<"CODES_10", StatusValue>;
+  vehicle: ContextValue<"VEHICLE", VehicleValue>;
+  penalCode: ContextValue<"PENAL_CODE", PenalCode>;
+  department: ContextValue<"DEPARTMENT", DepartmentValue>;
+  driverslicenseCategory: ContextValue<"DRIVERSLICENSE_CATEGORY", DriversLicenseCategoryValue>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);

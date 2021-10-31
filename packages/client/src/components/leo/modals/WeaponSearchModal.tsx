@@ -74,7 +74,7 @@ export const WeaponSearchModal = () => {
                 <ul className="mt-2">
                   <li>
                     <span className="font-semibold">{wT("model")}: </span>
-                    {results.model.value}
+                    {results.model.value.value}
                   </li>
                   <li>
                     <span className="font-semibold">{wT("registrationStatus")}: </span>
@@ -120,6 +120,5 @@ export const WeaponSearchModal = () => {
 
 interface WeaponSearchResult extends Weapon {
   citizen: Citizen;
-  model: Value<"WEAPON">;
   registrationStatus: Value<"LICENSE">;
 }

@@ -179,7 +179,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            {type === "VEHICLE" ? (
+            {["VEHICLE", "WEAPON"].includes(type) ? (
               <FormField fieldId="as" label="Game Hash">
                 <Input id="hash" onChange={handleChange} value={values.hash} />
               </FormField>

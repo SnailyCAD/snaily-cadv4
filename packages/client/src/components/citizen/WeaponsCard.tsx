@@ -68,7 +68,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
               <tbody>
                 {weapons.map((weapon) => (
                   <tr key={weapon.id}>
-                    <td>{weapon.model.value}</td>
+                    <td>{weapon.model.value.value}</td>
                     <td>{weapon.registrationStatus.value}</td>
                     <td>{weapon.serialNumber}</td>
                     <td className="w-36">

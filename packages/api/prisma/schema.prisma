@@ -170,10 +170,10 @@ model Weapon {
   citizen   Citizen @relation(fields: [citizenId], references: [id])
   citizenId String
 
-  serialNumber         String @unique @db.VarChar(255)
-  registrationStatus   Value  @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
+  serialNumber         String      @unique @db.VarChar(255)
+  registrationStatus   Value       @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  model                Value  @relation("weaponModelToValue", fields: [modelId], references: [id])
+  model                WeaponValue @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
 }
 
@@ -207,7 +207,6 @@ model Value {
   ccwToValue                      Citizen[]                     @relation("ccwToValue")
   registrationStatusToValue       RegisteredVehicle[]           @relation("registrationStatusToValue")
   weaponRegistrationStatusToValue Weapon[]                      @relation("weaponRegistrationStatusToValue")
-  weaponModelToValue              Weapon[]                      @relation("weaponModelToValue")
   EmployeeValue                   EmployeeValue[]
   officerRankToValue              Officer[]                     @relation("officerRankToValue")
   StatusValueToValue              StatusValue[]                 @relation("StatusValueToValue")
@@ -216,6 +215,7 @@ model Value {
   departmentToValue               DepartmentValue[]             @relation("departmentToValue")
   driversLicenseCategoryToValue   DriversLicenseCategoryValue[] @relation("driversLicenseCategoryToValue")
   VehicleValue                    VehicleValue[]                @relation("vehicleValueToValue")
+  WeaponValue                     WeaponValue[]                 @relation("weaponValueToValue")
 }
 
 model PenalCode {
@@ -264,6 +264,14 @@ model VehicleValue {
   value             Value               @relation("vehicleValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash              String?
   RegisteredVehicle RegisteredVehicle[]
+}
+
+model WeaponValue {
+  id      String   @id @default(cuid())
+  valueId String
+  value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  hash    String?
+  weapon  Weapon[] @relation("weaponModelToValue")
 }
 
 enum ValueType {

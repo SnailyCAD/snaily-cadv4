@@ -94,7 +94,7 @@ export const RegisterWeaponModal = ({
               <Select
                 hasError={!!errors.model}
                 values={weapons.values.map((weapon) => ({
-                  label: weapon.value,
+                  label: weapon.value.value,
                   value: weapon.id,
                 }))}
                 value={values.model}

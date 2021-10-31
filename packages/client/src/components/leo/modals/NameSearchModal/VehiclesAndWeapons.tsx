@@ -35,7 +35,7 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
                 {vehicles.map((vehicle) => (
                   <tr key={vehicle.id}>
                     <td>{vehicle.plate.toUpperCase()}</td>
-                    <td>{vehicle.model.value}</td>
+                    <td>{vehicle.model.value.value}</td>
                     <td>{vehicle.color}</td>
                     <td>{vehicle.registrationStatus.value}</td>
                     <td>{vehicle.vinNumber}</td>
@@ -66,7 +66,7 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
               <tbody>
                 {weapons.map((weapon) => (
                   <tr key={weapon.id}>
-                    <td>{weapon.model.value}</td>
+                    <td>{weapon.model.value.value}</td>
                     <td>{weapon.registrationStatus.value}</td>
                     <td>{weapon.serialNumber}</td>
                   </tr>

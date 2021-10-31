@@ -40,7 +40,7 @@ export class CitizenController {
         },
         weapons: {
           include: {
-            model: true,
+            model: { include: { value: true } },
             registrationStatus: true,
           },
         },

@@ -39,7 +39,7 @@ export class WeaponController {
         userId: user.id,
       },
       include: {
-        model: true,
+        model: { include: { value: true } },
         registrationStatus: true,
       },
     });
@@ -79,7 +79,7 @@ export class WeaponController {
         serialNumber: body.get("serialNumber") || weapon.serialNumber,
       },
       include: {
-        model: true,
+        model: { include: { value: true } },
         registrationStatus: true,
       },
     });

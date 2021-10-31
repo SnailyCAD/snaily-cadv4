@@ -78,7 +78,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                     key={vehicle.id}
                   >
                     <td>{vehicle.plate.toUpperCase()}</td>
-                    <td>{vehicle.model.value}</td>
+                    <td>{vehicle.model.value.value}</td>
                     <td>{vehicle.color}</td>
                     <td>{vehicle.registrationStatus.value}</td>
                     <td>{vehicle.vinNumber}</td>

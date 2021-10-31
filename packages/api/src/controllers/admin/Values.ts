@@ -46,6 +46,17 @@ export class ValuesController {
           };
         }
 
+        if (type === "WEAPON") {
+          return {
+            type,
+            values: await prisma.weaponValue.findMany({
+              include: {
+                value: true,
+              },
+            }),
+          };
+        }
+
         if (type === "BUSINESS_ROLE") {
           return {
             type,
@@ -221,6 +232,18 @@ export class ValuesController {
       return vehicleValue;
     }
 
+    if (type === "WEAPON") {
+      const weaponValue = await prisma.weaponValue.create({
+        data: {
+          valueId: value.id,
+          hash: body.get("hash") || null,
+        },
+        include: { value: true },
+      });
+
+      return weaponValue;
+    }
+
     if (type === "DIVISION") {
       if (!body.get("departmentId")) {
         throw new BadRequest("departmentIdRequired");
@@ -319,6 +342,16 @@ export class ValuesController {
 
     if (type === "VEHICLE") {
       await prisma.vehicleValue.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "WEAPON") {
+      await prisma.weaponValue.delete({
         where: {
           id,
         },
@@ -482,6 +515,25 @@ export class ValuesController {
       });
 
       return vehicleValue;
+    }
+
+    if (type === "WEAPON") {
+      const weaponValue = await prisma.weaponValue.update({
+        where: {
+          id,
+        },
+        data: {
+          value: {
+            update: {
+              value: body.get("value"),
+            },
+          },
+          hash: body.get("hash") || null,
+        },
+        include: { value: true },
+      });
+
+      return weaponValue;
     }
 
     const updated = await prisma.value.update({
