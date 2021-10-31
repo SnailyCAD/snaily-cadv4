@@ -5,6 +5,7 @@ import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "../../middlewares";
 import { Socket } from "../../services/SocketService";
+import { User } from ".prisma/client";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -44,28 +45,72 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Post("/")
-  async createTowCall(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
+  async createTowCall(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
     const error = validate(TOW_SCHEMA, body.toJSON(), true);
     if (error) {
       throw new BadRequest(error);
     }
 
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: body.get("creatorId"),
-      },
-    });
+    const creatorId = body.get("creatorId");
+    const plate = body.get("plate");
+    const deliveryAddress = body.get("deliveryAddress");
+    let citizen;
 
-    if (!citizen || citizen.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
+    if (creatorId) {
+      const extraWhere = plate
+        ? {
+            emsFdDeputies: { some: { citizenId: creatorId } },
+            OR: {
+              officers: { some: { citizenId: creatorId } },
+            },
+          }
+        : {};
+
+      citizen = await prisma.citizen.findFirst({
+        where: {
+          userId: user.id,
+          id: creatorId,
+          ...extraWhere,
+        },
+      });
+
+      if (!citizen) {
+        throw new NotFound("notFound");
+      }
+    }
+
+    let vehicle;
+    if (plate && deliveryAddress) {
+      vehicle = await prisma.registeredVehicle.findUnique({
+        where: {
+          plate,
+        },
+        include: { model: { include: { value: true } } },
+      });
+
+      if (!vehicle) {
+        throw new NotFound("vehicleNotFound");
+      }
+
+      await prisma.registeredVehicle.update({
+        where: {
+          id: vehicle.id,
+        },
+        data: {
+          impounded: true,
+        },
+      });
     }
 
     const call = await prisma.towCall.create({
       data: {
         creatorId: body.get("creatorId"),
-        userId: ctx.get("user").id,
+        userId: user.id,
         description: body.get("description"),
         location: body.get("location"),
+        deliveryAddress: deliveryAddress || null,
+        plate: vehicle?.plate.toUpperCase() ?? null,
+        model: vehicle?.model.value.value ?? null,
       },
       include: {
         assignedUnit: {

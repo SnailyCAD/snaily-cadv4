@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import Head from "next/head";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -28,7 +29,13 @@ export default function SupervisorPanelPage({ units }: Props) {
 
   return (
     <AdminLayout>
-      <div className="overflow-x-auto w-full mt-3">
+      <Head>
+        <title>{t("Management.MANAGE_UNITS")}</title>
+      </Head>
+
+      <h1 className="text-3xl font-semibold mb-4">{t("Management.MANAGE_UNITS")}</h1>
+
+      <div className="overflow-x-auto w-full">
         <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
           <thead>
             <tr>

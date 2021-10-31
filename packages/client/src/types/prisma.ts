@@ -507,6 +507,7 @@ export const valueType = {
   OFFICER_RANK: "OFFICER_RANK",
   DIVISION: "DIVISION",
   DRIVERSLICENSE_CATEGORY: "DRIVERSLICENSE_CATEGORY",
+  IMPOUND_LOT: "IMPOUND_LOT",
 } as const;
 
 export type ValueType = typeof valueType[keyof typeof valueType];

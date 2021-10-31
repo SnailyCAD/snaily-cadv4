@@ -45,7 +45,9 @@ export const ActiveCalls = () => {
       ? activeDeputy
       : null;
 
-  const isUnitAssigned = (call: Full911Call) => call.assignedUnits.some((v) => v.id === unit?.id);
+  const isUnitAssigned = (call: Full911Call) =>
+    call.assignedUnits.some((v) => v.unit.id === unit?.id);
+
   const makeUnit = (unit: AssignedUnit) =>
     `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
@@ -155,7 +157,12 @@ export const ActiveCalls = () => {
                         </>
                       )}
 
-                      <Button small className="ml-2" onClick={() => handleCallTow(call)}>
+                      <Button
+                        disabled={!isDispatch && !unit}
+                        small
+                        className="ml-2"
+                        onClick={() => handleCallTow(call)}
+                      >
                         {"Call Tow"}
                       </Button>
                     </td>

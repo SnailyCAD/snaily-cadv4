@@ -73,7 +73,11 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
               <tbody>
                 {vehicles.map((vehicle) => (
                   <tr
-                    className={classNames(vehicle.impounded && "opacity-50")}
+                    title={vehicle.impounded ? "This vehicle is impounded." : undefined}
+                    aria-label={vehicle.impounded ? "This vehicle is impounded." : undefined}
+                    className={classNames(
+                      vehicle.impounded && "opacity-50 select-none cursor-not-allowed",
+                    )}
                     aria-disabled={vehicle.impounded}
                     key={vehicle.id}
                   >
@@ -84,10 +88,16 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
                     <td>{vehicle.vinNumber}</td>
                     <td>{format(new Date(vehicle.createdAt), "yyyy-MM-dd")}</td>
                     <td className="w-36">
-                      <Button onClick={() => handleEditClick(vehicle)} small variant="success">
+                      <Button
+                        disabled={vehicle.impounded}
+                        onClick={() => handleEditClick(vehicle)}
+                        small
+                        variant="success"
+                      >
                         {common("edit")}
                       </Button>
                       <Button
+                        disabled={vehicle.impounded}
                         className="ml-2"
                         onClick={() => handleDeleteClick(vehicle)}
                         small

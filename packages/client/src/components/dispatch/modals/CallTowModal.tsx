@@ -8,6 +8,7 @@ import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
+import { useValues } from "context/ValuesContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -31,6 +32,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const { activeOfficer, officers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
+  const { impoundLot } = useValues();
 
   const citizensFrom =
     router.pathname === "/officer" ? officers : router.pathname === "/ems-fd" ? deputies : [];
@@ -98,22 +100,27 @@ export const DispatchCallTowModal = ({ call }: Props) => {
             </FormField>
 
             <FormField label={"Delivery Address"}>
-              <Input
-                onChange={handleChange}
+              <Select
+                isClearable
                 name="deliveryAddress"
+                onChange={handleChange}
+                values={impoundLot.values.map((lot) => ({
+                  label: lot.value,
+                  value: lot.id,
+                }))}
                 value={values.deliveryAddress}
               />
               <Error>{errors.deliveryAddress}</Error>
             </FormField>
 
-            <FormField label={"Model"}>
-              <Input onChange={handleChange} name="model" value={values.model} />
-              <Error>{errors.model}</Error>
-            </FormField>
-
             <FormField label={"Plate"}>
               <Input onChange={handleChange} name="plate" value={values.plate} />
               <Error>{errors.plate}</Error>
+            </FormField>
+
+            <FormField label={"Model"}>
+              <Input onChange={handleChange} name="model" value={values.model} />
+              <Error>{errors.model}</Error>
             </FormField>
 
             <FormField label={common("description")}>
@@ -136,7 +143,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                   type="submit"
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}
-                  {call ? common("save") : common("create")}
+                  {common("create")}
                 </Button>
               </div>
             </footer>

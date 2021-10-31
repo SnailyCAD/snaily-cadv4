@@ -10,6 +10,10 @@ import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD } from "../../lib/cad";
 import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 
+// expire after 5 hours
+const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
+const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
+
 @Controller("/auth")
 export class AuthController {
   @Post("/login")
@@ -47,11 +51,11 @@ export class AuthController {
       throw new BadRequest("passwordIncorrect");
     }
 
-    const jwtToken = signJWT({ userId: user.id }, 60 * 60);
+    const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
     setCookie({
       res,
       name: Cookie.Session,
-      expires: 60 * 60 * 1000,
+      expires: AUTH_TOKEN_EXPIRES_MS,
       value: jwtToken,
     });
 
@@ -123,11 +127,11 @@ export class AuthController {
       throw new BadRequest("whitelistPending");
     }
 
-    const jwtToken = signJWT({ userId: user.id }, 60 * 60);
+    const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
     setCookie({
       res,
       name: Cookie.Session,
-      expires: 60 * 60 * 1000,
+      expires: AUTH_TOKEN_EXPIRES_MS,
       value: jwtToken,
     });
 

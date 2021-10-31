@@ -81,5 +81,11 @@
     "ADD": "Add Category",
     "DELETE": "Delete Category",
     "EDIT": "Edit Category"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Manage Impound Lots",
+    "ADD": "Add Impound Lot",
+    "DELETE": "Delete Impound Lot",
+    "EDIT": "Edit Impound Lot"
   }
 }

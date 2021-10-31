@@ -10,20 +10,15 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth, IsDispatch } from "../../middlewares";
 import { UseBefore } from "@tsed/common";
 import { ShouldDoType, Officer, EmsFdDeputy } from ".prisma/client";
+import { unitProperties } from "../../lib/officer";
 
 const assignedUnitsInclude = {
   include: {
     officer: {
-      include: {
-        department: { include: { value: true } },
-        division: { include: { value: true } },
-      },
+      include: unitProperties,
     },
     deputy: {
-      include: {
-        department: { include: { value: true } },
-        division: { include: { value: true } },
-      },
+      include: unitProperties,
     },
   },
 };
@@ -301,7 +296,7 @@ export class Calls911Controller {
       throw new BadRequest("unitIsRequired");
     }
 
-    const unit = await this.findUnit(rawUnit);
+    const { unit, type } = await this.findUnit(rawUnit, undefined, true);
 
     if (!unit) {
       throw new NotFound("unitNotFound");
@@ -315,16 +310,27 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    const updated = await prisma.call911.update({
+    const existing = await prisma.assignedUnit.findFirst({
+      where: {
+        call911Id: callId,
+        [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+      },
+    });
+
+    if (existing) {
+      throw new BadRequest("alreadyAssignedToCall");
+    }
+
+    await prisma.assignedUnit.create({
+      data: {
+        call911Id: callId,
+        [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+      },
+    });
+
+    const updated = await prisma.call911.findUnique({
       where: {
         id: call.id,
-      },
-      data: {
-        assignedUnits: {
-          connect: {
-            id: unit.id,
-          },
-        },
       },
       include: {
         events: true,

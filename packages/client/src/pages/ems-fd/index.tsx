@@ -103,7 +103,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const [values, calls, { deputies, citizens }, activeDeputy] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code", []],
+    ["/admin/values/codes_10?paths=penal_code,impound_lot", []],
     ["/911-calls", []],
     ["/ems-fd", { deputies: [], citizens: [] }],
     ["/ems-fd/active-deputy", null],

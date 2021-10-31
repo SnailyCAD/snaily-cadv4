@@ -288,6 +288,7 @@ enum ValueType {
   OFFICER_RANK
   DIVISION
   DRIVERSLICENSE_CATEGORY
+  IMPOUND_LOT
 }
 
 enum DriversLicenseCategoryType {

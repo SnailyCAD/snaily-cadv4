@@ -413,13 +413,32 @@ export class LeoController {
   @Post("/panic-button")
   @Use(ActiveOfficer)
   async panicButton(@Context("activeOfficer") officer: Officer) {
-    const fullOfficer = await prisma.officer.findUnique({
+    let fullOfficer = await prisma.officer.findUnique({
       where: {
         id: officer.id,
       },
       include: unitProperties,
     });
 
+    const code = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: ShouldDoType.PANIC_BUTTON,
+      },
+    });
+
+    if (code) {
+      fullOfficer = await prisma.officer.update({
+        where: {
+          id: officer.id,
+        },
+        data: {
+          statusId: code.id,
+        },
+        include: unitProperties,
+      });
+    }
+
+    this.socket.emitUpdateOfficerStatus();
     this.socket.emitPanicButtonLeo(fullOfficer);
   }
 }

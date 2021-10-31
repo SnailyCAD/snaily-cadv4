@@ -31,6 +31,7 @@ interface Context {
   penalCode: ContextValue<"PENAL_CODE", PenalCode>;
   department: ContextValue<"DEPARTMENT", DepartmentValue>;
   driverslicenseCategory: ContextValue<"DRIVERSLICENSE_CATEGORY", DriversLicenseCategoryValue>;
+  impoundLot: ContextValue<"IMPOUND_LOT">;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
