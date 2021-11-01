@@ -173,7 +173,7 @@ export class CitizenController {
       },
     });
 
-    await this.linkDlCategories(citizen.id, driversLicenseCategory, pilotLicenseCategory);
+    await linkDlCategories(citizen.id, driversLicenseCategory, pilotLicenseCategory);
 
     return citizen;
   }
@@ -282,48 +282,84 @@ export class CitizenController {
 
     return data;
   }
+}
 
-  private async linkDlCategories(
-    citizenId: string,
-    driversLicenseCategory?: string[],
-    pilotLicenseCategory?: string[],
-  ) {
-    if (driversLicenseCategory) {
-      await Promise.all(
-        driversLicenseCategory.map(async (id) => {
-          await prisma.citizen.update({
-            where: {
-              id: citizenId,
-            },
-            data: {
-              dlCategory: {
-                connect: {
-                  id,
-                },
+export async function linkDlCategories(
+  citizenId: string,
+  driversLicenseCategory?: string[],
+  pilotLicenseCategory?: string[],
+) {
+  if (driversLicenseCategory) {
+    await Promise.all(
+      driversLicenseCategory.map(async (id) => {
+        await prisma.citizen.update({
+          where: {
+            id: citizenId,
+          },
+          data: {
+            dlCategory: {
+              connect: {
+                id,
               },
             },
-          });
-        }),
-      );
-    }
-
-    if (pilotLicenseCategory) {
-      await Promise.all(
-        pilotLicenseCategory.map(async (id) => {
-          await prisma.citizen.update({
-            where: {
-              id: citizenId,
-            },
-            data: {
-              dlPilotCategory: {
-                connect: {
-                  id,
-                },
-              },
-            },
-          });
-        }),
-      );
-    }
+          },
+        });
+      }),
+    );
   }
+
+  if (pilotLicenseCategory) {
+    await Promise.all(
+      pilotLicenseCategory.map(async (id) => {
+        await prisma.citizen.update({
+          where: {
+            id: citizenId,
+          },
+          data: {
+            dlPilotCategory: {
+              connect: {
+                id,
+              },
+            },
+          },
+        });
+      }),
+    );
+  }
+}
+
+export async function unlinkDlCategories(citizenId: string) {
+  const citizen = await prisma.citizen.findUnique({
+    where: {
+      id: citizenId,
+    },
+    select: {
+      dlPilotCategory: true,
+      dlCategory: true,
+    },
+  });
+
+  await Promise.all([
+    [...citizen!.dlCategory, ...citizen!.dlPilotCategory].map(async (v) => {
+      const t =
+        v.type === "AUTOMOTIVE"
+          ? "dlCategory"
+          : v.type === "AVIATION"
+          ? "dlPilotCategory"
+          : "dlCategory";
+
+      await prisma.citizen.update({
+        where: {
+          id: citizenId,
+        },
+        data: {
+          [t]: {
+            disconnect: {
+              id: v.id,
+            },
+          },
+        },
+      });
+    }),
+  ]);
 }

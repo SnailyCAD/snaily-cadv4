@@ -17,14 +17,19 @@ import { useCitizen } from "context/CitizenContext";
 export const ManageLicensesModal = () => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const { license } = useValues();
-  const t = useTranslations("Common");
+  const { license, driverslicenseCategory } = useValues();
+  const common = useTranslations("Common");
+  const t = useTranslations("Citizen");
   const { citizen, setCurrentCitizen } = useCitizen();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute(`/licenses/${citizen!.id}`, {
       method: "PUT",
-      data: values,
+      data: {
+        ...values,
+        driversLicenseCategory: values.driversLicenseCategory.map((v) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v) => v.value),
+      },
     });
 
     if (json?.id) {
@@ -43,6 +48,14 @@ export const ManageLicensesModal = () => {
     pilotLicense: citizen.pilotLicenseId ?? "",
     weaponLicense: citizen.weaponLicenseId ?? "",
     ccw: citizen.ccwId ?? "",
+    driversLicenseCategory: citizen.dlCategory.map((v) => ({
+      value: v.id,
+      label: v.value.value,
+    })),
+    pilotLicenseCategory: citizen.dlPilotCategory.map((v) => ({
+      value: v.id,
+      label: v.value.value,
+    })),
   };
 
   return (
@@ -55,7 +68,7 @@ export const ManageLicensesModal = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="driversLicense" label={"driversLicense"}>
+            <FormField fieldId="driversLicense" label={t("driversLicense")}>
               <Select
                 hasError={!!errors.driversLicense}
                 values={license.values.map((license) => ({
@@ -69,7 +82,24 @@ export const ManageLicensesModal = () => {
               <Error>{errors.driversLicense}</Error>
             </FormField>
 
-            <FormField fieldId="weaponLicense" label={"weaponLicense"}>
+            <FormField fieldId="driversLicenseCategory" label={t("driversLicenseCategory")}>
+              <Select
+                isMulti
+                hasError={!!errors.driversLicenseCategory}
+                values={driverslicenseCategory.values
+                  .filter((v) => v.type === "AUTOMOTIVE")
+                  .map((category) => ({
+                    label: category.value.value,
+                    value: category.id,
+                  }))}
+                value={values.driversLicenseCategory}
+                name="driversLicenseCategory"
+                onChange={handleChange}
+              />
+              <Error>{errors.driversLicenseCategory}</Error>
+            </FormField>
+
+            <FormField fieldId="weaponLicense" label={t("weaponLicense")}>
               <Select
                 hasError={!!errors.weaponLicense}
                 values={license.values.map((license) => ({
@@ -82,7 +112,8 @@ export const ManageLicensesModal = () => {
               />
               <Error>{errors.weaponLicense}</Error>
             </FormField>
-            <FormField fieldId="pilotLicense" label={"pilotLicense"}>
+
+            <FormField fieldId="pilotLicense" label={t("pilotLicense")}>
               <Select
                 hasError={!!errors.pilotLicense}
                 values={license.values.map((license) => ({
@@ -95,7 +126,25 @@ export const ManageLicensesModal = () => {
               />
               <Error>{errors.pilotLicense}</Error>
             </FormField>
-            <FormField fieldId="ccw" label={"ccw"}>
+
+            <FormField fieldId="pilotLicenseCategory" label={t("pilotLicenseCategory")}>
+              <Select
+                isMulti
+                hasError={!!errors.pilotLicenseCategory}
+                values={driverslicenseCategory.values
+                  .filter((v) => v.type === "AVIATION")
+                  .map((category) => ({
+                    label: category.value.value,
+                    value: category.id,
+                  }))}
+                value={values.pilotLicenseCategory}
+                name="pilotLicenseCategory"
+                onChange={handleChange}
+              />
+              <Error>{errors.pilotLicenseCategory}</Error>
+            </FormField>
+
+            <FormField fieldId="ccw" label={t("ccw")}>
               <Select
                 hasError={!!errors.ccw}
                 values={license.values.map((license) => ({
@@ -115,7 +164,7 @@ export const ManageLicensesModal = () => {
                 onClick={() => closeModal(ModalIds.ManageLicenses)}
                 variant="cancel"
               >
-                {t("cancel")}
+                {common("cancel")}
               </Button>
               <Button
                 className="flex items-center"
@@ -123,7 +172,7 @@ export const ManageLicensesModal = () => {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("save")}
+                {common("save")}
               </Button>
             </footer>
           </form>

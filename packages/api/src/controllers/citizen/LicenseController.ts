@@ -6,6 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares/IsAuth";
+import { linkDlCategories, unlinkDlCategories } from "./CitizenController";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -33,7 +34,9 @@ export class LicensesController {
       throw new NotFound("notFound");
     }
 
-    const updated = await prisma.citizen.update({
+    await unlinkDlCategories(citizen.id);
+
+    await prisma.citizen.update({
       where: {
         id: citizen.id,
       },
@@ -43,11 +46,25 @@ export class LicensesController {
         pilotLicenseId: body.get("pilotLicense"),
         weaponLicenseId: body.get("weaponLicense"),
       },
+    });
+
+    await linkDlCategories(
+      citizen.id,
+      body.get("driversLicenseCategory"),
+      body.get("pilotLicenseCategory"),
+    );
+
+    const updated = await prisma.citizen.findUnique({
+      where: {
+        id: citizen.id,
+      },
       include: {
         weaponLicense: true,
         driversLicense: true,
         ccw: true,
         pilotLicense: true,
+        dlCategory: { include: { value: true } },
+        dlPilotCategory: { include: { value: true } },
       },
     });
 

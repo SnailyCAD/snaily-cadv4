@@ -41,7 +41,7 @@ export const LicensesCard = () => {
                   {citizen[type]?.value ?? common("none")}
                 </p>
 
-                {category ? (
+                {category && category.length > 0 ? (
                   <p className="pl-3">
                     <span className="font-semibold">{common("categories")}: </span>
                     {category.map((v) => v?.value?.value).join(", ")}
