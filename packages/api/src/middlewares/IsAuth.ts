@@ -48,8 +48,6 @@ export class IsAuth implements MiddlewareMethods {
       if (isDisabled) {
         throw new BadRequest("routeIsDisabled");
       }
-
-      console.log({ header });
     } else {
       user = await getSessionUser(req, true);
       ctx.set("user", user);

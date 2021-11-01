@@ -1,9 +1,9 @@
+import { User } from ".prisma/client";
 import { Cookie } from "@snailycad/config";
 import { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { verifyJWT } from "../utils/jwt";
-import { getSessionUser } from "./auth";
 import { prisma } from "./prisma";
 
 export const unitProperties = {
@@ -14,13 +14,11 @@ export const unitProperties = {
   rank: true,
 };
 
-export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
+export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   const header = req.headers.cookie;
   if (!header) {
     throw new BadRequest("noActiveOfficer");
   }
-
-  const user = await getSessionUser(req);
 
   if (!user.isDispatch || !user.isLeo) {
     throw new Forbidden("Invalid Permissions");
@@ -49,7 +47,7 @@ export async function getActiveOfficer(req: Req, userId: string, ctx: Context) {
 
   const officer = await prisma.officer.findFirst({
     where: {
-      userId,
+      userId: user.id,
       id: jwtPayload?.officerId,
     },
     include: unitProperties,

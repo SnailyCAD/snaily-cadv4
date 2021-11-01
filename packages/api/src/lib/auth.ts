@@ -4,6 +4,7 @@ import { parse } from "cookie";
 import { Cookie } from "@snailycad/config";
 import { verifyJWT } from "../utils/jwt";
 import { prisma } from "./prisma";
+import { User } from ".prisma/client";
 
 export const userProperties = {
   id: true,
@@ -23,7 +24,7 @@ export const userProperties = {
   tempPassword: true,
 };
 
-export async function getSessionUser(req: Req, throwErrors = false) {
+export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
   const header = req.headers.cookie;
 
   if (throwErrors && !header) {
@@ -37,19 +38,23 @@ export async function getSessionUser(req: Req, throwErrors = false) {
     throw new Unauthorized("Unauthorized");
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: jwtPayload?.userId ?? "0000000",
-    },
-    select: userProperties,
-  });
+  const user = jwtPayload
+    ? await prisma.user.findUnique({
+        where: {
+          id: jwtPayload?.userId,
+        },
+        select: userProperties,
+      })
+    : null;
 
-  if (!throwErrors && !user) return null as unknown as any;
+  if (!throwErrors && !user) {
+    return null as unknown as User;
+  }
 
   if (throwErrors && !user) {
     throw new NotFound("notFound");
   }
 
   const { tempPassword, ...rest } = user! ?? {};
-  return { ...rest, hasTempPassword: !!tempPassword };
+  return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as unknown as User;
 }

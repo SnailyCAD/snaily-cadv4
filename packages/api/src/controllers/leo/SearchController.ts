@@ -118,12 +118,12 @@ export class SearchController {
       return null;
     }
 
-    // todo: not using Prisma's `OR` since it doesn't seem to be working 🤔
-    let vehicle = await prisma.registeredVehicle.findFirst({
+    const vehicle = await prisma.registeredVehicle.findFirst({
       where: {
-        plate: {
-          startsWith: plateOrVin.toUpperCase(),
-        },
+        OR: [
+          { plate: { startsWith: plateOrVin.toUpperCase() } },
+          { vinNumber: { startsWith: plateOrVin } },
+        ],
       },
       include: {
         citizen: true,
@@ -131,21 +131,6 @@ export class SearchController {
         registrationStatus: true,
       },
     });
-
-    if (!vehicle) {
-      vehicle = await prisma.registeredVehicle.findFirst({
-        where: {
-          vinNumber: {
-            startsWith: plateOrVin,
-          },
-        },
-        include: {
-          citizen: true,
-          model: { include: { value: true } },
-          registrationStatus: true,
-        },
-      });
-    }
 
     if (!vehicle) {
       throw new NotFound("vehicleNotFound");
