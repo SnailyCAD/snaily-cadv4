@@ -203,16 +203,25 @@ export class TowController {
       throw new NotFound("notFound");
     }
 
-    await prisma.towCall.update({
+    const updated = await prisma.towCall.update({
       where: {
         id: call.id,
       },
       data: {
         ended: true,
       },
+
+      include: {
+        assignedUnit: {
+          select: CITIZEN_SELECTS,
+        },
+        creator: {
+          select: CITIZEN_SELECTS,
+        },
+      },
     });
 
-    await this.socket.emitTowCallEnd(call);
+    await this.socket.emitTowCallEnd(updated);
 
     return true;
   }

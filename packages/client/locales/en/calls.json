@@ -1,6 +1,7 @@
 {
   "Calls": {
     "tow": "Tow",
+    "towLogs": "Tow Logs",
     "taxi": "Taxi",
     "active911Calls": "Active 911 Calls",
     "noTowCalls": "There are no tow calls yet.",

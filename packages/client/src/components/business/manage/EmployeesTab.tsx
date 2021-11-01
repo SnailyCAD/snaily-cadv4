@@ -78,7 +78,7 @@ export const EmployeesTab = () => {
           >
             <div>
               <span className="font-semibold text-xl">
-                {employee.citizen.surname} {employee.citizen.name}
+                {employee.citizen.name} {employee.citizen.surname}
               </span>
               <p>
                 <span className="font-semibold">{t("role")}: </span>

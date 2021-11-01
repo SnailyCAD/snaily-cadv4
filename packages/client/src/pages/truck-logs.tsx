@@ -88,7 +88,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             <tbody>
               {logs.map((log) => (
                 <tr key={log.id}>
-                  <td>
+                  <td className="capitalize">
                     {log.citizen.name} {log.citizen.surname}
                   </td>
                   <td>{log.vehicle?.model.value.value}</td>

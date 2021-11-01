@@ -9,9 +9,12 @@ import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./nav-dropdowns/CitizenDropdown";
 import { OfficerDropdown } from "./nav-dropdowns/OfficerDropdown";
 import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { TowDropdown } from "./nav-dropdowns/TowDropdown";
 
 export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
   const { user, cad } = useAuth();
+  const { TOW } = useFeatureEnabled();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
 
@@ -31,6 +34,8 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
 
             <ul className="hidden md:flex items-center space-x-1">
               <CitizenDropdown />
+
+              {user?.isTow && TOW ? <TowDropdown /> : null}
 
               {user?.isLeo ? <OfficerDropdown /> : null}
 

@@ -33,7 +33,7 @@ export class TruckLogsController {
         userId: user.id,
       },
       include: {
-        model: true,
+        model: { include: { value: true } },
       },
     });
 
@@ -82,7 +82,7 @@ export class TruckLogsController {
         citizen: true,
         vehicle: {
           include: {
-            model: true,
+            model: { include: { value: true } },
             registrationStatus: true,
           },
         },

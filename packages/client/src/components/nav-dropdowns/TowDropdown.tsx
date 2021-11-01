@@ -3,25 +3,20 @@ import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { Feature } from "types/prisma";
 
-export const CitizenDropdown = () => {
-  const enabled = useFeatureEnabled();
+export const TowDropdown = () => {
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
-
-  const items = ["Citizens", "Taxi", "Bleeter", "Truck Logs", "Courthouse", "Business"];
 
   return (
     <>
       <Menu as="div" className="relative inline-block text-left z-50">
         <Menu.Button
           className={`flex items-center py-3 px-2 text-gray-700 transition duration-300 ${
-            isActive("/citizen") && "font-semibold"
+            isActive("/tow") && "font-semibold"
           }`}
         >
-          Citizen
+          Tow
           <span className="ml-1 mt-1">
             <ChevronDown width={15} height={15} className="text-gray-700" />
           </span>
@@ -40,42 +35,31 @@ export const CitizenDropdown = () => {
             <div className="px-1 py-1 ">
               <Menu.Item>
                 {({ active }) => (
-                  <Link href="/citizen">
+                  <Link href="/tow">
                     <a
                       className={`${
                         active ? "bg-gray-200" : "text-gray-900"
                       } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
                     >
-                      Citizens
+                      Dashboard
                     </a>
                   </Link>
                 )}
               </Menu.Item>
 
-              {items.map((item) => {
-                const upperCase = item.replace(/ +/g, "_").toUpperCase() as Feature;
-                const lower = item.replace(/ +/g, "-").toLowerCase();
-
-                if (!enabled[upperCase]) {
-                  return null;
-                }
-
-                return (
-                  <Menu.Item key={item}>
-                    {({ active }) => (
-                      <Link href={`/${lower}`}>
-                        <a
-                          className={`${
-                            active ? "bg-gray-200" : "text-gray-900"
-                          } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
-                        >
-                          {item}
-                        </a>
-                      </Link>
-                    )}
-                  </Menu.Item>
-                );
-              })}
+              <Menu.Item>
+                {({ active }) => (
+                  <Link href="/tow/logs">
+                    <a
+                      className={`${
+                        active ? "bg-gray-200" : "text-gray-900"
+                      } block hover:bg-gray-200 group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
+                    >
+                      Tow Log
+                    </a>
+                  </Link>
+                )}
+              </Menu.Item>
             </div>
           </Menu.Items>
         </Transition>
