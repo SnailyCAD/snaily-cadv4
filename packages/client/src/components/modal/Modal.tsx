@@ -47,7 +47,7 @@ export const Modal = ({ title, children, isOpen, className, onClose }: ModalProp
             leaveTo="opacity-0 scale-95"
           >
             <div
-              className={`z-30 inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
+              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
             >
               <Dialog.Title
                 as="h3"

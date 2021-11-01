@@ -80,7 +80,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
       isOpen={isOpen(ModalIds.ManageUnit)}
       onClose={handleClose}
       title={`${common("manage")} ${unit.callsign} ${makeUnitName(unit)}`}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (

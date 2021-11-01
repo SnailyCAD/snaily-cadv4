@@ -145,7 +145,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={title}
       onClose={() => closeModal("manageValue")}
       isOpen={isOpen("manageValue")}

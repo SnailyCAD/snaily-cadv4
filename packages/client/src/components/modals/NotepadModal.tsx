@@ -20,7 +20,7 @@ export const NotepadModal = () => {
       isOpen={isOpen(ModalIds.Notepad)}
       onClose={() => closeModal(ModalIds.Notepad)}
       title={"notepad"}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Textarea className="min-h-[10em]" value={value} onChange={(e) => setValue(e.target.value)} />
 

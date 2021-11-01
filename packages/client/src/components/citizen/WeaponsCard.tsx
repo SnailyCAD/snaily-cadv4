@@ -111,7 +111,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
       />
 
       <AlertModal
-        className="min-w-[600px]"
+        className="w-[600px]"
         title={t("deleteWeapon")}
         id={ModalIds.AlertDeleteWeapon}
         description={t("alert_deleteWeapon")}

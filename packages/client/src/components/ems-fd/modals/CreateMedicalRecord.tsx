@@ -58,7 +58,7 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
       title={t("addMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.CreateMedicalRecord)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (

@@ -98,7 +98,7 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
       onClose={() => closeModal(ModalIds.ManageTowCall)}
       title={title}
       isOpen={isOpen(ModalIds.ManageTowCall)}
-      className="min-w-[700px]"
+      className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleSubmit, handleChange, values, isValid, errors }) => (

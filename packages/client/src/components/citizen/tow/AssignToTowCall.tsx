@@ -61,7 +61,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       title={t("selectUnit")}
       isOpen={isOpen(ModalIds.AssignToTowCall)}
       onClose={() => closeModal(ModalIds.AssignToTowCall)}
-      className="min-w-[500px]"
+      className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ values, errors, isValid, handleChange }) => (

@@ -133,7 +133,7 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
       />
 
       <AlertModal
-        className="min-w-[600px]"
+        className="w-[600px]"
         title={t("deleteVehicle")}
         id={ModalIds.AlertDeleteVehicle}
         description={t("alert_deleteVehicle")}

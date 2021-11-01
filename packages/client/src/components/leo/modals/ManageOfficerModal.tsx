@@ -108,7 +108,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
       title={officer ? t("editOfficer") : t("createOfficer")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageOfficer)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, setFieldValue, errors, values, isValid }) => (

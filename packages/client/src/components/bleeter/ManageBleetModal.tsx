@@ -82,7 +82,7 @@ export const ManageBleetModal = ({ post }: Props) => {
       title={post ? t("editBleet") : t("createBleet")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageBleetModal)}
-      className="min-w-[700px]"
+      className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, isValid, values, errors }) => (

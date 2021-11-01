@@ -39,7 +39,7 @@ export const ManageAOPModal = () => {
       isOpen={isOpen(ModalIds.ManageAOP)}
       onClose={() => closeModal(ModalIds.ManageAOP)}
       title={t("updateAOP")}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors, isValid }) => (

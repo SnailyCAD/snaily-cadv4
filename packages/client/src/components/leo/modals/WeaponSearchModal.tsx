@@ -50,7 +50,7 @@ export const WeaponSearchModal = () => {
       title={t("weaponSearch")}
       onClose={() => closeModal(ModalIds.WeaponSearch)}
       isOpen={isOpen(ModalIds.WeaponSearch)}
-      className="min-w-[750px]"
+      className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (

@@ -199,23 +199,23 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={"Manage 911 Call"}
-      className={call ? "min-w-[900px]" : "min-w-[650px]"}
+      className={call ? "w-[1000px]" : "w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, values, errors }) => (
             <Form className="w-full">
-              <FormField label="name">
+              <FormField label={common("name")}>
                 <Input id="name" value={values.name} onChange={handleChange} />
                 <Error>{errors.name}</Error>
               </FormField>
 
-              <FormField label="location">
+              <FormField label={t("location")}>
                 <Input id="location" value={values.location} onChange={handleChange} />
                 <Error>{errors.location}</Error>
               </FormField>
 
-              <FormField label="description">
+              <FormField label={common("description")}>
                 <Textarea
                   id="description"
                   className="min-h-[5em]"
@@ -226,7 +226,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
               </FormField>
 
               {isDispatch ? (
-                <FormField label="assignedUnits">
+                <FormField label={t("assignedUnits")}>
                   <Select
                     isMulti
                     name="assignedUnits"

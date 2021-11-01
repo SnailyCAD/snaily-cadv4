@@ -70,7 +70,7 @@ export const VehicleSearchModal = () => {
       title={t("plateSearch")}
       onClose={() => closeModal(ModalIds.VehicleSearch)}
       isOpen={isOpen(ModalIds.VehicleSearch)}
-      className="min-w-[750px]"
+      className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (

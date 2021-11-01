@@ -63,7 +63,7 @@ export const ManageLicensesModal = () => {
       title="Manage Licenses"
       isOpen={isOpen(ModalIds.ManageLicenses)}
       onClose={() => closeModal(ModalIds.ManageLicenses)}
-      className="min-w-[500px]"
+      className="w-[500px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, values, errors, isValid, handleChange }) => (

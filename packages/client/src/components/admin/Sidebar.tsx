@@ -18,13 +18,13 @@ export const AdminSidebar = () => {
   };
 
   const isValueActive = (type: string) => {
-    return router.asPath.includes(type.toLowerCase());
+    return router.asPath.endsWith(type.toLowerCase());
   };
 
   return (
     <div className="w-60">
       <aside
-        style={{ minHeight: "100vh" }}
+        style={{ minHeight: "calc(100vh - 5rem)" }}
         className="absolute w-60 left-0 -top-2 bg-gray-200 rounded-md py-2"
       >
         <section>

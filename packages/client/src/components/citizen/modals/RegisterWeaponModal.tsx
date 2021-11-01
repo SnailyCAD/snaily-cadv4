@@ -85,7 +85,7 @@ export const RegisterWeaponModal = ({
       title={t("registerWeapon")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.RegisterWeapon)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (

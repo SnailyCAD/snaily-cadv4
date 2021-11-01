@@ -109,7 +109,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
       title={deputy ? t("Ems.editDeputy") : t("Ems.createDeputy")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageDeputy)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (

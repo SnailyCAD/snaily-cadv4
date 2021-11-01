@@ -70,7 +70,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       title={t(data[type].title)}
       onClose={() => closeModal(data[type].id)}
       isOpen={isOpen(data[type].id)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (

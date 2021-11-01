@@ -81,7 +81,7 @@ export const ManageTruckLogModal = ({
       onClose={handleClose}
       title={log ? t("editTruckLog") : t("createTruckLog")}
       isOpen={isOpen(ModalIds.ManageTruckLog)}
-      className="min-w-[700px]"
+      className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleSubmit, handleChange, values, isValid, errors }) => (

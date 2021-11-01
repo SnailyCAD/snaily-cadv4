@@ -13,6 +13,9 @@
     "noBusinesses": "There are no businesses for this CAD yet.",
     "user": "User",
     "owner": "Owner",
+    "GENERAL_SETTINGS": "General Settings",
+    "FEATURES": "Features",
+    "MISC_SETTINGS": "Misc Settings",
     "deleteBusiness": "Delete Business",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
   }

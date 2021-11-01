@@ -61,7 +61,7 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={t("joinBusiness")}
       isOpen={isOpen(ModalIds.JoinBusiness)}
       onClose={handleClose}

@@ -23,8 +23,6 @@ import { Tab } from "@headlessui/react";
 import { MiscFeatures } from "components/admin/manage/MiscFeatures";
 import { requestAll } from "lib/utils";
 
-const SETTINGS_TABS = ["GENERAL_SETTINGS", "FEATURES", "MISC_SETTINGS"];
-
 export default function CadSettings() {
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
@@ -32,6 +30,8 @@ export default function CadSettings() {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+
+  const SETTINGS_TABS = [t("GENERAL_SETTINGS"), t("FEATURES"), t("MISC_SETTINGS")];
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/admin/manage/cad-settings", {

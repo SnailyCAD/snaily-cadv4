@@ -53,7 +53,7 @@ export const AddressSearchModal = () => {
       title={t("addressSearch")}
       onClose={() => closeModal(ModalIds.AddressSearch)}
       isOpen={isOpen(ModalIds.AddressSearch)}
-      className="min-w-[800px]"
+      className="w-[800px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (

@@ -81,7 +81,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
       isOpen={isOpen(ModalIds.ManageBolo)}
       onClose={handleClose}
       title={bolo ? "Edit Bolo" : "Create bolo"}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (

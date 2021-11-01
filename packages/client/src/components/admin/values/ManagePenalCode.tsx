@@ -62,7 +62,7 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={title}
       onClose={() => closeModal("manageValue")}
       isOpen={isOpen("manageValue")}

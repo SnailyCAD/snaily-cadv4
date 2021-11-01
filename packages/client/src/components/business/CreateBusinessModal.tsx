@@ -50,7 +50,7 @@ export const CreateBusinessModal = () => {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={t("createBusiness")}
       isOpen={isOpen(ModalIds.CreateBusiness)}
       onClose={handleClose}

@@ -34,15 +34,11 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const router = useRouter();
   const { impoundLot } = useValues();
 
-  const citizensFrom =
-    router.pathname === "/officer" ? officers : router.pathname === "/ems-fd" ? deputies : [];
+  const isLeo = router.pathname === "/officer";
+  const isDispatch = router.pathname === "/dispatch";
+  const citizensFrom = isLeo ? officers : router.pathname === "/ems-fd" ? deputies : [];
   const citizens = [...citizensFrom].map((v) => v.citizen);
-  const unit =
-    router.pathname === "/officer"
-      ? activeOfficer
-      : router.pathname === "/ems-fd"
-      ? activeDeputy
-      : null;
+  const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/tow", {
@@ -73,7 +69,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
       onClose={() => closeModal(ModalIds.ManageTowCall)}
       title={t("createTowCall")}
       isOpen={isOpen(ModalIds.ManageTowCall)}
-      className="min-w-[700px]"
+      className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleSubmit, handleChange, values, isValid, errors }) => (
@@ -99,29 +95,33 @@ export const DispatchCallTowModal = ({ call }: Props) => {
               <Error>{errors.location}</Error>
             </FormField>
 
-            <FormField label={"Delivery Address"}>
-              <Select
-                isClearable
-                name="deliveryAddress"
-                onChange={handleChange}
-                values={impoundLot.values.map((lot) => ({
-                  label: lot.value,
-                  value: lot.id,
-                }))}
-                value={values.deliveryAddress}
-              />
-              <Error>{errors.deliveryAddress}</Error>
-            </FormField>
+            {isLeo || isDispatch ? (
+              <>
+                <FormField label={"Delivery Address"}>
+                  <Select
+                    isClearable
+                    name="deliveryAddress"
+                    onChange={handleChange}
+                    values={impoundLot.values.map((lot) => ({
+                      label: lot.value,
+                      value: lot.id,
+                    }))}
+                    value={values.deliveryAddress}
+                  />
+                  <Error>{errors.deliveryAddress}</Error>
+                </FormField>
 
-            <FormField label={"Plate"}>
-              <Input onChange={handleChange} name="plate" value={values.plate} />
-              <Error>{errors.plate}</Error>
-            </FormField>
+                <FormField label={"Plate"}>
+                  <Input onChange={handleChange} name="plate" value={values.plate} />
+                  <Error>{errors.plate}</Error>
+                </FormField>
 
-            <FormField label={"Model"}>
-              <Input onChange={handleChange} name="model" value={values.model} />
-              <Error>{errors.model}</Error>
-            </FormField>
+                <FormField label={"Model"}>
+                  <Input onChange={handleChange} name="model" value={values.model} />
+                  <Error>{errors.model}</Error>
+                </FormField>
+              </>
+            ) : null}
 
             <FormField label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />

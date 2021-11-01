@@ -48,7 +48,7 @@ export const CallEventsModal = ({ call, onClose }: Props) => {
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={t("callEvents")}
-      className="min-w-[500px]"
+      className="w-[500px]"
     >
       <ul className="overflow-auto h-[250px]">
         {(call?.events.length ?? 0) <= 0 ? (

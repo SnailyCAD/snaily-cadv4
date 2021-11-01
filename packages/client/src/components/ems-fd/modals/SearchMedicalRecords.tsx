@@ -71,7 +71,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
       title={ems("searchMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.SearchMedicalRecord)}
-      className="min-w-[750px]"
+      className="w-[750px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (

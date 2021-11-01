@@ -47,7 +47,7 @@ export const CallEventsArea = ({ call }: Props) => {
   }
 
   return (
-    <div className="w-[28rem] ml-3 relative">
+    <div className="w-[35rem] ml-3 relative">
       <h4 className="font-semibold text-xl">{common("events")}</h4>
 
       <ul className="overflow-auto h-[210px]">
@@ -66,7 +66,7 @@ export const CallEventsArea = ({ call }: Props) => {
       >
         {({ handleChange, values, errors }) => (
           <Form className="absolute bottom-0 w-full">
-            <FormField label="description">
+            <FormField label={common("description")}>
               <Textarea
                 required
                 id="description"
@@ -131,16 +131,11 @@ const EventItem = ({ event, setTempEvent }: { event: Call911Event; setTempEvent:
   return (
     <li ref={actionsRef} className="flex justify-between">
       <div>
-        <span className="select-none text-gray-800 mr-1 font-semibold">{formatted}:</span>
+        <span className="select-none text-gray-800 mr-1 font-semibold w-[90%]">{formatted}:</span>
         <span>{event.description}</span>
       </div>
 
-      <div
-        className={classNames(
-          "transition-all",
-          isHovering ? "opacity-100 pointer-events-all" : "opacity-0 pointer-events-none",
-        )}
-      >
+      <div className={classNames(isHovering ? "flex" : "hidden")}>
         <Button
           className="p-0 px-0 mr-2"
           small

@@ -55,7 +55,7 @@ export const SelectOfficerModal = () => {
       title={t("selectOfficer")}
       onClose={() => closeModal(ModalIds.SelectOfficer)}
       isOpen={isOpen(ModalIds.SelectOfficer)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (

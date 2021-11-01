@@ -138,7 +138,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
                     {citizen.address}
                   </p>
                   <p>
-                    <span className="font-semibold">{t("phoneNumber")}: </span>
+                    <span className="font-semibold">{tCitizen("phoneNumber")}: </span>
                     {citizen.phoneNumber ?? common("none")}
                   </p>
                   <p>

@@ -42,7 +42,7 @@ export const CreateWarrantModal = () => {
       title={"Create Warrant"}
       isOpen={isOpen(ModalIds.CreateWarrant)}
       onClose={() => closeModal(ModalIds.CreateWarrant)}
-      className="min-w-[600px]"
+      className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors, isValid }) => (

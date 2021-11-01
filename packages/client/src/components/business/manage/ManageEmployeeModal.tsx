@@ -71,7 +71,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={t("manageEmployee")}
       isOpen={isOpen(ModalIds.ManageEmployee)}
       onClose={handleClose}

@@ -48,7 +48,7 @@ export const GiveTempPasswordModal = ({ user }: Props) => {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={"Give Temporary Password"}
       onClose={() => closeModal(ModalIds.GiveTempPassword)}
       isOpen={isOpen(ModalIds.GiveTempPassword)}

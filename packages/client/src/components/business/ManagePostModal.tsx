@@ -73,7 +73,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="w-[600px]"
       title={post ? t("editPost") : t("createPost")}
       isOpen={isOpen(ModalIds.ManageBusinessPost)}
       onClose={handleClose}
