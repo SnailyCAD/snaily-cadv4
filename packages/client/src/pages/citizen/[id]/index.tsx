@@ -244,7 +244,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
   }).catch(() => ({ data: null }));
 
   const { data: values = [] } = await handleRequest(
-    "/admin/values/weapon?paths=license,vehicle,driverslicense_category",
+    "/admin/values/weapon?paths=license,vehicle,driverslicense_category,blood_group",
   ).catch(() => ({ data: null }));
 
   return {

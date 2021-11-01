@@ -139,6 +139,8 @@ export type MedicalRecord = {
   citizenId: string;
   type: string;
   description: string;
+  bloodGroup: Value<"BLOOD_GROUP"> | null;
+  bloodGroupId: string | null;
 };
 
 /**

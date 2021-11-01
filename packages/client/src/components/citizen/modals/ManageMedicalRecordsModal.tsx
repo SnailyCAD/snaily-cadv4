@@ -14,6 +14,8 @@ import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { useCitizen } from "context/CitizenContext";
 import { Textarea } from "components/form/Textarea";
+import { Select } from "components/form/Select";
+import { useValues } from "context/ValuesContext";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -33,8 +35,7 @@ export const ManageMedicalRecordsModal = ({
   const { citizen } = useCitizen(false);
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
-
-  const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
+  const { bloodGroup } = useValues();
 
   function handleClose() {
     closeModal(ModalIds.ManageMedicalRecords);
@@ -63,9 +64,11 @@ export const ManageMedicalRecordsModal = ({
     }
   }
 
+  const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
   const INITIAL_VALUES = {
     type: medicalRecord?.type ?? "",
     description: medicalRecord?.description ?? "",
+    bloodGroup: medicalRecord?.bloodGroupId ?? "",
     citizenId: citizen.id,
   };
 
@@ -79,7 +82,7 @@ export const ManageMedicalRecordsModal = ({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="type" label={common("type")}>
+            <FormField fieldId="type" label={t("diseases")}>
               <Input
                 hasError={!!errors.type}
                 onChange={handleChange}
@@ -87,6 +90,20 @@ export const ManageMedicalRecordsModal = ({
                 value={values.type}
               />
               <Error>{errors.type}</Error>
+            </FormField>
+
+            <FormField fieldId="bloodGroup" label={t("bloodGroup")}>
+              <Select
+                values={bloodGroup.values.map((v) => ({
+                  value: v.id,
+                  label: v.value,
+                }))}
+                hasError={!!errors.bloodGroup}
+                onChange={handleChange}
+                name="bloodGroup"
+                value={values.bloodGroup}
+              />
+              <Error>{errors.bloodGroup}</Error>
             </FormField>
 
             <FormField fieldId="description" label={common("description")}>

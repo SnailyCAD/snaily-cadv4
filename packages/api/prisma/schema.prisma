@@ -185,8 +185,11 @@ model MedicalRecord {
   citizen   Citizen @relation(fields: [citizenId], references: [id])
   citizenId String
 
-  type        String @db.VarChar(255)
-  description String @db.Text
+  // type = diseases
+  type         String  @db.Text
+  description  String  @db.Text
+  bloodGroup   Value?  @relation(fields: [bloodGroupId], references: [id])
+  bloodGroupId String?
 }
 
 // admin values
@@ -219,6 +222,7 @@ model Value {
   WeaponValue                     WeaponValue[]                 @relation("weaponValueToValue")
   ImpoundedVehicle                ImpoundedVehicle[]
   TowCall                         TowCall[]
+  MedicalRecord                   MedicalRecord[]
 }
 
 model PenalCode {

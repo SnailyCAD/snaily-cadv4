@@ -66,6 +66,8 @@
     "editMedicalRecord": "Edit Medical Record",
     "noMedicalRecords": "You do not have any medical records yet.",
     "deleteMedicalRecord": "Delete Medical Record",
+    "bloodGroup": "Blood group",
+    "diseases": "Diseases",
     "alert_deleteMedicalRecord": "Are you sure you want to delete this medical record? This action cannot be undone."
   }
 }

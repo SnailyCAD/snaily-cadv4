@@ -29,7 +29,6 @@ type NameType = Exclude<
 >;
 
 const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> = {
-  PENAL_CODE: { name: "penalCode" },
   VEHICLE: { name: "vehicleValue" },
   WEAPON: { name: "weaponValue" },
   BUSINESS_ROLE: { name: "employeeValue" },
@@ -63,6 +62,13 @@ export class ValuesController {
             values: await prisma[data.name].findMany({
               include: { ...(data.include ?? {}), value: true },
             }),
+          };
+        }
+
+        if (type === "PENAL_CODE") {
+          return {
+            type,
+            values: await prisma.penalCode.findMany(),
           };
         }
 
@@ -245,6 +251,16 @@ export class ValuesController {
     if (data) {
       // @ts-expect-error ignore
       await prisma[data.name].delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "PENAL_CODE") {
+      await prisma.penalCode.delete({
         where: {
           id,
         },

@@ -198,7 +198,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
     <Modal
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
-      title={"Manage 911 Call"}
+      title={call ? "Manage 911 Call" : t("create911Call")}
       className={call ? "w-[1000px]" : "w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">
@@ -244,14 +244,16 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                 </FormField>
               ) : null}
 
-              <footer className="mt-5 flex justify-between">
-                <Button
-                  onClick={() => openModal(ModalIds.AlertEnd911Call)}
-                  type="button"
-                  variant="danger"
-                >
-                  {t("endCall")}
-                </Button>
+              <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
+                {call ? (
+                  <Button
+                    onClick={() => openModal(ModalIds.AlertEnd911Call)}
+                    type="button"
+                    variant="danger"
+                  >
+                    {t("endCall")}
+                  </Button>
+                ) : null}
 
                 <div className="flex">
                   <Button onClick={handleClose} type="button" variant="cancel">
@@ -271,13 +273,15 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
         {call ? <CallEventsArea call={call} /> : null}
       </div>
 
-      <AlertModal
-        id={ModalIds.AlertEnd911Call}
-        title={t("end911Call")}
-        description={t("alert_end911Call")}
-        onDeleteClick={handleDelete}
-        deleteText={t("endCall")}
-      />
+      {call ? (
+        <AlertModal
+          id={ModalIds.AlertEnd911Call}
+          title={t("end911Call")}
+          description={t("alert_end911Call")}
+          onDeleteClick={handleDelete}
+          deleteText={t("endCall")}
+        />
+      ) : null}
     </Modal>
   );
 };

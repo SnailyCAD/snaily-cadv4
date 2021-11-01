@@ -16,7 +16,11 @@ export class SearchController {
         name,
       },
       include: {
-        medicalRecords: true,
+        medicalRecords: {
+          include: {
+            bloodGroup: true,
+          },
+        },
       },
     });
 

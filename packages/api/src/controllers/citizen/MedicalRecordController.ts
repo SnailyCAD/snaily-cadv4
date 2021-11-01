@@ -35,6 +35,10 @@ export class MedicalRecordsController {
         userId: ctx.get("user").id,
         type: body.get("type"),
         description: body.get("description"),
+        bloodGroupId: body.get("bloodGroup") || null,
+      },
+      include: {
+        bloodGroup: true,
       },
     });
 
@@ -70,6 +74,10 @@ export class MedicalRecordsController {
       data: {
         description: body.get("description"),
         type: body.get("type"),
+        bloodGroupId: body.get("bloodGroup") || null,
+      },
+      include: {
+        bloodGroup: true,
       },
     });
 

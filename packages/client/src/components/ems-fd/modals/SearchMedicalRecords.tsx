@@ -97,7 +97,8 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
                   <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
                     <thead>
                       <tr>
-                        <th>{common("type")}</th>
+                        <th>{t("diseases")}</th>
+                        <th>{t("bloodGroup")}</th>
                         <th>{common("description")}</th>
                         <th>{common("actions")}</th>
                       </tr>
@@ -106,6 +107,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
                       {results.medicalRecords.map((record) => (
                         <tr key={record.id}>
                           <td>{record.type}</td>
+                          <td>{record.bloodGroup?.value ?? common("none")}</td>
                           <td>{record.description}</td>
                           <td className="w-[30%]">
                             <Button
