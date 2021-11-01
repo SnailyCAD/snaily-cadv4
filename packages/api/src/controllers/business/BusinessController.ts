@@ -407,6 +407,6 @@ export class BusinessController {
       },
     });
 
-    return business;
+    return { id: business.id, employeeId: employee.id };
   }
 }

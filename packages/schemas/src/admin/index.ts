@@ -20,7 +20,11 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({
-  features: z.array(z.string().regex(/BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS/)),
+  features: z.array(
+    z
+      .string()
+      .regex(/BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES/),
+  ),
 });
 
 export const BAN_SCHEMA = z.object({

@@ -19,19 +19,13 @@ import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { handleRequest } from "lib/fetch";
-import { Citizen, Value, ValueType } from "types/prisma";
+import { Citizen } from "types/prisma";
 import { Select } from "components/form/Select";
 import { useCitizen } from "context/CitizenContext";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import { useValues } from "context/ValuesContext";
 
-interface Props {
-  values: {
-    type: ValueType;
-    values: Value[];
-  }[];
-}
-
-export default function EditCitizen({ values }: Props) {
+export default function EditCitizen() {
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
@@ -39,8 +33,7 @@ export default function EditCitizen({ values }: Props) {
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const { citizen } = useCitizen();
-  const genders = values.find((v) => v.type === "GENDER")?.values ?? [];
-  const ethnicities = values.find((v) => v.type === "ETHNICITY")?.values ?? [];
+  const { gender, ethnicity } = useValues();
 
   React.useEffect(() => {
     if (!citizen) {
@@ -182,7 +175,7 @@ export default function EditCitizen({ values }: Props) {
                   value={values.gender}
                   onChange={handleChange}
                   hasError={!!errors.gender}
-                  values={genders.map((gender) => ({
+                  values={gender.values.map((gender) => ({
                     label: gender.value,
                     value: gender.id,
                   }))}
@@ -196,7 +189,7 @@ export default function EditCitizen({ values }: Props) {
                   value={values.ethnicity}
                   onChange={handleChange}
                   hasError={!!errors.ethnicity}
-                  values={ethnicities.map((ethnicity) => ({
+                  values={ethnicity.values.map((ethnicity) => ({
                     label: ethnicity.value,
                     value: ethnicity.id,
                   }))}

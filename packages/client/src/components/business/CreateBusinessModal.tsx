@@ -36,7 +36,7 @@ export const CreateBusinessModal = () => {
 
     if (json.id) {
       closeModal(ModalIds.CreateBusiness);
-      router.push(`/business/${json.id}/${json.citizenId}`);
+      router.push(`/business/${json.id}/${json.employeeId}`);
     }
   }
 

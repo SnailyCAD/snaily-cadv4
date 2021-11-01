@@ -147,6 +147,19 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
+            <FormField fieldId="allowDuplicateCitizenNames" label={"Allow Duplicate Citizen Names"}>
+              <Toggle
+                text="enable/disable"
+                toggled={values[feature.ALLOW_DUPLICATE_CITIZEN_NAMES]}
+                onClick={handleChange}
+                name={feature.ALLOW_DUPLICATE_CITIZEN_NAMES}
+              />
+              <small className="mt-2 text-base">
+                When enabled, this will allow users to create citizens with the same name (name and
+                surname)
+              </small>
+            </FormField>
+
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
               {common("save")}

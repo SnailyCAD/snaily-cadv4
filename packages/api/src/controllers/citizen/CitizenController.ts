@@ -8,7 +8,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { MiscCadSettings } from ".prisma/client";
+import { Feature, cad, MiscCadSettings } from ".prisma/client";
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -89,6 +89,7 @@ export class CitizenController {
       return new BadRequest(error);
     }
 
+    const disabledFeatures = (ctx.get("cad") as cad).disabledFeatures;
     const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings;
     if (miscSettings && miscSettings.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
@@ -126,15 +127,18 @@ export class CitizenController {
       pilotLicenseCategory: string[];
     };
 
-    const existing = await prisma.citizen.findFirst({
-      where: {
-        name,
-        surname,
-      },
-    });
+    const isEnabled = disabledFeatures.includes(Feature.ALLOW_DUPLICATE_CITIZEN_NAMES);
+    if (isEnabled) {
+      const existing = await prisma.citizen.findFirst({
+        where: {
+          name,
+          surname,
+        },
+      });
 
-    if (existing) {
-      throw new BadRequest("nameAlreadyTaken");
+      if (existing) {
+        throw new BadRequest("nameAlreadyTaken");
+      }
     }
 
     const date = new Date(dateOfBirth).getTime();

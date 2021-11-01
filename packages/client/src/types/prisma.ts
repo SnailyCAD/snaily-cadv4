@@ -32,6 +32,7 @@ export type MiscCadSettings = {
   pairedUnitSymbol: string | null;
   callsignTemplate: string | null;
   signal100Enabled: boolean;
+  allowDuplicateCitizenNames: boolean;
 };
 
 /**
@@ -533,6 +534,7 @@ export const feature = {
   TRUCK_LOGS: "TRUCK_LOGS",
   AOP: "AOP",
   BUSINESS: "BUSINESS",
+  ALLOW_DUPLICATE_CITIZEN_NAMES: "ALLOW_DUPLICATE_CITIZEN_NAMES",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];
