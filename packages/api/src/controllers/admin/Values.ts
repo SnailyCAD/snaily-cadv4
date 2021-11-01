@@ -1,4 +1,4 @@
-import { ValueType } from ".prisma/client";
+import { ValueType, PrismaClient } from ".prisma/client";
 import { CREATE_PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
 import {
   Get,
@@ -15,6 +15,33 @@ import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 
+type NameType = Exclude<
+  keyof PrismaClient,
+  | "$use"
+  | "$on"
+  | "$connect"
+  | "$disconnect"
+  | "$executeRaw"
+  | "$executeRawUnsafe"
+  | "$queryRaw"
+  | "$queryRawUnsafe"
+  | "$transaction"
+>;
+
+const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> = {
+  PENAL_CODE: { name: "penalCode" },
+  VEHICLE: { name: "vehicleValue" },
+  WEAPON: { name: "weaponValue" },
+  BUSINESS_ROLE: { name: "employeeValue" },
+  CODES_10: { name: "statusValue" },
+  DRIVERSLICENSE_CATEGORY: { name: "driversLicenseCategoryValue" },
+  DEPARTMENT: { name: "departmentValue" },
+  DIVISION: {
+    name: "divisionValue",
+    include: { department: { include: { value: true } } },
+  },
+};
+
 @Controller("/admin/values/:path")
 @UseBeforeEach(IsValidPath)
 export class ValuesController {
@@ -28,91 +55,13 @@ export class ValuesController {
       paths.map(async (path) => {
         const type = this.getTypeFromPath(path);
 
-        if (type === "PENAL_CODE") {
+        const data = GET_VALUES[type];
+        if (data) {
           return {
             type,
-            values: await prisma.penalCode.findMany(),
-          };
-        }
-
-        if (type === "VEHICLE") {
-          return {
-            type,
-            values: await prisma.vehicleValue.findMany({
-              include: {
-                value: true,
-              },
-            }),
-          };
-        }
-
-        if (type === "WEAPON") {
-          return {
-            type,
-            values: await prisma.weaponValue.findMany({
-              include: {
-                value: true,
-              },
-            }),
-          };
-        }
-
-        if (type === "BUSINESS_ROLE") {
-          return {
-            type,
-            values: await prisma.employeeValue.findMany({
-              include: {
-                value: true,
-              },
-            }),
-          };
-        }
-
-        if (type === "CODES_10") {
-          return {
-            type,
-            values: await prisma.statusValue.findMany({
-              include: {
-                value: true,
-              },
-            }),
-          };
-        }
-
-        if (type === "DIVISION") {
-          return {
-            type,
-            values: await prisma.divisionValue.findMany({
-              include: {
-                value: true,
-                department: {
-                  include: {
-                    value: true,
-                  },
-                },
-              },
-            }),
-          };
-        }
-
-        if (type === "DRIVERSLICENSE_CATEGORY") {
-          return {
-            type,
-            values: await prisma.driversLicenseCategoryValue.findMany({
-              include: {
-                value: true,
-              },
-            }),
-          };
-        }
-
-        if (type === "DEPARTMENT") {
-          return {
-            type,
-            values: await prisma.departmentValue.findMany({
-              include: {
-                value: true,
-              },
+            // @ts-expect-error ignore
+            values: await prisma[data.name].findMany({
+              include: { ...(data.include ?? {}), value: true },
             }),
           };
         }
@@ -291,68 +240,11 @@ export class ValuesController {
   async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
 
-    if (type === "CODES_10") {
-      await prisma.statusValue.delete({
-        where: {
-          id,
-        },
-      });
+    const data = GET_VALUES[type];
 
-      return true;
-    }
-
-    if (type === "PENAL_CODE") {
-      await prisma.penalCode.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "DEPARTMENT") {
-      await prisma.departmentValue.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "DRIVERSLICENSE_CATEGORY") {
-      await prisma.driversLicenseCategoryValue.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "DIVISION") {
-      await prisma.divisionValue.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "VEHICLE") {
-      await prisma.vehicleValue.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "WEAPON") {
-      await prisma.weaponValue.delete({
+    if (data) {
+      // @ts-expect-error ignore
+      await prisma[data.name].delete({
         where: {
           id,
         },
