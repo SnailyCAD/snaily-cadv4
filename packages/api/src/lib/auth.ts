@@ -23,31 +23,33 @@ export const userProperties = {
   tempPassword: true,
 };
 
-export async function getSessionUser(req: Req) {
+export async function getSessionUser(req: Req, throwErrors = false) {
   const header = req.headers.cookie;
 
-  if (!header) {
+  if (throwErrors && !header) {
     throw new Unauthorized("Unauthorized");
   }
 
-  const cookie = parse(header)[Cookie.Session];
+  const cookie = parse(header ?? "")[Cookie.Session];
   const jwtPayload = verifyJWT(cookie!);
 
-  if (!jwtPayload) {
+  if (throwErrors && !jwtPayload) {
     throw new Unauthorized("Unauthorized");
   }
 
   const user = await prisma.user.findUnique({
     where: {
-      id: jwtPayload.userId,
+      id: jwtPayload?.userId ?? "0000000",
     },
     select: userProperties,
   });
 
-  if (!user) {
+  if (!throwErrors && !user) return null as unknown as any;
+
+  if (throwErrors && !user) {
     throw new NotFound("notFound");
   }
 
-  const { tempPassword, ...rest } = user;
+  const { tempPassword, ...rest } = user! ?? {};
   return { ...rest, hasTempPassword: !!tempPassword };
 }

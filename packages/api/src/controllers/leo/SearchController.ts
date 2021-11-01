@@ -118,7 +118,7 @@ export class SearchController {
       return null;
     }
 
-    // not using Prisma's `OR` since it doesn't seem to be working 🤔
+    // todo: not using Prisma's `OR` since it doesn't seem to be working 🤔
     let vehicle = await prisma.registeredVehicle.findFirst({
       where: {
         plate: {

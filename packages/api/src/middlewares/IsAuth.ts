@@ -1,9 +1,11 @@
 import { Rank, User } from ".prisma/client";
+import { API_TOKEN_HEADER, DISABLED_API_TOKEN_ROUTES, PERMISSION_ROUTES } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
+import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "../lib/auth";
 import { prisma } from "../lib/prisma";
 
-const CAD_SELECT = (user: Pick<User, "rank">) => ({
+const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
   name: true,
   areaOfPlay: true,
@@ -11,11 +13,11 @@ const CAD_SELECT = (user: Pick<User, "rank">) => ({
   towWhitelisted: true,
   whitelisted: true,
   disabledFeatures: true,
-  liveMapSocketURl: user.rank === Rank.OWNER,
-  registrationCode: user.rank === Rank.OWNER,
-  steamApiKey: user.rank === Rank.OWNER,
-  apiTokenId: user.rank === Rank.OWNER,
-  apiToken: user.rank === Rank.OWNER,
+  liveMapSocketURl: user?.rank === Rank.OWNER,
+  registrationCode: user?.rank === Rank.OWNER,
+  steamApiKey: user?.rank === Rank.OWNER,
+  apiTokenId: user?.rank === Rank.OWNER,
+  apiToken: user?.rank === Rank.OWNER,
   discordWebhookURL: true,
   miscCadSettings: true,
   miscCadSettingsId: true,
@@ -24,7 +26,40 @@ const CAD_SELECT = (user: Pick<User, "rank">) => ({
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
   async use(@Req() req: Req, @Context() ctx: Context) {
-    const user = await getSessionUser(req);
+    const header = req.headers[API_TOKEN_HEADER];
+
+    let user;
+    if (header) {
+      const cad = await prisma.cad.findFirst({
+        select: {
+          apiToken: true,
+        },
+      });
+
+      if (!cad?.apiToken?.enabled) {
+        throw new Unauthorized("Unauthorized");
+      }
+
+      if (cad.apiToken.token !== header) {
+        throw new Unauthorized("Unauthorized");
+      }
+
+      const isDisabled = isRouteDisabled(req);
+      if (isDisabled) {
+        throw new BadRequest("routeIsDisabled");
+      }
+
+      console.log({ header });
+    } else {
+      user = await getSessionUser(req, true);
+      ctx.set("user", user);
+
+      const hasPermission = hasPermissionForReq(req, user);
+
+      if (!hasPermission) {
+        throw new Forbidden("Invalid Permissions");
+      }
+    }
 
     let cad = await prisma.cad.findFirst({
       select: CAD_SELECT(user),
@@ -51,6 +86,60 @@ export class IsAuth implements MiddlewareMethods {
     }
 
     ctx.set("cad", cad);
-    ctx.set("user", user);
   }
+}
+
+function isRouteDisabled(req: Req) {
+  const url = req.originalUrl.toLowerCase();
+  const requestMethod = req.method as any;
+
+  const route = DISABLED_API_TOKEN_ROUTES.find(([r]) => r.startsWith(url) || url.startsWith(r));
+
+  if (route) {
+    const [, methods] = route;
+
+    if (typeof methods === "string" && methods === "*") {
+      return true;
+    } else if (Array.isArray(methods) && methods.includes(requestMethod)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return false;
+}
+
+function hasPermissionForReq(req: Req, user: User) {
+  const url = req.originalUrl.toLowerCase();
+  const requestMethod = req.method as any;
+
+  const [route] = PERMISSION_ROUTES.filter(([m, r]) => {
+    if (typeof r === "string") {
+      const isTrue = r.startsWith(url) || url.startsWith(r);
+
+      if (m === "*") {
+        return isTrue;
+      }
+
+      return m.includes(requestMethod.toUpperCase()) && isTrue;
+    }
+
+    const isTrue = r.test(url) || url.match(r);
+
+    if (m === "*") {
+      return isTrue;
+    }
+
+    return m.includes(requestMethod) && isTrue;
+  });
+
+  if (route) {
+    const [, , callback] = route;
+    const hasPermission = callback(user);
+
+    return hasPermission;
+  }
+
+  return true;
 }

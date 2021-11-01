@@ -15,7 +15,7 @@ import { prisma } from "../../lib/prisma";
 import { Officer, cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
-import { IsAuth, IsLeo } from "../../middlewares";
+import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
@@ -33,7 +33,6 @@ export class LeoController {
     this.socket = socket;
   }
 
-  @UseBefore(IsLeo)
   @Get("/")
   async getUserOfficers(@Context() ctx: Context) {
     const officers = await prisma.officer.findMany({
@@ -54,7 +53,6 @@ export class LeoController {
     return { officers, citizens };
   }
 
-  @UseBefore(IsLeo)
   @Post("/")
   async createOfficer(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
@@ -101,7 +99,6 @@ export class LeoController {
     return officer;
   }
 
-  @UseBefore(IsLeo)
   @Put("/:id")
   async updateOfficer(
     @PathParams("id") officerId: string,
@@ -301,7 +298,6 @@ export class LeoController {
     return updatedOfficer;
   }
 
-  @UseBefore(IsLeo)
   @Delete("/:id")
   async deleteOfficer(@PathParams("id") officerId: string, @Context() ctx: Context) {
     const officer = await prisma.officer.findFirst({
@@ -324,7 +320,6 @@ export class LeoController {
     return true;
   }
 
-  @UseBefore(IsLeo)
   @Get("/logs")
   async getOfficerLogs(@Context() ctx: Context) {
     const logs = await prisma.officerLog.findMany({
@@ -366,7 +361,6 @@ export class LeoController {
     return Array.isArray(officers) ? officers : [officers];
   }
 
-  @UseBefore(IsLeo)
   @Post("/image/:id")
   async uploadImageToOfficer(
     @Context("user") user: User,
@@ -441,7 +435,6 @@ export class LeoController {
     this.socket.emitPanicButtonLeo(fullOfficer);
   }
 
-  @UseBefore(IsLeo)
   @Get("/impounded-vehicles")
   async getImpoundedVehicles() {
     const vehicles = await prisma.impoundedVehicle.findMany({
@@ -456,7 +449,6 @@ export class LeoController {
     return vehicles;
   }
 
-  @UseBefore(IsLeo)
   @Delete("/impounded-vehicles/:id")
   async checkoutImpoundedVehicle(@PathParams("id") id: string) {
     const vehicle = await prisma.impoundedVehicle.findUnique({

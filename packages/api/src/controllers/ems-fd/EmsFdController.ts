@@ -6,7 +6,6 @@ import {
   Req,
   MultipartFile,
   PlatformMulterFile,
-  UseBefore,
 } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import {
@@ -21,7 +20,7 @@ import { prisma } from "../../lib/prisma";
 import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
 import { setCookie } from "../../utils/setCookie";
 import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
-import { IsAuth, IsEmsFd } from "../../middlewares";
+import { IsAuth } from "../../middlewares";
 import { signJWT } from "../../utils/jwt";
 import { Socket } from "../../services/SocketService";
 import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
@@ -38,7 +37,6 @@ export class EmsFdController {
     this.socket = socket;
   }
 
-  @UseBefore(IsEmsFd)
   @Get("/")
   async getUserDeputies(@Context("user") user: User) {
     const deputies = await prisma.emsFdDeputy.findMany({
@@ -59,7 +57,6 @@ export class EmsFdController {
     return { deputies, citizens };
   }
 
-  @UseBefore(IsEmsFd)
   @Post("/")
   async createEmsFdDeputy(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
@@ -105,7 +102,6 @@ export class EmsFdController {
     return deputy;
   }
 
-  @UseBefore(IsEmsFd)
   @Put("/:id")
   async updateDeputy(
     @PathParams("id") deputyId: string,
@@ -272,7 +268,6 @@ export class EmsFdController {
     return updatedDeputy;
   }
 
-  @UseBefore(IsEmsFd)
   @Delete("/:id")
   async deleteDeputy(@PathParams("id") id: string, @Context() ctx: Context) {
     const deputy = await prisma.emsFdDeputy.findFirst({
@@ -373,7 +368,6 @@ export class EmsFdController {
     return updated;
   }
 
-  @UseBefore(IsEmsFd)
   @Post("/image/:id")
   async uploadImageToOfficer(
     @Context("user") user: User,

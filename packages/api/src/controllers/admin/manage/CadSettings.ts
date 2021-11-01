@@ -8,7 +8,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../../lib/prisma";
-import { IsAuth, IsOwner } from "../../../middlewares";
+import { IsAuth } from "../../../middlewares";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
 import { Socket } from "../../../services/SocketService";
@@ -35,7 +35,7 @@ export class ManageCitizensController {
     return { ...cad, registrationCode: !!cad!.registrationCode };
   }
 
-  @UseBefore(IsAuth, IsOwner)
+  @UseBefore(IsAuth)
   @Put("/")
   async updateCadSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(CAD_SETTINGS_SCHEMA, body.toJSON(), true);
@@ -64,7 +64,7 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth, IsOwner)
+  @UseBefore(IsAuth)
   @Put("/features")
   async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(DISABLED_FEATURES_SCHEMA, body.toJSON(), true);
@@ -84,7 +84,7 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth, IsOwner)
+  @UseBefore(IsAuth)
   @Put("/misc")
   async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(CAD_MISC_SETTINGS_SCHEMA, body.toJSON(), true);
@@ -108,7 +108,7 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth, IsOwner)
+  @UseBefore(IsAuth)
   @Put("/api-token")
   async updateApiToken(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const cad = ctx.get("cad");
@@ -145,7 +145,7 @@ export class ManageCitizensController {
     return apiToken;
   }
 
-  @UseBefore(IsAuth, IsOwner)
+  @UseBefore(IsAuth)
   @Delete("/api-token")
   async regenerateApiToken(@Context() ctx: Context) {
     const cad = ctx.get("cad");

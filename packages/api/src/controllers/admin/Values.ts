@@ -1,19 +1,11 @@
 import { ValueType, PrismaClient } from ".prisma/client";
 import { CREATE_PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
-import {
-  Get,
-  Controller,
-  PathParams,
-  UseBeforeEach,
-  UseBefore,
-  BodyParams,
-  QueryParams,
-} from "@tsed/common";
+import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
 import { Delete, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
-import { IsAdmin } from "../../middlewares/Permissions";
 import { IsValidPath } from "../../middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
+import { IsAuth } from "../../middlewares";
 
 type NameType = Exclude<
   keyof PrismaClient,
@@ -42,7 +34,7 @@ const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> 
 };
 
 @Controller("/admin/values/:path")
-@UseBeforeEach(IsValidPath)
+@UseBeforeEach(IsAuth, IsValidPath)
 export class ValuesController {
   @Get("/")
   async getValueByPath(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
@@ -89,7 +81,6 @@ export class ValuesController {
     return values;
   }
 
-  @UseBefore(IsAdmin)
   @Post("/")
   async createValueByPath(@BodyParams() body: JsonRequestBody, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
@@ -241,7 +232,6 @@ export class ValuesController {
     return value;
   }
 
-  @UseBefore(IsAdmin)
   @Delete("/:id")
   async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
@@ -278,7 +268,6 @@ export class ValuesController {
     return true;
   }
 
-  @UseBefore(IsAdmin)
   @Patch("/:id")
   async patchValueByPathAndId(
     @BodyParams() body: JsonRequestBody,
@@ -459,7 +448,6 @@ export class ValuesController {
   }
 
   @Put("/positions")
-  @UseBefore(IsAdmin)
   async updatePositions(@BodyParams() body: JsonRequestBody) {
     const ids = body.get("ids");
 

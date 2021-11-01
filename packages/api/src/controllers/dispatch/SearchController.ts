@@ -3,10 +3,10 @@ import { Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
-import { IsAuth, IsDispatch } from "../../middlewares";
+import { IsAuth } from "../../middlewares";
 
 @Controller("/search")
-@UseBeforeEach(IsAuth, IsDispatch)
+@UseBeforeEach(IsAuth)
 export class SearchController {
   @Post("/address")
   async searchAddress(@BodyParams("address") address: string) {
