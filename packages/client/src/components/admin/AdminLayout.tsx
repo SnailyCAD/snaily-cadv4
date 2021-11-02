@@ -7,7 +7,7 @@ interface Props {
 
 export const AdminLayout = ({ children }: Props) => {
   return (
-    <Layout className="relative z-10 flex min-h-screen">
+    <Layout className="relative z-10 flex">
       <div className="w-60">
         <AdminSidebar />
       </div>
