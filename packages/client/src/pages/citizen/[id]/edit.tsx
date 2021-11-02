@@ -18,12 +18,11 @@ import useFetch from "lib/useFetch";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { handleRequest } from "lib/fetch";
-import { Citizen } from "types/prisma";
 import { Select } from "components/form/Select";
 import { useCitizen } from "context/CitizenContext";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { useValues } from "context/ValuesContext";
+import { requestAll } from "lib/utils";
 
 export default function EditCitizen() {
   const { state, execute } = useFetch();
@@ -280,13 +279,10 @@ export default function EditCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
-  const { data: values = [] } = await handleRequest("/admin/values/gender?paths=ethnicity").catch(
-    () => ({ data: null }),
-  );
-
-  const { data } = await handleRequest<Citizen>(`/citizen/${query.id}`, {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
+  const [data, values] = await requestAll(req, [
+    [`/citizen/${query.id}`, null],
+    ["/admin/values/gender?paths=ethnicity", []],
+  ]);
 
   if (!data) {
     return {
