@@ -232,7 +232,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   />
                 </FormField>
 
-                <FormField fieldId="color" label="Color">
+                <FormField fieldId="color" label="Color (#HEX)">
                   <Input name="color" onChange={handleChange} value={values.color} />
                   <Error>{errors.color}</Error>
                 </FormField>
