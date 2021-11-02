@@ -5,11 +5,18 @@ interface Props {
   children: React.ReactNode;
   fieldId?: string;
   className?: string;
+  checkbox?: boolean;
 }
 
-export const FormField = ({ children, label, className, fieldId }: Props) => {
+export const FormField = ({ checkbox, children, label, className, fieldId }: Props) => {
   return (
-    <fieldset className={classNames("flex flex-col mb-3", className)}>
+    <fieldset
+      className={classNames(
+        "flex mb-3",
+        checkbox ? "flex-row items-center" : "flex-col",
+        className,
+      )}
+    >
       <label className="mb-1 dark:text-white" htmlFor={fieldId}>
         {label}
       </label>

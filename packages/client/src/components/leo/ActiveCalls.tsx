@@ -90,7 +90,7 @@ export const ActiveCalls = () => {
 
   function handleCallTow(call: Full911Call) {
     setTempCall(call);
-    openModal(ModalIds.ManageTowCall);
+    openModal(ModalIds.ManageTowCall, { call911Id: call.id });
   }
 
   async function handleAssignToCall(call: Full911Call) {

@@ -68,7 +68,7 @@ export default function TowLogs(props: Props) {
                   <td>{call.location}</td>
                   <td>{call.description}</td>
                   <td className="capitalize">
-                    {call.creator.name} {call.creator.surname}
+                    {call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch"}
                   </td>
                   <td className="capitalize">{assignedUnit(call)}</td>
                   {/* <td className="w-36">

@@ -27,7 +27,7 @@ interface Props {
 export const DispatchCallTowModal = ({ call }: Props) => {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
   const { activeOfficer, officers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
@@ -41,9 +41,10 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
     const { json } = await execute("/tow", {
       method: "POST",
-      data: values,
+      data: { ...values, ...payload, creatorId: values.creatorId || null },
     });
 
     if (json.id) {
@@ -57,8 +58,9 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const validate = handleValidate(TOW_SCHEMA);
   const INITIAL_VALUES = {
     location: call?.location ?? "",
-    creatorId: unit?.citizenId ?? "",
+    creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
+    callCountyService: false,
     deliveryAddress: "",
     model: "",
     plate: "",
@@ -72,7 +74,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleSubmit, handleChange, values, isValid, errors }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             {unit ? (
               <FormField label={"Citizen"}>
@@ -84,7 +86,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                     label: `${citizen.name} ${citizen.surname}`,
                     value: citizen.id,
                   }))}
-                  value={values.creatorId}
+                  value={values.creatorId || null}
                 />
                 <Error>{errors.creatorId}</Error>
               </FormField>
@@ -122,6 +124,17 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                 </FormField>
               </>
             ) : null}
+
+            <FormField checkbox label={"Call County Service"}>
+              <Input
+                type="checkbox"
+                name="callCountyService"
+                onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
+                checked={values.callCountyService}
+                className="w-[max-content] ml-3"
+              />
+              <Error>{errors.callCountyService}</Error>
+            </FormField>
 
             <FormField label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />

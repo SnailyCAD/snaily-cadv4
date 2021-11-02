@@ -53,6 +53,7 @@ export class TowController {
 
     const creatorId = body.get("creatorId");
     const plate = body.get("plate");
+    const call911Id = body.get("call911Id");
     const deliveryAddress = body.get("deliveryAddress");
     let citizen;
 
@@ -111,6 +112,17 @@ export class TowController {
           impounded: true,
         },
       });
+
+      if (call911Id) {
+        const event = await prisma.call911Event.create({
+          data: {
+            description: "Created a tow call",
+            call911Id,
+          },
+        });
+
+        this.socket.emitAddCallEvent(event);
+      }
     }
 
     const call = await prisma.towCall.create({
@@ -122,6 +134,7 @@ export class TowController {
         deliveryAddressId: deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
+        ended: body.get("callCountyService") || false,
       },
       include: {
         assignedUnit: {
@@ -133,7 +146,11 @@ export class TowController {
       },
     });
 
-    await this.socket.emitTowCall(call);
+    if (call.ended) {
+      await this.socket.emitTowCallEnd(call);
+    } else {
+      await this.socket.emitTowCall(call);
+    }
 
     return call;
   }
