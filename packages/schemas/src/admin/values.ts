@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const VALUE_SCHEMA = z.object({
-  value: z.string().min(2).max(255),
+  value: z.string().min(1).max(255),
 });
 
 export const CREATE_PENAL_CODE_SCHEMA = z.object({

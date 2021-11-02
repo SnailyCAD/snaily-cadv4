@@ -703,6 +703,7 @@ __metadata:
     preact: ^10.5.15
     react: ^17.0.2
     react-bootstrap-icons: ^1.6.1
+    react-colorful: ^5.5.0
     react-dom: ^17.0.2
     react-hot-toast: ^2.1.1
     react-markdown: ^7.1.0
@@ -7819,6 +7820,16 @@ __metadata:
   peerDependencies:
     react: ^16.8.6 || ^17
   checksum: a3cc168cb98accabc437ded46cd58190fedaafd86dfc4835cd918793c431b6180ad058a0cb6b91dc627352c2f56370ee14b41bbea07e35fca2ec31515f3c092b
+  languageName: node
+  linkType: hard
+
+"react-colorful@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-colorful@npm:5.5.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: aaffa002d9372f692238a29229ff1e991d6d0077f4f83dcdf88ad3106a0737aa56e415a71b91fb585f8532e04f09d3f0fabbc5cd8291137206dc3c1a0d70674f
   languageName: node
   linkType: hard
 

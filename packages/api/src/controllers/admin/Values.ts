@@ -240,9 +240,15 @@ export class ValuesController {
 
     if (data) {
       // @ts-expect-error ignore
-      await prisma[data.name].delete({
+      const deleted = await prisma[data.name].delete({
         where: {
           id,
+        },
+      });
+
+      await prisma.value.delete({
+        where: {
+          id: deleted.valueId,
         },
       });
 
