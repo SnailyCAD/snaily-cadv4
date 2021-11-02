@@ -30,6 +30,8 @@ model cad {
   miscCadSettingsId String?
   apiToken          ApiToken?        @relation(fields: [apiTokenId], references: [id])
   apiTokenId        String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @default(now()) @updatedAt
 }
 
 model MiscCadSettings {
@@ -75,6 +77,8 @@ model User {
   isDarkTheme     Boolean         @default(true)
   tempPassword    String?
   statusViewMode  StatusViewMode  @default(DOT_COLOR)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @default(now()) @updatedAt
 
   // relational data
   citizens             Citizen[]
@@ -147,6 +151,8 @@ model Citizen {
   TaxiCall         TaxiCall[]
   createdTaxiCalls TaxiCall[]                    @relation("taxiCallCreator")
   truckLogs        TruckLog[]
+  createdAt        DateTime                      @default(now())
+  updatedAt        DateTime                      @default(now()) @updatedAt
 }
 
 enum Rank {
@@ -173,6 +179,7 @@ model RegisteredVehicle {
   modelId              String
   color                String             @db.VarChar(255)
   createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @default(now()) @updatedAt
   registrationStatus   Value              @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
   insuranceStatus      String             @db.VarChar(255)
@@ -183,12 +190,13 @@ model RegisteredVehicle {
 }
 
 model Weapon {
-  id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  citizen   Citizen @relation(fields: [citizenId], references: [id])
-  citizenId String
-
+  id                   String      @id @default(cuid())
+  user                 User        @relation(fields: [userId], references: [id])
+  userId               String
+  citizen              Citizen     @relation(fields: [citizenId], references: [id])
+  citizenId            String
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @default(now()) @updatedAt
   serialNumber         String      @unique @db.VarChar(255)
   registrationStatus   Value       @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
@@ -197,11 +205,13 @@ model Weapon {
 }
 
 model MedicalRecord {
-  id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  citizen   Citizen @relation(fields: [citizenId], references: [id])
+  citizen   Citizen  @relation(fields: [citizenId], references: [id])
   citizenId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   // type = diseases
   type         String  @db.Text
@@ -217,7 +227,7 @@ model Value {
   value     String    @db.VarChar(255)
   isDefault Boolean
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @default(now()) @updatedAt
   position  Int?
 
   // how to clean this up?!
@@ -246,7 +256,7 @@ model Value {
 model PenalCode {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   title       String   @db.VarChar(255)
   description String   @db.Text
   records     Record[]
@@ -330,13 +340,15 @@ enum DriversLicenseCategoryType {
 
 // notifications
 model Notification {
-  id          String @id @default(uuid())
-  user        User   @relation(fields: [userId], references: [id])
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
-  executor    User   @relation("executor", fields: [executorId], references: [id])
+  executor    User     @relation("executor", fields: [executorId], references: [id])
   executorId  String
   title       String
   description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
 
 // bleeter
@@ -348,12 +360,12 @@ model BleeterPost {
   body      String   @db.Text
   imageId   String?  @db.VarChar(255)
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 // tow
 model TowCall {
   id                String   @id @default(uuid())
-  createdAt         DateTime @default(now())
   user              User     @relation(fields: [userId], references: [id])
   userId            String
   assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
@@ -368,12 +380,13 @@ model TowCall {
   creatorId         String?
   ended             Boolean  @default(false)
   callCountyService Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
 }
 
 // taxi
 model TaxiCall {
   id             String   @id @default(uuid())
-  createdAt      DateTime @default(now())
   user           User     @relation(fields: [userId], references: [id])
   userId         String
   assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
@@ -382,21 +395,23 @@ model TaxiCall {
   description    String   @db.Text
   creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id])
   creatorId      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 }
 
 // businesses
 model Business {
-  id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  citizen   Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId String
-
+  id            String         @id @default(cuid())
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  citizen       Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId     String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
   name          String         @db.VarChar(255)
   whitelisted   Boolean        @default(false)
   address       String         @db.Text
   businessPosts BusinessPost[]
-  createdAt     DateTime       @default(now())
   employees     Employee[]
 }
 
@@ -414,6 +429,8 @@ model Employee {
   canCreatePosts     Boolean         @default(true)
   whitelistStatus    WhitelistStatus @default(ACCEPTED)
   businessPosts      BusinessPost[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @default(now()) @updatedAt
 }
 
 model BusinessPost {
@@ -428,6 +445,7 @@ model BusinessPost {
   title     String   @db.VarChar(255)
   body      String   @db.Text
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model EmployeeValue {
@@ -464,6 +482,8 @@ model Officer {
   citizenId                   String
   user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
+  createdAt                   DateTime        @default(now())
+  updatedAt                   DateTime        @default(now()) @updatedAt
   bolos                       Bolo[]          @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
@@ -515,6 +535,7 @@ model LeoIncident {
   injuriesOrFatalities Boolean   @default(false)
   arrestsMade          Boolean   @default(false)
   createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
 }
 
 enum StatusEnum {
@@ -540,7 +561,7 @@ enum ShouldDoType {
 model Call911 {
   id            String         @id @default(cuid())
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  updatedAt     DateTime       @default(now()) @updatedAt
   user          User           @relation(fields: [userId], references: [id])
   userId        String
   assignedUnits AssignedUnit[]
@@ -563,6 +584,7 @@ model AssignedUnit {
 model Call911Event {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
   call        Call911  @relation(fields: [call911Id], references: [id])
   call911Id   String
   description String   @db.Text
@@ -571,7 +593,7 @@ model Call911Event {
 model Bolo {
   id          String   @id @default(cuid())
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   type        BoloType
   description String   @db.Text
   plate       String?  @db.VarChar(255)
@@ -598,6 +620,7 @@ model Record {
   officerId  String
   violations PenalCode[]
   createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @default(now()) @updatedAt
   postal     String      @db.VarChar(255)
   notes      String?     @db.Text
 }
@@ -617,6 +640,7 @@ model Warrant {
   description String        @db.Text
   status      WarrantStatus @default(ACTIVE)
   createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @default(now()) @updatedAt
 }
 
 enum WarrantStatus {
@@ -644,6 +668,8 @@ model EmsFdDeputy {
   citizenId    String
   user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @default(now()) @updatedAt
   AssignedUnit AssignedUnit[]
 }
 
