@@ -50,8 +50,6 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       ))
     );
 
-  // todo: active officer
-
   return (
     <Layout>
       <Head>
