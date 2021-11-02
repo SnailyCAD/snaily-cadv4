@@ -83,7 +83,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   ]);
 
   return (
-    <Layout className="max-w-[100rem]">
+    <Layout>
       <Head>
         <title>{t("officer")} - SnailyCAD</title>
       </Head>

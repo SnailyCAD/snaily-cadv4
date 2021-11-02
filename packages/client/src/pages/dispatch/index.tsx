@@ -81,7 +81,7 @@ export default function OfficerDashboard(props: Props) {
   ]);
 
   return (
-    <Layout className="max-w-[100rem]">
+    <Layout>
       <Head>
         <title>{t("dispatch")} - SnailyCAD</title>
       </Head>

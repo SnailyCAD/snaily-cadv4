@@ -8,9 +8,11 @@ interface Props {
 export const Layout = ({ children, className = "" }: Props) => {
   return (
     <>
-      <Nav maxWidth={className.split(" ").find((v) => v.startsWith("max-w"))} />
+      <Nav />
 
-      <main className={`mt-5 px-4 pb-5 container max-w-6xl mx-auto ${className}`}>{children}</main>
+      <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
+        {children}
+      </main>
     </>
   );
 };
