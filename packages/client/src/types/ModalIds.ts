@@ -34,6 +34,7 @@ export const enum ModalIds {
   Notepad = "NotepadModal",
   ManageUnit = "ManageUnitModal",
   CreateWarrant = "CreateWarrantModal",
+  CreateIncident = "CreateIncidentModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
