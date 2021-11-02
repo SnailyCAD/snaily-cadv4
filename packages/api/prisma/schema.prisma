@@ -514,6 +514,8 @@ model OfficerLog {
   userId    String
   officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
 
 model ImpoundedVehicle {
@@ -522,6 +524,8 @@ model ImpoundedVehicle {
   registeredVehicleId String
   location            Value             @relation(fields: [valueId], references: [id])
   valueId             String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @default(now()) @updatedAt
 }
 
 model LeoIncident {
@@ -579,6 +583,8 @@ model AssignedUnit {
   emsFdDeputyId String?
   call911       Call911?     @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
 }
 
 model Call911Event {
@@ -684,6 +690,8 @@ model TruckLog {
   vehicleId String?
   startedAt String             @db.VarChar(255)
   endedAt   String             @db.VarChar(255)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
 }
 
 // other
