@@ -5,10 +5,8 @@ import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { PersonFill } from "react-bootstrap-icons";
 import format from "date-fns/format";
-import { Citizen } from "types/prisma";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";
 import { Modal } from "components/modal/Modal";
@@ -20,10 +18,9 @@ import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
 import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
-import { calculateAge, makeImageUrl } from "lib/utils";
+import { calculateAge, makeImageUrl, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
-// import { ViolationsCard } from "components/citizen/ViolationsCard";
 
 export default function CitizenId() {
   const { execute, state } = useFetch();
@@ -239,14 +236,10 @@ export default function CitizenId() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
-  const { data } = await handleRequest<Citizen>(`/citizen/${query.id}`, {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
-
-  const { data: values = [] } = await handleRequest(
-    "/admin/values/weapon?paths=license,vehicle,driverslicense_category,blood_group",
-  ).catch(() => ({ data: null }));
-
+  const [data, values] = await requestAll(req, [
+    [`/citizen/${query.id}`, []],
+    ["/admin/values/weapon?paths=license,vehicle,driverslicense_category,blood_group", []],
+  ]);
   return {
     props: {
       session: await getSessionUser(req.headers),

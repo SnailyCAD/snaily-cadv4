@@ -7,13 +7,12 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
 import type { Citizen } from "types/prisma";
 import { Layout } from "components/Layout";
-import { handleRequest } from "lib/fetch";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { makeImageUrl } from "lib/utils";
+import { makeImageUrl, requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 
@@ -152,13 +151,10 @@ export default function CitizenPage({ citizens }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
-  const { data } = await handleRequest<any[]>("/citizen", {
-    headers: req.headers,
-  }).catch(() => ({ data: null }));
-
-  const { data: values = [] } = await handleRequest(
-    "/admin/values/weapon?paths=license,vehicle",
-  ).catch(() => ({ data: null }));
+  const [data, values] = await requestAll(req, [
+    ["/citizen", []],
+    ["/admin/values/weapon?paths=license,vehicle", []],
+  ]);
 
   return {
     props: {
