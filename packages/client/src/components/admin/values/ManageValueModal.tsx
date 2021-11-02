@@ -21,6 +21,10 @@ import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
 import { TValue } from "src/pages/admin/values/[path]";
+import dynamic from "next/dynamic";
+import { Eyedropper } from "react-bootstrap-icons";
+
+const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
 interface Props {
   type: ValueType;
@@ -128,6 +132,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     type: value?.type ?? "",
     // @ts-expect-error shortcut
     hash: value?.hash ?? "",
+    showPicker: false,
   };
 
   function validate(values: typeof INITIAL_VALUES) {
@@ -151,7 +156,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen("manageValue")}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
           <form onSubmit={handleSubmit}>
             {type === "DIVISION" ? (
               <FormField fieldId="departmentId" label="Department">
@@ -233,7 +238,28 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                 </FormField>
 
                 <FormField fieldId="color" label="Color (#HEX)">
-                  <Input name="color" onChange={handleChange} value={values.color} />
+                  <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
+                    {values.showPicker ? (
+                      <HexColorPicker
+                        color={values.color}
+                        onChange={(color) => setFieldValue("color", color)}
+                        style={{ width: "100%", height: "150px" }}
+                      />
+                    ) : (
+                      <Input name="color" onChange={handleChange} value={values.color} />
+                    )}
+
+                    <Button
+                      variant="cancel"
+                      className="ml-2 px-1 p-0"
+                      type="button"
+                      onClick={() => setFieldValue("showPicker", !values.showPicker)}
+                      aria-label="Color Picker"
+                      title="Color Picker"
+                    >
+                      <Eyedropper />
+                    </Button>
+                  </div>
                   <Error>{errors.color}</Error>
                 </FormField>
               </>

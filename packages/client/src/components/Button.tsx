@@ -19,9 +19,8 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
   ({ variant = "default", small, className = "", ...rest }, ref) => (
     <button
       className={classNames(
-        `${
-          small ? "p-0.5 px-2" : "p-1 px-4"
-        } rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed`,
+        "rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed",
+        small ? "p-0.5 px-2" : "p-1 px-4",
         variant && variants[variant],
         className,
       )}
