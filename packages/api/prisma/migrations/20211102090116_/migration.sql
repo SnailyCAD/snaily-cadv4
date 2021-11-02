@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "LeoIncident" (
     "id" TEXT NOT NULL,
+    "caseNumber" SERIAL NOT NULL,
     "description" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
     "firearmsInvolved" BOOLEAN NOT NULL DEFAULT false,

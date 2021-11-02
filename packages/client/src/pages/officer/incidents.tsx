@@ -61,7 +61,11 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("incidents")}</h1>
 
-        <Button disabled={!isActive} onClick={() => openModal(ModalIds.CreateIncident)}>
+        <Button
+          title={!isActive ? "You must have an active officer." : ""}
+          disabled={!isActive}
+          onClick={() => openModal(ModalIds.CreateIncident)}
+        >
           {t("createIncident")}
         </Button>
       </header>
