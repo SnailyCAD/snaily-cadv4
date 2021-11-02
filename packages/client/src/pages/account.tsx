@@ -53,8 +53,8 @@ export default function Account() {
       <div className="w-full flex justify-center">
         <div className="max-w-4xl w-full">
           <TabsContainer tabs={TABS_TITLES}>
-            <Tab.Panels className="mt-2">
-              <Tab.Panel className="bg-white rounded-xl p-3">
+            <Tab.Panels className="mt-2 dark:text-white">
+              <Tab.Panel>
                 <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
                 <div className="mt-2">
                   {Object.entries(user)
@@ -68,7 +68,7 @@ export default function Account() {
                     })}
                 </div>
               </Tab.Panel>
-              <Tab.Panel className="bg-white rounded-xl p-3">
+              <Tab.Panel>
                 <h3 className="text-2xl font-semibold">{t("accountSettings")}</h3>
                 <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
                   {({ handleChange, values, errors }) => (
