@@ -33,6 +33,9 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["GET"], /\/v1\/leo\/active-(officers|officer)/, (u) => u.isLeo || u.isDispatch],
   ["*", "/v1/leo", (u) => u.isLeo],
 
+  [["POST"], "/v1/incidents", (u) => u.isLeo],
+  ["*", "/v1/incidents", (u) => u.isLeo || u.rank !== "USER"],
+
   [["POST"], "/v1/search/name", (u) => u.isLeo || u.isDispatch],
   [["POST"], "/v1/search/weapon", (u) => u.isLeo || u.isDispatch],
   [["POST"], "/v1/search/vehicle", (u) => u.isLeo || u.isDispatch],

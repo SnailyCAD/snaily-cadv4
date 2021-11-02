@@ -440,29 +440,31 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id           String          @id @default(cuid())
-  department   DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId String
-  callsign     String          @db.VarChar(255)
-  callsign2    String          @db.VarChar(255)
-  division     DivisionValue   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId   String
-  rank         Value?          @relation("officerRankToValue", fields: [rankId], references: [id])
-  rankId       String?
-  status       StatusValue?    @relation("officerStatusToValue", fields: [statusId], references: [id])
-  statusId     String?
-  suspended    Boolean         @default(false)
-  badgeNumber  Int?
-  imageId      String?         @db.VarChar(255)
-  citizen      Citizen         @relation(fields: [citizenId], references: [id], onDelete: SetNull)
-  citizenId    String
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  bolos        Bolo[]          @relation("bolosToOfficer")
-  warrants     Warrant[]
-  logs         OfficerLog[]
-  Record       Record[]
-  assignedUnit AssignedUnit[]
+  id                          String          @id @default(cuid())
+  department                  DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId                String
+  callsign                    String          @db.VarChar(255)
+  callsign2                   String          @db.VarChar(255)
+  division                    DivisionValue   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId                  String
+  rank                        Value?          @relation("officerRankToValue", fields: [rankId], references: [id])
+  rankId                      String?
+  status                      StatusValue?    @relation("officerStatusToValue", fields: [statusId], references: [id])
+  statusId                    String?
+  suspended                   Boolean         @default(false)
+  badgeNumber                 Int?
+  imageId                     String?         @db.VarChar(255)
+  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: SetNull)
+  citizenId                   String
+  user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String
+  bolos                       Bolo[]          @relation("bolosToOfficer")
+  warrants                    Warrant[]
+  logs                        OfficerLog[]
+  Record                      Record[]
+  assignedUnit                AssignedUnit[]
+  LeoIncident                 LeoIncident[]
+  LeoIncidentInvolvedOfficers LeoIncident[]   @relation("involvedOfficers")
 }
 
 model StatusValue {
@@ -494,6 +496,18 @@ model ImpoundedVehicle {
   registeredVehicleId String
   location            Value             @relation(fields: [valueId], references: [id])
   valueId             String
+}
+
+model LeoIncident {
+  id                   String    @id @default(uuid())
+  description          String    @db.Text
+  creator              Officer   @relation(fields: [creatorId], references: [id])
+  creatorId            String
+  officersInvolved     Officer[] @relation("involvedOfficers")
+  firearmsInvolved     Boolean   @default(false)
+  injuriesOrFatalities Boolean   @default(false)
+  arrestsMade          Boolean   @default(false)
+  createdAt            DateTime  @default(now())
 }
 
 enum StatusEnum {
