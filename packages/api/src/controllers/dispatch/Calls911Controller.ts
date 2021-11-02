@@ -175,6 +175,12 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
+    await prisma.call911.delete({
+      where: {
+        id: call.id,
+      },
+    });
+
     return true;
   }
 
