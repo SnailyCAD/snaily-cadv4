@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "0.7.0-alpha",
+  "version": "0.8.0-alpha",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,8 +11,8 @@
   "dependencies": {
     "@casper124578/use-socket.io": "2.0.0",
     "@headlessui/react": "^1.4.1",
-    "@snailycad/config": "0.7.0-alpha",
-    "@snailycad/schemas": "0.7.0-alpha",
+    "@snailycad/config": "0.8.0-alpha",
+    "@snailycad/schemas": "0.8.0-alpha",
     "axios": "^0.24.0",
     "date-fns": "^2.25.0",
     "formik": "^2.2.9",
