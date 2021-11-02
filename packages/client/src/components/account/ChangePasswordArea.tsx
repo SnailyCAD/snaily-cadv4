@@ -76,7 +76,9 @@ export const ChangePasswordArea = () => {
               <Error>{errors.confirmPassword}</Error>
             </FormField>
 
-            <Button disabled={state === "loading"}>{common("save")}</Button>
+            <Button type="submit" disabled={state === "loading"}>
+              {common("save")}
+            </Button>
           </Form>
         )}
       </Formik>

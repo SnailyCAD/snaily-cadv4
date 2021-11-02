@@ -21,7 +21,7 @@ export class AccountController {
 
   @Patch("/")
   async patchAuthUser(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
-    const { username, isDarkTheme } = body.toJSON();
+    const { username, isDarkTheme, statusViewMode } = body.toJSON();
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -40,6 +40,7 @@ export class AccountController {
       data: {
         username,
         isDarkTheme,
+        statusViewMode,
       },
     });
 

@@ -3,7 +3,8 @@
     "account": "Account",
     "accountInfo": "Account Info",
     "accountSettings": "Account Settings",
-    "passwordSettings": "Password Settings"
+    "passwordSettings": "Password Settings",
+    "appearanceSettings": "Appearance Settings"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"
