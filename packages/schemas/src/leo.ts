@@ -16,3 +16,11 @@ export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
 export const SELECT_OFFICER_SCHEMA = z.object({
   officer: z.string().min(2).max(255),
 });
+
+export const LEO_INCIDENT_SCHEMA = z.object({
+  description: z.string().min(2),
+  firearmsInvolved: z.boolean(),
+  injuriesOrFatalities: z.boolean(),
+  arrestsMade: z.boolean(),
+  officersInvolved: z.array(z.any()).min(0).optional(),
+});

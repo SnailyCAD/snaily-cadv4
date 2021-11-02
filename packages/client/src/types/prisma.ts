@@ -499,6 +499,21 @@ export type ImpoundedVehicle = {
 };
 
 /**
+ * Model LeoIncident
+ */
+
+export type LeoIncident = {
+  id: string;
+  caseNumber: number;
+  description: string;
+  creatorId: string;
+  firearmsInvolved: boolean;
+  injuriesOrFatalities: boolean;
+  arrestsMade: boolean;
+  createdAt: Date;
+};
+
+/**
  * Enums
  */
 

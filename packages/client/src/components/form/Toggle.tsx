@@ -5,7 +5,7 @@ interface Props {
   toggled: boolean;
   onClick: (value: any) => void;
   name: string;
-  text?: "enable/disable" | "on/off";
+  text?: "enable/disable" | "on/off" | "true/false";
 }
 
 enum Directions {
@@ -17,8 +17,8 @@ export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
   const [x, setX] = React.useState(() => getDirection(toggled));
   const t = useTranslations("Common");
 
-  const trueText = text === "on/off" ? t("on") : t("enabled");
-  const falseText = text === "on/off" ? t("off") : t("disabled");
+  const trueText = text === "true/false" ? "True" : text === "on/off" ? t("on") : t("enabled");
+  const falseText = text === "true/false" ? "False" : text === "on/off" ? t("off") : t("disabled");
 
   React.useEffect(() => {
     setX(getDirection(toggled));
