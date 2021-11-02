@@ -22,5 +22,5 @@ export const LEO_INCIDENT_SCHEMA = z.object({
   firearmsInvolved: z.boolean(),
   injuriesOrFatalities: z.boolean(),
   arrestsMade: z.boolean(),
-  officersInvolved: z.array(z.any()),
+  officersInvolved: z.array(z.any()).min(0).optional(),
 });

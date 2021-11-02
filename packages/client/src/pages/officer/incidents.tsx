@@ -11,27 +11,46 @@ import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { LeoIncident } from "types/prisma";
-import { FullOfficer } from "state/dispatchState";
+import { FullOfficer, useDispatchState } from "state/dispatchState";
 import { format } from "date-fns";
 import { CreateIncidentModal } from "components/leo/modals/CreateIncidentModal";
+import { useLeoState } from "state/leoState";
 
-export type FullIncident = LeoIncident & { creator: FullOfficer; involvedOfficers: FullOfficer[] };
+export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
 interface Props {
   incidents: FullIncident[];
+  officers: FullOfficer[];
+  activeOfficer: FullOfficer | null;
 }
 
-export default function LeoIncidents({ incidents }: Props) {
-  console.log({ incidents });
+export default function LeoIncidents({ officers, activeOfficer, incidents }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
+  const { setAllOfficers } = useDispatchState();
+  const { setActiveOfficer } = useLeoState();
   const generateCallsign = useGenerateCallsign();
 
-  const handleEditClick = () => void 0;
-  const handleDeleteClick = () => void 9;
+  const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
 
-  const involvedOfficers = "";
+  React.useEffect(() => {
+    setAllOfficers(officers);
+    setActiveOfficer(activeOfficer);
+  }, [setAllOfficers, setActiveOfficer, activeOfficer, officers]);
+
+  const involvedOfficers = (incident: FullIncident) =>
+    incident.officersInvolved?.length <= 0 ? (
+      <span>{common("none")}</span>
+    ) : (
+      incident.officersInvolved?.map((o) => (
+        <span key={o.id}>
+          {generateCallsign(o)} {makeUnitName(o)}
+        </span>
+      ))
+    );
+
+  // todo: active officer
 
   return (
     <Layout>
@@ -42,7 +61,9 @@ export default function LeoIncidents({ incidents }: Props) {
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("incidents")}</h1>
 
-        <Button onClick={() => openModal(ModalIds.CreateIncident)}>{t("createIncident")}</Button>
+        <Button disabled={!isActive} onClick={() => openModal(ModalIds.CreateIncident)}>
+          {t("createIncident")}
+        </Button>
       </header>
 
       {incidents.length <= 0 ? (
@@ -59,13 +80,13 @@ export default function LeoIncidents({ incidents }: Props) {
                 <th>{t("injuriesOrFatalities")}</th>
                 <th>{t("arrestsMade")}</th>
                 <th>{common("description")}</th>
-                <th>{common("actions")}</th>
+                <th>{common("createdAt")}</th>
               </tr>
             </thead>
             <tbody>
               {incidents.map((incident) => (
                 <tr key={incident.id}>
-                  <td>TODO</td>
+                  <td>#{incident.caseNumber}</td>
                   <td className="capitalize flex items-center">
                     {incident.creator.imageId ? (
                       <img
@@ -76,26 +97,12 @@ export default function LeoIncidents({ incidents }: Props) {
                     ) : null}
                     {generateCallsign(incident.creator)} {makeUnitName(incident.creator)}
                   </td>
-                  <td>{involvedOfficers}</td>
+                  <td>{involvedOfficers(incident)}</td>
                   <td>{String(incident.firearmsInvolved)}</td>
                   <td>{String(incident.injuriesOrFatalities)}</td>
                   <td>{String(incident.arrestsMade)}</td>
                   <td>{incident.description}</td>
                   <td>{format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm")}</td>
-
-                  <td className="w-36">
-                    <Button small onClick={() => handleEditClick(incident)} variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteClick(incident)}
-                      className="ml-2"
-                      variant="danger"
-                      small
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
                 </tr>
               ))}
             </tbody>
@@ -103,44 +110,24 @@ export default function LeoIncidents({ incidents }: Props) {
         </div>
       )}
 
-      {/* <ManageOfficerModal
-        onCreate={(officer) => setOfficers((p) => [officer, ...p])}
-        onUpdate={(old, newO) => {
-          setOfficers((p) => {
-            const idx = p.indexOf(old);
-            p[idx] = newO;
-
-            return p;
-          });
-        }}
-        officer={tempOfficer}
-        onClose={() => setTempOfficer(null)}
-      /> */}
-
-      <CreateIncidentModal />
-
-      {/* <AlertModal
-        title={t("deleteOfficer")}
-        description={t.rich("alert_deleteOfficer", {
-          span: (children) => <span className="font-semibold">{children}</span>,
-          officer: tempOfficer && makeUnitName(tempOfficer),
-        })}
-        id={ModalIds.AlertDeleteOfficer}
-        onDeleteClick={handleDeleteOfficer}
-        state={state}
-        onClose={() => setTempOfficer(null)}
-      /> */}
+      {isActive ? <CreateIncidentModal /> : null}
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [incidents] = await requestAll(req, [["/incidents", []]]);
+  const [incidents, activeOfficer, { officers }] = await requestAll(req, [
+    ["/incidents", []],
+    ["/leo/active-officer", null],
+    ["/leo", [{ officers: [] }]],
+  ]);
 
   return {
     props: {
       session: await getSessionUser(req.headers),
       incidents,
+      activeOfficer,
+      officers,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
       },

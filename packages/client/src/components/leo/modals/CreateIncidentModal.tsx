@@ -2,28 +2,32 @@ import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
-import { Select, SelectValue } from "components/form/Select";
+import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
-import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { useCitizen } from "context/CitizenContext";
+import { useDispatchState } from "state/dispatchState";
+import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { Toggle } from "components/form/Toggle";
+import { FormRow } from "components/form/FormRow";
+import { useLeoState } from "state/leoState";
 
 export const CreateIncidentModal = () => {
-  const { isOpen, closeModal, getPayload } = useModal();
+  const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const generateCallsign = useGenerateCallsign();
+  const { activeOfficer } = useLeoState();
 
   const { state, execute } = useFetch();
-  const { penalCode } = useValues();
-  const { citizens } = useCitizen();
+  const { allOfficers } = useDispatchState();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/incidents", {
@@ -38,10 +42,11 @@ export const CreateIncidentModal = () => {
 
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
-    citizenId: getPayload<{ citizenId: string }>(ModalIds.CreateIncident)?.citizenId ?? "",
-    violations: [] as SelectValue[],
-    postal: "",
-    notes: "",
+    description: "",
+    involvedOfficers: [],
+    firearmsInvolved: false,
+    injuriesOrFatalities: false,
+    arrestsMade: false,
   };
 
   return (
@@ -54,53 +59,62 @@ export const CreateIncidentModal = () => {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("citizen")}>
+            <FormField label={t("involvedOfficers")}>
               <Select
-                value={values.citizenId}
-                hasError={!!errors.citizenId}
-                name="citizenId"
+                value={values.involvedOfficers}
+                hasError={!!errors.involvedOfficers}
+                name="involvedOfficers"
                 onChange={handleChange}
-                values={citizens.map((v) => ({
-                  label: `${v.name} ${v.surname}`,
-                  value: v.id,
-                }))}
+                values={allOfficers
+                  .filter((v) => v.id !== activeOfficer?.id)
+                  .map((v) => ({
+                    label: `${generateCallsign(v)} ${makeUnitName(v)}`,
+                    value: v.id,
+                  }))}
               />
-              <Error>{errors.citizenId}</Error>
+              <Error>{errors.involvedOfficers}</Error>
             </FormField>
 
-            <FormField label={t("postal")}>
-              <Input
-                value={values.postal}
-                hasError={!!errors.postal}
-                id="postal"
-                onChange={handleChange}
-              />
-              <Error>{errors.postal}</Error>
-            </FormField>
+            <FormRow>
+              <FormField label={t("firearmsInvolved")}>
+                <Toggle
+                  text="true/false"
+                  toggled={values.firearmsInvolved}
+                  name="firearmsInvolved"
+                  onClick={handleChange}
+                />
+                <Error>{errors.firearmsInvolved}</Error>
+              </FormField>
 
-            <FormField label={t("violations")}>
-              <Select
-                value={values.violations}
-                hasError={!!errors.violations}
-                name="violations"
-                onChange={handleChange}
-                isMulti
-                values={penalCode.values.map((value) => ({
-                  label: value.title,
-                  value: value.id,
-                }))}
-              />
-              <Error>{errors.violations}</Error>
-            </FormField>
+              <FormField label={t("injuriesOrFatalities")}>
+                <Toggle
+                  text="true/false"
+                  toggled={values.injuriesOrFatalities}
+                  name="injuriesOrFatalities"
+                  onClick={handleChange}
+                />
+                <Error>{errors.injuriesOrFatalities}</Error>
+              </FormField>
 
-            <FormField label={t("notes")}>
+              <FormField label={t("arrestsMade")}>
+                <Toggle
+                  text="true/false"
+                  toggled={values.arrestsMade}
+                  name="arrestsMade"
+                  onClick={handleChange}
+                />
+                <Error>{errors.arrestsMade}</Error>
+              </FormField>
+            </FormRow>
+
+            <FormField label={common("description")}>
               <Textarea
-                value={values.notes}
-                hasError={!!errors.notes}
-                id="notes"
+                value={values.description}
+                hasError={!!errors.description}
+                id="description"
                 onChange={handleChange}
               />
-              <Error>{errors.notes}</Error>
+              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="mt-5 flex justify-end">

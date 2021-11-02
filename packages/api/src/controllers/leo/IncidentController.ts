@@ -26,7 +26,7 @@ export class IncidentController {
 
   @UseBefore(ActiveOfficer)
   @Post("/")
-  async searchWeapon(
+  async createIncident(
     @BodyParams() body: JsonRequestBody,
     @Context("activeOfficer") { id: officerId }: Officer,
   ) {
@@ -47,7 +47,7 @@ export class IncidentController {
     });
 
     await Promise.all(
-      body.get("officersInvolved").map(async (id: string) => {
+      body.get("involvedOfficers").map(async (id: string) => {
         await prisma.leoIncident.update({
           where: {
             id: incident.id,

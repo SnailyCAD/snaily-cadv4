@@ -500,6 +500,7 @@ model ImpoundedVehicle {
 
 model LeoIncident {
   id                   String    @id @default(uuid())
+  caseNumber           Int       @default(autoincrement())
   description          String    @db.Text
   creator              Officer   @relation(fields: [creatorId], references: [id])
   creatorId            String

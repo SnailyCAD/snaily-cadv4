@@ -504,6 +504,7 @@ export type ImpoundedVehicle = {
 
 export type LeoIncident = {
   id: string;
+  caseNumber: number;
   description: string;
   creatorId: string;
   firearmsInvolved: boolean;
