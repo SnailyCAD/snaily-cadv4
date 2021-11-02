@@ -49,8 +49,8 @@ export class AdminController {
   }
 
   private async imageData() {
-    const p = join(__dirname, "../../../", "public");
-    const items = glob.sync(`${p}/**/*.*`);
+    const path = join(__dirname, "../../../", "public");
+    const items = glob.sync(`${path}/**/*.*`);
     let totalSize = 0;
 
     await Promise.all(
