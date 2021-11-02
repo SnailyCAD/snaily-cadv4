@@ -112,7 +112,6 @@ export class ManageCitizensController {
   @Put("/api-token")
   async updateApiToken(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const cad = ctx.get("cad");
-    console.log({ cad });
 
     const existing =
       cad.apiTokenId &&

@@ -52,6 +52,18 @@ export const ApiTokenTab = () => {
     <Tab.Panel>
       <h2 className="text-2xl font-semibold mt-2">Public API access</h2>
 
+      <p className="my-2">
+        Read more info about{" "}
+        <a
+          target="_blank"
+          rel="noreferrer noopener"
+          className="underline text-blue-600"
+          href="https://cad-docs.netlify.com/other/public-api"
+        >
+          Public API Access here
+        </a>
+      </p>
+
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
