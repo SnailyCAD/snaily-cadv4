@@ -19,9 +19,9 @@ import useFetch from "lib/useFetch";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { handleRequest } from "lib/fetch";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
+import { requestAll } from "lib/utils";
 
 const INITIAL_VALUES = {
   name: "",
@@ -330,9 +330,9 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data: values = [] } = await handleRequest(
-    "/admin/values/gender?paths=ethnicity,license,driverslicense_category",
-  ).catch(() => ({ data: null }));
+  const [values] = await requestAll(req, [
+    ["/admin/values/gender?paths=ethnicity,license,driverslicense_category", []],
+  ]);
 
   return {
     props: {
