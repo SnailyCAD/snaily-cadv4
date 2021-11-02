@@ -3,7 +3,6 @@ import * as React from "react";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
-import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
@@ -12,6 +11,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ManagePenalCode } from "components/admin/values/ManagePenalCode";
+import { requestAll } from "lib/utils";
 
 interface Props {
   values: { type: ValueType; values: PenalCode[] };
@@ -156,9 +156,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const { data: values = [] } = await handleRequest("/admin/values/penal_code", {
-    headers: req.headers,
-  }).catch(() => ({ data: [] }));
+  const [values] = await requestAll(req, [["/admin/values/penal_code", []]]);
 
   return {
     props: {
