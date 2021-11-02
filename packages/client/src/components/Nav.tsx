@@ -19,7 +19,7 @@ export const Nav = () => {
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   return (
-    <nav className="bg-white dark:bg-dark-bg shadow-sm">
+    <nav className="bg-white dark:bg-[#171717] shadow-sm">
       <div className="max-w-[100rem] mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
@@ -94,7 +94,7 @@ const NavDropdown = () => {
     <>
       <Menu as="div" className="relative inline-block text-left z-50">
         <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none">
-          <PersonCircle fill="#2f2f2f" width={20} height={20} />
+          <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
         </Menu.Button>
 
         <Transition
@@ -106,67 +106,45 @@ const NavDropdown = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white dark:bg-gray-4 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white dark:bg-dark-bright divide-y divide-gray-100 dark:divide-dark-bg rounded-md shadow-xl focus:outline-none">
             {user ? (
               <>
-                <div className="px-1 py-1 ">
+                <div className="px-1 py-1">
                   <Menu.Item>
-                    {({ active }) => (
-                      <Link href="/account">
-                        <a
-                          className={`${
-                            active ? "bg-gray-200" : "text-gray-900 dark:text-white"
-                          } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
-                        >
-                          Account
-                        </a>
-                      </Link>
-                    )}
+                    <Link href="/account">
+                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                        Account
+                      </a>
+                    </Link>
                   </Menu.Item>
                 </div>
 
                 <div className="px-1 py-1">
                   <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        onClick={handleLogout}
-                        className={`${
-                          active ? "bg-red-500 text-gray-900" : "text-red-500"
-                        } flex group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
-                      >
-                        Logout
-                      </button>
-                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
+                    >
+                      Logout
+                    </button>
                   </Menu.Item>
                 </div>
               </>
             ) : (
               <div className="px-1 py-1 ">
                 <Menu.Item>
-                  {({ active }) => (
-                    <Link href="/auth/login">
-                      <a
-                        className={`${
-                          active ? "bg-gray-200" : "text-gray-900 dark:text-white"
-                        } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
-                      >
-                        Login
-                      </a>
-                    </Link>
-                  )}
+                  <Link href="/auth/login">
+                    <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                      Login
+                    </a>
+                  </Link>
                 </Menu.Item>
                 <Menu.Item>
-                  {({ active }) => (
-                    <Link href="/auth/register">
-                      <a
-                        className={`${
-                          active ? "bg-gray-200" : "text-gray-900 dark:text-white"
-                        } block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all`}
-                      >
-                        Register
-                      </a>
-                    </Link>
-                  )}
+                  <Link href="/auth/register">
+                    <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                      Register
+                    </a>
+                  </Link>
                 </Menu.Item>
               </div>
             )}

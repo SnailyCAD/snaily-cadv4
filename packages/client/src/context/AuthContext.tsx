@@ -137,8 +137,7 @@ function _setBodyTheme(isDarkTheme: boolean) {
   if (!isDarkTheme) return;
   if (typeof window === "undefined") return;
 
-  true;
-  // window.document.body.classList.add("dark");
+  window.document.body.classList.add("dark");
 }
 
 function hasPermissionForCurrentRoute(path: string, user: User) {
