@@ -6,8 +6,9 @@ import { prisma } from "../../lib/prisma";
 import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
+import { IsAuth } from "../../middlewares";
 
-@UseBeforeEach(ActiveOfficer)
+@UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")

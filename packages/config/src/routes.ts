@@ -66,4 +66,6 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],
   ["*", "/v1/dispatch", (u) => u.isDispatch],
   ["*", "/v1/search/address", (u) => u.isDispatch],
+
+  ["*", "/v1/records", (u) => u.isLeo],
 ];
