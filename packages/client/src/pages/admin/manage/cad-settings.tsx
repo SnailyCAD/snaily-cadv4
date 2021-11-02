@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
-import { useRouter } from "next/router";
 import { rank } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
@@ -22,16 +21,16 @@ import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
 import { MiscFeatures } from "components/admin/manage/MiscFeatures";
 import { requestAll } from "lib/utils";
+import { ApiTokenTab } from "components/admin/manage/ApiTokenTab";
 
 export default function CadSettings() {
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
-  const router = useRouter();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
 
-  const SETTINGS_TABS = [t("GENERAL_SETTINGS"), t("FEATURES"), t("MISC_SETTINGS")];
+  const SETTINGS_TABS = [t("GENERAL_SETTINGS"), t("FEATURES"), t("MISC_SETTINGS"), "Api Token"];
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/admin/manage/cad-settings", {
@@ -43,12 +42,6 @@ export default function CadSettings() {
       setCad(json);
     }
   }
-
-  React.useEffect(() => {
-    if (user?.rank !== rank.OWNER) {
-      // router.push("/403");
-    }
-  }, [user, router]);
 
   if (user?.rank !== rank.OWNER) {
     return null;
@@ -156,6 +149,8 @@ export default function CadSettings() {
         <Tab.Panel>
           <MiscFeatures />
         </Tab.Panel>
+
+        <ApiTokenTab />
       </TabsContainer>
     </AdminLayout>
   );

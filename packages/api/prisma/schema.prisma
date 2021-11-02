@@ -28,6 +28,8 @@ model cad {
   disabledFeatures  Feature[]
   miscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id])
   miscCadSettingsId String?
+  apiToken          ApiToken?        @relation(fields: [apiTokenId], references: [id])
+  apiTokenId        String?
 }
 
 model MiscCadSettings {
@@ -41,6 +43,16 @@ model MiscCadSettings {
   callsignTemplate        String  @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitSymbol        String  @default("A") @db.VarChar(255)
   signal100Enabled        Boolean @default(false)
+
+  cad cad[]
+}
+
+model ApiToken {
+  id      String   @id @default(cuid())
+  enabled Boolean  @default(false)
+  token   String?
+  // empty = *
+  routes  String[]
 
   cad cad[]
 }

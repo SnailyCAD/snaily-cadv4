@@ -15,8 +15,9 @@ export type cad = {
   discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
+  apiTokenId: string | null;
   disabledFeatures: Feature[];
-} & { miscCadSettings: MiscCadSettings };
+} & { miscCadSettings: MiscCadSettings; apiToken: ApiToken | null };
 
 /**
  * Model MiscCadSettings
@@ -33,6 +34,17 @@ export type MiscCadSettings = {
   callsignTemplate: string | null;
   signal100Enabled: boolean;
   allowDuplicateCitizenNames: boolean;
+};
+
+/**
+ * Model ApiToken
+ */
+
+export type ApiToken = {
+  id: string;
+  enabled: boolean;
+  token: string | null;
+  routes: string[];
 };
 
 /**

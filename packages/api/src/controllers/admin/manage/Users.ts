@@ -6,13 +6,13 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { userProperties } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
-import { IsAuth, IsAdmin } from "../../../middlewares";
+import { IsAuth } from "../../../middlewares";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
 import { Socket } from "../../../services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
 
-@UseBeforeEach(IsAuth, IsAdmin)
+@UseBeforeEach(IsAuth)
 @Controller("/users")
 export class ManageUsersController {
   private socket: Socket;
@@ -22,7 +22,9 @@ export class ManageUsersController {
 
   @Get("/")
   async getUsers() {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      select: userProperties,
+    });
 
     return users;
   }

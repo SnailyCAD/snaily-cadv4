@@ -5,11 +5,11 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
 import { unitProperties } from "../../../lib/officer";
 import { prisma } from "../../../lib/prisma";
-import { IsAuth, IsSupervisor } from "../../../middlewares";
+import { IsAuth } from "../../../middlewares";
 
 const include = unitProperties;
 
-@UseBeforeEach(IsAuth, IsSupervisor)
+@UseBeforeEach(IsAuth)
 @Controller("/units")
 export class ManageUnitsController {
   @Get("/")

@@ -7,8 +7,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth, IsDispatch } from "../../middlewares";
-import { UseBefore } from "@tsed/common";
+import { IsAuth } from "../../middlewares";
 import { ShouldDoType, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties } from "../../lib/officer";
 
@@ -71,7 +70,6 @@ export class Calls911Controller {
     return this.officerOrDeputyToUnit(call);
   }
 
-  @UseBefore(IsDispatch)
   @Put("/:id")
   async update911Call(
     @PathParams("id") id: string,
@@ -167,7 +165,6 @@ export class Calls911Controller {
     return this.officerOrDeputyToUnit(updated);
   }
 
-  @UseBefore(IsDispatch)
   @Delete("/:id")
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
@@ -181,7 +178,6 @@ export class Calls911Controller {
     return true;
   }
 
-  @UseBefore(IsDispatch)
   @Post("/events/:callId")
   async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: JsonRequestBody) {
     if (!body.get("description")) {
@@ -208,7 +204,6 @@ export class Calls911Controller {
     return event;
   }
 
-  @UseBefore(IsDispatch)
   @Put("/events/:callId/:eventId")
   async updateCallEvent(
     @PathParams("callId") callId: string,
@@ -252,7 +247,6 @@ export class Calls911Controller {
     return updated;
   }
 
-  @UseBefore(IsDispatch)
   @Delete("/events/:callId/:eventId")
   async deleteCallEvent(
     @PathParams("callId") callId: string,

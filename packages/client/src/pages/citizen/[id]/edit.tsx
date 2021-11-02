@@ -35,12 +35,6 @@ export default function EditCitizen() {
   const { citizen } = useCitizen();
   const { gender, ethnicity } = useValues();
 
-  React.useEffect(() => {
-    if (!citizen) {
-      console.log("citizen not found");
-    }
-  }, [citizen]);
-
   if (!citizen) {
     return null;
   }
@@ -293,6 +287,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
   const { data } = await handleRequest<Citizen>(`/citizen/${query.id}`, {
     headers: req.headers,
   }).catch(() => ({ data: null }));
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
