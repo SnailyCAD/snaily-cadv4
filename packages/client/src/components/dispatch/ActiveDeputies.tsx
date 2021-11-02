@@ -9,6 +9,8 @@ import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
 import { makeImageUrl, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { StatusViewMode } from "types/prisma";
+import { useAuth } from "context/AuthContext";
 
 export const ActiveDeputies = () => {
   const { activeDeputies } = useActiveDeputies();
@@ -16,6 +18,7 @@ export const ActiveDeputies = () => {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
+  const { user } = useAuth();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -50,37 +53,44 @@ export const ActiveDeputies = () => {
                 </tr>
               </thead>
               <tbody>
-                {activeDeputies.map((deputy) => (
-                  <tr key={deputy.id}>
-                    <td className="capitalize flex items-center">
-                      {deputy.imageId ? (
-                        <img
-                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                          draggable={false}
-                          src={makeImageUrl("units", deputy.imageId)}
-                        />
-                      ) : null}
-                      {generateCallsign(deputy)} {makeUnitName(deputy)}
-                    </td>
-                    <td>{String(deputy.badgeNumber)}</td>
-                    <td>{deputy.department.value.value}</td>
-                    <td>{deputy.division.value.value}</td>
-                    <td className="flex items-center">
-                      <span
-                        style={{ background: deputy.status?.color }}
-                        className="block w-3 h-3 rounded-full mr-2"
-                      />
-                      {deputy.status?.value?.value}
-                    </td>
-                    {isDispatch ? (
-                      <td className="w-36">
-                        <Button onClick={() => handleEditClick(deputy)} small variant="success">
-                          {common("manage")}
-                        </Button>
+                {activeDeputies.map((deputy) => {
+                  const color = deputy.status?.color;
+                  const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+
+                  return (
+                    <tr style={{ background: !useDot ? color : undefined }} key={deputy.id}>
+                      <td className="capitalize flex items-center">
+                        {deputy.imageId ? (
+                          <img
+                            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                            draggable={false}
+                            src={makeImageUrl("units", deputy.imageId)}
+                          />
+                        ) : null}
+                        {generateCallsign(deputy)} {makeUnitName(deputy)}
                       </td>
-                    ) : null}
-                  </tr>
-                ))}
+                      <td>{String(deputy.badgeNumber)}</td>
+                      <td>{deputy.department.value.value}</td>
+                      <td>{deputy.division.value.value}</td>
+                      <td className="flex items-center">
+                        {useDot ? (
+                          <span
+                            style={{ background: deputy.status?.color }}
+                            className="block w-3 h-3 rounded-full mr-2"
+                          />
+                        ) : null}
+                        {deputy.status?.value?.value}
+                      </td>
+                      {isDispatch ? (
+                        <td className="w-36">
+                          <Button onClick={() => handleEditClick(deputy)} small variant="success">
+                            {common("manage")}
+                          </Button>
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

@@ -9,6 +9,8 @@ import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
 import { makeImageUrl, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useAuth } from "context/AuthContext";
+import { StatusViewMode } from "types/prisma";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
@@ -16,6 +18,7 @@ export const ActiveOfficers = () => {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
+  const { user } = useAuth();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -50,37 +53,44 @@ export const ActiveOfficers = () => {
                 </tr>
               </thead>
               <tbody>
-                {activeOfficers.map((officer) => (
-                  <tr key={officer.id}>
-                    <td className="capitalize flex items-center">
-                      {officer.imageId ? (
-                        <img
-                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                          draggable={false}
-                          src={makeImageUrl("units", officer.imageId)}
-                        />
-                      ) : null}
-                      {generateCallsign(officer)} {makeUnitName(officer)}
-                    </td>
-                    <td>{String(officer.badgeNumber)}</td>
-                    <td>{officer.department.value.value}</td>
-                    <td>{officer.division.value.value}</td>
-                    <td className="flex items-center">
-                      <span
-                        style={{ background: officer.status?.color }}
-                        className="block w-3 h-3 rounded-full mr-2"
-                      />
-                      {officer.status?.value?.value}
-                    </td>
-                    {isDispatch ? (
-                      <td className="w-36">
-                        <Button onClick={() => handleEditClick(officer)} small variant="success">
-                          {common("manage")}
-                        </Button>
+                {activeOfficers.map((officer) => {
+                  const color = officer.status?.color;
+                  const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+
+                  return (
+                    <tr style={{ background: !useDot ? color : undefined }} key={officer.id}>
+                      <td className="capitalize flex items-center">
+                        {officer.imageId ? (
+                          <img
+                            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                            draggable={false}
+                            src={makeImageUrl("units", officer.imageId)}
+                          />
+                        ) : null}
+                        {generateCallsign(officer)} {makeUnitName(officer)}
                       </td>
-                    ) : null}
-                  </tr>
-                ))}
+                      <td>{String(officer.badgeNumber)}</td>
+                      <td>{officer.department.value.value}</td>
+                      <td>{officer.division.value.value}</td>
+                      <td className="flex items-center">
+                        {useDot ? (
+                          <span
+                            style={{ background: officer.status?.color }}
+                            className="block w-3 h-3 rounded-full mr-2"
+                          />
+                        ) : null}
+                        {officer.status?.value?.value}
+                      </td>
+                      {isDispatch ? (
+                        <td className="w-36">
+                          <Button onClick={() => handleEditClick(officer)} small variant="success">
+                            {common("manage")}
+                          </Button>
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
