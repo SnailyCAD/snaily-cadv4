@@ -137,7 +137,7 @@ export class ManageCitizensController {
     const apiToken = await prisma.apiToken.create({
       data: {
         cad: { connect: { id: cad.id } },
-        token: nanoid(40),
+        token: nanoid(56),
       },
     });
 
@@ -158,7 +158,7 @@ export class ManageCitizensController {
         id: cad.apiTokenId,
       },
       data: {
-        token: nanoid(40),
+        token: nanoid(56),
       },
     });
 
