@@ -12,7 +12,7 @@ import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./nav-dropdowns/TowDropdown";
 
-export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
+export const Nav = () => {
   const { user, cad } = useAuth();
   const { TOW } = useFeatureEnabled();
   const router = useRouter();
@@ -20,7 +20,7 @@ export const Nav = ({ maxWidth = "max-w-6xl" }: { maxWidth?: string }) => {
 
   return (
     <nav className="bg-white dark:bg-dark-bg shadow-sm">
-      <div className={`${maxWidth} mx-auto px-4`}>
+      <div className="max-w-[100rem] mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
             <h1 className="text-2xl">
