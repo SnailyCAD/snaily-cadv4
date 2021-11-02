@@ -55,7 +55,7 @@ export const Nav = () => {
               ) : null}
 
               {user?.rank !== "USER" ? (
-                <Link href="/admin/manage/users">
+                <Link href="/admin">
                   <a
                     className={classNames(
                       "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
