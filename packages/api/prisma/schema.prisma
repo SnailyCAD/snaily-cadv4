@@ -74,6 +74,7 @@ model User {
   whitelistStatus WhitelistStatus @default(ACCEPTED)
   isDarkTheme     Boolean         @default(true)
   tempPassword    String?
+  statusViewMode  StatusViewMode  @default(DOT_COLOR)
 
   // relational data
   citizens             Citizen[]
@@ -94,6 +95,11 @@ model User {
   emsFdDeputies        EmsFdDeputy[]
   TaxiCall             TaxiCall[]
   TruckLog             TruckLog[]
+}
+
+enum StatusViewMode {
+  FULL_ROW_COLOR
+  DOT_COLOR
 }
 
 model Citizen {

@@ -67,6 +67,7 @@ export type User = {
   whitelistStatus: WhitelistStatus;
   isDarkTheme: boolean;
   hasTempPassword: boolean;
+  statusViewMode: StatusViewMode;
 };
 
 /**
@@ -519,6 +520,13 @@ export type LeoIncident = {
 
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
+
+export const StatusViewMode = {
+  FULL_ROW_COLOR: "FULL_ROW_COLOR",
+  DOT_COLOR: "DOT_COLOR",
+} as const;
+
+export type StatusViewMode = typeof StatusViewMode[keyof typeof StatusViewMode];
 
 export const rank = {
   OWNER: "OWNER",

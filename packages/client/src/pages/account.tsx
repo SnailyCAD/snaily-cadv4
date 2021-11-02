@@ -16,6 +16,7 @@ import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
+import { AppearanceTab } from "components/account/AppearanceTab";
 
 export default function Account() {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ export default function Account() {
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
 
-  const TABS_TITLES = [t("accountInfo"), t("accountSettings")];
+  const TABS_TITLES = [t("accountInfo"), t("accountSettings"), t("appearanceSettings")];
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
@@ -91,13 +92,16 @@ export default function Account() {
                         <Error>{errors.isDarkTheme}</Error>
                       </FormField>
 
-                      <Button disabled={state === "loading"}>{common("save")}</Button>
+                      <Button type="submit" disabled={state === "loading"}>
+                        {common("save")}
+                      </Button>
                     </Form>
                   )}
                 </Formik>
 
                 <ChangePasswordArea />
               </Tab.Panel>
+              <AppearanceTab />
             </Tab.Panels>
           </TabsContainer>
         </div>

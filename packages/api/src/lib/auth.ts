@@ -22,6 +22,7 @@ export const userProperties = {
   whitelistStatus: true,
   isDarkTheme: true,
   tempPassword: true,
+  statusViewMode: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
