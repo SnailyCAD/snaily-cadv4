@@ -60,7 +60,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("truckLogs")} - SnailyCAD</title>
       </Head>

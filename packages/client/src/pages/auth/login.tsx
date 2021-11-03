@@ -65,7 +65,7 @@ export default function Login() {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-dark-gray shadow-md"
+              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-gray-2 shadow-md"
               onSubmit={handleSubmit}
             >
               <h1 className="text-2xl text-gray-800 dark:text-white font-semibold mb-3">
@@ -107,7 +107,7 @@ export default function Login() {
                 <Button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3 dark:bg-dark-bg"
+                  className="w-full flex items-center justify-center gap-3"
                 >
                   {state === "loading" ? <Loader /> : null} {t("login")}
                 </Button>

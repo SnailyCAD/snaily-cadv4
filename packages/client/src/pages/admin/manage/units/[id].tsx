@@ -61,7 +61,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>
           {common("manage")} {makeUnitName(unit)} - SnailyCAD

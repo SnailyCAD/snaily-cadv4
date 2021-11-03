@@ -63,14 +63,14 @@ export default function CitizenId() {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>
           {citizen.name} {citizen.surname} - SnailyCAD
         </title>
       </Head>
 
-      <div className="card bg-gray-200/60 p-4 rounded-md flex items-start justify-between">
+      <div className="card bg-gray-200/60 dark:bg-gray-2 p-4 rounded-md flex items-start justify-between">
         <div className="flex flex-col sm:flex-row items-start">
           {citizen.imageId ? (
             <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
@@ -147,7 +147,6 @@ export default function CitizenId() {
       <div className="mt-3 gap-2 gap-y-3 grid grid-cols-1 md:grid-cols-2">
         <LicensesCard />
         <MedicalRecords medicalRecords={citizen.medicalRecords} />
-        {/* <ViolationsCard weapons={[]} /> */}
       </div>
 
       <div className="mt-3 space-y-3">

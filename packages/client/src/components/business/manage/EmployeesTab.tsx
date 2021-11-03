@@ -73,7 +73,7 @@ export const EmployeesTab = () => {
       <ul className="space-y-3 mt-3">
         {currentBusiness?.employees.map((employee) => (
           <li
-            className="bg-gray-200/60 rounded-md p-4 flex items-baseline justify-between"
+            className="bg-gray-200/60 dark:bg-gray-2 rounded-md p-4 flex items-baseline justify-between"
             key={employee.id}
           >
             <div>

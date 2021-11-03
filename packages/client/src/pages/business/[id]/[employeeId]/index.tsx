@@ -83,7 +83,7 @@ export default function BusinessId(props: Props) {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{currentBusiness.name}</title>
       </Head>
@@ -114,7 +114,7 @@ export default function BusinessId(props: Props) {
               const publishedBy = currentBusiness.employees.find((em) => em.id === post.employeeId);
 
               return (
-                <li className="bg-gray-100 overflow-hidden rounded-md" key={post.id}>
+                <li className="bg-gray-100 dark:bg-gray-2 overflow-hidden rounded-md" key={post.id}>
                   <header className="p-4 flex items-center justify-between">
                     <h3 className="text-2xl font-semibold">{post.title}</h3>
 
@@ -140,7 +140,7 @@ export default function BusinessId(props: Props) {
                   </main>
 
                   {publishedBy ? (
-                    <footer className="bg-gray-200/30 px-4 py-2">
+                    <footer className="bg-gray-200/30 dark:bg-gray-3 px-4 py-2">
                       <span className="font-semibold">{t("publishedBy")}: </span>
                       <span>
                         {publishedBy?.citizen.name} {publishedBy?.citizen.surname}

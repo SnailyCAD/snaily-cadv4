@@ -139,6 +139,9 @@ export function useAuth() {
 
 function isDarkModeSupportedForPage(pathname: string) {
   const routes = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/temp-password",
     "/account",
     "/admin",
     "/admin/manage/cad-settings",
@@ -153,6 +156,19 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/officer/incidents",
     "/officer/impound-lot",
     "/ems-fd/my-deputies",
+    "/citizen",
+    "/citizen/create",
+    "/citizen/[id]",
+    "/citizen/[id]/edit",
+    "/admin/manage/users",
+    "/admin/manage/users/[id]",
+    "/admin/manage/citizens",
+    "/admin/manage/units",
+    "/admin/manage/units/[id]",
+    "/truck-logs",
+    "/taxi",
+    "/business/[id]/[employeeId]",
+    "/business/[id]/[employeeId]/manage",
   ];
 
   return routes.includes(pathname);

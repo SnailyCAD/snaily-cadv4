@@ -64,7 +64,7 @@ export default function BusinessId(props: Props) {
     .filter(Boolean) as string[];
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>
           {currentBusiness.name} - {common("manage")}

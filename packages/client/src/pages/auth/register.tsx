@@ -65,8 +65,13 @@ export default function Register({ cad }: Props) {
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
-            <form className="rounded-lg p-6 w-full max-w-md bg-gray-100" onSubmit={handleSubmit}>
-              <h1 className="text-2xl text-gray-800 font-semibold mb-3">{t("register")}</h1>
+            <form
+              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-gray-2 shadow-md"
+              onSubmit={handleSubmit}
+            >
+              <h1 className="text-2xl text-gray-800 dark:text-white font-semibold mb-3">
+                {t("register")}
+              </h1>
 
               <FormField fieldId="username" label={t("username")}>
                 <Input
@@ -113,7 +118,7 @@ export default function Register({ cad }: Props) {
 
               <div className="mt-3">
                 <Link href="/auth/login">
-                  <a className="underline inline-block mb-3">{t("hasAccount")}</a>
+                  <a className="underline inline-block mb-3 dark:text-white">{t("hasAccount")}</a>
                 </Link>
 
                 <Button

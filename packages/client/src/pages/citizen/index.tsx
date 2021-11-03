@@ -41,7 +41,7 @@ export default function CitizenPage({ citizens }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("citizens")} - SnailyCAD</title>
       </Head>
@@ -52,8 +52,8 @@ export default function CitizenPage({ citizens }: Props) {
 
       <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
         <Link href="/citizen/create">
-          <a className="p-1 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-            {t("createCitizen")}
+          <a>
+            <Button className="w-full text-left">{t("createCitizen")}</Button>
           </a>
         </Link>
         <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
@@ -103,7 +103,7 @@ export default function CitizenPage({ citizens }: Props) {
           citizens.map((citizen) => (
             <li
               key={citizen.id}
-              className="p-3  bg-gray-200 rounded-md flex justify-between items-center"
+              className="p-3  bg-gray-200 dark:bg-gray-2 rounded-md flex justify-between items-center"
             >
               <div className="flex items-center space-x-3">
                 {citizen.imageId ? (
@@ -123,8 +123,8 @@ export default function CitizenPage({ citizens }: Props) {
 
               <div>
                 <Link href={`/citizen/${citizen.id}`}>
-                  <a className="py-1.5 px-3 text-white bg-gray-500 hover:bg-gray-600 rounded-md transition-all">
-                    {t("viewCitizen")}
+                  <a>
+                    <Button>{t("viewCitizen")}</Button>
                   </a>
                 </Link>
               </div>

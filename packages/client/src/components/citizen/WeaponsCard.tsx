@@ -43,7 +43,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
 
   return (
     <>
-      <div className="bg-gray-200/60 p-4 rounded-md">
+      <div className="bg-gray-200/60 dark:bg-gray-2 p-4 rounded-md">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourWeapons")}</h1>
 
@@ -53,7 +53,7 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
         </header>
 
         {weapons.length <= 0 ? (
-          <p className="text-gray-600">{t("noWeapons")}</p>
+          <p className="text-gray-600 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
           <div className="overflow-x-auto w-full mt-3">
             <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
