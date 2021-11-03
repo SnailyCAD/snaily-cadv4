@@ -94,7 +94,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
               {incidents.map((incident) => (
                 <tr key={incident.id}>
                   <td>#{incident.caseNumber}</td>
-                  <td className="capitalize flex items-center">
+                  <td className="capitalize">
                     {incident.creator.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
