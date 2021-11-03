@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
+import { useAuth } from "context/AuthContext";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
@@ -17,9 +18,17 @@ interface Props extends Exclude<SelectProps, "options"> {
 }
 
 export const Select = ({ name, onChange, ...rest }: Props) => {
+  const { user } = useAuth();
   const common = useTranslations("Common");
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
+
+  const useDarkTheme =
+    user?.isDarkTheme &&
+    typeof window !== "undefined" &&
+    window.document.body.classList.contains("dark");
+
+  const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
 
   function handleChange(value: SelectValue | null) {
     onChange?.({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
@@ -33,7 +42,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
-      styles={styles({})}
+      styles={styles(theme)}
       className="border-gray-500"
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
     />
@@ -51,7 +60,7 @@ export const styles = ({
 }: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
   valueContainer: (base) => ({
     ...base,
-    background: "#fff",
+    background: backgroundColor,
     color,
     ":hover": {
       border: "none",
@@ -107,7 +116,7 @@ export const styles = ({
   }),
   indicatorsContainer: (base) => ({
     ...base,
-    backgroundColor: "#fff",
+    backgroundColor,
     color,
   }),
   clearIndicator: (base) => ({
@@ -135,7 +144,7 @@ export const styles = ({
     boxShadow: "none",
     ":hover": {
       boxShadow: "none",
-      borderColor: "#000",
+      borderColor: "rgb(107, 114, 128)",
     },
     ":focus": {
       borderColor: "rgb(107, 114, 128)",

@@ -1,4 +1,5 @@
 import { useAuth } from "context/AuthContext";
+import { classNames } from "lib/classNames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { rank, valueType } from "types/prisma";
@@ -25,60 +26,67 @@ export const AdminSidebar = () => {
     <div className="w-60">
       <aside
         style={{ minHeight: "calc(100vh - 5rem)" }}
-        className="absolute w-60 left-4 top-0 bg-gray-200 rounded-md py-2"
+        className="absolute w-60 left-4 top-0 bg-gray-200 dark:bg-[#171717] rounded-md py-2"
       >
         <section>
-          <h1 className="text-2xl font-semibold px-3">{man("management")}</h1>
+          <h1 className="text-2xl font-semibold dark:text-white px-3">{man("management")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
             {management.map((type) => (
-              <li key={type} className="px-2">
-                <Link href={`/admin/manage/${type.toLowerCase()}`}>
-                  <a
-                    className={`transition-colors rounded-md block px-4 py-1.5 hover:bg-gray-300 ${
-                      isMActive(`/admin/manage/${type.toLowerCase()}`) && "bg-gray-300"
-                    }`}
-                  >
-                    {man(`MANAGE_${type}`)}
-                  </a>
-                </Link>
-              </li>
+              <SidebarItem
+                key={type}
+                isActive={isMActive(`/admin/manage/${type.toLowerCase()}`)}
+                href={`/admin/manage/${type.toLowerCase()}`}
+                text={man(`MANAGE_${type}`)}
+              />
             ))}
 
             {user?.rank === rank.OWNER ? (
-              <li className="px-2">
-                <Link href={"/admin/manage/cad-settings"}>
-                  <a
-                    className={`transition-colors rounded-md block px-4 py-1.5 hover:bg-gray-300 ${
-                      isMActive("/admin/manage/cad-settings") && "bg-gray-300"
-                    }`}
-                  >
-                    {man("MANAGE_CAD_SETTINGS")}
-                  </a>
-                </Link>
-              </li>
+              <SidebarItem
+                isActive={isMActive("/admin/manage/cad-settings")}
+                href="/admin/manage/cad-settings"
+                text={man("MANAGE_CAD_SETTINGS")}
+              />
             ) : null}
           </ul>
         </section>
 
         <section className="mt-3">
-          <h1 className="text-2xl font-semibold px-3">{t("Values.values")}</h1>
+          <h1 className="text-2xl font-semibold dark:text-white px-3">{t("Values.values")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
             {types.map((type) => (
-              <li key={type} className="px-2">
-                <Link href={`/admin/values/${type.toLowerCase()}`}>
-                  <a
-                    className={`transition-colors rounded-md block px-4 py-1 hover:bg-gray-300 ${
-                      isValueActive(type) && "bg-gray-300"
-                    }`}
-                  >
-                    {t(`${type.replace("-", "_")}.MANAGE`)}
-                  </a>
-                </Link>
-              </li>
+              <SidebarItem
+                key={type}
+                isActive={isValueActive(type)}
+                href={`/admin/values/${type.toLowerCase()}`}
+                text={t(`${type.replace("-", "_")}.MANAGE`)}
+              />
             ))}
           </ul>
         </section>
       </aside>
     </div>
+  );
+};
+
+interface ItemProps {
+  isActive: boolean;
+  text: string;
+  href: string;
+}
+
+const SidebarItem = ({ href, text, isActive }: ItemProps) => {
+  return (
+    <li className="px-2">
+      <Link href={href}>
+        <a
+          className={classNames(
+            "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-300 dark:hover:bg-dark-gray",
+            isActive && "bg-gray-300 dark:bg-dark-gray dark:text-white",
+          )}
+        >
+          {text}
+        </a>
+      </Link>
+    </li>
   );
 };

@@ -47,17 +47,17 @@ export const Modal = ({ title, children, isOpen, className, onClose }: ModalProp
             leaveTo="opacity-0 scale-95"
           >
             <div
-              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-xl rounded-lg ${className}`}
+              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg ${className}`}
             >
               <Dialog.Title
                 as="h3"
-                className="text-xl font-semibold text-gray-900 flex items-center justify-between mb-2"
+                className="text-xl font-semibold text-gray-900 dark:text-white flex items-center justify-between mb-2"
               >
                 {title}
 
                 <button
                   onClick={onClose}
-                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200"
+                  className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-dark-bright"
                 >
                   <X width={25} height={25} />
                 </button>

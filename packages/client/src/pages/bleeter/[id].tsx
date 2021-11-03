@@ -50,7 +50,7 @@ export default function BleetPost({ post }: Props) {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{post.title} - SnailyCAD</title>
       </Head>
