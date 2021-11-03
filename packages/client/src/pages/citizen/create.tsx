@@ -95,7 +95,7 @@ export default function CreateCitizen() {
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>Create Citizen</title>
       </Head>
@@ -115,7 +115,7 @@ export default function CreateCitizen() {
                 />
                 <Button
                   type="button"
-                  className="bg-red-400 hover:bg-red-500"
+                  variant="danger"
                   onClick={() => {
                     setFieldValue("image", "");
                   }}

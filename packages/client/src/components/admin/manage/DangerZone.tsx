@@ -32,7 +32,7 @@ export const DangerZone = ({ user }: Props) => {
   }
 
   return (
-    <div className="bg-gray-200 mt-10 rounded-md p-3">
+    <div className="bg-gray-200 dark:bg-gray-2 mt-10 rounded-md p-3">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
       <div className="mt-3 flex">

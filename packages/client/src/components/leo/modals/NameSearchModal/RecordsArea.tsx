@@ -33,7 +33,7 @@ export const RecordsArea = ({ records }: Props) => {
   ];
 
   return (
-    <div className={isCitizen ? "bg-gray-200/60 p-4 rounded-md" : ""}>
+    <div className={isCitizen ? "bg-gray-200/60 p-4 dark:bg-gray-2 rounded-md" : ""}>
       {isCitizen ? (
         <header className="flex items-center justify-between mb-3">
           <h1 className="text-2xl font-semibold">{t("Leo.records")}</h1>

@@ -95,7 +95,7 @@ export default function Taxi(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("taxi")} - SnailyCAD</title>
       </Head>

@@ -74,7 +74,7 @@ export default function ManageCitizens(props: Props) {
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{t("MANAGE_USERS")}</title>
       </Head>

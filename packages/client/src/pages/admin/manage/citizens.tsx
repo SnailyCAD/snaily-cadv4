@@ -67,7 +67,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
   }, [data]);
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{t("MANAGE_CITIZENS")}</title>
       </Head>
@@ -80,7 +80,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
         <ul className="mt-5">
           {citizens.map((citizen, idx) => (
             <li
-              className="my-1 bg-gray-200 p-2 px-4 rounded-md w-full flex flex-col"
+              className="my-1 bg-gray-200 dark:bg-gray-2 p-2 px-4 rounded-md w-full flex flex-col"
               key={citizen.id}
             >
               <Disclosure>

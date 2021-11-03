@@ -11,6 +11,7 @@ import { requestAll } from "lib/utils";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
 import { PendingUsersTab } from "components/admin/manage/PendingUsersTab";
+import { Button } from "components/Button";
 
 interface Props {
   users: User[];
@@ -30,7 +31,7 @@ export default function ManageCitizens({ users: data }: Props) {
   const tabs = [`${t("allUsers")} (${users.length})`, `${t("pendingUsers")} (${pending.length})`];
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{t("MANAGE_USERS")}</title>
       </Head>
@@ -42,7 +43,7 @@ export default function ManageCitizens({ users: data }: Props) {
           <ul className="mt-5">
             {users.map((user, idx) => (
               <li
-                className="my-1 bg-gray-200 py-3 px-4 rounded-md w-full flex flex-col"
+                className="my-1 bg-gray-200 dark:bg-gray-2 py-3 px-4 rounded-md w-full flex flex-col"
                 key={user.id}
               >
                 <div className="flex items-center justify-between">
@@ -53,8 +54,8 @@ export default function ManageCitizens({ users: data }: Props) {
 
                   <div>
                     <Link href={`/admin/manage/users/${user.id}`}>
-                      <a className="transition-colors text-white bg-gray-500 hover:bg-gray-600 p-1.5 px-3 rounded-md">
-                        {common("manage")}
+                      <a>
+                        <Button>{common("manage")}</Button>
                       </a>
                     </Link>
                   </div>
