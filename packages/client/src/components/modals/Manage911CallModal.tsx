@@ -168,7 +168,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
     } else {
       const { json } = await execute("/911-calls", {
         method: "POST",
-        data: values,
+        data: { ...values, assignedUnits: values.assignedUnits.map(({ value }) => value) },
       });
 
       if (json.id) {
