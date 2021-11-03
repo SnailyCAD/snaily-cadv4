@@ -146,6 +146,8 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/bleeter/[id]",
     "/admin/values/[path]",
     "/business",
+    "/tow",
+    "/tow/logs",
   ];
 
   return routes.includes(pathname);

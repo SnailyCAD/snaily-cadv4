@@ -25,7 +25,7 @@ table {
 }
 
 th {
-  @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-black lg:table-cell text-left select-none;
+  @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none;
 
   &:first-child {
     @apply rounded-tl-md rounded-bl-md;

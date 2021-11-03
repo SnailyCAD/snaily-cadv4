@@ -55,7 +55,7 @@ export interface SelectTheme {
 }
 
 export const styles = ({
-  backgroundColor = "rgb(229, 231, 235)",
+  backgroundColor = "white",
   color = "var(--dark)",
 }: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
   valueContainer: (base) => ({
@@ -124,7 +124,7 @@ export const styles = ({
     cursor: "pointer",
     color,
     ":hover": {
-      color: "#222",
+      color: backgroundColor === "white" ? "#222" : "#a1a1a1",
     },
   }),
   dropdownIndicator: (base) => ({
@@ -132,7 +132,7 @@ export const styles = ({
     cursor: "pointer",
     color,
     ":hover": {
-      color: "#222",
+      color: backgroundColor === "white" ? "#222" : "#a1a1a1",
     },
   }),
   control: (base, state) => ({
@@ -140,7 +140,9 @@ export const styles = ({
     background: backgroundColor,
     borderRadius: "0.375rem",
     overflow: "hidden",
-    border: state.isFocused ? "1.5px solid rgb(107, 114, 128)" : `1.5px solid ${backgroundColor}`,
+    border: state.isFocused
+      ? "1.5px solid rgb(107, 114, 128)"
+      : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
     boxShadow: "none",
     ":hover": {
       boxShadow: "none",
