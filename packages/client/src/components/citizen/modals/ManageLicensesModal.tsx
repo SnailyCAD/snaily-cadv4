@@ -13,6 +13,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
+import { FormRow } from "components/form/FormRow";
 
 export const ManageLicensesModal = () => {
   const { state, execute } = useFetch();
@@ -63,41 +64,76 @@ export const ManageLicensesModal = () => {
       title="Manage Licenses"
       isOpen={isOpen(ModalIds.ManageLicenses)}
       onClose={() => closeModal(ModalIds.ManageLicenses)}
-      className="w-[500px]"
+      className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="driversLicense" label={t("driversLicense")}>
-              <Select
-                hasError={!!errors.driversLicense}
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.driversLicense}
-                name="driversLicense"
-                onChange={handleChange}
-              />
-              <Error>{errors.driversLicense}</Error>
-            </FormField>
-
-            <FormField fieldId="driversLicenseCategory" label={t("driversLicenseCategory")}>
-              <Select
-                isMulti
-                hasError={!!errors.driversLicenseCategory}
-                values={driverslicenseCategory.values
-                  .filter((v) => v.type === "AUTOMOTIVE")
-                  .map((category) => ({
-                    label: category.value.value,
-                    value: category.id,
+            <FormRow>
+              <FormField fieldId="driversLicense" label={t("driversLicense")}>
+                <Select
+                  hasError={!!errors.driversLicense}
+                  values={license.values.map((license) => ({
+                    label: license.value,
+                    value: license.id,
                   }))}
-                value={values.driversLicenseCategory}
-                name="driversLicenseCategory"
-                onChange={handleChange}
-              />
-              <Error>{errors.driversLicenseCategory}</Error>
-            </FormField>
+                  value={values.driversLicense}
+                  name="driversLicense"
+                  onChange={handleChange}
+                />
+                <Error>{errors.driversLicense}</Error>
+              </FormField>
+
+              <FormField fieldId="driversLicenseCategory" label={t("driversLicenseCategory")}>
+                <Select
+                  isMulti
+                  hasError={!!errors.driversLicenseCategory}
+                  values={driverslicenseCategory.values
+                    .filter((v) => v.type === "AUTOMOTIVE")
+                    .map((category) => ({
+                      label: category.value.value,
+                      value: category.id,
+                    }))}
+                  value={values.driversLicenseCategory}
+                  name="driversLicenseCategory"
+                  onChange={handleChange}
+                />
+                <Error>{errors.driversLicenseCategory}</Error>
+              </FormField>
+            </FormRow>
+
+            <FormRow>
+              <FormField fieldId="pilotLicense" label={t("pilotLicense")}>
+                <Select
+                  hasError={!!errors.pilotLicense}
+                  values={license.values.map((license) => ({
+                    label: license.value,
+                    value: license.id,
+                  }))}
+                  value={values.pilotLicense}
+                  name="pilotLicense"
+                  onChange={handleChange}
+                />
+                <Error>{errors.pilotLicense}</Error>
+              </FormField>
+
+              <FormField fieldId="pilotLicenseCategory" label={t("pilotLicenseCategory")}>
+                <Select
+                  isMulti
+                  hasError={!!errors.pilotLicenseCategory}
+                  values={driverslicenseCategory.values
+                    .filter((v) => v.type === "AVIATION")
+                    .map((category) => ({
+                      label: category.value.value,
+                      value: category.id,
+                    }))}
+                  value={values.pilotLicenseCategory}
+                  name="pilotLicenseCategory"
+                  onChange={handleChange}
+                />
+                <Error>{errors.pilotLicenseCategory}</Error>
+              </FormField>
+            </FormRow>
 
             <FormField fieldId="weaponLicense" label={t("weaponLicense")}>
               <Select
@@ -111,37 +147,6 @@ export const ManageLicensesModal = () => {
                 onChange={handleChange}
               />
               <Error>{errors.weaponLicense}</Error>
-            </FormField>
-
-            <FormField fieldId="pilotLicense" label={t("pilotLicense")}>
-              <Select
-                hasError={!!errors.pilotLicense}
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.pilotLicense}
-                name="pilotLicense"
-                onChange={handleChange}
-              />
-              <Error>{errors.pilotLicense}</Error>
-            </FormField>
-
-            <FormField fieldId="pilotLicenseCategory" label={t("pilotLicenseCategory")}>
-              <Select
-                isMulti
-                hasError={!!errors.pilotLicenseCategory}
-                values={driverslicenseCategory.values
-                  .filter((v) => v.type === "AVIATION")
-                  .map((category) => ({
-                    label: category.value.value,
-                    value: category.id,
-                  }))}
-                value={values.pilotLicenseCategory}
-                name="pilotLicenseCategory"
-                onChange={handleChange}
-              />
-              <Error>{errors.pilotLicenseCategory}</Error>
             </FormField>
 
             <FormField fieldId="ccw" label={t("ccw")}>
