@@ -12,24 +12,29 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import {
+import type {
   DepartmentValue,
   DivisionValue,
   DriversLicenseCategoryValue,
   EmployeeValue,
   StatusValue,
   Value,
-  valueType,
   ValueType,
   VehicleValue,
 } from "types/prisma";
+// eslint-disable-next-line no-duplicate-imports
+import { valueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
+import dynamic from "next/dynamic";
+
+const ManageValueModal = dynamic(async () => {
+  return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
+});
 
 export type TValue =
   | Value

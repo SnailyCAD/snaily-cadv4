@@ -12,12 +12,16 @@ import { useModal } from "context/ModalContext";
 import { DriversLicenseCategoryType, DriversLicenseCategoryValue, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { ManageValueModal } from "components/admin/values/ManageValueModal";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import { handleFilter, sortValues } from "./[path]";
+import dynamic from "next/dynamic";
+
+const ManageValueModal = dynamic(async () => {
+  return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
+});
 
 export type TValue = DriversLicenseCategoryValue;
 

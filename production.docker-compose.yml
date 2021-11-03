@@ -49,6 +49,8 @@ services:
       - .:/srv/client
     env_file:
       - .env
+    environment:
+      NODE_ENV: production
     working_dir: /srv/client
     depends_on:
       - api

@@ -1,0 +1,62 @@
+import * as React from "react";
+import { Button } from "components/Button";
+import { Modal } from "components/modal/Modal";
+import { useCitizen } from "context/CitizenContext";
+import { useModal } from "context/ModalContext";
+import { makeImageUrl } from "lib/utils";
+import useFetch from "lib/useFetch";
+
+export const CitizenImageModal = () => {
+  const { execute } = useFetch();
+  const { citizen, setCurrentCitizen } = useCitizen(false);
+  const { isOpen, closeModal } = useModal();
+  const fileRef = React.useRef<HTMLInputElement>(null);
+
+  function handleEditImageClick() {
+    if (fileRef.current) {
+      fileRef.current.click();
+    }
+  }
+
+  async function onImageSelectClick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.item(0) ?? null;
+    const fd = new FormData();
+
+    if (!file) return;
+    if (!citizen) return;
+
+    fd.append("image", file, file.name);
+
+    const { json } = await execute(`/citizen/${citizen.id}`, {
+      method: "POST",
+      data: fd,
+    });
+
+    if (json.imageId) {
+      // `v` is to update the state. imageId will 80% be the same
+      const v = Math.floor(Math.random() * 100);
+      setCurrentCitizen({ ...citizen, imageId: `${json.imageId}?v=${v}` });
+    }
+  }
+
+  return (
+    <Modal
+      title={`${citizen.name} ${citizen.surname}`}
+      onClose={() => closeModal("citizenImage")}
+      isOpen={isOpen("citizenImage")}
+    >
+      <div className="mt-10 flex items-center justify-center">
+        <img
+          draggable={false}
+          className="rounded-md w-[40em] h-[40em] object-cover"
+          src={makeImageUrl("citizens", citizen.imageId!)}
+        />
+      </div>
+
+      <div className="mt-5 flex justify-center w-full">
+        <input onChange={onImageSelectClick} className="hidden" type="file" ref={fileRef} />
+        <Button onClick={handleEditImageClick}>Edit Image</Button>
+      </div>
+    </Modal>
+  );
+};

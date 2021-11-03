@@ -13,8 +13,8 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { LeoIncident } from "types/prisma";
 import { FullOfficer, useDispatchState } from "state/dispatchState";
 import { format } from "date-fns";
-import { CreateIncidentModal } from "components/leo/modals/CreateIncidentModal";
 import { useLeoState } from "state/leoState";
+import dynamic from "next/dynamic";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -23,6 +23,10 @@ interface Props {
   officers: FullOfficer[];
   activeOfficer: FullOfficer | null;
 }
+
+const CreateIncidentModal = dynamic(async () => {
+  return (await import("components/leo/modals/CreateIncidentModal")).CreateIncidentModal;
+});
 
 export default function LeoIncidents({ officers, activeOfficer, incidents }: Props) {
   const t = useTranslations("Leo");

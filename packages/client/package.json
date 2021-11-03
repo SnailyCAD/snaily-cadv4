@@ -3,8 +3,9 @@
   "version": "0.8.0-alpha",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn copy-env && next build",
     "start": "next start",
+    "copy-env": "copy ../../.env ./client/.env",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx,"
   },
@@ -38,6 +39,7 @@
     "@types/react-dom": "^17.0.10",
     "@types/sortablejs": "^1.10.7",
     "autoprefixer": "^10.4.0",
+    "copy": "^0.3.2",
     "postcss": "^8.3.11",
     "preact": "^10.5.15",
     "sass": "^1.43.4",
