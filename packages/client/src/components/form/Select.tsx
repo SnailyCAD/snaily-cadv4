@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
+import { useAuth } from "context/AuthContext";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
@@ -17,9 +18,17 @@ interface Props extends Exclude<SelectProps, "options"> {
 }
 
 export const Select = ({ name, onChange, ...rest }: Props) => {
+  const { user } = useAuth();
   const common = useTranslations("Common");
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
+
+  const useDarkTheme =
+    user?.isDarkTheme &&
+    typeof window !== "undefined" &&
+    window.document.body.classList.contains("dark");
+
+  const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
 
   function handleChange(value: SelectValue | null) {
     onChange?.({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
@@ -33,7 +42,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
-      styles={styles({})}
+      styles={styles(theme)}
       className="border-gray-500"
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
     />
@@ -46,12 +55,12 @@ export interface SelectTheme {
 }
 
 export const styles = ({
-  backgroundColor = "rgb(229, 231, 235)",
+  backgroundColor = "white",
   color = "var(--dark)",
 }: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
   valueContainer: (base) => ({
     ...base,
-    background: "#fff",
+    background: backgroundColor,
     color,
     ":hover": {
       border: "none",
@@ -107,7 +116,7 @@ export const styles = ({
   }),
   indicatorsContainer: (base) => ({
     ...base,
-    backgroundColor: "#fff",
+    backgroundColor,
     color,
   }),
   clearIndicator: (base) => ({
@@ -115,7 +124,7 @@ export const styles = ({
     cursor: "pointer",
     color,
     ":hover": {
-      color: "#222",
+      color: backgroundColor === "white" ? "#222" : "#a1a1a1",
     },
   }),
   dropdownIndicator: (base) => ({
@@ -123,7 +132,7 @@ export const styles = ({
     cursor: "pointer",
     color,
     ":hover": {
-      color: "#222",
+      color: backgroundColor === "white" ? "#222" : "#a1a1a1",
     },
   }),
   control: (base, state) => ({
@@ -131,11 +140,13 @@ export const styles = ({
     background: backgroundColor,
     borderRadius: "0.375rem",
     overflow: "hidden",
-    border: state.isFocused ? "1.5px solid rgb(107, 114, 128)" : `1.5px solid ${backgroundColor}`,
+    border: state.isFocused
+      ? "1.5px solid rgb(107, 114, 128)"
+      : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
     boxShadow: "none",
     ":hover": {
       boxShadow: "none",
-      borderColor: "#000",
+      borderColor: "rgb(107, 114, 128)",
     },
     ":focus": {
       borderColor: "rgb(107, 114, 128)",

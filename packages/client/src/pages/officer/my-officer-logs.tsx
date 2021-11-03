@@ -40,7 +40,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   }, [data]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("myOfficerLogs")} - SnailyCAD</title>
       </Head>

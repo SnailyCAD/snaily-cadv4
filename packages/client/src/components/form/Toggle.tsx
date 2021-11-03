@@ -9,8 +9,8 @@ interface Props {
 }
 
 enum Directions {
-  RIGHT = 0,
-  LEFT = 100,
+  RIGHT = 25,
+  LEFT = 175,
 }
 
 export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
@@ -28,11 +28,11 @@ export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
     <div
       className={`w-[100px] ${
         text === "enable/disable" && "w-1/4 min-w-[206px]"
-      } bg-gray-200 flex items-center justify-between rounded-lg relative overflow-hidden mt-1`}
+      } bg-gray-200  dark:bg-gray-2 flex items-center justify-between rounded-lg relative overflow-hidden mt-1`}
     >
       <div
         style={{ transform: `translateX(${x}%)` }}
-        className="absolute bg-dark-gray h-8 w-1/2 pointer-events-none transition-all duration-200"
+        className="absolute dark:bg-gray-3 bg-dark-gray h-7 w-2/6 rounded-md pointer-events-none transition-all duration-200"
       />
 
       <button

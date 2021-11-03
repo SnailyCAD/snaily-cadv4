@@ -41,7 +41,7 @@ export default function BusinessPage(props: Props) {
   }, [props.joinableBusinesses, setJoinableBusinesses]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("businesses")}</title>
       </Head>

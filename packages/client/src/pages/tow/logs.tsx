@@ -39,7 +39,7 @@ export default function TowLogs(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("towLogs")} - SnailyCAD</title>
       </Head>

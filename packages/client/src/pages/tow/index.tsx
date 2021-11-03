@@ -95,7 +95,7 @@ export default function Tow(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("tow")} - SnailyCAD</title>
       </Head>

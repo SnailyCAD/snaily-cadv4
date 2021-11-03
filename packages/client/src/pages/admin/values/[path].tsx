@@ -139,7 +139,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{typeT("MANAGE")} - SnailyCAD</title>
       </Head>
@@ -166,7 +166,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             .filter((v) => handleFilter(v, search))
             .map((value, idx) => (
               <li
-                className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
+                className="my-1 bg-gray-200 dark:bg-gray-2 p-2 px-4 rounded-md flex items-center justify-between"
                 key={value.id}
               >
                 <div className="flex items-center">

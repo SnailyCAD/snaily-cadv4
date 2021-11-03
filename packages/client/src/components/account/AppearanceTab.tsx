@@ -37,7 +37,7 @@ export const AppearanceTab = () => {
   }
 
   return (
-    <Tab.Panel className="bg-white rounded-xl p-3">
+    <Tab.Panel>
       <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (

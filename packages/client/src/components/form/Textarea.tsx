@@ -12,9 +12,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
       {...rest}
       className={classNames(
         `
-      w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200
-      outline-none focus:border-gray-800
-      hover:border-dark-gray
+      w-full p-1.5 px-3 bg-white dark:bg rounded-md border-[1.5px] border-gray-200 dark:border-gray-600
+      outline-none focus:border-gray-800 dark:focus:border-gray-200
+      dark:bg-gray-2 dark:text-white
       disabled:cursor-not-allowed disabled:opacity-80
       resize-y min-h-[3em]
       transition-colors`,

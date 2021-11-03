@@ -54,8 +54,12 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   }, [router]);
 
   React.useEffect(() => {
-    _setBodyTheme(user?.isDarkTheme ?? true);
-  }, [user?.isDarkTheme]);
+    if (isDarkModeSupportedForPage(router.pathname)) {
+      _setBodyTheme(user?.isDarkTheme ?? true);
+    } else {
+      _setBodyTheme(false);
+    }
+  }, [user?.isDarkTheme, router.pathname]);
 
   React.useEffect(() => {
     if (user) {
@@ -133,12 +137,35 @@ export function useAuth() {
   return context;
 }
 
+function isDarkModeSupportedForPage(pathname: string) {
+  const routes = [
+    "/account",
+    "/admin",
+    "/admin/manage/cad-settings",
+    "/bleeter",
+    "/bleeter/[id]",
+    "/admin/values/[path]",
+    "/business",
+    "/tow",
+    "/tow/logs",
+    "/officer/my-officers",
+    "/officer/my-officer-logs",
+    "/officer/incidents",
+    "/officer/impound-lot",
+    "/ems-fd/my-deputies",
+  ];
+
+  return routes.includes(pathname);
+}
+
 function _setBodyTheme(isDarkTheme: boolean) {
-  if (!isDarkTheme) return;
+  if (!isDarkTheme) {
+    window.document.body.classList.remove("dark");
+    return;
+  }
   if (typeof window === "undefined") return;
 
-  true;
-  // window.document.body.classList.add("dark");
+  window.document.body.classList.add("dark");
 }
 
 function hasPermissionForCurrentRoute(path: string, user: User) {

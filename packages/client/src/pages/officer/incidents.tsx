@@ -56,7 +56,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
     );
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("incidents")} - SnailyCAD</title>
       </Head>

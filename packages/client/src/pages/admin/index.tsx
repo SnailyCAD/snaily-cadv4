@@ -28,7 +28,7 @@ interface Counts {
 
 export default function Admin({ counts }: { counts: Counts }) {
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <h1 className="text-3xl font-semibold dark:text-white">Dashboard</h1>
 
       <Group name="Users">
@@ -104,7 +104,9 @@ const Item = ({
       </div>
 
       <div className="flex flex-col items-end">
-        {percentage ? <span className="text-gray-500 text-lg">{percentage}%</span> : null}
+        {percentage ? (
+          <span className="text-gray-500 dark:text-gray-300 text-lg">{percentage}%</span>
+        ) : null}
         <span className="ml-3 text-xl">{name}</span>
       </div>
     </div>
