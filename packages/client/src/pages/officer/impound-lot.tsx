@@ -47,7 +47,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("impoundLot")} - SnailyCAD</title>
       </Head>

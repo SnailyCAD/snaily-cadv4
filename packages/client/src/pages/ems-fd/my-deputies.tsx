@@ -61,7 +61,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("Ems.myDeputies")} - SnailyCAD</title>
       </Head>

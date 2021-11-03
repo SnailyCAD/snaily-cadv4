@@ -148,6 +148,11 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/business",
     "/tow",
     "/tow/logs",
+    "/officer/my-officers",
+    "/officer/my-officer-logs",
+    "/officer/incidents",
+    "/officer/impound-lot",
+    "/ems-fd/my-deputies",
   ];
 
   return routes.includes(pathname);

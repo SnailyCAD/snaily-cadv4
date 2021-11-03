@@ -124,7 +124,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
                 />
                 <Button
                   type="button"
-                  className="bg-red-400 hover:bg-red-500"
+                  variant="danger"
                   onClick={() => {
                     setFieldValue("image", "");
                   }}
