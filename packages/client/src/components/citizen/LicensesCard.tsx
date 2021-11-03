@@ -12,7 +12,7 @@ export const LicensesCard = () => {
   const common = useTranslations("Common");
   const { citizen } = useCitizen(false);
 
-  const types = ["driversLicense", "weaponLicense", "pilotLicense", "ccw"] as const;
+  const types = ["driversLicense", "pilotLicense", "weaponLicense", "ccw"] as const;
 
   return (
     <>
