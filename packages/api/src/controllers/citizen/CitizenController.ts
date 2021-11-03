@@ -9,6 +9,7 @@ import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
+import { unitProperties } from "../../lib/officer";
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -55,7 +56,9 @@ export class CitizenController {
         dlPilotCategory: { include: { value: true } },
         Record: {
           include: {
-            officer: true,
+            officer: {
+              include: unitProperties,
+            },
             violations: true,
           },
         },
