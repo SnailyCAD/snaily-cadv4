@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 import React from "react";
 import { FullDeputy } from "state/dispatchState";
 import { cad as CAD, Feature, Officer } from "types/prisma";
-import { handleRequest } from "./fetch";
+import { findUrl, handleRequest } from "./fetch";
 
-const url = (process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1").replace("/v1", "");
+const url = findUrl().replace("/v1", "");
 const IMAGE_URL = `${url}/static/`;
 
 export function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {

@@ -214,8 +214,8 @@ model MedicalRecord {
   updatedAt DateTime @default(now()) @updatedAt
 
   // type = diseases
-  type         String  @db.Text
-  description  String  @db.Text
+  type         String? @db.Text
+  description  String? @db.Text
   bloodGroup   Value?  @relation(fields: [bloodGroupId], references: [id])
   bloodGroupId String?
 }
@@ -514,6 +514,8 @@ model OfficerLog {
   userId    String
   officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 }
 
 model ImpoundedVehicle {
@@ -522,6 +524,8 @@ model ImpoundedVehicle {
   registeredVehicleId String
   location            Value             @relation(fields: [valueId], references: [id])
   valueId             String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @default(now()) @updatedAt
 }
 
 model LeoIncident {
@@ -579,13 +583,15 @@ model AssignedUnit {
   emsFdDeputyId String?
   call911       Call911?     @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
 }
 
 model Call911Event {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
-  call        Call911  @relation(fields: [call911Id], references: [id])
+  call        Call911  @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id   String
   description String   @db.Text
 }
@@ -684,6 +690,8 @@ model TruckLog {
   vehicleId String?
   startedAt String             @db.VarChar(255)
   endedAt   String             @db.VarChar(255)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
 }
 
 // other

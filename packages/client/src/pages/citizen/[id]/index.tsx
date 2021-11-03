@@ -9,10 +9,8 @@ import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";
-import { Modal } from "components/modal/Modal";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
@@ -21,15 +19,20 @@ import { MedicalRecords } from "components/citizen/MedicalRecords";
 import { calculateAge, makeImageUrl, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
+import dynamic from "next/dynamic";
+
+const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
+const CitizenImageModal = dynamic(
+  async () => (await import("components/citizen/modals/CitizenImageModal")).CitizenImageModal,
+);
 
 export default function CitizenId() {
   const { execute, state } = useFetch();
-  const { isOpen, openModal, closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const router = useRouter();
-  const { citizen, setCurrentCitizen } = useCitizen();
-  const fileRef = React.useRef<HTMLInputElement>(null);
+  const { citizen } = useCitizen();
 
   async function handleDelete() {
     if (!citizen) return;
@@ -40,33 +43,6 @@ export default function CitizenId() {
     if (data.json) {
       closeModal("deleteCitizen");
       router.push("/citizen");
-    }
-  }
-
-  function handleEditImageClick() {
-    if (fileRef.current) {
-      fileRef.current.click();
-    }
-  }
-
-  async function onImageSelectClick(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.item(0) ?? null;
-    const fd = new FormData();
-
-    if (!file) return;
-    if (!citizen) return;
-
-    fd.append("image", file, file.name);
-
-    const { json } = await execute(`/citizen/${citizen.id}`, {
-      method: "POST",
-      data: fd,
-    });
-
-    if (json.imageId) {
-      // `v` is to update the state. imageId will 80% be the same
-      const v = Math.floor(Math.random() * 100);
-      setCurrentCitizen({ ...citizen, imageId: `${json.imageId}?v=${v}` });
     }
   }
 
@@ -180,57 +156,20 @@ export default function CitizenId() {
         <RecordsArea records={citizen.Record} />
       </div>
 
-      <Modal
-        title={`${citizen.name} ${citizen.surname}`}
-        onClose={() => closeModal("citizenImage")}
-        isOpen={isOpen("citizenImage")}
-      >
-        <div className="mt-10 flex items-center justify-center">
-          <img
-            draggable={false}
-            className="rounded-md w-[40em] h-[40em] object-cover"
-            src={makeImageUrl("citizens", citizen.imageId!)}
-          />
-        </div>
+      <CitizenImageModal />
 
-        <div className="mt-5 flex justify-center w-full">
-          <input onChange={onImageSelectClick} className="hidden" type="file" ref={fileRef} />
-          <Button onClick={handleEditImageClick}>Edit Image</Button>
-        </div>
-      </Modal>
-
-      <Modal
+      <AlertModal
+        onDeleteClick={handleDelete}
         title="Delete Citizen"
-        onClose={() => closeModal("deleteCitizen")}
-        isOpen={isOpen("deleteCitizen")}
-      >
-        <p className="my-3">
-          {t.rich("alert_deleteCitizen", {
-            citizen: `${citizen.name} ${citizen.surname}`,
-            span: (children) => {
-              return <span className="font-semibold">{children}</span>;
-            },
-          })}
-        </p>
-        <div className="mt-2 flex gap-2 items-center justify-end">
-          <Button
-            variant="cancel"
-            disabled={state === "loading"}
-            onClick={() => closeModal("deleteCitizen")}
-          >
-            {common("cancel")}
-          </Button>
-          <Button
-            disabled={state === "loading"}
-            variant="danger"
-            className="flex items-center"
-            onClick={handleDelete}
-          >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
-            {common("delete")}
-          </Button>
-        </div>
-      </Modal>
+        description={t.rich("alert_deleteCitizen", {
+          citizen: `${citizen.name} ${citizen.surname}`,
+          span: (children) => {
+            return <span className="font-semibold">{children}</span>;
+          },
+        })}
+        id="deleteCitizen"
+        state={state}
+      />
     </Layout>
   );
 }

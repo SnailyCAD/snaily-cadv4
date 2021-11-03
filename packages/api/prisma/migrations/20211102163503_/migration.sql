@@ -1,0 +1,5 @@
+-- DropForeignKey
+ALTER TABLE "Call911Event" DROP CONSTRAINT "Call911Event_call911Id_fkey";
+
+-- AddForeignKey
+ALTER TABLE "Call911Event" ADD CONSTRAINT "Call911Event_call911Id_fkey" FOREIGN KEY ("call911Id") REFERENCES "Call911"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -11,7 +11,7 @@ interface Options extends AxiosRequestConfig {
 }
 
 export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
-  const url = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
+  const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = location?.pathname ?? options?.req?.url;
 
@@ -28,4 +28,15 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
       ...(options?.headers ?? {}),
     },
   }) as AxiosPromise<T>;
+}
+
+export function findUrl() {
+  const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
+  const includesDockerContainerName = envUrl.match(/(http(s?)):\/\/api:\w+/g);
+
+  if ((process.browser || typeof window !== "undefined") && includesDockerContainerName) {
+    return "http://localhost:8080/v1";
+  }
+
+  return envUrl;
 }

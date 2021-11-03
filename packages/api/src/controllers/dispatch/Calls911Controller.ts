@@ -65,9 +65,22 @@ export class Calls911Controller {
       },
     });
 
-    this.socket.emit911Call(this.officerOrDeputyToUnit(call));
+    const units = (body.get("assignedUnits") ?? []) as string[];
+    await this.assignUnitsToCall(call.id, units);
 
-    return this.officerOrDeputyToUnit(call);
+    const updated = await prisma.call911.findUnique({
+      where: {
+        id: call.id,
+      },
+      include: {
+        events: true,
+        assignedUnits: assignedUnitsInclude,
+      },
+    });
+
+    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
+
+    return this.officerOrDeputyToUnit(updated);
   }
 
   @Put("/:id")
@@ -116,39 +129,7 @@ export class Calls911Controller {
     });
 
     const units = (body.get("assignedUnits") ?? []) as string[];
-    await Promise.all(
-      units.map(async (id) => {
-        const { unit, type } = await this.findUnit(
-          id,
-          {
-            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-          },
-          true,
-        );
-
-        if (!unit) {
-          throw new BadRequest("unitOffDuty");
-        }
-
-        const assignedUnit = await prisma.assignedUnit.create({
-          data: {
-            call911Id: call.id,
-            [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
-          },
-        });
-
-        await prisma.call911.update({
-          where: {
-            id: call.id,
-          },
-          data: {
-            assignedUnits: {
-              connect: { id: assignedUnit.id },
-            },
-          },
-        });
-      }),
-    );
+    await this.assignUnitsToCall(call.id, units);
 
     const updated = await prisma.call911.findUnique({
       where: {
@@ -385,5 +366,41 @@ export class Calls911Controller {
         unit: v.officer ?? v.deputy,
       })),
     };
+  }
+
+  private async assignUnitsToCall(callId: string, units: string[]) {
+    await Promise.all(
+      units.map(async (id) => {
+        const { unit, type } = await this.findUnit(
+          id,
+          {
+            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          },
+          true,
+        );
+
+        if (!unit) {
+          throw new BadRequest("unitOffDuty");
+        }
+
+        const assignedUnit = await prisma.assignedUnit.create({
+          data: {
+            call911Id: callId,
+            [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+          },
+        });
+
+        await prisma.call911.update({
+          where: {
+            id: callId,
+          },
+          data: {
+            assignedUnits: {
+              connect: { id: assignedUnit.id },
+            },
+          },
+        });
+      }),
+    );
   }
 }

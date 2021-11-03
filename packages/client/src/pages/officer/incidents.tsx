@@ -13,8 +13,8 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { LeoIncident } from "types/prisma";
 import { FullOfficer, useDispatchState } from "state/dispatchState";
 import { format } from "date-fns";
-import { CreateIncidentModal } from "components/leo/modals/CreateIncidentModal";
 import { useLeoState } from "state/leoState";
+import dynamic from "next/dynamic";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -23,6 +23,10 @@ interface Props {
   officers: FullOfficer[];
   activeOfficer: FullOfficer | null;
 }
+
+const CreateIncidentModal = dynamic(async () => {
+  return (await import("components/leo/modals/CreateIncidentModal")).CreateIncidentModal;
+});
 
 export default function LeoIncidents({ officers, activeOfficer, incidents }: Props) {
   const t = useTranslations("Leo");
@@ -33,6 +37,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const generateCallsign = useGenerateCallsign();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
+  const yesOrNoText = (t: boolean) => (t === true ? "yes" : "no");
 
   React.useEffect(() => {
     setAllOfficers(officers);
@@ -89,7 +94,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
               {incidents.map((incident) => (
                 <tr key={incident.id}>
                   <td>#{incident.caseNumber}</td>
-                  <td className="capitalize flex items-center">
+                  <td className="capitalize">
                     {incident.creator.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -100,10 +105,12 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                     {generateCallsign(incident.creator)} {makeUnitName(incident.creator)}
                   </td>
                   <td>{involvedOfficers(incident)}</td>
-                  <td>{String(incident.firearmsInvolved)}</td>
-                  <td>{String(incident.injuriesOrFatalities)}</td>
-                  <td>{String(incident.arrestsMade)}</td>
-                  <td>{incident.description}</td>
+                  <td>{common(yesOrNoText(incident.firearmsInvolved))}</td>
+                  <td>{common(yesOrNoText(incident.injuriesOrFatalities))}</td>
+                  <td>{common(yesOrNoText(incident.arrestsMade))}</td>
+                  <td className="max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
+                    {incident.description}
+                  </td>
                   <td>{format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm")}</td>
                 </tr>
               ))}

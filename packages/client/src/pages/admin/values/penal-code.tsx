@@ -10,8 +10,12 @@ import { PenalCode, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { ManagePenalCode } from "components/admin/values/ManagePenalCode";
 import { requestAll } from "lib/utils";
+import dynamic from "next/dynamic";
+
+const ManagePenalCode = dynamic(async () => {
+  return (await import("components/admin/values/ManagePenalCode")).ManagePenalCode;
+});
 
 interface Props {
   values: { type: ValueType; values: PenalCode[] };
