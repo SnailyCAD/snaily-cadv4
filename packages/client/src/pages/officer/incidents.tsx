@@ -33,6 +33,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const generateCallsign = useGenerateCallsign();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
+  const yesOrNoText = (t: boolean) => (t === true ? "yes" : "no");
 
   React.useEffect(() => {
     setAllOfficers(officers);
@@ -100,10 +101,12 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                     {generateCallsign(incident.creator)} {makeUnitName(incident.creator)}
                   </td>
                   <td>{involvedOfficers(incident)}</td>
-                  <td>{String(incident.firearmsInvolved)}</td>
-                  <td>{String(incident.injuriesOrFatalities)}</td>
-                  <td>{String(incident.arrestsMade)}</td>
-                  <td>{incident.description}</td>
+                  <td>{common(yesOrNoText(incident.firearmsInvolved))}</td>
+                  <td>{common(yesOrNoText(incident.injuriesOrFatalities))}</td>
+                  <td>{common(yesOrNoText(incident.arrestsMade))}</td>
+                  <td className="max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
+                    {incident.description}
+                  </td>
                   <td>{format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm")}</td>
                 </tr>
               ))}

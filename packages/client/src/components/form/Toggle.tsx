@@ -17,8 +17,8 @@ export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
   const [x, setX] = React.useState(() => getDirection(toggled));
   const t = useTranslations("Common");
 
-  const trueText = text === "true/false" ? "True" : text === "on/off" ? t("on") : t("enabled");
-  const falseText = text === "true/false" ? "False" : text === "on/off" ? t("off") : t("disabled");
+  const trueText = text === "true/false" ? t("yes") : text === "on/off" ? t("on") : t("enabled");
+  const falseText = text === "true/false" ? t("no") : text === "on/off" ? t("off") : t("disabled");
 
   React.useEffect(() => {
     setX(getDirection(toggled));

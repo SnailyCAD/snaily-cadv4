@@ -214,8 +214,8 @@ model MedicalRecord {
   updatedAt DateTime @default(now()) @updatedAt
 
   // type = diseases
-  type         String  @db.Text
-  description  String  @db.Text
+  type         String? @db.Text
+  description  String? @db.Text
   bloodGroup   Value?  @relation(fields: [bloodGroupId], references: [id])
   bloodGroupId String?
 }

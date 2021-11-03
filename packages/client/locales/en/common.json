@@ -27,7 +27,9 @@
     "events": "Events",
     "name": "Name",
     "categories": "Categories",
-    "continue": "Continue"
+    "continue": "Continue",
+    "yes": "Yes",
+    "no": "No"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

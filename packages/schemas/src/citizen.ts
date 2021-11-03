@@ -35,7 +35,8 @@ export const LICENSE_SCHEMA = z.object({
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({
-  type: z.string().min(2).max(255),
-  description: z.string().min(5),
+  type: z.string().max(255),
+  description: z.string(),
+  bloodGroup: z.string().max(255),
   citizenId: z.string().min(2).max(255),
 });
