@@ -99,6 +99,8 @@ const components: Record<string, (...args: any[]) => any> = {
         "rounded-sm px-2 py-1",
         "dark:text-white",
         "hover:bg-white/[0.12] dark:hover:bg-white/[0.05]",
+        "active:bg-white/[0.12] dark:active:bg-white/[0.05]",
+        "focus:bg-white/[0.12] dark:focus:bg-white/[0.05]",
         "cursor-pointer",
         rest.className,
       )}
