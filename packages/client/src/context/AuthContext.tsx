@@ -177,6 +177,7 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/officer",
     "/dispatch",
     "/admin/values/driverslicense-category",
+    "/admin/values/penal-code",
   ];
 
   return routes.includes(pathname);
