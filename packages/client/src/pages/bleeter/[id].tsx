@@ -14,8 +14,8 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { makeImageUrl } from "lib/utils";
 import dynamic from "next/dynamic";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -34,6 +34,7 @@ export default function BleetPost({ post }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Bleeter");
   const router = useRouter();
+  const { makeImageUrl } = useImageUrl();
 
   async function handleDelete() {
     if (!post) return;

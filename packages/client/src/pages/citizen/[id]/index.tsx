@@ -16,10 +16,11 @@ import { VehiclesCard } from "components/citizen/VehiclesCard";
 import { WeaponsCard } from "components/citizen/WeaponsCard";
 import { LicensesCard } from "components/citizen/LicensesCard";
 import { MedicalRecords } from "components/citizen/MedicalRecords";
-import { calculateAge, makeImageUrl, requestAll } from "lib/utils";
+import { calculateAge, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -33,6 +34,7 @@ export default function CitizenId() {
   const common = useTranslations("Common");
   const router = useRouter();
   const { citizen } = useCitizen();
+  const { makeImageUrl } = useImageUrl();
 
   async function handleDelete() {
     if (!citizen) return;

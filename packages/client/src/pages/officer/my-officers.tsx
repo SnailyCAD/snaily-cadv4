@@ -12,8 +12,9 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { makeImageUrl, makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -36,6 +37,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const generateCallsign = useGenerateCallsign();
+  const { makeImageUrl } = useImageUrl();
 
   const [officers, setOfficers] = React.useState(data ?? []);
   const [tempOfficer, setTempOfficer] = React.useState<FullOfficer | null>(null);

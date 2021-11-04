@@ -2,14 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { FullDeputy } from "state/dispatchState";
 import { cad as CAD, Feature, Officer } from "types/prisma";
-import { findUrl, handleRequest } from "./fetch";
-
-const url = findUrl().replace("/v1", "");
-const IMAGE_URL = `${url}/static/`;
-
-export function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {
-  return `${IMAGE_URL}${type}/${id}`;
-}
+import { handleRequest } from "./fetch";
 
 export function calculateAge(dateOfBirth: string | Date) {
   return ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))

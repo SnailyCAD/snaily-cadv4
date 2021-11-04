@@ -3,14 +3,15 @@ import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
-import { makeImageUrl } from "lib/utils";
 import useFetch from "lib/useFetch";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export const CitizenImageModal = () => {
   const { execute } = useFetch();
   const { citizen, setCurrentCitizen } = useCitizen(false);
   const { isOpen, closeModal } = useModal();
   const fileRef = React.useRef<HTMLInputElement>(null);
+  const { makeImageUrl } = useImageUrl();
 
   function handleEditImageClick() {
     if (fileRef.current) {

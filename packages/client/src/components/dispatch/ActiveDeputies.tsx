@@ -7,10 +7,11 @@ import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
-import { makeImageUrl, makeUnitName } from "lib/utils";
+import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { StatusViewMode } from "types/prisma";
 import { useAuth } from "context/AuthContext";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export const ActiveDeputies = () => {
   const { activeDeputies } = useActiveDeputies();
@@ -19,6 +20,7 @@ export const ActiveDeputies = () => {
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
   const { user } = useAuth();
+  const { makeImageUrl } = useImageUrl();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";

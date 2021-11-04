@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeImageUrl, makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -15,6 +15,7 @@ import { FullOfficer, useDispatchState } from "state/dispatchState";
 import { format } from "date-fns";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -35,6 +36,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const { setAllOfficers } = useDispatchState();
   const { setActiveOfficer } = useLeoState();
   const generateCallsign = useGenerateCallsign();
+  const { makeImageUrl } = useImageUrl();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
   const yesOrNoText = (t: boolean) => (t === true ? "yes" : "no");

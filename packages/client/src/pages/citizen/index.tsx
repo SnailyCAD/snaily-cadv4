@@ -12,9 +12,10 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { makeImageUrl, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const RegisterVehicleModal = dynamic(
   async () => (await import("components/citizen/modals/RegisterVehicleModal")).RegisterVehicleModal,
@@ -39,6 +40,7 @@ export default function CitizenPage({ citizens }: Props) {
   const [modal, setModal] = React.useState<string | null>(null);
   const { TOW, TAXI } = useFeatureEnabled();
   const { showAop, areaOfPlay } = useAreaOfPlay();
+  const { makeImageUrl } = useImageUrl();
 
   return (
     <Layout className="dark:text-white">

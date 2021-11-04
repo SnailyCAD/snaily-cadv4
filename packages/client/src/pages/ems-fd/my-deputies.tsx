@@ -12,8 +12,9 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, EmsFdDeputy } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullDeputy } from "state/dispatchState";
-import { makeImageUrl, makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -35,6 +36,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const generateCallsign = useGenerateCallsign();
+  const { makeImageUrl } = useImageUrl();
 
   const [deputies, setDeputies] = React.useState(data ?? []);
   const [tempDeputy, setTempDeputy] = React.useState<FullDeputy | null>(null);

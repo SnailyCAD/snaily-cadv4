@@ -7,10 +7,11 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
-import { makeImageUrl, makeUnitName } from "lib/utils";
+import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { StatusViewMode } from "types/prisma";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
@@ -19,6 +20,7 @@ export const ActiveOfficers = () => {
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
   const { user } = useAuth();
+  const { makeImageUrl } = useImageUrl();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";

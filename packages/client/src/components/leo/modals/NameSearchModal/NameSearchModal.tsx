@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen, RecordType } from "types/prisma";
-import { calculateAge, makeImageUrl } from "lib/utils";
+import { calculateAge } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
@@ -19,6 +19,7 @@ import { useNameSearch } from "state/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { PersonFill } from "react-bootstrap-icons";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const enum Toggled {
   VEHICLES,
@@ -47,6 +48,7 @@ export const NameSearchModal = () => {
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
+  const { makeImageUrl } = useImageUrl();
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
