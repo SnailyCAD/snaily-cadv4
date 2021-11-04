@@ -2,7 +2,7 @@
   "name": "@snailycad/client",
   "version": "0.9.0-alpha",
   "scripts": {
-    "dev": "rm -f .env && next dev",
+    "dev": "rimraf .env && next dev",
     "build": "yarn copy-env && next build",
     "start": "next start",
     "copy-env": "copy ../../.env ./client/.env",
@@ -42,6 +42,7 @@
     "copy": "^0.3.2",
     "postcss": "^8.3.11",
     "preact": "^10.5.15",
+    "rimraf": "^3.0.2",
     "sass": "^1.43.4",
     "tailwindcss": "^2.2.19",
     "typescript": "^4.4.4"

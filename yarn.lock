@@ -714,6 +714,7 @@ __metadata:
     react-select: ^5.2.0
     react-sortablejs: ^6.0.0
     react-use: ^17.3.1
+    rimraf: ^3.0.2
     sass: ^1.43.4
     socket.io-client: ^4.3.2
     sortablejs: ^1.14.0
