@@ -47,7 +47,7 @@ export default function BusinessId(props: Props) {
 
   if (!currentEmployee.role || currentEmployee.role?.as === "EMPLOYEE") {
     return (
-      <Layout>
+      <Layout className="dark:text-white">
         <p>{common("insufficientPermissions")}</p>
       </Layout>
     );

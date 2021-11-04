@@ -33,6 +33,8 @@ const PERMISSIONS: Record<string, (user: User) => boolean> = {
   "/tow": (user) => user.isTow,
 };
 
+const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
+
 export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(null);
@@ -44,7 +46,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   const handleGetUser = React.useCallback(async () => {
     getSessionUser()
       .then((u) => {
-        if (!u && !router.asPath.includes("/auth")) {
+        if (!u && !NO_LOADING_ROUTES.includes(router.pathname)) {
           router.push("/auth/login");
         }
 
@@ -107,7 +109,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   const value = { user, cad, setCad, setUser };
 
-  if ((!router.pathname.includes("auth") && !user) || isForbidden) {
+  if ((!NO_LOADING_ROUTES.includes(router.pathname) && !user) || isForbidden) {
     return (
       <div id="unauthorized" className="fixed inset-0 grid place-items-center bg-transparent">
         <span aria-label="loading...">
@@ -139,6 +141,8 @@ export function useAuth() {
 
 function isDarkModeSupportedForPage(pathname: string) {
   const routes = [
+    "/403",
+    "/404",
     "/auth/login",
     "/auth/register",
     "/auth/temp-password",
@@ -169,6 +173,10 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/taxi",
     "/business/[id]/[employeeId]",
     "/business/[id]/[employeeId]/manage",
+    "/ems-fd",
+    "/officer",
+    "/dispatch",
+    "/admin/values/driverslicense-category",
   ];
 
   return routes.includes(pathname);

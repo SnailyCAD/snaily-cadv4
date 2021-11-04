@@ -58,7 +58,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const t = useTranslations();
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("Ems.emsFd")} - SnailyCAD</title>
       </Head>

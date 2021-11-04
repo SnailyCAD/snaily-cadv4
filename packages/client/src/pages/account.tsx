@@ -29,7 +29,7 @@ export default function Account() {
   }
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("account")} - SnailyCAD</title>
       </Head>

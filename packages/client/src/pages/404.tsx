@@ -3,7 +3,7 @@ import { Layout } from "components/Layout";
 
 export default function FourOhFour() {
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>Page not found.</title>
       </Head>

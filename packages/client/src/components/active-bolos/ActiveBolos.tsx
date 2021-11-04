@@ -79,8 +79,8 @@ export const ActiveBolos = () => {
   }
 
   return (
-    <div className="mt-3 bg-gray-200/80 overflow-hidden rounded-md">
-      <header className="bg-gray-300/50 px-4 p-2">
+    <div className="mt-3 bg-gray-200/80 dark:bg-gray-2 overflow-hidden rounded-md">
+      <header className="bg-gray-300/50 px-4 dark:bg-gray-3 p-2">
         <h3 className="text-xl font-semibold">{"Active Bolos"}</h3>
       </header>
 

@@ -62,13 +62,11 @@ export const StatusesArea = () => {
   const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeOfficer?.status?.id;
 
   return (
-    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50">
+    <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
       <li>
         <Button
-          className={classNames(
-            "w-full min-w-[5em]",
-            isOnDutyActive && "bg-blue-500 hover:bg-blue-600 font-semibold",
-          )}
+          className={classNames("w-full min-w-[5em]", isOnDutyActive && "font-semibold")}
+          variant={isOnDutyActive ? "blue" : "default"}
           onClick={() => openModal(ModalIds.SelectOfficer)}
         >
           {onDutyCode?.value.value}
@@ -79,8 +77,9 @@ export const StatusesArea = () => {
         .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY)
         .sort((a, b) => Number(a.position) - Number(b.position))
         .map((code) => {
-          const variant = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? "danger" : "default";
           const isActive = code.id === activeOfficer?.statusId;
+          const variant =
+            code.shouldDo === ShouldDoType.SET_OFF_DUTY ? "danger" : isActive ? "blue" : "default";
 
           return (
             <li key={code.id}>
@@ -88,10 +87,7 @@ export const StatusesArea = () => {
                 onClick={() => handleStatusUpdate(code)}
                 disabled={isButtonDisabled}
                 variant={variant}
-                className={classNames(
-                  "w-full min-w-[5em]",
-                  isActive && "bg-blue-500 hover:bg-blue-600 font-semibold",
-                )}
+                className={classNames("w-full min-w-[5em]", isActive && "font-semibold")}
               >
                 {code.value.value}
               </Button>

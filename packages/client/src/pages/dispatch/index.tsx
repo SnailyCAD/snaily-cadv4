@@ -81,7 +81,7 @@ export default function OfficerDashboard(props: Props) {
   ]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("dispatch")} - SnailyCAD</title>
       </Head>
@@ -89,8 +89,8 @@ export default function OfficerDashboard(props: Props) {
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}
 
-      <div className="w-full bg-gray-200/80 rounded-md overflow-hidden">
-        <header className="flex items-center justify-between px-4 py-2 bg-gray-300">
+      <div className="w-full bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
+        <header className="flex items-center justify-between dark:bg-gray-3 px-4 py-2 bg-gray-300">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
             {showAop ? <DispatchAOP /> : null}

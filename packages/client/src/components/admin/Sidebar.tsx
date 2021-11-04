@@ -33,6 +33,7 @@ export const AdminSidebar = () => {
           <ul className="flex flex-col space-y-1.5 mt-3">
             {management.map((type) => (
               <SidebarItem
+                disabled={type !== "UNITS" && user?.rank === "USER"}
                 key={type}
                 isActive={isMActive(`/admin/manage/${type.toLowerCase()}`)}
                 href={`/admin/manage/${type.toLowerCase()}`}
@@ -50,19 +51,21 @@ export const AdminSidebar = () => {
           </ul>
         </section>
 
-        <section className="mt-3">
-          <h1 className="text-2xl font-semibold dark:text-white px-3">{t("Values.values")}</h1>
-          <ul className="flex flex-col space-y-1.5 mt-3">
-            {types.map((type) => (
-              <SidebarItem
-                key={type}
-                isActive={isValueActive(type)}
-                href={`/admin/values/${type.toLowerCase()}`}
-                text={t(`${type.replace("-", "_")}.MANAGE`)}
-              />
-            ))}
-          </ul>
-        </section>
+        {user?.rank !== "USER" ? (
+          <section className="mt-3">
+            <h1 className="text-2xl font-semibold dark:text-white px-3">{t("Values.values")}</h1>
+            <ul className="flex flex-col space-y-1.5 mt-3">
+              {types.map((type) => (
+                <SidebarItem
+                  key={type}
+                  isActive={isValueActive(type)}
+                  href={`/admin/values/${type.toLowerCase()}`}
+                  text={t(`${type.replace("-", "_")}.MANAGE`)}
+                />
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </aside>
     </div>
   );
@@ -72,16 +75,19 @@ interface ItemProps {
   isActive: boolean;
   text: string;
   href: string;
+  disabled?: boolean;
 }
 
-const SidebarItem = ({ href, text, isActive }: ItemProps) => {
+const SidebarItem = ({ disabled, href, text, isActive }: ItemProps) => {
   return (
     <li className="px-2">
-      <Link href={href}>
+      <Link href={disabled ? "" : href}>
         <a
           className={classNames(
             "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-300 dark:hover:bg-dark-gray",
             isActive && "bg-gray-300 dark:bg-dark-gray dark:text-white",
+            disabled &&
+              "cursor-not-allowed opacity-60 hover:bg-transparent dark:hover:bg-transparent",
           )}
         >
           {text}

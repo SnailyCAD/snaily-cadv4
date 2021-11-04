@@ -8,6 +8,7 @@ import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "../../middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
+import { unitProperties } from "../../lib/officer";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -21,7 +22,9 @@ export class BoloController {
   async getBolos() {
     const bolos = await prisma.bolo.findMany({
       include: {
-        officer: true,
+        officer: {
+          include: unitProperties,
+        },
       },
     });
 
@@ -47,7 +50,9 @@ export class BoloController {
         officerId: ctx.get("activeOfficer")?.id ?? null,
       },
       include: {
-        officer: true,
+        officer: {
+          include: unitProperties,
+        },
       },
     });
 
@@ -84,7 +89,9 @@ export class BoloController {
         model: body.get("model") ?? null,
       },
       include: {
-        officer: true,
+        officer: {
+          include: unitProperties,
+        },
       },
     });
 
