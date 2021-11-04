@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "react-bootstrap-icons";
+import { useModal } from "context/ModalContext";
 
 export interface ModalProps {
   title: string;
@@ -11,13 +12,21 @@ export interface ModalProps {
 }
 
 export const Modal = ({ title, children, isOpen, className, onClose }: ModalProps) => {
+  const { canBeClosed } = useModal();
+
+  function handleClose() {
+    if (!canBeClosed) return;
+
+    onClose();
+  }
+
   return (
     <Transition show={isOpen} appear as={React.Fragment}>
       <Dialog
         open={isOpen}
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"
-        onClose={onClose}
+        onClose={handleClose}
       >
         <div className="min-h-screen px-4 text-center">
           <Transition.Child

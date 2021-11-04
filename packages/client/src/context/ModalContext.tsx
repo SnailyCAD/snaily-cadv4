@@ -2,10 +2,12 @@ import { useRouter } from "next/router";
 import * as React from "react";
 
 interface Context {
+  canBeClosed: boolean;
   isOpen: (id: string) => boolean;
   closeModal: (id: string) => void;
   openModal: <T = unknown>(id: string, payload?: T) => void;
   getPayload: <T = unknown>(id: string) => T | null;
+  setCanBeClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type Payloads = Record<string, any>;
@@ -14,6 +16,7 @@ const ModalContext = React.createContext<Context | undefined>(undefined);
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState<string[]>([]);
   const [payloads, setPayloads] = React.useState<Payloads>({});
+  const [canBeClosed, setCanBeClosed] = React.useState<boolean>(true);
   const router = useRouter();
 
   function isOpen(id: string) {
@@ -39,10 +42,12 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   }
 
   const value = {
+    canBeClosed,
     isOpen,
     openModal,
     closeModal,
     getPayload,
+    setCanBeClosed,
   };
 
   React.useEffect(() => {

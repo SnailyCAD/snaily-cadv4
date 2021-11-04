@@ -12,6 +12,7 @@
   "dependencies": {
     "@casper124578/use-socket.io": "2.0.0",
     "@headlessui/react": "^1.4.1",
+    "@radix-ui/react-context-menu": "^0.1.1",
     "@snailycad/config": "1.0.0-beta.0",
     "@snailycad/schemas": "1.0.0-beta.0",
     "axios": "^0.24.0",
@@ -32,12 +33,14 @@
     "react-use": "^17.3.1",
     "socket.io-client": "^4.3.2",
     "sortablejs": "^1.14.0",
+    "uuid": "^8.3.2",
     "zustand": "^3.6.3"
   },
   "devDependencies": {
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
     "@types/sortablejs": "^1.10.7",
+    "@types/uuid": "^8.3.1",
     "autoprefixer": "^10.4.0",
     "copy": "^0.3.2",
     "postcss": "^8.3.11",
