@@ -76,7 +76,7 @@ export default function BusinessId(props: Props) {
 
   if (currentEmployee.whitelistStatus === whitelistStatus.PENDING) {
     return (
-      <Layout>
+      <Layout className="dark:text-white">
         <p>{t("businessIsWhitelisted")}</p>
       </Layout>
     );

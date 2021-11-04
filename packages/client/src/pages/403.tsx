@@ -3,7 +3,7 @@ import Head from "next/head";
 
 export default function FourOhFour() {
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>Forbidden.</title>
       </Head>

@@ -1,8 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import Head from "next/head";
-import { ReactSortable } from "react-sortablejs";
-import { ArrowsExpand } from "react-bootstrap-icons";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -16,24 +14,23 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
-import { handleFilter, sortValues } from "./[path]";
 import dynamic from "next/dynamic";
+import { SortableList } from "components/admin/values/SortableList";
+import { handleFilter } from "./[path]";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
 });
-
-export type TValue = DriversLicenseCategoryValue;
 
 interface Props {
   pathValues: { type: ValueType; values: DriversLicenseCategoryValue[] };
 }
 
 export default function DriversLicenseCategories({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<TValue[]>(data);
+  const [values, setValues] = React.useState<DriversLicenseCategoryValue[]>(data);
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<{
-    value: TValue | null;
+    value: DriversLicenseCategoryValue | null;
     type: DriversLicenseCategoryType | null;
   }>({} as any);
   const { state, execute } = useFetch();
@@ -43,7 +40,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
-  async function setList(clType: DriversLicenseCategoryType, list: TValue[]) {
+  async function setList(clType: DriversLicenseCategoryType, list: DriversLicenseCategoryValue[]) {
     setValues((p) => {
       const filtered = p.filter((v) => v.type !== clType);
 
@@ -71,12 +68,12 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
     });
   }
 
-  function handleDeleteClick(type: DriversLicenseCategoryType, value: TValue) {
+  function handleDeleteClick(type: DriversLicenseCategoryType, value: DriversLicenseCategoryValue) {
     setTempValue({ value, type });
     openModal("deleteValue");
   }
 
-  function handleEditClick(type: DriversLicenseCategoryType, value: TValue) {
+  function handleEditClick(type: DriversLicenseCategoryType, value: DriversLicenseCategoryValue) {
     setTempValue({ value, type });
     openModal("manageValue");
   }
@@ -112,7 +109,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{typeT("MANAGE")} - SnailyCAD</title>
       </Head>
@@ -130,6 +127,10 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
       {Object.values(DriversLicenseCategoryType).map((type) => {
         const valuesForType = values.filter((v) => v.type === type);
+
+        if (search && valuesForType.filter((v) => handleFilter(v, search)).length <= 0) {
+          return null;
+        }
 
         return (
           <section className="my-4 mb-6" key={type}>
@@ -149,9 +150,9 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
             {valuesForType.length <= 0 ? (
               <p className="mt-3">There are no values yet for this type.</p>
             ) : (
-              <List
-                handleDelete={handleDeleteClick.bind(null, type)}
-                handleEdit={handleEditClick.bind(null, type)}
+              <SortableList
+                handleDelete={handleDeleteClick.bind(null, type) as any}
+                handleEdit={handleEditClick.bind(null, type) as any}
                 search={search}
                 values={valuesForType}
                 setList={setList.bind(null, type)}
@@ -230,52 +231,4 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       },
     },
   };
-};
-
-interface ListProps {
-  values: DriversLicenseCategoryValue[];
-  search: string;
-  setList: any;
-  handleEdit: (value: DriversLicenseCategoryValue) => void;
-  handleDelete: (value: DriversLicenseCategoryValue) => void;
-}
-
-const List = ({ values, search, setList, handleEdit, handleDelete }: ListProps) => {
-  const common = useTranslations("Common");
-
-  return (
-    <ReactSortable animation={200} className="mt-5" tag="ul" list={values} setList={setList}>
-      {sortValues(values)
-        .filter((v) => handleFilter(v, search))
-        .map((value, idx) => (
-          <li
-            className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
-            key={value.id}
-          >
-            <div className="flex items-center">
-              <span className="cursor-move">
-                <ArrowsExpand className="text-gray-500 mr-2" width={15} />
-              </span>
-
-              <span className="select-none text-gray-500">{++idx}.</span>
-              <span className="ml-2">
-                {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                  <span>{(value as any).department.value?.value} / </span>
-                ) : null}
-                {typeof value.value === "string" ? value.value : value.value.value}
-              </span>
-            </div>
-
-            <div>
-              <Button onClick={() => handleEdit(value)} variant="success">
-                {common("edit")}
-              </Button>
-              <Button onClick={() => handleDelete(value)} variant="danger" className="ml-2">
-                {common("delete")}
-              </Button>
-            </div>
-          </li>
-        ))}
-    </ReactSortable>
-  );
 };

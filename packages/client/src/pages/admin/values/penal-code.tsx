@@ -12,6 +12,7 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/ManagePenalCode")).ManagePenalCode;
@@ -73,7 +74,11 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   }, [isOpen]);
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
+      <Head>
+        <title>{typeT("MANAGE")} - SnailyCAD</title>
+      </Head>
+
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
         <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
@@ -84,7 +89,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
         <ul className="mt-5">
           {values.map((value, idx) => (
             <li
-              className="my-1 bg-gray-200 p-2 px-4 rounded-md flex items-center justify-between"
+              className="my-1 bg-gray-200 dark:bg-gray-2 p-2 px-4 rounded-md flex items-center justify-between"
               key={value.id}
             >
               <div>

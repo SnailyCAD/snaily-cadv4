@@ -83,7 +83,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   ]);
 
   return (
-    <Layout>
+    <Layout className="dark:text-white">
       <Head>
         <title>{t("officer")} - SnailyCAD</title>
       </Head>
@@ -91,8 +91,8 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}
 
-      <div className="w-full bg-gray-200/80 rounded-md overflow-hidden mb-3">
-        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 mb-2">
+      <div className="w-full bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden mb-3">
+        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3 mb-2">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
             {showAop ? <span> - AOP: {areaOfPlay}</span> : null}

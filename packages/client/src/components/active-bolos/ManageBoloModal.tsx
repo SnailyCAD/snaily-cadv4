@@ -91,10 +91,8 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                 <Button
                   disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.PERSON)}
-                  className={classNames(
-                    "flex justify-center",
-                    values.type === BoloType.PERSON && "bg-blue-500 hover:bg-blue-600",
-                  )}
+                  variant={values.type === BoloType.PERSON ? "blue" : "default"}
+                  className={classNames("flex justify-center")}
                   type="button"
                   title="Person type"
                 >
@@ -103,10 +101,8 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                 <Button
                   disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.VEHICLE)}
-                  className={classNames(
-                    "flex justify-center",
-                    values.type === BoloType.VEHICLE && "bg-blue-500 hover:bg-blue-600",
-                  )}
+                  variant={values.type === BoloType.VEHICLE ? "blue" : "default"}
+                  className={classNames("flex justify-center")}
                   type="button"
                   title="Vehicle type"
                 >
@@ -123,10 +119,8 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                 <Button
                   disabled={!!bolo}
                   onClick={() => setFieldValue("type", BoloType.OTHER)}
-                  className={classNames(
-                    "flex justify-center",
-                    values.type === BoloType.OTHER && "bg-blue-500 hover:bg-blue-600",
-                  )}
+                  variant={values.type === BoloType.OTHER ? "blue" : "default"}
+                  className={classNames("flex justify-center")}
                   type="button"
                   title="Other type"
                 >

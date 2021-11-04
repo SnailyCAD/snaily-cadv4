@@ -31,8 +31,8 @@ export const ActiveOfficers = () => {
   }
 
   return (
-    <div className="bg-gray-200/80 rounded-md overflow-hidden">
-      <header className="bg-gray-300/50 px-4 p-2">
+    <div className="bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
+      <header className="bg-gray-300/50 dark:bg-gray-3 px-4 p-2">
         <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
       </header>
 

@@ -16,7 +16,7 @@ export const DispatchAOP = () => {
         - AOP: {areaOfPlay}
         <Button
           onClick={() => openModal(ModalIds.ManageAOP)}
-          className="p-0 px-0 ml-2"
+          className="px-1.5 p-1 ml-2 dark:hover:bg-gray-2"
           variant="transparent"
           aria-label="Update Area of play"
           title="Update Area of play"

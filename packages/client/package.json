@@ -2,7 +2,7 @@
   "name": "@snailycad/client",
   "version": "0.9.0-alpha",
   "scripts": {
-    "dev": "next dev",
+    "dev": "rm -f .env && next dev",
     "build": "yarn copy-env && next build",
     "start": "next start",
     "copy-env": "copy ../../.env ./client/.env",

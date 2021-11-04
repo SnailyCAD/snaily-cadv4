@@ -54,7 +54,7 @@ export const Nav = () => {
                 </Link>
               ) : null}
 
-              {user?.rank !== "USER" ? (
+              {user && user.rank !== "USER" ? (
                 <Link href="/admin">
                   <a
                     className={classNames(
