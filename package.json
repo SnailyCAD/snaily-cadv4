@@ -19,6 +19,7 @@
     "@casper124578/eslint-config-next": "^0.1.1",
     "@casper124578/eslint-config-react": "^0.1.2",
     "colorette": "2.0.16",
+    "copy": "^0.3.2",
     "eslint": "^7.32.0",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",

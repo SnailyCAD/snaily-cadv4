@@ -3,9 +3,10 @@
   "version": "1.0.0-beta.0",
   "scripts": {
     "dev": "rimraf .env && next dev",
-    "build": "yarn copy-env && next build",
+    "build": "yarn copy-env && yarn next-build",
+    "next-build": "next build",
     "start": "next start",
-    "copy-env": "copy ../../.env ./client/.env",
+    "copy-env": "node ../../scripts/copy-env.mjs",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx,"
   },
@@ -42,7 +43,6 @@
     "@types/sortablejs": "^1.10.7",
     "@types/uuid": "^8.3.1",
     "autoprefixer": "^10.4.0",
-    "copy": "^0.3.2",
     "postcss": "^8.3.11",
     "preact": "^10.5.15",
     "rimraf": "^3.0.2",
