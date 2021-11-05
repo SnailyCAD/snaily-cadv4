@@ -199,7 +199,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={call ? "Manage 911 Call" : t("create911Call")}
-      className={call ? "w-[1000px]" : "w-[650px]"}
+      className={call ? "w-[1200px]" : "w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -228,6 +228,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
               {isDispatch ? (
                 <FormField label={t("assignedUnits")}>
                   <Select
+                    showContextMenuForUnits
                     isMulti
                     name="assignedUnits"
                     value={values.assignedUnits.map((value) => ({

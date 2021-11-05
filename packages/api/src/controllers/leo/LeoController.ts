@@ -1,30 +1,23 @@
 import {
-  Res,
   Controller,
   UseBeforeEach,
-  Req,
   PlatformMulterFile,
   MultipartFile,
   UseBefore,
 } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { Officer, cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
-import { setCookie } from "../../utils/setCookie";
-import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
+import { Officer, ShouldDoType, User } from ".prisma/client";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
-import { signJWT } from "../../utils/jwt";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 import { Socket } from "../../services/SocketService";
-import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
-import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import fs from "node:fs";
 import { unitProperties } from "../../lib/officer";
 
-// todo: check for leo permissions
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
 export class LeoController {
@@ -159,143 +152,6 @@ export class LeoController {
     });
 
     return updated;
-  }
-
-  @Put("/:id/status")
-  async setOfficerStatus(
-    @PathParams("id") officerId: string,
-    @BodyParams() body: JsonRequestBody,
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @Res() res: Res,
-    @Req() req: Req,
-  ) {
-    const error = validate(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const statusId = body.get("status");
-
-    const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
-    const isDispatch = isFromDispatch && user.isDispatch;
-
-    const officer = await prisma.officer.findFirst({
-      where: {
-        userId: isDispatch ? undefined : user.id,
-        id: officerId,
-      },
-    });
-
-    if (!officer) {
-      throw new NotFound("officerNotFound");
-    }
-
-    if (officer.suspended) {
-      throw new BadRequest("officerSuspended");
-    }
-
-    const code = await prisma.statusValue.findFirst({
-      where: {
-        id: statusId,
-      },
-      include: {
-        value: true,
-      },
-    });
-
-    if (!code) {
-      throw new NotFound("statusNotFound");
-    }
-
-    // reset all officers for user
-    await prisma.officer.updateMany({
-      where: {
-        userId: user.id,
-      },
-      data: {
-        statusId: null,
-      },
-    });
-
-    const updatedOfficer = await prisma.officer.update({
-      where: {
-        id: officer.id,
-      },
-      data: {
-        statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
-      },
-      include: unitProperties,
-    });
-
-    const officerLog = await prisma.officerLog.findFirst({
-      where: {
-        officerId: officer.id,
-        endedAt: null,
-      },
-    });
-
-    if (code.shouldDo === ShouldDoType.SET_ON_DUTY) {
-      if (!officerLog) {
-        await prisma.officerLog.create({
-          data: {
-            officerId: officer.id,
-            userId: user.id,
-            startedAt: new Date(),
-          },
-        });
-      }
-    } else {
-      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        // unassign officer from call
-        await prisma.assignedUnit.deleteMany({
-          where: {
-            officerId: officer.id,
-          },
-        });
-
-        if (officerLog) {
-          await prisma.officerLog.update({
-            where: {
-              id: officerLog.id,
-            },
-            data: {
-              endedAt: new Date(),
-            },
-          });
-        }
-      }
-    }
-
-    if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-      setCookie({
-        res,
-        name: Cookie.ActiveOfficer,
-        value: "",
-        expires: -1,
-      });
-    } else {
-      // expires after 3 hours.
-      setCookie({
-        res,
-        name: Cookie.ActiveOfficer,
-        value: signJWT({ officerId: updatedOfficer.id }, 60 * 60 * 3),
-        expires: 60 * 60 * 1000 * 3,
-      });
-    }
-
-    if (cad.discordWebhookURL) {
-      const webhook = await getWebhookData(cad.discordWebhookURL);
-      if (!webhook) return;
-      const data = createWebhookData(webhook, updatedOfficer);
-
-      await sendDiscordWebhook(webhook, data);
-    }
-
-    this.socket.emitUpdateOfficerStatus();
-
-    return updatedOfficer;
   }
 
   @Delete("/:id")
@@ -474,28 +330,4 @@ export class LeoController {
 
     return true;
   }
-}
-
-export function createWebhookData(webhook: APIWebhook, officer: any) {
-  const status = officer.status.value.value;
-  const department = officer.department.value.value;
-  const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
-
-  return {
-    avatar_url: webhook.avatar,
-    embeds: [
-      {
-        title: "Status Change",
-        type: "rich",
-        description: `Officer **${officerName}** has changed their status to ${status}`,
-        fields: [
-          {
-            name: "Status",
-            value: status,
-            inline: true,
-          },
-        ],
-      },
-    ],
-  };
 }

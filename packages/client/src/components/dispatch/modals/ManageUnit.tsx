@@ -37,33 +37,24 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!unit) return;
 
-    if (type === "leo") {
-      const { json } = await execute(`/leo/${unit.id}/status`, {
-        method: "PUT",
-        data: { ...values },
-      });
+    const { json } = await execute(`/dispatch/status/${unit.id}`, {
+      method: "PUT",
+      data: { ...values },
+    });
 
-      if (json.id) {
-        setActiveOfficers(
-          activeOfficers.map((officer) => {
-            if (officer.id === json.id) {
-              return { ...officer, ...json };
-            }
+    if (type === "leo" && json.id) {
+      setActiveOfficers(
+        activeOfficers.map((officer) => {
+          if (officer.id === json.id) {
+            return { ...officer, ...json };
+          }
 
-            return officer;
-          }),
-        );
-        handleClose();
-      }
-    } else {
-      const { json } = await execute(`/ems-fd/${unit.id}/status`, {
-        method: "PUT",
-        data: { ...values },
-      });
-
-      if (json.id) {
-        handleClose();
-      }
+          return officer;
+        }),
+      );
+      handleClose();
+    } else if (json.id) {
+      handleClose();
     }
   }
 

@@ -17,11 +17,19 @@ export const FormField = ({ checkbox, children, label, className, fieldId }: Pro
         className,
       )}
     >
-      <label className="mb-1 dark:text-white" htmlFor={fieldId}>
-        {label}
-      </label>
+      {!checkbox ? (
+        <label className="mb-1 dark:text-white" htmlFor={fieldId}>
+          {label}
+        </label>
+      ) : null}
 
       {children}
+
+      {checkbox ? (
+        <label className="mb-1 dark:text-white" htmlFor={fieldId}>
+          {label}
+        </label>
+      ) : null}
     </fieldset>
   );
 };

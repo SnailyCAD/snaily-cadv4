@@ -31,7 +31,7 @@ export const SelectOfficerModal = () => {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!onDutyCode) return;
 
-    const { json } = await execute(`/leo/${values.officer}/status`, {
+    const { json } = await execute(`/dispatch/status/${values.officer}`, {
       method: "PUT",
       data: {
         ...values,

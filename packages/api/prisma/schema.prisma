@@ -494,13 +494,14 @@ model Officer {
 }
 
 model StatusValue {
-  id        String       @id @default(uuid())
-  value     Value        @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  id        String          @id @default(uuid())
+  value     Value           @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId   String
-  shouldDo  ShouldDoType @default(SET_STATUS)
+  shouldDo  ShouldDoType    @default(SET_STATUS)
   position  Int?
   whatPages WhatPages[]
   color     String?
+  type      StatusValueType @default(STATUS_CODE)
 
   officerStatusToValue Officer[]     @relation("officerStatusToValue")
   emsFdStatusToValue   EmsFdDeputy[] @relation("emsFdStatusToValue")
@@ -540,6 +541,11 @@ model LeoIncident {
   arrestsMade          Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
+}
+
+enum StatusValueType {
+  STATUS_CODE
+  SITUATION_CODE
 }
 
 enum StatusEnum {

@@ -144,6 +144,7 @@ export class ValuesController {
           valueId: value.id,
           position: Number(body.get("position")),
           color: body.get("color") || null,
+          type: body.get("type") || "STATUS_CODE",
         },
         include: {
           value: true,
@@ -302,6 +303,7 @@ export class ValuesController {
           shouldDo: body.get("shouldDo"),
           position: Number(body.get("position")),
           color: body.get("color") || null,
+          type: body.get("type") || "STATUS_CODE",
         },
         include: {
           value: true,

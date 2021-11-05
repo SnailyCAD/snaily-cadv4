@@ -262,6 +262,28 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   </div>
                   <Error>{errors.color}</Error>
                 </FormField>
+
+                <FormField className="mb-0" checkbox fieldId="status_code" label="Status Code">
+                  <Input
+                    id="status_code"
+                    className="w-[max-content] mr-3"
+                    type="radio"
+                    name="type"
+                    onChange={() => setFieldValue("type", "STATUS_CODE")}
+                    checked={values.type === "STATUS_CODE"}
+                  />
+                </FormField>
+
+                <FormField checkbox fieldId="situation_code" label="Situation Code">
+                  <Input
+                    id="situation_code"
+                    className="w-[max-content] mr-3"
+                    type="radio"
+                    name="type"
+                    onChange={() => setFieldValue("type", "SITUATION_CODE")}
+                    checked={values.type === "SITUATION_CODE"}
+                  />
+                </FormField>
               </>
             ) : null}
 

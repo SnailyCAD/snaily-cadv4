@@ -46,7 +46,7 @@ export const StatusesArea = () => {
     if (!activeOfficer) return;
     if (status.id === activeOfficer.statusId) return;
 
-    const { json } = await execute(`/leo/${activeOfficer.id}/status`, {
+    const { json } = await execute(`/dispatch/status/${activeOfficer.id}`, {
       method: "PUT",
       data: {
         status: status.id,
@@ -74,7 +74,7 @@ export const StatusesArea = () => {
       </li>
 
       {codes10.values
-        .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY)
+        .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY && v.type === "STATUS_CODE")
         .sort((a, b) => Number(a.position) - Number(b.position))
         .map((code) => {
           const isActive = code.id === activeOfficer?.statusId;
