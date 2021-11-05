@@ -327,7 +327,7 @@ export class Calls911Controller {
   private officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
     return {
       ...call,
-      assignedUnits: call.assignedUnits.map((v: any) => ({
+      assignedUnits: (call.assignedUnits ?? [])?.map((v: any) => ({
         ...v,
         officer: undefined,
         deputy: undefined,

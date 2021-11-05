@@ -12,6 +12,11 @@ import { ContextMenu } from "components/context-menu/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { StatusValue } from "types/prisma";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { Full911Call, useDispatchState } from "state/dispatchState";
+import { makeUnitName } from "lib/utils";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
@@ -30,16 +35,31 @@ interface Props extends Exclude<SelectProps, "options"> {
 const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
   const { codes10 } = useValues();
   const { execute } = useFetch();
+  const { getPayload } = useModal();
+  const generateCallsign = useGenerateCallsign();
+  const call = getPayload<Full911Call>(ModalIds.Manage911Call);
+  const { allDeputies, allOfficers } = useDispatchState();
 
   const unitId = props.data.value;
+  const unit = [...allDeputies, ...allOfficers].find((v) => v.id === unitId);
 
   async function setCode(status: StatusValue) {
-    const { json } = await execute(`/dispatch/status/${unitId}`, {
-      method: "PUT",
-      data: { status: status.id },
-    });
+    if (!unit) return;
 
-    console.log({ json });
+    if (status.type === "STATUS_CODE") {
+      await execute(`/dispatch/status/${unitId}`, {
+        method: "PUT",
+        data: { status: status.id },
+      });
+    } else {
+      if (!call) return;
+      await execute(`/911-calls/events/${call.id}`, {
+        method: "POST",
+        data: {
+          description: `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
+        },
+      });
+    }
   }
 
   return (
