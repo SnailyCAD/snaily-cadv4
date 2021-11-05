@@ -74,7 +74,7 @@ export const StatusesArea = () => {
       </li>
 
       {codes10.values
-        .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY)
+        .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY && v.type === "STATUS_CODE")
         .sort((a, b) => Number(a.position) - Number(b.position))
         .map((code) => {
           const isActive = code.id === activeOfficer?.statusId;

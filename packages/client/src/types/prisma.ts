@@ -310,6 +310,7 @@ export type StatusValue = {
   whatPages: WhatPages[];
   departmentId: string;
   color?: string;
+  type: StatusValueType;
 };
 
 /**
@@ -647,3 +648,10 @@ export const DepartmentType = {
 } as const;
 
 export type DepartmentType = typeof DepartmentType[keyof typeof DepartmentType];
+
+export const StatusValueType = {
+  STATUS_CODE: "STATUS_CODE",
+  SITUATION_CODE: "SITUATION_CODE",
+} as const;
+
+export type StatusValueType = typeof StatusValueType[keyof typeof StatusValueType];
