@@ -277,7 +277,7 @@ export class Calls911Controller {
       throw new BadRequest("unitIsRequired");
     }
 
-    const { unit, type } = await this.findUnit(rawUnit, undefined, true);
+    const { unit, type } = await findUnit(rawUnit, undefined, true);
 
     if (!unit) {
       throw new NotFound("unitNotFound");
@@ -324,38 +324,6 @@ export class Calls911Controller {
     return this.officerOrDeputyToUnit(updated);
   }
 
-  private async findUnit(
-    id: string,
-    extraFind?: any,
-    withType?: false,
-  ): Promise<Officer | EmsFdDeputy>;
-  private async findUnit(
-    id: string,
-    extraFind?: any,
-    withType?: true,
-  ): Promise<{ unit: Officer | EmsFdDeputy; type: "leo" | "ems-fd" }>;
-  private async findUnit(id: string, extraFind?: any, withType?: boolean) {
-    let type: "leo" | "ems-fd" = "leo";
-    let unit = await prisma.officer.findFirst({
-      where: { id, ...extraFind },
-    });
-
-    if (!unit) {
-      type = "ems-fd";
-      unit = await prisma.emsFdDeputy.findFirst({ where: { id, ...extraFind } });
-    }
-
-    if (!unit) {
-      return null;
-    }
-
-    if (withType) {
-      return { type, unit };
-    }
-
-    return unit;
-  }
-
   private officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
     return {
       ...call,
@@ -371,7 +339,7 @@ export class Calls911Controller {
   private async assignUnitsToCall(callId: string, units: string[]) {
     await Promise.all(
       units.map(async (id) => {
-        const { unit, type } = await this.findUnit(
+        const { unit, type } = await findUnit(
           id,
           {
             NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
@@ -403,4 +371,40 @@ export class Calls911Controller {
       }),
     );
   }
+}
+
+export async function findUnit(
+  id: string,
+  extraFind?: any,
+  withType?: false,
+): Promise<Officer | EmsFdDeputy | null>;
+export async function findUnit(
+  id: string,
+  extraFind?: any,
+  withType?: true,
+): Promise<{ unit: Officer | EmsFdDeputy | null; type: "leo" | "ems-fd" }>;
+export async function findUnit(id: string, extraFind?: any, withType?: boolean) {
+  let type: "leo" | "ems-fd" = "leo";
+  let unit = await prisma.officer.findFirst({
+    where: { id, ...extraFind },
+  });
+
+  if (!unit) {
+    type = "ems-fd";
+    unit = await prisma.emsFdDeputy.findFirst({ where: { id, ...extraFind } });
+  }
+
+  if (!unit) {
+    if (withType) {
+      return { type, unit: null };
+    }
+
+    return null;
+  }
+
+  if (withType) {
+    return { type, unit };
+  }
+
+  return unit;
 }

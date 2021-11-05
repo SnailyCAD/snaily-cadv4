@@ -46,7 +46,7 @@ export const StatusesArea = () => {
     if (!activeOfficer) return;
     if (status.id === activeOfficer.statusId) return;
 
-    const { json } = await execute(`/leo/${activeOfficer.id}/status`, {
+    const { json } = await execute(`/dispatch/status/${activeOfficer.id}`, {
       method: "PUT",
       data: {
         status: status.id,

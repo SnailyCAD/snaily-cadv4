@@ -32,7 +32,7 @@ export const SelectDeputyModal = () => {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!onDutyCode) return;
 
-    const { json } = await execute(`/ems-fd/${values.deputy}/status`, {
+    const { json } = await execute(`/dispatch/status/${values.deputy}`, {
       method: "PUT",
       data: {
         ...values,

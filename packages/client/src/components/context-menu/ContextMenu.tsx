@@ -46,7 +46,7 @@ export const ContextMenu = ({ items, children }: Props) => {
           "flex flex-col",
           "shadow-md",
           "bg-white dark:bg-dark-bright shadow-sm",
-          "p-1.5 rounded-md w-36",
+          "p-1.5 rounded-md min-w-[12rem] max-h-[25rem] overflow-auto",
         )}
       >
         {items.map((item) => {

@@ -20,7 +20,6 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { ContextMenu } from "components/context-menu/ContextMenu";
 
 interface Props {
   call: Full911Call | null;
@@ -272,29 +271,6 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
         </Formik>
 
         {call ? <CallEventsArea call={call} /> : null}
-      </div>
-
-      <div className="mt-10">
-        <h1 className="text-xl font-semibold mb-3">Assigned Units</h1>
-
-        {call?.assignedUnits.map((unit) => (
-          <div key={unit.id}>
-            <ContextMenu
-              items={[
-                { name: "Test" },
-                { name: "Test" },
-                { name: "Test" },
-                { name: "Test" },
-                { name: "Test" },
-              ]}
-            >
-              <p className="max-w-[max-content]">
-                <span>{generateCallsign(unit.unit)}</span>
-                <span className="inline-block capitalize ml-2">{makeUnitName(unit.unit)}</span>
-              </p>
-            </ContextMenu>
-          </div>
-        ))}
       </div>
 
       {call ? (

@@ -1,30 +1,12 @@
-import {
-  Res,
-  Controller,
-  UseBeforeEach,
-  Use,
-  Req,
-  MultipartFile,
-  PlatformMulterFile,
-} from "@tsed/common";
+import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import {
-  CREATE_OFFICER_SCHEMA,
-  MEDICAL_RECORD_SCHEMA,
-  UPDATE_OFFICER_STATUS_SCHEMA,
-  validate,
-} from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
-import { cad, ShouldDoType, MiscCadSettings, User } from ".prisma/client";
-import { setCookie } from "../../utils/setCookie";
-import { AllowedFileExtension, allowedFileExtensions, Cookie } from "@snailycad/config";
+import { ShouldDoType, User } from ".prisma/client";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "../../middlewares";
-import { signJWT } from "../../utils/jwt";
-import { Socket } from "../../services/SocketService";
-import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
-import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { ActiveDeputy } from "../../middlewares/ActiveDeputy";
 import fs from "node:fs";
 import { unitProperties } from "../../lib/officer";
@@ -32,11 +14,6 @@ import { unitProperties } from "../../lib/officer";
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 export class EmsFdController {
-  private socket: Socket;
-  constructor(socket: Socket) {
-    this.socket = socket;
-  }
-
   @Get("/")
   async getUserDeputies(@Context("user") user: User) {
     const deputies = await prisma.emsFdDeputy.findMany({
@@ -162,110 +139,6 @@ export class EmsFdController {
     });
 
     return updated;
-  }
-
-  @Put("/:id/status")
-  async setDeputyStatus(
-    @PathParams("id") deputyId: string,
-    @BodyParams() body: JsonRequestBody,
-    @Context("user") user: User,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
-    @Res() res: Res,
-    @Req() req: Req,
-  ) {
-    const error = validate(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const statusId = body.get("status");
-    const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
-    const isDispatch = isFromDispatch && user.isDispatch;
-
-    const deputy = await prisma.emsFdDeputy.findFirst({
-      where: {
-        userId: isDispatch ? undefined : user.id,
-        id: deputyId,
-      },
-    });
-
-    if (!deputy) {
-      throw new NotFound("deputyNotFound");
-    }
-
-    if (deputy.suspended) {
-      throw new BadRequest("deputySuspended");
-    }
-
-    const code = await prisma.statusValue.findFirst({
-      where: {
-        id: statusId,
-      },
-      include: {
-        value: true,
-      },
-    });
-
-    if (!code) {
-      throw new NotFound("statusNotFound");
-    }
-
-    // reset all user
-    await prisma.emsFdDeputy.updateMany({
-      where: {
-        userId: user.id,
-      },
-      data: {
-        statusId: null,
-      },
-    });
-
-    const updatedDeputy = await prisma.emsFdDeputy.update({
-      where: {
-        id: deputy.id,
-      },
-      data: {
-        statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
-      },
-      include: unitProperties,
-    });
-
-    if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-      setCookie({
-        res,
-        name: Cookie.ActiveDeputy,
-        value: "",
-        expires: -1,
-      });
-
-      // unassign deputy from call
-      await prisma.assignedUnit.deleteMany({
-        where: {
-          emsFdDeputyId: deputy.id,
-        },
-      });
-    } else {
-      // expires after 3 hours.
-      setCookie({
-        res,
-        name: Cookie.ActiveDeputy,
-        value: signJWT({ deputyId: updatedDeputy.id }, 60 * 60 * 3),
-        expires: 60 * 60 * 1000 * 3,
-      });
-    }
-
-    if (cad.discordWebhookURL) {
-      const webhook = await getWebhookData(cad.discordWebhookURL);
-      if (!webhook) return;
-      const data = createWebhookData(webhook, updatedDeputy);
-
-      await sendDiscordWebhook(webhook, data);
-    }
-
-    this.socket.emitUpdateDeputyStatus();
-
-    return updatedDeputy;
   }
 
   @Delete("/:id")
@@ -409,28 +282,4 @@ export class EmsFdController {
 
     return data;
   }
-}
-
-export function createWebhookData(webhook: APIWebhook, officer: any) {
-  const status = officer.status.value.value;
-  const department = officer.department.value.value;
-  const officerName = `${officer.badgeNumber} - ${officer.name} ${officer.callsign} (${department})`;
-
-  return {
-    avatar_url: webhook.avatar,
-    embeds: [
-      {
-        title: "Status Change",
-        type: "rich",
-        description: `Officer **${officerName}** has changed their status to ${status}`,
-        fields: [
-          {
-            name: "Status",
-            value: status,
-            inline: true,
-          },
-        ],
-      },
-    ],
-  };
 }

@@ -1,7 +1,17 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
+import ReactSelect, {
+  Props as SelectProps,
+  GroupBase,
+  StylesConfig,
+  components,
+  MultiValueGenericProps,
+} from "react-select";
 import { useAuth } from "context/AuthContext";
+import { ContextMenu } from "components/context-menu/ContextMenu";
+import { useValues } from "context/ValuesContext";
+import useFetch from "lib/useFetch";
+import { StatusValue } from "types/prisma";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
@@ -16,6 +26,41 @@ interface Props extends Exclude<SelectProps, "options"> {
   isClearable?: boolean;
   disabled?: boolean;
 }
+
+const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
+  const { codes10 } = useValues();
+  const { execute } = useFetch();
+
+  const unitId = props.data.value;
+
+  async function setCode(status: StatusValue) {
+    const { json } = await execute(`/dispatch/status/${unitId}`, {
+      method: "PUT",
+      data: { status: status.id },
+    });
+
+    console.log({ json });
+  }
+
+  return (
+    <ContextMenu
+      items={codes10.values.map((v) => ({
+        name: v.value.value,
+        onClick: () => setCode(v),
+        "aria-label":
+          v.type === "STATUS_CODE"
+            ? `Set status to ${v.value.value}`
+            : `Add code to event: ${v.value.value} `,
+        title:
+          v.type === "STATUS_CODE"
+            ? `Set status to ${v.value.value}`
+            : `Add code to event: ${v.value.value} `,
+      }))}
+    >
+      <components.MultiValueContainer {...props} />
+    </ContextMenu>
+  );
+};
 
 export const Select = ({ name, onChange, ...rest }: Props) => {
   const { user } = useAuth();
@@ -45,6 +90,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       styles={styles(theme)}
       className="border-gray-500"
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
+      components={{ MultiValueContainer }}
     />
   );
 };
@@ -91,7 +137,8 @@ export const styles = ({
   multiValue: (base) => ({
     ...base,
     color: "#000",
-    borderColor: "rgba(229, 231, 235, 0.5)",
+    borderColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
   }),
   noOptionsMessage: (base) => ({
     ...base,
@@ -99,14 +146,14 @@ export const styles = ({
   }),
   multiValueLabel: (base) => ({
     ...base,
-    backgroundColor: "#cccccc",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
     color,
     padding: "0.2rem",
     borderRadius: "2px 0 0 2px",
   }),
   multiValueRemove: (base) => ({
     ...base,
-    backgroundColor: "#cccccc",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
     color,
     borderRadius: "0 2px 2px 0",
     cursor: "pointer",

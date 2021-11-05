@@ -25,9 +25,8 @@ export type PermissionRoute = [Method[] | "*", string | RegExp, (user: _User) =>
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
   [
-    ["PUT"],
-    // /v1/leo/:officerId/status
-    /\/v1\/(leo|ems-fd)\/[A-Z0-9]+\/status/i,
+    "*",
+    /\/v1\/dispatch\/status\/\w+/i,
     (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
   ],
   [["GET"], /\/v1\/leo\/active-(officers|officer)/, (u) => u.isLeo || u.isDispatch],
