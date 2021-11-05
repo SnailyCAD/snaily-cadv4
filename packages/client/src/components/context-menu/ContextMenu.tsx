@@ -16,7 +16,8 @@ type ButtonProps = React.DetailedHTMLProps<
 
 interface ContextItem extends ButtonProps {
   name: string;
-  component?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  component?: keyof typeof components | (string & {});
 }
 
 export const ContextMenu = ({ items, children }: Props) => {
@@ -46,17 +47,23 @@ export const ContextMenu = ({ items, children }: Props) => {
           "flex flex-col",
           "shadow-md",
           "bg-white dark:bg-dark-bright shadow-sm",
-          "p-1.5 rounded-md w-36",
+          "p-1.5 rounded-md min-w-[15rem] max-h-[25rem] overflow-auto",
         )}
+        style={{ scrollbarWidth: "thin" }}
       >
         {items.map((item) => {
           const { component = "Item", ...rest } = typeof item === "object" ? item : {};
+          // @ts-expect-error ignore
           const Component = components[component] ?? components.Item;
 
           return typeof item === "boolean" ? (
             <Menu.Separator key={v4()} />
           ) : Component ? (
-            <Component key={v4()} onClick={handleClick.bind(null, item)} {...rest}>
+            <Component
+              key={v4()}
+              onClick={component === "Item" ? handleClick.bind(null, item) : undefined}
+              {...rest}
+            >
               {item.name}
             </Component>
           ) : null;
@@ -90,13 +97,13 @@ export const ContextMenu = ({ items, children }: Props) => {
   );
 };
 
-const components: Record<string, (...args: any[]) => any> = {
+const components = {
   Item: ({ children, ...rest }: any) => (
     <Menu.Item
       {...rest}
       className={classNames(
         "block",
-        "rounded-sm px-2 py-1",
+        "rounded-sm px-3 py-1 my-0.5",
         "dark:text-white",
         "hover:bg-white/[0.12] dark:hover:bg-white/[0.05]",
         "active:bg-white/[0.12] dark:active:bg-white/[0.05]",
@@ -107,5 +114,19 @@ const components: Record<string, (...args: any[]) => any> = {
     >
       {children}
     </Menu.Item>
+  ),
+  Label: ({ children, ...rest }: any) => (
+    <Menu.Label
+      className={classNames(
+        "block",
+        "rounded-sm px-3 py-1 my-0.5",
+        "dark:text-white bg",
+        "font-semibold text-lg",
+        rest.className,
+      )}
+      {...rest}
+    >
+      {children}
+    </Menu.Label>
   ),
 };

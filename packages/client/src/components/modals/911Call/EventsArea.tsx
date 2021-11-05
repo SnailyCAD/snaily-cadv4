@@ -47,7 +47,7 @@ export const CallEventsArea = ({ call }: Props) => {
   }
 
   return (
-    <div className="w-[35rem] ml-3 relative">
+    <div className="w-[45rem] ml-3 relative">
       <h4 className="font-semibold text-xl">{common("events")}</h4>
 
       <ul className="overflow-auto h-[210px]">
@@ -131,20 +131,22 @@ const EventItem = ({ event, setTempEvent }: { event: Call911Event; setTempEvent:
   return (
     <li ref={actionsRef} className="flex justify-between">
       <div>
-        <span className="select-none text-gray-800 mr-1 font-semibold w-[90%]">{formatted}:</span>
+        <span className="select-none text-gray-800 dark:text-gray-400 mr-1 font-semibold w-[90%]">
+          {formatted}:
+        </span>
         <span>{event.description}</span>
       </div>
 
       <div className={classNames(isHovering ? "flex" : "hidden")}>
         <Button
-          className="p-0 px-0 mr-2"
+          className="p-0 px-1 mr-2"
           small
           variant="cancel"
           onClick={() => setTempEvent(event)}
         >
           <Pencil width={15} />
         </Button>
-        <Button className="p-0 px-0" small variant="cancel" onClick={handleOpen}>
+        <Button className="p-0 px-1" small variant="cancel" onClick={handleOpen}>
           <X width={20} height={20} />
         </Button>
       </div>

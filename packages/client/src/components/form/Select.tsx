@@ -1,7 +1,22 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
+import ReactSelect, {
+  Props as SelectProps,
+  GroupBase,
+  StylesConfig,
+  components,
+  MultiValueGenericProps,
+} from "react-select";
 import { useAuth } from "context/AuthContext";
+import { ContextMenu } from "components/context-menu/ContextMenu";
+import { useValues } from "context/ValuesContext";
+import useFetch from "lib/useFetch";
+import { StatusValue } from "types/prisma";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { Full911Call, useDispatchState } from "state/dispatchState";
+import { makeUnitName } from "lib/utils";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 
 export interface SelectValue<Value extends string | number = string> {
   label: string;
@@ -15,13 +30,72 @@ interface Props extends Exclude<SelectProps, "options"> {
   hasError?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
+  showContextMenuForUnits?: boolean;
 }
+
+const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
+  const { codes10 } = useValues();
+  const { execute } = useFetch();
+  const { getPayload } = useModal();
+  const generateCallsign = useGenerateCallsign();
+  const call = getPayload<Full911Call>(ModalIds.Manage911Call);
+  const { activeDeputies, activeOfficers } = useDispatchState();
+
+  const unitId = props.data.value;
+  const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId);
+
+  async function setCode(status: StatusValue) {
+    if (!unit) return;
+
+    if (status.type === "STATUS_CODE") {
+      await execute(`/dispatch/status/${unitId}`, {
+        method: "PUT",
+        data: { status: status.id },
+      });
+    } else {
+      if (!call) return;
+      await execute(`/911-calls/events/${call.id}`, {
+        method: "POST",
+        data: {
+          description: `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
+        },
+      });
+    }
+  }
+
+  const codesMapped: any[] = codes10.values.map((v) => ({
+    name: v.value.value,
+    onClick: () => setCode(v),
+    "aria-label":
+      v.type === "STATUS_CODE"
+        ? `Set status to ${v.value.value}`
+        : `Add code to event: ${v.value.value} `,
+    title:
+      v.type === "STATUS_CODE"
+        ? `Set status to ${v.value.value}`
+        : `Add code to event: ${v.value.value} `,
+  }));
+
+  if (unit) {
+    codesMapped.unshift({
+      name: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+      component: "Label",
+    });
+  }
+
+  return (
+    <ContextMenu items={codesMapped}>
+      <components.MultiValueContainer {...props} />
+    </ContextMenu>
+  );
+};
 
 export const Select = ({ name, onChange, ...rest }: Props) => {
   const { user } = useAuth();
   const common = useTranslations("Common");
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
+  const { canBeClosed } = useModal();
 
   const useDarkTheme =
     user?.isDarkTheme &&
@@ -37,7 +111,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
   return (
     <ReactSelect
       {...rest}
-      isDisabled={rest.disabled ?? false}
+      isDisabled={rest.disabled ?? !canBeClosed}
       value={value}
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
@@ -45,6 +119,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       styles={styles(theme)}
       className="border-gray-500"
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
+      components={rest.showContextMenuForUnits ? { MultiValueContainer } : undefined}
     />
   );
 };
@@ -91,7 +166,8 @@ export const styles = ({
   multiValue: (base) => ({
     ...base,
     color: "#000",
-    borderColor: "rgba(229, 231, 235, 0.5)",
+    borderColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
   }),
   noOptionsMessage: (base) => ({
     ...base,
@@ -99,14 +175,14 @@ export const styles = ({
   }),
   multiValueLabel: (base) => ({
     ...base,
-    backgroundColor: "#cccccc",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
     color,
     padding: "0.2rem",
     borderRadius: "2px 0 0 2px",
   }),
   multiValueRemove: (base) => ({
     ...base,
-    backgroundColor: "#cccccc",
+    backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
     color,
     borderRadius: "0 2px 2px 0",
     cursor: "pointer",
