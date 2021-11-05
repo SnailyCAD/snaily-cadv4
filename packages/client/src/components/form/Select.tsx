@@ -30,6 +30,7 @@ interface Props extends Exclude<SelectProps, "options"> {
   hasError?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
+  showContextMenuForUnits?: boolean;
 }
 
 const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
@@ -38,10 +39,10 @@ const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
   const { getPayload } = useModal();
   const generateCallsign = useGenerateCallsign();
   const call = getPayload<Full911Call>(ModalIds.Manage911Call);
-  const { allDeputies, allOfficers } = useDispatchState();
+  const { activeDeputies, activeOfficers } = useDispatchState();
 
   const unitId = props.data.value;
-  const unit = [...allDeputies, ...allOfficers].find((v) => v.id === unitId);
+  const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId);
 
   async function setCode(status: StatusValue) {
     if (!unit) return;
@@ -62,21 +63,28 @@ const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
     }
   }
 
+  const codesMapped: any[] = codes10.values.map((v) => ({
+    name: v.value.value,
+    onClick: () => setCode(v),
+    "aria-label":
+      v.type === "STATUS_CODE"
+        ? `Set status to ${v.value.value}`
+        : `Add code to event: ${v.value.value} `,
+    title:
+      v.type === "STATUS_CODE"
+        ? `Set status to ${v.value.value}`
+        : `Add code to event: ${v.value.value} `,
+  }));
+
+  if (unit) {
+    codesMapped.unshift({
+      name: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+      component: "Label",
+    });
+  }
+
   return (
-    <ContextMenu
-      items={codes10.values.map((v) => ({
-        name: v.value.value,
-        onClick: () => setCode(v),
-        "aria-label":
-          v.type === "STATUS_CODE"
-            ? `Set status to ${v.value.value}`
-            : `Add code to event: ${v.value.value} `,
-        title:
-          v.type === "STATUS_CODE"
-            ? `Set status to ${v.value.value}`
-            : `Add code to event: ${v.value.value} `,
-      }))}
-    >
+    <ContextMenu items={codesMapped}>
       <components.MultiValueContainer {...props} />
     </ContextMenu>
   );
@@ -87,6 +95,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
   const common = useTranslations("Common");
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
+  const { canBeClosed } = useModal();
 
   const useDarkTheme =
     user?.isDarkTheme &&
@@ -102,7 +111,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
   return (
     <ReactSelect
       {...rest}
-      isDisabled={rest.disabled ?? false}
+      isDisabled={rest.disabled ?? !canBeClosed}
       value={value}
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
@@ -110,7 +119,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       styles={styles(theme)}
       className="border-gray-500"
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
-      components={{ MultiValueContainer }}
+      components={rest.showContextMenuForUnits ? { MultiValueContainer } : undefined}
     />
   );
 };

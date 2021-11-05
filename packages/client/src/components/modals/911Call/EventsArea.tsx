@@ -47,7 +47,7 @@ export const CallEventsArea = ({ call }: Props) => {
   }
 
   return (
-    <div className="w-[35rem] ml-3 relative">
+    <div className="w-[45rem] ml-3 relative">
       <h4 className="font-semibold text-xl">{common("events")}</h4>
 
       <ul className="overflow-auto h-[210px]">
