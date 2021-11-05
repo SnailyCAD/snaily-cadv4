@@ -7,6 +7,7 @@ import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
+import { findUrl } from "lib/fetch";
 
 const styles: React.CSSProperties = {
   minWidth: "20em",
@@ -16,9 +17,12 @@ const styles: React.CSSProperties = {
 };
 
 export default function App({ Component, router, pageProps }: AppProps) {
+  const { hostname, protocol, port } = new URL(findUrl());
+  const url = `${protocol}//${hostname}:${port}`;
+
   return (
     <SocketProvider
-      uri="http://localhost:8080"
+      uri={url}
       options={{
         reconnectionDelay: 5_000,
         reconnectionAttempts: 50,
