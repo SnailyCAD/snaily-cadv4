@@ -34,7 +34,12 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
     if (penalCode) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${penalCode.id}`, {
         method: "PATCH",
-        data: values,
+        data: {
+          ...values,
+          fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
+          prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
+          bail: values.warningApplicable ? null : values.bail.values,
+        },
       });
 
       if (json?.id) {
@@ -44,7 +49,12 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
     } else {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
-        data: values,
+        data: {
+          ...values,
+          fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
+          prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
+          bail: values.warningApplicable ? null : values.bail.values,
+        },
       });
 
       if (json?.id) {
@@ -57,12 +67,23 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     description: penalCode?.description ?? "",
-    // @ts-expect-error todo
-    warningApplicable: penalCode?.warningApplicable ?? true,
-    fines1: { enabled: true, values: [] },
-    fines2: { enabled: false, values: [] },
-    prisonTerm: { enabled: false, values: [] },
-    bail: { enabled: false, values: [] },
+    warningApplicable: penalCode?.warningApplicable ? true : !penalCode?.warningNotApplicable,
+    fines1: {
+      enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
+      values: penalCode?.warningApplicable?.fines ?? [],
+    },
+    fines2: {
+      enabled: (penalCode?.warningNotApplicable?.fines.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.fines ?? [],
+    },
+    prisonTerm: {
+      enabled: (penalCode?.warningNotApplicable?.prisonTerm.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.prisonTerm ?? [],
+    },
+    bail: {
+      enabled: (penalCode?.warningNotApplicable?.bail.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.bail ?? [],
+    },
   };
 
   const validate = handleValidate(CREATE_PENAL_CODE_SCHEMA);

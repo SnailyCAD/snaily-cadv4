@@ -60,7 +60,12 @@ export class ValuesController {
         if (type === "PENAL_CODE") {
           return {
             type,
-            values: await prisma.penalCode.findMany(),
+            values: await prisma.penalCode.findMany({
+              include: {
+                warningApplicable: true,
+                warningNotApplicable: true,
+              },
+            }),
           };
         }
 
@@ -92,10 +97,37 @@ export class ValuesController {
         throw new BadRequest(error);
       }
 
+      let id;
+      if (body.get("warningApplicable")) {
+        const data = await prisma.warningApplicable.create({
+          data: {
+            fines: body.get("fines")?.map((v: any) => parseInt(v)) ?? null,
+          },
+        });
+
+        id = data.id;
+      } else {
+        const data = await prisma.warningNotApplicable.create({
+          data: {
+            fines: body.get("fines")?.map((v: any) => parseInt(v)) ?? null,
+            prisonTerm: body.get("prisonTerm")?.map((v: any) => parseInt(v)) ?? null,
+            bail: body.get("bail")?.map((v: any) => parseInt(v)) ?? null,
+          },
+        });
+
+        id = data.id;
+      }
+
+      const key = body.get("warningApplicable") ? "warningApplicableId" : "warningNotApplicableId";
       const code = await prisma.penalCode.create({
         data: {
           title: body.get("title"),
           description: body.get("description"),
+          [key]: id,
+        },
+        include: {
+          warningApplicable: true,
+          warningNotApplicable: true,
         },
       });
 

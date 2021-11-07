@@ -356,6 +356,8 @@ export type PenalCode = {
   title: string;
   description: string;
   position: number | null;
+  warningApplicable: WarningApplicable | null;
+  warningNotApplicable: WarningNotApplicable | null;
 };
 
 /**
@@ -514,6 +516,26 @@ export type LeoIncident = {
   injuriesOrFatalities: boolean;
   arrestsMade: boolean;
   createdAt: Date;
+};
+
+/**
+ * Model WarningApplicable
+ */
+
+export type WarningApplicable = {
+  id: string;
+  fines: number[];
+};
+
+/**
+ * Model WarningNotApplicable
+ */
+
+export type WarningNotApplicable = {
+  id: string;
+  fines: number[];
+  prisonTerm: number[];
+  bail: number[];
 };
 
 /**
