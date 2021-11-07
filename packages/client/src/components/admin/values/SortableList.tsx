@@ -19,49 +19,35 @@ export const SortableList = ({ values, search, setList, handleEdit, handleDelete
     <ReactSortable animation={200} className="mt-5" tag="ul" list={values} setList={setList}>
       {sortValues(values)
         .filter((v) => handleFilter(v, search))
-        .map((value, idx) => {
-          const name =
-            "description" in value
-              ? value.title
-              : typeof value.value === "string"
-              ? value.value
-              : value.value.value;
+        .map((value, idx) => (
+          <li
+            className="flex items-center justify-between p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
+            key={value.id}
+          >
+            <div className="flex items-center">
+              <span className="cursor-move">
+                <ArrowsExpand className="mr-2 text-gray-500" width={15} />
+              </span>
 
-          return (
-            <li
-              className="flex items-center justify-between p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-              key={value.id}
-            >
-              <div className="flex flex-col">
-                <div className="flex items-center">
-                  <span className="cursor-move">
-                    <ArrowsExpand className="mr-2 text-gray-500" width={15} />
-                  </span>
+              <span className="text-gray-500 select-none">{++idx}.</span>
+              <span className="ml-2">
+                {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
+                  <span>{(value as any).department.value?.value} / </span>
+                ) : null}
+                {typeof value.value === "string" ? value.value : value.value.value}
+              </span>
+            </div>
 
-                  <span className="text-gray-500 select-none">{++idx}.</span>
-                  <span className="ml-2">
-                    {typeof value.value !== "string" &&
-                    value.value &&
-                    value.value.type === "DIVISION" ? (
-                      <span>{(value as any).department.value?.value} / </span>
-                    ) : null}
-                    {name}
-                  </span>
-                </div>
-                {"description" in value ? <p className="mt-2 ml-5">{value.description}</p> : null}
-              </div>
-
-              <div>
-                <Button onClick={() => handleEdit(value)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button onClick={() => handleDelete(value)} variant="danger" className="ml-2">
-                  {common("delete")}
-                </Button>
-              </div>
-            </li>
-          );
-        })}
+            <div>
+              <Button onClick={() => handleEdit(value)} variant="success">
+                {common("edit")}
+              </Button>
+              <Button onClick={() => handleDelete(value)} variant="danger" className="ml-2">
+                {common("delete")}
+              </Button>
+            </div>
+          </li>
+        ))}
     </ReactSortable>
   );
 };
