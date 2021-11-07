@@ -7,7 +7,6 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Error } from "components/form/Error";
 import useFetch from "lib/useFetch";
-import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 
@@ -19,16 +18,13 @@ export const AccountSettingsTab = () => {
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
-    isDarkTheme: user?.isDarkTheme ?? true,
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute("/user", {
+    await execute("/user", {
       method: "PATCH",
       data,
     });
-
-    console.log({ json });
   }
 
   return (
@@ -45,11 +41,6 @@ export const AccountSettingsTab = () => {
                 name="username"
               />
               <Error>{errors.username}</Error>
-            </FormField>
-
-            <FormField label="Dark Theme">
-              <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
-              <Error>{errors.isDarkTheme}</Error>
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>

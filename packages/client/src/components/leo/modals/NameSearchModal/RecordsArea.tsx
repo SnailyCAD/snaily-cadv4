@@ -2,7 +2,7 @@ import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { Officer, PenalCode, Record, RecordType } from "types/prisma";
+import { PenalCode, Record, RecordType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -11,8 +11,10 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
 import { makeUnitName } from "lib/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { FullOfficer } from "state/dispatchState";
 
-export type FullRecord = Record & { officer: Officer; violations: PenalCode[] };
+export type FullRecord = Record & { officer: FullOfficer; violations: PenalCode[] };
 interface Props {
   records: FullRecord[];
 }
@@ -59,6 +61,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
   const router = useRouter();
   const isCitizen = router.pathname.startsWith("/citizen");
   const { state, execute } = useFetch();
+  const generateCallsign = useGenerateCallsign();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
@@ -88,8 +91,8 @@ const Table = ({ data }: { data: FullRecord[] }) => {
   }
 
   return (
-    <div className="overflow-x-auto w-full mt-3 max-h-56">
-      <table className="overflow-hidden w-full whitespace-nowrap">
+    <div className="w-full mt-3 overflow-x-auto max-h-56">
+      <table className="w-full overflow-hidden whitespace-nowrap">
         <thead className="sticky top-0">
           <tr>
             <th>{t("Leo.violations")}</th>
@@ -108,7 +111,7 @@ const Table = ({ data }: { data: FullRecord[] }) => {
                 <td>{value.violations.map((v) => v.title).join(", ")}</td>
                 <td>{value.postal}</td>
                 <td>
-                  {value.officer.callsign} {makeUnitName(value.officer)}
+                  {generateCallsign(value.officer)} {makeUnitName(value.officer)}
                 </td>
                 <td>{value.notes}</td>
                 <td>{format(new Date(value.createdAt), "yyyy-MM-dd")}</td>

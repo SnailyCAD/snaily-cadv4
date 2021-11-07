@@ -10,6 +10,7 @@ import { User } from ".prisma/client";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, validate } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
+import { userProperties } from "../../lib/auth";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -42,6 +43,7 @@ export class AccountController {
         isDarkTheme,
         statusViewMode,
       },
+      select: userProperties,
     });
 
     return updated;

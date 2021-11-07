@@ -17,7 +17,7 @@ const LABELS = {
 };
 
 export const AppearanceTab = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
@@ -33,7 +33,9 @@ export const AppearanceTab = () => {
       data: { ...user, ...data },
     });
 
-    console.log({ json });
+    if (json.id) {
+      setUser({ ...user, ...json });
+    }
   }
 
   return (

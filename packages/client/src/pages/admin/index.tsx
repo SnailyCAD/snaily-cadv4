@@ -4,7 +4,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import prettyBytes from "pretty-bytes";
-("pretty-bytes");
+import Head from "next/head";
 
 interface Counts {
   activeUsers: number;
@@ -29,6 +29,10 @@ interface Counts {
 export default function Admin({ counts }: { counts: Counts }) {
   return (
     <AdminLayout className="dark:text-white">
+      <Head>
+        <title>Admin Dashboard - SnailyCAD</title>
+      </Head>
+
       <h1 className="text-3xl font-semibold dark:text-white">Dashboard</h1>
 
       <Group name="Users">
@@ -80,7 +84,7 @@ export default function Admin({ counts }: { counts: Counts }) {
 
 const Group = ({ name, children }: { name: string; children: React.ReactNode }) => {
   return (
-    <section className="my-2 mb-7 max-w-2xl">
+    <section className="max-w-2xl my-2 mb-7">
       <h4 className="text-lg">{name}</h4>
 
       <div className="flex justify-between">{children}</div>
@@ -98,14 +102,14 @@ const Item = ({
   percentage?: number;
 }) => {
   return (
-    <div className="select-none flex items-end relative">
+    <div className="relative flex items-end select-none">
       <div>
-        <span className="text-5xl font-semibold font-sans">{count}</span>
+        <span className="font-sans text-5xl font-semibold">{count}</span>
       </div>
 
       <div className="flex flex-col items-end">
         {percentage ? (
-          <span className="text-gray-500 dark:text-gray-300 text-lg">{percentage}%</span>
+          <span className="text-lg text-gray-500 dark:text-gray-300">{percentage}%</span>
         ) : null}
         <span className="ml-3 text-xl">{name}</span>
       </div>
