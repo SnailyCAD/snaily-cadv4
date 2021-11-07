@@ -355,6 +355,7 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string;
+  position: number | null;
 };
 
 /**

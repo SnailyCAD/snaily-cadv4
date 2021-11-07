@@ -182,7 +182,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             },
           })}
         </p>
-        <div className="mt-2 flex gap-2 items-center justify-end">
+        <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
@@ -196,7 +196,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             variant="danger"
             onClick={handleDelete}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}
           </Button>
         </div>

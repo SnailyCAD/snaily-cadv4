@@ -1,16 +1,15 @@
 import { classNames } from "lib/classNames";
 
-interface Props {
-  label: string;
-  children: React.ReactNode;
+type Props = JSX.IntrinsicElements["fieldset"] & {
+  label: string | null;
   fieldId?: string;
-  className?: string;
   checkbox?: boolean;
-}
+};
 
-export const FormField = ({ checkbox, children, label, className, fieldId }: Props) => {
+export const FormField = ({ checkbox, children, label, className, fieldId, ...rest }: Props) => {
   return (
     <fieldset
+      {...rest}
       className={classNames(
         "flex mb-3",
         checkbox ? "flex-row items-center" : "flex-col",
