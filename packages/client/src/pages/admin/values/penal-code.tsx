@@ -89,14 +89,45 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
         <ul className="mt-5">
           {values.map((value, idx) => (
             <li
-              className="my-1 bg-gray-200 dark:bg-gray-2 p-2 px-4 rounded-md flex items-center justify-between"
+              className="flex items-center justify-between p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
               key={value.id}
             >
               <div>
-                <span className="select-none text-gray-500">{++idx}.</span>
+                <span className="text-gray-500 select-none">{++idx}.</span>
                 <span className="ml-2">{value.title}</span>
 
-                <p className="ml-5 mt-2">{value.description}</p>
+                <p className="mt-2 ml-5">{value.description}</p>
+
+                {value.warningApplicable ? (
+                  <div className="mt-3 ml-5">
+                    <p>
+                      <span className="font-semibold">Fines: </span>
+                      {value.warningApplicable.fines.map(Intl.NumberFormat().format).join(" - ") ||
+                        common("none")}
+                    </p>
+                  </div>
+                ) : value.warningNotApplicable ? (
+                  <div className="mt-3 ml-5">
+                    <p>
+                      <span className="font-semibold">Fines: </span>
+                      {value.warningNotApplicable.fines
+                        .map(Intl.NumberFormat().format)
+                        .join(" - ") || common("none")}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Prison Term: </span>
+                      {value.warningNotApplicable.prisonTerm
+                        .map(Intl.NumberFormat().format)
+                        .join(" - ") || common("none")}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Bail: </span>
+                      {value.warningNotApplicable.bail
+                        .map(Intl.NumberFormat().format)
+                        .join(" - ") || common("none")}
+                    </p>
+                  </div>
+                ) : null}
               </div>
 
               <div>
@@ -125,7 +156,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
             },
           })}
         </p>
-        <div className="mt-2 flex gap-2 items-center justify-end">
+        <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
@@ -139,7 +170,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
             variant="danger"
             onClick={handleDelete}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}
           </Button>
         </div>

@@ -15,7 +15,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { useCitizen } from "context/CitizenContext";
-import { RecordType } from "types/prisma";
+import { RecordType, PenalCode } from "types/prisma";
 
 export const CreateTicketModal = ({ type }: { type: RecordType }) => {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -70,7 +70,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       title={t(data[type].title)}
       onClose={() => closeModal(data[type].id)}
       isOpen={isOpen(data[type].id)}
-      className="w-[600px]"
+      className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
@@ -106,13 +106,17 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                 name="violations"
                 onChange={handleChange}
                 isMulti
-                values={penalCode.values.map((value) => ({
-                  label: value.title,
-                  value: value.id,
-                }))}
+                values={penalCode.values
+                  .filter((v) => (type === "WRITTEN_WARNING" ? v.warningApplicable : true))
+                  .map((value) => ({
+                    label: value.title,
+                    value: value.id,
+                  }))}
               />
               <Error>{errors.violations}</Error>
             </FormField>
+
+            <PenalCodesTable penalCodes={penalCode.values} />
 
             <FormField label={t("notes")}>
               <Textarea
@@ -124,7 +128,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
               <Error>{errors.notes}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
                 {common("cancel")}
               </Button>
@@ -141,5 +145,43 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
         )}
       </Formik>
     </Modal>
+  );
+};
+
+const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
+  const common = useTranslations("Common");
+
+  return (
+    <div className="w-full mt-3 overflow-x-auto">
+      <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
+        <thead>
+          <tr>
+            <th>{"title"}</th>
+            <th>{"color"}</th>
+            <th>{common("actions")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {penalCodes.map((penalCode) => (
+            <tr key={penalCode.id}>
+              <td>{penalCode.title}</td>
+              <td>hello world</td>
+              <td className="w-36">
+                <Button type="button" className="ml-2" small variant="danger">
+                  {common("delete")}
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <div className="w-full p-2 px-3">
+            <span className="font-semibold uppercase">TOTAL</span>
+
+            <span className="ml-2">Fines: {}</span>
+          </div>
+        </tfoot>
+      </table>
+    </div>
   );
 };
