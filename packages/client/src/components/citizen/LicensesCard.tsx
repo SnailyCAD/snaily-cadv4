@@ -16,7 +16,7 @@ export const LicensesCard = () => {
 
   return (
     <>
-      <div className="bg-gray-200/60 dark:bg-gray-2 p-4 rounded-md">
+      <div className="p-4 rounded-md bg-gray-200/60 dark:bg-gray-2">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Licenses</h1>
 
@@ -29,9 +29,9 @@ export const LicensesCard = () => {
           {types.map((type) => {
             const category =
               type === "driversLicense"
-                ? citizen.dlCategory
+                ? citizen.dlCategory.filter((v) => v.type === "AUTOMOTIVE")
                 : type === "pilotLicense"
-                ? citizen.dlPilotCategory
+                ? citizen.dlCategory.filter((v) => v.type === "AVIATION")
                 : null;
 
             return (
