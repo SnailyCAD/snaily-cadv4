@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "scripts": {
     "dev": "rimraf .env && next dev",
     "build": "yarn copy-env && yarn next-build",
@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "@casper124578/use-socket.io": "2.0.0",
-    "@headlessui/react": "^1.4.1",
+    "@headlessui/react": "^1.4.2",
     "@radix-ui/react-context-menu": "^0.1.1",
-    "@snailycad/config": "1.0.0-beta.3",
-    "@snailycad/schemas": "1.0.0-beta.3",
+    "@snailycad/config": "1.0.0-beta.4",
+    "@snailycad/schemas": "1.0.0-beta.4",
     "axios": "^0.24.0",
     "date-fns": "^2.25.0",
     "formik": "^2.2.9",
     "hex-color-regex": "^1.1.0",
-    "next": "^12.0.2",
+    "next": "^12.0.3",
     "next-intl": "^2.2.0",
     "pretty-bytes": "^5.6.0",
     "react": "^17.0.2",
@@ -29,13 +29,13 @@
     "react-dom": "^17.0.2",
     "react-hot-toast": "^2.1.1",
     "react-markdown": "^7.1.0",
-    "react-select": "^5.2.0",
+    "react-select": "^5.2.1",
     "react-sortablejs": "^6.0.0",
     "react-use": "^17.3.1",
     "socket.io-client": "^4.3.2",
     "sortablejs": "^1.14.0",
     "uuid": "^8.3.2",
-    "zustand": "^3.6.3"
+    "zustand": "^3.6.4"
   },
   "devDependencies": {
     "@types/react": "^17.0.34",
