@@ -16,6 +16,7 @@ import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { useCitizen } from "context/CitizenContext";
 import { RecordType, PenalCode } from "types/prisma";
+import { TableForm } from "./CreateRecordModal/TableForm";
 
 export const CreateTicketModal = ({ type }: { type: RecordType }) => {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -106,17 +107,19 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                 name="violations"
                 onChange={handleChange}
                 isMulti
-                values={penalCode.values
-                  .filter((v) => (type === "WRITTEN_WARNING" ? v.warningApplicable : true))
-                  .map((value) => ({
-                    label: value.title,
-                    value: value.id,
-                  }))}
+                values={
+                  penalCode.values
+                    .filter((v) => (type === "WRITTEN_WARNING" ? v.warningApplicable : true))
+                    .map((value) => ({
+                      label: value.title,
+                      value,
+                    })) as any
+                }
               />
               <Error>{errors.violations}</Error>
             </FormField>
 
-            <PenalCodesTable penalCodes={penalCode.values} />
+            <PenalCodesTable penalCodes={values.violations.map((v) => v.value) as any} />
 
             <FormField label={t("notes")}>
               <Textarea
@@ -149,27 +152,26 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
 };
 
 const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
-  const common = useTranslations("Common");
+  if (penalCodes.length <= 0) {
+    return <p className="mb-3">No penal codes selected.</p>;
+  }
 
   return (
-    <div className="w-full mt-3 overflow-x-auto">
+    <div className="w-full my-3 overflow-x-auto">
       <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
         <thead>
           <tr>
-            <th>{"title"}</th>
-            <th>{"color"}</th>
-            <th>{common("actions")}</th>
+            <th>{"Penal Code"}</th>
+            <th>{"Data"}</th>
           </tr>
         </thead>
         <tbody>
           {penalCodes.map((penalCode) => (
-            <tr key={penalCode.id}>
+            // todo: <TableItem penalCode={penalCode}  /> -> keep track of state in this component
+            <tr className="border-b-[1px] border-blue-50" key={penalCode.id}>
               <td>{penalCode.title}</td>
-              <td>hello world</td>
-              <td className="w-36">
-                <Button type="button" className="ml-2" small variant="danger">
-                  {common("delete")}
-                </Button>
+              <td>
+                <TableForm penalCode={penalCode} />
               </td>
             </tr>
           ))}

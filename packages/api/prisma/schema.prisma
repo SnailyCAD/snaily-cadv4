@@ -263,8 +263,7 @@ model PenalCode {
   warningApplicableId    String?
   warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
   warningNotApplicableId String?
-  records                Record[]
-  recordId               String?
+  violations             Violation[]
 }
 
 // Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored
@@ -305,11 +304,11 @@ model DepartmentValue {
 }
 
 model DriversLicenseCategoryValue {
-  id               String                     @id @default(cuid())
-  valueId          String
-  value            Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type             DriversLicenseCategoryType
-  citizens         Citizen[]                  @relation("dlCategoryToDLCategory")
+  id       String                     @id @default(cuid())
+  valueId  String
+  value    Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type     DriversLicenseCategoryType
+  citizens Citizen[]                  @relation("dlCategoryToDLCategory")
 }
 
 model VehicleValue {
@@ -648,11 +647,21 @@ model Record {
   citizenId  String
   officer    Officer     @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId  String
-  violations PenalCode[]
+  violations Violation[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @default(now()) @updatedAt
   postal     String      @db.VarChar(255)
   notes      String?     @db.Text
+}
+
+model Violation {
+  id          String    @id @default(uuid())
+  fine        Int?
+  jailTime    Int?
+  bail        Int?
+  penalCode   PenalCode @relation(fields: [penalCodeId], references: [id])
+  penalCodeId String
+  records     Record[]
 }
 
 enum RecordType {

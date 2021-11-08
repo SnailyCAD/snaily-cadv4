@@ -71,20 +71,31 @@ export class RecordsController {
     });
 
     await Promise.all(
-      body.get("violations").map(async (item: string) => {
-        await prisma.penalCode.update({
-          where: {
-            id: item,
+      body
+        .get("violations")
+        .map(
+          async (item: {
+            penalCodeId: string;
+            fine: number | null;
+            jailTime: number | null;
+            bail: number | null;
+          }) => {
+            // todo
+            item;
+            // await prisma.penalCode.update({
+            //   where: {
+            //     id: item,
+            //   },
+            //   data: {
+            //     violations: {
+            //       connect: {
+            //         id: ticket.id,
+            //       },
+            //     },
+            //   },
+            // });
           },
-          data: {
-            records: {
-              connect: {
-                id: ticket.id,
-              },
-            },
-          },
-        });
-      }),
+        ),
     );
 
     return ticket;
