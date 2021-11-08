@@ -20,6 +20,7 @@ import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useAuth } from "context/AuthContext";
 
 const enum Toggled {
   VEHICLES,
@@ -49,6 +50,7 @@ export const NameSearchModal = () => {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
+  const { cad } = useAuth();
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
@@ -173,7 +175,7 @@ export const NameSearchModal = () => {
                 </header>
 
                 {currentResult?.dead && currentResult?.dateOfDead ? (
-                  <div className="bg-yellow-500 p-2 rounded-md font-semibold mt-2">
+                  <div className="p-2 mt-2 font-semibold bg-yellow-500 rounded-md">
                     {t("citizenDead", {
                       date: format(
                         new Date(currentResult.dateOfDead ?? new Date()),
@@ -184,7 +186,7 @@ export const NameSearchModal = () => {
                 ) : null}
 
                 {hasWarrants ? (
-                  <div className="bg-red-500 p-2 rounded-md font-semibold mt-2">
+                  <div className="p-2 mt-2 font-semibold bg-red-500 rounded-md">
                     {t("hasWarrants")}
                   </div>
                 ) : null}
@@ -233,11 +235,11 @@ export const NameSearchModal = () => {
                     <div className="flex flex-col">
                       <p>
                         <span className="font-semibold">{cT("weight")}: </span>
-                        {currentResult.weight}
+                        {currentResult.weight} {cad?.miscCadSettings.weightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("height")}: </span>
-                        {currentResult.height}
+                        {currentResult.height} {cad?.miscCadSettings.heightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("address")}: </span>

@@ -48,11 +48,11 @@ export default function CitizenPage({ citizens }: Props) {
         <title>{t("citizens")} - SnailyCAD</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold mb-3">
+      <h1 className="mb-3 text-3xl font-semibold">
         Citizens{showAop ? <span> - AOP: {areaOfPlay}</span> : null}
       </h1>
 
-      <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
+      <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         <Link href="/citizen/create">
           <a>
             <Button className="w-full text-left">{t("createCitizen")}</Button>
@@ -66,7 +66,7 @@ export default function CitizenPage({ citizens }: Props) {
         </Button>
       </ul>
 
-      <ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mb-3">
+      <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         {TOW ? (
           <Button
             onClick={() => {
@@ -100,22 +100,22 @@ export default function CitizenPage({ citizens }: Props) {
         }
       >
         {citizens.length <= 0 ? (
-          <p className="text-gray-600 font-medium">{t("userNoCitizens")}</p>
+          <p className="font-medium text-gray-600">{t("userNoCitizens")}</p>
         ) : (
           citizens.map((citizen) => (
             <li
               key={citizen.id}
-              className="p-3  bg-gray-200 dark:bg-gray-2 rounded-md flex justify-between items-center"
+              className="flex items-center justify-between p-3 bg-gray-200 rounded-md dark:bg-gray-2"
             >
               <div className="flex items-center space-x-3">
                 {citizen.imageId ? (
                   <img
                     draggable={false}
-                    className="rounded-full w-14 h-14 object-cover"
+                    className="object-cover rounded-full w-14 h-14"
                     src={makeImageUrl("citizens", citizen.imageId)}
                   />
                 ) : (
-                  <PersonFill className="text-gray-500/60 w-12 h-12" />
+                  <PersonFill className="w-12 h-12 text-gray-500/60" />
                 )}
 
                 <p className="text-xl font-semibold">

@@ -23,6 +23,7 @@ import { useCitizen } from "context/CitizenContext";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
+import { useAuth } from "context/AuthContext";
 
 export default function EditCitizen() {
   const { state, execute } = useFetch();
@@ -30,6 +31,7 @@ export default function EditCitizen() {
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { cad } = useAuth();
 
   const { citizen } = useCitizen();
   const { gender, ethnicity } = useValues();
@@ -94,7 +96,7 @@ export default function EditCitizen() {
           {t("editCitizen")} - {citizen.name} {citizen.surname}
         </title>
       </Head>
-      <h1 className="text-3xl mb-3 font-semibold">{t("editCitizen")}</h1>
+      <h1 className="mb-3 text-3xl font-semibold">{t("editCitizen")}</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
@@ -215,7 +217,7 @@ export default function EditCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField label={t("weight")}>
+              <FormField label={`${t("weight")} (${cad?.miscCadSettings.weightPrefix})`}>
                 <Input
                   value={values.weight}
                   hasError={!!errors.weight}
@@ -225,7 +227,7 @@ export default function EditCitizen() {
                 <Error>{errors.weight}</Error>
               </FormField>
 
-              <FormField label={t("height")}>
+              <FormField label={`${t("height")} (${cad?.miscCadSettings.heightPrefix})`}>
                 <Input
                   value={values.height}
                   hasError={!!errors.height}

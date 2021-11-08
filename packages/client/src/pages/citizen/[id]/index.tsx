@@ -21,6 +21,7 @@ import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useAuth } from "context/AuthContext";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -35,6 +36,7 @@ export default function CitizenId() {
   const router = useRouter();
   const { citizen } = useCitizen();
   const { makeImageUrl } = useImageUrl();
+  const { cad } = useAuth();
 
   async function handleDelete() {
     if (!citizen) return;
@@ -72,8 +74,8 @@ export default function CitizenId() {
         </title>
       </Head>
 
-      <div className="card bg-gray-200/60 dark:bg-gray-2 p-4 rounded-md flex items-start justify-between">
-        <div className="flex flex-col sm:flex-row items-start">
+      <div className="flex items-start justify-between p-4 rounded-md card bg-gray-200/60 dark:bg-gray-2">
+        <div className="flex flex-col items-start sm:flex-row">
           {citizen.imageId ? (
             <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
               <img
@@ -86,7 +88,7 @@ export default function CitizenId() {
             <PersonFill className="text-gray-500/60 w-[150px] h-[150px]" />
           )}
 
-          <div className="sm:ml-3 mt-2 sm:mt-0 flex flex-col">
+          <div className="flex flex-col mt-2 sm:ml-3 sm:mt-0">
             <p>
               <span className="font-semibold">{t("fullName")}: </span>
               {citizen.name} {citizen.surname}
@@ -114,14 +116,14 @@ export default function CitizenId() {
             </p>
           </div>
 
-          <div className="sm:ml-5 flex flex-col">
+          <div className="flex flex-col sm:ml-5">
             <p>
               <span className="font-semibold">{t("weight")}: </span>
-              {citizen.weight}
+              {citizen.weight} {cad?.miscCadSettings.weightPrefix}
             </p>
             <p>
               <span className="font-semibold">{t("height")}: </span>
-              {citizen.height}
+              {citizen.height} {cad?.miscCadSettings.heightPrefix}
             </p>
             <p>
               <span className="font-semibold">{t("address")}: </span>
@@ -146,7 +148,7 @@ export default function CitizenId() {
         </div>
       </div>
 
-      <div className="mt-3 gap-2 gap-y-3 grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2 mt-3 gap-y-3 md:grid-cols-2">
         <LicensesCard />
         <MedicalRecords medicalRecords={citizen.medicalRecords} />
       </div>

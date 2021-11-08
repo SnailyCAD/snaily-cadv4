@@ -22,6 +22,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
+import { useAuth } from "context/AuthContext";
 
 const INITIAL_VALUES = {
   name: "",
@@ -50,6 +51,7 @@ export default function CreateCitizen() {
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { cad } = useAuth();
 
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
 
@@ -99,7 +101,7 @@ export default function CreateCitizen() {
       <Head>
         <title>Create Citizen</title>
       </Head>
-      <h1 className="text-3xl mb-3 font-semibold">Create citizen</h1>
+      <h1 className="mb-3 text-3xl font-semibold">Create citizen</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
@@ -197,12 +199,12 @@ export default function CreateCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField label={t("weight")}>
+              <FormField label={`${t("weight")} (${cad?.miscCadSettings.weightPrefix})`}>
                 <Input hasError={!!errors.weight} onChange={handleChange} name="weight" />
                 <Error>{errors.weight}</Error>
               </FormField>
 
-              <FormField label={t("height")}>
+              <FormField label={`${t("height")} (${cad?.miscCadSettings.heightPrefix})`}>
                 <Input hasError={!!errors.height} onChange={handleChange} name="height" />
                 <Error>{errors.height}</Error>
               </FormField>
