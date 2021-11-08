@@ -53,7 +53,6 @@ export class CitizenController {
         ccw: true,
         pilotLicense: true,
         dlCategory: { include: { value: true } },
-        dlPilotCategory: { include: { value: true } },
         Record: {
           include: {
             officer: {
@@ -293,46 +292,27 @@ export class CitizenController {
 
 export async function linkDlCategories(
   citizenId: string,
-  driversLicenseCategory?: string[],
-  pilotLicenseCategory?: string[],
+  driversLicenseCategory: string[] = [],
+  pilotLicenseCategory: string[] = [],
 ) {
-  if (driversLicenseCategory) {
-    await Promise.all(
-      driversLicenseCategory.map(async (id) => {
-        await prisma.citizen.update({
-          where: {
-            id: citizenId,
-          },
-          data: {
-            dlCategory: {
-              connect: {
-                id,
-              },
-            },
-          },
-        });
-      }),
-    );
-  }
+  await Promise.all(
+    [...driversLicenseCategory, ...pilotLicenseCategory].map(async (fullId) => {
+      const [id] = fullId.split("-");
 
-  if (pilotLicenseCategory) {
-    await Promise.all(
-      pilotLicenseCategory.map(async (id) => {
-        await prisma.citizen.update({
-          where: {
-            id: citizenId,
-          },
-          data: {
-            dlPilotCategory: {
-              connect: {
-                id,
-              },
+      await prisma.citizen.update({
+        where: {
+          id: citizenId,
+        },
+        data: {
+          dlCategory: {
+            connect: {
+              id,
             },
           },
-        });
-      }),
-    );
-  }
+        },
+      });
+    }),
+  );
 }
 
 export async function unlinkDlCategories(citizenId: string) {
@@ -341,26 +321,18 @@ export async function unlinkDlCategories(citizenId: string) {
       id: citizenId,
     },
     select: {
-      dlPilotCategory: true,
       dlCategory: true,
     },
   });
 
   await Promise.all([
-    [...citizen!.dlCategory, ...citizen!.dlPilotCategory].map(async (v) => {
-      const t =
-        v.type === "AUTOMOTIVE"
-          ? "dlCategory"
-          : v.type === "AVIATION"
-          ? "dlPilotCategory"
-          : "dlCategory";
-
+    citizen!.dlCategory.map(async (v) => {
       await prisma.citizen.update({
         where: {
           id: citizenId,
         },
         data: {
-          [t]: {
+          dlCategory: {
             disconnect: {
               id: v.id,
             },

@@ -72,9 +72,9 @@ export default function CreateCitizen() {
       method: "POST",
       data: {
         ...values,
-        driversLicenseCategory: Array.isArray(values.pilotLicenseCategory)
-          ? values.pilotLicenseCategory.map((v) => v.value)
-          : values.pilotLicenseCategory,
+        driversLicenseCategory: Array.isArray(values.driversLicenseCategory)
+          ? values.driversLicenseCategory.map((v) => v.value)
+          : values.driversLicenseCategory,
         pilotLicenseCategory: Array.isArray(values.pilotLicenseCategory)
           ? values.pilotLicenseCategory.map((v) => v.value)
           : values.pilotLicenseCategory,
@@ -242,7 +242,7 @@ export default function CreateCitizen() {
                       .filter((v) => v.type === "AUTOMOTIVE")
                       .map((v) => ({
                         label: v.value.value,
-                        value: v.id,
+                        value: [v.id, v.type].join("-"),
                       }))}
                     value={values.driversLicenseCategory}
                     hasError={!!errors.driversLicenseCategory}
@@ -285,7 +285,7 @@ export default function CreateCitizen() {
                       .filter((v) => v.type === "AVIATION")
                       .map((v) => ({
                         label: v.value.value,
-                        value: v.id,
+                        value: [v.id, v.type].join("-"),
                       }))}
                     value={values.pilotLicenseCategory}
                     hasError={!!errors.pilotLicenseCategory}

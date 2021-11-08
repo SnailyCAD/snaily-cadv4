@@ -129,7 +129,6 @@ model Citizen {
   weaponLicenseId  String?
   pilotLicense     Value?                        @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
   pilotLicenseId   String?
-  dlPilotCategory  DriversLicenseCategoryValue[] @relation("dlPilotCategoryToDLCategory")
   ccw              Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
   ccwId            String?
   imageId          String?                       @db.Text
@@ -291,7 +290,6 @@ model DriversLicenseCategoryValue {
   value            Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
   type             DriversLicenseCategoryType
   citizens         Citizen[]                  @relation("dlCategoryToDLCategory")
-  citizenToPilotDl Citizen[]                  @relation("dlPilotCategoryToDLCategory")
 }
 
 model VehicleValue {

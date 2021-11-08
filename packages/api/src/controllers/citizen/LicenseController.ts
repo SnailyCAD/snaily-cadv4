@@ -64,7 +64,6 @@ export class LicensesController {
         ccw: true,
         pilotLicense: true,
         dlCategory: { include: { value: true } },
-        dlPilotCategory: { include: { value: true } },
       },
     });
 

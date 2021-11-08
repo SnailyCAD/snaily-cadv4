@@ -102,7 +102,6 @@ export type Citizen = {
   dead: boolean | null;
   dateOfDead: Date | null;
   dlCategory: DriversLicenseCategoryValue[];
-  dlPilotCategory: DriversLicenseCategoryValue[];
   phoneNumber: string | null;
 };
 

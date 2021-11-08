@@ -49,14 +49,18 @@ export const ManageLicensesModal = () => {
     pilotLicense: citizen.pilotLicenseId ?? "",
     weaponLicense: citizen.weaponLicenseId ?? "",
     ccw: citizen.ccwId ?? "",
-    driversLicenseCategory: citizen.dlCategory.map((v) => ({
-      value: v.id,
-      label: v.value.value,
-    })),
-    pilotLicenseCategory: citizen.dlPilotCategory.map((v) => ({
-      value: v.id,
-      label: v.value.value,
-    })),
+    driversLicenseCategory: citizen.dlCategory
+      .filter((v) => v.type === "AUTOMOTIVE")
+      .map((v) => ({
+        value: v.id,
+        label: v.value.value,
+      })),
+    pilotLicenseCategory: citizen.dlCategory
+      .filter((v) => v.type === "AVIATION")
+      .map((v) => ({
+        value: v.id,
+        label: v.value.value,
+      })),
   };
 
   return (
@@ -163,7 +167,7 @@ export const ManageLicensesModal = () => {
               <Error>{errors.ccw}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.ManageLicenses)}
