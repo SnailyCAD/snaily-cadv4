@@ -295,8 +295,6 @@ export async function linkDlCategories(
   driversLicenseCategory: string[] = [],
   pilotLicenseCategory: string[] = [],
 ) {
-  console.log([...driversLicenseCategory, ...pilotLicenseCategory]);
-
   await Promise.all(
     [...driversLicenseCategory, ...pilotLicenseCategory].map(async (fullId) => {
       const [id] = fullId.split("-");
