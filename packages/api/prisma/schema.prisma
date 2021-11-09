@@ -285,11 +285,11 @@ model DepartmentValue {
 }
 
 model DriversLicenseCategoryValue {
-  id               String                     @id @default(cuid())
-  valueId          String
-  value            Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type             DriversLicenseCategoryType
-  citizens         Citizen[]                  @relation("dlCategoryToDLCategory")
+  id       String                     @id @default(cuid())
+  valueId  String
+  value    Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type     DriversLicenseCategoryType
+  citizens Citizen[]                  @relation("dlCategoryToDLCategory")
 }
 
 model VehicleValue {
@@ -476,7 +476,7 @@ model Officer {
   suspended                   Boolean         @default(false)
   badgeNumber                 Int?
   imageId                     String?         @db.VarChar(255)
-  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: SetNull)
+  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
   user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String

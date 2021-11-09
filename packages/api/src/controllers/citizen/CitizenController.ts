@@ -73,10 +73,25 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    await prisma.citizen.deleteMany({
+    const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
         userId: ctx.get("user").id,
+      },
+      include: {
+        dlCategory: true,
+      },
+    });
+
+    console.log({ citizen });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.citizen.delete({
+      where: {
+        id: citizen.id,
       },
     });
 
@@ -327,14 +342,14 @@ export async function unlinkDlCategories(citizenId: string) {
 
   await Promise.all([
     citizen!.dlCategory.map(async (v) => {
-      await prisma.citizen.update({
+      await prisma.driversLicenseCategoryValue.update({
         where: {
-          id: citizenId,
+          id: v.id,
         },
         data: {
-          dlCategory: {
-            disconnect: {
-              id: v.id,
+          citizens: {
+            delete: {
+              id: citizenId,
             },
           },
         },
