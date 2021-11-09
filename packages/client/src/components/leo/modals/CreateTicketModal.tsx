@@ -8,7 +8,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -16,7 +16,7 @@ import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { useCitizen } from "context/CitizenContext";
 import { RecordType, PenalCode } from "types/prisma";
-import { TableForm } from "./CreateRecordModal/TableForm";
+import { TableItem } from "./CreateRecordModal/TableItem";
 
 export const CreateTicketModal = ({ type }: { type: RecordType }) => {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -49,6 +49,9 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
         ...values,
         type,
         violations: values.violations.map((v) => v.value),
+        fine: values.fine.enabled ? values.fine.value : null,
+        jailTime: values.jailTime.enabled ? values.jailTime.value : null,
+        bail: values.jailTime.enabled ? values.bail.value : null,
       },
     });
 
@@ -64,6 +67,9 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
     violations: [] as SelectValue[],
     postal: "",
     notes: "",
+    fine: { enabled: false, value: "" },
+    jailTime: { enabled: false, value: "" },
+    bail: { value: "" },
   };
 
   return (
@@ -152,9 +158,13 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
 };
 
 const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
+  const { values } = useFormikContext<any>();
+
   if (penalCodes.length <= 0) {
     return <p className="mb-3">No penal codes selected.</p>;
   }
+
+  const totalFines = (values.violations as any[]).reduce((ac, cv) => ac + cv.value.fine, 0);
 
   return (
     <div className="w-full my-3 overflow-x-auto">
@@ -167,23 +177,26 @@ const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
         </thead>
         <tbody>
           {penalCodes.map((penalCode) => (
-            // todo: <TableItem penalCode={penalCode}  /> -> keep track of state in this component
-            <tr className="border-b-[1px] border-blue-50" key={penalCode.id}>
-              <td>{penalCode.title}</td>
-              <td>
-                <TableForm penalCode={penalCode} />
-              </td>
-            </tr>
+            <TableItem key={penalCode.id} penalCode={penalCode} />
           ))}
         </tbody>
-        <tfoot>
-          <div className="w-full p-2 px-3">
-            <span className="font-semibold uppercase">TOTAL</span>
-
-            <span className="ml-2">Fines: {}</span>
-          </div>
-        </tfoot>
       </table>
+      <p className="flex items-center justify-center w-full gap-2 p-2 px-3">
+        <span className="mr-2 font-semibold uppercase select-none">TOTAL </span>
+
+        <span className="ml-2">
+          <span className="font-semibold select-none">Fines: </span> ${totalFines}
+        </span>
+        <span>{"/"}</span>
+        <span className="ml-2">
+          <span className="font-semibold select-none">Jail Time: </span>
+          {values.jailTime.value ?? 0}
+        </span>
+        <span>{"/"}</span>
+        <span className="ml-2">
+          <span className="font-semibold select-none">Bail: </span> ${values.bail.value ?? 0}
+        </span>
+      </p>
     </div>
   );
 };

@@ -18,7 +18,7 @@ import { makeUnitName } from "lib/utils";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 
-export interface SelectValue<Value extends string | number = string> {
+export interface SelectValue<Value = string> {
   label: string;
   value: Value;
 }
