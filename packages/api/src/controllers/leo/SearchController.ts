@@ -141,8 +141,6 @@ export class SearchController {
         include: data.include,
       });
 
-      console.log({ vehicles });
-
       return vehicles;
     }
 

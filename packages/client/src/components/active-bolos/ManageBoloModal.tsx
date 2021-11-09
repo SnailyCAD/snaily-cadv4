@@ -10,14 +10,15 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { BoloType, RegisteredVehicle } from "types/prisma";
+import { BoloType, Citizen, RegisteredVehicle } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { FullBolo, useDispatchState } from "state/dispatchState";
-import { Person, ThreeDots } from "react-bootstrap-icons";
+import { Person, PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
 import { InputSuggestions } from "components/form/InputSuggestions";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   onClose?: () => void;
@@ -29,6 +30,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { bolos, setBolos } = useDispatchState();
+  const { makeImageUrl } = useImageUrl();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
@@ -148,7 +150,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                     }}
                     onSuggestionClick={(suggestion: RegisteredVehicle) => {
                       setFieldValue("plate", suggestion.plate);
-                      setFieldValue("model", suggestion.model);
+                      setFieldValue("model", suggestion.model.value.value);
                       setFieldValue("color", suggestion.color);
                     }}
                     Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
@@ -185,11 +187,43 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
 
             {values.type === BoloType.PERSON ? (
               <FormField label={"Name"}>
-                <Input
-                  id="name"
-                  onChange={handleChange}
-                  hasError={!!errors.name}
-                  value={values.name}
+                <InputSuggestions
+                  inputProps={{
+                    id: "name",
+                    onChange: handleChange,
+                    hasError: !!errors.name,
+                    value: values.name,
+                    autoComplete: "false",
+                    autoCorrect: "false",
+                    list: "null",
+                  }}
+                  options={{
+                    apiPath: "/search/name?includeMany=true",
+                    method: "POST",
+                    data: { name: values.name },
+                    minLength: 2,
+                  }}
+                  onSuggestionClick={(suggestion: Citizen) => {
+                    setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
+                  }}
+                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                    <div className="flex items-center">
+                      <div className="mr-2 min-w-[25px]">
+                        {suggestion.imageId ? (
+                          <img
+                            className="rounded-md w-[35px] h-[35px] object-cover"
+                            draggable={false}
+                            src={makeImageUrl("citizens", suggestion.imageId)}
+                          />
+                        ) : (
+                          <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />
+                        )}
+                      </div>
+                      <p>
+                        {suggestion.name} {suggestion.surname}
+                      </p>
+                    </div>
+                  )}
                 />
                 <Error>{errors.name}</Error>
               </FormField>
