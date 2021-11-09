@@ -78,12 +78,7 @@ export class CitizenController {
         id: citizenId,
         userId: ctx.get("user").id,
       },
-      include: {
-        dlCategory: true,
-      },
     });
-
-    console.log({ citizen });
 
     if (!citizen) {
       throw new NotFound("notFound");
