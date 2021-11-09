@@ -10,13 +10,14 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { BoloType } from "types/prisma";
+import { BoloType, RegisteredVehicle } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { FullBolo, useDispatchState } from "state/dispatchState";
 import { Person, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
+import { InputSuggestions } from "components/form/InputSuggestions";
 
 interface Props {
   onClose?: () => void;
@@ -133,11 +134,29 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
             {values.type === BoloType.VEHICLE ? (
               <>
                 <FormField label={"Plate"}>
-                  <Input
-                    id="plate"
-                    onChange={handleChange}
-                    hasError={!!errors.plate}
-                    value={values.plate}
+                  <InputSuggestions
+                    inputProps={{
+                      id: "plate",
+                      onChange: handleChange,
+                      hasError: !!errors.plate,
+                      value: values.plate,
+                    }}
+                    options={{
+                      apiPath: "/search/vehicle?includeMany=true",
+                      method: "POST",
+                      data: { plateOrVin: values.plate },
+                    }}
+                    onSuggestionClick={(suggestion: RegisteredVehicle) => {
+                      setFieldValue("plate", suggestion.plate);
+                      setFieldValue("model", suggestion.model);
+                      setFieldValue("color", suggestion.color);
+                    }}
+                    Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                      <p>
+                        {suggestion.plate.toUpperCase()} (
+                        {suggestion.model?.value?.value?.toUpperCase() ?? null})
+                      </p>
+                    )}
                   />
                   <Error>{errors.plate}</Error>
                 </FormField>
@@ -186,7 +205,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
