@@ -337,14 +337,14 @@ export async function unlinkDlCategories(citizenId: string) {
 
   await Promise.all([
     citizen!.dlCategory.map(async (v) => {
-      await prisma.driversLicenseCategoryValue.update({
+      await prisma.citizen.update({
         where: {
-          id: v.id,
+          id: citizenId,
         },
         data: {
-          citizens: {
-            delete: {
-              id: citizenId,
+          dlCategory: {
+            disconnect: {
+              id: v.id,
             },
           },
         },
