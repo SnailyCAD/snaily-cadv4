@@ -31,6 +31,8 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
   const { state, execute } = useFetch();
   const { bolos, setBolos } = useDispatchState();
   const { makeImageUrl } = useImageUrl();
+  const t = useTranslations("Bolos");
+  const leo = useTranslations("Leo");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
@@ -83,13 +85,13 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
     <Modal
       isOpen={isOpen(ModalIds.ManageBolo)}
       onClose={handleClose}
-      title={bolo ? "Edit Bolo" : "Create bolo"}
+      title={bolo ? t("editBolo") : t("createBolo")}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form>
-            <FormField label={"Type"}>
+            <FormField label={common("type")}>
               <FormRow>
                 <Button
                   disabled={!!bolo}
@@ -135,7 +137,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
 
             {values.type === BoloType.VEHICLE ? (
               <>
-                <FormField label={"Plate"}>
+                <FormField label={leo("plate")}>
                   <InputSuggestions
                     inputProps={{
                       id: "plate",
@@ -163,7 +165,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   <Error>{errors.plate}</Error>
                 </FormField>
 
-                <FormField label={"Model"}>
+                <FormField label={leo("model")}>
                   <Input
                     id="model"
                     onChange={handleChange}
@@ -173,7 +175,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   <Error>{errors.model}</Error>
                 </FormField>
 
-                <FormField label={"Color"}>
+                <FormField label={leo("color")}>
                   <Input
                     id="color"
                     onChange={handleChange}
@@ -186,7 +188,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
             ) : null}
 
             {values.type === BoloType.PERSON ? (
-              <FormField label={"Name"}>
+              <FormField label={common("name")}>
                 <InputSuggestions
                   inputProps={{
                     id: "name",
@@ -229,7 +231,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
               </FormField>
             ) : null}
 
-            <FormField label={"Description"}>
+            <FormField label={common("description")}>
               <Textarea
                 id="description"
                 onChange={handleChange}

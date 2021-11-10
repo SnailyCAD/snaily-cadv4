@@ -74,8 +74,8 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
       {logs.length <= 0 ? (
         <p className="mt-3">{t("noTruckLogs")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+        <div className="w-full mt-3 overflow-x-auto">
+          <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
             <thead>
               <tr>
                 <th>{t("driver")}</th>
@@ -131,7 +131,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
       />
 
       <AlertModal
-        title={"Delete truck log"}
+        title={t("deleteTruckLog")}
         description={t("alert_deleteTruckLog")}
         onDeleteClick={handleDelete}
         id={ModalIds.AlertDeleteTruckLog}

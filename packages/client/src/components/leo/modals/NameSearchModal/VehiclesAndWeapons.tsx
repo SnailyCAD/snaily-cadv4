@@ -14,13 +14,13 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
   return (
     <>
       <section id="vehicles" className="mt-3">
-        <h3 className="text-xl font-semibold">{"Register Vehicles"}</h3>
+        <h3 className="text-xl font-semibold">{"Registered Vehicles"}</h3>
 
         {vehicles.length <= 0 ? (
           <p>{t("Leo.noVehiclesCitizen")}</p>
         ) : (
-          <div className="overflow-x-auto w-full mt-3">
-            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+          <div className="w-full mt-3 overflow-x-auto">
+            <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
               <thead>
                 <tr>
                   <th>{t("Vehicles.plate")}</th>
@@ -49,13 +49,13 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
       </section>
 
       <section id="weapons" className="mt-5">
-        <h3 className="text-xl font-semibold">{"Register Weapons"}</h3>
+        <h3 className="text-xl font-semibold">{"Registered Weapons"}</h3>
 
         {weapons.length <= 0 ? (
           <p>{t("Leo.noWeaponsCitizen")}</p>
         ) : (
-          <div className="overflow-x-auto w-full mt-3">
-            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+          <div className="w-full mt-3 overflow-x-auto">
+            <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
               <thead>
                 <tr>
                   <th>{t("Weapons.model")}</th>

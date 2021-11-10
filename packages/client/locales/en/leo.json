@@ -95,6 +95,8 @@
     "activeBolos": "Active Bolos",
     "noActiveBolos": "There are no active bolos",
     "deleteBolo": "Delete Bolo",
+    "editBolo": "Edit Bolo",
+    "createBolo": "Create Bolo",
     "alert_deleteBolo": "Are you sure you want to delete this bolo? This action cannot be undone"
   }
 }

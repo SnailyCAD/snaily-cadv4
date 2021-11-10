@@ -94,7 +94,7 @@ export const VehicleSearchModal = () => {
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
                 {results.reportedStolen ? (
-                  <div className="bg-yellow-500 p-2 rounded-md font-semibold mt-2">
+                  <div className="p-2 mt-2 font-semibold bg-yellow-500 rounded-md">
                     {t("vehicleReportedStolen")}
                   </div>
                 ) : null}
@@ -143,7 +143,7 @@ export const VehicleSearchModal = () => {
                     variant="cancel"
                     className="px-1.5"
                   >
-                    {"Mark as stolen"}
+                    {vT("reportAsStolen")}
                   </Button>
                 </div>
               ) : null}

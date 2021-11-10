@@ -42,12 +42,12 @@ export const ModalButtons = () => {
     <div className="py-2">
       {!isButtonDisabled ? (
         <p className="text-lg">
-          <span className="font-semibold">{"Active Deputy"}: </span>
+          <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
           {`${generateCallsign(activeDeputy)} ${makeUnitName(activeDeputy)}`}
         </p>
       ) : null}
 
-      <ul className="modal-buttons-grid mt-2">
+      <ul className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => (
           <Button
             id={button.nameKey[1]}

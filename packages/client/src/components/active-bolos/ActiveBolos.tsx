@@ -87,7 +87,7 @@ export const ActiveBolos = () => {
 
       <div className="px-4">
         {bolos.length <= 0 ? (
-          <p className="py-2">{"There are no active bolos."}</p>
+          <p className="py-2">{t("noActiveBolos")}</p>
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {BOLO_TYPES.map((boloType) => {

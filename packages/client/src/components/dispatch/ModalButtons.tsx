@@ -63,7 +63,7 @@ export const DispatchModalButtons = () => {
         </Button>
       ))}
 
-      <Button onClick={handleSignal100} id={"signal100"} title={t("Leo.disableSignal100")}>
+      <Button onClick={handleSignal100} id="signal100" title={t("Leo.disableSignal100")}>
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
     </ul>
