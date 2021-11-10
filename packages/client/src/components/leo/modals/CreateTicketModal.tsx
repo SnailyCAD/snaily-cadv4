@@ -14,8 +14,10 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { useCitizen } from "context/CitizenContext";
-import { RecordType } from "types/prisma";
+import { Citizen, RecordType } from "types/prisma";
+import { InputSuggestions } from "components/form/InputSuggestions";
+import { PersonFill } from "react-bootstrap-icons";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export const CreateTicketModal = ({ type }: { type: RecordType }) => {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -39,7 +41,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
 
   const { state, execute } = useFetch();
   const { penalCode } = useValues();
-  const { citizens } = useCitizen();
+  const { makeImageUrl } = useImageUrl();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/records", {
@@ -56,10 +58,12 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
     }
   }
 
+  const payload = getPayload<{ citizenId: string; citizenName: string }>(data[type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
   const INITIAL_VALUES = {
     type,
-    citizenId: getPayload<{ citizenId: string }>(data[type].id)?.citizenId ?? "",
+    citizenId: payload?.citizenId ?? "",
+    citizenName: payload?.citizenName ?? "",
     violations: [] as SelectValue[],
     postal: "",
     notes: "",
@@ -73,18 +77,44 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField label={t("citizen")}>
-              <Select
-                value={values.citizenId}
-                hasError={!!errors.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens.map((v) => ({
-                  label: `${v.name} ${v.surname}`,
-                  value: v.id,
-                }))}
+              <InputSuggestions
+                inputProps={{
+                  value: values.citizenName,
+                  hasError: !!errors.citizenName,
+                  name: "citizenName",
+                  onChange: handleChange,
+                }}
+                onSuggestionClick={(suggestion) => {
+                  setFieldValue("citizenId", suggestion.id);
+                  setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
+                }}
+                options={{
+                  apiPath: "/search/name",
+                  data: { name: values.citizenName },
+                  method: "POST",
+                  minLength: 2,
+                }}
+                Component={({ suggestion }: { suggestion: Citizen }) => (
+                  <div className="flex items-center">
+                    <div className="mr-2 min-w-[25px]">
+                      {suggestion.imageId ? (
+                        <img
+                          className="rounded-md w-[35px] h-[35px] object-cover"
+                          draggable={false}
+                          src={makeImageUrl("citizens", suggestion.imageId)}
+                        />
+                      ) : (
+                        <PersonFill className="text-gray-500/60 w-[25px] h-[25px]" />
+                      )}
+                    </div>
+                    <p>
+                      {suggestion.name} {suggestion.surname}
+                    </p>
+                  </div>
+                )}
               />
               <Error>{errors.citizenId}</Error>
             </FormField>
@@ -124,7 +154,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
               <Error>{errors.notes}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={() => closeModal(data[type].id)} variant="cancel">
                 {common("cancel")}
               </Button>
