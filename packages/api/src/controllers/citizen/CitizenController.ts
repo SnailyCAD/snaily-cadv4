@@ -73,10 +73,20 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    await prisma.citizen.deleteMany({
+    const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
         userId: ctx.get("user").id,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.citizen.delete({
+      where: {
+        id: citizen.id,
       },
     });
 
