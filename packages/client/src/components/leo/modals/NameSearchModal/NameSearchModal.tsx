@@ -94,7 +94,7 @@ export const NameSearchModal = () => {
   }
 
   function handleOpenCreateRecord(type: RecordType) {
-    if (typeof results === "boolean" || !results) return;
+    if (!currentResult) return;
 
     const modalId = {
       [RecordType.ARREST_REPORT]: ModalIds.CreateArrestReport,
@@ -102,7 +102,10 @@ export const NameSearchModal = () => {
       [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
     };
 
-    openModal(modalId[type], { citizenId: currentResult?.id });
+    openModal(modalId[type], {
+      citizenName: `${currentResult.name} ${currentResult.surname}`,
+      citizenId: currentResult.id,
+    });
   }
 
   const hasWarrants =

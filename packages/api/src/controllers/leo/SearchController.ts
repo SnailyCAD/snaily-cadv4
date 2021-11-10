@@ -1,7 +1,7 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
 import { JsonRequestBody, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
-import { BodyParams } from "@tsed/platform-params";
+import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
@@ -113,12 +113,15 @@ export class SearchController {
   }
 
   @Post("/vehicle")
-  async searchVehicle(@BodyParams("plateOrVin") plateOrVin: string) {
+  async searchVehicle(
+    @QueryParams("includeMany") includeMany: boolean,
+    @BodyParams("plateOrVin") plateOrVin: string,
+  ) {
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
     }
 
-    const vehicle = await prisma.registeredVehicle.findFirst({
+    const data = {
       where: {
         OR: [
           { plate: { startsWith: plateOrVin.toUpperCase() } },
@@ -130,7 +133,18 @@ export class SearchController {
         model: { include: { value: true } },
         registrationStatus: true,
       },
-    });
+    };
+
+    if (includeMany) {
+      const vehicles = await prisma.registeredVehicle.findMany({
+        where: { plate: { startsWith: plateOrVin.toUpperCase() } },
+        include: data.include,
+      });
+
+      return vehicles;
+    }
+
+    const vehicle = await prisma.registeredVehicle.findFirst(data);
 
     if (!vehicle) {
       throw new NotFound("vehicleNotFound");

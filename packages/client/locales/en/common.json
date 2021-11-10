@@ -50,6 +50,7 @@
     "dateLargerThanNow": "Please provide a date smaller than the current date.",
     "divisionNotInDepartment": "This division does not exist in this department.",
     "passwordsDoNotMatch": "Passwords do not match",
-    "currentPasswordIncorrect": "Current password is incorrect"
+    "currentPasswordIncorrect": "Current password is incorrect",
+    "citizenNotFound": "That citizen was not found"
   }
 }
