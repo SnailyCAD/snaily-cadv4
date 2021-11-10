@@ -53,7 +53,7 @@ export class RecordsController {
       },
     });
 
-    if (!citizen) {
+    if (!citizen || `${citizen.name} ${citizen.surname}` !== body.get("citizenName")) {
       throw new NotFound("citizenNotFound");
     }
 

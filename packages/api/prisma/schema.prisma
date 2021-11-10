@@ -495,7 +495,7 @@ model Officer {
   suspended                   Boolean         @default(false)
   badgeNumber                 Int?
   imageId                     String?         @db.VarChar(255)
-  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: SetNull)
+  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
   user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
