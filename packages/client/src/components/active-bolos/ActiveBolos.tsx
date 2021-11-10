@@ -21,6 +21,7 @@ export const ActiveBolos = () => {
   const { openModal, closeModal } = useModal();
   const { bolos, setBolos } = useDispatchState();
   const [tempBolo, setTempBolo] = React.useState<FullBolo | null>(null);
+  const t = useTranslations("Bolos");
 
   useListener(
     SocketEvents.CreateBolo,
@@ -79,22 +80,22 @@ export const ActiveBolos = () => {
   }
 
   return (
-    <div className="mt-3 bg-gray-200/80 dark:bg-gray-2 overflow-hidden rounded-md">
-      <header className="bg-gray-300/50 px-4 dark:bg-gray-3 p-2">
-        <h3 className="text-xl font-semibold">{"Active Bolos"}</h3>
+    <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+        <h3 className="text-xl font-semibold">{t("activeBolos")}</h3>
       </header>
 
       <div className="px-4">
         {bolos.length <= 0 ? (
           <p className="py-2">{"There are no active bolos."}</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {BOLO_TYPES.map((boloType) => {
               const items = bolos.filter((v) => v.type === boloType);
 
               return (
                 <div key={boloType}>
-                  <h1 className="font-semibold text-xl my-2 capitalize">
+                  <h1 className="my-2 text-xl font-semibold capitalize">
                     {boloType.toLowerCase()} bolos
                   </h1>
 
@@ -122,12 +123,12 @@ export const ActiveBolos = () => {
 
       {/* timeout: wait for modal to close */}
       <>
-        <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 100)} bolo={tempBolo} />
+        <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 80)} bolo={tempBolo} />
 
         <AlertModal
-          title={"Delete Bolo"}
+          title={t("deleteBolo")}
           onDeleteClick={handleDeleteBolo}
-          description={"Are you sure you want to delete this bolo? This action cannot be undone"}
+          description={t("alert_deleteBolo")}
           id={ModalIds.AlertDeleteBolo}
           onClose={() => setTempBolo(null)}
           state={state}
@@ -146,6 +147,7 @@ interface BoloItemProps {
 
 const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
   const t = useTranslations("Leo");
+  const common = useTranslations("Common");
   const { activeOfficer } = useLeoState();
   const { pathname } = useRouter();
   const isDispatchRoute = pathname === "/dispatch";
@@ -156,25 +158,25 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
   return (
     <li key={bolo.id} className="flex justify-between">
       <div className="flex">
-        <span className="select-none text-gray-500 mr-2">{idx + 1}. </span>
+        <span className="mr-2 text-gray-500 select-none">{idx + 1}. </span>
 
         <div>
           {bolo.type === BoloType.PERSON ? (
             <p id="description">
               {bolo.description} <br />
-              <span className="font-semibold">{"Name"}: </span>
+              <span className="font-semibold">{common("name")}: </span>
               {bolo.name}
             </p>
           ) : bolo.type === BoloType.VEHICLE ? (
             <p>
               {bolo.description} <br />
-              <span className="font-semibold">{"Plate"}: </span>
+              <span className="font-semibold">{t("plate")}: </span>
               {bolo.plate?.toUpperCase()}
               <br />
-              <span className="font-semibold">{"Color"}: </span>
+              <span className="font-semibold">{t("color")}: </span>
               {bolo.color}
               <br />
-              <span className="font-semibold">{"Model"}: </span>
+              <span className="font-semibold">{t("model")}: </span>
               {bolo.model}
             </p>
           ) : (
@@ -182,7 +184,7 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
           )}
 
           <p>
-            <span className="font-semibold">{"Officer"}: </span>
+            <span className="font-semibold">{t("officer")}: </span>
             {bolo.officer ? makeUnitName(bolo.officer) : t("dispatch")}
           </p>
         </div>
@@ -190,7 +192,7 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
 
       <div>
         <Button small disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
-          Edit
+          {common("edit")}
         </Button>
         <Button
           small
@@ -199,7 +201,7 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
           onClick={() => handleDelete(bolo)}
           variant="danger"
         >
-          Delete
+          {common("delete")}
         </Button>
       </div>
     </li>

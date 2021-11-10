@@ -29,7 +29,11 @@ export default function App({ Component, router, pageProps }: AppProps) {
       }}
     >
       <AuthProvider initialData={pageProps}>
-        <NextIntlProvider locale={router.locale ?? "en"} messages={pageProps.messages}>
+        <NextIntlProvider
+          onError={console.warn}
+          locale={router.locale ?? "en"}
+          messages={pageProps.messages}
+        >
           <ModalProvider>
             <ValuesProvider initialData={pageProps}>
               <CitizenProvider initialData={pageProps}>

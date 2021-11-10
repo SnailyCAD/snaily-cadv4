@@ -76,6 +76,7 @@
     "noImpoundedVehicles": "There are no impounded vehicles",
     "allowCheckout": "Allow Checkout",
     "plate": "Plate",
+    "color": "Color",
     "location": "Location",
     "model": "Model",
     "incidents": "Incidents",
@@ -89,5 +90,11 @@
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
     "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?"
+  },
+  "Bolos": {
+    "activeBolos": "Active Bolos",
+    "noActiveBolos": "There are no active bolos",
+    "deleteBolo": "Delete Bolo",
+    "alert_deleteBolo": "Are you sure you want to delete this bolo? This action cannot be undone"
   }
 }
