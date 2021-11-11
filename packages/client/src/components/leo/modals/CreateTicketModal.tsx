@@ -50,7 +50,12 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       data: {
         ...values,
         type,
-        violations: values.violations.map((v) => v.value),
+        violations: values.violations.map(({ value }: { value: any }) => ({
+          penalCodeId: value.id,
+          bail: value.jailTime.enabled ? value.bail.value : null,
+          jailTime: value.jailTime.enabled ? value.jailTime.value : null,
+          fine: value.fine.enabled ? value.fine.value : null,
+        })),
         fine: values.fine.enabled ? values.fine.value : null,
         jailTime: values.jailTime.enabled ? values.jailTime.value : null,
         bail: values.jailTime.enabled ? values.bail.value : null,
@@ -194,7 +199,18 @@ const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
     return <p className="mb-3">No penal codes selected.</p>;
   }
 
-  const totalFines = (values.violations as any[]).reduce((ac, cv) => ac + cv.value.fine, 0);
+  const totalFines = (values.violations as any[]).reduce(
+    (ac, cv) => ac + cv.value.fine?.value ?? 0,
+    0,
+  );
+  const totalJailTime = (values.violations as any[]).reduce(
+    (ac, cv) => ac + cv.value.jailTime?.value ?? 0,
+    0,
+  );
+  const totalBail = (values.violations as any[]).reduce(
+    (ac, cv) => ac + cv.value.bail?.value ?? 0,
+    0,
+  );
 
   return (
     <div className="w-full my-3 overflow-x-auto">
@@ -215,16 +231,16 @@ const PenalCodesTable = ({ penalCodes }: { penalCodes: PenalCode[] }) => {
         <span className="mr-2 font-semibold uppercase select-none">TOTAL </span>
 
         <span className="ml-2">
-          <span className="font-semibold select-none">Fines: </span> ${totalFines}
+          <span className="font-semibold select-none">Fines: </span> ${totalFines || 0}
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
           <span className="font-semibold select-none">Jail Time: </span>
-          {values.jailTime.value ?? 0}
+          {totalJailTime || 0}
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
-          <span className="font-semibold select-none">Bail: </span> ${values.bail.value ?? 0}
+          <span className="font-semibold select-none">Bail: </span> ${totalBail || 0}
         </span>
       </p>
     </div>
