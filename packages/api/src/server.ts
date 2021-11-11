@@ -51,5 +51,7 @@ export class Server {
         cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
       )
       .use(IsEnabled);
+
+    this.app.get("/", (_: any, res: any) => res.status(200).send("OK"));
   }
 }
