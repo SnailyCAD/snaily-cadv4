@@ -14,7 +14,7 @@ import { UseBefore } from "@tsed/common";
 import { Socket } from "../../../services/SocketService";
 import { nanoid } from "nanoid";
 
-@Controller("/cad-settings")
+@Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
   private socket: Socket;
   constructor(socket: Socket) {

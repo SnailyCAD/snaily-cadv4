@@ -14,7 +14,7 @@ import { prisma } from "../../lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
 
 @UseBeforeEach(IsAuth)
-@Controller("/")
+@Controller("/businesses")
 export class BusinessController {
   @Get("/")
   async getBusinessesByUser(@Context() ctx: Context) {

@@ -17,8 +17,6 @@ const rootDir = __dirname;
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
-    "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
-    "/v1/businesses": [`${rootDir}/controllers/business/*.ts`],
   },
   statics: {
     "/static": [

@@ -68,7 +68,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   }, [data]);
 
   return (
-    <AdminLayout>
+    <AdminLayout className="dark:text-white">
       <Head>
         <title>{t("MANAGE_BUSINESSES")}</title>
       </Head>
@@ -81,13 +81,13 @@ export default function ManageBusinesses({ businesses: data }: Props) {
         <ul className="mt-5">
           {businesses.map((business, idx) => (
             <li
-              className="my-1 bg-gray-200 p-2 px-4 rounded-md w-full flex flex-col"
+              className="flex flex-col w-full p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
               key={business.id}
             >
               <Disclosure>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="select-none text-gray-500">{idx + 1}.</span>
+                    <span className="text-gray-500 select-none">{idx + 1}.</span>
                     <span className="ml-2">{business.name}</span>
                   </div>
 
@@ -139,7 +139,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           </FormField>
         </div>
 
-        <div className="mt-2 flex gap-2 items-center justify-end">
+        <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
@@ -153,7 +153,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             variant="danger"
             onClick={handleDelete}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}
           </Button>
         </div>
@@ -163,7 +163,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [data] = await requestAll(req, [["/admin/manage/businesses-admin", []]]);
+  const [data] = await requestAll(req, [["/admin/manage/businesses", []]]);
 
   return {
     props: {

@@ -10,7 +10,7 @@ import { IsAuth } from "../../../middlewares";
 const include = unitProperties;
 
 @UseBeforeEach(IsAuth)
-@Controller("/units")
+@Controller("/admin/manage/units")
 export class ManageUnitsController {
   @Get("/")
   async getUnits() {
