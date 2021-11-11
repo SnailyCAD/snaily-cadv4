@@ -462,33 +462,35 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id                          String          @id @default(cuid())
-  department                  DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  id                          String           @id @default(cuid())
+  department                  DepartmentValue  @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId                String
-  callsign                    String          @db.VarChar(255)
-  callsign2                   String          @db.VarChar(255)
-  division                    DivisionValue   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  callsign                    String           @db.VarChar(255)
+  callsign2                   String           @db.VarChar(255)
+  division                    DivisionValue    @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String
-  rank                        Value?          @relation("officerRankToValue", fields: [rankId], references: [id])
+  rank                        Value?           @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
-  status                      StatusValue?    @relation("officerStatusToValue", fields: [statusId], references: [id])
+  status                      StatusValue?     @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
-  suspended                   Boolean         @default(false)
+  suspended                   Boolean          @default(false)
   badgeNumber                 Int?
-  imageId                     String?         @db.VarChar(255)
-  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  imageId                     String?          @db.VarChar(255)
+  citizen                     Citizen          @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
-  createdAt                   DateTime        @default(now())
-  updatedAt                   DateTime        @default(now()) @updatedAt
-  bolos                       Bolo[]          @relation("bolosToOfficer")
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @default(now()) @updatedAt
+  bolos                       Bolo[]           @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
   LeoIncident                 LeoIncident[]
-  LeoIncidentInvolvedOfficers LeoIncident[]   @relation("involvedOfficers")
+  LeoIncidentInvolvedOfficers LeoIncident[]    @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit? @relation(fields: [combinedLeoUnitId], references: [id])
+  combinedLeoUnitId           String?
 }
 
 model StatusValue {
@@ -501,8 +503,9 @@ model StatusValue {
   color     String?
   type      StatusValueType @default(STATUS_CODE)
 
-  officerStatusToValue Officer[]     @relation("officerStatusToValue")
-  emsFdStatusToValue   EmsFdDeputy[] @relation("emsFdStatusToValue")
+  officerStatusToValue Officer[]         @relation("officerStatusToValue")
+  emsFdStatusToValue   EmsFdDeputy[]     @relation("emsFdStatusToValue")
+  CombinedLeoUnit      CombinedLeoUnit[] @relation("combinedUnitStatusToValue")
 }
 
 model OfficerLog {
@@ -563,6 +566,13 @@ enum ShouldDoType {
   SET_ASSIGNED
   SET_STATUS
   PANIC_BUTTON
+}
+
+model CombinedLeoUnit {
+  id       String       @id @default(uuid())
+  officers Officer[]
+  status   StatusValue? @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId String?
 }
 
 // 911 calls & bolos

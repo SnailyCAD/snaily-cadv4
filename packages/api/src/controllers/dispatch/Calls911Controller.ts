@@ -385,7 +385,7 @@ export async function findUnit(
 ): Promise<{ unit: Officer | EmsFdDeputy | null; type: "leo" | "ems-fd" }>;
 export async function findUnit(id: string, extraFind?: any, withType?: boolean) {
   let type: "leo" | "ems-fd" = "leo";
-  let unit = await prisma.officer.findFirst({
+  let unit: any = await prisma.officer.findFirst({
     where: { id, ...extraFind },
   });
 

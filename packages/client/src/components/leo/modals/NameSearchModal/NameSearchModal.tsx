@@ -189,7 +189,7 @@ export const NameSearchModal = () => {
                 ) : null}
 
                 {hasWarrants ? (
-                  <div className="p-2 mt-2 font-semibold bg-red-500 rounded-md">
+                  <div className="p-2 my-2 font-semibold bg-red-500 rounded-md">
                     {t("hasWarrants")}
                   </div>
                 ) : null}
