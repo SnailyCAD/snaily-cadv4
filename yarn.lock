@@ -998,8 +998,8 @@ __metadata:
   resolution: "@snailycad/api@workspace:packages/api"
   dependencies:
     "@prisma/client": ^3.4.1
-    "@snailycad/config": 1.0.0-beta.5
-    "@snailycad/schemas": 1.0.0-beta.5
+    "@snailycad/config": 1.0.0-beta.6
+    "@snailycad/schemas": 1.0.0-beta.6
     "@tsed/common": ^6.77.1
     "@tsed/core": ^6.77.1
     "@tsed/di": ^6.77.1
@@ -1048,8 +1048,8 @@ __metadata:
     "@casper124578/use-socket.io": 2.0.0
     "@headlessui/react": ^1.4.2
     "@radix-ui/react-context-menu": ^0.1.1
-    "@snailycad/config": 1.0.0-beta.5
-    "@snailycad/schemas": 1.0.0-beta.5
+    "@snailycad/config": 1.0.0-beta.6
+    "@snailycad/schemas": 1.0.0-beta.6
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
     "@types/sortablejs": ^1.10.7
@@ -1085,7 +1085,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.0.0-beta.5, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.0.0-beta.6, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
@@ -1094,7 +1094,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.0.0-beta.5, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.0.0-beta.6, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
