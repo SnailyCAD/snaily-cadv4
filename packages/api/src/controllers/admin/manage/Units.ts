@@ -6,12 +6,18 @@ import { Get, JsonRequestBody, Put } from "@tsed/schema";
 import { unitProperties } from "../../../lib/officer";
 import { prisma } from "../../../lib/prisma";
 import { IsAuth } from "../../../middlewares";
+import { Socket } from "../../../services/SocketService";
 
 const include = unitProperties;
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
 export class ManageUnitsController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/")
   async getUnits() {
     const units = await Promise.all([
@@ -41,6 +47,29 @@ export class ManageUnitsController {
     }
 
     return unit;
+  }
+
+  @Put("/off-duty")
+  async setSelectedOffDuty(@BodyParams("ids") ids: string[]) {
+    const updated = await Promise.all(
+      ids.map(async (fullId) => {
+        const [id, rawType] = fullId.split("-");
+        const type = rawType === "OFFICER" ? "officer" : "emsFdDeputy";
+
+        // @ts-expect-error ignore
+        return prisma[type].update({
+          where: { id },
+          data: {
+            statusId: null,
+          },
+        });
+      }),
+    );
+
+    this.socket.emitUpdateDeputyStatus();
+    this.socket.emitUpdateOfficerStatus();
+
+    return updated;
   }
 
   @Put("/:id")

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@casper124578/use-socket.io": "2.0.0",
+    "@casper124578/useful": "^1.4.2",
     "@headlessui/react": "^1.4.2",
     "@radix-ui/react-context-menu": "^0.1.1",
     "@snailycad/config": "1.0.0-beta.6",
