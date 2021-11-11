@@ -28,6 +28,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
+  const bleeter = useTranslations("Bleeter");
 
   if (!currentBusiness || !currentEmployee) {
     return null;
@@ -81,7 +82,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField fieldId="title" label={"Title"}>
+            <FormField fieldId="title" label={bleeter("bleetTitle")}>
               <Input
                 id="title"
                 onChange={handleChange}
@@ -91,7 +92,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
               <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField fieldId="body" label={"Body"}>
+            <FormField fieldId="body" label={bleeter("bleetBody")}>
               <Textarea
                 id="body"
                 onChange={handleChange}
@@ -101,7 +102,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
               <Error>{errors.body}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>

@@ -82,7 +82,7 @@ export const ModalButtons = () => {
         </p>
       ) : null}
 
-      <ul className="modal-buttons-grid mt-2">
+      <ul className="mt-2 modal-buttons-grid">
         {buttons.map((button, idx) => (
           <Button
             id={button.nameKey[1]}
@@ -96,7 +96,7 @@ export const ModalButtons = () => {
         ))}
 
         <Button
-          id={"panicButton"}
+          id="panicButton"
           disabled={isButtonDisabled}
           title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
           onClick={handlePanic}

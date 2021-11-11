@@ -19,12 +19,12 @@ export const NotepadModal = () => {
     <Modal
       isOpen={isOpen(ModalIds.Notepad)}
       onClose={() => closeModal(ModalIds.Notepad)}
-      title={"notepad"}
+      title="notepad"
       className="w-[600px]"
     >
       <Textarea className="min-h-[10em]" value={value} onChange={(e) => setValue(e.target.value)} />
 
-      <footer className="mt-5 flex justify-end">
+      <footer className="flex justify-end mt-5">
         <Button onClick={handleReset} variant="danger">
           {common("reset")}
         </Button>

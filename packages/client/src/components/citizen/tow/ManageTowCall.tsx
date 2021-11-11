@@ -104,7 +104,7 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
         {({ handleSubmit, handleChange, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormRow>
-              <FormField label={"Citizen"}>
+              <FormField label={t("citizen")}>
                 <Select
                   disabled={!!call}
                   name="creatorId"
@@ -118,7 +118,7 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
                 <Error>{errors.creatorId}</Error>
               </FormField>
 
-              <FormField label={"Location"}>
+              <FormField label={t("location")}>
                 <Input onChange={handleChange} name="location" value={values.location} />
                 <Error>{errors.location}</Error>
               </FormField>
