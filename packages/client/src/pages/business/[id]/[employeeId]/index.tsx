@@ -39,7 +39,7 @@ export default function BusinessId(props: Props) {
   async function handlePostDeletion() {
     if (!tempPost) return;
 
-    const { json } = await execute(`/businesses/${currentBusiness?.id}/posts/${tempPost.id}`, {
+    const { json } = await execute(`/businesses/posts/${currentBusiness?.id}/${tempPost.id}`, {
       method: "DELETE",
       data: { employeeId: currentEmployee?.id },
     });
@@ -107,15 +107,15 @@ export default function BusinessId(props: Props) {
         </div>
       </header>
 
-      <main className="flex flex-col sm:flex-row mt-5">
+      <main className="flex flex-col mt-5 sm:flex-row">
         <section className="w-full mr-5">
           <ul className="space-y-3">
             {posts.map((post) => {
               const publishedBy = currentBusiness.employees.find((em) => em.id === post.employeeId);
 
               return (
-                <li className="bg-gray-100 dark:bg-gray-2 overflow-hidden rounded-md" key={post.id}>
-                  <header className="p-4 flex items-center justify-between">
+                <li className="overflow-hidden bg-gray-100 rounded-md dark:bg-gray-2" key={post.id}>
+                  <header className="flex items-center justify-between p-4">
                     <h3 className="text-2xl font-semibold">{post.title}</h3>
 
                     {post.employeeId === currentEmployee.id ? (
@@ -140,7 +140,7 @@ export default function BusinessId(props: Props) {
                   </main>
 
                   {publishedBy ? (
-                    <footer className="bg-gray-200/30 dark:bg-gray-3 px-4 py-2">
+                    <footer className="px-4 py-2 bg-gray-200/30 dark:bg-gray-3">
                       <span className="font-semibold">{t("publishedBy")}: </span>
                       <span>
                         {publishedBy?.citizen.name} {publishedBy?.citizen.surname}

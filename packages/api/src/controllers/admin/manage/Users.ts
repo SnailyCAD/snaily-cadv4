@@ -13,7 +13,7 @@ import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
 
 @UseBeforeEach(IsAuth)
-@Controller("/users")
+@Controller("/admin/manage/users")
 export class ManageUsersController {
   private socket: Socket;
   constructor(socket: Socket) {

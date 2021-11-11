@@ -9,7 +9,7 @@ import { prisma } from "../../lib/prisma";
 import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
 
 @UseBeforeEach(IsAuth)
-@Controller("/employees")
+@Controller("/businesses/employees")
 export class BusinessEmployeeController {
   @Put("/:businessId/:id")
   async updateEmployee(

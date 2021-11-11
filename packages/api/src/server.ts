@@ -17,8 +17,6 @@ const rootDir = __dirname;
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
-    "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
-    "/v1/businesses": [`${rootDir}/controllers/business/*.ts`],
   },
   statics: {
     "/static": [
@@ -51,5 +49,7 @@ export class Server {
         cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
       )
       .use(IsEnabled);
+
+    this.app.get("/", (_: any, res: any) => res.status(200).send("OK"));
   }
 }

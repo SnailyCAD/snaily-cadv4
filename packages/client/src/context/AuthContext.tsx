@@ -111,7 +111,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   if ((!NO_LOADING_ROUTES.includes(router.pathname) && !user) || isForbidden) {
     return (
-      <div id="unauthorized" className="fixed inset-0 grid place-items-center bg-transparent">
+      <div id="unauthorized" className="fixed inset-0 grid bg-transparent place-items-center">
         <span aria-label="loading...">
           <Loader className="w-14 h-14 border-[3px]" />
         </span>
@@ -121,7 +121,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
 
   if (cad && !isEnabled) {
     return (
-      <main className="grid place-items-center h-screen">
+      <main className="grid h-screen place-items-center">
         <p>Feature is not enabled.</p>
       </main>
     );
@@ -178,6 +178,7 @@ function isDarkModeSupportedForPage(pathname: string) {
     "/dispatch",
     "/admin/values/driverslicense-category",
     "/admin/values/penal-code",
+    "/admin/manage/businesses",
   ];
 
   return routes.includes(pathname);
