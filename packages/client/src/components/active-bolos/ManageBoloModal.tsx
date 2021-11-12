@@ -90,7 +90,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
-          <Form>
+          <Form autoComplete="off">
             <FormField label={common("type")}>
               <FormRow>
                 <Button

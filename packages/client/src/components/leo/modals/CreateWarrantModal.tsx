@@ -53,7 +53,7 @@ export const CreateWarrantModal = () => {
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
-          <Form>
+          <Form autoComplete="off">
             <FormField label="Name">
               <InputSuggestions
                 inputProps={{
