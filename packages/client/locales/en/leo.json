@@ -87,9 +87,11 @@
     "arrestsMade": "Arrest(s) Made",
     "involvedOfficers": "Involved Officers",
     "noIncidents": "There are no incidents yet.",
+    "deleteIncident": "Delete Incident",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
-    "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?"
+    "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?",
+    "alert_deleteIncident": "Are you sure you want to delete this incident? This action cannot be undone."
   },
   "Bolos": {
     "activeBolos": "Active Bolos",

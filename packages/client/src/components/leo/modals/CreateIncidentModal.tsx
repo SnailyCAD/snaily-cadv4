@@ -18,6 +18,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
+import { useRouter } from "next/router";
 
 export const CreateIncidentModal = () => {
   const { isOpen, closeModal } = useModal();
@@ -25,6 +26,7 @@ export const CreateIncidentModal = () => {
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
   const { activeOfficer } = useLeoState();
+  const router = useRouter();
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
@@ -37,6 +39,10 @@ export const CreateIncidentModal = () => {
 
     if (json.id) {
       closeModal(ModalIds.CreateIncident);
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
     }
   }
 
@@ -117,7 +123,7 @@ export const CreateIncidentModal = () => {
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.CreateIncident)}
