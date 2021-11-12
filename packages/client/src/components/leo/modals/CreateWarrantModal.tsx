@@ -19,7 +19,6 @@ export const CreateWarrantModal = () => {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { makeImageUrl } = useImageUrl();
-  const t = useTranslations("Leo");
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -46,7 +45,7 @@ export const CreateWarrantModal = () => {
 
   return (
     <Modal
-      title={t("createWarrant")}
+      title={"Create Warrant"}
       isOpen={isOpen(ModalIds.CreateWarrant)}
       onClose={() => closeModal(ModalIds.CreateWarrant)}
       className="w-[600px]"
@@ -93,7 +92,7 @@ export const CreateWarrantModal = () => {
               />
             </FormField>
 
-            <FormField label={t("status")}>
+            <FormField label="Status">
               <Select
                 values={[
                   { label: "Active", value: "ACTIVE" },

@@ -77,7 +77,7 @@ export const ModalButtons = () => {
     <div className="py-2">
       {!isButtonDisabled ? (
         <p className="text-lg">
-          <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
+          <span className="font-semibold">{"Active Officer"}: </span>
           {`${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`}
         </p>
       ) : null}

@@ -280,14 +280,14 @@ export const NameSearchModal = () => {
                       type="button"
                       className="w-full"
                     >
-                      {t("toggleVehiclesWeapons")}
+                      {"Toggle vehicles and weapons"}
                     </Button>
                     <Button
                       onClick={() => handleToggle(Toggled.RECORDS)}
                       type="button"
                       className="w-full"
                     >
-                      {t("toggleRecords")}
+                      {"Toggle records"}
                     </Button>
                   </div>
 

@@ -5,7 +5,6 @@ import { User } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
-import { useTranslations } from "use-intl";
 
 interface Props {
   user: User;
@@ -14,7 +13,6 @@ interface Props {
 export const GiveTempPasswordModal = ({ user }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const t = useTranslations("Management");
 
   const [result, setResult] = React.useState<string | null>(null);
 
@@ -51,7 +49,7 @@ export const GiveTempPasswordModal = ({ user }: Props) => {
   return (
     <Modal
       className="w-[600px]"
-      title={t("giveTempPassword")}
+      title={"Give Temporary Password"}
       onClose={() => closeModal(ModalIds.GiveTempPassword)}
       isOpen={isOpen(ModalIds.GiveTempPassword)}
     >
