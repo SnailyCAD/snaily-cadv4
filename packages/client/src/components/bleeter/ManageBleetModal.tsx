@@ -16,7 +16,6 @@ import { Textarea } from "components/form/Textarea";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { Error } from "components/form/Error";
-import { CropImageModal } from "components/modal/CropImageModal";
 
 interface Props {
   post: BleeterPost | null;
@@ -24,7 +23,7 @@ interface Props {
 
 export const ManageBleetModal = ({ post }: Props) => {
   const { state, execute } = useFetch();
-  const { openModal, isOpen, closeModal } = useModal();
+  const { isOpen, closeModal } = useModal();
   const t = useTranslations("Bleeter");
   const common = useTranslations("Common");
   const router = useRouter();
@@ -71,11 +70,6 @@ export const ManageBleetModal = ({ post }: Props) => {
     closeModal(ModalIds.ManageBleetModal);
   }
 
-  function onCropSuccess(url: Blob, filename: string, setImage: any) {
-    setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
-  }
-
   const validate = handleValidate(BLEETER_SCHEMA);
   const INITIAL_VALUES = {
     title: post?.title ?? "",
@@ -96,7 +90,6 @@ export const ManageBleetModal = ({ post }: Props) => {
             <FormField label={t("headerImage")}>
               <div className="flex">
                 <Input
-                  style={{ width: "95%", marginRight: "0.5em" }}
                   type="file"
                   id="image"
                   hasError={!!errors.image}
@@ -104,15 +97,6 @@ export const ManageBleetModal = ({ post }: Props) => {
                     setFieldValue("image", e.currentTarget.files?.[0]);
                   }}
                 />
-                <Button
-                  className="mr-2"
-                  type="button"
-                  onClick={() => {
-                    openModal(ModalIds.CropImageModal);
-                  }}
-                >
-                  Crop
-                </Button>
               </div>
             </FormField>
 
@@ -154,14 +138,6 @@ export const ManageBleetModal = ({ post }: Props) => {
                 {post ? common("save") : t("createBleet")}
               </Button>
             </footer>
-
-            <CropImageModal
-              isOpen={isOpen(ModalIds.CropImageModal)}
-              onClose={() => closeModal(ModalIds.CropImageModal)}
-              image={values.image}
-              onSuccess={(...data) => onCropSuccess(...data, (d: any) => setFieldValue("image", d))}
-              options={{ height: 500, aspectRatio: 16 / 9 }}
-            />
           </form>
         )}
       </Formik>
