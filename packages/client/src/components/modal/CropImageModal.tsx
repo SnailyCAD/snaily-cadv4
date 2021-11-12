@@ -15,6 +15,7 @@ interface Props {
 
 export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, options }: Props) => {
   const common = useTranslations("Common");
+  const t = useTranslations("Errors");
 
   const [src, setSrc] = React.useState(null);
   const [cropper, setCropper] = React.useState<CropperJS>();
@@ -66,14 +67,14 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, opti
           guides
         />
       ) : (
-        <p>Select an image please</p>
+        <p className="my-3">{t("selectImageFirst")}</p>
       )}
 
       <div className="flex items-center justify-end gap-2 mt-2">
         <Button variant="cancel" onClick={onClose}>
           {common("cancel")}
         </Button>
-        <Button className="flex items-center" onClick={getCropData}>
+        <Button disabled={!image} className="flex items-center" onClick={getCropData}>
           {common("save")}
         </Button>
       </div>
