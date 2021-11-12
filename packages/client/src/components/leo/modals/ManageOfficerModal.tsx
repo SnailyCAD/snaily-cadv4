@@ -27,8 +27,7 @@ interface Props {
 }
 
 export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Props) => {
-  const [image, setImage] = React.useState<File | null>(null);
-  const { openModal, isOpen, closeModal } = useModal();
+  const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { citizens } = useCitizen();
