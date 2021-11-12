@@ -10,13 +10,17 @@ interface Props {
   onClose: () => void;
   isOpen: boolean;
   image: File | null;
+  options?: { width?: number; height?: number; aspectRatio: number };
 }
 
-export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose }: Props) => {
+export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, options }: Props) => {
   const common = useTranslations("Common");
 
   const [src, setSrc] = React.useState(null);
   const [cropper, setCropper] = React.useState<CropperJS>();
+  const width = options?.width ?? 900;
+  const height = options?.height ?? 400;
+  const aspectRatio = options?.aspectRatio ?? 1;
 
   React.useEffect(() => {
     if (!image) return;
@@ -33,7 +37,6 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose }: Pr
 
     if (typeof cropper !== "undefined") {
       cropper.getCroppedCanvas().toBlob((blob) => {
-        console.log({ blob });
         if (!blob) return;
 
         onSuccess?.(blob, image.name);
@@ -42,17 +45,17 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose }: Pr
   };
 
   return (
-    <Modal title="Crop image" isOpen={isOpen} onClose={onClose}>
+    <Modal className={`w-[${width}px]`} title="Crop image" isOpen={isOpen} onClose={onClose}>
       {src ? (
         <Cropper
-          style={{ height: 400, width: "100%" }}
+          style={{ height, width: "100%" }}
           zoomTo={0.5}
-          initialAspectRatio={1}
+          initialAspectRatio={aspectRatio}
           src={src}
           viewMode={1}
-          aspectRatio={1}
-          minCropBoxHeight={10}
-          minCropBoxWidth={10}
+          aspectRatio={aspectRatio}
+          minCropBoxHeight={80}
+          minCropBoxWidth={80}
           background={false}
           responsive
           autoCropArea={1}
