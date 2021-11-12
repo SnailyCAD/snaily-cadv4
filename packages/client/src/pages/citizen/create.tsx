@@ -55,7 +55,6 @@ export default function CreateCitizen() {
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
-  const formRef = React.useRef<HTMLFormElement>(null);
   const { cad } = useAuth();
   const { openModal, isOpen, closeModal } = useModal();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
@@ -117,7 +116,7 @@ export default function CreateCitizen() {
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
-          <form ref={formRef} onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <FormField label={t("image")}>
               <div className="flex">
                 <Input
