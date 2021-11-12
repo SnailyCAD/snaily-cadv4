@@ -18,7 +18,6 @@ import { useTranslations } from "use-intl";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { FormRow } from "components/form/FormRow";
 import { useCitizen } from "context/CitizenContext";
-import { CropImageModal } from "components/modal/CropImageModal";
 
 interface Props {
   deputy: FullDeputy | null;
@@ -28,8 +27,7 @@ interface Props {
 }
 
 export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props) => {
-  const [image, setImage] = React.useState<File | null>(null);
-  const { openModal, isOpen, closeModal } = useModal();
+  const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -43,24 +41,18 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
     onClose?.();
   }
 
-  function onCropSuccess(url: Blob, filename: string) {
-    setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
-  }
-
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const fd = new FormData();
+    const fd = formRef.current && new FormData(formRef.current);
+    const image = fd?.get("image") as File;
 
     if (image && image.size && image.name) {
       if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
         helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
         return;
       }
-
-      fd.set("image", image, image.name);
     }
 
     let deputyId;
@@ -127,23 +119,11 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setImage(e.target.files?.[0] ?? null);
-                  }}
+                  onChange={handleChange}
                   type="file"
                   name="image"
                   value={values.image ?? ""}
                 />
-                <Button
-                  className="mr-2"
-                  type="button"
-                  onClick={() => {
-                    openModal(ModalIds.CropImageModal);
-                  }}
-                >
-                  Crop
-                </Button>
                 <Button
                   type="button"
                   className="bg-red-400 hover:bg-red-500"
@@ -261,13 +241,6 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 {deputy ? common("save") : common("create")}
               </Button>
             </footer>
-
-            <CropImageModal
-              isOpen={isOpen(ModalIds.CropImageModal)}
-              onClose={() => closeModal(ModalIds.CropImageModal)}
-              image={image}
-              onSuccess={onCropSuccess}
-            />
           </form>
         )}
       </Formik>
