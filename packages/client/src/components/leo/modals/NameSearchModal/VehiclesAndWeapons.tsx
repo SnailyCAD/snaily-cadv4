@@ -14,7 +14,7 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
   return (
     <>
       <section id="vehicles" className="mt-3">
-        <h3 className="text-xl font-semibold">{"Registered Vehicles"}</h3>
+        <h3 className="text-xl font-semibold">{t("Vehicles.registeredVehicles")}</h3>
 
         {vehicles.length <= 0 ? (
           <p>{t("Leo.noVehiclesCitizen")}</p>
@@ -49,7 +49,7 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
       </section>
 
       <section id="weapons" className="mt-5">
-        <h3 className="text-xl font-semibold">{"Registered Weapons"}</h3>
+        <h3 className="text-xl font-semibold">{t("Weapons.registeredWeapons")}</h3>
 
         {weapons.length <= 0 ? (
           <p>{t("Leo.noWeaponsCitizen")}</p>
