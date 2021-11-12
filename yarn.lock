@@ -1070,6 +1070,7 @@ __metadata:
     "@types/uuid": ^8.3.1
     autoprefixer: ^10.4.0
     axios: ^0.24.0
+    cropperjs: ^1.5.12
     date-fns: ^2.25.0
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
@@ -1082,6 +1083,7 @@ __metadata:
     react-bootstrap-icons: ^1.6.1
     react-colorful: ^5.5.0
     react-cool-onclickoutside: ^1.7.0
+    react-cropper: ^2.1.8
     react-dom: ^17.0.2
     react-hot-toast: ^2.1.1
     react-markdown: ^7.1.0
@@ -3390,6 +3392,13 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: a9a1503d4390d8b59ad86f4607de7870b39cad43d929813599a23714831e81c520bddf61bcdd1f8e30f05fd3a2b71ae8538e946eb2786dc65c2bbc520f692eff
+  languageName: node
+  linkType: hard
+
+"cropperjs@npm:^1.5.12":
+  version: 1.5.12
+  resolution: "cropperjs@npm:1.5.12"
+  checksum: 8dcbceb3659ad72d421038abf7f9d08ca13a061dc6c643497efc043033e22b17411b5558db29a841cb4f0a3b7943a20e6a3d9fecf3901185b7cd027f8097442b
   languageName: node
   linkType: hard
 
@@ -8695,6 +8704,17 @@ __metadata:
   peerDependencies:
     react: ">= 16.8.0"
   checksum: 52041d867ff275ee9e925b2fc0616febd17964a372b2319007e4c8ae375a9c583da79ab0f27238a36d7fb7e486ec2293f94b2a2362e9c48db44303884c97b2d4
+  languageName: node
+  linkType: hard
+
+"react-cropper@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "react-cropper@npm:2.1.8"
+  dependencies:
+    cropperjs: ^1.5.12
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: f2961a871f0e641f72dcd6e21b74ad10c6d06f0fa24da790b32b6e47ab601cc1b163750952f405ef14ee983750afe8923c8ffd0f7f8bf661096996b43e52a2b2
   languageName: node
   linkType: hard
 
