@@ -1,0 +1,30 @@
+name: Test builds
+
+on: [push, pull_request]
+
+jobs:
+  test-client-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build config
+        run: "yarn workspace @snailycad/config build"
+
+      - name: Build schemas
+        run: "yarn workspace @snailycad/schemas build"
+
+      - name: Run build
+        run: "yarn workspace @snailycad/client build"
