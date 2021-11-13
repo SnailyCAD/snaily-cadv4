@@ -9,6 +9,7 @@ export const enum ModalIds {
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
+  CropImageModal = "CropImageModal",
 
   ManageTaxiCall = "ManageTaxiCallModal",
 
