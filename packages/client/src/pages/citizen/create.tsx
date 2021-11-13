@@ -23,6 +23,9 @@ import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
+import { useModal } from "context/ModalContext";
+import { CropImageModal } from "components/modal/CropImageModal";
+import { ModalIds } from "types/ModalIds";
 
 const INITIAL_VALUES = {
   name: "",
@@ -46,26 +49,34 @@ const INITIAL_VALUES = {
 };
 
 export default function CreateCitizen() {
+  const [image, setImage] = React.useState<File | null>(null);
+
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const { openModal, isOpen, closeModal } = useModal();
+
+  function onCropSuccess(url: Blob, filename: string) {
+    setImage(new File([url], filename, { type: url.type }));
+    closeModal(ModalIds.CropImageModal);
+  }
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const fd = formRef.current && new FormData(formRef.current);
-    const image = fd?.get("image") as File;
+    const fd = new FormData();
 
     if (image && image.size && image.name) {
       if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
         helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
         return;
       }
+
+      fd.set("image", image, image.name);
     }
 
     const { json } = await execute("/citizen", {
@@ -105,16 +116,28 @@ export default function CreateCitizen() {
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
-          <form ref={formRef} onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <FormField label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setImage(e.target.files?.[0] ?? null);
+                  }}
                   type="file"
                   name="image"
                   value={values.image ?? ""}
                 />
+                <Button
+                  className="mr-2"
+                  type="button"
+                  onClick={() => {
+                    openModal(ModalIds.CropImageModal);
+                  }}
+                >
+                  Crop
+                </Button>
                 <Button
                   type="button"
                   variant="danger"
@@ -324,6 +347,13 @@ export default function CreateCitizen() {
                 {state === "loading" ? <Loader /> : null} {t("createCitizen")}
               </Button>
             </div>
+
+            <CropImageModal
+              isOpen={isOpen(ModalIds.CropImageModal)}
+              onClose={() => closeModal(ModalIds.CropImageModal)}
+              image={image}
+              onSuccess={onCropSuccess}
+            />
           </form>
         )}
       </Formik>

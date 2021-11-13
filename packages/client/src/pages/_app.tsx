@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import "cropperjs/dist/cropper.css";
 import { Toaster } from "react-hot-toast";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
