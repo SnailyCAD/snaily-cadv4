@@ -51,8 +51,10 @@ export class Server {
       .use(IsEnabled);
 
     this.app.get("/", (_: any, res: Response) => {
-      res.setHeader("content-type", "application/json");
-      return res.status(200).json({ status: 200, error: false });
+      res.setHeader("content-type", "text/html");
+      return res
+        .status(200)
+        .send("<html><head><title>SnailyCAD API</title></head><body>200 Success</body></html>");
     });
   }
 }
