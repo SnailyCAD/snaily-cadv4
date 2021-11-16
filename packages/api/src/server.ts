@@ -1,4 +1,4 @@
-import { Configuration, Inject, PlatformApplication } from "@tsed/common";
+import { Configuration, Inject, PlatformApplication, Response } from "@tsed/common";
 import { json } from "express";
 import "@tsed/socketio";
 import compress from "compression";
@@ -50,6 +50,9 @@ export class Server {
       )
       .use(IsEnabled);
 
-    this.app.get("/", (_: any, res: any) => res.status(200).send("OK"));
+    this.app.get("/", (_: any, res: Response) => {
+      res.setHeader("content-type", "application/json");
+      return res.status(200).json({ status: 200, error: false });
+    });
   }
 }
