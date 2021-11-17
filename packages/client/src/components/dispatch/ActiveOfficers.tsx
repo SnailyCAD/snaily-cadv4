@@ -10,9 +10,10 @@ import { useRouter } from "next/router";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { CombinedLeoUnit, StatusViewMode } from "types/prisma";
+import { CombinedLeoUnit, StatusValue, StatusViewMode } from "types/prisma";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ContextMenu } from "components/context-menu/ContextMenu";
+import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
 
@@ -25,6 +26,7 @@ export const ActiveOfficers = () => {
   const generateCallsign = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
+  const { codes10 } = useValues();
   const { execute } = useFetch();
 
   const router = useRouter();
@@ -38,12 +40,19 @@ export const ActiveOfficers = () => {
   }
 
   async function handleMerge(id: string) {
-    const { json } = await execute("/dispatch/status/merge", {
+    await execute("/dispatch/status/merge", {
       data: { id },
       method: "POST",
     });
+  }
 
-    console.log({ json });
+  async function setCode(id: string, status: StatusValue) {
+    if (status.type === "STATUS_CODE") {
+      await execute(`/dispatch/status/${id}`, {
+        method: "PUT",
+        data: { status: status.id },
+      });
+    }
   }
 
   return (
@@ -72,14 +81,32 @@ export const ActiveOfficers = () => {
                 {activeOfficers.map((officer) => {
                   const color = officer.status?.color;
                   const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-                  const canBeOpened = !isDispatch && officer.id !== activeOfficer?.id;
+                  const canBeOpened = isDispatch ? true : officer.id !== activeOfficer?.id;
+
+                  const codesMapped: any[] = codes10.values
+                    .filter((v) => v.type === "STATUS_CODE")
+                    .map((v) => ({
+                      name: v.value.value,
+                      onClick: () => setCode(officer.id, v),
+                      "aria-label": `Set status to ${v.value.value}`,
+                      title: `Set status to ${v.value.value}`,
+                    }));
 
                   return (
                     <tr style={{ background: !useDot ? color : undefined }} key={officer.id}>
                       <ContextMenu
                         canBeOpened={canBeOpened}
                         asChild
-                        items={[{ onClick: () => handleMerge(officer.id), name: "Merge" }]}
+                        items={
+                          isDispatch
+                            ? codesMapped
+                            : [
+                                {
+                                  name: "Merge",
+                                  onClick: () => handleMerge(officer.id),
+                                },
+                              ]
+                        }
                       >
                         <td className="flex items-center capitalize">
                           <>

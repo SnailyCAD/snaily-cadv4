@@ -143,7 +143,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
 
     if (json) {
       closeModal(ModalIds.AlertEnd911Call);
-      closeModal(ModalIds.Manage911Call);
+      handleClose();
     }
   }
 
