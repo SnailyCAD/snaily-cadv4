@@ -51,6 +51,7 @@
     "divisionNotInDepartment": "This division does not exist in this department.",
     "passwordsDoNotMatch": "Passwords do not match",
     "currentPasswordIncorrect": "Current password is incorrect",
-    "citizenNotFound": "That citizen was not found"
+    "citizenNotFound": "That citizen was not found",
+    "selectImageFirst": "You must first select an image."
   }
 }

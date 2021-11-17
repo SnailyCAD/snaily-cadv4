@@ -7,6 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
+import { useTranslations } from "use-intl";
 
 interface Props {
   user: User;
@@ -16,6 +17,7 @@ export const DangerZone = ({ user }: Props) => {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { openModal, closeModal } = useModal();
+  const t = useTranslations("Management");
 
   const formDisabled = user.rank === "OWNER";
 
@@ -32,10 +34,10 @@ export const DangerZone = ({ user }: Props) => {
   }
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-2 mt-10 rounded-md p-3">
+    <div className="p-3 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
-      <div className="mt-3 flex">
+      <div className="flex mt-3">
         <Button
           variant="danger"
           className="flex items-center"
@@ -69,10 +71,10 @@ export const DangerZone = ({ user }: Props) => {
           closeModal(ModalIds.AlertGiveTempPassword);
           openModal(ModalIds.GiveTempPassword);
         }}
-        title="Give Temporary Password"
+        title={t("giveTempPassword")}
         description={`Are you sure you want to give ${user.username} a temporary password? They will not be able to log in to their account with their previous password. They will only be able to login with the password provided in the next step.`}
         id={ModalIds.AlertGiveTempPassword}
-        deleteText={"Yes, continue."}
+        deleteText={t("continue")}
       />
 
       <GiveTempPasswordModal user={user} />

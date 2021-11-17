@@ -1,4 +1,4 @@
-import { Configuration, Inject, PlatformApplication } from "@tsed/common";
+import { Configuration, Inject, PlatformApplication, Response } from "@tsed/common";
 import { json } from "express";
 import "@tsed/socketio";
 import compress from "compression";
@@ -17,8 +17,6 @@ const rootDir = __dirname;
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
-    "/v1/admin/manage": [`${rootDir}/controllers/admin/manage/*.ts`],
-    "/v1/businesses": [`${rootDir}/controllers/business/*.ts`],
   },
   statics: {
     "/static": [
@@ -51,5 +49,12 @@ export class Server {
         cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
       )
       .use(IsEnabled);
+
+    this.app.get("/", (_: any, res: Response) => {
+      res.setHeader("content-type", "text/html");
+      return res
+        .status(200)
+        .send("<html><head><title>SnailyCAD API</title></head><body>200 Success</body></html>");
+    });
   }
 }

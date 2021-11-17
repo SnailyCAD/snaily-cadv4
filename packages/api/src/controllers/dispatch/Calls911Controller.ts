@@ -78,7 +78,7 @@ export class Calls911Controller {
       },
     });
 
-    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
+    this.socket.emit911Call(this.officerOrDeputyToUnit(updated));
 
     return this.officerOrDeputyToUnit(updated);
   }
@@ -161,6 +161,8 @@ export class Calls911Controller {
         id: call.id,
       },
     });
+
+    this.socket.emit911CallDelete(call);
 
     return true;
   }

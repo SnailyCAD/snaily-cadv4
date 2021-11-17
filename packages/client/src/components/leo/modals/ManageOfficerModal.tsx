@@ -10,7 +10,7 @@ import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Formik, FormikHelpers, useFormikContext } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
@@ -18,6 +18,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { FormRow } from "components/form/FormRow";
+import { CropImageModal } from "components/modal/CropImageModal";
 
 interface Props {
   officer: FullOfficer | null;
@@ -27,7 +28,8 @@ interface Props {
 }
 
 export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Props) => {
-  const { isOpen, closeModal } = useModal();
+  const [image, setImage] = React.useState<File | null>(null);
+  const { openModal, isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { citizens } = useCitizen();
@@ -41,17 +43,24 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
     onClose?.();
   }
 
+  function onCropSuccess(url: Blob, filename: string) {
+    setImage(new File([url], filename, { type: url.type }));
+    closeModal(ModalIds.CropImageModal);
+  }
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const fd = formRef.current && new FormData(formRef.current);
-    const image = fd?.get("image") as File;
+    const fd = new FormData();
 
     if (image && image.size && image.name) {
       if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
         helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
+        return;
       }
+
+      fd.set("image", image, image.name);
     }
 
     let officerId;
@@ -117,11 +126,23 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setImage(e.target.files?.[0] ?? null);
+                  }}
                   type="file"
                   name="image"
                   value={values.image ?? ""}
                 />
+                <Button
+                  className="mr-2"
+                  type="button"
+                  onClick={() => {
+                    openModal(ModalIds.CropImageModal);
+                  }}
+                >
+                  Crop
+                </Button>
                 <Button
                   type="button"
                   variant="danger"
@@ -224,7 +245,7 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
               <Error>{errors.division}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
@@ -238,29 +259,15 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
               </Button>
             </footer>
 
-            <AutoSetName />
+            <CropImageModal
+              isOpen={isOpen(ModalIds.CropImageModal)}
+              onClose={() => closeModal(ModalIds.CropImageModal)}
+              image={image}
+              onSuccess={onCropSuccess}
+            />
           </form>
         )}
       </Formik>
     </Modal>
   );
-};
-
-const AutoSetName = () => {
-  const { citizens } = useCitizen();
-  const { values, setFieldValue } = useFormikContext<any>();
-
-  React.useEffect(() => {
-    if (values.citizenId) {
-      const citizen = citizens.find((v) => v.id === values.citizenId);
-
-      if (citizen) {
-        setFieldValue("name", `${citizen?.name} ${citizen?.surname}`);
-      }
-    } else {
-      setFieldValue("name", values.name);
-    }
-  }, [citizens, values.citizenId, values.name, setFieldValue]);
-
-  return null;
 };

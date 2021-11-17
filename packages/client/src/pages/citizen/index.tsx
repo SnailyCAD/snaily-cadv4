@@ -100,7 +100,7 @@ export default function CitizenPage({ citizens }: Props) {
         }
       >
         {citizens.length <= 0 ? (
-          <p className="font-medium text-gray-600">{t("userNoCitizens")}</p>
+          <p className="font-medium text-gray-600 dark:text-gray-300">{t("userNoCitizens")}</p>
         ) : (
           citizens.map((citizen) => (
             <li

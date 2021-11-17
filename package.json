@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.8",
   "packageManager": "yarn@3.1.0",
   "workspaces": [
     "packages/**"
@@ -23,6 +23,6 @@
     "eslint": "^7.32.0",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
-    "pretty-quick": "^3.1.1"
+    "pretty-quick": "^3.1.2"
   }
 }

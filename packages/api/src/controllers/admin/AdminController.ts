@@ -4,8 +4,11 @@ import { prisma } from "../../lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { statSync } from "node:fs";
+import { UseBeforeEach } from "@tsed/common";
+import { IsAuth } from "../../middlewares";
 
 @Controller("/admin")
+@UseBeforeEach(IsAuth)
 export class AdminController {
   @Get("/")
   async getData() {

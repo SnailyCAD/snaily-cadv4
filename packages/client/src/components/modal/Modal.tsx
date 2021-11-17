@@ -4,6 +4,7 @@ import { X } from "react-bootstrap-icons";
 import { useModal } from "context/ModalContext";
 
 export interface ModalProps {
+  modalStyles?: React.CSSProperties;
   title: string;
   children: React.ReactNode;
   isOpen: boolean;
@@ -11,7 +12,14 @@ export interface ModalProps {
   onClose: () => void;
 }
 
-export const Modal = ({ title, children, isOpen, className, onClose }: ModalProps) => {
+export const Modal = ({
+  modalStyles = {},
+  title,
+  children,
+  isOpen,
+  className,
+  onClose,
+}: ModalProps) => {
   const { canBeClosed } = useModal();
 
   function handleClose() {
@@ -56,11 +64,12 @@ export const Modal = ({ title, children, isOpen, className, onClose }: ModalProp
             leaveTo="opacity-0 scale-95"
           >
             <div
+              style={modalStyles}
               className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg ${className}`}
             >
               <Dialog.Title
                 as="h3"
-                className="text-xl font-semibold text-gray-900 dark:text-white flex items-center justify-between mb-2"
+                className="flex items-center justify-between mb-2 text-xl font-semibold text-gray-900 dark:text-white"
               >
                 {title}
 

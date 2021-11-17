@@ -1,7 +1,7 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
-import { BadRequest } from "@tsed/exceptions";
-import { BodyParams, Context } from "@tsed/platform-params";
+import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
+import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares";
 import { unitProperties } from "../../lib/officer";
@@ -64,5 +64,22 @@ export class IncidentController {
     );
 
     return incident;
+  }
+
+  @Delete("/:id")
+  async deleteIncident(@PathParams("id") incidentId: string) {
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id: incidentId },
+    });
+
+    if (!incident) {
+      throw new NotFound("incidentNotFound");
+    }
+
+    await prisma.leoIncident.delete({
+      where: { id: incidentId },
+    });
+
+    return true;
   }
 }

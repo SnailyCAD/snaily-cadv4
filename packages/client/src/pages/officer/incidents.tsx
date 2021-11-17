@@ -16,6 +16,9 @@ import { format } from "date-fns";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useAuth } from "context/AuthContext";
+import useFetch from "lib/useFetch";
+import { useRouter } from "next/router";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -29,17 +32,48 @@ const CreateIncidentModal = dynamic(async () => {
   return (await import("components/leo/modals/CreateIncidentModal")).CreateIncidentModal;
 });
 
+const AlertModal = dynamic(async () => {
+  return (await import("components/modal/AlertModal")).AlertModal;
+});
+
 export default function LeoIncidents({ officers, activeOfficer, incidents }: Props) {
+  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { setAllOfficers } = useDispatchState();
   const { setActiveOfficer } = useLeoState();
   const generateCallsign = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
+  const { user } = useAuth();
+  const { state, execute } = useFetch();
+  const router = useRouter();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
   const yesOrNoText = (t: boolean) => (t === true ? "yes" : "no");
+
+  function onDeleteClick(incident: FullIncident) {
+    openModal(ModalIds.AlertDeleteIncident);
+    setTempIncident(incident);
+  }
+
+  async function handleDelete() {
+    if (!tempIncident) return;
+
+    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      closeModal(ModalIds.AlertDeleteIncident);
+      setTempIncident(null);
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
+    }
+  }
 
   React.useEffect(() => {
     setAllOfficers(officers);
@@ -78,8 +112,8 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       {incidents.length <= 0 ? (
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
+        <div className="w-full mt-3 overflow-x-auto">
+          <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
             <thead>
               <tr>
                 <th>{t("caseNumber")}</th>
@@ -90,6 +124,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                 <th>{t("arrestsMade")}</th>
                 <th>{common("description")}</th>
                 <th>{common("createdAt")}</th>
+                {user?.isSupervisor ? <th>{common("actions")}</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -114,6 +149,13 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                     {incident.description}
                   </td>
                   <td>{format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm")}</td>
+                  {user?.isSupervisor ? (
+                    <td>
+                      <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
+                        {common("delete")}
+                      </Button>
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>
@@ -122,6 +164,16 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       )}
 
       {isActive ? <CreateIncidentModal /> : null}
+      {user?.isSupervisor ? (
+        <AlertModal
+          id={ModalIds.AlertDeleteIncident}
+          title={t("deleteIncident")}
+          description={t("alert_deleteIncident")}
+          onDeleteClick={handleDelete}
+          onClose={() => setTempIncident(null)}
+          state={state}
+        />
+      ) : null}
     </Layout>
   );
 }

@@ -49,7 +49,12 @@ export const InputSuggestions = ({ Component, onSuggestionClick, options, inputP
 
   return (
     <div ref={ref} className="relative w-full">
-      <Input {...(inputProps as any)} onFocus={() => setOpen(true)} onChange={handleChange} />
+      <Input
+        {...(inputProps as any)}
+        autoComplete="off"
+        onFocus={() => setOpen(true)}
+        onChange={handleChange}
+      />
 
       {isOpen && suggestions.length > 0 ? (
         <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">

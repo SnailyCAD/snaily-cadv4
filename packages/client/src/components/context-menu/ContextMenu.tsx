@@ -84,7 +84,7 @@ export const ContextMenu = ({ items, asChild = false, children }: Props) => {
         </Menu.CheckboxItem>
 
         <Menu.RadioGroup>
-          <Menu.RadioItem value={"true"}>
+          <Menu.RadioItem value="true">
             <Menu.ItemIndicator>test</Menu.ItemIndicator>
           </Menu.RadioItem>
         </Menu.RadioGroup> */}

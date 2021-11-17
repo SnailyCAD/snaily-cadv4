@@ -59,6 +59,10 @@ export class IsAuth implements MiddlewareMethods {
       }
     }
 
+    if (!header && !user) {
+      throw new Unauthorized("Unauthorized");
+    }
+
     let cad = await prisma.cad.findFirst({
       select: CAD_SELECT(user),
     });
@@ -129,7 +133,7 @@ function hasPermissionForReq(req: Req, user: User) {
       return isTrue;
     }
 
-    return m.includes(requestMethod) && isTrue;
+    return m.includes(requestMethod.toUpperCase()) && isTrue;
   });
 
   if (route) {

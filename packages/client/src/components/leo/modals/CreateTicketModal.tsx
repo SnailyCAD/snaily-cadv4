@@ -78,7 +78,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
-          <Form>
+          <Form autoComplete="off">
             <FormField label={t("citizen")}>
               <InputSuggestions
                 inputProps={{

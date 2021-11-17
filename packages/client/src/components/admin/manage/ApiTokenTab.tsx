@@ -14,6 +14,7 @@ export const ApiTokenTab = () => {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad } = useAuth();
+  const t = useTranslations("Management");
 
   const [token, setToken] = React.useState("");
 
@@ -50,14 +51,14 @@ export const ApiTokenTab = () => {
 
   return (
     <Tab.Panel>
-      <h2 className="text-2xl font-semibold mt-2">Public API access</h2>
+      <h2 className="mt-2 text-2xl font-semibold">Public API access</h2>
 
       <p className="my-2">
         Read more info about{" "}
         <a
           target="_blank"
           rel="noreferrer noopener"
-          className="underline text-blue-600"
+          className="text-blue-600 underline"
           href="https://cad-docs.netlify.com/other/public-api"
         >
           Public API Access here
@@ -76,7 +77,7 @@ export const ApiTokenTab = () => {
               />
             </FormField>
 
-            <FormField fieldId="enabled" label={"Enabled"}>
+            <FormField fieldId="enabled" label={common("enabled")}>
               <Toggle
                 text="enable/disable"
                 toggled={values.enabled}
@@ -94,12 +95,12 @@ export const ApiTokenTab = () => {
                   type="button"
                   disabled={state === "loading"}
                 >
-                  {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
-                  {"Re-generate Token"}
+                  {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
+                  {t("reGenerateToken")}
                 </Button>
               ) : null}
               <Button className="flex items-center" type="submit" disabled={state === "loading"}>
-                {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
+                {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
                 {common("save")}
               </Button>
             </div>

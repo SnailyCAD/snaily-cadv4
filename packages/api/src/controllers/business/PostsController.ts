@@ -12,7 +12,7 @@ import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "../../lib/prisma";
 
 @UseBeforeEach(IsAuth)
-@Controller("/posts")
+@Controller("/businesses/posts")
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(

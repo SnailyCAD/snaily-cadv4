@@ -33,6 +33,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   ["*", "/v1/leo", (u) => u.isLeo],
 
   [["POST"], "/v1/incidents", (u) => u.isLeo],
+  [["DELETE"], "/v1/incidents", (u) => u.isSupervisor],
   ["*", "/v1/incidents", (u) => u.isLeo || u.rank !== "USER"],
 
   [["POST"], "/v1/search/name", (u) => u.isLeo || u.isDispatch],
@@ -47,14 +48,14 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["GET"], "/v1/bolos", (u) => u.isLeo || u.isDispatch || u.isEmsFd],
   [["POST", "PUT", "DELETE"], "/v1/bolos", (u) => u.isLeo || u.isDispatch],
 
-  ["*", "/v1/admin/manage/cad-settings", (u) => ["OWNER"].includes(u.rank)],
+  ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
+  ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
   ["*", "/v1/admin/manage/units", (u) => u.isSupervisor || ["ADMIN", "OWNER"].includes(u.rank)],
   [
     ["PATCH", "DELETE", "PUT", "POST"],
     "/v1/admin/values/",
     (u) => ["ADMIN", "OWNER"].includes(u.rank),
   ],
-  ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
   [["PUT", "DELETE", "POST"], "/v1/911-calls/events", (u) => u.isDispatch],
   [["POST"], "/v1/911-calls/assign-to/", (u) => u.isLeo || u.isEmsFd],
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],
