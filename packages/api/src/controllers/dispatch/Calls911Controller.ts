@@ -353,6 +353,22 @@ export class Calls911Controller {
           throw new BadRequest("unitOffDuty");
         }
 
+        const status = await prisma.statusValue.findFirst({
+          where: { shouldDo: "SET_ASSIGNED" },
+        });
+
+        if (status) {
+          const t = type === "leo" ? "officer" : "emsFdDeputy";
+          // @ts-expect-error ignore
+          await prisma[t].update({
+            where: { id: unit.id },
+            data: { statusId: status.id },
+          });
+
+          this.socket.emitUpdateOfficerStatus();
+          this.socket.emitUpdateDeputyStatus();
+        }
+
         const assignedUnit = await prisma.assignedUnit.create({
           data: {
             call911Id: callId,
