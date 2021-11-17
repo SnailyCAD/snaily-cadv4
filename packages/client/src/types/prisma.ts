@@ -515,6 +515,18 @@ export type LeoIncident = {
 };
 
 /**
+ * Model CombinedLeoUnit
+ *
+ */
+export type CombinedLeoUnit = {
+  id: string;
+  callsign: string;
+  statusId: string | null;
+  status: StatusValue | null;
+  officers: FullOfficer[];
+};
+
+/**
  * Enums
  */
 

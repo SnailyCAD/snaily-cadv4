@@ -1,10 +1,10 @@
-import { User, ShouldDoType, MiscCadSettings, cad } from ".prisma/client";
+import { User, ShouldDoType, MiscCadSettings, cad, Officer } from ".prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
-import { Req, Res, UseBeforeEach } from "@tsed/common";
+import { Req, Res, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { JsonRequestBody, Put } from "@tsed/schema";
+import { JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { findUnit } from "./Calls911Controller";
 import { unitProperties } from "../../lib/officer";
@@ -15,6 +15,7 @@ import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { Socket } from "../../services/SocketService";
 import { APIWebhook } from "discord-api-types";
 import { IsAuth } from "../../middlewares";
+import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -53,17 +54,13 @@ export class StatusController {
       throw new NotFound("unitNotFound");
     }
 
-    if (unit.suspended) {
+    if ("suspended" in unit && unit.suspended) {
       throw new BadRequest("unitSuspended");
     }
 
     const code = await prisma.statusValue.findFirst({
-      where: {
-        id: statusId,
-      },
-      include: {
-        value: true,
-      },
+      where: { id: statusId },
+      include: { value: true },
     });
 
     if (!code) {
@@ -73,18 +70,14 @@ export class StatusController {
     // reset all units for user
     if (type === "leo") {
       await prisma.officer.updateMany({
-        where: {
-          userId: user.id,
-        },
+        where: { userId: user.id },
         data: {
           statusId: null,
         },
       });
-    } else {
+    } else if (type === "ems-fd") {
       await prisma.emsFdDeputy.updateMany({
-        where: {
-          userId: user.id,
-        },
+        where: { userId: user.id },
         data: {
           statusId: null,
         },
@@ -94,23 +87,27 @@ export class StatusController {
     let updatedUnit;
     if (type === "leo") {
       updatedUnit = await prisma.officer.update({
-        where: {
-          id: unit.id,
+        where: { id: unit.id },
+        data: {
+          statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
         },
+        include: unitProperties,
+      });
+    } else if (type === "ems-fd") {
+      updatedUnit = await prisma.emsFdDeputy.update({
+        where: { id: unit.id },
         data: {
           statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
         },
         include: unitProperties,
       });
     } else {
-      updatedUnit = await prisma.emsFdDeputy.update({
-        where: {
-          id: unit.id,
-        },
+      updatedUnit = await prisma.combinedLeoUnit.update({
+        where: { id: unit.id },
         data: {
           statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
         },
-        include: unitProperties,
+        include: { status: { include: { value: true } }, officers: { include: unitProperties } },
       });
     }
 
@@ -153,7 +150,7 @@ export class StatusController {
           }
         }
       }
-    } else {
+    } else if (type === "ems-fd") {
       // unassign deputy from call
       await prisma.assignedUnit.deleteMany({
         where: {
@@ -170,14 +167,16 @@ export class StatusController {
         expires: -1,
       });
     } else {
-      const cookieName = type === "leo" ? Cookie.ActiveOfficer : Cookie.ActiveOfficer;
-      const cookiePayloadName = type === "leo" ? "officerId" : "deputyId";
+      const cookieName = ["leo", "combined"].includes(type)
+        ? Cookie.ActiveOfficer
+        : Cookie.ActiveOfficer;
+      const cookiePayloadName = ["leo", "combined"].includes(type) ? "officerId" : "deputyId";
 
       // expires after 3 hours.
       setCookie({
         res,
         name: cookieName,
-        value: signJWT({ [cookiePayloadName]: updatedUnit.id }, 60 * 60 * 3),
+        value: signJWT({ [cookiePayloadName]: updatedUnit?.id }, 60 * 60 * 3),
         expires: 60 * 60 * 1000 * 3,
       });
     }
@@ -190,13 +189,128 @@ export class StatusController {
       await sendDiscordWebhook(webhook, data);
     }
 
-    if (type === "leo") {
+    if (["leo", "combined"].includes(type)) {
       this.socket.emitUpdateOfficerStatus();
     } else {
       this.socket.emitUpdateDeputyStatus();
     }
 
     return updatedUnit;
+  }
+
+  @UseBefore(ActiveOfficer)
+  @Post("/merge")
+  async mergeOfficers(
+    @BodyParams("id") id: string,
+    @Context("activeOfficer") activeOfficer: Officer,
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
+  ) {
+    if (id === activeOfficer.id) {
+      throw new BadRequest("id cannot be the same.");
+    }
+
+    const existing = await prisma.combinedLeoUnit.findFirst({
+      where: {
+        OR: [
+          {
+            officers: {
+              some: {
+                id,
+              },
+            },
+          },
+          {
+            officers: {
+              some: {
+                id: activeOfficer.id,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    if (existing) {
+      throw new BadRequest("Officer is already merged.");
+    }
+
+    const status = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: ShouldDoType.SET_ON_DUTY,
+      },
+      select: { id: true },
+    });
+
+    const symbol = cad.miscCadSettings.pairedUnitSymbol || "A";
+    const unit = await prisma.combinedLeoUnit.create({
+      data: {
+        statusId: status?.id ?? null,
+        callsign: `1${symbol}-${activeOfficer.callsign2}`,
+      },
+    });
+
+    const [, updated] = await Promise.all(
+      [id, activeOfficer.id].map(async (idd) => {
+        await prisma.officer.update({
+          where: { id: idd },
+          data: { statusId: null },
+        });
+
+        return prisma.combinedLeoUnit.update({
+          where: {
+            id: unit.id,
+          },
+          data: {
+            officers: {
+              connect: {
+                id: idd,
+              },
+            },
+          },
+        });
+      }),
+    );
+
+    this.socket.emitUpdateOfficerStatus();
+
+    return updated;
+  }
+
+  @Post("/unmerge/:id")
+  async unmergeOfficers(@PathParams("id") id: string) {
+    const unit = await prisma.combinedLeoUnit.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        officers: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!unit) {
+      throw new NotFound("notFound");
+    }
+
+    const [, updated] = await Promise.all(
+      unit.officers.map(async ({ id }) => {
+        await prisma.officer.update({
+          where: { id },
+          data: { statusId: unit.statusId },
+        });
+      }),
+    );
+
+    await prisma.combinedLeoUnit.delete({
+      where: { id },
+    });
+
+    this.socket.emitUpdateOfficerStatus();
+
+    return updated;
   }
 }
 

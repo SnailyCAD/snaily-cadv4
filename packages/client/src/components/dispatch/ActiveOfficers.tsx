@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { ActiveOfficer } from "state/leoState";
+import { ActiveOfficer, useLeoState } from "state/leoState";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -10,27 +10,40 @@ import { useRouter } from "next/router";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { StatusViewMode } from "types/prisma";
+import { CombinedLeoUnit, StatusViewMode } from "types/prisma";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ContextMenu } from "components/context-menu/ContextMenu";
+import useFetch from "lib/useFetch";
+import { ArrowRight } from "react-bootstrap-icons";
 
 export const ActiveOfficers = () => {
   const { activeOfficers } = useActiveOfficers();
+  const { activeOfficer } = useLeoState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const generateCallsign = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
+  const { execute } = useFetch();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
-  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | null>(null);
+  const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
 
-  function handleEditClick(officer: ActiveOfficer) {
+  function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.ManageUnit);
+  }
+
+  async function handleMerge(id: string) {
+    const { json } = await execute("/dispatch/status/merge", {
+      data: { id },
+      method: "POST",
+    });
+
+    console.log({ json });
   }
 
   return (
@@ -59,26 +72,45 @@ export const ActiveOfficers = () => {
                 {activeOfficers.map((officer) => {
                   const color = officer.status?.color;
                   const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+                  const canBeOpened = !isDispatch && officer.id !== activeOfficer?.id;
 
                   return (
                     <tr style={{ background: !useDot ? color : undefined }} key={officer.id}>
-                      <ContextMenu asChild items={[{ name: "Merge" }]}>
+                      <ContextMenu
+                        canBeOpened={canBeOpened}
+                        asChild
+                        items={[{ onClick: () => handleMerge(officer.id), name: "Merge" }]}
+                      >
                         <td className="flex items-center capitalize">
                           <>
-                            {officer.imageId ? (
+                            {"imageId" in officer && officer.imageId ? (
                               <img
                                 className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                                 draggable={false}
                                 src={makeImageUrl("units", officer.imageId)}
                               />
                             ) : null}
-                            {generateCallsign(officer)} {makeUnitName(officer)}
+                            {"officers" in officer ? (
+                              <div className="flex items-center">
+                                {officer.callsign}
+                                <span className="mx-4">
+                                  <ArrowRight />
+                                </span>
+                                {officer.officers.map((officer) => (
+                                  <React.Fragment key={officer.id}>
+                                    {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            ) : (
+                              `${generateCallsign(officer)} ${makeUnitName(officer)}`
+                            )}
                           </>
                         </td>
                       </ContextMenu>
-                      <td>{String(officer.badgeNumber)}</td>
-                      <td>{officer.department.value.value}</td>
-                      <td>{officer.division.value.value}</td>
+                      <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
+                      <td>{!("officers" in officer) && officer.department.value.value}</td>
+                      <td>{!("officers" in officer) && officer.division.value.value}</td>
                       <td className="flex items-center">
                         {useDot ? (
                           <span

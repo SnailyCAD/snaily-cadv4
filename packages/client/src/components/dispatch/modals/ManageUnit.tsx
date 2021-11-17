@@ -14,10 +14,12 @@ import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
+import { CombinedLeoUnit } from "types/prisma";
+import { classNames } from "lib/classNames";
 
 interface Props {
   type?: "ems-fd" | "leo";
-  unit: ActiveOfficer | ActiveDeputy | null;
+  unit: ActiveOfficer | ActiveDeputy | CombinedLeoUnit | null;
   onClose?: () => void;
 }
 
@@ -32,6 +34,20 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
   function handleClose() {
     onClose?.();
     closeModal(ModalIds.ManageUnit);
+  }
+
+  async function handleUnmerge() {
+    if (!unit) return;
+
+    const json = await execute(`/dispatch/status/unmerge/${unit.id}`, {
+      method: "POST",
+    });
+
+    if (json) {
+      handleClose();
+    }
+
+    console.log({ json });
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -70,7 +86,9 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
     <Modal
       isOpen={isOpen(ModalIds.ManageUnit)}
       onClose={handleClose}
-      title={`${common("manage")} ${unit.callsign} ${makeUnitName(unit)}`}
+      title={`${common("manage")} ${unit.callsign} ${
+        !("officers" in unit) ? makeUnitName(unit) : ""
+      }`}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -89,15 +107,28 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
               <Error>{errors.status}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
-              <Button onClick={handleClose} type="button" variant="cancel">
-                {common("cancel")}
-              </Button>
-              <Button className="ml-2 flex items-center" type="submit">
-                {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+            <footer
+              className={classNames(
+                "flex mt-5",
+                "officers" in unit ? "justify-between" : "justify-end",
+              )}
+            >
+              {"officers" in unit ? (
+                <Button onClick={handleUnmerge} type="button" variant="danger">
+                  {"Unmerge"}
+                </Button>
+              ) : null}
 
-                {common("save")}
-              </Button>
+              <div className="flex">
+                <Button onClick={handleClose} type="button" variant="cancel">
+                  {common("cancel")}
+                </Button>
+                <Button className="flex items-center ml-2" type="submit">
+                  {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+
+                  {common("save")}
+                </Button>
+              </div>
             </footer>
           </Form>
         )}

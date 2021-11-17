@@ -20,7 +20,7 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     throw new BadRequest("noActiveOfficer");
   }
 
-  if (!user.isDispatch || !user.isLeo) {
+  if (!user.isLeo) {
     throw new Forbidden("Invalid Permissions");
   }
 
@@ -45,13 +45,27 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     throw new BadRequest("noActiveOfficer");
   }
 
-  const officer = await prisma.officer.findFirst({
+  let officer: any = await prisma.officer.findFirst({
     where: {
       userId: user.id,
       id: jwtPayload?.officerId,
     },
     include: unitProperties,
   });
+
+  if (!officer) {
+    officer = await prisma.combinedLeoUnit.findFirst({
+      where: {
+        officers: {
+          some: {
+            userId: user.id,
+            id: jwtPayload?.officerId,
+          },
+        },
+      },
+      include: { status: { include: { value: true } }, officers: { include: unitProperties } },
+    });
+  }
 
   if (!officer) {
     ctx.delete("activeOfficer");

@@ -73,12 +73,18 @@ export const ModalButtons = () => {
     activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
     activeOfficer.statusId === null;
 
+  const name =
+    !isButtonDisabled &&
+    ("officers" in activeOfficer
+      ? null
+      : `${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`);
+
   return (
     <div className="py-2">
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Leo.activeOfficer")}: </span>
-          {`${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`}
+          {name}
         </p>
       ) : null}
 

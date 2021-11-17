@@ -21,7 +21,6 @@ model cad {
   discordWebhookURL String?          @db.VarChar(255)
   whitelisted       Boolean          @default(false)
   towWhitelisted    Boolean          @default(false)
-  maxPlateLength    Int              @default(8)
   liveMapSocketURl  String?          @db.VarChar(255)
   logoId            String?
   registrationCode  String?
@@ -544,6 +543,14 @@ model LeoIncident {
   updatedAt            DateTime  @default(now()) @updatedAt
 }
 
+model CombinedLeoUnit {
+  id       String       @id @default(uuid())
+  officers Officer[]
+  callsign String
+  status   StatusValue? @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId String?
+}
+
 enum StatusValueType {
   STATUS_CODE
   SITUATION_CODE
@@ -566,13 +573,6 @@ enum ShouldDoType {
   SET_ASSIGNED
   SET_STATUS
   PANIC_BUTTON
-}
-
-model CombinedLeoUnit {
-  id       String       @id @default(uuid())
-  officers Officer[]
-  status   StatusValue? @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId String?
 }
 
 // 911 calls & bolos
