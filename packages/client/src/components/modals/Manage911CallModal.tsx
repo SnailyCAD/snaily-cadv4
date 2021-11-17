@@ -142,7 +142,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
 
     if (json) {
       closeModal(ModalIds.AlertEnd911Call);
-      closeModal(ModalIds.Manage911Call);
+      handleClose();
     }
   }
 
@@ -260,8 +260,8 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                   <Button onClick={handleClose} type="button" variant="cancel">
                     {common("cancel")}
                   </Button>
-                  <Button className="ml-2 flex items-center" type="submit">
-                    {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+                  <Button className="flex items-center ml-2" type="submit">
+                    {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                     {call ? common("save") : common("create")}
                   </Button>
