@@ -7,6 +7,8 @@ import { useModal } from "context/ModalContext";
 interface Props {
   items: (ContextItem | boolean)[];
   children: React.ReactChild;
+  asChild?: boolean;
+  canBeOpened?: boolean;
 }
 
 type ButtonProps = React.DetailedHTMLProps<
@@ -20,12 +22,16 @@ interface ContextItem extends ButtonProps {
   component?: keyof typeof components | (string & {});
 }
 
-export const ContextMenu = ({ items, children }: Props) => {
+export const ContextMenu = ({ items, canBeOpened = true, asChild = false, children }: Props) => {
   const { canBeClosed, setCanBeClosed } = useModal();
 
   function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     item.onClick?.(e);
     setCanBeClosed(true);
+  }
+
+  if (!canBeOpened) {
+    return <>{children}</>;
   }
 
   return (
@@ -39,7 +45,7 @@ export const ContextMenu = ({ items, children }: Props) => {
         }
       }}
     >
-      <Menu.Trigger>{children}</Menu.Trigger>
+      <Menu.Trigger asChild={asChild}>{children}</Menu.Trigger>
 
       <Menu.Content
         alignOffset={5}
