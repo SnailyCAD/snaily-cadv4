@@ -19,6 +19,14 @@ const assignedUnitsInclude = {
     deputy: {
       include: unitProperties,
     },
+    combinedUnit: {
+      include: {
+        status: { include: { value: true } },
+        officers: {
+          include: unitProperties,
+        },
+      },
+    },
   },
 };
 
@@ -333,7 +341,8 @@ export class Calls911Controller {
         ...v,
         officer: undefined,
         deputy: undefined,
-        unit: v.officer ?? v.deputy,
+
+        unit: v.officer ?? v.deputy ?? v.combinedUnit,
       })),
     };
   }
@@ -353,10 +362,16 @@ export class Calls911Controller {
           throw new BadRequest("unitOffDuty");
         }
 
+        const types = {
+          combined: "combinedLeoId",
+          leo: "officerId",
+          "ems-fd": "emsFdDeputyId",
+        };
+
         const assignedUnit = await prisma.assignedUnit.create({
           data: {
             call911Id: callId,
-            [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+            [types[type]]: unit.id,
           },
         });
 

@@ -414,6 +414,7 @@ export type EmsFdDeputy = {
   citizenId: string;
   userId: string;
   imageId: string | null;
+  combinedLeoUnitId: string | null;
 };
 
 /**
@@ -473,7 +474,7 @@ export type AssignedUnit = {
   officerId: string | null;
   emsFdDeputyId: string | null;
   call911Id: string | null;
-  unit: FullDeputy | FullOfficer;
+  unit: FullDeputy | FullOfficer | CombinedLeoUnit;
 };
 
 /**

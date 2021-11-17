@@ -21,6 +21,7 @@ model cad {
   discordWebhookURL String?          @db.VarChar(255)
   whitelisted       Boolean          @default(false)
   towWhitelisted    Boolean          @default(false)
+  maxPlateLength    Int              @default(8)
   liveMapSocketURl  String?          @db.VarChar(255)
   logoId            String?
   registrationCode  String?
@@ -544,11 +545,12 @@ model LeoIncident {
 }
 
 model CombinedLeoUnit {
-  id       String       @id @default(uuid())
-  officers Officer[]
-  callsign String
-  status   StatusValue? @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId String?
+  id           String         @id @default(uuid())
+  officers     Officer[]
+  callsign     String
+  status       StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId     String?
+  AssignedUnit AssignedUnit[]
 }
 
 enum StatusValueType {
@@ -590,15 +592,17 @@ model Call911 {
 }
 
 model AssignedUnit {
-  id            String       @id @default(uuid())
-  officer       Officer?     @relation(fields: [officerId], references: [id])
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
   officerId     String?
-  deputy        EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id])
+  deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
   emsFdDeputyId String?
-  call911       Call911?     @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @default(now()) @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
 }
 
 model Call911Event {

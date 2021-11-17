@@ -10,7 +10,7 @@ import { Error } from "components/form/Error";
 import { Textarea } from "components/form/Textarea";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Select, SelectValue } from "components/form/Select";
@@ -20,6 +20,7 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import type { CombinedLeoUnit } from "types/prisma";
 
 interface Props {
   call: Full911Call | null;
@@ -39,8 +40,8 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const generateCallsign = useGenerateCallsign();
 
-  const allUnits = [...allOfficers, ...allDeputies];
-  const units = [...activeOfficers, ...activeDeputies];
+  const allUnits = [...allOfficers, ...allDeputies] as (FullDeputy | CombinedLeoUnit)[];
+  const units = [...activeOfficers, ...activeDeputies] as (FullDeputy | CombinedLeoUnit)[];
 
   useListener(
     SocketEvents.AddCallEvent,
@@ -190,8 +191,13 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   };
 
   function makeLabel(value: string) {
-    const unit = allUnits.find((v) => v.id === value);
-    return `${generateCallsign(unit!)} ${makeUnitName(unit!)}`;
+    const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
+
+    if (unit && "officers" in unit) {
+      return `${unit.callsign}`;
+    }
+
+    return unit ? `${generateCallsign(unit!)} ${makeUnitName(unit!)}` : "";
   }
 
   return (
@@ -260,8 +266,12 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                   <Button onClick={handleClose} type="button" variant="cancel">
                     {common("cancel")}
                   </Button>
-                  <Button className="ml-2 flex items-center" type="submit">
-                    {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+                  <Button
+                    disabled={state === "loading"}
+                    className="flex items-center ml-2"
+                    type="submit"
+                  >
+                    {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                     {call ? common("save") : common("create")}
                   </Button>

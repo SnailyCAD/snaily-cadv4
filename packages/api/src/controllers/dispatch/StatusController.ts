@@ -277,10 +277,10 @@ export class StatusController {
   }
 
   @Post("/unmerge/:id")
-  async unmergeOfficers(@PathParams("id") id: string) {
+  async unmergeOfficers(@PathParams("id") unitId: string) {
     const unit = await prisma.combinedLeoUnit.findFirst({
       where: {
-        id,
+        id: unitId,
       },
       include: {
         officers: {
@@ -295,7 +295,7 @@ export class StatusController {
       throw new NotFound("notFound");
     }
 
-    const [, updated] = await Promise.all(
+    await Promise.all(
       unit.officers.map(async ({ id }) => {
         await prisma.officer.update({
           where: { id },
@@ -304,13 +304,15 @@ export class StatusController {
       }),
     );
 
+    await prisma.assignedUnit.deleteMany({
+      where: { combinedLeoId: unitId },
+    });
+
     await prisma.combinedLeoUnit.delete({
-      where: { id },
+      where: { id: unitId },
     });
 
     this.socket.emitUpdateOfficerStatus();
-
-    return updated;
   }
 }
 
