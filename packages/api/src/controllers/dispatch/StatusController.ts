@@ -233,18 +233,10 @@ export class StatusController {
       where: {
         OR: [
           {
-            officers: {
-              some: {
-                id,
-              },
-            },
+            officers: { some: { id } },
           },
           {
-            officers: {
-              some: {
-                id: activeOfficer.id,
-              },
-            },
+            officers: { some: { id: activeOfficer.id } },
           },
         ],
       },
@@ -255,9 +247,7 @@ export class StatusController {
     }
 
     const status = await prisma.statusValue.findFirst({
-      where: {
-        shouldDo: ShouldDoType.SET_ON_DUTY,
-      },
+      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
       select: { id: true },
     });
 
@@ -281,11 +271,7 @@ export class StatusController {
             id: unit.id,
           },
           data: {
-            officers: {
-              connect: {
-                id: idd,
-              },
-            },
+            officers: { connect: { id: idd } },
           },
         });
       }),
@@ -303,19 +289,13 @@ export class StatusController {
         id: unitId,
       },
       include: {
-        officers: {
-          select: {
-            id: true,
-          },
-        },
+        officers: { select: { id: true } },
       },
     });
 
     if (!unit) {
       throw new NotFound("notFound");
     }
-
-    console.log({ unit });
 
     await Promise.all(
       unit.officers.map(async ({ id }) => {
@@ -339,9 +319,13 @@ export class StatusController {
 }
 
 function createWebhookData(webhook: APIWebhook, unit: any) {
+  const isNotCombined = !("officers" in unit);
+
   const status = unit.status.value.value;
-  const department = unit.department.value.value;
-  const officerName = `${unit.badgeNumber} - ${unit.name} ${unit.callsign} (${department})`;
+  const department = isNotCombined && unit.department.value.value;
+  const officerName = isNotCombined
+    ? `${unit.badgeNumber} - ${unit.name} ${unit.callsign} (${department})`
+    : `${unit.callsign}`;
 
   return {
     avatar_url: webhook.avatar,

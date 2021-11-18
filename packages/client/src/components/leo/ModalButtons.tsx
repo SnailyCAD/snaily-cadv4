@@ -76,7 +76,7 @@ export const ModalButtons = () => {
   const name =
     !isButtonDisabled &&
     ("officers" in activeOfficer
-      ? null
+      ? activeOfficer.callsign
       : `${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`);
 
   return (

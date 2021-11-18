@@ -39,16 +39,8 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
 
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
-      NOT: {
-        status: {
-          shouldDo: "SET_OFF_DUTY",
-        },
-      },
-      officers: {
-        some: {
-          userId: user.id,
-        },
-      },
+      NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
+      officers: { some: { userId: user.id } },
     },
     include: { status: { include: { value: true } }, officers: { include: unitProperties } },
   });

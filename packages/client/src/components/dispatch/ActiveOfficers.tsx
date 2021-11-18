@@ -81,11 +81,10 @@ export const ActiveOfficers = () => {
                 {activeOfficers.map((officer) => {
                   const color = officer.status?.color;
                   const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-                  const canBeOpened = isDispatch
-                    ? true
-                    : activeOfficer
-                    ? officer.id !== activeOfficer.id
-                    : false;
+                  const canBeOpened =
+                    isDispatch ||
+                    (activeOfficer && activeOfficer.id !== officer.id) ||
+                    (activeOfficer && "officers" in activeOfficer);
 
                   const codesMapped = codes10.values
                     .filter((v) => v.type === "STATUS_CODE")
@@ -99,7 +98,7 @@ export const ActiveOfficers = () => {
                   return (
                     <tr style={{ background: !useDot ? color : undefined }} key={officer.id}>
                       <ContextMenu
-                        canBeOpened={canBeOpened}
+                        canBeOpened={canBeOpened ?? false}
                         asChild
                         items={
                           isDispatch

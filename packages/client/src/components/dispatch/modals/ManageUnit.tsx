@@ -46,8 +46,6 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
     if (json) {
       handleClose();
     }
-
-    console.log({ json });
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -78,6 +76,11 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
     return null;
   }
 
+  const title =
+    "officers" in unit
+      ? `${common("manage")} ${unit.callsign}`
+      : `${common("manage")} ${unit.callsign} ${makeUnitName(unit)}`;
+
   const INITIAL_VALUES = {
     status: unit.status?.id ?? null,
   };
@@ -86,9 +89,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
     <Modal
       isOpen={isOpen(ModalIds.ManageUnit)}
       onClose={handleClose}
-      title={`${common("manage")} ${unit.callsign} ${
-        !("officers" in unit) ? makeUnitName(unit) : ""
-      }`}
+      title={title}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
