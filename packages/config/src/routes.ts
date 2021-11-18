@@ -24,12 +24,14 @@ type _User = {
 export type PermissionRoute = [Method[] | "*", string | RegExp, (user: _User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
+  [["POST"], "/v1/dispatch/status/merge", (u) => u.isLeo],
+  [["POST"], "/v1/dispatch/status/unmerge", (u) => u.isDispatch],
   [
     "*",
     /\/v1\/dispatch\/status\/\w+/i,
     (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
   ],
-  [["GET"], /\/v1\/leo\/active-(officers|officer)/, (u) => u.isLeo || u.isDispatch],
+  [["GET"], /\/v1\/leo\/active-(officers|officer)/, (u) => u.isLeo || u.isDispatch || u.isEmsFd],
   ["*", "/v1/leo", (u) => u.isLeo],
 
   [["POST"], "/v1/incidents", (u) => u.isLeo],
@@ -49,6 +51,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["POST", "PUT", "DELETE"], "/v1/bolos", (u) => u.isLeo || u.isDispatch],
 
   ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
+  [["GET"], "/v1/admin/values", () => true],
   ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
   ["*", "/v1/admin/manage/units", (u) => u.isSupervisor || ["ADMIN", "OWNER"].includes(u.rank)],
   [

@@ -6,9 +6,9 @@ import { useModal } from "context/ModalContext";
 
 interface Props {
   items: (ContextItem | boolean)[];
-  children: React.ReactChild;
   asChild?: boolean;
   canBeOpened?: boolean;
+  children: React.ReactChild;
 }
 
 type ButtonProps = React.DetailedHTMLProps<

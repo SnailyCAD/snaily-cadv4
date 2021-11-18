@@ -203,18 +203,26 @@ export class LeoController {
 
   @Get("/active-officers")
   async getActiveOfficers() {
-    const officers = await prisma.officer.findMany({
-      where: {
-        status: {
-          NOT: {
-            shouldDo: ShouldDoType.SET_OFF_DUTY,
+    const [officers, units] = await Promise.all([
+      await prisma.officer.findMany({
+        where: {
+          status: {
+            NOT: {
+              shouldDo: ShouldDoType.SET_OFF_DUTY,
+            },
           },
         },
-      },
-      include: unitProperties,
-    });
+        include: unitProperties,
+      }),
+      await prisma.combinedLeoUnit.findMany({
+        include: {
+          status: { include: { value: true } },
+          officers: { include: unitProperties },
+        },
+      }),
+    ]);
 
-    return Array.isArray(officers) ? officers : [officers];
+    return [...officers, ...units];
   }
 
   @Post("/image/:id")

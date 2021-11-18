@@ -8,7 +8,7 @@ import { prisma } from "../../lib/prisma";
 import { Socket } from "../../services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "../../middlewares";
-import { ShouldDoType, Officer, EmsFdDeputy } from ".prisma/client";
+import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties } from "../../lib/officer";
 
 const assignedUnitsInclude = {
@@ -18,6 +18,14 @@ const assignedUnitsInclude = {
     },
     deputy: {
       include: unitProperties,
+    },
+    combinedUnit: {
+      include: {
+        status: { include: { value: true } },
+        officers: {
+          include: unitProperties,
+        },
+      },
     },
   },
 };
@@ -333,7 +341,8 @@ export class Calls911Controller {
         ...v,
         officer: undefined,
         deputy: undefined,
-        unit: v.officer ?? v.deputy,
+
+        unit: v.officer ?? v.deputy ?? v.combinedUnit,
       })),
     };
   }
@@ -353,12 +362,19 @@ export class Calls911Controller {
           throw new BadRequest("unitOffDuty");
         }
 
+        const types = {
+          combined: "combinedLeoId",
+          leo: "officerId",
+          "ems-fd": "emsFdDeputyId",
+        };
+
         const status = await prisma.statusValue.findFirst({
           where: { shouldDo: "SET_ASSIGNED" },
         });
 
         if (status) {
-          const t = type === "leo" ? "officer" : "emsFdDeputy";
+          const t =
+            type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
           // @ts-expect-error ignore
           await prisma[t].update({
             where: { id: unit.id },
@@ -372,7 +388,7 @@ export class Calls911Controller {
         const assignedUnit = await prisma.assignedUnit.create({
           data: {
             call911Id: callId,
-            [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+            [types[type]]: unit.id,
           },
         });
 
@@ -394,16 +410,19 @@ export class Calls911Controller {
 export async function findUnit(
   id: string,
   extraFind?: any,
-  withType?: false,
-): Promise<Officer | EmsFdDeputy | null>;
+  searchCombined?: false,
+): Promise<{ unit: Officer | EmsFdDeputy | null; type: "leo" | "ems-fd" }>;
 export async function findUnit(
   id: string,
   extraFind?: any,
-  withType?: true,
-): Promise<{ unit: Officer | EmsFdDeputy | null; type: "leo" | "ems-fd" }>;
-export async function findUnit(id: string, extraFind?: any, withType?: boolean) {
+  searchCombined?: true,
+): Promise<{
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit | null;
+  type: "leo" | "ems-fd" | "combined";
+}>;
+export async function findUnit(id: string, extraFind?: any, searchCombined?: boolean) {
   let type: "leo" | "ems-fd" = "leo";
-  let unit = await prisma.officer.findFirst({
+  let unit: any = await prisma.officer.findFirst({
     where: { id, ...extraFind },
   });
 
@@ -412,17 +431,18 @@ export async function findUnit(id: string, extraFind?: any, withType?: boolean) 
     unit = await prisma.emsFdDeputy.findFirst({ where: { id, ...extraFind } });
   }
 
-  if (!unit) {
-    if (withType) {
-      return { type, unit: null };
-    }
+  if (searchCombined && !unit) {
+    unit = await prisma.combinedLeoUnit.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        officers: { select: unitProperties },
+      },
+    });
 
-    return null;
+    return { type: "combined", unit: unit ?? null };
   }
 
-  if (withType) {
-    return { type, unit };
-  }
-
-  return unit;
+  return { type, unit: unit ?? null };
 }

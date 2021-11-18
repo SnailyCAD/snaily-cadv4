@@ -58,6 +58,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const validate = handleValidate(TOW_SCHEMA);
   const INITIAL_VALUES = {
     location: call?.location ?? "",
+    // @ts-expect-error ignore
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
     callCountyService: false,
@@ -141,7 +142,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <div className="flex items-center">
                 <Button
                   type="reset"

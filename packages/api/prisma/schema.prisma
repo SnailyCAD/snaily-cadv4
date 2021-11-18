@@ -462,33 +462,35 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id                          String          @id @default(cuid())
-  department                  DepartmentValue @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  id                          String           @id @default(cuid())
+  department                  DepartmentValue  @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId                String
-  callsign                    String          @db.VarChar(255)
-  callsign2                   String          @db.VarChar(255)
-  division                    DivisionValue   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  callsign                    String           @db.VarChar(255)
+  callsign2                   String           @db.VarChar(255)
+  division                    DivisionValue    @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String
-  rank                        Value?          @relation("officerRankToValue", fields: [rankId], references: [id])
+  rank                        Value?           @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
-  status                      StatusValue?    @relation("officerStatusToValue", fields: [statusId], references: [id])
+  status                      StatusValue?     @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
-  suspended                   Boolean         @default(false)
+  suspended                   Boolean          @default(false)
   badgeNumber                 Int?
-  imageId                     String?         @db.VarChar(255)
-  citizen                     Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  imageId                     String?          @db.VarChar(255)
+  citizen                     Citizen          @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
-  createdAt                   DateTime        @default(now())
-  updatedAt                   DateTime        @default(now()) @updatedAt
-  bolos                       Bolo[]          @relation("bolosToOfficer")
+  createdAt                   DateTime         @default(now())
+  updatedAt                   DateTime         @default(now()) @updatedAt
+  bolos                       Bolo[]           @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
   LeoIncident                 LeoIncident[]
-  LeoIncidentInvolvedOfficers LeoIncident[]   @relation("involvedOfficers")
+  LeoIncidentInvolvedOfficers LeoIncident[]    @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit? @relation(fields: [combinedLeoUnitId], references: [id])
+  combinedLeoUnitId           String?
 }
 
 model StatusValue {
@@ -501,8 +503,9 @@ model StatusValue {
   color     String?
   type      StatusValueType @default(STATUS_CODE)
 
-  officerStatusToValue Officer[]     @relation("officerStatusToValue")
-  emsFdStatusToValue   EmsFdDeputy[] @relation("emsFdStatusToValue")
+  officerStatusToValue Officer[]         @relation("officerStatusToValue")
+  emsFdStatusToValue   EmsFdDeputy[]     @relation("emsFdStatusToValue")
+  CombinedLeoUnit      CombinedLeoUnit[] @relation("combinedUnitStatusToValue")
 }
 
 model OfficerLog {
@@ -539,6 +542,15 @@ model LeoIncident {
   arrestsMade          Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
+}
+
+model CombinedLeoUnit {
+  id           String         @id @default(uuid())
+  officers     Officer[]
+  callsign     String
+  status       StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId     String?
+  AssignedUnit AssignedUnit[]
 }
 
 enum StatusValueType {
@@ -580,15 +592,17 @@ model Call911 {
 }
 
 model AssignedUnit {
-  id            String       @id @default(uuid())
-  officer       Officer?     @relation(fields: [officerId], references: [id])
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
   officerId     String?
-  deputy        EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id])
+  deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
   emsFdDeputyId String?
-  call911       Call911?     @relation(fields: [call911Id], references: [id], onDelete: Cascade)
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @default(now()) @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
 }
 
 model Call911Event {

@@ -49,7 +49,9 @@ export const ActiveCalls = () => {
     call.assignedUnits.some((v) => v.unit.id === unit?.id);
 
   const makeUnit = (unit: AssignedUnit) =>
-    `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+    "officers" in unit.unit
+      ? unit.unit.callsign
+      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
   useListener(
     SocketEvents.Create911Call,
@@ -101,8 +103,8 @@ export const ActiveCalls = () => {
   }
 
   return (
-    <div className="bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
-      <header className="bg-gray-300/50 dark:bg-gray-3 px-4 p-2">
+    <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
       </header>
 
@@ -110,8 +112,8 @@ export const ActiveCalls = () => {
         {calls.length <= 0 ? (
           <p className="py-2">{t("no911Calls")}</p>
         ) : (
-          <div className="overflow-x-auto w-full  max-h-80 mt-3">
-            <table className="overflow-hidden w-full whitespace-nowrap">
+          <div className="w-full mt-3 overflow-x-auto max-h-80">
+            <table className="w-full overflow-hidden whitespace-nowrap">
               <thead className="sticky top-0">
                 <tr>
                   <th className="bg-gray-300">{t("caller")}</th>

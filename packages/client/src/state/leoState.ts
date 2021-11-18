@@ -1,7 +1,8 @@
+import { CombinedLeoUnit } from "types/prisma";
 import create from "zustand";
 import type { FullOfficer } from "./dispatchState";
 
-export type ActiveOfficer = FullOfficer;
+export type ActiveOfficer = FullOfficer | CombinedLeoUnit;
 
 interface LeoState {
   activeOfficer: ActiveOfficer | null;

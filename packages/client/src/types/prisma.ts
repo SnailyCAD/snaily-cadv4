@@ -414,6 +414,7 @@ export type EmsFdDeputy = {
   citizenId: string;
   userId: string;
   imageId: string | null;
+  combinedLeoUnitId: string | null;
 };
 
 /**
@@ -473,7 +474,7 @@ export type AssignedUnit = {
   officerId: string | null;
   emsFdDeputyId: string | null;
   call911Id: string | null;
-  unit: FullDeputy | FullOfficer;
+  unit: FullDeputy | FullOfficer | CombinedLeoUnit;
 };
 
 /**
@@ -512,6 +513,18 @@ export type LeoIncident = {
   injuriesOrFatalities: boolean;
   arrestsMade: boolean;
   createdAt: Date;
+};
+
+/**
+ * Model CombinedLeoUnit
+ *
+ */
+export type CombinedLeoUnit = {
+  id: string;
+  callsign: string;
+  statusId: string | null;
+  status: StatusValue | null;
+  officers: FullOfficer[];
 };
 
 /**

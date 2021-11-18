@@ -11,9 +11,9 @@ import { useAuth } from "context/AuthContext";
 import { ContextMenu } from "components/context-menu/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import { StatusValue } from "types/prisma";
+import { CombinedLeoUnit, StatusValue } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -42,7 +42,9 @@ const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
   const { activeDeputies, activeOfficers } = useDispatchState();
 
   const unitId = props.data.value;
-  const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId);
+  const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId) as
+    | FullDeputy
+    | CombinedLeoUnit;
 
   async function setCode(status: StatusValue) {
     if (!unit) return;
@@ -57,7 +59,10 @@ const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
       await execute(`/911-calls/events/${call.id}`, {
         method: "POST",
         data: {
-          description: `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
+          description:
+            "officers" in unit
+              ? `${unit.callsign} / ${status.value.value}`
+              : `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
         },
       });
     }
@@ -78,7 +83,9 @@ const MultiValueContainer = (props: MultiValueGenericProps<any>) => {
 
   if (unit) {
     codesMapped.unshift({
-      name: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+      name: !("officers" in unit)
+        ? `${generateCallsign(unit)} ${makeUnitName(unit)}`
+        : unit.callsign,
       component: "Label",
     });
   }
