@@ -105,7 +105,7 @@ export const ActiveOfficers = () => {
                             ? codesMapped
                             : [
                                 {
-                                  name: "Merge",
+                                  name: t("merge"),
                                   onClick: () => handleMerge(officer.id),
                                 },
                               ]

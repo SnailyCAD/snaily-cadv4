@@ -116,7 +116,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
             >
               {"officers" in unit ? (
                 <Button onClick={handleUnmerge} type="button" variant="danger">
-                  {"Unmerge"}
+                  {t("unmerge")}
                 </Button>
               ) : null}
 
