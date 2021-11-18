@@ -37,43 +37,39 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   const cookie = parse(header)[Cookie.ActiveOfficer];
   const jwtPayload = verifyJWT(cookie!);
 
-  if (!jwtPayload) {
-    ctx.delete("activeOfficer");
-  }
+  const combinedUnit = await prisma.combinedLeoUnit.findFirst({
+    where: {
+      NOT: {
+        status: {
+          shouldDo: "SET_OFF_DUTY",
+        },
+      },
+      officers: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+    include: { status: { include: { value: true } }, officers: { include: unitProperties } },
+  });
 
-  if (!isDispatch && !jwtPayload) {
-    throw new BadRequest("noActiveOfficer");
-  }
-
-  let officer: any = await prisma.officer.findFirst({
+  const officer = await prisma.officer.findFirst({
     where: {
       userId: user.id,
-      id: jwtPayload?.officerId,
+      id: jwtPayload?.officerId ?? "",
     },
     include: unitProperties,
   });
 
-  if (!officer) {
-    officer = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        officers: {
-          some: {
-            userId: user.id,
-            id: jwtPayload?.officerId,
-          },
-        },
-      },
-      include: { status: { include: { value: true } }, officers: { include: unitProperties } },
-    });
-  }
+  const off = combinedUnit ?? officer;
 
-  if (!officer) {
+  if (!off) {
     ctx.delete("activeOfficer");
   }
 
-  if (!isDispatch && !officer) {
+  if (!off && !isDispatch) {
     throw new BadRequest("noActiveOfficer");
   }
 
-  return isDispatch ? null : officer;
+  return isDispatch ? null : off;
 }

@@ -141,6 +141,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     ["/bolos", []],
   ]);
 
+  console.log({ activeOfficer });
+
   return {
     props: {
       session: await getSessionUser(req.headers),

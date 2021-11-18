@@ -15,6 +15,8 @@ export const StatusesArea = () => {
   const { openModal } = useModal();
   const { execute } = useFetch();
 
+  console.log({ activeOfficer });
+
   async function getActiveOfficer() {
     const { json, error } = await execute("/leo/active-officer", {
       noToast: true,

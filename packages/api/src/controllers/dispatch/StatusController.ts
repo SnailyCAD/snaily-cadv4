@@ -178,6 +178,14 @@ export class StatusController {
         value: "",
         expires: -1,
       });
+
+      if (type === "combined") {
+        await prisma.combinedLeoUnit.delete({
+          where: {
+            id: unit.id,
+          },
+        });
+      }
     } else {
       const cookieName = ["leo", "combined"].includes(type)
         ? Cookie.ActiveOfficer
@@ -306,6 +314,8 @@ export class StatusController {
     if (!unit) {
       throw new NotFound("notFound");
     }
+
+    console.log({ unit });
 
     await Promise.all(
       unit.officers.map(async ({ id }) => {
