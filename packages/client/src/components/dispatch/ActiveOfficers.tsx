@@ -81,9 +81,13 @@ export const ActiveOfficers = () => {
                 {activeOfficers.map((officer) => {
                   const color = officer.status?.color;
                   const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-                  const canBeOpened = isDispatch ? true : officer.id !== activeOfficer?.id;
+                  const canBeOpened = isDispatch
+                    ? true
+                    : activeOfficer
+                    ? officer.id !== activeOfficer.id
+                    : false;
 
-                  const codesMapped: any[] = codes10.values
+                  const codesMapped = codes10.values
                     .filter((v) => v.type === "STATUS_CODE")
                     .map((v) => ({
                       name: v.value.value,
@@ -109,30 +113,28 @@ export const ActiveOfficers = () => {
                         }
                       >
                         <td className="flex items-center capitalize">
-                          <>
-                            {"imageId" in officer && officer.imageId ? (
-                              <img
-                                className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                                draggable={false}
-                                src={makeImageUrl("units", officer.imageId)}
-                              />
-                            ) : null}
-                            {"officers" in officer ? (
-                              <div className="flex items-center">
-                                {officer.callsign}
-                                <span className="mx-4">
-                                  <ArrowRight />
-                                </span>
-                                {officer.officers.map((officer) => (
-                                  <React.Fragment key={officer.id}>
-                                    {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                                  </React.Fragment>
-                                ))}
-                              </div>
-                            ) : (
-                              `${generateCallsign(officer)} ${makeUnitName(officer)}`
-                            )}
-                          </>
+                          {"imageId" in officer && officer.imageId ? (
+                            <img
+                              className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                              draggable={false}
+                              src={makeImageUrl("units", officer.imageId)}
+                            />
+                          ) : null}
+                          {"officers" in officer ? (
+                            <div className="flex items-center">
+                              {officer.callsign}
+                              <span className="mx-4">
+                                <ArrowRight />
+                              </span>
+                              {officer.officers.map((officer) => (
+                                <React.Fragment key={officer.id}>
+                                  {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          ) : (
+                            `${generateCallsign(officer)} ${makeUnitName(officer)}`
+                          )}
                         </td>
                       </ContextMenu>
                       <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>

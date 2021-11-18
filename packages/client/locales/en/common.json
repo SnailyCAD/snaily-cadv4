@@ -52,6 +52,7 @@
     "passwordsDoNotMatch": "Passwords do not match",
     "currentPasswordIncorrect": "Current password is incorrect",
     "citizenNotFound": "That citizen was not found",
-    "selectImageFirst": "You must first select an image."
+    "selectImageFirst": "You must first select an image.",
+    "officerIsCombined": "This officer is marked as combined unit and cannot be used individually right now."
   }
 }

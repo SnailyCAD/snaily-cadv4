@@ -58,6 +58,18 @@ export class StatusController {
       throw new BadRequest("unitSuspended");
     }
 
+    if (type === "leo" && !isDispatch) {
+      const hasCombinedUnit = await prisma.combinedLeoUnit.findFirst({
+        where: {
+          officers: { some: { id: unit.id } },
+        },
+      });
+
+      if (hasCombinedUnit) {
+        throw new BadRequest("officerIsCombined");
+      }
+    }
+
     const code = await prisma.statusValue.findFirst({
       where: { id: statusId },
       include: { value: true },
