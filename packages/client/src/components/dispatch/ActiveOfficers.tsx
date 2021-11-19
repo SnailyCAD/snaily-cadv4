@@ -46,6 +46,13 @@ export const ActiveOfficers = () => {
     });
   }
 
+  async function handleunMerge(id: string) {
+    await execute(`/dispatch/status/unmerge/${id}`, {
+      data: { id },
+      method: "POST",
+    });
+  }
+
   async function setCode(id: string, status: StatusValue) {
     if (status.type === "STATUS_CODE") {
       await execute(`/dispatch/status/${id}`, {
@@ -81,10 +88,16 @@ export const ActiveOfficers = () => {
                 {activeOfficers.map((officer) => {
                   const color = officer.status?.color;
                   const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+                  const shouldShowSplit =
+                    activeOfficer &&
+                    "officers" in activeOfficer &&
+                    "officers" in officer &&
+                    officer.id === activeOfficer.id;
+
                   const canBeOpened =
                     isDispatch ||
-                    (activeOfficer && activeOfficer.id !== officer.id) ||
-                    (activeOfficer && "officers" in activeOfficer);
+                    shouldShowSplit ||
+                    (activeOfficer && activeOfficer.id !== officer.id);
 
                   const codesMapped = codes10.values
                     .filter((v) => v.type === "STATUS_CODE")
@@ -105,8 +118,12 @@ export const ActiveOfficers = () => {
                             ? codesMapped
                             : [
                                 {
-                                  name: t("merge"),
-                                  onClick: () => handleMerge(officer.id),
+                                  name: shouldShowSplit ? t("unmerge") : t("merge"),
+                                  onClick: () => {
+                                    shouldShowSplit
+                                      ? handleunMerge(officer.id)
+                                      : handleMerge(officer.id);
+                                  },
                                 },
                               ]
                         }
