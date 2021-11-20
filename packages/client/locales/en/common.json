@@ -53,6 +53,7 @@
     "currentPasswordIncorrect": "Current password is incorrect",
     "citizenNotFound": "That citizen was not found",
     "selectImageFirst": "You must first select an image.",
-    "officerIsCombined": "This officer is marked as combined unit and cannot be used individually right now."
+    "officerIsCombined": "This officer is marked as combined unit and cannot be used individually right now.",
+    "officerAlreadyMerged": "This unit is already marked as a combined unit."
   }
 }

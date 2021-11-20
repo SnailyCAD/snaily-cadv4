@@ -226,7 +226,7 @@ export class StatusController {
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
     if (id === activeOfficer.id) {
-      throw new BadRequest("id cannot be the same.");
+      throw new BadRequest("officerAlreadyMerged");
     }
 
     const existing = await prisma.combinedLeoUnit.findFirst({
@@ -238,12 +238,18 @@ export class StatusController {
           {
             officers: { some: { id: activeOfficer.id } },
           },
+          {
+            id,
+          },
+          {
+            id: activeOfficer.id,
+          },
         ],
       },
     });
 
     if (existing) {
-      throw new BadRequest("Officer is already merged.");
+      throw new BadRequest("officerAlreadyMerged");
     }
 
     const status = await prisma.statusValue.findFirst({
