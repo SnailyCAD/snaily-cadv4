@@ -1083,7 +1083,7 @@ __metadata:
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
     next: ^12.0.4
-    next-intl: ^2.2.0
+    next-intl: 2.1.0
     postcss: ^8.3.11
     preact: ^10.5.15
     pretty-bytes: ^5.6.0
@@ -7478,15 +7478,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-intl@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "next-intl@npm:2.2.0"
+"next-intl@npm:2.1.0":
+  version: 2.1.0
+  resolution: "next-intl@npm:2.1.0"
   dependencies:
-    use-intl: ^2.2.0
+    use-intl: ^2.1.0
   peerDependencies:
     next: ^10.0.0 || ^11.0.0 || ^12.0.0
     react: ^16.8.0 || ^17.0.0
-  checksum: f0b6c9435fc64d0ff5d8ad9fbac17b714541fcbf5502bff9cf3d2e548b0f57b335d4877454f7abf2e04602693c6d24b2f3a673677a1535679ecfff92167ecd27
+  checksum: 7a808ebaa2f90b1f2343bfcebfa5d7be55cd4973d013fe3382b2ce1426add2dd486be092dc717300af0cafc12df32e5f4996e712054912026c81066dfdc2f9f4
   languageName: node
   linkType: hard
 
@@ -10627,7 +10627,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-intl@npm:^2.2.0":
+"use-intl@npm:^2.1.0":
   version: 2.2.0
   resolution: "use-intl@npm:2.2.0"
   dependencies:
