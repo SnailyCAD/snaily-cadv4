@@ -47,10 +47,17 @@ export const ActiveOfficers = () => {
   }
 
   async function handleunMerge(id: string) {
-    await execute(`/dispatch/status/unmerge/${id}`, {
+    const { json } = await execute(`/dispatch/status/unmerge/${id}`, {
       data: { id },
       method: "POST",
     });
+
+    if (json) {
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
+    }
   }
 
   async function setCode(id: string, status: StatusValue) {
@@ -97,7 +104,10 @@ export const ActiveOfficers = () => {
                   const canBeOpened =
                     isDispatch ||
                     shouldShowSplit ||
-                    (activeOfficer && activeOfficer.id !== officer.id);
+                    (activeOfficer &&
+                      activeOfficer.id !== officer.id &&
+                      !("officers" in officer) &&
+                      !("officers" in activeOfficer));
 
                   const codesMapped = codes10.values
                     .filter((v) => v.type === "STATUS_CODE")
