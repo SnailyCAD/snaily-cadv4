@@ -97,7 +97,7 @@ export const ManageBusinessTab = () => {
               <Error>{errors.whitelisted}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-between">
+            <footer className="flex justify-between mt-5">
               <Button
                 onClick={() => openModal(ModalIds.AlertDeleteBusiness)}
                 type="reset"

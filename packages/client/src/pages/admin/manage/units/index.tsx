@@ -70,7 +70,7 @@ export default function SupervisorPanelPage({ units }: Props) {
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full mt-3 overflow-x-auto">
         <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
           <thead>
             <tr>
