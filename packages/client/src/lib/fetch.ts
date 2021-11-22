@@ -10,38 +10,22 @@ interface Options extends AxiosRequestConfig {
   data?: RequestData;
 }
 
-export function handleRequest<T = any>(
-  path: string,
-  { req, ...rest }: Options = {},
-): Promise<AxiosResponse<T>> {
+export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
-  const isDispatchUrl = location?.pathname ?? req?.url;
-
-  let host;
-  try {
-    const origin = process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
-    const url = new URL(origin);
-    host = `${url.hostname}:${url.port}`;
-  } catch (e) {
-    if (e) {
-      console.log("DEBUG", e);
-    }
-
-    host = rest.headers.host;
-  }
+  const isDispatchUrl = location?.pathname ?? options?.req?.url;
 
   return axios({
     url: `${url}${path}`,
-    method: rest?.method ?? "GET",
-    data: rest?.data,
+    method: options?.method ?? "GET",
+    data: options?.data,
     withCredentials: true,
-    ...rest,
+    ...options,
     headers: {
-      ...(rest?.headers ?? {}),
+      Cookie: options?.data?.cookie ?? "",
       "Content-Type": "application/json",
       "is-from-dispatch": isDispatchUrl === "/dispatch",
-      host,
+      ...(options?.headers ?? {}),
     },
   }) as AxiosPromise<T>;
 }
@@ -49,6 +33,8 @@ export function handleRequest<T = any>(
 export function findUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
   const includesDockerContainerName = envUrl === "http://api:8080/v1";
+
+  console.log("DEBUG:", { envUrl, includesDockerContainerName });
 
   if ((process.browser || typeof window !== "undefined") && includesDockerContainerName) {
     return "http://localhost:8080/v1";
