@@ -32,7 +32,9 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
 
 export function findUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
-  const includesDockerContainerName = envUrl.match(/(http(s?)):\/\/api:\w+/g);
+  const includesDockerContainerName = envUrl === "http://api:8080/v1";
+
+  console.log("DEBUG:", { envUrl, includesDockerContainerName });
 
   if ((process.browser || typeof window !== "undefined") && includesDockerContainerName) {
     return "http://localhost:8080/v1";

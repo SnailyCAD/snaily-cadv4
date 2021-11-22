@@ -55,7 +55,7 @@ export async function requestAll(req: any, config: Config) {
         headers: req.headers,
         req,
       })
-        .then((v) => v.data)
+        .then((v) => (typeof v.data === "undefined" ? defaultValue : v.data))
         .catch(() => defaultValue);
     }),
   );
