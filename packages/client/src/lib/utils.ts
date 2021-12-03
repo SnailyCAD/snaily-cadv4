@@ -56,13 +56,7 @@ export async function requestAll(req: any, config: Config) {
         req,
       })
         .then((v) => (typeof v.data === "undefined" ? defaultValue : v.data))
-        .catch((error) => {
-          if (error) {
-            console.log("DEBUG: ", error);
-          }
-
-          return defaultValue;
-        });
+        .catch(() => defaultValue);
     }),
   );
 }
