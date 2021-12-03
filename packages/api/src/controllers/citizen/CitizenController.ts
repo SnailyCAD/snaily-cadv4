@@ -11,6 +11,37 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { unitProperties } from "../../lib/officer";
 
+export const citizenInclude = {
+  vehicles: {
+    include: {
+      model: { include: { value: true } },
+      registrationStatus: true,
+    },
+  },
+  weapons: {
+    include: {
+      model: { include: { value: true } },
+      registrationStatus: true,
+    },
+  },
+  medicalRecords: true,
+  ethnicity: true,
+  gender: true,
+  weaponLicense: true,
+  driversLicense: true,
+  ccw: true,
+  pilotLicense: true,
+  dlCategory: { include: { value: true } },
+  Record: {
+    include: {
+      officer: {
+        include: unitProperties,
+      },
+      violations: true,
+    },
+  },
+};
+
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
 export class CitizenController {
@@ -32,36 +63,7 @@ export class CitizenController {
         id: citizenId,
         userId: ctx.get("user").id,
       },
-      include: {
-        vehicles: {
-          include: {
-            model: { include: { value: true } },
-            registrationStatus: true,
-          },
-        },
-        weapons: {
-          include: {
-            model: { include: { value: true } },
-            registrationStatus: true,
-          },
-        },
-        medicalRecords: true,
-        ethnicity: true,
-        gender: true,
-        weaponLicense: true,
-        driversLicense: true,
-        ccw: true,
-        pilotLicense: true,
-        dlCategory: { include: { value: true } },
-        Record: {
-          include: {
-            officer: {
-              include: unitProperties,
-            },
-            violations: true,
-          },
-        },
-      },
+      include: citizenInclude,
     });
 
     if (!citizen) {

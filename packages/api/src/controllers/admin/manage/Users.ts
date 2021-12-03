@@ -1,5 +1,5 @@
 import { Rank, WhitelistStatus } from ".prisma/client";
-import { PathParams, BodyParams, Context } from "@tsed/common";
+import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -11,6 +11,7 @@ import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
 import { Socket } from "../../../services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
+import { citizenInclude } from "../../citizen/CitizenController";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -30,8 +31,24 @@ export class ManageUsersController {
   }
 
   @Get("/:id")
-  async getUserById(@PathParams("id") userId: string) {
+  async getUserById(
+    @PathParams("id") userId: string,
+    @QueryParams("select-citizens") selectCitizens: boolean,
+  ) {
     const user = await prisma.user.findUnique({ where: { id: userId }, select: userProperties });
+
+    const citizens =
+      selectCitizens && user
+        ? await prisma.citizen.findMany({
+            where: { userId },
+            include: citizenInclude,
+          })
+        : undefined;
+
+    if (user && selectCitizens) {
+      // @ts-expect-error ignore
+      user.citizens = citizens;
+    }
 
     return user;
   }
