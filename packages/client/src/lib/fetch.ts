@@ -1,5 +1,7 @@
+import { Cookie } from "@snailycad/config";
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from "axios";
 import { IncomingMessage } from "connect";
+import { parse } from "cookie";
 
 export type RequestData = Record<string, unknown>;
 export type AllowedMethods = "PATCH" | "PUT" | "DELETE" | "OPTIONS" | "GET" | "POST";
@@ -12,32 +14,52 @@ interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
 }
 
 export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
-  const { req, method, data, ...rest } = options ?? {};
+  const { req, method, data } = options ?? {};
   const headers = req?.headers ?? {};
 
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
-  const isDispatchUrl = location?.pathname ?? req?.url;
+  const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
 
   const cookieHeader = headers?.cookie;
+  const parsedCookie = parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
+
+  console.log({ parsedCookie });
 
   return axios({
     url: `${url}${path}`,
-    method: method ?? "GET",
-    data,
+    method,
+    data: data ?? undefined,
     withCredentials: true,
-    ...rest,
     headers: {
-      ...rest.headers,
-      Cookie: cookieHeader,
-      "is-from-dispatch": isDispatchUrl === "/dispatch",
+      Session: parsedCookie,
+      "Content-Type": "application/json",
+      "is-from-dispatch": String(isDispatchUrl),
     },
   }) as AxiosPromise<T>;
+
+  // return axios({
+  //   url: `${url}${path}`,
+  //   method: method ?? "GET",
+  //   data,
+  //   withCredentials: true,
+  //   ...rest,
+  //   headers: {
+  //     ...rest.headers,
+  /* eslint-disable-next-line */
+  //     Cookie: cookieHeader,
+  //     "is-from-dispatch": isDispatchUrl === "/dispatch",
+  //   },
+  // }) as AxiosPromise<T>;
 }
 
 export function findUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
   const includesDockerContainerName = envUrl === "http://api:8080/v1";
+
+  if (process.env.FORCE_URL === "true") {
+    return process.env.NEXT_PUBLIC_PROD_ORIGIN;
+  }
 
   if ((process.browser || typeof window !== "undefined") && includesDockerContainerName) {
     return "http://localhost:8080/v1";

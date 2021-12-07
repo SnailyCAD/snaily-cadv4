@@ -1,6 +1,6 @@
 import { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
-import { parse } from "cookie";
+// import { parse } from "cookie";
 import { Cookie } from "@snailycad/config";
 import { verifyJWT } from "../utils/jwt";
 import { prisma } from "./prisma";
@@ -26,13 +26,15 @@ export const userProperties = {
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
-  const header = req.headers.cookie;
+  const header = req.cookies[Cookie.Session] || req.headers.session;
 
   if (throwErrors && !header) {
     throw new Unauthorized("Unauthorized");
   }
 
-  const cookie = parse(header ?? "")[Cookie.Session];
+  console.log({ header });
+
+  const cookie = header;
   const jwtPayload = verifyJWT(cookie!);
 
   if (throwErrors && !jwtPayload) {
