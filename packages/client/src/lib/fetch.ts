@@ -24,7 +24,7 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
   const cookieHeader = headers?.cookie;
   const parsedCookie = parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
 
-  console.log({ parsedCookie });
+  console.log({ parsedCookie, isClient: typeof window !== "undefined" });
 
   return axios({
     url: `${url}${path}`,
@@ -32,6 +32,7 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
     data: data ?? undefined,
     withCredentials: true,
     headers: {
+      Cookie: headers.cookie ?? "",
       Session: parsedCookie,
       "Content-Type": "application/json",
       "is-from-dispatch": String(isDispatchUrl),
