@@ -2,13 +2,14 @@ import { Cookie } from "@snailycad/config";
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from "axios";
 import { IncomingMessage } from "connect";
 import { parse } from "cookie";
+import { NextApiRequestCookies } from "next/dist/server/api-utils";
 
 export type RequestData = Record<string, unknown>;
 export type AllowedMethods = "PATCH" | "PUT" | "DELETE" | "OPTIONS" | "GET" | "POST";
 
 interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
   headers?: any;
-  req?: Pick<IncomingMessage, "url" | "headers">;
+  req?: Pick<IncomingMessage, "url" | "headers"> & { cookies?: NextApiRequestCookies };
   method?: AllowedMethods;
   data?: RequestData;
 }
@@ -22,7 +23,8 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
 
   const cookieHeader = headers?.cookie;
-  const parsedCookie = parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
+  const parsedCookie =
+    req?.cookies?.[Cookie.Session] ?? parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
 
   console.log({ parsedCookie, isClient: typeof window !== "undefined" });
 

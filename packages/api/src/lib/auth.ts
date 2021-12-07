@@ -26,7 +26,7 @@ export const userProperties = {
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
-  const header = req.cookies[Cookie.Session] || req.headers.session;
+  const header = req.cookies[Cookie.Session] || req.headers.session || req.headers.cookie;
 
   if (throwErrors && !header) {
     throw new Unauthorized("Unauthorized");
