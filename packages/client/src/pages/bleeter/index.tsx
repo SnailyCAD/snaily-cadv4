@@ -43,7 +43,7 @@ export default function Bleeter({ posts }: Props) {
         <ul className="mt-5 space-y-3">
           {posts.map((post) => (
             <li
-              className="flex items-start justify-between dark:bg-gray-2 shadow-sm bg-gray-200/80 p-4 rounded-md"
+              className="flex items-start justify-between p-4 rounded-md shadow-sm dark:bg-gray-2 bg-gray-200/80"
               key={post.id}
             >
               <div>
@@ -70,7 +70,7 @@ export default function Bleeter({ posts }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const { data } = await handleRequest("/bleeter", {
-    headers: req.headers,
+    req,
   }).catch(() => ({ data: [] }));
 
   return {

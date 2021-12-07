@@ -52,7 +52,6 @@ export async function requestAll(req: any, config: Config) {
   return Promise.all(
     config.map(async ([path, defaultValue = {}]) => {
       return handleRequest(path, {
-        headers: req.headers,
         req,
       })
         .then((v) => (typeof v.data === "undefined" ? defaultValue : v.data))

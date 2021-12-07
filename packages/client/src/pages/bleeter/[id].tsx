@@ -56,7 +56,7 @@ export default function BleetPost({ post }: Props) {
         <title>{post.title} - SnailyCAD</title>
       </Head>
 
-      <header className="flex items-center justify-between border-b-2 pb-2">
+      <header className="flex items-center justify-between pb-2 border-b-2">
         <h1 className="text-3xl font-semibold">{post.title}</h1>
 
         <div>
@@ -77,7 +77,7 @@ export default function BleetPost({ post }: Props) {
         </div>
       </header>
 
-      <main className="bleet-reset mt-2">
+      <main className="mt-2 bleet-reset">
         {post.imageId ? (
           <img
             draggable={false}
@@ -105,7 +105,7 @@ export default function BleetPost({ post }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
   const { data } = await handleRequest(`/bleeter/${query.id}`, {
-    headers: req.headers,
+    req,
   }).catch(() => ({ data: null }));
 
   return {
