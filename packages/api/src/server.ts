@@ -11,9 +11,6 @@ const rootDir = __dirname;
 
 @Configuration({
   rootDir,
-  httpPort: 8080,
-  httpsPort: 8080,
-  port: 8080,
   logger: {
     debug: true,
     level: process.env.NODE_ENV === "production" ? "off" : undefined,
