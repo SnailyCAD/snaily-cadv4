@@ -26,7 +26,7 @@ export function handleRequest<T = any>(path: string, options?: Options): Promise
   const parsedCookie =
     req?.cookies?.[Cookie.Session] ?? parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
 
-  console.log({ parsedCookie, isClient: typeof window !== "undefined" });
+  // console.log({ parsedCookie, isClient: typeof window !== "undefined" });
 
   return axios({
     url: `${url}${path}`,

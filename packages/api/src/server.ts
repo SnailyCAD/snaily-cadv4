@@ -11,7 +11,6 @@ const rootDir = __dirname;
 
 @Configuration({
   rootDir,
-  httpPort: process.env.USE_WEB_PROXY ? 80 : 8080,
   logger: {
     debug: true,
     level: process.env.NODE_ENV === "production" ? "off" : undefined,
