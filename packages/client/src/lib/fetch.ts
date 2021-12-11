@@ -23,8 +23,6 @@ export async function handleRequest<T = any>(
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
   const parsedCookie = req?.headers.cookie;
 
-  console.log({ parsedCookie, isClient: typeof window !== "undefined" });
-
   const res = await axios({
     url: `${url}${path}`,
     method,
@@ -39,23 +37,7 @@ export async function handleRequest<T = any>(
     return e;
   });
 
-  console.log({ res });
-
   return res;
-
-  // return axios({
-  //   url: `${url}${path}`,
-  //   method: method ?? "GET",
-  //   data,
-  //   withCredentials: true,
-  //   ...rest,
-  //   headers: {
-  //     ...rest.headers,
-  /* eslint-disable-next-line */
-  //     Cookie: cookieHeader,
-  //     "is-from-dispatch": isDispatchUrl === "/dispatch",
-  //   },
-  // }) as AxiosPromise<T>;
 }
 
 export function findUrl() {
