@@ -118,8 +118,6 @@ const Item = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  console.log({ cookies: req.cookies, headers: req.headers });
-
   const [data] = await requestAll(req, [["/admin/", {}]]);
 
   return {
