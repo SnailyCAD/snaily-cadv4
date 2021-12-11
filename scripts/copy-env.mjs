@@ -14,6 +14,9 @@ if (
   ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api)\//, "");
 }
 
+/**
+ * @param {string} distDir
+ */
 async function copyEnv(distDir) {
   try {
     one(ENV_FILE_PATH, distDir, (error) => {
@@ -22,7 +25,10 @@ async function copyEnv(distDir) {
         return;
       }
 
-      console.log("✅ copied .env");
+      const [rawType] = distDir.match(/client|api/);
+      const type = rawType ?? "";
+
+      console.log(`✅ copied .env — ${type}`);
     });
   } catch (e) {
     console.log({ e });
