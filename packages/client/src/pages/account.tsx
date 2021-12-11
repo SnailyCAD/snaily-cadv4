@@ -65,7 +65,7 @@ export default function Account() {
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   return {
     props: {
-      session: await getSessionUser(req.headers),
+      session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["account", "common"], locale)),
       },

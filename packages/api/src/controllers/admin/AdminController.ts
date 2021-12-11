@@ -31,7 +31,7 @@ export class AdminController {
       await prisma.bolo.count({ where: { type: "VEHICLE" } }),
     ]);
 
-    const imageData = await this.imageData();
+    const imageData = await this.imageData().catch(() => null);
 
     return {
       activeUsers,
@@ -47,7 +47,10 @@ export class AdminController {
       impoundedVehicles,
       vehiclesInBOLO,
 
-      imageData,
+      imageData: imageData ?? {
+        count: 0,
+        totalSize: 0,
+      },
     };
   }
 

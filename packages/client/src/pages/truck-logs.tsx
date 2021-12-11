@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       truckLogs: logs,
       registeredVehicles,
       citizens,
-      session: await getSessionUser(req.headers),
+      session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["truck-logs", "common"], locale)),
       },

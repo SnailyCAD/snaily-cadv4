@@ -165,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req.headers),
+      session: await getSessionUser(req),
       deputies,
       values,
       citizens,

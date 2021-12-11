@@ -1,9 +1,10 @@
 import { handleRequest } from "lib/fetch";
+import type { IncomingMessage } from "http";
 import { User } from "types/prisma";
 
-export async function getSessionUser(headers?: any): Promise<User | null> {
+export async function getSessionUser(req?: IncomingMessage): Promise<User | null> {
   try {
-    const { data } = await handleRequest<User | null>("/user", { headers, method: "POST" });
+    const { data } = await handleRequest<User | null>("/user", { req, method: "POST" });
 
     if (data?.id) {
       return data;

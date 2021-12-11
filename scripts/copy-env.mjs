@@ -5,7 +5,14 @@ const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
 const copyToApi = hasArg("--api");
 
-const ENV_FILE_PATH = join(process.cwd(), ".env");
+let ENV_FILE_PATH = join(process.cwd(), ".env");
+
+if (
+  ENV_FILE_PATH.endsWith("/packages/client/.env") ||
+  ENV_FILE_PATH.endsWith("/packages/api/.env")
+) {
+  ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api)\//, "");
+}
 
 async function copyEnv(distDir) {
   try {

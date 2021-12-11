@@ -1,7 +1,5 @@
-import { Cookie } from "@snailycad/config";
-import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { IncomingMessage } from "connect";
-import { parse } from "cookie";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 
 export type RequestData = Record<string, unknown>;
@@ -14,32 +12,36 @@ interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
   data?: RequestData;
 }
 
-export function handleRequest<T = any>(path: string, options?: Options): Promise<AxiosResponse<T>> {
+export async function handleRequest<T = any>(
+  path: string,
+  options?: Options,
+): Promise<AxiosResponse<T>> {
   const { req, method, data } = options ?? {};
-  const headers = req?.headers ?? {};
 
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
+  const parsedCookie = req?.headers.cookie;
 
-  const cookieHeader = headers?.cookie;
-  const parsedCookie =
-    req?.cookies?.[Cookie.Session] ?? parse((cookieHeader as string) ?? "")?.[Cookie.Session] ?? "";
+  console.log({ parsedCookie, isClient: typeof window !== "undefined" });
 
-  // console.log({ parsedCookie, isClient: typeof window !== "undefined" });
-
-  return axios({
+  const res = await axios({
     url: `${url}${path}`,
     method,
     data: data ?? undefined,
     withCredentials: true,
     headers: {
-      Cookie: headers.cookie ?? "",
-      Session: parsedCookie,
+      Session: parsedCookie ?? "",
       "Content-Type": "application/json",
       "is-from-dispatch": String(isDispatchUrl),
     },
-  }) as AxiosPromise<T>;
+  }).catch((e) => {
+    return e;
+  });
+
+  console.log({ res });
+
+  return res;
 
   // return axios({
   //   url: `${url}${path}`,

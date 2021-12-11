@@ -103,7 +103,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
       business,
       values,
       employee: business?.employee ?? null,
-      session: await getSessionUser(req.headers),
+      session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["business", "common"], locale)),
       },
