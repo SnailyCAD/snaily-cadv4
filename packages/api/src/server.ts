@@ -51,7 +51,8 @@ export class Server {
       .use(IsEnabled);
 
     if (process.env.EXPERIMENTAL_SECURE_CONTEXT) {
-      this.app.raw.set("trust proxy", 1);
+      const app = this.app.callback();
+      app.set("trust proxy", 1);
     }
 
     this.app.get("/", (_: any, res: Response) => {
