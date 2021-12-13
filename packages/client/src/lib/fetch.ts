@@ -23,21 +23,7 @@ export async function handleRequest<T = any>(
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  let parsedCookie = req?.headers.cookie;
-
-  if (process.env.DEBUG_REQUESTS === "true") {
-    console.log("COOKIES", req?.cookies);
-    console.log("REQUEST", req);
-    console.log("COOKIE", { COOKIE: cookie });
-
-    if (!parsedCookie) {
-      parsedCookie = serialize("snaily-cad-session", cookie as string, {
-        path: "/",
-        httpOnly: true,
-        expires: new Date(Date.now() + 60 * 60 * 1000 * 5),
-      });
-    }
-  }
+  const parsedCookie = req?.headers.cookie || serialize("snaily-cad-session", cookie as string);
 
   const res = await axios({
     url: `${url}${path}`,
@@ -52,10 +38,6 @@ export async function handleRequest<T = any>(
   }).catch((e) => {
     return e;
   });
-
-  if (process.env.DEBUG_REQUESTS === "true") {
-    console.log("COOKIES", res);
-  }
 
   return res;
 }
