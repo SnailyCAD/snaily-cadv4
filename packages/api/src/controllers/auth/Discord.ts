@@ -1,9 +1,11 @@
-import { Get, QueryParams, Res } from "@tsed/common";
+import { Get, QueryParams, Req, Res } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import fetch from "node-fetch";
 import { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types";
 import { encode } from "../../utils/discord";
+import { prisma } from "../../lib/prisma";
+import { getSessionUser } from "../../lib/auth";
 
 const DISCORD_API_VERSION = "v9";
 const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
@@ -17,8 +19,6 @@ export class DiscordAuth {
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
     const url = new URL(`${discordApiUrl}/oauth2/authorize`);
 
-    console.log({ callbackUrl });
-
     url.searchParams.append("client_id", DISCORD_CLIENT_ID!);
     url.searchParams.append("redirect_uri", callbackUrl);
     url.searchParams.append("prompt", "consent");
@@ -29,9 +29,51 @@ export class DiscordAuth {
   }
 
   @Get("/callback")
-  async handleCallbackFromDiscord(@QueryParams() query: any) {
+  async handleCallbackFromDiscord(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
     const code = query.code;
     const data = await getDiscordData(code);
+    const redirectURL = findRedirectURL();
+    const authUser = await getSessionUser(req, false);
+
+    if (!data) {
+      return res.redirect(`${redirectURL}/account?tab=discord&error=could not fetch discord data`);
+    }
+
+    const user = await prisma.user.findFirst({
+      where: { discordId: data.id },
+    });
+
+    if (!user && !authUser) {
+      const existingUserWithUsername = await prisma.user.findUnique({
+        where: { username: data.username },
+      });
+
+      if (existingUserWithUsername) {
+        return res.redirect(
+          // todo: add random characters behind username and remove this error
+          `${redirectURL}/account?tab=discord&error=could not create a new account with Discord since the username is already in-use.`,
+        );
+      }
+
+      await prisma.user.create({
+        data: {
+          username: data.username,
+          password: "",
+          discordId: data.id,
+        },
+      });
+    } else {
+      await prisma.user.update({
+        where: {
+          id: authUser.id,
+        },
+        data: {
+          discordId: data.id,
+        },
+      });
+
+      return res.redirect(`${redirectURL}/account?tab=discord&success`);
+    }
 
     // todo, do something with the Discord data
     /**
@@ -43,6 +85,7 @@ export class DiscordAuth {
      * -> user not found
      *    -> create account with Discord username
      *    -> set discordId
+     *    -> authenticate user
      */
 
     return { data };
@@ -88,6 +131,10 @@ function findUrl() {
   }
 
   return envUrl;
+}
+
+function findRedirectURL() {
+  return process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
 }
 
 function makeCallbackURL(base: string) {

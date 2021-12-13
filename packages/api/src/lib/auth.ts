@@ -23,6 +23,7 @@ export const userProperties = {
   isDarkTheme: true,
   tempPassword: true,
   statusViewMode: true,
+  discordId: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {

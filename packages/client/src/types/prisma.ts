@@ -68,6 +68,7 @@ export type User = {
   isDarkTheme: boolean;
   hasTempPassword: boolean;
   statusViewMode: StatusViewMode;
+  discordId: string | null;
 };
 
 /**
