@@ -23,6 +23,11 @@ export async function handleRequest<T = any>(
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
   const parsedCookie = req?.headers.cookie;
 
+  if (process.env.DEBUG_REQUESTS === "true") {
+    console.log("COOKIES", req?.cookies);
+    console.log("REQUEST", req);
+  }
+
   const res = await axios({
     url: `${url}${path}`,
     method,
@@ -36,6 +41,10 @@ export async function handleRequest<T = any>(
   }).catch((e) => {
     return e;
   });
+
+  if (process.env.DEBUG_REQUESTS === "true") {
+    console.log("COOKIES", res);
+  }
 
   return res;
 }
