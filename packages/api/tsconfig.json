@@ -12,6 +12,7 @@
     "declaration": false,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "skipLibCheck": true,
 
     "outDir": "dist",
     "strict": true,
