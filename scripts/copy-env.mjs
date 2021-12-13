@@ -25,8 +25,8 @@ async function copyEnv(distDir) {
         return;
       }
 
-      const [rawType] = distDir.match(/client|api/);
-      const type = rawType ?? "";
+      const type =
+        (distDir.endsWith("client") && "client") || (distDir.endsWith("api") && "api") || "Unknown";
 
       console.log(`✅ copied .env — ${type}`);
     });
