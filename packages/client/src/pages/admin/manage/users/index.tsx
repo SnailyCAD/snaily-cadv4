@@ -12,6 +12,8 @@ import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
 import { PendingUsersTab } from "components/admin/manage/PendingUsersTab";
 import { Button } from "components/Button";
+import { Input } from "components/form/Input";
+import { FormField } from "components/form/FormField";
 
 interface Props {
   users: User[];
@@ -19,6 +21,7 @@ interface Props {
 
 export default function ManageCitizens({ users: data }: Props) {
   const [users, setUsers] = React.useState<User[]>(data);
+  const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -36,19 +39,28 @@ export default function ManageCitizens({ users: data }: Props) {
         <title>{t("MANAGE_USERS")}</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold mb-4">{t("MANAGE_USERS")}</h1>
+      <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
+
+      <FormField label={common("search")} className="my-2">
+        <Input
+          placeholder="john doe"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          className=""
+        />
+      </FormField>
 
       <TabsContainer tabs={tabs}>
         <Tab.Panel>
           <ul className="mt-5">
-            {users.map((user, idx) => (
+            {users.filter(handleFilter.bind(null, search)).map((user, idx) => (
               <li
-                className="my-1 bg-gray-200 dark:bg-gray-2 py-3 px-4 rounded-md w-full flex flex-col"
+                className="flex flex-col w-full px-4 py-3 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
                 key={user.id}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="select-none text-gray-500">{idx + 1}.</span>
+                    <span className="text-gray-500 select-none">{idx + 1}.</span>
                     <span className="ml-2">{user.username}</span>
                   </div>
 
@@ -65,7 +77,10 @@ export default function ManageCitizens({ users: data }: Props) {
           </ul>
         </Tab.Panel>
 
-        <PendingUsersTab setUsers={setUsers} users={pending} />
+        <PendingUsersTab
+          setUsers={setUsers}
+          users={pending.filter(handleFilter.bind(null, search))}
+        />
       </TabsContainer>
     </AdminLayout>
   );
@@ -84,3 +99,13 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     },
   };
 };
+
+function handleFilter(search: string, user: User) {
+  if (!search) {
+    return true;
+  }
+
+  const { username } = user;
+
+  return username.toLowerCase().includes(search.toLowerCase());
+}

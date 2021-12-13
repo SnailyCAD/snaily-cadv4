@@ -22,6 +22,8 @@ interface Props {
 }
 
 export default function ManageCitizens({ citizens: data }: Props) {
+  const [search, setSearch] = React.useState("");
+
   const [citizens, setCitizens] = React.useState<(Citizen & { user: User })[]>(data);
   const [tempValue, setTempValue] = React.useState<(Citizen & { user: User }) | null>(null);
   const [reason, setReason] = React.useState("");
@@ -74,19 +76,28 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
       <h1 className="text-3xl font-semibold">{t("MANAGE_CITIZENS")}</h1>
 
+      <FormField label={common("search")} className="my-2">
+        <Input
+          placeholder="john doe"
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          className=""
+        />
+      </FormField>
+
       {citizens.length <= 0 ? (
         <p className="mt-5">{t("noCitizens")}</p>
       ) : (
         <ul className="mt-5">
-          {citizens.map((citizen, idx) => (
+          {citizens.filter(handleFilter.bind(null, search)).map((citizen, idx) => (
             <li
-              className="my-1 bg-gray-200 dark:bg-gray-2 p-2 px-4 rounded-md w-full flex flex-col"
+              className="flex flex-col w-full p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
               key={citizen.id}
             >
               <Disclosure>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="select-none text-gray-500">{idx + 1}.</span>
+                    <span className="text-gray-500 select-none">{idx + 1}.</span>
                     <span className="ml-2">
                       {citizen.name} {citizen.surname}
                     </span>
@@ -171,7 +182,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
           </FormField>
         </div>
 
-        <div className="mt-2 flex gap-2 items-center justify-end">
+        <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
@@ -185,7 +196,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
             variant="danger"
             onClick={handleDelete}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("delete")}
           </Button>
         </div>
@@ -207,3 +218,20 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     },
   };
 };
+
+function handleFilter(search: string, citizen: Citizen) {
+  if (!search) {
+    return true;
+  }
+
+  const { name, surname } = citizen;
+
+  if (`${name} ${surname}`.toLowerCase() === search.toLowerCase()) {
+    return true;
+  }
+
+  return (
+    name.toLowerCase().includes(search.toLowerCase()) ||
+    surname.toLowerCase().includes(search.toLowerCase())
+  );
+}
