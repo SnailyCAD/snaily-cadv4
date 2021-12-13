@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { serialize } from "cookie";
 import { IncomingMessage } from "connect";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 
@@ -15,17 +16,27 @@ interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
 export async function handleRequest<T = any>(
   path: string,
   options?: Options,
+  cookie?: string,
 ): Promise<AxiosResponse<T>> {
   const { req, method, data } = options ?? {};
 
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  const parsedCookie = req?.headers.cookie;
+  let parsedCookie = req?.headers.cookie;
 
   if (process.env.DEBUG_REQUESTS === "true") {
     console.log("COOKIES", req?.cookies);
     console.log("REQUEST", req);
+    console.log("COOKIE", { COOKIE: cookie });
+
+    if (!parsedCookie) {
+      parsedCookie = serialize("snaily-cad-session", cookie as string, {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(Date.now() + 60 * 60 * 1000 * 5),
+      });
+    }
   }
 
   const res = await axios({

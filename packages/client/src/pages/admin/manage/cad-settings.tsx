@@ -67,7 +67,7 @@ export default function CadSettings() {
         <title>{t("MANAGE_CAD_SETTINGS")}</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CAD_SETTINGS")}</h1>
+      <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
 
       <TabsContainer tabs={SETTINGS_TABS}>
         <Tab.Panel className="mt-3">
@@ -162,7 +162,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       citizens: data,
-      session: await getSessionUser(req),
+      session: await getSessionUser(req, req.cookies?.["snaily-cad-session"]),
       messages: {
         ...(await getTranslations(["admin", "values", "common"], locale)),
       },
