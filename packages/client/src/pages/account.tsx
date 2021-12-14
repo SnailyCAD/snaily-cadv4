@@ -1,3 +1,4 @@
+import * as React from "react";
 import Head from "next/head";
 import { Layout } from "components/Layout";
 import { Tab } from "@headlessui/react";
@@ -9,6 +10,10 @@ import { TabsContainer } from "components/tabs/TabsContainer";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import toast from "react-hot-toast";
+import { useMounted } from "@casper124578/useful";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -18,11 +23,37 @@ const AppearanceTab = dynamic(async () => {
   return (await import("components/account/AppearanceTab")).AppearanceTab;
 });
 
+const ConnectionsTab = dynamic(async () => {
+  return (await import("components/account/ConnectionsTab")).ConnectionsTab;
+});
+
 export default function Account() {
+  const mounted = useMounted();
   const { user } = useAuth();
   const t = useTranslations("Account");
+  const router = useRouter();
+  const { DISCORD_AUTH } = useFeatureEnabled();
+  const errorT = useTranslations("Errors");
+
+  const errors = {
+    discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
+  };
+  const error = errors[router.query.error as keyof typeof errors];
+
+  React.useEffect(() => {
+    if (error && mounted) {
+      toast.error(error);
+    }
+  }, [error, mounted]);
+
+  const tab = router.query.tab;
+  const discordIndex = DISCORD_AUTH ? (tab === "discord" ? 3 : undefined) : undefined;
 
   const TABS_TITLES = [t("accountInfo"), t("accountSettings"), t("appearanceSettings")];
+
+  if (DISCORD_AUTH) {
+    TABS_TITLES.push(t("connections"));
+  }
 
   if (!user) {
     return null;
@@ -34,9 +65,9 @@ export default function Account() {
         <title>{t("account")} - SnailyCAD</title>
       </Head>
 
-      <div className="w-full flex justify-center">
-        <div className="max-w-4xl w-full">
-          <TabsContainer tabs={TABS_TITLES}>
+      <div className="flex justify-center w-full">
+        <div className="w-full max-w-4xl">
+          <TabsContainer defaultIndex={discordIndex} tabs={TABS_TITLES}>
             <Tab.Panels className="mt-2 dark:text-white">
               <Tab.Panel>
                 <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
@@ -46,7 +77,7 @@ export default function Account() {
                     .map(([key, value]) => {
                       return (
                         <p key={key}>
-                          <span className="capitalize font-semibold">{key}: </span> {String(value)}
+                          <span className="font-semibold capitalize">{key}: </span> {String(value)}
                         </p>
                       );
                     })}
@@ -54,6 +85,7 @@ export default function Account() {
               </Tab.Panel>
               <AccountSettingsTab />
               <AppearanceTab />
+              {DISCORD_AUTH ? <ConnectionsTab /> : null}
             </Tab.Panels>
           </TabsContainer>
         </div>

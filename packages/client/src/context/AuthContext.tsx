@@ -20,7 +20,7 @@ const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: { session?: User | null };
+  initialData: { session?: User | null; cad?: CAD | null };
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
@@ -81,13 +81,14 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   React.useEffect(() => {
     if (initialData.session) {
       setUser(initialData.session);
-
-      if ("cad" in initialData.session) {
-        // @ts-expect-error ignore
-        setCad(initialData.session.cad);
-      }
     }
-  }, [initialData.session]);
+
+    // @ts-expect-error ignore
+    if (initialData.session?.cad ?? initialData.cad) {
+      // @ts-expect-error ignore
+      setCad(initialData.session?.cad ?? initialData.cad);
+    }
+  }, [initialData]);
 
   useListener(
     SocketEvents.UserBanned,

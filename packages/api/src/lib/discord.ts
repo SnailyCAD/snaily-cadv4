@@ -1,4 +1,3 @@
-// @ts-expect-error ignore
 import fetch from "node-fetch";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";

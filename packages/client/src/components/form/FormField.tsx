@@ -6,9 +6,12 @@ interface Props {
   fieldId?: string;
   className?: string;
   checkbox?: boolean;
+  boldLabel?: boolean;
 }
 
-export const FormField = ({ checkbox, children, label, className, fieldId }: Props) => {
+export const FormField = ({ boldLabel, checkbox, children, label, className, fieldId }: Props) => {
+  const labelClassnames = ["mb-1 dark:text-white", boldLabel ? "font-semibold" : ""].join(" ");
+
   return (
     <fieldset
       className={classNames(
@@ -18,7 +21,7 @@ export const FormField = ({ checkbox, children, label, className, fieldId }: Pro
       )}
     >
       {!checkbox ? (
-        <label className="mb-1 dark:text-white" htmlFor={fieldId}>
+        <label className={labelClassnames} htmlFor={fieldId}>
           {label}
         </label>
       ) : null}
@@ -26,7 +29,7 @@ export const FormField = ({ checkbox, children, label, className, fieldId }: Pro
       {children}
 
       {checkbox ? (
-        <label className="mb-1 dark:text-white" htmlFor={fieldId}>
+        <label className={labelClassnames} htmlFor={fieldId}>
           {label}
         </label>
       ) : null}

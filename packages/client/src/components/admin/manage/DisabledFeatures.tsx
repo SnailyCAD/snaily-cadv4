@@ -52,7 +52,7 @@ export const DisabledFeaturesArea = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
-            <FormField fieldId="tow" label={"Tow"}>
+            <FormField boldLabel fieldId="tow" label={"Tow"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.TOW]}
@@ -64,7 +64,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="bleeter" label={"Bleeter"}>
+            <FormField boldLabel fieldId="bleeter" label={"Bleeter"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.BLEETER]}
@@ -85,7 +85,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="courthouse" label={"Courthouse"}>
+            <FormField boldLabel fieldId="courthouse" label={"Courthouse"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.COURTHOUSE]}
@@ -97,7 +97,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="taxi" label={"Taxi"}>
+            <FormField boldLabel fieldId="taxi" label={"Taxi"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.TAXI]}
@@ -109,7 +109,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="truck-logs" label={"Truck Logs"}>
+            <FormField boldLabel fieldId="truck-logs" label={"Truck Logs"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.TRUCK_LOGS]}
@@ -122,7 +122,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="aop" label={"Area of Play"}>
+            <FormField boldLabel fieldId="aop" label={"Area of Play"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.AOP]}
@@ -135,7 +135,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="business" label={"Businesses"}>
+            <FormField boldLabel fieldId="business" label={"Businesses"}>
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.BUSINESS]}
@@ -147,7 +147,11 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField fieldId="allowDuplicateCitizenNames" label={"Allow Duplicate Citizen Names"}>
+            <FormField
+              boldLabel
+              fieldId="allowDuplicateCitizenNames"
+              label={"Allow Duplicate Citizen Names"}
+            >
               <Toggle
                 text="enable/disable"
                 toggled={values[feature.ALLOW_DUPLICATE_CITIZEN_NAMES]}
@@ -160,8 +164,24 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
+            <FormField
+              boldLabel
+              fieldId="discordAuth"
+              label={"Allow users to authenticate with Discord."}
+            >
+              <Toggle
+                text="enable/disable"
+                toggled={values[feature.DISCORD_AUTH]}
+                onClick={handleChange}
+                name={feature.DISCORD_AUTH}
+              />
+              <small className="mt-2 text-base">
+                When enabled, this will allow users to login and register with Discord.
+              </small>
+            </FormField>
+
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
-              {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
+              {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
           </form>

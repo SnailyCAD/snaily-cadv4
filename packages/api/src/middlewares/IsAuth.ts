@@ -1,4 +1,5 @@
 import { Rank, User } from ".prisma/client";
+import { cad } from "@prisma/client";
 import { API_TOKEN_HEADER, DISABLED_API_TOKEN_ROUTES, PERMISSION_ROUTES } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
@@ -87,8 +88,23 @@ export class IsAuth implements MiddlewareMethods {
       });
     }
 
-    ctx.set("cad", cad);
+    ctx.set("cad", setDiscordAUth(cad as any));
   }
+}
+
+export function setDiscordAUth(cad: cad) {
+  const hasDiscordTokens = process.env["DISCORD_CLIENT_ID"] && process.env["DISCORD_CLIENT_SECRET"];
+  const isEnabled = !cad?.disabledFeatures?.includes("DISCORD_AUTH");
+
+  if (!cad && !hasDiscordTokens) {
+    return { disabledFeatures: ["DISCORD_AUTH"] };
+  }
+
+  if (isEnabled && !hasDiscordTokens) {
+    return { ...cad, disabledFeatures: [...cad.disabledFeatures, "DISCORD_AUTH"] };
+  }
+
+  return cad;
 }
 
 function isRouteDisabled(req: Req) {

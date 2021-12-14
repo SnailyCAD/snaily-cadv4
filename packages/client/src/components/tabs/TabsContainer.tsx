@@ -4,14 +4,15 @@ import { classNames } from "lib/classNames";
 
 interface Props {
   tabs: string[];
+  defaultIndex?: number;
   children: React.ReactNode;
 }
 
-export const TabsContainer = ({ children, tabs }: Props) => {
+export const TabsContainer = ({ defaultIndex, children, tabs }: Props) => {
   return (
     <div className="w-full px-2 sm:px-0">
-      <Tab.Group>
-        <Tab.List className="flex p-1 space-x-1 bg-gray-100 dark:bg-gray-3 rounded-lg">
+      <Tab.Group defaultIndex={defaultIndex}>
+        <Tab.List className="flex p-1 space-x-1 bg-gray-100 rounded-lg dark:bg-gray-3">
           {tabs.map((tab) => (
             <Tab
               key={tab}

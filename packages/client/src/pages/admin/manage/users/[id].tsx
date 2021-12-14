@@ -68,6 +68,7 @@ export default function ManageCitizens(props: Props) {
     isEmsFd: user.isEmsFd,
     isTow: user.isTow,
     steamId: user.steamId ?? "",
+    discordId: user.discordId ?? "",
   };
 
   const isRankDisabled = user.rank === "OWNER" || user.id === session?.id;
@@ -139,11 +140,19 @@ export default function ManageCitizens(props: Props) {
                 </FormField>
               </FormRow>
 
-              <FormField label="Steam ID">
-                <Input name="steamId" onChange={handleChange} value={values.steamId} />
+              <FormRow>
+                <FormField label="Steam ID">
+                  <Input name="steamId" onChange={handleChange} value={values.steamId} />
 
-                <Error>{errors.steamId}</Error>
-              </FormField>
+                  <Error>{errors.steamId}</Error>
+                </FormField>
+
+                <FormField label="Discord ID">
+                  <Input name="discordId" onChange={handleChange} value={values.discordId} />
+
+                  <Error>{errors.discordId}</Error>
+                </FormField>
+              </FormRow>
 
               <div className="flex justify-end">
                 <Link href="/admin/manage/users">

@@ -79,6 +79,8 @@ model User {
   statusViewMode  StatusViewMode  @default(DOT_COLOR)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @default(now()) @updatedAt
+  discordId       String?
+
 
   // relational data
   citizens             Citizen[]
@@ -722,4 +724,5 @@ enum Feature {
   AOP
   BUSINESS
   ALLOW_DUPLICATE_CITIZEN_NAMES
+  DISCORD_AUTH
 }

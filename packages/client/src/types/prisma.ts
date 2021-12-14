@@ -68,6 +68,7 @@ export type User = {
   isDarkTheme: boolean;
   hasTempPassword: boolean;
   statusViewMode: StatusViewMode;
+  discordId: string | null;
 };
 
 /**
@@ -585,6 +586,7 @@ export const feature = {
   AOP: "AOP",
   BUSINESS: "BUSINESS",
   ALLOW_DUPLICATE_CITIZEN_NAMES: "ALLOW_DUPLICATE_CITIZEN_NAMES",
+  DISCORD_AUTH: "DISCORD_AUTH",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];

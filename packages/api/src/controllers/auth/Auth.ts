@@ -11,8 +11,8 @@ import { findOrCreateCAD } from "../../lib/cad";
 import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 
 // expire after 5 hours
-const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
-const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
+export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
+export const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
 
 @Controller("/auth")
 export class AuthController {
