@@ -7,7 +7,7 @@ export function useFeatureEnabled() {
   const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
   Object.keys(feature).map((feature) => {
-    obj[feature as Feature] = !cad?.disabledFeatures.includes(feature as Feature);
+    obj[feature as Feature] = !cad?.disabledFeatures?.includes(feature as Feature);
   });
 
   return obj;

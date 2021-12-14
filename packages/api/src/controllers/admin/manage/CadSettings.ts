@@ -8,7 +8,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "../../../lib/prisma";
-import { IsAuth } from "../../../middlewares";
+import { IsAuth, setDiscordAUth } from "../../../middlewares";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
 import { Socket } from "../../../services/SocketService";
@@ -32,7 +32,7 @@ export class ManageCitizensController {
       },
     });
 
-    return { ...cad, registrationCode: !!cad!.registrationCode };
+    return { ...setDiscordAUth(cad as any), registrationCode: !!cad?.registrationCode };
   }
 
   @UseBefore(IsAuth)

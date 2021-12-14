@@ -45,6 +45,11 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
     }
 
+    const users = await prisma.user.count();
+    if (users <= 0) {
+      return res.redirect(`${redirectURL}/auth/login?error=cannotRegisterFirstWithDiscord`);
+    }
+
     const user = await prisma.user.findFirst({
       where: { discordId: data.id },
     });
