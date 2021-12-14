@@ -130,19 +130,6 @@ export class DiscordAuth {
 
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
     }
-
-    // todo, do something with the Discord data
-    /**
-     * 1. find user by discordId
-     *
-     * -> user found
-     *    -> authenticate user
-     *
-     * -> user not found
-     *    -> create account with Discord username
-     *    -> set discordId
-     *    -> authenticate user
-     */
   }
 
   @Delete("/")
