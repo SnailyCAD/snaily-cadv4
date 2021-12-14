@@ -1,4 +1,4 @@
-import { Get, QueryParams, Req, Res } from "@tsed/common";
+import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import fetch from "node-fetch";
@@ -11,6 +11,7 @@ import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
 import { signJWT } from "../../utils/jwt";
 import { setCookie } from "../../utils/setCookie";
 import { Cookie } from "@snailycad/config";
+import { IsAuth } from "../../middlewares";
 
 const DISCORD_API_VERSION = "v9";
 const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
@@ -41,7 +42,7 @@ export class DiscordAuth {
     const authUser: User | null = await getSessionUser(req, false);
 
     if (!data) {
-      return res.redirect(`${redirectURL}/account?tab=discord&error=could not fetch discord data`);
+      return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
     }
 
     const user = await prisma.user.findFirst({
@@ -78,10 +79,7 @@ export class DiscordAuth {
       });
 
       if (existingUserWithUsername) {
-        return res.redirect(
-          // todo: add random characters behind username and remove this error
-          `${redirectURL}/account?tab=discord&error=could not create a new account with Discord since the username is already in-use.`,
-        );
+        return res.redirect(`${redirectURL}/auth/login?error=discordNameInUse`);
       }
 
       const user = await prisma.user.create({
@@ -103,16 +101,35 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/citizen`);
     }
 
-    await prisma.user.update({
-      where: {
-        id: authUser.id,
-      },
-      data: {
-        discordId: data.id,
-      },
-    });
+    if (authUser && user) {
+      if (user.id === authUser.id) {
+        await prisma.user.update({
+          where: {
+            id: authUser.id,
+          },
+          data: {
+            discordId: data.id,
+          },
+        });
 
-    return res.redirect(`${redirectURL}/account?tab=discord&success`);
+        return res.redirect(`${redirectURL}/account?tab=discord&success`);
+      }
+
+      return res.redirect(`${redirectURL}/account?tab=discord&error=discordAccountAlreadyLinked`);
+    }
+
+    if (authUser && !user) {
+      await prisma.user.update({
+        where: {
+          id: authUser.id,
+        },
+        data: {
+          discordId: data.id,
+        },
+      });
+
+      return res.redirect(`${redirectURL}/account?tab=discord&success`);
+    }
 
     // todo, do something with the Discord data
     /**
@@ -126,6 +143,21 @@ export class DiscordAuth {
      *    -> set discordId
      *    -> authenticate user
      */
+  }
+
+  @Delete("/")
+  @UseBefore(IsAuth)
+  async removeDiscordAuth(@Context("user") user: User) {
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        discordId: null,
+      },
+    });
+
+    return true;
   }
 }
 

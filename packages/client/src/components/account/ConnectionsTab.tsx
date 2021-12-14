@@ -4,10 +4,12 @@ import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
 import { findUrl } from "lib/fetch";
+import useFetch from "lib/useFetch";
 
 export const ConnectionsTab = () => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const t = useTranslations("Account");
+  const { state, execute } = useFetch();
 
   function handleConnectClick() {
     const url = findUrl();
@@ -16,13 +18,23 @@ export const ConnectionsTab = () => {
     window.location.href = fullUrl;
   }
 
+  async function handleUnlink() {
+    const { json } = await execute("/auth/discord", { method: "DELETE" });
+
+    if (json && user) {
+      setUser({ ...user, discordId: null });
+    }
+  }
+
   return (
     <Tab.Panel>
       <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
       <div className="mt-5">
         {user?.discordId ? (
           <>
-            <Button variant="danger">Disconnect Discord account</Button>
+            <Button onClick={handleUnlink} disabled={state === "loading"} variant="danger">
+              {state === "loading" ? "Disconnecting.." : "Disconnect Discord account"}
+            </Button>
             <p className="mt-2 text-base">This will remove the ability to login via Discord.</p>
           </>
         ) : (

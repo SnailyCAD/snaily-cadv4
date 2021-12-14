@@ -54,6 +54,8 @@
     "citizenNotFound": "That citizen was not found",
     "selectImageFirst": "You must first select an image.",
     "officerIsCombined": "This officer is marked as combined unit and cannot be used individually right now.",
-    "officerAlreadyMerged": "This unit is already marked as a combined unit."
+    "officerAlreadyMerged": "This unit is already marked as a combined unit.",
+    "discordNameInUse": "Could not create a new account with Discord since the username is already in-use.",
+    "discordAccountAlreadyLinked": "This Discord account is already linked to another account."
   }
 }

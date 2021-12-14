@@ -1,3 +1,4 @@
+import * as React from "react";
 import Head from "next/head";
 import { Layout } from "components/Layout";
 import { Tab } from "@headlessui/react";
@@ -11,6 +12,8 @@ import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import toast from "react-hot-toast";
+import { useMounted } from "@casper124578/useful";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -25,10 +28,23 @@ const ConnectionsTab = dynamic(async () => {
 });
 
 export default function Account() {
+  const mounted = useMounted();
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
   const { DISCORD_AUTH } = useFeatureEnabled();
+  const errorT = useTranslations("Errors");
+
+  const errors = {
+    discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
+  };
+  const error = errors[router.query.error as keyof typeof errors];
+
+  React.useEffect(() => {
+    if (error && mounted) {
+      toast.error(error);
+    }
+  }, [error, mounted]);
 
   const tab = router.query.tab;
   const discordIndex = DISCORD_AUTH ? (tab === "discord" ? 3 : undefined) : undefined;
