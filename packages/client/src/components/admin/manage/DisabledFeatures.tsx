@@ -176,7 +176,10 @@ export const DisabledFeaturesArea = () => {
                 name={feature.DISCORD_AUTH}
               />
               <small className="mt-2 text-base">
-                When enabled, this will allow users to login and register with Discord.
+                When enabled, this will allow users to login and register with Discord.{" "}
+                <a href="https://cad-docs.netlify.app/other/discord-authentication">
+                  Click here for Documentation
+                </a>
               </small>
             </FormField>
 
