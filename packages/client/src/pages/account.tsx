@@ -10,6 +10,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -27,16 +28,16 @@ export default function Account() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
+  const { DISCORD_AUTH } = useFeatureEnabled();
 
   const tab = router.query.tab;
-  const discordIndex = tab === "discord" ? 3 : undefined;
+  const discordIndex = DISCORD_AUTH ? (tab === "discord" ? 3 : undefined) : undefined;
 
-  const TABS_TITLES = [
-    t("accountInfo"),
-    t("accountSettings"),
-    t("appearanceSettings"),
-    t("connections"),
-  ];
+  const TABS_TITLES = [t("accountInfo"), t("accountSettings"), t("appearanceSettings")];
+
+  if (DISCORD_AUTH) {
+    TABS_TITLES.push(t("connections"));
+  }
 
   if (!user) {
     return null;
@@ -68,7 +69,7 @@ export default function Account() {
               </Tab.Panel>
               <AccountSettingsTab />
               <AppearanceTab />
-              <ConnectionsTab />
+              {DISCORD_AUTH ? <ConnectionsTab /> : null}
             </Tab.Panels>
           </TabsContainer>
         </div>

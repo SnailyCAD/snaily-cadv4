@@ -12,9 +12,11 @@ import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import { useTranslations } from "use-intl";
-import { GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
+import { findUrl, handleRequest } from "lib/fetch";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const INITIAL_VALUES = {
   username: "",
@@ -26,6 +28,7 @@ export default function Login() {
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
   const error = useTranslations("Errors");
+  const { DISCORD_AUTH } = useFeatureEnabled();
 
   const authMessages = {
     banned: error("userBanned"),
@@ -55,6 +58,13 @@ export default function Login() {
     }
   }
 
+  function handleDiscordLogin() {
+    const url = findUrl();
+
+    const fullUrl = `${url}/auth/discord`;
+    window.location.href = fullUrl;
+  }
+
   return (
     <>
       <Head>
@@ -65,10 +75,10 @@ export default function Login() {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-gray-2 shadow-md"
+              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
               onSubmit={handleSubmit}
             >
-              <h1 className="text-2xl text-gray-800 dark:text-white font-semibold mb-3">
+              <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("login")}
               </h1>
 
@@ -101,17 +111,27 @@ export default function Login() {
 
               <div className="mt-3">
                 <Link href="/auth/register">
-                  <a className="underline inline-block mb-3 dark:text-gray-200">{t("noAccount")}</a>
+                  <a className="inline-block mb-3 underline dark:text-gray-200">{t("noAccount")}</a>
                 </Link>
 
                 <Button
                   disabled={!isValid || state === "loading"}
                   type="submit"
-                  className="w-full flex items-center justify-center gap-3"
+                  className="flex items-center justify-center w-full gap-3"
                 >
                   {state === "loading" ? <Loader /> : null} {t("login")}
                 </Button>
               </div>
+
+              {DISCORD_AUTH ? (
+                <>
+                  <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+
+                  <Button type="button" onClick={handleDiscordLogin} className="w-full">
+                    Login via Discord
+                  </Button>
+                </>
+              ) : null}
             </form>
           )}
         </Formik>
@@ -120,9 +140,14 @@ export default function Login() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const { data } = await handleRequest("/admin/manage/cad-settings").catch(() => ({
+    data: null,
+  }));
+
   return {
     props: {
+      cad: data ?? {},
       messages: await getTranslations(["auth"], locale),
     },
   };

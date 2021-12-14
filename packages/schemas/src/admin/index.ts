@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 const RANK_REGEX = /OWNER|ADMIN|USER/;
+const FEATURES_REGEX =
+  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH/;
 
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
@@ -20,11 +22,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({
-  features: z.array(
-    z
-      .string()
-      .regex(/BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES/),
-  ),
+  features: z.array(z.string().regex(FEATURES_REGEX)),
 });
 
 export const BAN_SCHEMA = z.object({

@@ -6,6 +6,11 @@ import { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types";
 import { encode } from "../../utils/discord";
 import { prisma } from "../../lib/prisma";
 import { getSessionUser } from "../../lib/auth";
+import { User } from "@prisma/client";
+import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
+import { signJWT } from "../../utils/jwt";
+import { setCookie } from "../../utils/setCookie";
+import { Cookie } from "@snailycad/config";
 
 const DISCORD_API_VERSION = "v9";
 const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
@@ -33,7 +38,7 @@ export class DiscordAuth {
     const code = query.code;
     const data = await getDiscordData(code);
     const redirectURL = findRedirectURL();
-    const authUser = await getSessionUser(req, false);
+    const authUser: User | null = await getSessionUser(req, false);
 
     if (!data) {
       return res.redirect(`${redirectURL}/account?tab=discord&error=could not fetch discord data`);
@@ -43,6 +48,30 @@ export class DiscordAuth {
       where: { discordId: data.id },
     });
 
+    /**
+     * a user was found with the discordId, but the user is authenticated.
+     *
+     * -> log the user in and set the cookie
+     */
+    if (!authUser && user) {
+      // authenticate user with cookie
+
+      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
+      setCookie({
+        res,
+        name: Cookie.Session,
+        expires: AUTH_TOKEN_EXPIRES_MS,
+        value: jwtToken,
+      });
+
+      return res.redirect(`${redirectURL}/citizen`);
+    }
+
+    /**
+     * there is no user authenticated and there is no user with the discordId already registered
+     *
+     * -> register the account and set cookie
+     */
     if (!user && !authUser) {
       const existingUserWithUsername = await prisma.user.findUnique({
         where: { username: data.username },
@@ -55,25 +84,35 @@ export class DiscordAuth {
         );
       }
 
-      await prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           username: data.username,
           password: "",
           discordId: data.id,
         },
       });
-    } else {
-      await prisma.user.update({
-        where: {
-          id: authUser.id,
-        },
-        data: {
-          discordId: data.id,
-        },
+
+      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
+      setCookie({
+        res,
+        name: Cookie.Session,
+        expires: AUTH_TOKEN_EXPIRES_MS,
+        value: jwtToken,
       });
 
-      return res.redirect(`${redirectURL}/account?tab=discord&success`);
+      return res.redirect(`${redirectURL}/citizen`);
     }
+
+    await prisma.user.update({
+      where: {
+        id: authUser.id,
+      },
+      data: {
+        discordId: data.id,
+      },
+    });
+
+    return res.redirect(`${redirectURL}/account?tab=discord&success`);
 
     // todo, do something with the Discord data
     /**
@@ -87,8 +126,6 @@ export class DiscordAuth {
      *    -> set discordId
      *    -> authenticate user
      */
-
-    return { data };
   }
 }
 
