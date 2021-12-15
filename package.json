@@ -18,6 +18,7 @@
     "@casper124578/eslint-config": "^1.0.0",
     "@casper124578/eslint-config-next": "^1.0.0",
     "@casper124578/eslint-config-react": "^0.1.2",
+    "chalk": "^5.0.0",
     "colorette": "2.0.16",
     "copy": "^0.3.2",
     "eslint": "^7.32.0",
