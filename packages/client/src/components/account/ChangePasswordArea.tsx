@@ -46,7 +46,7 @@ export const ChangePasswordArea = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
-            <FormField label="Current Password">
+            <FormField label={t("currentPassword")}>
               <PasswordInput
                 hasError={!!errors.currentPassword}
                 value={values.currentPassword}
@@ -56,7 +56,7 @@ export const ChangePasswordArea = () => {
               <Error>{errors.currentPassword}</Error>
             </FormField>
 
-            <FormField label="New Password">
+            <FormField label={t("newPassword")}>
               <PasswordInput
                 hasError={!!errors.newPassword}
                 value={values.newPassword}
@@ -66,7 +66,7 @@ export const ChangePasswordArea = () => {
               <Error>{errors.currentPassword}</Error>
             </FormField>
 
-            <FormField label="Confirm New Password">
+            <FormField label={t("confirmNewPassword")}>
               <PasswordInput
                 hasError={!!errors.confirmPassword}
                 value={values.confirmPassword}

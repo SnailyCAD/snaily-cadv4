@@ -1,8 +1,8 @@
 import * as React from "react";
+import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
-import Link from "next/link";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Feature } from "types/prisma";
 
@@ -49,8 +49,9 @@ export const CitizenDropdown = () => {
               {items.map((item) => {
                 const upperCase = item.replace(/ +/g, "_").toUpperCase() as Feature;
                 const lower = item.replace(/ +/g, "-").toLowerCase();
+                const isDisabled = ["Courthouse"].includes(item);
 
-                if (!enabled[upperCase]) {
+                if (!enabled[upperCase] || isDisabled) {
                   return null;
                 }
 

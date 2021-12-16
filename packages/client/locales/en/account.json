@@ -5,7 +5,15 @@
     "accountSettings": "Account Settings",
     "passwordSettings": "Password Settings",
     "appearanceSettings": "Appearance Settings",
-    "connections": "Connections"
+    "connections": "Connections",
+    "connectDiscord": "Connect Discord account",
+    "disconnectDiscord": "Disconnect Discord account",
+    "disconnectText": "This will remove the ability to login via Discord.",
+    "connectText": "This will add the ability to login via Discord.",
+    "disconnecting": "Disconnecting...",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm new password"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"
