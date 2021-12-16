@@ -3,12 +3,25 @@
   "version": "1.0.0-beta.13",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup"
   },
   "devDependencies": {
+    "tsup": "^5.11.6",
     "typescript": "^4.5.4"
   },
   "dependencies": {
     "zod": "^3.11.6"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts",
+      "src/routes.ts",
+      "src/socket-events.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "target": "node16",
+    "silent": true
   }
 }

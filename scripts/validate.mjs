@@ -10,7 +10,9 @@ const isSupportedVersion = is16 && isDot6;
 const versionText = chalk.bold(chalk.underline("16.6 or higher"));
 
 if (!isSupportedVersion) {
-  throw warn(`Unsupported Node.js version detected. SnailyCADv4 requires version ${versionText}.`);
+  throw warn(
+    `Unsupported Node.js version detected (${process.version}). SnailyCADv4 requires version ${versionText}.`,
+  );
 }
 
 function warn(message) {
