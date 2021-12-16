@@ -4,10 +4,12 @@ import { FullDeputy } from "state/dispatchState";
 import { cad as CAD, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
 
-export function calculateAge(dateOfBirth: string | Date) {
-  return ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))
+export function calculateAge(dateOfBirth: string | Date): string {
+  const [age] = ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))
     .toString()
-    .split(".")[0];
+    .split(".");
+
+  return age as string;
 }
 
 export function useIsFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeatures">>) {

@@ -66,3 +66,11 @@ td {
 .status-buttons-grid {
   @apply flex gap-1 flex-grow flex-wrap;
 }
+
+.switch-component[data-state="checked"] {
+  transform: translateX(23px);
+}
+
+.switch-component[data-state="unchecked"] {
+  transform: translateX(3px);
+}

@@ -61,6 +61,14 @@ export const StatusesArea = () => {
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
   const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeDeputy?.status?.id;
 
+  if (!onDutyCode && codes10.values.length <= 0) {
+    return (
+      <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+        This CAD does not have any 10 codes. Please ask an admin to add some.
+      </div>
+    );
+  }
+
   return (
     <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
       <li>

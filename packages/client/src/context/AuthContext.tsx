@@ -56,12 +56,8 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   }, [router]);
 
   React.useEffect(() => {
-    if (isDarkModeSupportedForPage(router.pathname)) {
-      _setBodyTheme(user?.isDarkTheme ?? true);
-    } else {
-      _setBodyTheme(false);
-    }
-  }, [user?.isDarkTheme, router.pathname]);
+    _setBodyTheme(user?.isDarkTheme ?? true);
+  }, [user?.isDarkTheme]);
 
   React.useEffect(() => {
     if (user) {
@@ -138,51 +134,6 @@ export function useAuth() {
   }
 
   return context;
-}
-
-function isDarkModeSupportedForPage(pathname: string) {
-  const routes = [
-    "/403",
-    "/404",
-    "/auth/login",
-    "/auth/register",
-    "/auth/temp-password",
-    "/account",
-    "/admin",
-    "/admin/manage/cad-settings",
-    "/bleeter",
-    "/bleeter/[id]",
-    "/admin/values/[path]",
-    "/business",
-    "/tow",
-    "/tow/logs",
-    "/officer/my-officers",
-    "/officer/my-officer-logs",
-    "/officer/incidents",
-    "/officer/impound-lot",
-    "/ems-fd/my-deputies",
-    "/citizen",
-    "/citizen/create",
-    "/citizen/[id]",
-    "/citizen/[id]/edit",
-    "/admin/manage/users",
-    "/admin/manage/users/[id]",
-    "/admin/manage/citizens",
-    "/admin/manage/units",
-    "/admin/manage/units/[id]",
-    "/truck-logs",
-    "/taxi",
-    "/business/[id]/[employeeId]",
-    "/business/[id]/[employeeId]/manage",
-    "/ems-fd",
-    "/officer",
-    "/dispatch",
-    "/admin/values/driverslicense-category",
-    "/admin/values/penal-code",
-    "/admin/manage/businesses",
-  ];
-
-  return routes.includes(pathname);
 }
 
 function _setBodyTheme(isDarkTheme: boolean) {

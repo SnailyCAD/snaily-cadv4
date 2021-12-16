@@ -33,14 +33,14 @@ export const ConnectionsTab = () => {
         {user?.discordId ? (
           <>
             <Button onClick={handleUnlink} disabled={state === "loading"} variant="danger">
-              {state === "loading" ? "Disconnecting.." : "Disconnect Discord account"}
+              {state === "loading" ? t("disconnecting") : t("disconnectDiscord")}
             </Button>
-            <p className="mt-2 text-base">This will remove the ability to login via Discord.</p>
+            <p className="mt-2 text-base">{t("disconnectText")}</p>
           </>
         ) : (
           <>
-            <Button onClick={handleConnectClick}>Connect Discord account</Button>
-            <p className="mt-2 text-base">This will add the ability to login via Discord.</p>
+            <Button onClick={handleConnectClick}>{t("connectDiscord")}</Button>
+            <p className="mt-2 text-base">{t("connectText")}</p>
           </>
         )}
       </div>

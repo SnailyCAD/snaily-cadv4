@@ -43,6 +43,8 @@ export default function SupervisorPanelPage({ units }: Props) {
   }
 
   async function setSelectedUnitsOffDuty() {
+    if (selectedRows.length <= 0) return;
+
     const { json } = await execute("/admin/manage/units/off-duty", {
       method: "PUT",
       data: { ids: selectedRows },
@@ -75,7 +77,7 @@ export default function SupervisorPanelPage({ units }: Props) {
           <thead>
             <tr>
               <th>
-                <Dropdown onClick={setSelectedUnitsOffDuty} />
+                <Dropdown disabled={selectedRows.length <= 0} onClick={setSelectedUnitsOffDuty} />
               </th>
               <th>
                 {t("Ems.deputy")}/{t("Leo.officer")}
@@ -140,7 +142,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   };
 };
 
-const Dropdown = ({ onClick }: { onClick: any }) => {
+const Dropdown = ({ onClick, disabled }: { disabled: boolean; onClick: any }) => {
   const mounted = useMounted();
   const portalRef = usePortal("dropdown_portal_above_table");
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -173,10 +175,11 @@ const Dropdown = ({ onClick }: { onClick: any }) => {
                   className="fixed top-0 left-0 z-50 w-48 mt-0 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-xl dark:bg-dark-bright dark:divide-dark-bg focus:outline-none"
                 >
                   <div className="px-1 py-1 ">
-                    <Menu.Item>
+                    <Menu.Item disabled={disabled}>
                       <button
+                        disabled={disabled}
                         onClick={onClick}
-                        className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
+                        className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         Set selected units off-duty
                       </button>

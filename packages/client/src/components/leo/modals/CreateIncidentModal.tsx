@@ -84,7 +84,6 @@ export const CreateIncidentModal = () => {
             <FormRow>
               <FormField label={t("firearmsInvolved")}>
                 <Toggle
-                  text="true/false"
                   toggled={values.firearmsInvolved}
                   name="firearmsInvolved"
                   onClick={handleChange}
@@ -94,7 +93,6 @@ export const CreateIncidentModal = () => {
 
               <FormField label={t("injuriesOrFatalities")}>
                 <Toggle
-                  text="true/false"
                   toggled={values.injuriesOrFatalities}
                   name="injuriesOrFatalities"
                   onClick={handleChange}
@@ -103,12 +101,7 @@ export const CreateIncidentModal = () => {
               </FormField>
 
               <FormField label={t("arrestsMade")}>
-                <Toggle
-                  text="true/false"
-                  toggled={values.arrestsMade}
-                  name="arrestsMade"
-                  onClick={handleChange}
-                />
+                <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
                 <Error>{errors.arrestsMade}</Error>
               </FormField>
             </FormRow>

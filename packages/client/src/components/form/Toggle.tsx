@@ -1,66 +1,34 @@
 import * as React from "react";
-import { useTranslations } from "use-intl";
+import * as SwitchPrimitive from "@radix-ui/react-switch";
+import { classNames } from "lib/classNames";
 
-interface Props {
+type ButtonProps = JSX.IntrinsicElements["button"];
+
+interface Props extends ButtonProps {
   toggled: boolean;
-  onClick: (value: any) => void;
   name: string;
-  text?: "enable/disable" | "on/off" | "true/false";
+  onClick: (value: any) => void;
 }
 
-enum Directions {
-  RIGHT = 25,
-  LEFT = 175,
-}
-
-export const Toggle = ({ toggled, name, text = "on/off", onClick }: Props) => {
-  const [x, setX] = React.useState(() => getDirection(toggled));
-  const t = useTranslations("Common");
-
-  const trueText = text === "true/false" ? t("yes") : text === "on/off" ? t("on") : t("enabled");
-  const falseText = text === "true/false" ? t("no") : text === "on/off" ? t("off") : t("disabled");
-
-  React.useEffect(() => {
-    setX(getDirection(toggled));
-  }, [toggled]);
-
-  return (
-    <div
-      className={`w-[100px] ${
-        text === "enable/disable" && "w-1/4 min-w-[206px]"
-      } bg-gray-200  dark:bg-gray-2 flex items-center justify-between rounded-lg relative overflow-hidden mt-1`}
-    >
-      <div
-        style={{ transform: `translateX(${x}%)` }}
-        className="absolute dark:bg-gray-3 bg-dark-gray h-7 w-2/6 rounded-md pointer-events-none transition-all duration-200"
-      />
-
-      <button
-        onClick={() => onClick({ target: { name, value: true } })}
-        type="button"
-        className={`w-full p-1 cursor-pointer pointer-events-auto z-10  ${
-          toggled && "text-white font-semibold"
-        }`}
+export const Toggle = React.forwardRef<HTMLButtonElement, Props>(
+  ({ toggled, onClick, name, ...props }, ref) => {
+    return (
+      <SwitchPrimitive.Root
+        ref={ref as any}
+        onCheckedChange={() => onClick({ target: { name, value: !toggled } })}
+        {...props}
+        id={name}
+        name={name}
+        checked={toggled}
+        className="relative h-6 transition-all rounded-full shadow-sm w-11 bg-gray-400/50 dark:bg-gray-3 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {trueText}
-      </button>
-      <button
-        onClick={() => onClick({ target: { name, value: false } })}
-        type="button"
-        className={`w-full p-1 cursor-pointer pointer-events-auto z-10  ${
-          !toggled && "text-white font-semibold"
-        }`}
-      >
-        {falseText}
-      </button>
-    </div>
-  );
-};
-
-function getDirection(toggled: boolean) {
-  if (toggled === true) {
-    return Directions.RIGHT;
-  }
-
-  return Directions.LEFT;
-}
+        <SwitchPrimitive.Thumb
+          className={classNames(
+            "block w-4 h-4 transition-all rounded-full switch-component",
+            toggled ? "bg-gray-4 dark:bg-[#e4e4e4]" : "bg-gray-600/40 dark:bg-gray-600",
+          )}
+        />
+      </SwitchPrimitive.Root>
+    );
+  },
+);
