@@ -6,8 +6,8 @@
     "build": "tsup"
   },
   "devDependencies": {
-    "typescript": "^4.5.4",
-    "tsup": "^5.11.6"
+    "tsup": "^5.11.6",
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "zod": "^3.11.6"
