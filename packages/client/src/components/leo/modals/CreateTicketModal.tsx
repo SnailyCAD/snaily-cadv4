@@ -93,7 +93,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                 }}
                 options={{
                   apiPath: "/search/name",
-                  data: { name: values.citizenName },
+                  dataKey: "name",
                   method: "POST",
                   minLength: 2,
                 }}
@@ -116,7 +116,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                   </div>
                 )}
               />
-              <Error>{errors.citizenId}</Error>
+              <Error>{errors.citizenName}</Error>
             </FormField>
 
             <FormField label={t("postal")}>

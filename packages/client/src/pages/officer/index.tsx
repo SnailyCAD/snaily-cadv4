@@ -91,7 +91,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}
 
-      <div className="w-full mb-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+      <div className="w-full mb-3 overflow-hidden card">
         <header className="flex items-center justify-between px-4 py-2 mb-2 bg-gray-300 dark:bg-gray-3">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}

@@ -16,7 +16,7 @@ export const LicensesCard = () => {
 
   return (
     <>
-      <div className="p-4 rounded-md bg-gray-200/60 dark:bg-gray-2">
+      <div className="p-4 card">
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Licenses</h1>
 

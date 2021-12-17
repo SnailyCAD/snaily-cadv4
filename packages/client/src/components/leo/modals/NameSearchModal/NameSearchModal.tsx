@@ -18,7 +18,7 @@ import { RecordsArea } from "./RecordsArea";
 import { useNameSearch } from "state/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
-import { PersonFill } from "react-bootstrap-icons";
+import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 
@@ -167,11 +167,16 @@ export const NameSearchModal = () => {
 
             {typeof results !== "boolean" && currentResult ? (
               <div className="mt-3">
-                <header className="flex justify-between mb-3">
+                <header className="flex justify-between mb-5">
                   <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
                   <div>
-                    <Button type="button" onClick={() => setCurrentResult(null)}>
+                    <Button
+                      className="flex items-center justify-between gap-2"
+                      type="button"
+                      onClick={() => setCurrentResult(null)}
+                    >
+                      <ArrowLeft />
                       {t("viewAllResults")}
                     </Button>
                   </div>

@@ -148,7 +148,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                     options={{
                       apiPath: "/search/vehicle?includeMany=true",
                       method: "POST",
-                      data: { plateOrVin: values.plate },
+                      dataKey: "plateOrVin",
                     }}
                     onSuggestionClick={(suggestion: RegisteredVehicle) => {
                       setFieldValue("plate", suggestion.plate);
@@ -202,7 +202,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   options={{
                     apiPath: "/search/name?includeMany=true",
                     method: "POST",
-                    data: { name: values.name },
+                    dataKey: "name",
                     minLength: 2,
                   }}
                   onSuggestionClick={(suggestion: Citizen) => {

@@ -80,7 +80,7 @@ export const ActiveBolos = () => {
   }
 
   return (
-    <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+    <div className="mt-3 overflow-hidden card">
       <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("activeBolos")}</h3>
       </header>

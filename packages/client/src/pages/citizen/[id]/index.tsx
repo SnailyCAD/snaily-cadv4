@@ -74,7 +74,7 @@ export default function CitizenId() {
         </title>
       </Head>
 
-      <div className="flex items-start justify-between p-4 rounded-md card bg-gray-200/60 dark:bg-gray-2">
+      <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">
           {citizen.imageId ? (
             <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
@@ -137,7 +137,7 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => router.push(`/citizen/${citizen.id}/edit`)} variant="success">
+          <Button onClick={() => router.push(`/citizen/${citizen.id}/edit`)}>
             <Link href={`/citizen/${citizen.id}/edit`}>
               <a>{t("editCitizen")}</a>
             </Link>

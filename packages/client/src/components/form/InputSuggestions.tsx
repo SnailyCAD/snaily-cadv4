@@ -8,26 +8,35 @@ interface Props {
   inputProps?: JSX.IntrinsicElements["input"] & { hasError?: boolean };
   onSuggestionClick?: (suggestion: any) => void;
   Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
-  options: { apiPath: string; method: Method; data: any; minLength?: number };
+  options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };
 }
 
 export const InputSuggestions = ({ Component, onSuggestionClick, options, inputProps }: Props) => {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
+  const [localValue, setLocalValue] = React.useState("");
   const { execute } = useFetch();
   const ref = useOnclickOutside(() => setOpen(false));
 
   async function onSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const target = e.target as HTMLInputElement;
-    const value = target.value;
+    const value = target.value.trim();
+
+    setLocalValue(value);
 
     if (value.length < (options.minLength ?? 3)) {
       setOpen(false);
       return;
     }
 
+    const data: Record<string, unknown> = {};
+    if (options.dataKey) {
+      data[options.dataKey] = value;
+    }
+
     const { json } = await execute(options.apiPath, {
       ...options,
+      data,
     });
 
     if (json && Array.isArray(json)) {
@@ -41,6 +50,12 @@ export const InputSuggestions = ({ Component, onSuggestionClick, options, inputP
     setOpen(false);
   }
 
+  function handleFocus() {
+    if (suggestions.length > 0 && localValue.length > (options.minLength ?? 3)) {
+      setOpen(true);
+    }
+  }
+
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
     // todo: debounce
@@ -52,7 +67,7 @@ export const InputSuggestions = ({ Component, onSuggestionClick, options, inputP
       <Input
         {...(inputProps as any)}
         autoComplete="off"
-        onFocus={() => setOpen(true)}
+        onFocus={handleFocus}
         onChange={handleChange}
       />
 

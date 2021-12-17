@@ -103,7 +103,7 @@ export const ActiveCalls = () => {
   }
 
   return (
-    <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+    <div className="overflow-hidden rounded-md card">
       <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
       </header>

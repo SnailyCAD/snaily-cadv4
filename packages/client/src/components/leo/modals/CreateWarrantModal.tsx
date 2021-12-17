@@ -13,6 +13,9 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { Citizen } from "types/prisma";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
+import { handleValidate } from "lib/handleValidate";
+import { CREATE_WARRANT_SCHEMA } from "@snailycad/schemas";
+import { Error } from "components/form/Error";
 
 export const CreateWarrantModal = () => {
   const { isOpen, closeModal } = useModal();
@@ -37,6 +40,7 @@ export const CreateWarrantModal = () => {
     }
   }
 
+  const validate = handleValidate(CREATE_WARRANT_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: "",
     citizenName: "",
@@ -51,7 +55,7 @@ export const CreateWarrantModal = () => {
       onClose={() => closeModal(ModalIds.CreateWarrant)}
       className="w-[600px]"
     >
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField label="Name">
@@ -68,7 +72,7 @@ export const CreateWarrantModal = () => {
                 }}
                 options={{
                   apiPath: "/search/name",
-                  data: { name: values.citizenName },
+                  dataKey: "name",
                   method: "POST",
                   minLength: 2,
                 }}
@@ -91,6 +95,7 @@ export const CreateWarrantModal = () => {
                   </div>
                 )}
               />
+              <Error>{errors.citizenName}</Error>
             </FormField>
 
             <FormField label={t("status")}>
@@ -104,6 +109,7 @@ export const CreateWarrantModal = () => {
                 hasError={!!errors.status}
                 value={values.status}
               />
+              <Error>{errors.status}</Error>
             </FormField>
 
             <FormField label={common("description")}>
@@ -113,16 +119,26 @@ export const CreateWarrantModal = () => {
                 hasError={!!errors.description}
                 value={values.description}
               />
+              <Error>{errors.description}</Error>
             </FormField>
 
-            <Button
-              className="flex items-center"
-              disabled={!isValid || state === "loading"}
-              type="submit"
-            >
-              {state === "loading" ? <Loader className="mr-2" /> : null}
-              {common("create")}
-            </Button>
+            <footer className="flex justify-end mt-5">
+              <Button
+                type="reset"
+                onClick={() => closeModal(ModalIds.CreateWarrant)}
+                variant="cancel"
+              >
+                {common("cancel")}
+              </Button>
+              <Button
+                className="flex items-center"
+                disabled={!isValid || state === "loading"}
+                type="submit"
+              >
+                {state === "loading" ? <Loader className="mr-2" /> : null}
+                {common("create")}
+              </Button>
+            </footer>
           </Form>
         )}
       </Formik>

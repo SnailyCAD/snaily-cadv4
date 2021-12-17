@@ -45,17 +45,14 @@ export const PendingEmployeesTab = () => {
     <Tab.Panel className="mt-3">
       <h3 className="text-2xl font-semibold">{t("pendingEmployees")}</h3>
 
-      <ul className="space-y-3 mt-3">
+      <ul className="mt-3 space-y-3">
         {employees.length <= 0 ? (
           <p>{t("noPendingEmployees")}</p>
         ) : (
           employees.map((employee) => (
-            <li
-              className="bg-gray-200/60 dark:bg-gray-2 rounded-md p-4 flex items-baseline justify-between"
-              key={employee.id}
-            >
+            <li className="flex items-baseline justify-between p-4 card" key={employee.id}>
               <div>
-                <span className="font-semibold text-xl">
+                <span className="text-xl font-semibold">
                   {employee.citizen.surname} {employee.citizen.name}
                 </span>
               </div>

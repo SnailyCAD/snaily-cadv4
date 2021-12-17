@@ -11,6 +11,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@layer components {
+  .card {
+    @apply rounded-md bg-gray-200/60 dark:bg-gray-2;
+  }
+}
+
 #__next {
   @apply min-h-screen dark:bg-dark-bg;
 }
