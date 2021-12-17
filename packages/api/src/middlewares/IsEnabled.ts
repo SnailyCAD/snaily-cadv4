@@ -17,15 +17,16 @@ const featuresRoute: Partial<Record<Feature, string>> = {
 export class IsEnabled implements MiddlewareMethods {
   async use(@Req() req: Req) {
     const cad = setDiscordAUth(
-      (await prisma.cad.findFirst({
+      await prisma.cad.findFirst({
         select: {
           id: true,
           disabledFeatures: true,
         },
-      })) as any,
+      }),
     );
 
-    for (const feature of cad.disabledFeatures) {
+    const disabledFeatures = cad?.disabledFeatures ?? [];
+    for (const feature of disabledFeatures) {
       const route = featuresRoute[feature as Feature];
 
       if (req.originalUrl.includes(route!) || req.baseUrl.includes(route!)) {

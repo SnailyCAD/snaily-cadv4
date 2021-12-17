@@ -92,7 +92,7 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAUth(cad: cad) {
+export function setDiscordAUth<T extends Pick<cad, "disabledFeatures"> | null = cad>(cad: T) {
   const hasDiscordTokens = process.env["DISCORD_CLIENT_ID"] && process.env["DISCORD_CLIENT_SECRET"];
   const isEnabled = !cad?.disabledFeatures?.includes("DISCORD_AUTH");
 
@@ -101,7 +101,7 @@ export function setDiscordAUth(cad: cad) {
   }
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, disabledFeatures: [...cad.disabledFeatures, "DISCORD_AUTH"] };
+    return { ...cad, disabledFeatures: [...(cad?.disabledFeatures ?? []), "DISCORD_AUTH"] };
   }
 
   return cad;
