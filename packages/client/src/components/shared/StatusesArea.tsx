@@ -1,52 +1,32 @@
-import { useListener } from "@casper124578/use-socket.io";
-import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
-import { useEmsFdState } from "state/emsFdState";
+import { useRouter } from "next/router";
+import { ActiveDeputy } from "state/emsFdState";
+import { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { ShouldDoType, StatusValue } from "types/prisma";
 
-export const StatusesArea = () => {
+interface Props {
+  activeUnit: ActiveOfficer | ActiveDeputy | null;
+  setActiveUnit(unit: ActiveOfficer | ActiveDeputy | null): void;
+}
+
+export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
   const { codes10 } = useValues();
-  const { activeDeputy, setActiveDeputy } = useEmsFdState();
   const { openModal } = useModal();
   const { execute } = useFetch();
-
-  async function getActiveDeputy() {
-    const { json, error } = await execute("/ems-fd/active-deputy", {
-      noToast: true,
-    });
-
-    if (json.id) {
-      setActiveDeputy({ ...activeDeputy, ...json });
-    }
-
-    if (error && error === "noActiveDeputy") {
-      setActiveDeputy(null);
-    }
-  }
-
-  useListener(
-    SocketEvents.UpdateEmsFdStatus,
-    () => {
-      getActiveDeputy();
-    },
-    [setActiveDeputy, activeDeputy],
-  );
-
-  const isButtonDisabled =
-    !activeDeputy ||
-    activeDeputy.status === null ||
-    activeDeputy.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
+  const router = useRouter();
+  const isEmsFd = router.pathname.includes("/ems-fd");
+  const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
 
   async function handleStatusUpdate(status: StatusValue) {
-    if (!activeDeputy) return;
-    if (status.id === activeDeputy?.statusId) return;
+    if (!activeUnit) return;
+    if (status.id === activeUnit.statusId) return;
 
-    const { json } = await execute(`/dispatch/status/${activeDeputy.id}`, {
+    const { json } = await execute(`/dispatch/status/${activeUnit.id}`, {
       method: "PUT",
       data: {
         status: status.id,
@@ -54,12 +34,17 @@ export const StatusesArea = () => {
     });
 
     if (json.id) {
-      setActiveDeputy({ ...activeDeputy, ...json });
+      setActiveUnit({ ...activeUnit, ...json });
     }
   }
 
+  const isButtonDisabled =
+    !activeUnit ||
+    activeUnit.status === null ||
+    activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
+
   const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
-  const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeDeputy?.status?.id;
+  const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeUnit?.status?.id;
 
   if (!onDutyCode && codes10.values.length <= 0) {
     return (
@@ -75,7 +60,7 @@ export const StatusesArea = () => {
         <Button
           className={classNames("w-full min-w-[5em]", isOnDutyActive && "font-semibold")}
           variant={isOnDutyActive ? "blue" : "default"}
-          onClick={() => openModal(ModalIds.SelectDeputy)}
+          onClick={() => openModal(modalId)}
         >
           {onDutyCode?.value.value}
         </Button>
@@ -85,7 +70,7 @@ export const StatusesArea = () => {
         .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY && v.type === "STATUS_CODE")
         .sort((a, b) => Number(a.position) - Number(b.position))
         .map((code) => {
-          const isActive = code.id === activeDeputy?.statusId;
+          const isActive = code.id === activeUnit?.statusId;
           const variant =
             code.shouldDo === ShouldDoType.SET_OFF_DUTY ? "danger" : isActive ? "blue" : "default";
 
@@ -104,4 +89,4 @@ export const StatusesArea = () => {
         })}
     </ul>
   );
-};
+}

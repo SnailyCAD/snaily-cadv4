@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
 import Head from "next/head";
 import { Layout } from "components/Layout";
-import { StatusesArea } from "components/leo/StatusesArea";
+import { StatusesArea } from "components/shared/StatusesArea";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -105,7 +105,7 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
           <ModalButtons />
         </div>
 
-        <StatusesArea />
+        <StatusesArea activeUnit={state.activeOfficer} setActiveUnit={state.setActiveOfficer} />
       </div>
 
       <ActiveCalls />

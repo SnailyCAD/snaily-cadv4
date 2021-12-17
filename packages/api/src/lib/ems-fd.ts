@@ -8,7 +8,9 @@ import { unitProperties } from "./officer";
 import { prisma } from "./prisma";
 
 export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
-  const header = req.headers.cookie;
+  const header =
+    req.cookies[Cookie.ActiveDeputy] || parse(`${req.headers.session}`)?.[Cookie.ActiveDeputy];
+
   if (!header) {
     throw new BadRequest("noActiveDeputy");
   }
@@ -29,9 +31,7 @@ export async function getActiveDeputy(req: Req, userId: string, ctx: Context) {
     }
   }
 
-  const cookie = parse(header)[Cookie.ActiveDeputy];
-  const jwtPayload = verifyJWT(cookie!);
-
+  const jwtPayload = verifyJWT(header);
   if (!jwtPayload) {
     ctx.delete("activeDeputy");
   }

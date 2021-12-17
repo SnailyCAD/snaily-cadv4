@@ -10,7 +10,7 @@ import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
-import { StatusesArea } from "components/ems-fd/StatusesArea";
+import { StatusesArea } from "components/shared/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
 import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
@@ -65,7 +65,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
       {signal100Enabled ? <Component /> : null}
 
-      <div className="w-full bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
+      <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3 dark:text-white dark:border-b-[1px] dark:border-dark-gray mb-2">
           <h3 className="text-xl font-semibold">
             {t("Leo.utilityPanel")}
@@ -79,10 +79,10 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
           <ModalButtons />
         </div>
 
-        <StatusesArea />
+        <StatusesArea setActiveUnit={state.setActiveDeputy} activeUnit={state.activeDeputy} />
       </div>
 
-      <div className="flex flex-col md:flex-row md:space-x-3 mt-3">
+      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
           <ActiveCalls />
         </div>

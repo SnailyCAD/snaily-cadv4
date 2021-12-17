@@ -15,7 +15,9 @@ export const unitProperties = {
 };
 
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
-  const header = req.headers.cookie;
+  const header =
+    req.cookies[Cookie.ActiveOfficer] || parse(`${req.headers.session}`)?.[Cookie.ActiveOfficer];
+
   if (!header) {
     throw new BadRequest("noActiveOfficer");
   }
@@ -34,8 +36,7 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     }
   }
 
-  const cookie = parse(header)[Cookie.ActiveOfficer];
-  const jwtPayload = verifyJWT(cookie!);
+  const jwtPayload = verifyJWT(header);
 
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {

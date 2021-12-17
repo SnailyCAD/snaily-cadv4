@@ -58,7 +58,7 @@ const SHOULD_DO_LABELS = {
 };
 
 const DEPARTMENT_LABELS = {
-  [DepartmentType.LEO]: "Leo",
+  [DepartmentType.LEO]: "LEO",
   [DepartmentType.EMS_FD]: "EMS/FD",
 };
 
@@ -129,7 +129,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     // @ts-expect-error shortcut
     color: value?.color ?? "",
     // @ts-expect-error shortcut
-    type: value?.type ?? "",
+    type: value?.type ?? "STATUS_CODE",
     // @ts-expect-error shortcut
     hash: value?.hash ?? "",
     showPicker: false,
@@ -251,7 +251,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
 
                     <Button
                       variant="cancel"
-                      className="ml-2 px-1 p-0"
+                      className="p-0 px-1 ml-2"
                       type="button"
                       onClick={() => setFieldValue("showPicker", !values.showPicker)}
                       aria-label="Color Picker"
@@ -287,7 +287,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
               </>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
                 Cancel
               </Button>

@@ -189,7 +189,7 @@ export class StatusController {
     } else {
       const cookieName = ["leo", "combined"].includes(type)
         ? Cookie.ActiveOfficer
-        : Cookie.ActiveOfficer;
+        : Cookie.ActiveDeputy;
       const cookiePayloadName = ["leo", "combined"].includes(type) ? "officerId" : "deputyId";
 
       // expires after 3 hours.
