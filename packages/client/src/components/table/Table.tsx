@@ -3,15 +3,23 @@ import { classNames } from "lib/classNames";
 import * as React from "react";
 import { useTable, Column } from "react-table";
 
-interface Props<T extends object = any> {
-  data: readonly T[];
-  columns: Column<T>[];
+type TableData = {
+  rowProps?: JSX.IntrinsicElements["tr"];
+  [k: string]: any;
+};
+
+interface Props<T extends TableData = TableData> {
+  data: readonly TableData[];
+  columns: (Column<T> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
 }
 
 export function Table(props: Props) {
   const data = React.useMemo(() => props.data, [props.data]);
-  const columns = React.useMemo(() => props.columns ?? [], [props.columns]);
+  const columns = React.useMemo(
+    () => (props.columns.filter(Boolean) as Column<any>[]) ?? [],
+    [props.columns],
+  );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
@@ -41,10 +49,11 @@ export function Table(props: Props) {
 
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {
+            const rowProps = row.original.rowProps ?? {};
             prepareRow(row);
 
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} {...rowProps}>
                 {row.cells.map((cell) => {
                   const isActions = cell.column.id === "actions";
 

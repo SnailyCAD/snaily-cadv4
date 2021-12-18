@@ -11,6 +11,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import type { Citizen, MedicalRecord } from "types/prisma";
 import { Input } from "components/form/Input";
+import { Table } from "components/table/Table";
 
 interface Props {
   onClose?: () => void;
@@ -92,43 +93,45 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
             ) : null}
 
             {typeof results !== "boolean" && results !== null ? (
-              <>
-                <div className="overflow-x-auto w-full mt-3">
-                  <table className="overflow-hidden max-w-4xl w-full whitespace-nowrap max-h-64">
-                    <thead>
-                      <tr>
-                        <th>{t("diseases")}</th>
-                        <th>{t("bloodGroup")}</th>
-                        <th>{common("description")}</th>
-                        <th>{common("actions")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {results.medicalRecords.map((record) => (
-                        <tr key={record.id}>
-                          <td>{record.type}</td>
-                          <td>{record.bloodGroup?.value ?? common("none")}</td>
-                          <td>{record.description}</td>
-                          <td className="w-[30%]">
-                            <Button
-                              small
-                              variant={results.dead ? "success" : "danger"}
-                              type="button"
-                              onClick={handleDeclare}
-                              className=""
-                            >
-                              {results.dead ? "Declare Alive" : "Declare dead"}
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
+              <Table
+                data={results.medicalRecords.map((record) => ({
+                  type: record.type,
+                  bloodGroup: record.bloodGroup?.value ?? common("none"),
+                  description: record.description,
+                  actions: (
+                    <Button
+                      small
+                      variant={results.dead ? "success" : "danger"}
+                      type="button"
+                      onClick={handleDeclare}
+                      className=""
+                    >
+                      {results.dead ? "Declare Alive" : "Declare dead"}
+                    </Button>
+                  ),
+                }))}
+                columns={[
+                  {
+                    Header: t("diseases"),
+                    accessor: "type",
+                  },
+                  {
+                    Header: t("bloodGroup"),
+                    accessor: "bloodGroup",
+                  },
+                  {
+                    Header: t("description"),
+                    accessor: "description",
+                  },
+                  {
+                    Header: common("actions"),
+                    accessor: "actions",
+                  },
+                ]}
+              />
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.SearchMedicalRecord)}

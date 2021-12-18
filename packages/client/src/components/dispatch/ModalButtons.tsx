@@ -24,6 +24,10 @@ const buttons: MButton[] = [
     modalId: ModalIds.WeaponSearch,
   },
   {
+    nameKey: ["Leo", "addressSearch"],
+    modalId: ModalIds.AddressSearch,
+  },
+  {
     nameKey: ["Leo", "createBolo"],
     modalId: ModalIds.ManageBolo,
   },
