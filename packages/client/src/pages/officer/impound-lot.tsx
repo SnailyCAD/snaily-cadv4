@@ -62,7 +62,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
           data={vehicles.map((item) => ({
             plate: item.vehicle.plate,
             model: item.vehicle.model.value.value,
-            location: item.location,
+            location: item.location.value,
             actions: (
               <Button onClick={() => handleCheckoutClick(item)} className="ml-2" small>
                 {t("allowCheckout")}

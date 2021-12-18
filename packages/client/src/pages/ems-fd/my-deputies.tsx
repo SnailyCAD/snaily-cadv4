@@ -80,7 +80,7 @@ export default function MyDeputies({ deputies: data }: Props) {
       ) : (
         <Table
           data={deputies.map((deputy) => ({
-            officer: (
+            deputy: (
               <span className="flex items-center">
                 {deputy.imageId ? (
                   <img
@@ -115,27 +115,27 @@ export default function MyDeputies({ deputies: data }: Props) {
           }))}
           columns={[
             {
-              Header: t("officer"),
-              accessor: "officer",
+              Header: t("Ems.deputy"),
+              accessor: "deputy",
             },
             {
-              Header: t("callsign"),
+              Header: t("Leo.callsign"),
               accessor: "callsign",
             },
             {
-              Header: t("badgeNumber"),
+              Header: t("Leo.badgeNumber"),
               accessor: "badgeNumber",
             },
             {
-              Header: t("department"),
+              Header: t("Leo.department"),
               accessor: "department",
             },
             {
-              Header: t("division"),
+              Header: t("Leo.division"),
               accessor: "division",
             },
             {
-              Header: t("rank"),
+              Header: t("Leo.rank"),
               accessor: "rank",
             },
             {
