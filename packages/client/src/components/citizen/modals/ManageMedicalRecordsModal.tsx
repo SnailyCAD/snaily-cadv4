@@ -82,7 +82,7 @@ export const ManageMedicalRecordsModal = ({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="type" label={t("diseases")}>
+            <FormField label={t("diseases")}>
               <Input
                 hasError={!!errors.type}
                 onChange={handleChange}
@@ -92,7 +92,7 @@ export const ManageMedicalRecordsModal = ({
               <Error>{errors.type}</Error>
             </FormField>
 
-            <FormField fieldId="bloodGroup" label={t("bloodGroup")}>
+            <FormField label={t("bloodGroup")}>
               <Select
                 values={bloodGroup.values.map((v) => ({
                   value: v.id,
@@ -106,7 +106,7 @@ export const ManageMedicalRecordsModal = ({
               <Error>{errors.bloodGroup}</Error>
             </FormField>
 
-            <FormField fieldId="description" label={common("description")}>
+            <FormField label={common("description")}>
               <Textarea
                 hasError={!!errors.description}
                 value={values.description}

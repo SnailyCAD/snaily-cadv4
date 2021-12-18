@@ -74,7 +74,7 @@ export const ManageLicensesModal = () => {
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
             <FormRow>
-              <FormField fieldId="driversLicense" label={t("driversLicense")}>
+              <FormField label={t("driversLicense")}>
                 <Select
                   hasError={!!errors.driversLicense}
                   values={license.values.map((license) => ({
@@ -88,7 +88,7 @@ export const ManageLicensesModal = () => {
                 <Error>{errors.driversLicense}</Error>
               </FormField>
 
-              <FormField fieldId="driversLicenseCategory" label={t("driversLicenseCategory")}>
+              <FormField label={t("driversLicenseCategory")}>
                 <Select
                   isMulti
                   hasError={!!errors.driversLicenseCategory}
@@ -107,7 +107,7 @@ export const ManageLicensesModal = () => {
             </FormRow>
 
             <FormRow>
-              <FormField fieldId="pilotLicense" label={t("pilotLicense")}>
+              <FormField label={t("pilotLicense")}>
                 <Select
                   hasError={!!errors.pilotLicense}
                   values={license.values.map((license) => ({
@@ -121,7 +121,7 @@ export const ManageLicensesModal = () => {
                 <Error>{errors.pilotLicense}</Error>
               </FormField>
 
-              <FormField fieldId="pilotLicenseCategory" label={t("pilotLicenseCategory")}>
+              <FormField label={t("pilotLicenseCategory")}>
                 <Select
                   isMulti
                   hasError={!!errors.pilotLicenseCategory}
@@ -139,7 +139,7 @@ export const ManageLicensesModal = () => {
               </FormField>
             </FormRow>
 
-            <FormField fieldId="weaponLicense" label={t("weaponLicense")}>
+            <FormField label={t("weaponLicense")}>
               <Select
                 hasError={!!errors.weaponLicense}
                 values={license.values.map((license) => ({
@@ -153,7 +153,7 @@ export const ManageLicensesModal = () => {
               <Error>{errors.weaponLicense}</Error>
             </FormField>
 
-            <FormField fieldId="ccw" label={t("ccw")}>
+            <FormField label={t("ccw")}>
               <Select
                 hasError={!!errors.ccw}
                 values={license.values.map((license) => ({

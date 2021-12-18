@@ -81,7 +81,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField fieldId="title" label={t("postTitle")}>
+            <FormField label={t("postTitle")}>
               <Input
                 id="title"
                 onChange={handleChange}
@@ -91,7 +91,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
               <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField fieldId="body" label={t("postBody")}>
+            <FormField label={t("postBody")}>
               <Textarea
                 id="body"
                 onChange={handleChange}

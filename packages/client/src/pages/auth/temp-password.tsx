@@ -74,7 +74,7 @@ export default function TempPassword() {
 
               <p className="text-base italic my-3">{t("savePasswordInfo")}</p>
 
-              <FormField fieldId="newPassword" label={t("password")}>
+              <FormField label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.newPassword}
                   id="newPassword"
@@ -84,7 +84,7 @@ export default function TempPassword() {
                 <Error>{errors.newPassword}</Error>
               </FormField>
 
-              <FormField fieldId="confirmPassword" label={t("confirmPassword")}>
+              <FormField label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
                   id="confirmPassword"

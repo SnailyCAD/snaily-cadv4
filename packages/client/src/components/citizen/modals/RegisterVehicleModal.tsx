@@ -96,7 +96,7 @@ export const RegisterVehicleModal = ({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="plate" label={tVehicle("plate")}>
+            <FormField label={tVehicle("plate")}>
               <Input
                 disabled={!!vehicle}
                 hasError={!!errors.plate}
@@ -109,11 +109,11 @@ export const RegisterVehicleModal = ({
               <Error>{errors.plate}</Error>
             </FormField>
 
-            <FormField fieldId="vinNumber" label={tVehicle("vinNumber")}>
+            <FormField label={tVehicle("vinNumber")}>
               <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 
-            <FormField fieldId="model" label={tVehicle("model")}>
+            <FormField label={tVehicle("model")}>
               <Select
                 hasError={!!errors.model}
                 values={vehicles.values.map((vehicle) => ({
@@ -127,7 +127,7 @@ export const RegisterVehicleModal = ({
               <Error>{errors.model}</Error>
             </FormField>
 
-            <FormField fieldId="citizenId" label={tVehicle("owner")}>
+            <FormField label={tVehicle("owner")}>
               <Select
                 hasError={!!errors.citizenId}
                 values={
@@ -146,7 +146,7 @@ export const RegisterVehicleModal = ({
               <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField fieldId="registrationStatus" label={tVehicle("registrationStatus")}>
+            <FormField label={tVehicle("registrationStatus")}>
               <Select
                 hasError={!!errors.registrationStatus}
                 values={license.values.map((license) => ({
@@ -160,7 +160,7 @@ export const RegisterVehicleModal = ({
               <Error>{errors.registrationStatus}</Error>
             </FormField>
 
-            <FormField fieldId="color" label={tVehicle("color")}>
+            <FormField label={tVehicle("color")}>
               <Input
                 hasError={!!errors.color}
                 onChange={handleChange}
@@ -171,7 +171,7 @@ export const RegisterVehicleModal = ({
             </FormField>
 
             {vehicle ? (
-              <FormField fieldId="reportedStolen" label={tVehicle("reportAsStolen")}>
+              <FormField label={tVehicle("reportAsStolen")}>
                 <Toggle
                   onClick={handleChange}
                   name="reportedStolen"

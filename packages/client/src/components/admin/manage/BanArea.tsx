@@ -51,7 +51,7 @@ export const BanArea = ({ user, setUser }: Props) => {
   const validate = handleValidate(BAN_SCHEMA);
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-2 mt-10 rounded-md p-3">
+    <div className="p-3 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">Ban area</h1>
 
       {user.banned && user.rank !== "OWNER" ? (
@@ -73,7 +73,7 @@ export const BanArea = ({ user, setUser }: Props) => {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={{ reason: "" }}>
           {({ handleChange, handleSubmit, values, errors }) => (
             <form className="mt-3" onSubmit={handleSubmit}>
-              <FormField fieldId="reason" label={common("reason")}>
+              <FormField label={common("reason")}>
                 <Input
                   hasError={!!errors.reason}
                   className="bg-gray-100"
@@ -91,7 +91,7 @@ export const BanArea = ({ user, setUser }: Props) => {
                 disabled={formDisabled || state === "loading"}
                 variant="danger"
               >
-                {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
+                {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
                 Ban User
               </Button>
             </form>

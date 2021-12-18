@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { useAuth } from "context/AuthContext";
@@ -44,12 +43,11 @@ export const AppearanceTab = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
-            <FormField label="Dark Theme">
+            <FormField errorMessage={errors.isDarkTheme} label="Dark Theme">
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
-              <Error>{errors.isDarkTheme}</Error>
             </FormField>
 
-            <FormField label="Status View">
+            <FormField errorMessage={errors.statusViewMode} label="Status View">
               <Select
                 values={Object.values(StatusViewMode).map((v) => ({
                   value: v,
@@ -59,7 +57,6 @@ export const AppearanceTab = () => {
                 onChange={handleChange}
                 name="statusViewMode"
               />
-              <Error>{errors.statusViewMode}</Error>
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>

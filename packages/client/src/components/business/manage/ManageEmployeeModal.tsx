@@ -79,7 +79,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField fieldId="roleId" label={t("role")}>
+            <FormField label={t("role")}>
               <Select
                 name="roleId"
                 onChange={handleChange}
@@ -93,7 +93,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
             </FormField>
 
             <FormRow>
-              <FormField fieldId="canCreatePosts" label={t("canCreatePosts")}>
+              <FormField label={t("canCreatePosts")}>
                 <Toggle
                   name="canCreatePosts"
                   onClick={handleChange}
@@ -102,7 +102,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
                 <Error>{errors.canCreatePosts}</Error>
               </FormField>
 
-              <FormField fieldId="employeeOfTheMonth" label={t("employeeOfTheMonth")}>
+              <FormField label={t("employeeOfTheMonth")}>
                 <Toggle
                   name="employeeOfTheMonth"
                   onClick={handleChange}

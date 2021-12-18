@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Textarea } from "components/form/Textarea";
@@ -91,7 +90,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField label={common("type")}>
+            <FormField errorMessage={errors.type} label={common("type")}>
               <FormRow>
                 <Button
                   disabled={!!bolo}
@@ -132,12 +131,11 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   <ThreeDots width={30} height={30} />
                 </Button>
               </FormRow>
-              <Error>{errors.type}</Error>
             </FormField>
 
             {values.type === BoloType.VEHICLE ? (
               <>
-                <FormField label={leo("plate")}>
+                <FormField errorMessage={errors.plate} label={leo("plate")}>
                   <InputSuggestions
                     inputProps={{
                       id: "plate",
@@ -162,33 +160,30 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                       </p>
                     )}
                   />
-                  <Error>{errors.plate}</Error>
                 </FormField>
 
-                <FormField label={leo("model")}>
+                <FormField errorMessage={errors.model} label={leo("model")}>
                   <Input
                     id="model"
                     onChange={handleChange}
                     hasError={!!errors.model}
                     value={values.model}
                   />
-                  <Error>{errors.model}</Error>
                 </FormField>
 
-                <FormField label={leo("color")}>
+                <FormField errorMessage={errors.color} label={leo("color")}>
                   <Input
                     id="color"
                     onChange={handleChange}
                     hasError={!!errors.color}
                     value={values.color}
                   />
-                  <Error>{errors.color}</Error>
                 </FormField>
               </>
             ) : null}
 
             {values.type === BoloType.PERSON ? (
-              <FormField label={common("name")}>
+              <FormField errorMessage={errors.name} label={common("name")}>
                 <InputSuggestions
                   inputProps={{
                     id: "name",
@@ -227,18 +222,16 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                     </div>
                   )}
                 />
-                <Error>{errors.name}</Error>
               </FormField>
             ) : null}
 
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
                 id="description"
                 onChange={handleChange}
                 hasError={!!errors.description}
                 value={values.description}
               />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

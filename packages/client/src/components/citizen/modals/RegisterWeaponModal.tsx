@@ -90,7 +90,7 @@ export const RegisterWeaponModal = ({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="model" label={tVehicle("model")}>
+            <FormField label={tVehicle("model")}>
               <Select
                 hasError={!!errors.model}
                 values={weapons.values.map((weapon) => ({
@@ -104,7 +104,7 @@ export const RegisterWeaponModal = ({
               <Error>{errors.model}</Error>
             </FormField>
 
-            <FormField fieldId="citizenId" label={tVehicle("owner")}>
+            <FormField label={tVehicle("owner")}>
               <Select
                 hasError={!!errors.citizenId}
                 values={
@@ -123,7 +123,7 @@ export const RegisterWeaponModal = ({
               <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField fieldId="registrationStatus" label={tVehicle("registrationStatus")}>
+            <FormField label={tVehicle("registrationStatus")}>
               <Select
                 hasError={!!errors.registrationStatus}
                 values={license.values.map((license) => ({
@@ -137,7 +137,7 @@ export const RegisterWeaponModal = ({
               <Error>{errors.registrationStatus}</Error>
             </FormField>
 
-            <FormField fieldId="serialNumber" label={tWeapon("serialNumber")}>
+            <FormField label={tWeapon("serialNumber")}>
               <Input
                 hasError={!!errors.serialNumber}
                 value={values.serialNumber}

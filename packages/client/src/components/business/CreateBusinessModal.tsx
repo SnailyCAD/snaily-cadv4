@@ -58,7 +58,7 @@ export const CreateBusinessModal = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField fieldId="ownerId" label={t("owner")}>
+            <FormField label={t("owner")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -72,7 +72,7 @@ export const CreateBusinessModal = () => {
               <Error>{errors.ownerId}</Error>
             </FormField>
 
-            <FormField fieldId="name" label={t("name")}>
+            <FormField label={t("name")}>
               <Input
                 id="name"
                 onChange={handleChange}
@@ -82,7 +82,7 @@ export const CreateBusinessModal = () => {
               <Error>{errors.name}</Error>
             </FormField>
 
-            <FormField fieldId="address" label={t("address")}>
+            <FormField label={t("address")}>
               <Input
                 id="address"
                 onChange={handleChange}
@@ -92,7 +92,7 @@ export const CreateBusinessModal = () => {
               <Error>{errors.address}</Error>
             </FormField>
 
-            <FormField fieldId="whitelisted" label={t("whitelisted")}>
+            <FormField label={t("whitelisted")}>
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
               <Error>{errors.whitelisted}</Error>
             </FormField>

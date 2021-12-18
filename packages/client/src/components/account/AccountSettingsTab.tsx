@@ -5,7 +5,6 @@ import { Form, Formik } from "formik";
 import { useAuth } from "src/context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { Error } from "components/form/Error";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
@@ -33,14 +32,13 @@ export const AccountSettingsTab = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
-            <FormField label="Username">
+            <FormField label="Username" errorMessage={errors.username}>
               <Input
                 hasError={!!errors.username}
                 value={values.username}
                 onChange={handleChange}
                 name="username"
               />
-              <Error>{errors.username}</Error>
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>

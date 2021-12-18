@@ -73,7 +73,7 @@ export default function Register({ cad }: Props) {
                 {t("register")}
               </h1>
 
-              <FormField fieldId="username" label={t("username")}>
+              <FormField label={t("username")}>
                 <Input
                   hasError={!!errors.username}
                   id="username"
@@ -84,7 +84,7 @@ export default function Register({ cad }: Props) {
                 <Error>{errors.username}</Error>
               </FormField>
 
-              <FormField fieldId="password" label={t("password")}>
+              <FormField label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
                   id="password"
@@ -94,7 +94,7 @@ export default function Register({ cad }: Props) {
                 <Error>{errors.password}</Error>
               </FormField>
 
-              <FormField fieldId="confirmPassword" label={t("confirmPassword")}>
+              <FormField label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
                   id="confirmPassword"
@@ -105,7 +105,7 @@ export default function Register({ cad }: Props) {
               </FormField>
 
               {cad.registrationCode ? (
-                <FormField fieldId="registrationCode" label={t("registrationCode")}>
+                <FormField label={t("registrationCode")}>
                   <Input
                     hasError={!!errors.registrationCode}
                     id="registrationCode"

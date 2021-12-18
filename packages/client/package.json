@@ -18,6 +18,8 @@
     "@headlessui/react": "^1.4.2",
     "@radix-ui/react-context-menu": "^0.1.4",
     "@radix-ui/react-switch": "^0.1.4",
+    "@react-aria/label": "^3.2.1",
+    "@react-aria/ssr": "^3.1.0",
     "@snailycad/config": "1.0.0-beta.16",
     "@snailycad/schemas": "1.0.0-beta.16",
     "axios": "^0.24.0",

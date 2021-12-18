@@ -76,7 +76,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="name" label={t("citizen")}>
+            <FormField label={t("citizen")}>
               <Input
                 required
                 hasError={!!errors.name}

@@ -1,6 +1,5 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/Input";
 import { Form, Formik, FormikHelpers } from "formik";
@@ -46,34 +45,31 @@ export const ChangePasswordArea = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
-            <FormField label={t("currentPassword")}>
+            <FormField errorMessage={errors.currentPassword} label={t("currentPassword")}>
               <PasswordInput
                 hasError={!!errors.currentPassword}
                 value={values.currentPassword}
                 onChange={handleChange}
                 name="currentPassword"
               />
-              <Error>{errors.currentPassword}</Error>
             </FormField>
 
-            <FormField label={t("newPassword")}>
+            <FormField errorMessage={errors.currentPassword} label={t("newPassword")}>
               <PasswordInput
                 hasError={!!errors.newPassword}
                 value={values.newPassword}
                 onChange={handleChange}
                 name="newPassword"
               />
-              <Error>{errors.currentPassword}</Error>
             </FormField>
 
-            <FormField label={t("confirmNewPassword")}>
+            <FormField errorMessage={errors.confirmPassword} label={t("confirmNewPassword")}>
               <PasswordInput
                 hasError={!!errors.confirmPassword}
                 value={values.confirmPassword}
                 onChange={handleChange}
                 name="confirmPassword"
               />
-              <Error>{errors.confirmPassword}</Error>
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>

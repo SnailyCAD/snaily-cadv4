@@ -69,7 +69,7 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField fieldId="citizenId" label={t("citizen")}>
+            <FormField label={t("citizen")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -83,7 +83,7 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
               <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField fieldId="businessId" label={t("business")}>
+            <FormField label={t("business")}>
               <Select
                 values={joinableBusinesses.map((business) => ({
                   label: business.name,

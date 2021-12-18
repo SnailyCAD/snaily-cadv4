@@ -70,7 +70,7 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="title" label="Title">
+            <FormField label="Title">
               <Input
                 autoFocus
                 id="title"
@@ -81,7 +81,7 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
               <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField fieldId="description" label="Description">
+            <FormField label="Description">
               <Textarea
                 id="description"
                 name="description"
