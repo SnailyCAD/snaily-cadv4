@@ -83,6 +83,14 @@ export class AuthController {
       throw new BadRequest("userAlreadyExists");
     }
 
+    const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
+    if (preCad && preCad.registrationCode) {
+      const code = body.get("registrationCode");
+      if (code !== preCad.registrationCode) {
+        throw new BadRequest("invalidRegistrationCode");
+      }
+    }
+
     const userCount = await prisma.user.count();
     const salt = genSaltSync();
 

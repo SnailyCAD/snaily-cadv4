@@ -57,6 +57,7 @@
     "officerAlreadyMerged": "This unit is already marked as a combined unit.",
     "discordNameInUse": "Could not create a new account with Discord since the username is already in-use.",
     "discordAccountAlreadyLinked": "This Discord account is already linked to another account.",
-    "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created."
+    "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created.",
+    "invalidRegistrationCode": "The registration code you provided is invalid."
   }
 }
