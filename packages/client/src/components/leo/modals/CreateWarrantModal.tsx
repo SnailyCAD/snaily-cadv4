@@ -13,8 +13,6 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { Citizen } from "types/prisma";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
-import { handleValidate } from "lib/handleValidate";
-import { CREATE_WARRANT_SCHEMA } from "@snailycad/schemas";
 import { Error } from "components/form/Error";
 
 export const CreateWarrantModal = () => {
@@ -40,7 +38,6 @@ export const CreateWarrantModal = () => {
     }
   }
 
-  const validate = handleValidate(CREATE_WARRANT_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: "",
     citizenName: "",
@@ -55,7 +52,7 @@ export const CreateWarrantModal = () => {
       onClose={() => closeModal(ModalIds.CreateWarrant)}
       className="w-[600px]"
     >
-      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField label="Name">

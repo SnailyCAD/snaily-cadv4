@@ -29,7 +29,7 @@ export const FormField = ({ boldLabel, checkbox, children, label, className, fie
       {children}
 
       {checkbox ? (
-        <label className={labelClassnames} htmlFor={fieldId}>
+        <label className={`${labelClassnames} ml-2`} htmlFor={fieldId}>
           {label}
         </label>
       ) : null}

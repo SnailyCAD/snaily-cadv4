@@ -6,7 +6,7 @@ import { getActiveDeputy } from "../lib/ems-fd";
 export class ActiveDeputy implements MiddlewareMethods {
   async use(@Req() req: Req, @Context() ctx: Context) {
     const user = await getSessionUser(req);
-    const officer = await getActiveDeputy(req, user.id, ctx);
+    const officer = await getActiveDeputy(req, user, ctx);
 
     ctx.set("activeDeputy", officer);
   }

@@ -18,14 +18,6 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   const header =
     req.cookies[Cookie.ActiveOfficer] || parse(`${req.headers.session}`)?.[Cookie.ActiveOfficer];
 
-  if (!header) {
-    throw new BadRequest("noActiveOfficer");
-  }
-
-  if (!user.isLeo) {
-    throw new Forbidden("Invalid Permissions");
-  }
-
   // dispatch is allowed to use officer routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
@@ -33,6 +25,14 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
       throw new Unauthorized("Must be dispatch to use this header.");
     } else {
       isDispatch = true;
+    }
+  } else {
+    if (!header) {
+      throw new BadRequest("noActiveOfficer");
+    }
+
+    if (!user.isLeo) {
+      throw new Forbidden("Invalid Permissions");
     }
   }
 

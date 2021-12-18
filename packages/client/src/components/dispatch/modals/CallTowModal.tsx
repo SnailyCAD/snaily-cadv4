@@ -126,13 +126,14 @@ export const DispatchCallTowModal = ({ call }: Props) => {
               </>
             ) : null}
 
-            <FormField checkbox label={"Call County Service"}>
+            <FormField fieldId="callCountyService" checkbox label={"Call County Service"}>
               <Input
+                id="callCountyService"
                 type="checkbox"
                 name="callCountyService"
                 onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
                 checked={values.callCountyService}
-                className="w-[max-content] ml-3"
+                className="w-[max-content] ml-1"
               />
               <Error>{errors.callCountyService}</Error>
             </FormField>
