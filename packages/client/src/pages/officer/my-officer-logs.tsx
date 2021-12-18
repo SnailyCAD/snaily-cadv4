@@ -12,6 +12,8 @@ import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { Table } from "components/table/Table";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -22,6 +24,7 @@ interface Props {
 export default function MyOfficersLogs({ logs: data }: Props) {
   const [logs, setLogs] = React.useState(data);
   const [officerId, setOfficerId] = React.useState<string | null>(null);
+  const { makeImageUrl } = useImageUrl();
 
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
@@ -49,7 +52,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
         <h1 className="text-3xl font-semibold">{t("myOfficerLogs")}</h1>
 
         <div className="flex">
-          <div className="w-52 ml-3">
+          <div className="ml-3 w-52">
             <FormField label="Group By Officer">
               <Select
                 isClearable
@@ -68,39 +71,56 @@ export default function MyOfficersLogs({ logs: data }: Props) {
       {logs.length <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-5">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("officer")}</th>
-                <th>{t("startedAt")}</th>
-                <th>{t("endedAt")}</th>
-                <th>{t("totalTime")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((log) => {
-                const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
-                const endedAt = log.endedAt && format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss");
+        <Table
+          data={filtered.map((log) => {
+            const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
 
-                return (
-                  <tr key={log.id}>
-                    <td className="capitalize">
-                      {generateCallsign(log.officer as any)} {makeUnitName(log.officer)}
-                    </td>
-                    <td>{startedAt}</td>
-                    <td>{log.endedAt !== null ? endedAt : t("notEndedYet")}</td>
-                    <td>
-                      {log.endedAt !== null
-                        ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
-                        : t("notEndedYet")}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+            const endedAt = log.endedAt
+              ? format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss")
+              : t("notEndedYet");
+
+            const totalTime =
+              log.endedAt !== null
+                ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
+                : t("notEndedYet");
+
+            return {
+              officer: (
+                <span className="flex items-center">
+                  {log.officer.imageId ? (
+                    <img
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      draggable={false}
+                      src={makeImageUrl("units", log.officer.imageId)}
+                    />
+                  ) : null}
+                  {makeUnitName(log.officer)}
+                </span>
+              ),
+              startedAt,
+              endedAt,
+              totalTime,
+            };
+          })}
+          columns={[
+            {
+              Header: t("officer"),
+              accessor: "officer",
+            },
+            {
+              Header: t("startedAt"),
+              accessor: "startedAt",
+            },
+            {
+              Header: t("endedAt"),
+              accessor: "endedAt",
+            },
+            {
+              Header: t("totalTime"),
+              accessor: "totalTime",
+            },
+          ]}
+        />
       )}
     </Layout>
   );

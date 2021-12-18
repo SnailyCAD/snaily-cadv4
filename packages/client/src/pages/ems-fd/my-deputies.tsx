@@ -15,6 +15,7 @@ import { FullDeputy } from "state/dispatchState";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
+import { Table } from "components/table/Table";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -77,55 +78,72 @@ export default function MyDeputies({ deputies: data }: Props) {
       {deputies.length <= 0 ? (
         <p className="mt-5">{t("Ems.noDeputies")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("Ems.deputy")}</th>
-                <th>{t("Leo.callsign")}</th>
-                <th>{t("Leo.badgeNumber")}</th>
-                <th>{t("Leo.department")}</th>
-                <th>{t("Leo.division")}</th>
-                <th>{t("Leo.rank")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deputies.map((deputy) => (
-                <tr key={deputy.id}>
-                  <td className="capitalize flex items-center">
-                    {deputy.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", deputy.imageId)}
-                      />
-                    ) : null}
-                    {makeUnitName(deputy)}
-                  </td>
-                  <td>{generateCallsign(deputy)}</td>
-                  <td>{String(deputy.badgeNumber)}</td>
-                  <td>{deputy.department.value?.value}</td>
-                  <td>{deputy.division?.value?.value}</td>
-                  <td>{deputy.rank?.value}</td>
-                  <td className="w-36">
-                    <Button small onClick={() => handleEditClick(deputy)} variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteClick(deputy)}
-                      className="ml-2"
-                      variant="danger"
-                      small
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={deputies.map((deputy) => ({
+            deputy: (
+              <span className="flex items-center">
+                {deputy.imageId ? (
+                  <img
+                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                    draggable={false}
+                    src={makeImageUrl("units", deputy.imageId)}
+                  />
+                ) : null}
+                {makeUnitName(deputy)}
+              </span>
+            ),
+            callsign: generateCallsign(deputy),
+            badgeNumber: deputy.badgeNumber,
+            department: deputy.department.value.value,
+            division: deputy.division.value.value,
+            rank: deputy.rank?.value ?? common("none"),
+            actions: (
+              <>
+                <Button small onClick={() => handleEditClick(deputy)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  onClick={() => handleDeleteClick(deputy)}
+                  className="ml-2"
+                  variant="danger"
+                  small
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={[
+            {
+              Header: t("Ems.deputy"),
+              accessor: "deputy",
+            },
+            {
+              Header: t("Leo.callsign"),
+              accessor: "callsign",
+            },
+            {
+              Header: t("Leo.badgeNumber"),
+              accessor: "badgeNumber",
+            },
+            {
+              Header: t("Leo.department"),
+              accessor: "department",
+            },
+            {
+              Header: t("Leo.division"),
+              accessor: "division",
+            },
+            {
+              Header: t("Leo.rank"),
+              accessor: "rank",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       <ManageDeputyModal

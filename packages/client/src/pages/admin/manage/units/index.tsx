@@ -16,6 +16,7 @@ import { ThreeDots } from "react-bootstrap-icons";
 import { useMounted, usePortal } from "@casper124578/useful";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
+import { Table } from "components/table/Table";
 
 type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });
 
@@ -72,58 +73,78 @@ export default function SupervisorPanelPage({ units }: Props) {
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
 
-      <div className="w-full mt-3 overflow-x-auto">
-        <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
-          <thead>
-            <tr>
-              <th>
-                <Dropdown disabled={selectedRows.length <= 0} onClick={setSelectedUnitsOffDuty} />
-              </th>
-              <th>
-                {t("Ems.deputy")}/{t("Leo.officer")}
-              </th>
-              <th>{common("name")}</th>
-              <th>{t("Leo.callsign")}</th>
-              <th>{t("Leo.badgeNumber")}</th>
-              <th>{t("Leo.department")}</th>
-              <th>{t("Leo.division")}</th>
-              <th>{t("Leo.rank")}</th>
-              <th>{t("Leo.status")}</th>
-              <th>{common("actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {units.map((unit) => (
-              <tr key={unit.id}>
-                <td>
-                  <input
-                    checked={selectedRows.includes(`${unit.id}-${unit.type}`)}
-                    onChange={() => handleCheckboxChange(unit)}
-                    type="checkbox"
-                  />
-                </td>
-                <td>{LABELS[unit.type]}</td>
-                <td className="capitalize">{makeUnitName(unit)}</td>
-                <td> {generateCallsign(unit)}</td>
-                <td>{String(unit.badgeNumber)}</td>
-                <td>{unit.department?.value?.value}</td>
-                <td>{unit.division?.value?.value}</td>
-                <td>{unit.rank?.value ?? common("none")}</td>
-                <td>{unit.status?.value?.value ?? common("none")}</td>
-                <td className="w-36">
-                  <Link href={`/admin/manage/units/${unit.id}`}>
-                    <a>
-                      <Button small variant="success">
-                        {common("manage")}
-                      </Button>
-                    </a>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table
+        data={units.map((unit) => ({
+          dropdown: (
+            <input
+              checked={selectedRows.includes(`${unit.id}-${unit.type}`)}
+              onChange={() => handleCheckboxChange(unit)}
+              type="checkbox"
+            />
+          ),
+          unit: LABELS[unit.type],
+          name: makeUnitName(unit),
+          callsign: generateCallsign(unit),
+          badgeNumber: unit.badgeNumber,
+          department: unit.department.value.value,
+          division: unit.division.value.value,
+          rank: unit.rank?.value ?? common("none"),
+          status: unit.status?.value.value ?? common("none"),
+          actions: (
+            <Link href={`/admin/manage/units/${unit.id}`}>
+              <a>
+                <Button small variant="success">
+                  {common("manage")}
+                </Button>
+              </a>
+            </Link>
+          ),
+        }))}
+        columns={[
+          {
+            Header: (
+              <Dropdown disabled={selectedRows.length <= 0} onClick={setSelectedUnitsOffDuty} />
+            ),
+            accessor: "dropdown",
+          },
+          {
+            Header: `${t("Ems.deputy")}/${t("Leo.officer")}`,
+            accessor: "unit",
+          },
+          {
+            Header: common("name"),
+            accessor: "name",
+          },
+          {
+            Header: t("Leo.callsign"),
+            accessor: "callsign",
+          },
+          {
+            Header: t("Leo.badgeNumber"),
+            accessor: "badgeNumber",
+          },
+          {
+            Header: t("Leo.department"),
+            accessor: "department",
+          },
+          {
+            Header: t("Leo.division"),
+            accessor: "division",
+          },
+          {
+            Header: t("Leo.rank"),
+            accessor: "rank",
+          },
+          {
+            Header: t("Leo.status"),
+            accessor: "status",
+          },
+          {
+            Header: common("actions"),
+            accessor: "actions",
+          },
+        ]}
+      />
     </AdminLayout>
   );
 }

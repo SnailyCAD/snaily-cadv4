@@ -1133,6 +1133,7 @@ __metadata:
     "@snailycad/schemas": 1.0.0-beta.16
     "@types/react": ^17.0.37
     "@types/react-dom": ^17.0.11
+    "@types/react-table": ^7.7.9
     "@types/sortablejs": ^1.10.7
     "@types/uuid": ^8.3.3
     autoprefixer: ^10.4.0
@@ -1155,6 +1156,7 @@ __metadata:
     react-markdown: ^7.1.1
     react-select: ^5.2.1
     react-sortablejs: ^6.0.0
+    react-table: ^7.7.0
     react-use: ^17.3.1
     rimraf: ^3.0.2
     sass: ^1.45.0
@@ -1799,6 +1801,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 4d5730dffbef86c887cecad7e3cecda424ce6a64d0b5441c63b5b015d48219868660a2bb1aa15e897e565ad8867fa6b885d4358b04e1c4e589ba4c07c3fda55c
+  languageName: node
+  linkType: hard
+
+"@types/react-table@npm:^7.7.9":
+  version: 7.7.9
+  resolution: "@types/react-table@npm:7.7.9"
+  dependencies:
+    "@types/react": "*"
+  checksum: 3f6c847c8e904479875bb249af02b70e271c5480d0f8b94f7da96eb3980a83cf011d7e558e885259851e3af8defb6493deb147227242766ebca37c9cb630c306
   languageName: node
   linkType: hard
 
@@ -8718,6 +8729,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: d44524158c403658132c33bcbe2c274fc919981fbe05a5205033a6adf3d1a1c3d07433d519213285dd581a932f9e2c66bd8b4511af40ec02a39ac4d426e146d4
+  languageName: node
+  linkType: hard
+
+"react-table@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "react-table@npm:7.7.0"
+  peerDependencies:
+    react: ^16.8.3 || ^17.0.0-0
+  checksum: a679edecc76d3e51311b095528395b38ac85a1ffa371716bea01559a5fdc75af9a6abb9bb907c63190c8e77da22b11f7b05065b3a45d190d8f43cb83e4366206
   languageName: node
   linkType: hard
 

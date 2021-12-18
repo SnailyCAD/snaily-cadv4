@@ -19,6 +19,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
+import { Table } from "components/table/Table";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -112,55 +113,78 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       {incidents.length <= 0 ? (
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
-        <div className="w-full mt-3 overflow-x-auto">
-          <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("caseNumber")}</th>
-                <th>{t("officer")}</th>
-                <th>{t("involvedOfficers")}</th>
-                <th>{t("firearmsInvolved")}</th>
-                <th>{t("injuriesOrFatalities")}</th>
-                <th>{t("arrestsMade")}</th>
-                <th>{common("description")}</th>
-                <th>{common("createdAt")}</th>
-                {user?.isSupervisor ? <th>{common("actions")}</th> : null}
-              </tr>
-            </thead>
-            <tbody>
-              {incidents.map((incident) => (
-                <tr key={incident.id}>
-                  <td>#{incident.caseNumber}</td>
-                  <td className="capitalize">
-                    {incident.creator.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", incident.creator.imageId)}
-                      />
-                    ) : null}
-                    {generateCallsign(incident.creator)} {makeUnitName(incident.creator)}
-                  </td>
-                  <td>{involvedOfficers(incident)}</td>
-                  <td>{common(yesOrNoText(incident.firearmsInvolved))}</td>
-                  <td>{common(yesOrNoText(incident.injuriesOrFatalities))}</td>
-                  <td>{common(yesOrNoText(incident.arrestsMade))}</td>
-                  <td className="max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
-                    {incident.description}
-                  </td>
-                  <td>{format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm")}</td>
-                  {user?.isSupervisor ? (
-                    <td>
-                      <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
-                        {common("delete")}
-                      </Button>
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={incidents.map((incident) => ({
+            caseNumber: `#${incident.caseNumber}`,
+            officer: (
+              <span className="flex items-center">
+                {incident.creator.imageId ? (
+                  <img
+                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                    draggable={false}
+                    src={makeImageUrl("units", incident.creator.imageId)}
+                  />
+                ) : null}
+                {makeUnitName(incident.creator)}
+              </span>
+            ),
+            involvedOfficers: involvedOfficers(incident),
+            firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
+            injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
+            arrestsMade: common(yesOrNoText(incident.arrestsMade)),
+            description: (
+              <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
+                {incident.description}
+              </span>
+            ),
+            createdAt: format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm"),
+            actions: user?.isSupervisor ? (
+              <td>
+                <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
+                  {common("delete")}
+                </Button>
+              </td>
+            ) : null,
+          }))}
+          columns={[
+            {
+              Header: t("caseNumber"),
+              accessor: "caseNumber",
+            },
+            {
+              Header: t("officer"),
+              accessor: "officer",
+            },
+            {
+              Header: t("involvedOfficers"),
+              accessor: "involvedOfficers",
+            },
+            {
+              Header: t("firearmsInvolved"),
+              accessor: "firearmsInvolved",
+            },
+            {
+              Header: t("injuriesOrFatalities"),
+              accessor: "injuriesOrFatalities",
+            },
+            {
+              Header: t("arrestsMade"),
+              accessor: "arrestsMade",
+            },
+            {
+              Header: common("description"),
+              accessor: "description",
+            },
+            {
+              Header: common("createdAt"),
+              accessor: "createdAt",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       {isActive ? <CreateIncidentModal /> : null}

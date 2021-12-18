@@ -17,7 +17,7 @@ export type FullOfficer = OfficerWithDept & {
   status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
 };
-export type FullDeputy = DeputyWithDept & { rank: Value<"OFFICER_RANK">; status: StatusValue };
+export type FullDeputy = DeputyWithDept & { rank?: Value<"OFFICER_RANK">; status: StatusValue };
 
 interface DispatchState {
   calls: Full911Call[];
