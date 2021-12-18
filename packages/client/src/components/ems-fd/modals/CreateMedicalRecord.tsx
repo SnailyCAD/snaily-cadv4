@@ -97,7 +97,7 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.CreateMedicalRecord)}

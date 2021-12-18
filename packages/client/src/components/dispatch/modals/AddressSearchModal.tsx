@@ -11,6 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen } from "types/prisma";
+import { Table } from "components/table/Table";
 
 export const AddressSearchModal = () => {
   const { isOpen, closeModal, openModal } = useModal();
@@ -28,7 +29,7 @@ export const AddressSearchModal = () => {
 
   function handleOpen(citizen: Citizen) {
     closeModal(ModalIds.AddressSearch);
-    openModal(ModalIds.NameSearch, citizen);
+    openModal(ModalIds.NameSearch, { name: `${citizen.name} ${citizen.surname}` });
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -74,41 +75,40 @@ export const AddressSearchModal = () => {
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                <div className="overflow-x-auto w-full mt-3">
-                  <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-                    <thead>
-                      <tr>
-                        <th>{t("citizen")}</th>
-                        <th>{t("fullAddress")}</th>
-                        <th>{common("actions")}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {results.map((citizen) => (
-                        <tr key={citizen.id}>
-                          <td>
-                            {citizen.name} {citizen.surname}
-                          </td>
-                          <td>{citizen.address}</td>
-                          <td className="w-36">
-                            <Button
-                              type="button"
-                              onClick={() => handleOpen(citizen)}
-                              small
-                              variant="success"
-                            >
-                              {t("viewInNameSearch")}
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <Table
+                  data={results.map((result) => ({
+                    citizen: `${result.name} ${result.surname}`,
+                    fullAddress: result.address,
+                    actions: (
+                      <Button
+                        type="button"
+                        onClick={() => handleOpen(result)}
+                        small
+                        variant="success"
+                      >
+                        {t("viewInNameSearch")}
+                      </Button>
+                    ),
+                  }))}
+                  columns={[
+                    {
+                      Header: t("citizen"),
+                      accessor: "citizen",
+                    },
+                    {
+                      Header: t("fullAddress"),
+                      accessor: "fullAddress",
+                    },
+                    {
+                      Header: common("actions"),
+                      accessor: "actions",
+                    },
+                  ]}
+                />
               </div>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.AddressSearch)}

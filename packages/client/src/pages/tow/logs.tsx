@@ -9,6 +9,8 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
 import { FullTowCall } from ".";
+import { Table } from "components/table/Table";
+import format from "date-fns/format";
 
 interface Props {
   calls: FullTowCall[];
@@ -51,36 +53,37 @@ export default function TowLogs(props: Props) {
       {calls.length <= 0 ? (
         <p className="mt-5">{t("noTowCalls")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("location")}</th>
-                <th>{common("description")}</th>
-                <th>{t("caller")}</th>
-                <th>{t("assignedUnit")}</th>
-                {/* <th>{common("actions")}</th> */}
-              </tr>
-            </thead>
-            <tbody>
-              {calls.map((call) => (
-                <tr key={call.id}>
-                  <td>{call.location}</td>
-                  <td>{call.description}</td>
-                  <td className="capitalize">
-                    {call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch"}
-                  </td>
-                  <td className="capitalize">{assignedUnit(call)}</td>
-                  {/* <td className="w-36">
-                    <Button className="ml-2" onClick={() => assignClick(call)} small>
-                      {common("details")}
-                    </Button>
-                  </td> */}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={calls.map((call) => ({
+            location: call.location,
+            description: call.description,
+            caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
+            assignedUnit: assignedUnit(call),
+            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+          }))}
+          columns={[
+            {
+              Header: t("location"),
+              accessor: "location",
+            },
+            {
+              Header: common("description"),
+              accessor: "description",
+            },
+            {
+              Header: t("caller"),
+              accessor: "caller",
+            },
+            {
+              Header: t("assignedUnit"),
+              accessor: "assignedUnit",
+            },
+            {
+              Header: common("createdAt"),
+              accessor: "createdAt",
+            },
+          ]}
+        />
       )}
     </Layout>
   );

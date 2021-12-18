@@ -140,6 +140,8 @@ export type Weapon = {
   registrationStatusId: string;
   model: VehicleValue;
   modelId: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 /**

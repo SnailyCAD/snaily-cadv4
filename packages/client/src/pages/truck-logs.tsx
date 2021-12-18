@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
+import { Table } from "components/table/Table";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageTruckLogModal = dynamic(
@@ -74,44 +75,51 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
       {logs.length <= 0 ? (
         <p className="mt-3">{t("noTruckLogs")}</p>
       ) : (
-        <div className="w-full mt-3 overflow-x-auto">
-          <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("driver")}</th>
-                <th>{t("vehicle")}</th>
-                <th>{t("startedAt")}</th>
-                <th>{t("endedAt")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.id}>
-                  <td className="capitalize">
-                    {log.citizen.name} {log.citizen.surname}
-                  </td>
-                  <td>{log.vehicle?.model.value.value}</td>
-                  <td>{log.startedAt}</td>
-                  <td>{log.endedAt}</td>
-                  <td className="w-36">
-                    <Button onClick={() => handleEditClick(log)} small variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteClick(log)}
-                      className="ml-2"
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={logs.map((log) => ({
+            driver: `${log.citizen.name} ${log.citizen.surname}`,
+            vehicle: log.vehicle?.model.value?.value,
+            startedAt: log.startedAt,
+            endedAt: log.endedAt,
+            actions: (
+              <>
+                <Button onClick={() => handleEditClick(log)} small variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  onClick={() => handleDeleteClick(log)}
+                  className="ml-2"
+                  small
+                  variant="danger"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={[
+            {
+              Header: t("driver"),
+              accessor: "driver",
+            },
+            {
+              Header: t("vehicle"),
+              accessor: "vehicle",
+            },
+            {
+              Header: t("startedAt"),
+              accessor: "startedAt",
+            },
+            {
+              Header: t("endedAt"),
+              accessor: "endedAt",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       <ManageTruckLogModal

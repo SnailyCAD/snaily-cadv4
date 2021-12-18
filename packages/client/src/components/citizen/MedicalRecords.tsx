@@ -7,6 +7,7 @@ import { useModal } from "context/ModalContext";
 import { ManageMedicalRecordsModal } from "./modals/ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { Table } from "components/table/Table";
 
 export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
   const { state, execute } = useFetch();
@@ -55,40 +56,46 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
         {medicalRecords.length <= 0 ? (
           <p className="text-gray-600 dark:text-gray-400">{t("noMedicalRecords")}</p>
         ) : (
-          <div className="w-full mt-3 overflow-x-auto">
-            <table className="w-full max-w-4xl overflow-hidden whitespace-nowrap max-h-64">
-              <thead>
-                <tr>
-                  <th>{t("diseases")}</th>
-                  <th>{t("bloodGroup")}</th>
-                  <th>{common("description")}</th>
-                  <th>{common("actions")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {medicalRecords.map((record) => (
-                  <tr key={record.id}>
-                    <td>{record.type}</td>
-                    <td>{record.bloodGroup?.value ?? common("none")}</td>
-                    <td>{record.description}</td>
-                    <td className="w-[30%]">
-                      <Button onClick={() => handleEditClick(record)} small variant="success">
-                        {common("edit")}
-                      </Button>
-                      <Button
-                        className="ml-2"
-                        onClick={() => handleDeleteClick(record)}
-                        small
-                        variant="danger"
-                      >
-                        {common("delete")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table
+            data={medicalRecords.map((record) => ({
+              diseases: record.type,
+              bloodGroup: record.bloodGroup?.value ?? common("none"),
+              description: record.description,
+              actions: (
+                <>
+                  <Button onClick={() => handleEditClick(record)} small variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    onClick={() => handleDeleteClick(record)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={[
+              {
+                Header: t("diseases"),
+                accessor: "diseases",
+              },
+              {
+                Header: t("bloodGroup"),
+                accessor: "bloodGroup",
+              },
+              {
+                Header: common("description"),
+                accessor: "description",
+              },
+              {
+                Header: common("actions"),
+                accessor: "actions",
+              },
+            ]}
+          />
         )}
       </div>
 

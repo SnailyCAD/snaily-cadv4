@@ -13,6 +13,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
+import { Table } from "components/table/Table";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -52,37 +53,41 @@ export default function ImpoundLot({ vehicles: data }: Props) {
         <title>{t("impoundLot")} - SnailyCAD</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold mb-3">{t("impoundLot")}</h1>
+      <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>
 
       {vehicles.length <= 0 ? (
         <p className="mt-5">{t("noImpoundedVehicles")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("plate")}</th>
-                <th>{t("model")}</th>
-                <th>{t("location")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vehicles.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.vehicle.plate.toUpperCase()}</td>
-                  <td>{item.vehicle.model.value.value}</td>
-                  <td>{item.location.value}</td>
-                  <td className="w-36">
-                    <Button onClick={() => handleCheckoutClick(item)} className="ml-2" small>
-                      {t("allowCheckout")}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={vehicles.map((item) => ({
+            plate: item.vehicle.plate,
+            model: item.vehicle.model.value.value,
+            location: item.location.value,
+            actions: (
+              <Button onClick={() => handleCheckoutClick(item)} className="ml-2" small>
+                {t("allowCheckout")}
+              </Button>
+            ),
+          }))}
+          columns={[
+            {
+              Header: t("plate"),
+              accessor: "plate",
+            },
+            {
+              Header: t("model"),
+              accessor: "model",
+            },
+            {
+              Header: t("location"),
+              accessor: "location",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       <Modal
@@ -91,7 +96,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
         isOpen={isOpen(ModalIds.AlertCheckoutImpoundedVehicle)}
       >
         <p className="my-3">{t("alert_allowCheckout")}</p>
-        <div className="mt-2 flex gap-2 items-center justify-end">
+        <div className="flex items-center justify-end gap-2 mt-2">
           <Button
             variant="cancel"
             disabled={state === "loading"}
@@ -104,7 +109,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             className="flex items-center"
             onClick={handleCheckout}
           >
-            {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
             {common("continue")}
           </Button>
         </div>

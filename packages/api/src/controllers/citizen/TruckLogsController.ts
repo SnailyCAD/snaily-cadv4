@@ -20,10 +20,7 @@ export class TruckLogsController {
       include: {
         citizen: true,
         vehicle: {
-          include: {
-            model: true,
-            registrationStatus: true,
-          },
+          include: { model: { include: { value: true } }, registrationStatus: true },
         },
       },
     });
@@ -149,10 +146,7 @@ export class TruckLogsController {
       include: {
         citizen: true,
         vehicle: {
-          include: {
-            model: true,
-            registrationStatus: true,
-          },
+          include: { model: { include: { value: true } }, registrationStatus: true },
         },
       },
     });
