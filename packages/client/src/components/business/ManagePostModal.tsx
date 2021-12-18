@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Textarea } from "components/form/Textarea";
@@ -81,24 +80,22 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("postTitle")}>
+            <FormField errorMessage={errors.title} label={t("postTitle")}>
               <Input
                 id="title"
                 onChange={handleChange}
                 hasError={!!errors.title}
                 value={values.title}
               />
-              <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField label={t("postBody")}>
+            <FormField errorMessage={errors.body} label={t("postBody")}>
               <Textarea
                 id="body"
                 onChange={handleChange}
                 hasError={!!errors.body}
                 value={values.body}
               />
-              <Error>{errors.body}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

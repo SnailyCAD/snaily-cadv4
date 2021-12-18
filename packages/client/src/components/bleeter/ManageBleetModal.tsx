@@ -15,7 +15,6 @@ import { BleeterPost } from "types/prisma";
 import { Textarea } from "components/form/Textarea";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
-import { Error } from "components/form/Error";
 import { CropImageModal } from "components/modal/CropImageModal";
 
 interface Props {
@@ -116,17 +115,16 @@ export const ManageBleetModal = ({ post }: Props) => {
               </div>
             </FormField>
 
-            <FormField label={t("bleetTitle")}>
+            <FormField errorMessage={errors.title} label={t("bleetTitle")}>
               <Input
                 id="title"
                 value={values.title}
                 hasError={!!errors.title}
                 onChange={handleChange}
               />
-              <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField label={t("bleetBody")}>
+            <FormField errorMessage={errors.body} label={t("bleetBody")}>
               <Textarea
                 id="body"
                 value={values.body}
@@ -134,7 +132,6 @@ export const ManageBleetModal = ({ post }: Props) => {
                 onChange={handleChange}
                 className="min-h-[20em]"
               />
-              <Error>{errors.body}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

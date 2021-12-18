@@ -7,7 +7,6 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/Input";
-import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 
 export const MiscFeatures = () => {
@@ -64,29 +63,30 @@ export const MiscFeatures = () => {
         {({ handleChange, handleSubmit, errors, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
             <FormRow>
-              <FormField label="Weight Prefix">
+              <FormField errorMessage={errors.weightPrefix} label="Weight Prefix">
                 <Input
                   name="weightPrefix"
                   hasError={!!errors.weightPrefix}
                   value={values.weightPrefix}
                   onChange={handleChange}
                 />
-                <Error>{errors.weightPrefix}</Error>
               </FormField>
 
-              <FormField label="Height Prefix">
+              <FormField errorMessage={errors.heightPrefix} label="Height Prefix">
                 <Input
                   name="heightPrefix"
                   hasError={!!errors.heightPrefix}
                   value={values.heightPrefix}
                   onChange={handleChange}
                 />
-                <Error>{errors.heightPrefix}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label="Max businesses per citizen">
+              <FormField
+                errorMessage={errors.maxBusinessesPerCitizen}
+                label="Max businesses per citizen"
+              >
                 <Input
                   name="maxBusinessesPerCitizen"
                   type="number"
@@ -94,10 +94,9 @@ export const MiscFeatures = () => {
                   value={values.maxBusinessesPerCitizen}
                   onChange={handleChange}
                 />
-                <Error>{errors.maxBusinessesPerCitizen}</Error>
               </FormField>
 
-              <FormField label="Max citizens per user">
+              <FormField errorMessage={errors.maxCitizensPerUser} label="Max citizens per user">
                 <Input
                   name="maxCitizensPerUser"
                   type="number"
@@ -105,11 +104,10 @@ export const MiscFeatures = () => {
                   value={values.maxCitizensPerUser}
                   onChange={handleChange}
                 />
-                <Error>{errors.maxCitizensPerUser}</Error>
               </FormField>
             </FormRow>
 
-            <FormField label="Max plate length">
+            <FormField errorMessage={errors.maxPlateLength} label="Max plate length">
               <Input
                 name="maxPlateLength"
                 type="number"
@@ -117,33 +115,30 @@ export const MiscFeatures = () => {
                 value={values.maxPlateLength}
                 onChange={handleChange}
               />
-              <Error>{errors.maxPlateLength}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label="Paired unit symbol">
+              <FormField errorMessage={errors.pairedUnitSymbol} label="Paired unit symbol">
                 <Input
                   id="pairedUnitSymbol"
                   hasError={!!errors.pairedUnitSymbol}
                   value={values.pairedUnitSymbol}
                   onChange={handleChange}
                 />
-                <Error>{errors.pairedUnitSymbol}</Error>
               </FormField>
 
-              <FormField label="Callsign Template">
+              <FormField errorMessage={errors.callsignTemplate} label="Callsign Template">
                 <Input
                   id="callsignTemplate"
                   hasError={!!errors.callsignTemplate}
                   value={values.callsignTemplate}
                   onChange={handleChange}
                 />
-                <Error>{errors.callsignTemplate}</Error>
               </FormField>
             </FormRow>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
-              {state === "loading" ? <Loader className="border-red-300 mr-3" /> : null}
+              {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
           </form>

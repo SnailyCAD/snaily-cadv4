@@ -1,6 +1,5 @@
 import { CREATE_PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -70,7 +69,7 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label="Title">
+            <FormField errorMessage={errors.title} label="Title">
               <Input
                 autoFocus
                 id="title"
@@ -78,20 +77,18 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
                 onChange={handleChange}
                 value={values.title}
               />
-              <Error>{errors.title}</Error>
             </FormField>
 
-            <FormField label="Description">
+            <FormField errorMessage={errors.description} label="Description">
               <Textarea
                 id="description"
                 name="description"
                 onChange={handleChange}
                 value={values.description}
               />
-              <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
                 Cancel
               </Button>

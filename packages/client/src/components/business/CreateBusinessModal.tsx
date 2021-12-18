@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -58,7 +57,7 @@ export const CreateBusinessModal = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("owner")}>
+            <FormField errorMessage={errors.ownerId} label={t("owner")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -69,35 +68,31 @@ export const CreateBusinessModal = () => {
                 hasError={!!errors.ownerId}
                 value={values.ownerId}
               />
-              <Error>{errors.ownerId}</Error>
             </FormField>
 
-            <FormField label={t("name")}>
+            <FormField errorMessage={errors.name} label={t("name")}>
               <Input
                 id="name"
                 onChange={handleChange}
                 hasError={!!errors.name}
                 value={values.name}
               />
-              <Error>{errors.name}</Error>
             </FormField>
 
-            <FormField label={t("address")}>
+            <FormField errorMessage={errors.address} label={t("address")}>
               <Input
                 id="address"
                 onChange={handleChange}
                 hasError={!!errors.address}
                 value={values.address}
               />
-              <Error>{errors.address}</Error>
             </FormField>
 
-            <FormField label={t("whitelisted")}>
+            <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
-              <Error>{errors.whitelisted}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>

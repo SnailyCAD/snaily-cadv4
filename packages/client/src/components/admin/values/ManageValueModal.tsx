@@ -1,6 +1,5 @@
 import { VALUE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -172,7 +171,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            <FormField label="Value">
+            <FormField errorMessage={errors.value} label="Value">
               <Input
                 autoFocus
                 id="value"
@@ -180,7 +179,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                 onChange={handleChange}
                 value={values.value}
               />
-              <Error>{errors.value}</Error>
             </FormField>
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
@@ -237,7 +235,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   />
                 </FormField>
 
-                <FormField label="Color (#HEX)">
+                <FormField errorMessage={errors.color as string} label="Color (#HEX)">
                   <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
                     {values.showPicker ? (
                       <HexColorPicker
@@ -260,7 +258,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                       <Eyedropper />
                     </Button>
                   </div>
-                  <Error>{errors.color}</Error>
                 </FormField>
 
                 <FormField className="mb-0" checkbox label="Status Code">

@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -69,7 +68,7 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -80,10 +79,9 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
                 hasError={!!errors.citizenId}
                 value={values.citizenId}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={t("business")}>
+            <FormField errorMessage={errors.businessId} label={t("business")}>
               <Select
                 values={joinableBusinesses.map((business) => ({
                   label: business.name,
@@ -94,10 +92,9 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
                 hasError={!!errors.businessId}
                 value={values.businessId}
               />
-              <Error>{errors.businessId}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>

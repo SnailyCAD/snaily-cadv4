@@ -10,7 +10,6 @@ import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { Error } from "components/form/Error";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
@@ -72,29 +71,26 @@ export const ManageBusinessTab = () => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("name")}>
+            <FormField errorMessage={errors.name} label={t("name")}>
               <Input
                 id="name"
                 onChange={handleChange}
                 hasError={!!errors.name}
                 value={values.name}
               />
-              <Error>{errors.name}</Error>
             </FormField>
 
-            <FormField label={t("address")}>
+            <FormField errorMessage={errors.address} label={t("address")}>
               <Input
                 id="address"
                 onChange={handleChange}
                 hasError={!!errors.address}
                 value={values.address}
               />
-              <Error>{errors.address}</Error>
             </FormField>
 
-            <FormField label={t("whitelisted")}>
+            <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
-              <Error>{errors.whitelisted}</Error>
             </FormField>
 
             <footer className="flex justify-between mt-5">

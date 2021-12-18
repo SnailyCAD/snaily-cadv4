@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -73,7 +72,7 @@ export const BanArea = ({ user, setUser }: Props) => {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={{ reason: "" }}>
           {({ handleChange, handleSubmit, values, errors }) => (
             <form className="mt-3" onSubmit={handleSubmit}>
-              <FormField label={common("reason")}>
+              <FormField errorMessage={errors.reason} label={common("reason")}>
                 <Input
                   hasError={!!errors.reason}
                   className="bg-gray-100"
@@ -82,7 +81,6 @@ export const BanArea = ({ user, setUser }: Props) => {
                   id="reason"
                   disabled={formDisabled}
                 />
-                <Error>{errors.reason} </Error>
               </FormField>
 
               <Button
