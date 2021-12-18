@@ -13,6 +13,8 @@ import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
+import { Table } from "components/table/Table";
+import format from "date-fns/format";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -101,7 +103,7 @@ export default function Taxi(props: Props) {
       </Head>
 
       <header className="flex items-center justify-between mb-5">
-        <h1 className="text-3xl font-semibold">{t("tow")}</h1>
+        <h1 className="text-3xl font-semibold">{t("taxi")}</h1>
 
         <Button onClick={onCreateClick}>{t("createTaxiCall")}</Button>
       </header>
@@ -109,39 +111,51 @@ export default function Taxi(props: Props) {
       {calls.length <= 0 ? (
         <p className="mt-5">{t("noTaxiCalls")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("location")}</th>
-                <th>{common("description")}</th>
-                <th>{t("caller")}</th>
-                <th>{t("assignedUnit")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {calls.map((call) => (
-                <tr key={call.id}>
-                  <td>{call.location}</td>
-                  <td>{call.description}</td>
-                  <td className="capitalize">
-                    {call.creator.name} {call.creator.surname}
-                  </td>
-                  <td className="capitalize">{assignedUnit(call)}</td>
-                  <td className="w-36">
-                    <Button onClick={() => editClick(call)} small variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button className="ml-2" onClick={() => assignClick(call)} small>
-                      {t("assignToCall")}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={calls.map((call) => ({
+            location: call.location,
+            description: call.description,
+            caller: `${call.creator.name} ${call.creator.surname}`,
+            assignedUnit: assignedUnit(call),
+            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+            actions: (
+              <>
+                <Button onClick={() => editClick(call)} small variant="success">
+                  {common("edit")}
+                </Button>
+                <Button className="ml-2" onClick={() => assignClick(call)} small>
+                  {t("assignToCall")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={[
+            {
+              Header: t("location"),
+              accessor: "location",
+            },
+            {
+              Header: common("description"),
+              accessor: "description",
+            },
+            {
+              Header: t("caller"),
+              accessor: "caller",
+            },
+            {
+              Header: t("assignedUnit"),
+              accessor: "assignedUnit",
+            },
+            {
+              Header: common("createdAt"),
+              accessor: "createdAt",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       <AssignToCallModal onSuccess={updateCalls} call={tempCall} />

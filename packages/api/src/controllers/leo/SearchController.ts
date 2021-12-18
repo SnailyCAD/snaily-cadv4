@@ -9,16 +9,10 @@ import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
 const citizenSearchInclude = {
   businesses: true,
   vehicles: {
-    include: {
-      model: true,
-      registrationStatus: true,
-    },
+    include: { model: { include: { value: true } }, registrationStatus: true },
   },
   weapons: {
-    include: {
-      model: true,
-      registrationStatus: true,
-    },
+    include: { model: { include: { value: true } }, registrationStatus: true },
   },
   medicalRecords: true,
   ethnicity: true,
