@@ -7,6 +7,7 @@ import { RegisterWeaponModal } from "./modals/RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { Table } from "components/table/Table";
 
 export const WeaponsCard = (props: { weapons: Weapon[] }) => {
   const { openModal, closeModal } = useModal();
@@ -55,40 +56,46 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
         {weapons.length <= 0 ? (
           <p className="text-gray-600 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
-          <div className="w-full mt-3 overflow-x-auto">
-            <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
-              <thead>
-                <tr>
-                  <th>{t("model")}</th>
-                  <th>{t("registrationStatus")}</th>
-                  <th>{t("serialNumber")}</th>
-                  <th>{common("actions")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {weapons.map((weapon) => (
-                  <tr key={weapon.id}>
-                    <td>{weapon.model.value.value}</td>
-                    <td>{weapon.registrationStatus.value}</td>
-                    <td>{weapon.serialNumber}</td>
-                    <td className="w-36">
-                      <Button onClick={() => handleEditClick(weapon)} small variant="success">
-                        {common("edit")}
-                      </Button>
-                      <Button
-                        className="ml-2"
-                        onClick={() => handleDeleteClick(weapon)}
-                        small
-                        variant="danger"
-                      >
-                        {common("delete")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table
+            data={weapons.map((weapon) => ({
+              model: weapon.model.value.value,
+              registrationStatus: weapon.registrationStatus.value,
+              serialNumber: weapon.serialNumber,
+              actions: (
+                <>
+                  <Button onClick={() => handleEditClick(weapon)} small variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    onClick={() => handleDeleteClick(weapon)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={[
+              {
+                Header: t("model"),
+                accessor: "model",
+              },
+              {
+                Header: t("registrationStatus"),
+                accessor: "registrationStatus",
+              },
+              {
+                Header: t("serialNumber"),
+                accessor: "serialNumber",
+              },
+              {
+                Header: common("actions"),
+                accessor: "actions",
+              },
+            ]}
+          />
         )}
       </div>
 

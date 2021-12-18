@@ -7,8 +7,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import format from "date-fns/format";
-import { classNames } from "lib/classNames";
+import { Table } from "components/table/Table";
 
 export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
   const { openModal, closeModal } = useModal();
@@ -57,60 +56,62 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
         {vehicles.length <= 0 ? (
           <p className="text-gray-600 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
-          <div className="w-full mt-3 overflow-x-auto">
-            <table className="w-full overflow-hidden whitespace-nowrap max-h-64">
-              <thead>
-                <tr>
-                  <th>{t("plate")}</th>
-                  <th>{t("model")}</th>
-                  <th>{t("color")}</th>
-                  <th>{t("registrationStatus")}</th>
-                  <th>{t("vinNumber")}</th>
-                  <th>{common("createdAt")}</th>
-                  <th>{common("actions")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {vehicles.map((vehicle) => (
-                  <tr
-                    title={vehicle.impounded ? "This vehicle is impounded." : undefined}
-                    aria-label={vehicle.impounded ? "This vehicle is impounded." : undefined}
-                    className={classNames(
-                      vehicle.impounded && "opacity-50 select-none cursor-not-allowed",
-                    )}
-                    aria-disabled={vehicle.impounded}
-                    key={vehicle.id}
+          <Table
+            data={vehicles.map((vehicle) => ({
+              plate: vehicle.plate,
+              model: vehicle.model.value.value,
+              color: vehicle.color,
+              registrationStatus: vehicle.registrationStatus.value,
+              vinNumber: vehicle.vinNumber,
+              actions: (
+                <>
+                  <Button
+                    disabled={vehicle.impounded}
+                    onClick={() => handleEditClick(vehicle)}
+                    small
+                    variant="success"
                   >
-                    <td>{vehicle.plate.toUpperCase()}</td>
-                    <td>{vehicle.model.value.value}</td>
-                    <td>{vehicle.color}</td>
-                    <td>{vehicle.registrationStatus.value}</td>
-                    <td>{vehicle.vinNumber}</td>
-                    <td>{format(new Date(vehicle.createdAt), "yyyy-MM-dd")}</td>
-                    <td className="w-36">
-                      <Button
-                        disabled={vehicle.impounded}
-                        onClick={() => handleEditClick(vehicle)}
-                        small
-                        variant="success"
-                      >
-                        {common("edit")}
-                      </Button>
-                      <Button
-                        disabled={vehicle.impounded}
-                        className="ml-2"
-                        onClick={() => handleDeleteClick(vehicle)}
-                        small
-                        variant="danger"
-                      >
-                        {common("delete")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    disabled={vehicle.impounded}
+                    className="ml-2"
+                    onClick={() => handleDeleteClick(vehicle)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={[
+              {
+                Header: t("plate"),
+                accessor: "plate",
+              },
+              {
+                Header: t("model"),
+                accessor: "model",
+              },
+              {
+                Header: t("color"),
+                accessor: "color",
+              },
+              {
+                Header: t("registrationStatus"),
+                accessor: "registrationStatus",
+              },
+              {
+                Header: t("vinNumber"),
+                accessor: "vinNumber",
+              },
+              {
+                Header: common("actions"),
+                accessor: "actions",
+              },
+            ]}
+          />
         )}
       </div>
 

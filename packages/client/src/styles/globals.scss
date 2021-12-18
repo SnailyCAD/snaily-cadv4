@@ -80,3 +80,7 @@ td {
 .switch-component[data-state="unchecked"] {
   transform: translateX(3px);
 }
+
+.thin-scrollbar {
+  scrollbar-width: thin;
+}
