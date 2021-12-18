@@ -183,7 +183,7 @@ export const NameSearchModal = () => {
                 </header>
 
                 {currentResult?.dead && currentResult?.dateOfDead ? (
-                  <div className="p-2 mt-2 font-semibold bg-yellow-500 rounded-md">
+                  <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
                     {t("citizenDead", {
                       date: format(
                         new Date(currentResult.dateOfDead ?? new Date()),
@@ -194,7 +194,7 @@ export const NameSearchModal = () => {
                 ) : null}
 
                 {hasWarrants ? (
-                  <div className="p-2 my-2 font-semibold bg-red-500 rounded-md">
+                  <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
                     {t("hasWarrants")}
                   </div>
                 ) : null}
