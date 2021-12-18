@@ -5,7 +5,7 @@ import { useTable, Column } from "react-table";
 
 type TableData = {
   rowProps?: JSX.IntrinsicElements["tr"];
-  [k: string]: any;
+  [k: string]: string | null | undefined | number | object;
 };
 
 interface Props<T extends TableData = TableData> {

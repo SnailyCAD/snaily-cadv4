@@ -13,6 +13,7 @@ import { useNameSearch } from "state/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
+import { Table } from "components/table/Table";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: PenalCode[] };
 interface Props {
@@ -46,14 +47,14 @@ export const RecordsArea = ({ records }: Props) => {
         <section className="my-2 mb-5" key={title} id={title}>
           <h3 className="text-xl font-semibold">{title}</h3>
 
-          {data!.length <= 0 ? <p>{noValuesText}</p> : <Table data={data} />}
+          {data!.length <= 0 ? <p>{noValuesText}</p> : <RecordsTable data={data} />}
         </section>
       ))}
     </div>
   );
 };
 
-const Table = ({ data }: { data: FullRecord[] }) => {
+const RecordsTable = ({ data }: { data: FullRecord[] }) => {
   const [tempItem, setTempItem] = React.useState<FullRecord | null>(null);
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -91,46 +92,56 @@ const Table = ({ data }: { data: FullRecord[] }) => {
   }
 
   return (
-    <div className="w-full mt-3 overflow-x-auto max-h-56">
-      <table className="w-full overflow-hidden whitespace-nowrap">
-        <thead className="sticky top-0">
-          <tr>
-            <th>{t("Leo.violations")}</th>
-            <th>{t("Leo.postal")}</th>
-            <th>{t("Leo.officer")}</th>
-            <th>{common("description")}</th>
-            <th>{common("createdAt")}</th>
-            {isCitizen ? null : <th>{common("actions")}</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {data
-            .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-            .map((value) => (
-              <tr key={value.id}>
-                <td>{value.violations.map((v) => v.title).join(", ")}</td>
-                <td>{value.postal}</td>
-                <td>
-                  {generateCallsign(value.officer)} {makeUnitName(value.officer)}
-                </td>
-                <td>{value.notes}</td>
-                <td>{format(new Date(value.createdAt), "yyyy-MM-dd")}</td>
-                {isCitizen ? null : (
-                  <td>
-                    <Button
-                      type="button"
-                      onClick={() => handleDeleteClick(value)}
-                      small
-                      variant="danger"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            ))}
-        </tbody>
-      </table>
+    <>
+      <Table
+        data={data
+          .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
+          .map((record) => ({
+            violations: record.violations.map((v) => v.title).join(", "),
+            postal: record.postal,
+            officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
+            description: record.notes,
+            createdAt: format(new Date(record.createdAt), "yyyy-MM-dd"),
+            actions: isCitizen ? null : (
+              <Button
+                type="button"
+                onClick={() => handleDeleteClick(record)}
+                small
+                variant="danger"
+              >
+                {common("delete")}
+              </Button>
+            ),
+          }))}
+        columns={[
+          {
+            Header: t("Leo.violations"),
+            accessor: "violations",
+          },
+          {
+            Header: t("Leo.postal"),
+            accessor: "postal",
+          },
+          {
+            Header: t("Leo.officer"),
+            accessor: "officer",
+          },
+          {
+            Header: common("description"),
+            accessor: "description",
+          },
+          {
+            Header: common("createdAt"),
+            accessor: "createdAt",
+          },
+          isCitizen
+            ? null
+            : {
+                Header: common("actions"),
+                accessor: "actions",
+              },
+        ]}
+      />
 
       <AlertModal
         id={ModalIds.AlertDeleteRecord}
@@ -139,6 +150,6 @@ const Table = ({ data }: { data: FullRecord[] }) => {
         title={t("Leo.deleteRecord")}
         state={state}
       />
-    </div>
+    </>
   );
 };

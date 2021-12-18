@@ -15,6 +15,7 @@ import { FullOfficer } from "state/dispatchState";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
+import { Table } from "components/table/Table";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -24,7 +25,7 @@ const ManageOfficerModal = dynamic(
 export type OfficerWithDept = Officer & {
   division: DivisionValue;
   department: DepartmentValue;
-  rank: Value<"OFFICER_RANK">;
+  rank?: Value<"OFFICER_RANK">;
 };
 
 interface Props {
@@ -78,55 +79,72 @@ export default function MyOfficers({ officers: data }: Props) {
       {officers.length <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <div className="overflow-x-auto w-full mt-3">
-          <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-            <thead>
-              <tr>
-                <th>{t("officer")}</th>
-                <th>{t("callsign")}</th>
-                <th>{t("badgeNumber")}</th>
-                <th>{t("department")}</th>
-                <th>{t("division")}</th>
-                <th>{t("rank")}</th>
-                <th>{common("actions")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {officers.map((officer) => (
-                <tr key={officer.id}>
-                  <td className="capitalize flex items-center">
-                    {officer.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", officer.imageId)}
-                      />
-                    ) : null}
-                    {makeUnitName(officer)}
-                  </td>
-                  <td>{generateCallsign(officer)}</td>
-                  <td>{String(officer.badgeNumber)}</td>
-                  <td>{officer.department.value?.value}</td>
-                  <td>{officer.division?.value?.value}</td>
-                  <td>{officer.rank?.value ?? common("none")}</td>
-                  <td className="w-36">
-                    <Button small onClick={() => handleEditClick(officer)} variant="success">
-                      {common("edit")}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteClick(officer)}
-                      className="ml-2"
-                      variant="danger"
-                      small
-                    >
-                      {common("delete")}
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          data={officers.map((officer) => ({
+            officer: (
+              <span className="flex items-center">
+                {officer.imageId ? (
+                  <img
+                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                    draggable={false}
+                    src={makeImageUrl("units", officer.imageId)}
+                  />
+                ) : null}
+                {makeUnitName(officer)}
+              </span>
+            ),
+            callsign: generateCallsign(officer),
+            badgeNumber: officer.badgeNumber,
+            department: officer.department.value.value,
+            division: officer.division.value.value,
+            rank: officer.rank?.value ?? common("none"),
+            actions: (
+              <>
+                <Button small onClick={() => handleEditClick(officer)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  onClick={() => handleDeleteClick(officer)}
+                  className="ml-2"
+                  variant="danger"
+                  small
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={[
+            {
+              Header: t("officer"),
+              accessor: "officer",
+            },
+            {
+              Header: t("callsign"),
+              accessor: "callsign",
+            },
+            {
+              Header: t("badgeNumber"),
+              accessor: "badgeNumber",
+            },
+            {
+              Header: t("department"),
+              accessor: "department",
+            },
+            {
+              Header: t("division"),
+              accessor: "division",
+            },
+            {
+              Header: t("rank"),
+              accessor: "rank",
+            },
+            {
+              Header: common("actions"),
+              accessor: "actions",
+            },
+          ]}
+        />
       )}
 
       <ManageOfficerModal

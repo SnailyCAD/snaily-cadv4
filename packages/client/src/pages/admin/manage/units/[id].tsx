@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { OfficerLog } from "types/prisma";
 import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
+import { Table } from "components/table/Table";
 
 type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
 
@@ -68,7 +69,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
         </title>
       </Head>
 
-      <h1 className="text-2xl font-semibold capitalize mb-3">{makeUnitName(unit)}</h1>
+      <h1 className="mb-3 text-2xl font-semibold capitalize">{makeUnitName(unit)}</h1>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values }) => (
@@ -134,7 +135,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
                 </a>
               </Link>
               <Button type="submit" className="flex items-center">
-                {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+                {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                 {common("save")}
               </Button>
@@ -144,39 +145,43 @@ export default function SupervisorPanelPage({ unit }: Props) {
       </Formik>
 
       {"logs" in unit ? (
-        <div className="mt-5">
+        <div className="mt-3">
           <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
 
-          <div className="overflow-x-auto w-full mt-5">
-            <table className="overflow-hidden w-full whitespace-nowrap max-h-64">
-              <thead>
-                <tr>
-                  <th>{t("startedAt")}</th>
-                  <th>{t("endedAt")}</th>
-                  <th>{t("totalTime")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {unit.logs.map((log) => {
-                  const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
-                  const endedAt =
-                    log.endedAt && format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss");
+          <Table
+            data={unit.logs.map((log) => {
+              const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
 
-                  return (
-                    <tr key={log.id}>
-                      <td>{startedAt}</td>
-                      <td>{log.endedAt !== null ? endedAt : t("notEndedYet")}</td>
-                      <td>
-                        {log.endedAt !== null
-                          ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
-                          : t("notEndedYet")}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+              const endedAt = log.endedAt
+                ? format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss")
+                : t("notEndedYet");
+
+              const totalTime =
+                log.endedAt !== null
+                  ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
+                  : t("notEndedYet");
+
+              return {
+                startedAt,
+                endedAt,
+                totalTime,
+              };
+            })}
+            columns={[
+              {
+                Header: t("startedAt"),
+                accessor: "startedAt",
+              },
+              {
+                Header: t("endedAt"),
+                accessor: "endedAt",
+              },
+              {
+                Header: t("totalTime"),
+                accessor: "totalTime",
+              },
+            ]}
+          />
         </div>
       ) : null}
     </AdminLayout>
