@@ -172,13 +172,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             <FormField errorMessage={errors.value} label="Value">
-              <Input
-                autoFocus
-                id="value"
-                name="value"
-                onChange={handleChange}
-                value={values.value}
-              />
+              <Input autoFocus name="value" onChange={handleChange} value={values.value} />
             </FormField>
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
@@ -211,7 +205,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
 
             {["VEHICLE", "WEAPON"].includes(type) ? (
               <FormField label="Game Hash">
-                <Input id="hash" onChange={handleChange} value={values.hash} />
+                <Input name="hash" onChange={handleChange} value={values.hash} />
               </FormField>
             ) : null}
 
@@ -262,7 +256,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
 
                 <FormField className="mb-0" checkbox label="Status Code">
                   <Input
-                    id="status_code"
                     className="w-[max-content] mr-3"
                     type="radio"
                     name="type"
@@ -273,7 +266,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
 
                 <FormField checkbox label="Situation Code">
                   <Input
-                    id="situation_code"
                     className="w-[max-content] mr-3"
                     type="radio"
                     name="type"

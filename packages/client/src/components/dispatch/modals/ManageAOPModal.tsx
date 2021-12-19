@@ -47,7 +47,7 @@ export const ManageAOPModal = () => {
             <FormField label={t("areaOfPlay")}>
               <Input
                 autoFocus
-                id="aop"
+                name="aop"
                 onChange={handleChange}
                 value={values.aop}
                 hasError={!!errors.aop}

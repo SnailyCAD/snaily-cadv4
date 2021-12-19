@@ -124,11 +124,11 @@ export const NameSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={cT("fullName")} fieldId="name">
+            <FormField label={cT("fullName")}>
               <Input
                 value={values.name}
                 hasError={!!errors.name}
-                id="name"
+                name="name"
                 onChange={handleChange}
               />
               <Error>{errors.name}</Error>

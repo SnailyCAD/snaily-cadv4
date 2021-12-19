@@ -86,7 +86,7 @@ export const ManageMedicalRecordsModal = ({
               <Input
                 hasError={!!errors.type}
                 onChange={handleChange}
-                id="type"
+                name="type"
                 value={values.type}
               />
               <Error>{errors.type}</Error>
@@ -116,7 +116,7 @@ export const ManageMedicalRecordsModal = ({
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.ManageMedicalRecords)}

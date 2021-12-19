@@ -75,11 +75,11 @@ export const VehicleSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("plateOrVin")} fieldId="plateOrVin">
+            <FormField label={t("plateOrVin")}>
               <Input
                 value={values.plateOrVin}
                 hasError={!!errors.plateOrVin}
-                id="plateOrVin"
+                name="plateOrVin"
                 onChange={handleChange}
               />
               <Error>{errors.plateOrVin}</Error>

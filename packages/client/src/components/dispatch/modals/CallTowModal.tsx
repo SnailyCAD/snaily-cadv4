@@ -128,7 +128,6 @@ export const DispatchCallTowModal = ({ call }: Props) => {
 
             <FormField checkbox label={"Call County Service"}>
               <Input
-                id="callCountyService"
                 type="checkbox"
                 name="callCountyService"
                 onChange={() => setFieldValue("callCountyService", !values.callCountyService)}

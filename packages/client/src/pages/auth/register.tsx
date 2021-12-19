@@ -66,17 +66,16 @@ export default function Register({ cad }: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-gray-2 shadow-md"
+              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
               onSubmit={handleSubmit}
             >
-              <h1 className="text-2xl text-gray-800 dark:text-white font-semibold mb-3">
+              <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("register")}
               </h1>
 
               <FormField label={t("username")}>
                 <Input
                   hasError={!!errors.username}
-                  id="username"
                   type="text"
                   name="username"
                   onChange={handleChange}
@@ -87,7 +86,6 @@ export default function Register({ cad }: Props) {
               <FormField label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
-                  id="password"
                   name="password"
                   onChange={handleChange}
                 />
@@ -97,7 +95,6 @@ export default function Register({ cad }: Props) {
               <FormField label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
-                  id="confirmPassword"
                   name="confirmPassword"
                   onChange={handleChange}
                 />
@@ -108,7 +105,6 @@ export default function Register({ cad }: Props) {
                 <FormField label={t("registrationCode")}>
                   <Input
                     hasError={!!errors.registrationCode}
-                    id="registrationCode"
                     name="registrationCode"
                     onChange={handleChange}
                   />
@@ -118,7 +114,7 @@ export default function Register({ cad }: Props) {
 
               <div className="mt-3">
                 <Link href="/auth/login">
-                  <a className="underline inline-block mb-3 dark:text-white">{t("hasAccount")}</a>
+                  <a className="inline-block mb-3 underline dark:text-white">{t("hasAccount")}</a>
                 </Link>
 
                 <Button

@@ -120,7 +120,7 @@ export const MiscFeatures = () => {
             <FormRow>
               <FormField errorMessage={errors.pairedUnitSymbol} label="Paired unit symbol">
                 <Input
-                  id="pairedUnitSymbol"
+                  name="pairedUnitSymbol"
                   hasError={!!errors.pairedUnitSymbol}
                   value={values.pairedUnitSymbol}
                   onChange={handleChange}
@@ -129,7 +129,7 @@ export const MiscFeatures = () => {
 
               <FormField errorMessage={errors.callsignTemplate} label="Callsign Template">
                 <Input
-                  id="callsignTemplate"
+                  name="callsignTemplate"
                   hasError={!!errors.callsignTemplate}
                   value={values.callsignTemplate}
                   onChange={handleChange}

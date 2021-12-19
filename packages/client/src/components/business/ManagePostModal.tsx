@@ -82,7 +82,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
           <Form>
             <FormField errorMessage={errors.title} label={t("postTitle")}>
               <Input
-                id="title"
+                name="title"
                 onChange={handleChange}
                 hasError={!!errors.title}
                 value={values.title}
@@ -91,7 +91,7 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
 
             <FormField errorMessage={errors.body} label={t("postBody")}>
               <Textarea
-                id="body"
+                name="body"
                 onChange={handleChange}
                 hasError={!!errors.body}
                 value={values.body}

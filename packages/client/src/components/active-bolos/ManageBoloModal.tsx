@@ -164,7 +164,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
 
                 <FormField errorMessage={errors.model} label={leo("model")}>
                   <Input
-                    id="model"
+                    name="model"
                     onChange={handleChange}
                     hasError={!!errors.model}
                     value={values.model}
@@ -173,7 +173,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
 
                 <FormField errorMessage={errors.color} label={leo("color")}>
                   <Input
-                    id="color"
+                    name="color"
                     onChange={handleChange}
                     hasError={!!errors.color}
                     value={values.color}
@@ -227,7 +227,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
 
             <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
-                id="description"
+                name="description"
                 onChange={handleChange}
                 hasError={!!errors.description}
                 value={values.description}

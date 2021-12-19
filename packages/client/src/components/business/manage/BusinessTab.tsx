@@ -73,7 +73,7 @@ export const ManageBusinessTab = () => {
           <Form>
             <FormField errorMessage={errors.name} label={t("name")}>
               <Input
-                id="name"
+                name="name"
                 onChange={handleChange}
                 hasError={!!errors.name}
                 value={values.name}
@@ -82,7 +82,7 @@ export const ManageBusinessTab = () => {
 
             <FormField errorMessage={errors.address} label={t("address")}>
               <Input
-                id="address"
+                name="address"
                 onChange={handleChange}
                 hasError={!!errors.address}
                 value={values.address}

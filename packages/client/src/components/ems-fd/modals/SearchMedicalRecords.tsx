@@ -82,7 +82,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
                 required
                 hasError={!!errors.name}
                 onChange={handleChange}
-                id="name"
+                name="name"
                 value={values.name}
               />
               <Error>{errors.name}</Error>

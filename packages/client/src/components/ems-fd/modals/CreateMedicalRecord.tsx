@@ -81,7 +81,7 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
               <Input
                 hasError={!!errors.type}
                 onChange={handleChange}
-                id="type"
+                name="type"
                 value={values.type}
               />
               <Error>{errors.type}</Error>

@@ -101,7 +101,7 @@ export const RegisterVehicleModal = ({
                 disabled={!!vehicle}
                 hasError={!!errors.plate}
                 onChange={handleChange}
-                id="plate"
+                name="plate"
                 value={values.plate.toUpperCase()}
                 max={maxPlateLength}
                 maxLength={maxPlateLength}
@@ -164,7 +164,7 @@ export const RegisterVehicleModal = ({
               <Input
                 hasError={!!errors.color}
                 onChange={handleChange}
-                id="color"
+                name="color"
                 value={values.color}
               />
               <Error>{errors.color}</Error>
@@ -181,7 +181,7 @@ export const RegisterVehicleModal = ({
               </FormField>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.RegisterVehicle)}

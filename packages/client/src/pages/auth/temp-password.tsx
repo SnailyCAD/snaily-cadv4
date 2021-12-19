@@ -65,19 +65,18 @@ export default function TempPassword() {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="rounded-lg p-6 w-full max-w-md bg-gray-100 dark:bg-gray-2 shadow-md"
+              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
               onSubmit={handleSubmit}
             >
-              <h1 className="text-2xl text-gray-800 dark:text-white font-semibold">
+              <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("changePassword")}
               </h1>
 
-              <p className="text-base italic my-3">{t("savePasswordInfo")}</p>
+              <p className="my-3 text-base italic">{t("savePasswordInfo")}</p>
 
               <FormField label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.newPassword}
-                  id="newPassword"
                   name="newPassword"
                   onChange={handleChange}
                 />
@@ -87,7 +86,6 @@ export default function TempPassword() {
               <FormField label={t("confirmPassword")}>
                 <PasswordInput
                   hasError={!!errors.confirmPassword}
-                  id="confirmPassword"
                   name="confirmPassword"
                   onChange={handleChange}
                 />

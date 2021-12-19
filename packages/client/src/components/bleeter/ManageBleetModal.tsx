@@ -97,7 +97,7 @@ export const ManageBleetModal = ({ post }: Props) => {
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
                   type="file"
-                  id="image"
+                  name="image"
                   hasError={!!errors.image}
                   onChange={(e) => {
                     setFieldValue("image", e.currentTarget.files?.[0]);
@@ -117,7 +117,7 @@ export const ManageBleetModal = ({ post }: Props) => {
 
             <FormField errorMessage={errors.title} label={t("bleetTitle")}>
               <Input
-                id="title"
+                name="title"
                 value={values.title}
                 hasError={!!errors.title}
                 onChange={handleChange}
@@ -126,7 +126,7 @@ export const ManageBleetModal = ({ post }: Props) => {
 
             <FormField errorMessage={errors.body} label={t("bleetBody")}>
               <Textarea
-                id="body"
+                name="body"
                 value={values.body}
                 hasError={!!errors.body}
                 onChange={handleChange}

@@ -76,45 +76,45 @@ export default function CadSettings() {
           <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
               <form className="mt-3" onSubmit={handleSubmit}>
-                <FormField label="CAD Name" fieldId="name">
-                  <Input onChange={handleChange} value={values.name} id="name" />
+                <FormField label="CAD Name">
+                  <Input onChange={handleChange} value={values.name} name="name" />
                   <Error>{errors.name}</Error>
                 </FormField>
 
-                <FormField label="Area of Play" fieldId="areaOfPlay">
-                  <Input onChange={handleChange} value={values.areaOfPlay} id="areaOfPlay" />
+                <FormField label="Area of Play">
+                  <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
                   <Error>{errors.areaOfPlay}</Error>
                 </FormField>
 
-                <FormField label="Steam API Key" fieldId="steamApiKey">
+                <FormField label="Steam API Key">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.steamApiKey}
-                    id="steamApiKey"
+                    name="steamApiKey"
                   />
                   <Error>{errors.steamApiKey}</Error>
                 </FormField>
 
-                <FormField label="Discord webhook URL" fieldId="discordWebhookURL">
+                <FormField label="Discord webhook URL">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.discordWebhookURL}
-                    id="discordWebhookURL"
+                    name="discordWebhookURL"
                   />
                   <Error>{errors.discordWebhookURL}</Error>
                 </FormField>
 
-                <FormField label="Registration Code" fieldId="registrationCode">
+                <FormField label="Registration Code">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.registrationCode}
-                    id="registrationCode"
+                    name="registrationCode"
                   />
                   <Error>{errors.registrationCode}</Error>
                 </FormField>
 
                 <FormRow>
-                  <FormField label="Tow Whitelisted" fieldId="towWhitelisted">
+                  <FormField label="Tow Whitelisted">
                     <Toggle
                       name="towWhitelisted"
                       onClick={handleChange}
@@ -123,7 +123,7 @@ export default function CadSettings() {
                     <Error>{errors.towWhitelisted}</Error>
                   </FormField>
 
-                  <FormField label="CAD Whitelisted" fieldId="whitelisted">
+                  <FormField label="CAD Whitelisted">
                     <Toggle
                       name="whitelisted"
                       onClick={handleChange}

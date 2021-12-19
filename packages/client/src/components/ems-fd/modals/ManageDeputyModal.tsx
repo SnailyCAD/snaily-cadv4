@@ -179,7 +179,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 type="number"
                 value={values.badgeNumber}
                 hasError={!!errors.badgeNumber}
-                id="badgeNumber"
+                name="badgeNumber"
                 onChange={(e) =>
                   handleChange({
                     ...e,
@@ -199,7 +199,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 <Input
                   value={values.callsign}
                   hasError={!!errors.callsign}
-                  id="callsign"
+                  name="callsign"
                   onChange={handleChange}
                 />
                 <Error>{errors.callsign}</Error>
@@ -209,7 +209,7 @@ export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props
                 <Input
                   value={values.callsign2}
                   hasError={!!errors.callsign2}
-                  id="callsign2"
+                  name="callsign2"
                   onChange={handleChange}
                 />
                 <Error>{errors.callsign2}</Error>

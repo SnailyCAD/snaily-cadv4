@@ -92,7 +92,6 @@ export default function Login() {
               <FormField errorMessage={errors.username} label={t("username")}>
                 <Input
                   hasError={!!errors.username}
-                  id="username"
                   type="text"
                   name="username"
                   onChange={handleChange}
@@ -102,7 +101,6 @@ export default function Login() {
               <FormField errorMessage={errors.password} label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
-                  id="password"
                   name="password"
                   onChange={handleChange}
                 />

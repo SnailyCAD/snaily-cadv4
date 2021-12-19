@@ -123,7 +123,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
               <Input
                 value={values.postal}
                 hasError={!!errors.postal}
-                id="postal"
+                name="postal"
                 onChange={handleChange}
               />
               <Error>{errors.postal}</Error>
@@ -148,7 +148,7 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
               <Textarea
                 value={values.notes}
                 hasError={!!errors.notes}
-                id="notes"
+                name="notes"
                 onChange={handleChange}
               />
               <Error>{errors.notes}</Error>

@@ -78,7 +78,7 @@ export const BanArea = ({ user, setUser }: Props) => {
                   className="bg-gray-100"
                   value={values.reason}
                   onChange={handleChange}
-                  id="reason"
+                  name="reason"
                   disabled={formDisabled}
                 />
               </FormField>

@@ -48,7 +48,7 @@ export const CallEventsArea = ({ call }: Props) => {
 
   return (
     <div className="w-[45rem] ml-3 relative">
-      <h4 className="font-semibold text-xl">{common("events")}</h4>
+      <h4 className="text-xl font-semibold">{common("events")}</h4>
 
       <ul className="overflow-auto h-[210px]">
         {(call?.events.length ?? 0) <= 0 ? (
@@ -69,14 +69,14 @@ export const CallEventsArea = ({ call }: Props) => {
             <FormField label={common("description")}>
               <Textarea
                 required
-                id="description"
+                name="description"
                 value={values.description}
                 onChange={handleChange}
               />
               <Error>{errors.description}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               {tempEvent ? (
                 <Button variant="cancel" onClick={() => setTempEvent(null)} type="reset">
                   {common("cancel")}
@@ -84,10 +84,10 @@ export const CallEventsArea = ({ call }: Props) => {
               ) : null}
               <Button
                 disabled={state === "loading"}
-                className="ml-2 flex items-center"
+                className="flex items-center ml-2"
                 type="submit"
               >
-                {state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}
+                {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                 {tempEvent ? common("save") : t("addEvent")}
               </Button>

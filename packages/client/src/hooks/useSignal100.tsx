@@ -15,8 +15,8 @@ export function useSignal100() {
   });
 
   React.useEffect(() => {
-    setSign100(cad?.miscCadSettings.signal100Enabled ?? false);
-  }, [cad?.miscCadSettings.signal100Enabled]);
+    setSign100(cad?.miscCadSettings?.signal100Enabled ?? false);
+  }, [cad?.miscCadSettings?.signal100Enabled]);
 
   return { signal100Enabled, Component };
 }
@@ -25,7 +25,7 @@ const Component = () => {
   const t = useTranslations("Leo");
 
   return (
-    <div role="alert" className="font-semibold text-white bg-red-500 p-2 px-3 rounded-md my-2">
+    <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
       <p>{t("signal100enabled")}</p>
     </div>
   );

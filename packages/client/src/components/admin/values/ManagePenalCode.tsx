@@ -70,22 +70,11 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
         {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.title} label="Title">
-              <Input
-                autoFocus
-                id="title"
-                name="title"
-                onChange={handleChange}
-                value={values.title}
-              />
+              <Input autoFocus name="title" onChange={handleChange} value={values.title} />
             </FormField>
 
             <FormField errorMessage={errors.description} label="Description">
-              <Textarea
-                id="description"
-                name="description"
-                onChange={handleChange}
-                value={values.description}
-              />
+              <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
