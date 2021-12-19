@@ -5,6 +5,7 @@ import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "../../lib/prisma";
 import { IsAuth } from "../../middlewares";
 import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
+import { unitProperties } from "../../lib/officer";
 
 const citizenSearchInclude = {
   businesses: true,
@@ -24,7 +25,9 @@ const citizenSearchInclude = {
   warrants: true,
   Record: {
     include: {
-      officer: true,
+      officer: {
+        select: unitProperties,
+      },
       violations: true,
     },
   },
