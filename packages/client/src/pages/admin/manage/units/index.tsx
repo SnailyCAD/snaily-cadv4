@@ -5,7 +5,7 @@ import Head from "next/head";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll, yesOrNoText } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
@@ -90,6 +90,7 @@ export default function SupervisorPanelPage({ units }: Props) {
           division: unit.division.value.value,
           rank: unit.rank?.value ?? common("none"),
           status: unit.status?.value.value ?? common("none"),
+          suspended: common(yesOrNoText(unit.suspended)),
           actions: (
             <Link href={`/admin/manage/units/${unit.id}`}>
               <a>
@@ -138,6 +139,10 @@ export default function SupervisorPanelPage({ units }: Props) {
           {
             Header: t("Leo.status"),
             accessor: "status",
+          },
+          {
+            Header: t("Leo.suspended"),
+            accessor: "suspended",
           },
           {
             Header: common("actions"),

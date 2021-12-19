@@ -117,11 +117,7 @@ export const ManageMedicalRecordsModal = ({
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageMedicalRecords)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

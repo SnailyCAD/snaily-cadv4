@@ -102,6 +102,7 @@ export class ManageUnitsController {
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         rankId: body.get("rank") || null,
+        suspended: Boolean(body.get("suspended")),
       },
     });
 

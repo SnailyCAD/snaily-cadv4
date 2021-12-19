@@ -65,3 +65,7 @@ export async function requestAll(req: any, config: Config) {
 export function makeUnitName(officer: Officer | FullDeputy) {
   return `${officer.citizen.name} ${officer.citizen.surname}`;
 }
+
+export function yesOrNoText(t: boolean): "yes" | "no" {
+  return t === true ? "yes" : "no";
+}

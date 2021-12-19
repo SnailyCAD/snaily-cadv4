@@ -14,7 +14,7 @@ import { findUrl } from "lib/fetch";
 const styles: React.CSSProperties = {
   minWidth: "20em",
   fontSize: "1.1rem",
-  padding: "0.5em 1em",
+  padding: "0.5em 0.5em",
   fontWeight: 600,
 };
 
