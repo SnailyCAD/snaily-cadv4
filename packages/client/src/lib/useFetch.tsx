@@ -6,34 +6,37 @@ import toast from "react-hot-toast";
 import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 
+interface UseFetchOptions {
+  overwriteState: State | null;
+}
+
 type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
 type Options = AxiosRequestConfig & { noToast?: boolean };
-type Return = {
-  json: any;
+type Return<Data> = {
+  json: Data;
   error: null | ErrorMessage | (string & {});
 };
 
-export default function useFetch(
-  { overwriteState }: { overwriteState: State | null } = { overwriteState: null },
-) {
-  const t = useTranslations("Errors");
+export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
-  const abortController = React.useRef<NullableAbortController>(null);
+
+  const t = useTranslations("Errors");
+  const abortControllerRef = React.useRef<NullableAbortController>(null);
 
   React.useEffect(() => {
     setState(overwriteState);
   }, [overwriteState]);
 
-  const execute = async (path: string, options: Options): Promise<Return> => {
+  async function execute<Data = any>(path: string, options: Options): Promise<Return<Data>> {
     setState("loading");
-    abortController.current = new AbortController();
+    abortControllerRef.current = new AbortController();
 
-    const response = await handleRequest(path, {
-      ...{ ...(options as any), signal: abortController.current.signal },
-    }).catch((e) => {
+    const mergedOptions = { ...options, signal: abortControllerRef.current.signal };
+
+    const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
       setState("error");
       return e;
     });
@@ -60,7 +63,7 @@ export default function useFetch(
       setState("error");
 
       return {
-        json: {},
+        json: {} as Data,
         error: response instanceof Error ? parseError(response as AxiosError) : null,
       };
     }
@@ -71,12 +74,12 @@ export default function useFetch(
       json: response?.data ?? {},
       error: null,
     };
-  };
+  }
 
   React.useEffect(() => {
     return () => {
-      if (abortController.current) {
-        abortController.current.abort();
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
     };
   }, []);

@@ -32,7 +32,7 @@ export class ManageCitizensController {
       },
     });
 
-    return { ...setDiscordAUth(cad as any), registrationCode: !!cad?.registrationCode };
+    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode };
   }
 
   @UseBefore(IsAuth)

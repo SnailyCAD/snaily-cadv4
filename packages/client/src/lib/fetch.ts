@@ -1,15 +1,14 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { Method, AxiosRequestConfig, AxiosResponse } from "axios";
 import { serialize } from "cookie";
 import { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 
 export type RequestData = Record<string, unknown>;
-export type AllowedMethods = "PATCH" | "PUT" | "DELETE" | "OPTIONS" | "GET" | "POST";
 
 interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
   headers?: any;
   req?: Pick<IncomingMessage, "url" | "headers"> & { cookies?: NextApiRequestCookies };
-  method?: AllowedMethods;
+  method?: Method;
   data?: RequestData;
 }
 

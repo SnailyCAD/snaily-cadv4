@@ -5,7 +5,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
-import { Officer, OfficerLog } from "types/prisma";
+import { OfficerLog } from "types/prisma";
 import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import { Select } from "components/form/Select";
@@ -14,8 +14,9 @@ import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/table/Table";
 import { useImageUrl } from "hooks/useImageUrl";
+import { FullOfficer } from "state/dispatchState";
 
-export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
+export type OfficerLogWithOfficer = OfficerLog & { officer: FullOfficer };
 
 interface Props {
   logs: OfficerLogWithOfficer[];
@@ -33,7 +34,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   const officers = logs.reduce(
     (ac, cv) => ({
       ...ac,
-      [cv.officerId]: `${generateCallsign(cv.officer as any)} ${makeUnitName(cv.officer)}`,
+      [cv.officerId]: `${generateCallsign(cv.officer)} ${makeUnitName(cv.officer)}`,
     }),
     {},
   );
