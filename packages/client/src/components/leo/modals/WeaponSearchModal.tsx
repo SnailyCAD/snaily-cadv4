@@ -55,11 +55,11 @@ export const WeaponSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("serialNumber")} fieldId="serialNumber">
+            <FormField label={t("serialNumber")}>
               <Input
                 value={values.serialNumber}
                 hasError={!!errors.serialNumber}
-                id="serialNumber"
+                name="serialNumber"
                 onChange={handleChange}
               />
               <Error>{errors.serialNumber}</Error>
@@ -94,7 +94,7 @@ export const WeaponSearchModal = () => {
               </div>
             ) : null}
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.WeaponSearch)}

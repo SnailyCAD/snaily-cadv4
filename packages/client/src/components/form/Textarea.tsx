@@ -1,7 +1,7 @@
 import { classNames } from "lib/classNames";
 import * as React from "react";
 
-type Props = JSX.IntrinsicElements["textarea"] & {
+type Props = Omit<JSX.IntrinsicElements["textarea"], "id"> & {
   hasError?: boolean;
 };
 

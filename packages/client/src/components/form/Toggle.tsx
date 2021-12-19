@@ -16,8 +16,8 @@ export const Toggle = React.forwardRef<HTMLButtonElement, Props>(
       <SwitchPrimitive.Root
         ref={ref as any}
         onCheckedChange={() => onClick({ target: { name, value: !toggled } })}
-        {...props}
         id={name}
+        {...props}
         name={name}
         checked={toggled}
         className="relative h-6 transition-all rounded-full shadow-sm w-11 bg-gray-400/50 dark:bg-gray-3 disabled:opacity-50 disabled:cursor-not-allowed"

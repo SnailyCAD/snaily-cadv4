@@ -6,7 +6,6 @@ import { AUTH_SCHEMA } from "@snailycad/schemas";
 
 import useFetch from "lib/useFetch";
 
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -90,25 +89,21 @@ export default function Login() {
                 </p>
               ) : null}
 
-              <FormField fieldId="username" label={t("username")}>
+              <FormField errorMessage={errors.username} label={t("username")}>
                 <Input
                   hasError={!!errors.username}
-                  id="username"
                   type="text"
                   name="username"
                   onChange={handleChange}
                 />
-                <Error>{errors.username}</Error>
               </FormField>
 
-              <FormField fieldId="password" label={t("password")}>
+              <FormField errorMessage={errors.password} label={t("password")}>
                 <PasswordInput
                   hasError={!!errors.password}
-                  id="password"
                   name="password"
                   onChange={handleChange}
                 />
-                <Error>{errors.password}</Error>
               </FormField>
 
               <div className="mt-3">

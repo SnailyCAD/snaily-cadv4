@@ -110,7 +110,7 @@ export const CreateIncidentModal = () => {
               <Textarea
                 value={values.description}
                 hasError={!!errors.description}
-                id="description"
+                name="description"
                 onChange={handleChange}
               />
               <Error>{errors.description}</Error>

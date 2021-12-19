@@ -1,6 +1,5 @@
 import { VALUE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -159,7 +158,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
         {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
           <form onSubmit={handleSubmit}>
             {type === "DIVISION" ? (
-              <FormField fieldId="departmentId" label="Department">
+              <FormField label="Department">
                 <Select
                   values={department.values.map((v) => ({
                     value: v.id,
@@ -172,25 +171,18 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            <FormField fieldId="value" label="Value">
-              <Input
-                autoFocus
-                id="value"
-                name="value"
-                onChange={handleChange}
-                value={values.value}
-              />
-              <Error>{errors.value}</Error>
+            <FormField errorMessage={errors.value} label="Value">
+              <Input autoFocus name="value" onChange={handleChange} value={values.value} />
             </FormField>
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
-              <FormField fieldId="callsign" label="Callsign Symbol">
+              <FormField label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
               </FormField>
             ) : null}
 
             {type === "DEPARTMENT" ? (
-              <FormField fieldId="type" label="Type">
+              <FormField label="Type">
                 <Select
                   values={DEPARTMENT_TYPES}
                   name="type"
@@ -201,7 +193,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "BUSINESS_ROLE" ? (
-              <FormField fieldId="as" label="As (this is so the database knows what to use.)">
+              <FormField label="As (this is so the database knows what to use.)">
                 <Select
                   values={BUSINESS_VALUES}
                   name="as"
@@ -212,14 +204,14 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {["VEHICLE", "WEAPON"].includes(type) ? (
-              <FormField fieldId="as" label="Game Hash">
-                <Input id="hash" onChange={handleChange} value={values.hash} />
+              <FormField label="Game Hash">
+                <Input name="hash" onChange={handleChange} value={values.hash} />
               </FormField>
             ) : null}
 
             {type === "CODES_10" ? (
               <>
-                <FormField fieldId="shouldDo" label="Should Do">
+                <FormField label="Should Do">
                   <Select
                     values={SHOULD_DO_VALUES}
                     name="shouldDo"
@@ -228,7 +220,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   />
                 </FormField>
 
-                <FormField fieldId="position" label="Position">
+                <FormField label="Position">
                   <Select
                     values={POSITION_VALUES}
                     name="position"
@@ -237,7 +229,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   />
                 </FormField>
 
-                <FormField fieldId="color" label="Color (#HEX)">
+                <FormField errorMessage={errors.color as string} label="Color (#HEX)">
                   <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
                     {values.showPicker ? (
                       <HexColorPicker
@@ -260,12 +252,10 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                       <Eyedropper />
                     </Button>
                   </div>
-                  <Error>{errors.color}</Error>
                 </FormField>
 
-                <FormField className="mb-0" checkbox fieldId="status_code" label="Status Code">
+                <FormField className="mb-0" checkbox label="Status Code">
                   <Input
-                    id="status_code"
                     className="w-[max-content] mr-3"
                     type="radio"
                     name="type"
@@ -274,9 +264,8 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                   />
                 </FormField>
 
-                <FormField checkbox fieldId="situation_code" label="Situation Code">
+                <FormField checkbox label="Situation Code">
                   <Input
-                    id="situation_code"
                     className="w-[max-content] mr-3"
                     type="radio"
                     name="type"

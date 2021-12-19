@@ -77,7 +77,7 @@ export const ApiTokenTab = () => {
               />
             </FormField>
 
-            <FormField fieldId="enabled" label={common("enabled")}>
+            <FormField label={common("enabled")}>
               <Toggle toggled={values.enabled} onClick={handleChange} name="enabled" />
             </FormField>
 

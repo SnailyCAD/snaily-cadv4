@@ -1,7 +1,7 @@
 import { Button } from "components/Button";
 import * as React from "react";
 
-type Props = JSX.IntrinsicElements["input"] & {
+type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
   hasError?: boolean;
 };
 

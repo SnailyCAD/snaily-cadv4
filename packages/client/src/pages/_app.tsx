@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import "cropperjs/dist/cropper.css";
+import { SSRProvider } from "@react-aria/ssr";
 import { Toaster } from "react-hot-toast";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
@@ -22,34 +23,36 @@ export default function App({ Component, router, pageProps }: AppProps) {
   const url = `${protocol}//${hostname}:${port}`;
 
   return (
-    <SocketProvider
-      uri={url}
-      options={{
-        reconnectionDelay: 5_000,
-        reconnectionAttempts: 50,
-      }}
-    >
-      <AuthProvider initialData={pageProps}>
-        <NextIntlProvider
-          onError={console.warn}
-          locale={router.locale ?? "en"}
-          messages={pageProps.messages}
-        >
-          <ModalProvider>
-            <ValuesProvider initialData={pageProps}>
-              <CitizenProvider initialData={pageProps}>
-                <Component {...pageProps} />
-                <Toaster
-                  position="top-right"
-                  toastOptions={{
-                    style: styles,
-                  }}
-                />
-              </CitizenProvider>
-            </ValuesProvider>
-          </ModalProvider>
-        </NextIntlProvider>
-      </AuthProvider>
-    </SocketProvider>
+    <SSRProvider>
+      <SocketProvider
+        uri={url}
+        options={{
+          reconnectionDelay: 5_000,
+          reconnectionAttempts: 50,
+        }}
+      >
+        <AuthProvider initialData={pageProps}>
+          <NextIntlProvider
+            onError={console.warn}
+            locale={router.locale ?? "en"}
+            messages={pageProps.messages}
+          >
+            <ModalProvider>
+              <ValuesProvider initialData={pageProps}>
+                <CitizenProvider initialData={pageProps}>
+                  <Component {...pageProps} />
+                  <Toaster
+                    position="top-right"
+                    toastOptions={{
+                      style: styles,
+                    }}
+                  />
+                </CitizenProvider>
+              </ValuesProvider>
+            </ModalProvider>
+          </NextIntlProvider>
+        </AuthProvider>
+      </SocketProvider>
+    </SSRProvider>
   );
 }

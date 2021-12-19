@@ -59,11 +59,11 @@ export const AddressSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("enterAddress")} fieldId="address">
+            <FormField label={t("enterAddress")}>
               <Input
                 value={values.address}
                 hasError={!!errors.address}
-                id="address"
+                name="address"
                 onChange={handleChange}
               />
               <Error>{errors.address}</Error>

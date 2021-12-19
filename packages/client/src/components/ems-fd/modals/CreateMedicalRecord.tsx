@@ -63,7 +63,7 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField fieldId="citizenId" label={t("citizen")}>
+            <FormField label={t("citizen")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -77,17 +77,17 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
               <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField fieldId="type" label={common("type")}>
+            <FormField label={common("type")}>
               <Input
                 hasError={!!errors.type}
                 onChange={handleChange}
-                id="type"
+                name="type"
                 value={values.type}
               />
               <Error>{errors.type}</Error>
             </FormField>
 
-            <FormField fieldId="description" label={common("description")}>
+            <FormField label={common("description")}>
               <Textarea
                 hasError={!!errors.description}
                 value={values.description}

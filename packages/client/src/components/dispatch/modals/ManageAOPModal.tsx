@@ -44,10 +44,10 @@ export const ManageAOPModal = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors, isValid }) => (
           <Form>
-            <FormField fieldId="aop" label={t("areaOfPlay")}>
+            <FormField label={t("areaOfPlay")}>
               <Input
                 autoFocus
-                id="aop"
+                name="aop"
                 onChange={handleChange}
                 value={values.aop}
                 hasError={!!errors.aop}

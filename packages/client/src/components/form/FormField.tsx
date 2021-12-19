@@ -1,19 +1,38 @@
+import * as React from "react";
+import { useField } from "@react-aria/label";
 import { classNames } from "lib/classNames";
 
 interface Props {
   label: string;
   children: React.ReactNode;
-  fieldId?: string;
   className?: string;
   checkbox?: boolean;
   boldLabel?: boolean;
+  errorMessage?: string;
 }
 
-export const FormField = ({ boldLabel, checkbox, children, label, className, fieldId }: Props) => {
-  const labelClassnames = ["mb-1 dark:text-white", boldLabel ? "font-semibold" : ""].join(" ");
+export const FormField = ({
+  boldLabel,
+  checkbox,
+  children,
+  label,
+  className,
+  errorMessage,
+}: Props) => {
+  const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
+
+  const labelClassnames = classNames(
+    "mb-1 dark:text-white",
+    boldLabel && "font-semibold",
+    checkbox && "ml-2",
+  );
+
+  const [child, ...rest] = Array.isArray(children) ? children : [children];
+
+  const element = React.cloneElement(child as React.ReactElement<any>, fieldProps);
 
   return (
-    <fieldset
+    <div
       className={classNames(
         "flex mb-3",
         checkbox ? "flex-row items-center" : "flex-col",
@@ -21,18 +40,25 @@ export const FormField = ({ boldLabel, checkbox, children, label, className, fie
       )}
     >
       {!checkbox ? (
-        <label className={labelClassnames} htmlFor={fieldId}>
+        <label {...labelProps} className={labelClassnames}>
           {label}
         </label>
       ) : null}
 
-      {children}
+      {element}
+      {rest}
 
       {checkbox ? (
-        <label className={`${labelClassnames} ml-2`} htmlFor={fieldId}>
+        <label {...labelProps} className={labelClassnames}>
           {label}
         </label>
       ) : null}
-    </fieldset>
+
+      {errorMessage ? (
+        <span {...errorMessageProps} className="mt-1 font-medium text-red-500">
+          {errorMessage}
+        </span>
+      ) : null}
+    </div>
   );
 };

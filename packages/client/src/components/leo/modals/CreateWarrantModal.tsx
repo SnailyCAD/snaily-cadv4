@@ -111,7 +111,7 @@ export const CreateWarrantModal = () => {
 
             <FormField label={common("description")}>
               <Textarea
-                id="description"
+                name="description"
                 onChange={handleChange}
                 hasError={!!errors.description}
                 value={values.description}
