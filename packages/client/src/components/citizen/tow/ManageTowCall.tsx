@@ -1,6 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/Input";
@@ -87,6 +86,7 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
 
   const INITIAL_VALUES = {
     location: call?.location ?? "",
+    postal: call?.postal ?? "",
     creatorId: call?.creatorId ?? "",
     description: call?.description ?? "",
   };
@@ -103,30 +103,31 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleSubmit, handleChange, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
+            <FormField errorMessage={errors.creatorId} label={t("citizen")}>
+              <Select
+                disabled={!!call}
+                name="creatorId"
+                onChange={handleChange}
+                values={citizens.map((citizen) => ({
+                  label: `${citizen.name} ${citizen.surname}`,
+                  value: citizen.id,
+                }))}
+                value={values.creatorId}
+              />
+            </FormField>
+
             <FormRow>
-              <FormField label={t("citizen")}>
-                <Select
-                  disabled={!!call}
-                  name="creatorId"
-                  onChange={handleChange}
-                  values={citizens.map((citizen) => ({
-                    label: `${citizen.name} ${citizen.surname}`,
-                    value: citizen.id,
-                  }))}
-                  value={values.creatorId}
-                />
-                <Error>{errors.creatorId}</Error>
+              <FormField errorMessage={errors.location} label={t("location")}>
+                <Input name="location" value={values.location} onChange={handleChange} />
               </FormField>
 
-              <FormField label={t("location")}>
-                <Input onChange={handleChange} name="location" value={values.location} />
-                <Error>{errors.location}</Error>
+              <FormField errorMessage={errors.postal} label={t("postal")}>
+                <Input name="postal" value={values.postal} onChange={handleChange} />
               </FormField>
             </FormRow>
 
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
