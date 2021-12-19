@@ -1,9 +1,6 @@
 import { User } from ".prisma/client";
-import { Cookie } from "@snailycad/config";
 import { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { parse } from "cookie";
-import { verifyJWT } from "../utils/jwt";
 import { prisma } from "./prisma";
 
 export const unitProperties = {
@@ -15,9 +12,6 @@ export const unitProperties = {
 };
 
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
-  const header =
-    req.cookies[Cookie.ActiveOfficer] || parse(`${req.headers.session}`)?.[Cookie.ActiveOfficer];
-
   // dispatch is allowed to use officer routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
@@ -27,16 +21,10 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
       isDispatch = true;
     }
   } else {
-    if (!header) {
-      throw new BadRequest("noActiveOfficer");
-    }
-
     if (!user.isLeo) {
       throw new Forbidden("Invalid Permissions");
     }
   }
-
-  const jwtPayload = verifyJWT(header);
 
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
@@ -49,7 +37,11 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   const officer = await prisma.officer.findFirst({
     where: {
       userId: user.id,
-      id: jwtPayload?.officerId ?? "",
+      NOT: {
+        status: {
+          shouldDo: "SET_OFF_DUTY",
+        },
+      },
     },
     include: unitProperties,
   });
