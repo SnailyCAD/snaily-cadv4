@@ -226,15 +226,6 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                 </FormField>
               </FormRow>
 
-              <FormField errorMessage={errors.description} label={common("description")}>
-                <Textarea
-                  name="description"
-                  className="min-h-[5em]"
-                  value={values.description}
-                  onChange={handleChange}
-                />
-              </FormField>
-
               {isDispatch ? (
                 <FormField errorMessage={errors.assignedUnits as string} label={t("assignedUnits")}>
                   <Select
@@ -253,6 +244,15 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                   />
                 </FormField>
               ) : null}
+
+              <FormField errorMessage={errors.description} label={common("description")}>
+                <Textarea
+                  name="description"
+                  className="min-h-[5em]"
+                  value={values.description}
+                  onChange={handleChange}
+                />
+              </FormField>
 
               <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
                 {call ? (
