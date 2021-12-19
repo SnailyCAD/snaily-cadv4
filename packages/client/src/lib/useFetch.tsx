@@ -43,9 +43,18 @@ export default function useFetch(
     if (error) {
       const hasKey = Object.keys(Common.Errors).some((e) => e === error);
       const key = hasKey ? error : "unknown";
+      const errorObj = getErrorObj(response);
+      console.error({ DEBUG: errorObj });
 
       if (!options.noToast) {
-        toast.error(t(key));
+        toast.error(
+          <div
+            onClick={() => handleToastClick(response)}
+            className="absolute inset-0 flex items-center justify-center rounded-md"
+          >
+            {t(key)}
+          </div>,
+        );
       }
 
       setState("error");
@@ -77,4 +86,34 @@ export default function useFetch(
 
 function parseError(error: AxiosError<any>): ErrorMessage | "unknown" {
   return error.response?.data?.message ?? "unknown";
+}
+
+function getErrorObj(error: unknown) {
+  let errorObj = {};
+
+  if (error instanceof Error) {
+    const err = error as AxiosError;
+
+    errorObj = {
+      message: err.message,
+      status: err.response?.status,
+      response: err.response,
+      method: err.config?.method,
+      data: err.config?.data,
+      url: err.config?.url,
+    };
+
+    console.error({ DEBUG: errorObj });
+  }
+
+  return errorObj;
+}
+
+function handleToastClick(error: unknown) {
+  const errorObj = getErrorObj(error);
+
+  try {
+    navigator.clipboard.writeText(JSON.stringify(errorObj, null, 4));
+    // eslint-disable-next-line no-empty
+  } catch {}
 }
