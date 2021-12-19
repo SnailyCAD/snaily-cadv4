@@ -59,6 +59,7 @@ export class TowController {
         userId: ctx.get("user").id,
         description: body.get("description"),
         location: body.get("location"),
+        postal: body.get("postal"),
       },
       include: {
         assignedUnit: {
@@ -110,6 +111,7 @@ export class TowController {
       data: {
         description: body.get("description"),
         location: body.get("location"),
+        postal: body.get("postal"),
         assignedUnit: assignedUnitId,
       },
       include: {

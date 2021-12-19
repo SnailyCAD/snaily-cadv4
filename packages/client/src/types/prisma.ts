@@ -194,6 +194,7 @@ export type TowCall = {
   userId: string;
   assignedUnitId: string | null;
   location: string;
+  postal: string | null;
   description: string;
   creatorId: string;
 };
@@ -208,6 +209,7 @@ export type TaxiCall = {
   userId: string;
   assignedUnitId: string | null;
   location: string;
+  postal: string | null;
   description: string;
   creatorId: string;
 };
@@ -329,6 +331,7 @@ export type Call911 = {
   userId: string;
   assignedUnits: AssignedUnit[];
   location: string;
+  postal: string | null;
   description: string;
   name: string;
 };
