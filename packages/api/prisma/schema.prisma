@@ -255,13 +255,43 @@ model Value {
 }
 
 model PenalCode {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
-  title       String   @db.VarChar(255)
-  description String   @db.Text
+  id                     String                @id @default(cuid())
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @default(now()) @updatedAt
+  title                  String                @db.VarChar(255)
+  description            String                @db.Text
+  warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
+  warningApplicableId    String?
+  warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
+  warningNotApplicableId String?
+  violations             Violation[]
+}
+
+// Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored
+model WarningApplicable {
+  id        String      @id @default(uuid())
+  fines     Int[]
+  PenalCode PenalCode[]
+}
+
+model WarningNotApplicable {
+  id         String      @id @default(uuid())
+  fines      Int[]
+  prisonTerm Int[]
+  bail       Int[]
+  PenalCode  PenalCode[]
+}
+
+// Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored
+// field1 = min value, field2 = max value.
+model Violation {
+  id          String    @id @default(uuid())
+  fine        Int[]
+  jailTime    Int[]
+  bail        Int[]
+  penalCode   PenalCode @relation(fields: [penalCodeId], references: [id])
+  penalCodeId String
   records     Record[]
-  recordId    String?
 }
 
 model DivisionValue {
@@ -644,7 +674,7 @@ model Record {
   citizenId  String
   officer    Officer     @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId  String
-  violations PenalCode[]
+  violations Violation[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @default(now()) @updatedAt
   postal     String      @db.VarChar(255)
