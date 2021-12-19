@@ -41,7 +41,11 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
   const deputy = await prisma.emsFdDeputy.findFirst({
     where: {
       userId: user.id,
-      id: jwtPayload?.deputyId,
+      NOT: {
+        status: {
+          shouldDo: "SET_OFF_DUTY",
+        },
+      },
     },
     include: unitProperties,
   });

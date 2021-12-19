@@ -308,7 +308,10 @@ export type StatusValue = {
   valueId: string;
   value: Value<"CODES_10">;
   shouldDo: ShouldDoType;
-  position: number | null;
+  /**
+   * @deprecated use `<StatusValue>.value.position`
+   */
+  position: null;
   whatPages: WhatPages[];
   departmentId: string;
   color?: string;
