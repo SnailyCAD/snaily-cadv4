@@ -6,7 +6,6 @@ import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
-import { Error } from "components/form/Error";
 import { Textarea } from "components/form/Textarea";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
@@ -21,6 +20,7 @@ import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit } from "types/prisma";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   call: Full911Call | null;
@@ -182,6 +182,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const INITIAL_VALUES = {
     name: call?.name ?? "",
     location: call?.location ?? "",
+    postal: call?.postal ?? "",
     description: call?.description ?? "",
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
@@ -211,28 +212,22 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, values, errors }) => (
             <Form className="w-full">
-              <FormField label={common("name")}>
+              <FormField errorMessage={errors.name} label={common("name")}>
                 <Input name="name" value={values.name} onChange={handleChange} />
-                <Error>{errors.name}</Error>
               </FormField>
 
-              <FormField label={t("location")}>
-                <Input name="location" value={values.location} onChange={handleChange} />
-                <Error>{errors.location}</Error>
-              </FormField>
+              <FormRow>
+                <FormField errorMessage={errors.location} label={t("location")}>
+                  <Input name="location" value={values.location} onChange={handleChange} />
+                </FormField>
 
-              <FormField label={common("description")}>
-                <Textarea
-                  name="description"
-                  className="min-h-[5em]"
-                  value={values.description}
-                  onChange={handleChange}
-                />
-                <Error>{errors.description}</Error>
-              </FormField>
+                <FormField errorMessage={errors.postal} label={t("postal")}>
+                  <Input name="postal" value={values.postal} onChange={handleChange} />
+                </FormField>
+              </FormRow>
 
               {isDispatch ? (
-                <FormField label={t("assignedUnits")}>
+                <FormField errorMessage={errors.assignedUnits as string} label={t("assignedUnits")}>
                   <Select
                     showContextMenuForUnits
                     isMulti
@@ -247,9 +242,17 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
                     }))}
                     onChange={handleChange}
                   />
-                  <Error>{errors.assignedUnits}</Error>
                 </FormField>
               ) : null}
+
+              <FormField errorMessage={errors.description} label={common("description")}>
+                <Textarea
+                  name="description"
+                  className="min-h-[5em]"
+                  value={values.description}
+                  onChange={handleChange}
+                />
+              </FormField>
 
               <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
                 {call ? (

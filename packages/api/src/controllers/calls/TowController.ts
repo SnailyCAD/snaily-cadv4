@@ -131,6 +131,7 @@ export class TowController {
         userId: user.id,
         description: body.get("description"),
         location: body.get("location"),
+        postal: body.get("postal"),
         deliveryAddressId: deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
@@ -190,6 +191,7 @@ export class TowController {
       data: {
         description: body.get("description"),
         location: body.get("location"),
+        postal: body.get("postal"),
         assignedUnit: assignedUnitId,
       },
       include: {

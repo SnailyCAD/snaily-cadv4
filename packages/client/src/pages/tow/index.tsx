@@ -114,6 +114,7 @@ export default function Tow(props: Props) {
         <Table
           data={calls.map((call) => ({
             location: call.location,
+            postal: call.postal || common("none"),
             description: call.description,
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
@@ -133,6 +134,10 @@ export default function Tow(props: Props) {
             {
               Header: t("location"),
               accessor: "location",
+            },
+            {
+              Header: t("postal"),
+              accessor: "postal",
             },
             {
               Header: common("description"),

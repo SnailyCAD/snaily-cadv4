@@ -2,6 +2,7 @@ import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
+import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
 import { Textarea } from "components/form/Textarea";
@@ -58,6 +59,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const validate = handleValidate(TOW_SCHEMA);
   const INITIAL_VALUES = {
     location: call?.location ?? "",
+    postal: call?.postal ?? "",
     // @ts-expect-error ignore
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
@@ -93,10 +95,15 @@ export const DispatchCallTowModal = ({ call }: Props) => {
               </FormField>
             ) : null}
 
-            <FormField label={"Location"}>
-              <Input disabled onChange={handleChange} name="location" value={values.location} />
-              <Error>{errors.location}</Error>
-            </FormField>
+            <FormRow>
+              <FormField errorMessage={errors.location} label={t("location")}>
+                <Input name="location" value={values.location} onChange={handleChange} />
+              </FormField>
+
+              <FormField errorMessage={errors.postal} label={t("postal")}>
+                <Input name="postal" value={values.postal} onChange={handleChange} />
+              </FormField>
+            </FormRow>
 
             {isLeo || isDispatch ? (
               <>
