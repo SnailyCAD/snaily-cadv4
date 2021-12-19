@@ -52,14 +52,14 @@ export const DisabledFeaturesArea = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
-            <FormField boldLabel fieldId={feature.TOW} label={"Tow"}>
+            <FormField boldLabel label={"Tow"}>
               <Toggle toggled={values[feature.TOW]} onClick={handleChange} name={feature.TOW} />
               <small className="mt-2 text-base">
                 Enable/Disable tow. When enabled, this will allow citizens to call tow.
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.BLEETER} label={"Bleeter"}>
+            <FormField boldLabel label={"Bleeter"}>
               <Toggle
                 toggled={values[feature.BLEETER]}
                 onClick={handleChange}
@@ -79,7 +79,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.COURTHOUSE} label={"Courthouse"}>
+            <FormField boldLabel label={"Courthouse"}>
               <Toggle
                 toggled={values[feature.COURTHOUSE]}
                 onClick={handleChange}
@@ -90,14 +90,14 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.TAXI} label={"Taxi"}>
+            <FormField boldLabel label={"Taxi"}>
               <Toggle toggled={values[feature.TAXI]} onClick={handleChange} name={feature.TAXI} />
               <small className="mt-2 text-base">
                 When enabled, this will allow citizens to call a taxi to pick them up.
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.TRUCK_LOGS} label={"Truck Logs"}>
+            <FormField boldLabel label={"Truck Logs"}>
               <Toggle
                 toggled={values[feature.TRUCK_LOGS]}
                 onClick={handleChange}
@@ -109,7 +109,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.AOP} label={"Area of Play"}>
+            <FormField boldLabel label={"Area of Play"}>
               <Toggle toggled={values[feature.AOP]} onClick={handleChange} name={feature.AOP} />
               <small className="mt-2 text-base">
                 {/* eslint-disable-next-line quotes */}
@@ -117,7 +117,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField boldLabel fieldId={feature.BUSINESS} label={"Businesses"}>
+            <FormField boldLabel label={"Businesses"}>
               <Toggle
                 toggled={values[feature.BUSINESS]}
                 onClick={handleChange}
@@ -128,11 +128,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField
-              boldLabel
-              fieldId={feature.ALLOW_DUPLICATE_CITIZEN_NAMES}
-              label={"Allow Duplicate Citizen Names"}
-            >
+            <FormField boldLabel label={"Allow Duplicate Citizen Names"}>
               <Toggle
                 toggled={values[feature.ALLOW_DUPLICATE_CITIZEN_NAMES]}
                 onClick={handleChange}
@@ -144,11 +140,7 @@ export const DisabledFeaturesArea = () => {
               </small>
             </FormField>
 
-            <FormField
-              boldLabel
-              fieldId={feature.DISCORD_AUTH}
-              label={"Allow users to authenticate with Discord."}
-            >
+            <FormField boldLabel label={"Allow users to authenticate with Discord."}>
               <Toggle
                 toggled={values[feature.DISCORD_AUTH]}
                 onClick={handleChange}
