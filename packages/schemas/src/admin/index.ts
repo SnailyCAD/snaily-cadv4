@@ -14,8 +14,8 @@ export const CAD_SETTINGS_SCHEMA = z.object({
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
-  heightPrefix: z.string().max(255).min(1),
-  weightPrefix: z.string().max(255).min(1),
+  heightPrefix: z.string().max(255),
+  weightPrefix: z.string().max(255),
   maxCitizensPerUser: z.number().nullable(),
   maxBusinessesPerCitizen: z.number().nullable(),
   maxPlateLength: z.number().min(1),

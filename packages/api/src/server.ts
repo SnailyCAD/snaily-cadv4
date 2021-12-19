@@ -11,7 +11,7 @@ const rootDir = __dirname;
 
 @Configuration({
   rootDir,
-  port: process.env.PORT_API ? parseInt(process.env.PORT_API) : undefined,
+  port: process.env.PORT_API ? parseInt(process.env.PORT_API) : 8080,
   logger: {
     debug: true,
     level: process.env.NODE_ENV === "production" ? "off" : undefined,
