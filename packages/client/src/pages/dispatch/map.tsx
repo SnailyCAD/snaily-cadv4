@@ -21,12 +21,13 @@ export default function MapPage() {
           integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
           crossOrigin=""
         />
+        <title>Map / Dispatch - SnailyCAD</title>
         {/* disabled since I can't use css modules for this & I don't want to load unneeded css via _app.tsx */}
         {/* eslint-disable-next-line @next/next/no-css-tags */}
         {/* <link rel="stylesheet" href="/css/map.css" /> */}
       </Head>
 
-      <Layout className="px-1 pb-1 mt-1">
+      <Layout className="relative px-1 pb-1 mt-1">
         <Map />
       </Layout>
     </>
