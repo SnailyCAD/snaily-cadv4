@@ -12,7 +12,12 @@ import { useModal } from "context/ModalContext";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 
-export function ActiveMapCalls() {
+interface Props {
+  hasMarker(callId: string): boolean;
+  setMarker(call: Full911Call, type: "remove" | "set"): void;
+}
+
+export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const t = useTranslations("Calls");
   const { calls, setCalls } = useDispatchState();
@@ -60,8 +65,8 @@ export function ActiveMapCalls() {
             return (
               <CallItem
                 setTempCall={setTempCall}
-                // hasMarker={hasMarker}
-                // setMarker={setMarker}
+                hasMarker={hasMarker}
+                setMarker={setMarker}
                 key={call.id}
                 call={call}
               />
@@ -79,12 +84,12 @@ const Span = ({ children }: { children: React.ReactNode }) => (
   <span className="font-semibold">{children}</span>
 );
 
-interface CallItemProps {
+interface CallItemProps extends Props {
   call: Full911Call;
   setTempCall: any;
 }
 
-function CallItem({ call, setTempCall }: CallItemProps) {
+function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
   const generateCallsign = useGenerateCallsign();
@@ -153,11 +158,8 @@ function CallItem({ call, setTempCall }: CallItemProps) {
                     {common("manage")}
                   </Button>
 
-                  <Button
-                    // onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "place")}
-                    className=""
-                  >
-                    {/* {hasMarker(call.id) ? lang.dispatch.remove_marker : lang.dispatch.place_marker} */}
+                  <Button onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}>
+                    {hasMarker(call.id) ? "Remove marker" : "Set marker"}
                   </Button>
                 </div>
               </div>

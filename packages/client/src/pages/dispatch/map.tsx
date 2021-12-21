@@ -8,7 +8,8 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
-import { useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
+import useFetch from "lib/useFetch";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -17,8 +18,13 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
 
 export default function MapPage(props: any) {
   const { openModal } = useModal();
-  const { user } = useAuth();
+  const { cad, user } = useAuth();
   const state = useDispatchState();
+  const { execute } = useFetch();
+
+  async function update911Call(call: Omit<Full911Call, "events" | "assignedUnits">) {
+    await execute(`/911-calls/${call.id}`, { method: "PUT", data: call });
+  }
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -38,7 +44,7 @@ export default function MapPage(props: any) {
     props,
   ]);
 
-  if (!user) {
+  if (!user || !cad) {
     return null;
   }
 
@@ -58,7 +64,13 @@ export default function MapPage(props: any) {
       </Head>
 
       <Layout className="relative px-1 pb-1 mt-1">
-        <Map openModal={openModal} user={user} />
+        <Map
+          cad={cad}
+          update911Call={update911Call}
+          calls={state.calls}
+          openModal={openModal}
+          user={user}
+        />
       </Layout>
     </>
   );
@@ -70,7 +82,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       ["/admin/values/codes_10?paths=penal_code,impound_lot", []],
       ["/911-calls", []],
       ["/bolos", []],
-      ["/dispatch", [{ deputies: [], officers: [] }]],
+      ["/dispatch", { deputies: [], officers: [] }],
       ["/ems-fd/active-deputies", []],
       ["/leo/active-officers", []],
     ]);

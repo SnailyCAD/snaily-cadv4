@@ -44,13 +44,6 @@ export function CallInfoHTML(call: Call911) {
           <p style="margin: 2px; font-size: 1rem;">
             <strong>Description: </strong> ${call.description}
           </p>
-          <button
-            class="btn btn-success mt-2"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapse-${call.id}"
-          >
-            Toggle
-          </button>
         </div>
       </div>
     `;

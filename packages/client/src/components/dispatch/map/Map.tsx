@@ -2,15 +2,11 @@
 import React, { Component } from "react";
 
 import L from "leaflet";
-// const L = dynamic(() => import("leaflet").then((d) => d.default).then((d) => d));
 import J from "jquery";
 import "leaflet.markercluster";
 import { v4 as uuid } from "uuid";
 import { Socket } from "socket.io-client";
 
-// import { getActiveUnits, getSteamIds, update911Call } from "actions/dispatch/DispatchActions";
-
-// import { socket as CADSocket } from "hooks/useSocket";
 import {
   Player,
   DataActions,
@@ -24,40 +20,26 @@ import {
   IPopup,
 } from "types/Map";
 import { getMapBounds, convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
-// import { ActiveMapCalls } from "components/dispatch/map.ActiveCalls";
-// import { ActiveMapUnits } from "components/dispatch/map.ActiveUnits";
-// import { Create911Modal } from "components/modals/Create911Modal";
-// import { Nullable, State } from "types/State";
+
 import { cad, Call911, User } from "types/prisma";
 import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
 import { blipTypes } from "lib/map/blips";
 import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
-import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { ActiveMapCalls } from "./ActiveMapCalls";
+import { Full911Call } from "state/dispatchState";
+import toast from "react-hot-toast";
+
 /* most code in this file is from TGRHavoc/live_map-interface, special thanks to him for making this! */
 
-/*
- ? Search for:
- * REMOVE_CALL_FROM_MAP
- * CREATE_CALL_MARKER
- * UPDATE_CALL_POSITION
- * REMOVE_911_CALL_FROM_MAP
-*/
-
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
-type Nullable<T> = T | null;
 
 interface Props {
-  openModal: (id: string) => void;
+  openModal(id: string): void;
   user: User;
-
-  cadInfo: cad;
+  update911Call(call: Omit<Full911Call, "events" | "assignedUnits">): Promise<void>;
   calls: Call911[];
-  steamIds: Partial<User>[];
-  getActiveUnits: () => void;
-  getSteamIds: () => void;
-  // update911Call: (id: string, data: Partial<Call>, notify?: boolean) => void;
+  cad: cad;
 }
 
 interface MapState {
@@ -74,8 +56,8 @@ interface MapState {
 }
 
 class MapClass extends Component<Props, MapState> {
-  CADSocket: Nullable<Socket>;
-  MAPSocket: Nullable<WebSocket>;
+  CADSocket: Socket | null;
+  MAPSocket: WebSocket | null;
 
   constructor(props: Props) {
     super(props);
@@ -97,7 +79,6 @@ class MapClass extends Component<Props, MapState> {
     this.MAPSocket = null;
 
     this.handleMapSocket = this.handleMapSocket.bind(this);
-    // this.handleCADSocket = this.handleCADSocket.bind(this);
     this.onMessage = this.onMessage.bind(this);
   }
 
@@ -110,17 +91,17 @@ class MapClass extends Component<Props, MapState> {
       loading: false,
     });
 
-    const live_map_url = this.props.cadInfo?.live_map_url ?? "ws://localhost:30121";
+    const live_map_url = this.props.cad?.miscCadSettings?.liveMapURL ?? "ws://localhost:30121";
     if (!live_map_url) {
-      // notify.error("There was no live_map_url provided from the CAD-Settings.", {
-      //   autoClose: false,
-      // });
+      toast.error("There was no live_map_url provided from the CAD-Settings.", {
+        duration: Infinity,
+      });
       return;
     }
     if (!live_map_url.startsWith("ws")) {
-      // notify.error("The live_map_url did not start with ws. Make sure it is a WebSocket protocol", {
-      //   autoClose: false,
-      // });
+      toast.error("The live_map_url did not start with ws. Make sure it is a WebSocket protocol", {
+        duration: Infinity,
+      });
 
       return;
     }
@@ -128,7 +109,7 @@ class MapClass extends Component<Props, MapState> {
     const socket = new WebSocket(live_map_url);
 
     socket.addEventListener("error", (e) => {
-      // notify.error("An error occurred when trying to connect to the live_map");
+      toast.error("An error occurred when trying to connect to the live_map");
       console.error("LIVE_MAP", `${JSON.stringify(e)}`);
     });
 
@@ -142,10 +123,6 @@ class MapClass extends Component<Props, MapState> {
       loading: false,
     });
   }
-
-  // handleCADSocket() {
-  //   this.CADSocket = CADSocket;
-  // }
 
   initMap() {
     if (this.state.ran) return;
@@ -171,7 +148,7 @@ class MapClass extends Component<Props, MapState> {
 
     const bounds = getMapBounds(map);
 
-    map.setMaxBounds(bounds);
+    map.setMaxBounds(bounds.pad(1));
     map.fitBounds(bounds);
     map.addLayer(this.state.PlayerMarkers);
 
@@ -490,60 +467,48 @@ class MapClass extends Component<Props, MapState> {
     });
   }
 
-  // async handleCalls() {
-  //   if (!this.state.map) return;
-  //   await new Promise((resolve) => {
-  //     setTimeout(resolve, 500);
-  //   });
+  handleCalls() {
+    if (!this.state.map) return;
 
-  //   this.props.calls.forEach((call) => {
-  //     // ? REMOVE_CALL_FROM_MAP
-  //     const m = this.state.MarkerStore.some((marker) => marker.payload?.call?.id === call.id);
+    this.props.calls.forEach((call) => {
+      if (!call.position) {
+        this.remove911Call(call.id);
+        return;
+      }
 
-  //     if (m) return;
-  //     if (call.hidden === "1") return;
+      const existing = this.state.MarkerStore.find((m) => m.payload?.call?.id === call.id);
 
-  //     // ? CREATE_CALL_MARKER
-  //     const marker = this.createMarker(
-  //       true,
-  //       {
-  //         icon: null,
-  //         description: `911 Call from: ${call.name}`,
-  //         id: uuid(),
-  //         pos: (call as any).pos,
-  //         isPlayer: false,
-  //         title: "911 Call",
-  //         call,
-  //       },
-  //       call.location,
-  //     );
-  //     if (!marker) return;
+      if (existing) {
+        existing.setLatLng(call.position);
+        return;
+      }
 
-  //     // ? UPDATE_CALL_POSITION
-  //     marker.on("moveend", async (e) => {
-  //       const target = e.target;
-  //       const latLng: LatLng = (target as any)._latlng;
+      const marker = this.createMarker(
+        true,
+        {
+          icon: null,
+          description: `911 Call from: ${call.name}`,
+          id: uuid(),
+          pos: call.position,
+          isPlayer: false,
+          title: "911 Call",
+          call,
+        },
+        call.location,
+      );
+      if (!marker) return;
 
-  //       // send data to in-game to create blip on map
-  //       // tODO: convert latLng back to x, y,z
-  //       // socket?.send(
-  //       //   jSON.stringify({
-  //       //     type: "update911Call",
-  //       //     call: call,
-  //       //   }),
-  //       // );
+      marker.on("moveend", async (e) => {
+        const target = e.target;
+        const latLng: LatLng = (target as any)._latlng;
 
-  //       this.props.update911Call(
-  //         call.id,
-  //         {
-  //           ...call,
-  //           pos: latLng,
-  //         } as any,
-  //         false,
-  //       );
-  //     });
-  //   });
-  // }
+        this.props.update911Call({
+          ...call,
+          position: { id: "", ...latLng },
+        });
+      });
+    });
+  }
 
   async onMessage(e: any) {
     const data = JSON.parse(e.data) as DataActions;
@@ -674,11 +639,7 @@ class MapClass extends Component<Props, MapState> {
     // this.handleCADSocket();
     this.initMap();
 
-    // get all values from backend
-    // !this.state.ran && this.props?.getActiveUnits();
-    // !this.state.ran && this.props?.getSteamIds();
-
-    // this.handleCalls();
+    this.handleCalls();
     this.initBlips();
 
     // ? REMOVE_911_CALL_FROM_MAP
@@ -687,27 +648,37 @@ class MapClass extends Component<Props, MapState> {
     });
   }
 
-  // componentDidUpdate() {
-  //   if (this.props?.calls) {
-  //     this.handleCalls();
-  //   }
-  // }
+  componentDidUpdate(prevProps: Props) {
+    let hasChanged = false;
 
-  // componentWillUnmount() {
-  //   this.state.map?.remove();
-  //   this.MAPSocket?.close();
-  //   // this.state.MAPSocket = null;
+    for (let i = 0; i < prevProps.calls.length; i++) {
+      const a = prevProps.calls[i];
+      const b = this.props.calls[i];
 
-  //   this.setState({
-  //     MarkerStore: [],
-  //     blips: [],
-  //     blipsShown: true,
-  //     MarkerTypes: defaultTypes,
-  //     PopupStore: [],
-  //     map: null,
-  //     ran: false,
-  //   });
-  // }
+      if (a?.updatedAt !== b?.updatedAt) {
+        hasChanged = true;
+      }
+    }
+
+    if (hasChanged && this.props.calls && this.state.map) {
+      this.handleCalls();
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.map?.remove();
+    this.MAPSocket?.close();
+
+    this.setState({
+      MarkerStore: [],
+      blips: [],
+      blipsShown: true,
+      MarkerTypes: defaultTypes,
+      PopupStore: [],
+      map: null,
+      ran: false,
+    });
+  }
 
   render() {
     if (typeof window === "undefined") return null;
@@ -752,22 +723,23 @@ class MapClass extends Component<Props, MapState> {
             hasMarker={(callId: string) => {
               return this.state.MarkerStore.some((m) => m.payload?.call?.id === callId);
             }}
-            setMarker={(call: Call, type: "remove" | "place") => {
+            setMarker={(call: Full911Call, type: "remove" | "set") => {
               const marker = this.state.MarkerStore.some((m) => m.payload.call?.id === call.id);
-              if (marker && type === "place") return;
+
+              if (type === "set") {
+                this.handleCalls();
+              }
 
               if (marker && type === "remove") {
                 this.remove911Call(call.id);
               }
 
-              this.props.update911Call(
-                call.id,
-                {
-                  ...call,
-                  hidden: type === "remove" ? "1" : "0",
-                },
-                false,
-              );
+              const coords = convertToMap(0, 0, this.state.map!);
+
+              this.props.update911Call({
+                ...call,
+                position: type === "remove" ? null : { id: "", ...coords },
+              });
             }}
           />
         </div>

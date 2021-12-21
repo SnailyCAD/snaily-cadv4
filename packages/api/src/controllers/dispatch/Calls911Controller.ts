@@ -30,6 +30,12 @@ const assignedUnitsInclude = {
   },
 };
 
+const callInclude = {
+  position: true,
+  assignedUnits: true,
+  events: true,
+};
+
 @Controller("/911-calls")
 @UseBeforeEach(IsAuth)
 export class Calls911Controller {
@@ -41,10 +47,7 @@ export class Calls911Controller {
   @Get("/")
   async get911Calls() {
     const calls = await prisma.call911.findMany({
-      include: {
-        assignedUnits: assignedUnitsInclude,
-        events: true,
-      },
+      include: callInclude,
       orderBy: {
         createdAt: "desc",
       },
@@ -67,10 +70,7 @@ export class Calls911Controller {
         name: body.get("name"),
         userId: ctx.get("user").id,
       },
-      include: {
-        events: true,
-        assignedUnits: assignedUnitsInclude,
-      },
+      include: callInclude,
     });
 
     const units = (body.get("assignedUnits") ?? []) as string[];
@@ -80,10 +80,7 @@ export class Calls911Controller {
       where: {
         id: call.id,
       },
-      include: {
-        events: true,
-        assignedUnits: assignedUnitsInclude,
-      },
+      include: callInclude,
     });
 
     this.socket.emit911Call(this.officerOrDeputyToUnit(updated));
@@ -124,6 +121,24 @@ export class Calls911Controller {
       }),
     );
 
+    const data = body.get("position") ?? null;
+
+    const position = data
+      ? await prisma.position.upsert({
+          where: {
+            id: call.positionId ?? "undefined",
+          },
+          create: {
+            lat: data.lat ? parseFloat(data.lat) : 0.0,
+            lng: data.lng ? parseFloat(data.lng) : 0.0,
+          },
+          update: {
+            lat: data.lat ? parseFloat(data.lat) : 0.0,
+            lng: data.lng ? parseFloat(data.lng) : 0.0,
+          },
+        })
+      : null;
+
     await prisma.call911.update({
       where: {
         id: call.id,
@@ -133,6 +148,7 @@ export class Calls911Controller {
         description: body.get("description"),
         name: body.get("name"),
         userId: ctx.get("user").id,
+        positionId: position?.id ?? null,
       },
     });
 
@@ -143,10 +159,7 @@ export class Calls911Controller {
       where: {
         id: call.id,
       },
-      include: {
-        events: true,
-        assignedUnits: assignedUnitsInclude,
-      },
+      include: callInclude,
     });
 
     this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
@@ -323,10 +336,7 @@ export class Calls911Controller {
       where: {
         id: call.id,
       },
-      include: {
-        events: true,
-        assignedUnits: assignedUnitsInclude,
-      },
+      include: callInclude,
     });
 
     this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
