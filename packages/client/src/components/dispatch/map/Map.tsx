@@ -33,6 +33,8 @@ import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
 import { blipTypes } from "lib/map/blips";
 import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
+import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { ActiveMapCalls } from "./ActiveMapCalls";
 /* most code in this file is from TGRHavoc/live_map-interface, special thanks to him for making this! */
 
 /*
@@ -47,9 +49,11 @@ const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
 type Nullable<T> = T | null;
 
 interface Props {
+  openModal: (id: string) => void;
+  user: User;
+
   cadInfo: cad;
   calls: Call911[];
-  user: User;
   steamIds: Partial<User>[];
   getActiveUnits: () => void;
   getSteamIds: () => void;
@@ -721,7 +725,9 @@ class MapClass extends Component<Props, MapState> {
           >
             {this.state.blipsShown ? "Hide Blips" : "Show Blips"}
           </Button>
-          <Button>{"Create 911 Call"}</Button>
+          <Button onClick={() => this.props.openModal(ModalIds.Manage911Call)}>
+            {"Create 911 Call"}
+          </Button>
           {["owner", "admin", "moderator"].includes(`${this.props?.user?.rank}`) ? (
             <button
               onClick={() => {
@@ -740,9 +746,8 @@ class MapClass extends Component<Props, MapState> {
           ) : null}
         </div>
 
-        {/* <Create911Modal />
         <div className="map-items-container">
-          <ActiveMapUnits />
+          {/* <ActiveMapUnits /> */}
           <ActiveMapCalls
             hasMarker={(callId: string) => {
               return this.state.MarkerStore.some((m) => m.payload?.call?.id === callId);
@@ -765,7 +770,7 @@ class MapClass extends Component<Props, MapState> {
               );
             }}
           />
-        </div> */}
+        </div>
       </>
     );
   }

@@ -33,7 +33,7 @@ export const Modal = ({
       <Dialog
         open={isOpen}
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
+        className="fixed inset-0 z-50 overflow-y-auto"
         onClose={handleClose}
       >
         <div className="min-h-screen px-4 text-center">

@@ -1,17 +1,47 @@
+import dynamic from "next/dynamic";
+import Head from "next/head";
+import * as React from "react";
 import { Layout } from "components/Layout";
+import { useAuth } from "context/AuthContext";
+import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
-import dynamic from "next/dynamic";
-import Head from "next/head";
+import { useDispatchState } from "state/dispatchState";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
   loading: () => <p>loading map..</p>,
 });
 
-export default function MapPage() {
+export default function MapPage(props: any) {
+  const { openModal } = useModal();
+  const { user } = useAuth();
+  const state = useDispatchState();
+
+  React.useEffect(() => {
+    state.setCalls(props.calls);
+    state.setBolos(props.bolos);
+    state.setAllOfficers(props.officers);
+    state.setActiveDeputies(props.activeDeputies);
+    state.setActiveOfficers(props.activeOfficers);
+    state.setAllDeputies(props.deputies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    state.setCalls,
+    state.setBolos,
+    state.setAllOfficers,
+    state.setActiveDeputies,
+    state.setActiveOfficers,
+    state.setAllDeputies,
+    props,
+  ]);
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <Head>
@@ -28,7 +58,7 @@ export default function MapPage() {
       </Head>
 
       <Layout className="relative px-1 pb-1 mt-1">
-        <Map />
+        <Map openModal={openModal} user={user} />
       </Layout>
     </>
   );
