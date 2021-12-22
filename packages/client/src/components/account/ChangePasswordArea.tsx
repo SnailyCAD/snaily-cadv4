@@ -47,7 +47,6 @@ export function ChangePasswordArea() {
           <Form className="mt-2">
             <FormField errorMessage={errors.currentPassword} label={t("currentPassword")}>
               <PasswordInput
-                hasError={!!errors.currentPassword}
                 value={values.currentPassword}
                 onChange={handleChange}
                 name="currentPassword"
@@ -56,7 +55,6 @@ export function ChangePasswordArea() {
 
             <FormField errorMessage={errors.currentPassword} label={t("newPassword")}>
               <PasswordInput
-                hasError={!!errors.newPassword}
                 value={values.newPassword}
                 onChange={handleChange}
                 name="newPassword"
@@ -65,7 +63,6 @@ export function ChangePasswordArea() {
 
             <FormField errorMessage={errors.confirmPassword} label={t("confirmNewPassword")}>
               <PasswordInput
-                hasError={!!errors.confirmPassword}
                 value={values.confirmPassword}
                 onChange={handleChange}
                 name="confirmPassword"

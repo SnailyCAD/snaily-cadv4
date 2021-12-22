@@ -1,7 +1,6 @@
 import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
@@ -123,7 +122,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField label={t("Leo.image")}>
+            <FormField errorMessage={errors.image} label={t("Leo.image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
@@ -154,14 +153,12 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                   {common("delete")}
                 </Button>
               </div>
-              <Error>{errors.image}</Error>
             </FormField>
 
-            <FormField label={t("Leo.citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
               <Select
                 isClearable
                 value={values.citizenId}
-                hasError={!!errors.citizenId}
                 name="citizenId"
                 onChange={handleChange}
                 values={citizens
@@ -171,14 +168,12 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                     value: value.id,
                   }))}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={t("Leo.badgeNumber")}>
+            <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
               <Input
                 type="number"
                 value={values.badgeNumber}
-                hasError={!!errors.badgeNumber}
                 name="badgeNumber"
                 onChange={(e) =>
                   handleChange({
@@ -191,35 +186,21 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                   })
                 }
               />
-              <Error>{errors.badgeNumber}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={"Callsign Symbol 1"}>
-                <Input
-                  value={values.callsign}
-                  hasError={!!errors.callsign}
-                  name="callsign"
-                  onChange={handleChange}
-                />
-                <Error>{errors.callsign}</Error>
+              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+                <Input value={values.callsign} name="callsign" onChange={handleChange} />
               </FormField>
 
-              <FormField label={"Callsign Symbol 2"}>
-                <Input
-                  value={values.callsign2}
-                  hasError={!!errors.callsign2}
-                  name="callsign2"
-                  onChange={handleChange}
-                />
-                <Error>{errors.callsign2}</Error>
+              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
               </FormField>
             </FormRow>
 
-            <FormField label={t("Leo.department")}>
+            <FormField errorMessage={errors.department} label={t("Leo.department")}>
               <Select
                 value={values.department}
-                hasError={!!errors.department}
                 name="department"
                 onChange={handleChange}
                 values={department.values
@@ -229,13 +210,11 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                     value: value.id,
                   }))}
               />
-              <Error>{errors.department}</Error>
             </FormField>
 
-            <FormField label={t("Leo.division")}>
+            <FormField errorMessage={errors.division} label={t("Leo.division")}>
               <Select
                 value={values.division}
-                hasError={!!errors.division}
                 name="division"
                 onChange={handleChange}
                 values={division.values
@@ -245,7 +224,6 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                     value: value.id,
                   }))}
               />
-              <Error>{errors.division}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

@@ -10,7 +10,6 @@ import { getTranslations } from "lib/getTranslation";
 import { Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
-import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
@@ -77,60 +76,53 @@ export default function CadSettings() {
           <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
               <form className="mt-3" onSubmit={handleSubmit}>
-                <FormField label="CAD Name">
+                <FormField errorMessage={errors.name} label="CAD Name">
                   <Input onChange={handleChange} value={values.name} name="name" />
-                  <Error>{errors.name}</Error>
                 </FormField>
 
-                <FormField label="Area of Play">
+                <FormField errorMessage={errors.areaOfPlay} label="Area of Play">
                   <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
-                  <Error>{errors.areaOfPlay}</Error>
                 </FormField>
 
-                <FormField label="Steam API Key">
+                <FormField errorMessage={errors.steamApiKey} label="Steam API Key">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.steamApiKey}
                     name="steamApiKey"
                   />
-                  <Error>{errors.steamApiKey}</Error>
                 </FormField>
 
-                <FormField label="Discord webhook URL">
+                <FormField errorMessage={errors.discordWebhookURL} label="Discord webhook URL">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.discordWebhookURL}
                     name="discordWebhookURL"
                   />
-                  <Error>{errors.discordWebhookURL}</Error>
                 </FormField>
 
-                <FormField label="Registration Code">
+                <FormField errorMessage={errors.registrationCode} label="Registration Code">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.registrationCode}
                     name="registrationCode"
                   />
-                  <Error>{errors.registrationCode}</Error>
                 </FormField>
 
                 <FormRow>
-                  <FormField label="Tow Whitelisted">
+                  <FormField errorMessage={errors.towWhitelisted} label="Tow Whitelisted">
                     <Toggle
                       name="towWhitelisted"
                       onClick={handleChange}
                       toggled={values.towWhitelisted}
                     />
-                    <Error>{errors.towWhitelisted}</Error>
                   </FormField>
 
-                  <FormField label="CAD Whitelisted">
+                  <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
                     <Toggle
                       name="whitelisted"
                       onClick={handleChange}
                       toggled={values.whitelisted}
                     />
-                    <Error>{errors.whitelisted}</Error>
                   </FormField>
                 </FormRow>
 

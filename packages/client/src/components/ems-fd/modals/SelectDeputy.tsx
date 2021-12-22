@@ -1,6 +1,5 @@
 import { SELECT_DEPUTY_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -61,10 +60,9 @@ export function SelectDeputyModal() {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("deputy")}>
+            <FormField errorMessage={errors.deputy} label={t("deputy")}>
               <Select
                 value={values.deputy}
-                hasError={!!errors.deputy}
                 name="deputy"
                 onChange={handleChange}
                 isClearable
@@ -73,7 +71,6 @@ export function SelectDeputyModal() {
                   value: deputy.id,
                 }))}
               />
-              <Error>{errors.deputy}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

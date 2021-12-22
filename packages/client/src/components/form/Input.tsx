@@ -2,11 +2,10 @@ import { Button } from "components/Button";
 import * as React from "react";
 
 type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
-  /** @deprecated use `errorMessage` on `FormField` */
-  hasError?: boolean;
+  errorMessage?: string;
 };
 
-export const Input = React.forwardRef<HTMLInputElement, Props>(({ hasError, ...rest }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, ...rest }, ref) => (
   <input
     ref={ref}
     {...rest}
@@ -17,7 +16,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ hasError, ...r
     disabled:cursor-not-allowed disabled:opacity-80
     placeholder:opacity-50
     transition-all ${rest.className} ${
-      hasError
+      errorMessage
         ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
         : "border-gray-200 dark:border-gray-600"
     } `}

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -124,14 +123,8 @@ export function NameSearchModal() {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={cT("fullName")}>
-              <Input
-                value={values.name}
-                hasError={!!errors.name}
-                name="name"
-                onChange={handleChange}
-              />
-              <Error>{errors.name}</Error>
+            <FormField errorMessage={errors.name} label={cT("fullName")}>
+              <Input value={values.name} name="name" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}

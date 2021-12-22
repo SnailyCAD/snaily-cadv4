@@ -81,21 +81,11 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
         {({ handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.title} label={t("postTitle")}>
-              <Input
-                name="title"
-                onChange={handleChange}
-                hasError={!!errors.title}
-                value={values.title}
-              />
+              <Input name="title" onChange={handleChange} value={values.title} />
             </FormField>
 
             <FormField errorMessage={errors.body} label={t("postBody")}>
-              <Textarea
-                name="body"
-                onChange={handleChange}
-                hasError={!!errors.body}
-                value={values.body}
-              />
+              <Textarea name="body" onChange={handleChange} value={values.body} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

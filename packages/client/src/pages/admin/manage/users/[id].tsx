@@ -12,7 +12,6 @@ import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { Error } from "components/form/Error";
 import { useAuth } from "context/AuthContext";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
@@ -86,7 +85,7 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, handleSubmit, isValid, values, errors }) => (
             <form onSubmit={handleSubmit}>
-              <FormField label="Rank">
+              <FormField errorMessage={errors.rank} label="Rank">
                 <Select
                   name="rank"
                   onChange={handleChange}
@@ -101,56 +100,41 @@ export default function ManageCitizens(props: Props) {
                         ]
                   }
                 />
-                <Error>{errors.rank}</Error>
               </FormField>
 
               <FormRow flexLike className="mt-5">
-                <FormField label="Leo Access">
+                <FormField errorMessage={errors.isLeo} label="Leo Access">
                   <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
-
-                  <Error>{errors.isLeo}</Error>
                 </FormField>
 
-                <FormField label="LEO Supervisor">
+                <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
                   <Toggle
                     name="isSupervisor"
                     onClick={handleChange}
                     toggled={values.isSupervisor}
                   />
-
-                  <Error>{errors.isSupervisor}</Error>
                 </FormField>
 
-                <FormField label="Dispatch Access">
+                <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
                   <Toggle name="isDispatch" onClick={handleChange} toggled={values.isDispatch} />
-
-                  <Error>{errors.isDispatch}</Error>
                 </FormField>
 
-                <FormField label="EMS-FD Access">
+                <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
                   <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
-
-                  <Error>{errors.isEmsFd}</Error>
                 </FormField>
 
-                <FormField label="Tow Access">
+                <FormField errorMessage={errors.isTow} label="Tow Access">
                   <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
-
-                  <Error>{errors.isTow}</Error>
                 </FormField>
               </FormRow>
 
               <FormRow>
-                <FormField label="Steam ID">
+                <FormField errorMessage={errors.steamId} label="Steam ID">
                   <Input name="steamId" onChange={handleChange} value={values.steamId} />
-
-                  <Error>{errors.steamId}</Error>
                 </FormField>
 
-                <FormField label="Discord ID">
+                <FormField errorMessage={errors.discordId} label="Discord ID">
                   <Input name="discordId" onChange={handleChange} value={values.discordId} />
-
-                  <Error>{errors.discordId}</Error>
                 </FormField>
               </FormRow>
 

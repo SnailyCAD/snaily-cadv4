@@ -3,7 +3,6 @@ import { Formik } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -84,9 +83,8 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={tVehicle("model")}>
+            <FormField errorMessage={errors.model} label={tVehicle("model")}>
               <Select
-                hasError={!!errors.model}
                 values={weapons.values.map((weapon) => ({
                   label: weapon.value.value,
                   value: weapon.id,
@@ -95,12 +93,10 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                 name="model"
                 onChange={handleChange}
               />
-              <Error>{errors.model}</Error>
             </FormField>
 
-            <FormField label={tVehicle("owner")}>
+            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <Select
-                hasError={!!errors.citizenId}
                 values={
                   isDisabled
                     ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
@@ -114,12 +110,13 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={tVehicle("registrationStatus")}>
+            <FormField
+              errorMessage={errors.registrationStatus}
+              label={tVehicle("registrationStatus")}
+            >
               <Select
-                hasError={!!errors.registrationStatus}
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
@@ -128,17 +125,10 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                 name="registrationStatus"
                 onChange={handleChange}
               />
-              <Error>{errors.registrationStatus}</Error>
             </FormField>
 
-            <FormField label={tWeapon("serialNumber")}>
-              <Input
-                hasError={!!errors.serialNumber}
-                value={values.serialNumber}
-                name="serialNumber"
-                onChange={handleChange}
-              />
-              <Error>{errors.serialNumber}</Error>
+            <FormField errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
+              <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

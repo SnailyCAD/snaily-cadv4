@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -55,14 +54,8 @@ export function WeaponSearchModal() {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("serialNumber")}>
-              <Input
-                value={values.serialNumber}
-                hasError={!!errors.serialNumber}
-                name="serialNumber"
-                onChange={handleChange}
-              />
-              <Error>{errors.serialNumber}</Error>
+            <FormField errorMessage={errors.serialNumber} label={t("serialNumber")}>
+              <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? <p>{t("weaponNotFound")}</p> : null}

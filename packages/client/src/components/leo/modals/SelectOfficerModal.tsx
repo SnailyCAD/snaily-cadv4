@@ -1,6 +1,5 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -60,10 +59,9 @@ export function SelectOfficerModal() {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("officer")}>
+            <FormField errorMessage={errors.officer} label={t("officer")}>
               <Select
                 value={values.officer}
-                hasError={!!errors.officer}
                 name="officer"
                 onChange={handleChange}
                 isClearable
@@ -72,7 +70,6 @@ export function SelectOfficerModal() {
                   value: officer.id,
                 }))}
               />
-              <Error>{errors.officer}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

@@ -6,8 +6,6 @@ import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
-
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -73,42 +71,21 @@ export default function Register({ cad }: Props) {
                 {t("register")}
               </h1>
 
-              <FormField label={t("username")}>
-                <Input
-                  hasError={!!errors.username}
-                  type="text"
-                  name="username"
-                  onChange={handleChange}
-                />
-                <Error>{errors.username}</Error>
+              <FormField errorMessage={errors.username} label={t("username")}>
+                <Input type="text" name="username" onChange={handleChange} />
               </FormField>
 
-              <FormField label={t("password")}>
-                <PasswordInput
-                  hasError={!!errors.password}
-                  name="password"
-                  onChange={handleChange}
-                />
-                <Error>{errors.password}</Error>
+              <FormField errorMessage={errors.password} label={t("password")}>
+                <PasswordInput name="password" onChange={handleChange} />
               </FormField>
 
-              <FormField label={t("confirmPassword")}>
-                <PasswordInput
-                  hasError={!!errors.confirmPassword}
-                  name="confirmPassword"
-                  onChange={handleChange}
-                />
-                <Error>{errors.confirmPassword}</Error>
+              <FormField errorMessage={errors.confirmPassword} label={t("confirmPassword")}>
+                <PasswordInput name="confirmPassword" onChange={handleChange} />
               </FormField>
 
               {cad.registrationCode ? (
-                <FormField label={t("registrationCode")}>
-                  <Input
-                    hasError={!!errors.registrationCode}
-                    name="registrationCode"
-                    onChange={handleChange}
-                  />
-                  <Error>{errors.registrationCode}</Error>
+                <FormField errorMessage={errors.registrationCode} label={t("registrationCode")}>
+                  <Input name="registrationCode" onChange={handleChange} />
                 </FormField>
               ) : null}
 
