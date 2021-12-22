@@ -24,7 +24,7 @@ interface Props {
   deputy: FullDeputy | null;
   onCreate?: (officer: FullDeputy) => void;
   onUpdate?: (old: FullDeputy, newO: FullDeputy) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const ManageDeputyModal = ({ deputy, onClose, onUpdate, onCreate }: Props) => {

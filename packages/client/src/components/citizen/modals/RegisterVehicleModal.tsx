@@ -24,7 +24,7 @@ interface Props {
   citizens: Citizen[];
   onCreate?: (newV: RegisteredVehicle) => void;
   onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const RegisterVehicleModal = ({

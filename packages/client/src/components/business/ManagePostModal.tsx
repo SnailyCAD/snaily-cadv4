@@ -17,7 +17,7 @@ import { BusinessPost } from "types/prisma";
 interface Props {
   onCreate: (post: BusinessPost) => void;
   onUpdate: (old: BusinessPost, newPost: BusinessPost) => void;
-  onClose?: () => void;
+  onClose?(): void;
   post: BusinessPost | null;
 }
 

@@ -10,7 +10,7 @@ import { SocketEvents } from "@snailycad/config";
 
 interface Props {
   call: Full911Call | null;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const CallEventsModal = ({ call, onClose }: Props) => {

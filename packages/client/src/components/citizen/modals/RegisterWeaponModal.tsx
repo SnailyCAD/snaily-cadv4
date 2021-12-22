@@ -22,7 +22,7 @@ interface Props {
   citizens: Citizen[];
   onCreate?: (newV: Weapon) => void;
   onUpdate?: (old: Weapon, newV: Weapon) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const RegisterWeaponModal = ({

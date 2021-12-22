@@ -24,7 +24,7 @@ interface Props {
   officer: FullOfficer | null;
   onCreate?: (officer: FullOfficer) => void;
   onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Props) => {

@@ -22,7 +22,7 @@ interface Props {
   registeredVehicles: RegisteredVehicle[];
   onUpdate?: (old: FullTruckLog, newLog: FullTruckLog) => void;
   onCreate?: (log: FullTruckLog) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export const ManageTruckLogModal = ({
