@@ -2,10 +2,10 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, JsonRequestBody, Put } from "@tsed/schema";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA, validate } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
 
 @UseBeforeEach(IsAuth)

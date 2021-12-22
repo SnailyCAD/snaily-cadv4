@@ -2,14 +2,14 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 import {
   CREATE_COMPANY_POST_SCHEMA,
   DELETE_COMPANY_POST_SCHEMA,
   validate,
 } from "@snailycad/schemas";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")

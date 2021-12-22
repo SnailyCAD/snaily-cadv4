@@ -3,11 +3,11 @@ import { JsonRequestBody } from "@tsed/schema";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
-import { setCookie } from "../../utils/setCookie";
-import { signJWT } from "../../utils/jwt";
+import { prisma } from "lib/prisma";
+import { setCookie } from "utils/setCookie";
+import { signJWT } from "utils/jwt";
 import { Cookie } from "@snailycad/config";
-import { findOrCreateCAD } from "../../lib/cad";
+import { findOrCreateCAD } from "lib/cad";
 import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
 
 // expire after 5 hours

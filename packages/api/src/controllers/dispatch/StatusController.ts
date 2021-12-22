@@ -5,14 +5,14 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { JsonRequestBody, Post, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { findUnit } from "./Calls911Controller";
-import { unitProperties } from "../../lib/officer";
-import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
-import { Socket } from "../../services/SocketService";
+import { unitProperties } from "lib/officer";
+import { getWebhookData, sendDiscordWebhook } from "lib/discord";
+import { Socket } from "services/SocketService";
 import { APIWebhook } from "discord-api-types";
-import { IsAuth } from "../../middlewares";
-import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
+import { IsAuth } from "middlewares/index";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)

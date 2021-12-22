@@ -160,21 +160,18 @@ export default function CreateCitizen() {
             </FormField>
 
             <FormRow>
-              <FormField label={t("name")}>
-                <Input hasError={!!errors.name} onChange={handleChange} name="name" />
-                <Error>{errors.name}</Error>
+              <FormField errorMessage={errors.name} label={t("name")}>
+                <Input onChange={handleChange} name="name" />
               </FormField>
 
-              <FormField label={t("surname")}>
-                <Input hasError={!!errors.surname} onChange={handleChange} name="surname" />
-                <Error>{errors.surname}</Error>
+              <FormField errorMessage={errors.surname} label={t("surname")}>
+                <Input onChange={handleChange} name="surname" />
               </FormField>
             </FormRow>
 
-            <FormField label={t("dateOfBirth")}>
+            <FormField errorMessage={errors.dateOfBirth} label={t("dateOfBirth")}>
               <Input
                 type="date"
-                hasError={!!errors.dateOfBirth}
                 onChange={(e) =>
                   handleChange({
                     ...e,
@@ -183,91 +180,81 @@ export default function CreateCitizen() {
                 }
                 name="dateOfBirth"
               />
-              <Error>{errors.dateOfBirth}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={t("gender")}>
+              <FormField errorMessage={errors.gender} label={t("gender")}>
                 <Select
                   name="gender"
                   value={values.gender}
                   onChange={handleChange}
-                  hasError={!!errors.gender}
                   values={gender.values.map((gender) => ({
                     label: gender.value,
                     value: gender.id,
                   }))}
                 />
-                <Error>{errors.gender}</Error>
               </FormField>
 
-              <FormField label={t("ethnicity")}>
+              <FormField errorMessage={errors.ethnicity} label={t("ethnicity")}>
                 <Select
                   name="ethnicity"
                   value={values.ethnicity}
                   onChange={handleChange}
-                  hasError={!!errors.ethnicity}
                   values={ethnicity.values.map((ethnicity) => ({
                     label: ethnicity.value,
                     value: ethnicity.id,
                   }))}
                 />
-
-                <Error>{errors.ethnicity}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={t("eyeColor")}>
-                <Input hasError={!!errors.hairColor} onChange={handleChange} name="hairColor" />
-                <Error>{errors.hairColor}</Error>
+              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
+                <Input onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField label={t("hairColor")}>
-                <Input hasError={!!errors.eyeColor} onChange={handleChange} name="eyeColor" />
-                <Error>{errors.eyeColor}</Error>
+              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
+                <Input onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={`${t("weight")} ${weightPrefix}`}>
-                <Input hasError={!!errors.weight} onChange={handleChange} name="weight" />
-                <Error>{errors.weight}</Error>
+              <FormField errorMessage={errors.weight} label={`${t("weight")} ${weightPrefix}`}>
+                <Input onChange={handleChange} name="weight" />
               </FormField>
 
-              <FormField label={`${t("height")} ${heightPrefix}`}>
-                <Input hasError={!!errors.height} onChange={handleChange} name="height" />
-                <Error>{errors.height}</Error>
+              <FormField errorMessage={errors.height} label={`${t("height")} ${heightPrefix}`}>
+                <Input onChange={handleChange} name="height" />
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={t("address")}>
-                <Input hasError={!!errors.address} onChange={handleChange} name="address" />
-                <Error>{errors.address}</Error>
+              <FormField errorMessage={errors.address} label={t("address")}>
+                <Input onChange={handleChange} name="address" />
               </FormField>
 
-              <FormField label={t("phoneNumber")}>
-                <Input hasError={!!errors.phoneNumber} onChange={handleChange} name="phoneNumber" />
-                <Error>{errors.phoneNumber}</Error>
+              <FormField errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
+                <Input onChange={handleChange} name="phoneNumber" />
               </FormField>
             </FormRow>
 
             <FormRow className="mt-5">
-              <FormField label={t("driversLicense")}>
+              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
                   values={license.values.map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
                   value={values.driversLicense}
-                  hasError={!!errors.driversLicense}
                   onChange={handleChange}
                   name="driversLicense"
                 />
-                <Error>{errors.driversLicense}</Error>
 
-                <FormField className="mt-2" label="Type">
+                <FormField
+                  errorMessage={errors.driversLicenseCategory}
+                  className="mt-2"
+                  label="Type"
+                >
                   <Select
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === "AUTOMOTIVE")
@@ -276,7 +263,6 @@ export default function CreateCitizen() {
                         value: [v.id, v.type].join("-"),
                       }))}
                     value={values.driversLicenseCategory}
-                    hasError={!!errors.driversLicenseCategory}
                     onChange={handleChange}
                     name="driversLicenseCategory"
                     isMulti
@@ -284,33 +270,29 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField label={t("weaponLicense")}>
+              <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                 <Select
                   values={license.values.map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
                   value={values.weaponLicense}
-                  hasError={!!errors.weaponLicense}
                   onChange={handleChange}
                   name="weaponLicense"
                 />
-                <Error>{errors.weaponLicense}</Error>
               </FormField>
-              <FormField label={t("pilotLicense")}>
+              <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
                   values={license.values.map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
                   value={values.pilotLicense}
-                  hasError={!!errors.pilotLicense}
                   onChange={handleChange}
                   name="pilotLicense"
                 />
-                <Error>{errors.pilotLicense}</Error>
 
-                <FormField className="mt-2" label="Type">
+                <FormField errorMessage={errors.pilotLicenseCategory} className="mt-2" label="Type">
                   <Select
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === "AVIATION")
@@ -319,7 +301,6 @@ export default function CreateCitizen() {
                         value: [v.id, v.type].join("-"),
                       }))}
                     value={values.pilotLicenseCategory}
-                    hasError={!!errors.pilotLicenseCategory}
                     onChange={handleChange}
                     name="pilotLicenseCategory"
                     isMulti
@@ -327,18 +308,16 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField label={t("ccw")}>
+              <FormField errorMessage={errors.ccw} label={t("ccw")}>
                 <Select
                   values={license.values.map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
                   value={values.ccw}
-                  hasError={!!errors.ccw}
                   onChange={handleChange}
                   name="ccw"
                 />
-                <Error>{errors.ccw}</Error>
               </FormField>
             </FormRow>
 

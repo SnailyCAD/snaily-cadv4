@@ -123,23 +123,24 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
-      styles={styles(theme)}
-      className="border-gray-500"
+      styles={styles({ ...theme, hasError: rest.hasError })}
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={rest.showContextMenuForUnits ? { MultiValueContainer } : undefined}
     />
   );
 };
 
-export interface SelectTheme {
+export interface SelectStylesOptions {
   backgroundColor?: string;
   color?: string;
+  hasError?: boolean;
 }
 
 export const styles = ({
   backgroundColor = "white",
   color = "var(--dark)",
-}: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
+  hasError = false,
+}: SelectStylesOptions): StylesConfig<unknown, boolean, GroupBase<unknown>> => ({
   valueContainer: (base) => ({
     ...base,
     background: backgroundColor,
@@ -218,21 +219,24 @@ export const styles = ({
       color: backgroundColor === "white" ? "#222" : "#a1a1a1",
     },
   }),
+
   control: (base, state) => ({
     ...base,
     background: backgroundColor,
     borderRadius: "0.375rem",
     overflow: "hidden",
-    border: state.isFocused
+    border: hasError
+      ? "1.5px solid #EF4444"
+      : state.isFocused
       ? "1.5px solid rgb(107, 114, 128)"
       : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
     boxShadow: "none",
     ":hover": {
       boxShadow: "none",
-      borderColor: "rgb(107, 114, 128)",
+      borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
     },
     ":focus": {
-      borderColor: "rgb(107, 114, 128)",
+      borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
       boxShadow: "none",
     },
   }),
