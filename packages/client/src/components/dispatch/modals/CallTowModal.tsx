@@ -26,7 +26,7 @@ interface Props {
 
 export function DispatchCallTowModal({ call }: Props) {
   const common = useTranslations("Common");
-  const t = useTranslations("Calls");
+  const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
   const { activeOfficer, officers } = useLeoState();
@@ -79,7 +79,7 @@ export function DispatchCallTowModal({ call }: Props) {
         {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             {unit ? (
-              <FormField errorMessage={errors.creatorId as string} label={"Citizen"}>
+              <FormField errorMessage={errors.creatorId as string} label={t("citizen")}>
                 <Select
                   disabled
                   name="creatorId"
@@ -94,7 +94,7 @@ export function DispatchCallTowModal({ call }: Props) {
             ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.location} label={t("location")}>
+              <FormField errorMessage={errors.location} label={t("Calls.location")}>
                 <Input name="location" value={values.location} onChange={handleChange} />
               </FormField>
 
@@ -105,7 +105,7 @@ export function DispatchCallTowModal({ call }: Props) {
 
             {isLeo || isDispatch ? (
               <>
-                <FormField errorMessage={errors.deliveryAddress} label={"Delivery Address"}>
+                <FormField errorMessage={errors.deliveryAddress} label={t("Calls.deliveryAddress")}>
                   <Select
                     isClearable
                     name="deliveryAddress"
@@ -118,11 +118,11 @@ export function DispatchCallTowModal({ call }: Props) {
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.plate} label={"Plate"}>
+                <FormField errorMessage={errors.plate} label={t("Vehicles.plate")}>
                   <Input onChange={handleChange} name="plate" value={values.plate} />
                 </FormField>
 
-                <FormField errorMessage={errors.model} label={"Model"}>
+                <FormField errorMessage={errors.model} label={t("Vehicles.model")}>
                   <Input onChange={handleChange} name="model" value={values.model} />
                 </FormField>
               </>

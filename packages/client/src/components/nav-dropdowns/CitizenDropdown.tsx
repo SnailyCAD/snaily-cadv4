@@ -5,13 +5,15 @@ import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Feature } from "types/prisma";
+import { useTranslations } from "next-intl";
 
 export function CitizenDropdown() {
   const enabled = useFeatureEnabled();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const t = useTranslations("Nav");
 
-  const items = ["Citizens", "Taxi", "Bleeter", "Truck Logs", "Courthouse", "Business"];
+  const items = [t("citizens"), t("taxi"), t("bleeter"), t("truckLogs"), t("business")];
 
   return (
     <>
@@ -21,7 +23,7 @@ export function CitizenDropdown() {
             isActive("/citizen") && "font-semibold"
           }`}
         >
-          Citizen
+          {t("citizen")}
           <span className="mt-1 ml-1">
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
@@ -41,7 +43,7 @@ export function CitizenDropdown() {
               <Menu.Item>
                 <Link href="/citizen">
                   <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                    Citizens
+                    {t("citizens")}
                   </a>
                 </Link>
               </Menu.Item>

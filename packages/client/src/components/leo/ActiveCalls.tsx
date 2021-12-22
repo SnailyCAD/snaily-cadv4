@@ -167,7 +167,7 @@ export function ActiveCalls() {
                         className="ml-2"
                         onClick={() => handleCallTow(call)}
                       >
-                        {"Call Tow"}
+                        {t("callTow")}
                       </Button>
                     </td>
                   </tr>
