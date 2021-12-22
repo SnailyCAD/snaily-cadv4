@@ -56,10 +56,16 @@ export class ManageCitizensController {
         whitelisted: body.get("whitelisted"),
         registrationCode: body.get("registrationCode"),
         discordWebhookURL: body.get("discordWebhookURL"),
+        miscCadSettings: {
+          update: {
+            roleplayEnabled: Boolean(body.get("roleplayEnabled")),
+          },
+        },
       },
     });
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
+    this.socket.emitUpdateRoleplayStopped(Boolean(body.get("roleplayEnabled")));
 
     return updated;
   }

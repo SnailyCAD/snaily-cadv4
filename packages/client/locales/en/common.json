@@ -29,7 +29,9 @@
     "categories": "Categories",
     "continue": "Continue",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "stopRoleplay": "Stop Roleplay",
+    "roleplayStopped": "Admins issued all players to stop all roleplay."
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
