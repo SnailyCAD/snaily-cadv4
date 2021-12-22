@@ -52,6 +52,10 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.UpdateAreaOfPlay, aop);
   }
 
+  emitUpdateRoleplayStopped(value: boolean) {
+    this.io.sockets.emit(SocketEvents.RoleplayStopped, value);
+  }
+
   emitUpdateOfficerStatus() {
     this.io.sockets.emit(SocketEvents.UpdateOfficerStatus);
   }

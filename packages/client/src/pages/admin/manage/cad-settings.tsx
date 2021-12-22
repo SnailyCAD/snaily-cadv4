@@ -59,6 +59,7 @@ export default function CadSettings() {
     towWhitelisted: cad.towWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
+    roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
   };
 
   return (
@@ -132,6 +133,17 @@ export default function CadSettings() {
                     <Error>{errors.whitelisted}</Error>
                   </FormField>
                 </FormRow>
+
+                <FormField errorMessage={errors.roleplayEnabled} label="Roleplay enabled">
+                  <Toggle
+                    name="roleplayEnabled"
+                    onClick={handleChange}
+                    toggled={values.roleplayEnabled}
+                  />
+                  <small className="mt-1 text-sm">
+                    When disabled, this will add a banner that says that roleplay must be stopped.
+                  </small>
+                </FormField>
 
                 <Button disabled={state === "loading"} className="flex items-center" type="submit">
                   {state === "loading" ? <Loader className="mr-3" /> : null}

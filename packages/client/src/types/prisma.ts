@@ -35,6 +35,7 @@ export type MiscCadSettings = {
   signal100Enabled: boolean;
   allowDuplicateCitizenNames: boolean;
   liveMapURL: string | null;
+  roleplayEnabled: boolean | null;
 };
 
 /**
