@@ -20,7 +20,7 @@ import { classNames } from "lib/classNames";
 interface Props {
   type?: "ems-fd" | "leo";
   unit: ActiveOfficer | ActiveDeputy | CombinedLeoUnit | null;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {

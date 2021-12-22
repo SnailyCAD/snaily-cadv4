@@ -18,7 +18,7 @@ import { useCitizen } from "context/CitizenContext";
 
 interface Props {
   onCreate?: (newV: MedicalRecord) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {

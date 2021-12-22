@@ -21,7 +21,7 @@ interface Props {
   medicalRecord: MedicalRecord | null;
   onCreate?: (newV: MedicalRecord) => void;
   onUpdate?: (old: MedicalRecord, newV: MedicalRecord) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, onUpdate }: Props) {

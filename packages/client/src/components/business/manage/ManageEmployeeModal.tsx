@@ -19,7 +19,7 @@ import { EmployeeAsEnum } from "types/prisma";
 
 interface Props {
   onUpdate: (old: FullEmployee, newPost: FullEmployee) => void;
-  onClose?: () => void;
+  onClose?(): void;
   employee: FullEmployee | null;
 }
 

@@ -20,7 +20,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
-  onClose?: () => void;
+  onClose?(): void;
   bolo: FullBolo | null;
 }
 

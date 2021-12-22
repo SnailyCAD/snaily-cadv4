@@ -14,7 +14,7 @@ import { Input } from "components/form/Input";
 import { Table } from "components/table/Table";
 
 interface Props {
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function SearchMedicalRecordModal({ onClose }: Props) {
