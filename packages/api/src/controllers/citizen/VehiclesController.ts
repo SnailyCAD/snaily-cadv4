@@ -4,9 +4,9 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares/IsAuth";
-import { generateString } from "../../utils/generateString";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/IsAuth";
+import { generateString } from "utils/generateString";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)

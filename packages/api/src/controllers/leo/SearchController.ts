@@ -2,10 +2,10 @@ import { Controller, UseBeforeEach } from "@tsed/common";
 import { JsonRequestBody, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares";
-import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
-import { unitProperties } from "../../lib/officer";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { unitProperties } from "lib/officer";
 
 const citizenSearchInclude = {
   businesses: true,

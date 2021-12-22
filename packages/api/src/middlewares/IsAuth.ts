@@ -8,8 +8,8 @@ import {
 } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { getSessionUser } from "../lib/auth";
-import { prisma } from "../lib/prisma";
+import { getSessionUser } from "lib/auth";
+import { prisma } from "lib/prisma";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,

@@ -43,9 +43,19 @@ export function FormField({
         }
       : {};
 
+  const isInput =
+    ["__Input__", "__Textarea__"].includes(child.type?.displayName) ||
+    child.type?.name === "Select";
+  const inputProps = isInput
+    ? {
+        hasError: !!errorMessage,
+      }
+    : {};
+
   const element = React.cloneElement(child as React.ReactElement<any>, {
     ...fieldProps,
     ...selectProps,
+    ...inputProps,
   });
 
   return (

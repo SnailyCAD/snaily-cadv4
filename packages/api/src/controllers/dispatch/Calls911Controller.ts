@@ -4,12 +4,12 @@ import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_911_CALL, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
-import { Socket } from "../../services/SocketService";
+import { prisma } from "lib/prisma";
+import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
-import { unitProperties } from "../../lib/officer";
+import { unitProperties } from "lib/officer";
 
 const assignedUnitsInclude = {
   include: {

@@ -18,9 +18,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
       disabled:cursor-not-allowed disabled:opacity-80
       resize-y min-h-[3em]
       transition-colors`,
-        hasError && "border-red-500",
+        hasError && "border-red-500 focus:border-red-500 dark:focus:border-red-500",
         rest.className,
       )}
     />
   ),
 );
+
+Textarea.displayName = "__Textarea__";

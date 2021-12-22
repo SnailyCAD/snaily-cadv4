@@ -4,8 +4,8 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 
 @Controller("/truck-logs")

@@ -1,10 +1,10 @@
 import { Controller, QueryParams, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { IsAuth } from "../../middlewares";
-import { Socket } from "../../services/SocketService";
+import { IsAuth } from "middlewares/index";
+import { Socket } from "services/SocketService";
 import { User } from ".prisma/client";
 
 const CITIZEN_SELECTS = {
