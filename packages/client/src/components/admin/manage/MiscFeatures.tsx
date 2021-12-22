@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { Input } from "components/form/Input";
 import { FormRow } from "components/form/FormRow";
 
-export const MiscFeatures = () => {
+export function MiscFeatures() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
@@ -164,4 +164,4 @@ export const MiscFeatures = () => {
       </Formik>
     </div>
   );
-};
+}

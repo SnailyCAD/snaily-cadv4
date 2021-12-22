@@ -27,7 +27,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Props) => {
+export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Props) {
   const [image, setImage] = React.useState<File | null>(null);
   const { openModal, isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -270,4 +270,4 @@ export const ManageOfficerModal = ({ officer, onClose, onUpdate, onCreate }: Pro
       </Formik>
     </Modal>
   );
-};
+}

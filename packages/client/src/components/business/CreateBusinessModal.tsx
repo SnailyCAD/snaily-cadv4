@@ -15,7 +15,7 @@ import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 
-export const CreateBusinessModal = () => {
+export function CreateBusinessModal() {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
@@ -110,4 +110,4 @@ export const CreateBusinessModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

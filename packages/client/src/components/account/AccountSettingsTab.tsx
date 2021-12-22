@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 
-export const AccountSettingsTab = () => {
+export function AccountSettingsTab() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
@@ -51,4 +51,4 @@ export const AccountSettingsTab = () => {
       <ChangePasswordArea />
     </Tab.Panel>
   );
-};
+}

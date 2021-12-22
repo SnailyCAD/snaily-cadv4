@@ -21,7 +21,7 @@ interface Props {
   post: BleeterPost | null;
 }
 
-export const ManageBleetModal = ({ post }: Props) => {
+export function ManageBleetModal({ post }: Props) {
   const { state, execute } = useFetch();
   const { openModal, isOpen, closeModal } = useModal();
   const t = useTranslations("Bleeter");
@@ -164,4 +164,4 @@ export const ManageBleetModal = ({ post }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

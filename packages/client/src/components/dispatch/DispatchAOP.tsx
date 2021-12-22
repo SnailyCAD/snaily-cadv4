@@ -5,7 +5,7 @@ import { Pencil } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManageAOPModal } from "./modals/ManageAOPModal";
 
-export const DispatchAOP = () => {
+export function DispatchAOP() {
   const { areaOfPlay } = useAreaOfPlay();
   const { openModal } = useModal();
 
@@ -28,4 +28,4 @@ export const DispatchAOP = () => {
       <ManageAOPModal />
     </>
   );
-};
+}

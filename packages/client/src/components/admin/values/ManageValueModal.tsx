@@ -71,7 +71,7 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
   value: v,
 }));
 
-export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, value }: Props) => {
+export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -274,4 +274,4 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
       </Formik>
     </Modal>
   );
-};
+}

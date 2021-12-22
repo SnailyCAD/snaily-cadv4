@@ -19,7 +19,7 @@ interface Props {
   onSuccess: (old: TowCall, newC: TowCall) => void;
 }
 
-export const AssignToCallModal = ({ call, onSuccess }: Props) => {
+export function AssignToCallModal({ call, onSuccess }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -81,7 +81,7 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
               <Error>{errors.assignedUnitId}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.AssignToTowCall)}
@@ -103,4 +103,4 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

@@ -15,7 +15,7 @@ interface Props {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
-export const BanArea = ({ user, setUser }: Props) => {
+export function BanArea({ user, setUser }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { user: session } = useAuth();
@@ -98,4 +98,4 @@ export const BanArea = ({ user, setUser }: Props) => {
       )}
     </div>
   );
-};
+}

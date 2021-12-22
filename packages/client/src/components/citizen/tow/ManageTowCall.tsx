@@ -26,7 +26,7 @@ interface Props {
   onDelete?: (call: TowCall) => void;
 }
 
-export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props) => {
+export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
@@ -175,4 +175,4 @@ export const ManageCallModal = ({ onDelete, onUpdate, isTow: tow, call }: Props)
       />
     </Modal>
   );
-};
+}

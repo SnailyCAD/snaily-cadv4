@@ -10,7 +10,7 @@ import { EmployeeAsEnum } from "types/prisma";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
-export const EmployeesTab = () => {
+export function EmployeesTab() {
   const [tempEmployee, setTempEmployee] = React.useState<FullEmployee | null>(null);
 
   const { state, execute } = useFetch();
@@ -125,4 +125,4 @@ export const EmployeesTab = () => {
       <ManageEmployeeModal onUpdate={handleUpdate} employee={tempEmployee} />
     </Tab.Panel>
   );
-};
+}

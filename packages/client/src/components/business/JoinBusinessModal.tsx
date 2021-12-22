@@ -19,7 +19,7 @@ interface Props {
   onCreate: (business: FullBusiness) => void;
 }
 
-export const JoinBusinessModal = ({ onCreate }: Props) => {
+export function JoinBusinessModal({ onCreate }: Props) {
   const joinableBusinesses = useBusinessState((s) => s.joinableBusinesses);
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -112,4 +112,4 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

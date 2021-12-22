@@ -16,7 +16,7 @@ import { ManageBoloModal } from "./ManageBoloModal";
 
 const BOLO_TYPES = Object.values(BoloType);
 
-export const ActiveBolos = () => {
+export function ActiveBolos() {
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { bolos, setBolos } = useDispatchState();
@@ -136,7 +136,7 @@ export const ActiveBolos = () => {
       </>
     </div>
   );
-};
+}
 
 interface BoloItemProps {
   idx: number;
@@ -145,7 +145,7 @@ interface BoloItemProps {
   handleDelete: (bolo: FullBolo) => void;
 }
 
-const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
+function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { activeOfficer } = useLeoState();
@@ -158,7 +158,7 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
   return (
     <li key={bolo.id} className="flex justify-between">
       <div className="flex">
-        <span className="mr-2 text-gray-500 select-none">{idx + 1}. </span>
+        <span className="mr-2 text-gray-500 select-none">{idx + 1}.</span>
 
         <div>
           {bolo.type === BoloType.PERSON ? (
@@ -206,4 +206,4 @@ const BoloItem = ({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) => {
       </div>
     </li>
   );
-};
+}

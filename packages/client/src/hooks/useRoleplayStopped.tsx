@@ -22,7 +22,7 @@ export function useRoleplayStopped() {
   return { roleplayStopped, Component };
 }
 
-const Component = () => {
+function Component() {
   const t = useTranslations("Common");
 
   return (
@@ -31,4 +31,4 @@ const Component = () => {
       <p className="mt-1 text-lg">{t("roleplayStopped")}</p>
     </div>
   );
-};
+}

@@ -24,12 +24,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const ManageMedicalRecordsModal = ({
-  medicalRecord,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) => {
+export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { citizen } = useCitizen(false);
@@ -134,4 +129,4 @@ export const ManageMedicalRecordsModal = ({
       </Formik>
     </Modal>
   );
-};
+}

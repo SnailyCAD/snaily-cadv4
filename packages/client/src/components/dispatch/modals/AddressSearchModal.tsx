@@ -13,7 +13,7 @@ import { Input } from "components/form/Input";
 import { Citizen } from "types/prisma";
 import { Table } from "components/table/Table";
 
-export const AddressSearchModal = () => {
+export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -130,6 +130,6 @@ export const AddressSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 type AddressSearchResult = Citizen[];

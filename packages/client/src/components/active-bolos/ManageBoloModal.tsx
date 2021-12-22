@@ -24,7 +24,7 @@ interface Props {
   bolo: FullBolo | null;
 }
 
-export const ManageBoloModal = ({ onClose, bolo }: Props) => {
+export function ManageBoloModal({ onClose, bolo }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -252,4 +252,4 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

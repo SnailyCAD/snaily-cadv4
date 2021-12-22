@@ -22,7 +22,7 @@ interface ContextItem extends ButtonProps {
   component?: keyof typeof components | (string & {});
 }
 
-export const ContextMenu = ({ items, canBeOpened = true, asChild = false, children }: Props) => {
+export function ContextMenu({ items, canBeOpened = true, asChild = false, children }: Props) {
   const { canBeClosed, setCanBeClosed } = useModal();
 
   function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -77,31 +77,31 @@ export const ContextMenu = ({ items, canBeOpened = true, asChild = false, childr
 
         {/* <Menu.Label>hello world</Menu.Label>
 
-        <Menu.Group>
-          <Menu.Item>my text</Menu.Item>
-          <Menu.Item>my text</Menu.Item>
-          <Menu.Item>my text</Menu.Item>
-          <Menu.Item>my text</Menu.Item>
-        </Menu.Group>
+            <Menu.Group>
+              <Menu.Item>my text</Menu.Item>
+              <Menu.Item>my text</Menu.Item>
+              <Menu.Item>my text</Menu.Item>
+              <Menu.Item>my text</Menu.Item>
+            </Menu.Group>
 
-        <Menu.CheckboxItem>
-          <Menu.ItemIndicator>test</Menu.ItemIndicator>
-        </Menu.CheckboxItem>
+            <Menu.CheckboxItem>
+              <Menu.ItemIndicator>test</Menu.ItemIndicator>
+            </Menu.CheckboxItem>
 
-        <Menu.RadioGroup>
-          <Menu.RadioItem value="true">
-            <Menu.ItemIndicator>test</Menu.ItemIndicator>
-          </Menu.RadioItem>
-        </Menu.RadioGroup> */}
+            <Menu.RadioGroup>
+              <Menu.RadioItem value="true">
+                <Menu.ItemIndicator>test</Menu.ItemIndicator>
+              </Menu.RadioItem>
+            </Menu.RadioGroup> */}
 
         {/* <Menu.Root>
-          <Menu.TriggerItem />
-          <Menu.Content />
-        </Menu.Root> */}
+              <Menu.TriggerItem />
+              <Menu.Content />
+            </Menu.Root> */}
       </Menu.Content>
     </Menu.Root>
   );
-};
+}
 
 const components = {
   Item: ({ children, ...rest }: any) => (

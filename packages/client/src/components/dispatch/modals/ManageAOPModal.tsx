@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
-export const ManageAOPModal = () => {
+export function ManageAOPModal() {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
   const { cad, setCad } = useAuth();
@@ -70,4 +70,4 @@ export const ManageAOPModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

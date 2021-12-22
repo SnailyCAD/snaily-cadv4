@@ -16,7 +16,7 @@ import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 
-export const ManageBusinessTab = () => {
+export function ManageBusinessTab() {
   const { state, execute } = useFetch();
   const { openModal } = useModal();
   const common = useTranslations("Common");
@@ -133,4 +133,4 @@ export const ManageBusinessTab = () => {
       />
     </Tab.Panel>
   );
-};
+}

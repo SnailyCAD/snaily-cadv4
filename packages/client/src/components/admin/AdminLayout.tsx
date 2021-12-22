@@ -8,7 +8,7 @@ interface Props {
   className?: string;
 }
 
-export const AdminLayout = ({ children, className }: Props) => {
+export function AdminLayout({ children, className }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
 
   return (
@@ -23,4 +23,4 @@ export const AdminLayout = ({ children, className }: Props) => {
       </div>
     </Layout>
   );
-};
+}

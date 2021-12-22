@@ -13,7 +13,7 @@ interface Props {
   user: User;
 }
 
-export const DangerZone = ({ user }: Props) => {
+export function DangerZone({ user }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
   const { openModal, closeModal } = useModal();
@@ -80,4 +80,4 @@ export const DangerZone = ({ user }: Props) => {
       <GiveTempPasswordModal user={user} />
     </div>
   );
-};
+}

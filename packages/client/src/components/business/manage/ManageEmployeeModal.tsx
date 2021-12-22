@@ -23,7 +23,7 @@ interface Props {
   employee: FullEmployee | null;
 }
 
-export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
+export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
   const { currentBusiness, currentEmployee } = useBusinessState();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -112,7 +112,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
               </FormField>
             </FormRow>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
@@ -130,4 +130,4 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

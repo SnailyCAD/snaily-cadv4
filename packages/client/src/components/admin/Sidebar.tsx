@@ -8,19 +8,19 @@ import { useTranslations } from "use-intl";
 const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES"];
 const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
-export const AdminSidebar = () => {
+export function AdminSidebar() {
   const t = useTranslations();
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
 
-  const isMActive = (path: string) => {
+  function isMActive(path: string) {
     return router.pathname === path;
-  };
+  }
 
-  const isValueActive = (type: string) => {
+  function isValueActive(type: string) {
     return router.asPath.endsWith(type.toLowerCase());
-  };
+  }
 
   return (
     <div className="w-60">
@@ -29,7 +29,7 @@ export const AdminSidebar = () => {
         className="absolute w-60 left-4 top-0 bg-gray-200 dark:bg-[#171717] rounded-md py-2"
       >
         <section>
-          <h1 className="text-2xl font-semibold dark:text-white px-3">{man("management")}</h1>
+          <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
             {management.map((type) => (
               <SidebarItem
@@ -53,7 +53,7 @@ export const AdminSidebar = () => {
 
         {user?.rank !== "USER" ? (
           <section className="mt-3">
-            <h1 className="text-2xl font-semibold dark:text-white px-3">{t("Values.values")}</h1>
+            <h1 className="px-3 text-2xl font-semibold dark:text-white">{t("Values.values")}</h1>
             <ul className="flex flex-col space-y-1.5 mt-3">
               {types.map((type) => (
                 <SidebarItem
@@ -69,7 +69,7 @@ export const AdminSidebar = () => {
       </aside>
     </div>
   );
-};
+}
 
 interface ItemProps {
   isActive: boolean;
@@ -78,7 +78,7 @@ interface ItemProps {
   disabled?: boolean;
 }
 
-const SidebarItem = ({ disabled, href, text, isActive }: ItemProps) => {
+function SidebarItem({ disabled, href, text, isActive }: ItemProps) {
   return (
     <li className="px-2">
       <Link href={disabled ? "" : href}>
@@ -95,4 +95,4 @@ const SidebarItem = ({ disabled, href, text, isActive }: ItemProps) => {
       </Link>
     </li>
   );
-};
+}

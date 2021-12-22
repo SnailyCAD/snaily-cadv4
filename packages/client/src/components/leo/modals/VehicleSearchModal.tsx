@@ -14,7 +14,7 @@ import { Citizen, RegisteredVehicle, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 
-export const VehicleSearchModal = () => {
+export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
 
   const { isOpen, closeModal } = useModal();
@@ -171,7 +171,7 @@ export const VehicleSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;

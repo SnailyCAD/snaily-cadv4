@@ -19,7 +19,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 
-export const CreateTicketModal = ({ type }: { type: RecordType }) => {
+export function CreateTicketModal({ type }: { type: RecordType }) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -172,4 +172,4 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       </Formik>
     </Modal>
   );
-};
+}

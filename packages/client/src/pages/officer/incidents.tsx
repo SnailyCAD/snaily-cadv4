@@ -80,8 +80,8 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
     setActiveOfficer(activeOfficer);
   }, [setAllOfficers, setActiveOfficer, activeOfficer, officers]);
 
-  const involvedOfficers = (incident: FullIncident) =>
-    incident.officersInvolved?.length <= 0 ? (
+  function involvedOfficers(incident: FullIncident) {
+    return incident.officersInvolved?.length <= 0 ? (
       <span>{common("none")}</span>
     ) : (
       incident.officersInvolved?.map((o) => (
@@ -90,6 +90,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         </span>
       ))
     );
+  }
 
   return (
     <Layout className="dark:text-white">

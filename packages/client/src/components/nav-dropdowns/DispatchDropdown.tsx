@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
 
-export const DispatchDropdown = () => {
+export function DispatchDropdown() {
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
 
@@ -54,4 +54,4 @@ export const DispatchDropdown = () => {
       </Menu>
     </>
   );
-};
+}

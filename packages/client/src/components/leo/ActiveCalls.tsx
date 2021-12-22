@@ -23,7 +23,7 @@ const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
 );
 
-export const ActiveCalls = () => {
+export function ActiveCalls() {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { calls, setCalls } = useDispatchState();
@@ -191,4 +191,4 @@ export const ActiveCalls = () => {
       )}
     </div>
   );
-};
+}
