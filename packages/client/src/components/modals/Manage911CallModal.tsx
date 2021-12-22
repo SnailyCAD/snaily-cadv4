@@ -28,7 +28,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
+export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -298,4 +298,4 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
       ) : null}
     </Modal>
   );
-};
+}

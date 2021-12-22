@@ -23,7 +23,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
+export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -136,4 +136,4 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

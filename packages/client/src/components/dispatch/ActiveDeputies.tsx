@@ -14,7 +14,7 @@ import { useAuth } from "context/AuthContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/table/Table";
 
-export const ActiveDeputies = () => {
+export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -121,4 +121,4 @@ export const ActiveDeputies = () => {
       ) : null}
     </div>
   );
-};
+}

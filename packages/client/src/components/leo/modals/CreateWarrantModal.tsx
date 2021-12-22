@@ -15,7 +15,7 @@ import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Error } from "components/form/Error";
 
-export const CreateWarrantModal = () => {
+export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -141,4 +141,4 @@ export const CreateWarrantModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

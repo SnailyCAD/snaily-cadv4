@@ -19,7 +19,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ hasError, ...r
   />
 ));
 
-export const PasswordInput = (props: Omit<Props, "type" | "ref">) => {
+export function PasswordInput(props: Omit<Props, "type" | "ref">) {
   const [type, setType] = React.useState("password");
   const ref = React.useRef<HTMLInputElement>(null);
 
@@ -44,4 +44,4 @@ export const PasswordInput = (props: Omit<Props, "type" | "ref">) => {
       </Button>
     </div>
   );
-};
+}

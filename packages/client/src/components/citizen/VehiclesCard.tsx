@@ -10,7 +10,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/table/Table";
 
-export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
+export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Vehicles");
@@ -150,4 +150,4 @@ export const VehiclesCard = (props: { vehicles: RegisteredVehicle[] }) => {
       />
     </>
   );
-};
+}

@@ -25,13 +25,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const RegisterWeaponModal = ({
-  citizens = [],
-  weapon,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) => {
+export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
@@ -147,7 +141,7 @@ export const RegisterWeaponModal = ({
               <Error>{errors.serialNumber}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.RegisterWeapon)}
@@ -169,4 +163,4 @@ export const RegisterWeaponModal = ({
       </Formik>
     </Modal>
   );
-};
+}

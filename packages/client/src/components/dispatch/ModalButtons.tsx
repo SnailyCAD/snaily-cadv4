@@ -41,7 +41,7 @@ const buttons: MButton[] = [
   },
 ];
 
-export const DispatchModalButtons = () => {
+export function DispatchModalButtons() {
   const { openModal } = useModal();
   const t = useTranslations();
   const { execute } = useFetch();
@@ -72,4 +72,4 @@ export const DispatchModalButtons = () => {
       </Button>
     </ul>
   );
-};
+}

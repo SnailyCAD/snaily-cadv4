@@ -12,14 +12,14 @@ interface Props {
   errorMessage?: string;
 }
 
-export const FormField = ({
+export function FormField({
   boldLabel,
   checkbox,
   children,
   label,
   className,
   errorMessage,
-}: Props) => {
+}: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const ref = useOnclickOutside(() => setMenuOpen(false));
   const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
@@ -79,4 +79,4 @@ export const FormField = ({
       ) : null}
     </div>
   );
-};
+}

@@ -6,7 +6,7 @@ import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Feature } from "types/prisma";
 
-export const CitizenDropdown = () => {
+export function CitizenDropdown() {
   const enabled = useFeatureEnabled();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
@@ -71,4 +71,4 @@ export const CitizenDropdown = () => {
       </Menu>
     </>
   );
-};
+}

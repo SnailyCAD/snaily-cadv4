@@ -168,7 +168,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   };
 };
 
-const Dropdown = ({ onClick, disabled }: { disabled: boolean; onClick: any }) => {
+function Dropdown({ onClick, disabled }: { disabled: boolean; onClick: any }) {
   const mounted = useMounted();
   const portalRef = usePortal("dropdown_portal_above_table");
   const ref = React.useRef<HTMLButtonElement>(null);
@@ -219,4 +219,4 @@ const Dropdown = ({ onClick, disabled }: { disabled: boolean; onClick: any }) =>
       </Menu>
     </>
   );
-};
+}

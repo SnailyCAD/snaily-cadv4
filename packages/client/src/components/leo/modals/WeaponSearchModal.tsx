@@ -12,7 +12,7 @@ import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen, Value, Weapon } from "types/prisma";
 
-export const WeaponSearchModal = () => {
+export function WeaponSearchModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const wT = useTranslations("Weapons");
@@ -116,7 +116,7 @@ export const WeaponSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface WeaponSearchResult extends Weapon {
   citizen: Citizen;

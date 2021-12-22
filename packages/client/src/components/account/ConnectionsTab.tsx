@@ -6,7 +6,7 @@ import { useTranslations } from "use-intl";
 import { findUrl } from "lib/fetch";
 import useFetch from "lib/useFetch";
 
-export const ConnectionsTab = () => {
+export function ConnectionsTab() {
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { state, execute } = useFetch();
@@ -46,4 +46,4 @@ export const ConnectionsTab = () => {
       </div>
     </Tab.Panel>
   );
-};
+}

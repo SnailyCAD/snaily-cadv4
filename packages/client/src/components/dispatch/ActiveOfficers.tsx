@@ -17,7 +17,7 @@ import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
 
-export const ActiveOfficers = () => {
+export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
   const { activeOfficer } = useLeoState();
   const t = useTranslations("Leo");
@@ -194,4 +194,4 @@ export const ActiveOfficers = () => {
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
     </div>
   );
-};
+}

@@ -5,7 +5,7 @@ import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
 import { useAuth } from "context/AuthContext";
 
-export const OfficerDropdown = () => {
+export function OfficerDropdown() {
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { user } = useAuth();
@@ -74,4 +74,4 @@ export const OfficerDropdown = () => {
       </Menu>
     </>
   );
-};
+}

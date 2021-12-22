@@ -9,7 +9,7 @@ interface Props {
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
-export const PendingUsersTab = ({ setUsers, users }: Props) => {
+export function PendingUsersTab({ setUsers, users }: Props) {
   const t = useTranslations("Management");
   const { execute } = useFetch();
 
@@ -31,14 +31,14 @@ export const PendingUsersTab = ({ setUsers, users }: Props) => {
 
   return (
     <Tab.Panel>
-      <h3 className="text-xl font-semibold my-4">{t("pendingUsers")}</h3>
+      <h3 className="my-4 text-xl font-semibold">{t("pendingUsers")}</h3>
 
       <ul className="">
         {users.map((user, idx) => (
-          <li className="my-1 bg-gray-200 py-3 px-4 rounded-md w-full flex flex-col" key={user.id}>
+          <li className="flex flex-col w-full px-4 py-3 my-1 bg-gray-200 rounded-md" key={user.id}>
             <div className="flex items-center justify-between">
               <div>
-                <span className="select-none text-gray-500">{idx + 1}.</span>
+                <span className="text-gray-500 select-none">{idx + 1}.</span>
                 <span className="ml-2">{user.username}</span>
               </div>
 
@@ -60,4 +60,4 @@ export const PendingUsersTab = ({ setUsers, users }: Props) => {
       </ul>
     </Tab.Panel>
   );
-};
+}

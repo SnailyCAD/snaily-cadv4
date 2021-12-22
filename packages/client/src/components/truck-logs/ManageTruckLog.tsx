@@ -25,13 +25,13 @@ interface Props {
   onClose?: () => void;
 }
 
-export const ManageTruckLogModal = ({
+export function ManageTruckLogModal({
   onUpdate,
   onCreate,
   onClose,
   registeredVehicles,
   log,
-}: Props) => {
+}: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("TruckLogs");
   const { isOpen, closeModal } = useModal();
@@ -124,7 +124,7 @@ export const ManageTruckLogModal = ({
               <Error>{errors.vehicleId}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <div className="flex items-center">
                 <Button type="reset" onClick={handleClose} variant="cancel">
                   {common("cancel")}
@@ -144,4 +144,4 @@ export const ManageTruckLogModal = ({
       </Formik>
     </Modal>
   );
-};
+}

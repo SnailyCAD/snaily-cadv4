@@ -21,7 +21,7 @@ interface Props {
   post: BusinessPost | null;
 }
 
-export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: Props) => {
+export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: Props) {
   const { currentBusiness, currentEmployee } = useBusinessState();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -116,4 +116,4 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
       </Formik>
     </Modal>
   );
-};
+}

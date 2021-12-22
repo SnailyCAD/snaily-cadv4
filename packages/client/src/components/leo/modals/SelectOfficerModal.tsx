@@ -17,7 +17,7 @@ import { ShouldDoType } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 
-export const SelectOfficerModal = () => {
+export function SelectOfficerModal() {
   const { officers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -75,7 +75,7 @@ export const SelectOfficerModal = () => {
               <Error>{errors.officer}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.SelectOfficer)}
@@ -97,4 +97,4 @@ export const SelectOfficerModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

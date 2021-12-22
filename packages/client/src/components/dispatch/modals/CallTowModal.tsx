@@ -25,7 +25,7 @@ interface Props {
   call: Full911Call | null;
 }
 
-export const DispatchCallTowModal = ({ call }: Props) => {
+export function DispatchCallTowModal({ call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, getPayload } = useModal();
@@ -173,4 +173,4 @@ export const DispatchCallTowModal = ({ call }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

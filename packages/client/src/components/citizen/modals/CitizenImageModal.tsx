@@ -6,7 +6,7 @@ import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { useImageUrl } from "hooks/useImageUrl";
 
-export const CitizenImageModal = () => {
+export function CitizenImageModal() {
   const { execute } = useFetch();
   const { citizen, setCurrentCitizen } = useCitizen(false);
   const { isOpen, closeModal } = useModal();
@@ -46,7 +46,7 @@ export const CitizenImageModal = () => {
       onClose={() => closeModal("citizenImage")}
       isOpen={isOpen("citizenImage")}
     >
-      <div className="mt-10 flex items-center justify-center">
+      <div className="flex items-center justify-center mt-10">
         <img
           draggable={false}
           className="rounded-md w-[40em] h-[40em] object-cover"
@@ -54,10 +54,10 @@ export const CitizenImageModal = () => {
         />
       </div>
 
-      <div className="mt-5 flex justify-center w-full">
+      <div className="flex justify-center w-full mt-5">
         <input onChange={onImageSelectClick} className="hidden" type="file" ref={fileRef} />
         <Button onClick={handleEditImageClick}>Edit Image</Button>
       </div>
     </Modal>
   );
-};
+}

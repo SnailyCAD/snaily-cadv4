@@ -14,7 +14,7 @@ type Props = Pick<ModalProps, "title" | "className"> & {
   deleteText?: string;
 };
 
-export const AlertModal = (props: Props) => {
+export function AlertModal(props: Props) {
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
 
@@ -31,7 +31,7 @@ export const AlertModal = (props: Props) => {
       isOpen={isOpen(props.id)}
     >
       <p className="my-3">{props.description}</p>
-      <div className="mt-2 flex gap-2 items-center justify-end">
+      <div className="flex items-center justify-end gap-2 mt-2">
         <Button variant="cancel" disabled={props.state === "loading"} onClick={handleClose}>
           {common("cancel")}
         </Button>
@@ -41,10 +41,10 @@ export const AlertModal = (props: Props) => {
           className="flex items-center"
           onClick={props.onDeleteClick}
         >
-          {props.state === "loading" ? <Loader className="border-red-200 mr-2" /> : null}{" "}
+          {props.state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
           {props.deleteText ? props.deleteText : common("delete")}
         </Button>
       </div>
     </Modal>
   );
-};
+}

@@ -83,14 +83,15 @@ export default function Tow(props: Props) {
     });
   }
 
-  const assignedUnit = (call: FullTowCall) =>
-    call.assignedUnit ? (
+  function assignedUnit(call: FullTowCall) {
+    return call.assignedUnit ? (
       <span>
         {call.assignedUnit.name} {call.assignedUnit.surname}
       </span>
     ) : (
       <span>{common("none")}</span>
     );
+  }
 
   React.useEffect(() => {
     setCalls(props.calls);

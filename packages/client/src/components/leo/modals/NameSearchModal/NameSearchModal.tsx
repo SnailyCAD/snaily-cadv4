@@ -27,7 +27,7 @@ const enum Toggled {
   RECORDS,
 }
 
-const AutoSubmit = () => {
+function AutoSubmit() {
   const { getPayload } = useModal();
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
   const { submitForm } = useFormikContext();
@@ -40,9 +40,9 @@ const AutoSubmit = () => {
   }, [payloadName, submitForm]);
 
   return null;
-};
+}
 
-export const NameSearchModal = () => {
+export function NameSearchModal() {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
@@ -358,4 +358,4 @@ export const NameSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

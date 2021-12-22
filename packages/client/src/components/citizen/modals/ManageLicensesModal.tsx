@@ -15,7 +15,7 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { FormRow } from "components/form/FormRow";
 
-export const ManageLicensesModal = () => {
+export function ManageLicensesModal() {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { license, driverslicenseCategory } = useValues();
@@ -189,4 +189,4 @@ export const ManageLicensesModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

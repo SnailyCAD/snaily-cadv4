@@ -12,7 +12,7 @@ interface ListProps {
   handleDelete: (value: TValue) => void;
 }
 
-export const SortableList = ({ values, search, setList, handleEdit, handleDelete }: ListProps) => {
+export function SortableList({ values, search, setList, handleEdit, handleDelete }: ListProps) {
   const common = useTranslations("Common");
 
   function checkMoved(list: TValue[]) {
@@ -68,4 +68,4 @@ export const SortableList = ({ values, search, setList, handleEdit, handleDelete
         ))}
     </ReactSortable>
   );
-};
+}

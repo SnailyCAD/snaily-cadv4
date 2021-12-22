@@ -11,7 +11,7 @@ import { feature, Feature } from "types/prisma";
 
 const FEATURES = Object.keys(feature) as Feature[];
 
-export const DisabledFeaturesArea = () => {
+export function DisabledFeaturesArea() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
@@ -163,4 +163,4 @@ export const DisabledFeaturesArea = () => {
       </Formik>
     </div>
   );
-};
+}

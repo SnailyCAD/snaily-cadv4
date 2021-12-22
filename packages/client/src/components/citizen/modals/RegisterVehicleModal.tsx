@@ -27,13 +27,13 @@ interface Props {
   onClose?: () => void;
 }
 
-export const RegisterVehicleModal = ({
+export function RegisterVehicleModal({
   citizens = [],
   vehicle,
   onClose,
   onCreate,
   onUpdate,
-}: Props) => {
+}: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Citizen");
@@ -203,4 +203,4 @@ export const RegisterVehicleModal = ({
       </Formik>
     </Modal>
   );
-};
+}

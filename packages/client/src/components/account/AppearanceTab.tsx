@@ -15,7 +15,7 @@ const LABELS = {
   [StatusViewMode.FULL_ROW_COLOR]: "Full row color",
 };
 
-export const AppearanceTab = () => {
+export function AppearanceTab() {
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
@@ -67,4 +67,4 @@ export const AppearanceTab = () => {
       </Formik>
     </Tab.Panel>
   );
-};
+}

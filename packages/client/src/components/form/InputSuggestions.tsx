@@ -11,7 +11,7 @@ interface Props {
   options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };
 }
 
-export const InputSuggestions = ({ Component, onSuggestionClick, options, inputProps }: Props) => {
+export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
@@ -87,4 +87,4 @@ export const InputSuggestions = ({ Component, onSuggestionClick, options, inputP
       ) : null}
     </div>
   );
-};
+}

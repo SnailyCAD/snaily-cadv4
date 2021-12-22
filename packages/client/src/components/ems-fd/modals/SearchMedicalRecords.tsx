@@ -17,7 +17,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const SearchMedicalRecordModal = ({ onClose }: Props) => {
+export function SearchMedicalRecordModal({ onClose }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -153,7 +153,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface SearchResult extends Citizen {
   medicalRecords: MedicalRecord[];

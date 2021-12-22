@@ -13,7 +13,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./nav-dropdowns/TowDropdown";
 import { DispatchDropdown } from "./nav-dropdowns/DispatchDropdown";
 
-export const Nav = () => {
+export function Nav() {
   const { user, cad } = useAuth();
   const { TOW } = useFeatureEnabled();
   const router = useRouter();
@@ -66,9 +66,9 @@ export const Nav = () => {
       </div>
     </nav>
   );
-};
+}
 
-const NavDropdown = () => {
+function NavDropdown() {
   const { user, setUser } = useAuth();
   const router = useRouter();
 
@@ -143,4 +143,4 @@ const NavDropdown = () => {
       </Menu>
     </>
   );
-};
+}

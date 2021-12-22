@@ -6,7 +6,7 @@ import { useModal } from "context/ModalContext";
 import { ManageLicensesModal } from "./modals/ManageLicensesModal";
 import { useCitizen } from "context/CitizenContext";
 
-export const LicensesCard = () => {
+export function LicensesCard() {
   const { openModal } = useModal();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
@@ -56,4 +56,4 @@ export const LicensesCard = () => {
       <ManageLicensesModal />
     </>
   );
-};
+}

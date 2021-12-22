@@ -20,7 +20,7 @@ import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
 
-export const CreateIncidentModal = () => {
+export function CreateIncidentModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -138,4 +138,4 @@ export const CreateIncidentModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

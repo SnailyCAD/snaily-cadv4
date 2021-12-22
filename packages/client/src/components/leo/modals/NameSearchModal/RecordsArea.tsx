@@ -20,7 +20,7 @@ interface Props {
   records: FullRecord[];
 }
 
-export const RecordsArea = ({ records }: Props) => {
+export function RecordsArea({ records }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const { state, execute } = useFetch();
@@ -83,9 +83,9 @@ export const RecordsArea = ({ records }: Props) => {
       />
     </div>
   );
-};
+}
 
-const RecordsTable = ({ data }: { data: FullRecord[] }) => {
+function RecordsTable({ data }: { data: FullRecord[] }) {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
@@ -150,4 +150,4 @@ const RecordsTable = ({ data }: { data: FullRecord[] }) => {
       />
     </div>
   );
-};
+}

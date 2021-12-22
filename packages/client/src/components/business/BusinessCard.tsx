@@ -8,7 +8,7 @@ interface Props {
   employee: FullEmployee & { business: Business };
 }
 
-export const BusinessCard = ({ employee }: Props) => {
+export function BusinessCard({ employee }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
 
@@ -16,7 +16,7 @@ export const BusinessCard = ({ employee }: Props) => {
     employee.business.whitelisted && employee.whitelistStatus === whitelistStatus.PENDING;
 
   return (
-    <li className="flex items-baseline justify-between bg-gray-200/80 p-4 rounded-md">
+    <li className="flex items-baseline justify-between p-4 rounded-md bg-gray-200/80">
       <div>
         <p>
           <span className="font-semibold">{t("business")}: </span> {employee.business.name}
@@ -41,4 +41,4 @@ export const BusinessCard = ({ employee }: Props) => {
       </Link>
     </li>
   );
-};
+}

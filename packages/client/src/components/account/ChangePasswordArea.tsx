@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import toast from "react-hot-toast";
 import { useTranslations } from "use-intl";
 
-export const ChangePasswordArea = () => {
+export function ChangePasswordArea() {
   const t = useTranslations("Account");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -80,4 +80,4 @@ export const ChangePasswordArea = () => {
       </Formik>
     </section>
   );
-};
+}

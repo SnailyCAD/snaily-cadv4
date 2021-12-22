@@ -7,7 +7,7 @@ interface Props {
   hideAlerts?: boolean;
 }
 
-export const Layout = ({ hideAlerts, children, className = "" }: Props) => {
+export function Layout({ hideAlerts, children, className = "" }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
 
   return (
@@ -21,4 +21,4 @@ export const Layout = ({ hideAlerts, children, className = "" }: Props) => {
       </main>
     </>
   );
-};
+}
