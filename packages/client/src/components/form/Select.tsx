@@ -220,7 +220,6 @@ export function styles({
         color: backgroundColor === "white" ? "#222" : "#a1a1a1",
       },
     }),
-
     control: (base, state) => ({
       ...base,
       background: backgroundColor,
@@ -239,6 +238,14 @@ export function styles({
       ":focus": {
         borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
         boxShadow: "none",
+        ":hover": {
+          boxShadow: "none",
+          borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+        },
+        ":focus": {
+          borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+          boxShadow: "none",
+        },
       },
     }),
     placeholder: (base) => ({
