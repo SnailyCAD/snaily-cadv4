@@ -12,11 +12,13 @@ import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./nav-dropdowns/TowDropdown";
 import { DispatchDropdown } from "./nav-dropdowns/DispatchDropdown";
+import { useTranslations } from "next-intl";
 
 export function Nav() {
   const { user, cad } = useAuth();
   const { TOW } = useFeatureEnabled();
   const router = useRouter();
+  const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   return (
@@ -52,7 +54,7 @@ export function Nav() {
                       isActive("/admin") && "font-semibold",
                     )}
                   >
-                    Admin
+                    {t("admin")}
                   </a>
                 </Link>
               ) : null}
@@ -71,6 +73,7 @@ export function Nav() {
 function NavDropdown() {
   const { user, setUser } = useAuth();
   const router = useRouter();
+  const t = useTranslations("Nav");
 
   async function handleLogout() {
     const success = await logout();
@@ -103,7 +106,7 @@ function NavDropdown() {
                   <Menu.Item>
                     <Link href="/account">
                       <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        Account
+                        {t("account")}
                       </a>
                     </Link>
                   </Menu.Item>
@@ -115,7 +118,7 @@ function NavDropdown() {
                       onClick={handleLogout}
                       className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
                     >
-                      Logout
+                      {t("logout")}
                     </button>
                   </Menu.Item>
                 </div>
@@ -125,14 +128,14 @@ function NavDropdown() {
                 <Menu.Item>
                   <Link href="/auth/login">
                     <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                      Login
+                      {t("login")}
                     </a>
                   </Link>
                 </Menu.Item>
                 <Menu.Item>
                   <Link href="/auth/register">
                     <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                      Register
+                      {t("register")}
                     </a>
                   </Link>
                 </Menu.Item>

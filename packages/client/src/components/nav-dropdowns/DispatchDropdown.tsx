@@ -3,9 +3,11 @@ import { Menu, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export function DispatchDropdown() {
   const router = useRouter();
+  const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
 
   return (
@@ -16,7 +18,7 @@ export function DispatchDropdown() {
             isActive("/dispatch") && "font-semibold"
           }`}
         >
-          Dispatch
+          {t("dispatch")}
           <span className="mt-1 ml-1">
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
@@ -36,7 +38,7 @@ export function DispatchDropdown() {
               <Menu.Item>
                 <Link href="/dispatch">
                   <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                    Dashboard
+                    {t("dashboard")}
                   </a>
                 </Link>
               </Menu.Item>
@@ -44,7 +46,7 @@ export function DispatchDropdown() {
               <Menu.Item>
                 <Link href="/dispatch/map">
                   <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                    Live Map
+                    {t("liveMap")}
                   </a>
                 </Link>
               </Menu.Item>
