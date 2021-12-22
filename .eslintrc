@@ -19,6 +19,7 @@
   },
   "rules": {
     "@next/next/no-img-element": "off",
-    "promise/always-return": "off"
+    "promise/always-return": "off",
+    "@typescript-eslint/consistent-type-imports": "off"
   }
 }

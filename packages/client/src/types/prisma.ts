@@ -34,6 +34,7 @@ export type MiscCadSettings = {
   callsignTemplate: string | null;
   signal100Enabled: boolean;
   allowDuplicateCitizenNames: boolean;
+  liveMapURL: string | null;
 };
 
 /**
@@ -334,6 +335,16 @@ export type Call911 = {
   postal: string | null;
   description: string;
   name: string;
+  position: Position | null;
+};
+
+/**
+ * Model Position
+ */
+export type Position = {
+  id: string;
+  lng: number;
+  lat: number;
 };
 
 /**

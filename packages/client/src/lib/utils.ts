@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { FullDeputy } from "state/dispatchState";
-import { cad as CAD, Feature, Officer } from "types/prisma";
+import { cad as CAD, CombinedLeoUnit, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
 
 export function calculateAge(dateOfBirth: string | Date): string {
@@ -62,8 +62,12 @@ export async function requestAll(req: any, config: Config) {
   );
 }
 
-export function makeUnitName(officer: Officer | FullDeputy) {
-  return `${officer.citizen.name} ${officer.citizen.surname}`;
+export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
+  if (!("citizen" in unit)) {
+    return "";
+  }
+
+  return `${unit.citizen.name} ${unit.citizen.surname}`;
 }
 
 export function yesOrNoText(t: boolean): "yes" | "no" {

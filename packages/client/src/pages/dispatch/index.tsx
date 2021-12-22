@@ -89,8 +89,8 @@ export default function OfficerDashboard(props: Props) {
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}
 
-      <div className="w-full bg-gray-200/80 dark:bg-gray-2 rounded-md overflow-hidden">
-        <header className="flex items-center justify-between dark:bg-gray-3 px-4 py-2 bg-gray-300">
+      <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
+        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
             {showAop ? <DispatchAOP /> : null}
@@ -104,7 +104,7 @@ export default function OfficerDashboard(props: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row md:space-x-3 mt-3">
+      <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
           <ActiveOfficers />
           <ActiveDeputies />
@@ -131,7 +131,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       ["/admin/values/codes_10?paths=penal_code,impound_lot", []],
       ["/911-calls", []],
       ["/bolos", []],
-      ["/dispatch", [{ deputies: [], officers: [] }]],
+      ["/dispatch", { deputies: [], officers: [] }],
       ["/ems-fd/active-deputies", []],
       ["/leo/active-officers", []],
     ]);

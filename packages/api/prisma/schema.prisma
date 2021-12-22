@@ -45,6 +45,7 @@ model MiscCadSettings {
   callsignTemplate        String  @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitSymbol        String  @default("A") @db.VarChar(255)
   signal100Enabled        Boolean @default(false)
+  liveMapURL              String? @db.Text
 
   cad cad[]
 }
@@ -587,6 +588,8 @@ model Call911 {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
   user          User           @relation(fields: [userId], references: [id])
+  position      Position?      @relation(fields: [positionId], references: [id])
+  positionId    String?
   userId        String
   assignedUnits AssignedUnit[]
   location      String         @db.Text
@@ -594,6 +597,13 @@ model Call911 {
   description   String         @db.Text
   name          String         @db.VarChar(255)
   events        Call911Event[]
+}
+
+model Position {
+  id      String    @id @default(uuid())
+  lat     Float?
+  lng     Float?
+  Call911 Call911[]
 }
 
 model AssignedUnit {
