@@ -144,6 +144,10 @@ function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
                 <p id="location">
                   <Span>{t("location")}:</Span> {call.location}
                 </p>
+                <p id="postal">
+                  <Span>{t("postal")}: </Span>
+                  {call.postal || common("none")}
+                </p>
                 <p id="assigned_unit">
                   <Span>{t("assignedUnits")}: </Span>
                   {assignedUnits.length <= 0 ? "None" : assignedUnits}
