@@ -91,7 +91,7 @@ class MapClass extends Component<Props, MapState> {
       loading: false,
     });
 
-    const live_map_url = this.props.cad?.miscCadSettings?.liveMapURL ?? "ws://localhost:30121";
+    const live_map_url = this.props.cad?.miscCadSettings?.liveMapURL;
     if (!live_map_url) {
       toast.error("There was no live_map_url provided from the CAD-Settings.", {
         duration: Infinity,
@@ -387,7 +387,7 @@ class MapClass extends Component<Props, MapState> {
 
           for (const i in blipArray) {
             const blip = blipArray[i];
-            const fallbackName = `${id} | ${this.state.MarkerTypes?.[+id]?.name}` || id;
+            const fallbackName = this.state.MarkerTypes?.[+id]?.name || id;
 
             blip.name = blip?.name || fallbackName;
             blip.description = blip?.description || "N/A";

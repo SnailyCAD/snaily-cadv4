@@ -11,6 +11,7 @@ import { OfficerDropdown } from "./nav-dropdowns/OfficerDropdown";
 import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./nav-dropdowns/TowDropdown";
+import { DispatchDropdown } from "./nav-dropdowns/DispatchDropdown";
 
 export const Nav = () => {
   const { user, cad } = useAuth();
@@ -32,7 +33,7 @@ export const Nav = () => {
               </a>
             </h1>
 
-            <ul className="hidden md:flex items-center space-x-1">
+            <ul className="items-center hidden space-x-1 md:flex">
               <CitizenDropdown />
 
               {user?.isTow && TOW ? <TowDropdown /> : null}
@@ -41,18 +42,7 @@ export const Nav = () => {
 
               {user?.isEmsFd ? <EmsFdDropdown /> : null}
 
-              {user?.isDispatch ? (
-                <Link href="/dispatch">
-                  <a
-                    className={classNames(
-                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
-                      isActive("/dispatch") && "font-semibold",
-                    )}
-                  >
-                    Dispatch
-                  </a>
-                </Link>
-              ) : null}
+              {user?.isDispatch ? <DispatchDropdown /> : null}
 
               {user && user.rank !== "USER" ? (
                 <Link href="/admin">
@@ -92,7 +82,7 @@ const NavDropdown = () => {
 
   return (
     <>
-      <Menu as="div" className="relative inline-block text-left z-50">
+      <Menu as="div" className="relative z-50 inline-block text-left">
         <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none">
           <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
         </Menu.Button>
@@ -106,7 +96,7 @@ const NavDropdown = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white dark:bg-dark-bright divide-y divide-gray-100 dark:divide-dark-bg rounded-md shadow-xl focus:outline-none">
+          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-xl dark:bg-dark-bright dark:divide-dark-bg focus:outline-none">
             {user ? (
               <>
                 <div className="px-1 py-1">

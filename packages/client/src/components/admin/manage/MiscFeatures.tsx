@@ -53,6 +53,7 @@ export const MiscFeatures = () => {
     maxPlateLength: miscSettings.maxPlateLength,
     pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
     callsignTemplate: miscSettings.callsignTemplate ?? "",
+    liveMapURL: miscSettings.liveMapURL ?? "",
   };
 
   return (
@@ -136,6 +137,17 @@ export const MiscFeatures = () => {
                 />
               </FormField>
             </FormRow>
+
+            <FormField errorMessage={errors.liveMapURL} label="Live Map URL">
+              <Input
+                type="url"
+                name="liveMapURL"
+                hasError={!!errors.liveMapURL}
+                value={values.liveMapURL}
+                onChange={handleChange}
+                placeholder="ws://my-host:my-port"
+              />
+            </FormField>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}

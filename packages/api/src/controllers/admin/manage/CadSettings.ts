@@ -102,6 +102,7 @@ export class ManageCitizensController {
         maxBusinessesPerCitizen: body.get("maxBusinessesPerCitizen"),
         maxCitizensPerUser: body.get("maxCitizensPerUser"),
         maxPlateLength: body.get("maxPlateLength"),
+        liveMapURL: body.get("liveMapURL"),
       },
     });
 

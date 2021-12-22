@@ -45,7 +45,7 @@ model MiscCadSettings {
   callsignTemplate        String  @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitSymbol        String  @default("A") @db.VarChar(255)
   signal100Enabled        Boolean @default(false)
-  liveMapURL              String?
+  liveMapURL              String? @db.Text
 
   cad cad[]
 }
