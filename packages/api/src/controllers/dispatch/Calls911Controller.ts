@@ -150,7 +150,7 @@ export class Calls911Controller {
         description: body.get("description"),
         name: body.get("name"),
         userId: ctx.get("user").id,
-        positionId: position?.id ?? null,
+        positionId: position?.id ?? call.positionId,
       },
     });
 
