@@ -598,9 +598,6 @@ model Call911 {
 
 model Position {
   id      String    @id @default(uuid())
-  x       Int?
-  y       Int?
-  z       Int?
   lat     Float?
   lng     Float?
   Call911 Call911[]

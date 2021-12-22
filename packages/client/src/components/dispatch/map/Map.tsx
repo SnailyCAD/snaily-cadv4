@@ -206,7 +206,8 @@ class MapClass extends Component<Props, MapState> {
   }
 
   createMarker(draggable: boolean, payload: MarkerPayload, title: string) {
-    if (this.state.map === null) return;
+    if (!this.state.map) return;
+
     let newPos: LatLng;
     if (!payload.pos) return;
 

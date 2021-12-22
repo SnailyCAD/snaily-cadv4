@@ -1,12 +1,14 @@
 -- AlterTable
 ALTER TABLE "Call911" ADD COLUMN     "positionId" TEXT;
 
+-- AlterTable
+ALTER TABLE "MiscCadSettings" ADD COLUMN     "liveMapURL" TEXT;
+
 -- CreateTable
 CREATE TABLE "Position" (
     "id" TEXT NOT NULL,
-    "x" INTEGER NOT NULL,
-    "y" INTEGER NOT NULL,
-    "z" INTEGER NOT NULL,
+    "lat" DOUBLE PRECISION,
+    "lng" DOUBLE PRECISION,
 
     CONSTRAINT "Position_pkey" PRIMARY KEY ("id")
 );
