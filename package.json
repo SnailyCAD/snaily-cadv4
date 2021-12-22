@@ -15,8 +15,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@casper124578/eslint-config": "^2.3.0",
-    "@casper124578/eslint-config-next": "^1.2.0",
+    "@casper124578/eslint-config": "^2.3.1",
+    "@casper124578/eslint-config-next": "^1.2.1",
     "@casper124578/eslint-config-react": "^2.2.0",
     "chalk": "^5.0.0",
     "colorette": "2.0.16",
@@ -25,6 +25,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "prettier": "^2.5.1",
-    "pretty-quick": "^3.1.2"
+    "pretty-quick": "^3.1.3"
   }
 }
