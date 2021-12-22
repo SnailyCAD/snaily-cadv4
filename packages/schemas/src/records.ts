@@ -8,7 +8,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
     .regex(/ARREST_REPORT|TICKET|WRITTEN_WARNING/),
   citizenId: z.string().min(2).max(255),
   citizenName: z.string().min(2).max(255),
-  violations: z.array(z.any()),
+  violations: z.array(z.any()).min(1),
   postal: z.string().min(1).max(255).nullable(),
   notes: z.string(),
 });
