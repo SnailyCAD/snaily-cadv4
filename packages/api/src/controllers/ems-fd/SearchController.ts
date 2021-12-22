@@ -2,9 +2,9 @@ import { Controller, UseBeforeEach } from "@tsed/common";
 import { Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares";
-import { ActiveDeputy } from "../../middlewares/ActiveDeputy";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
+import { ActiveDeputy } from "middlewares/ActiveDeputy";
 
 @Controller("/search")
 @UseBeforeEach(IsAuth, ActiveDeputy)

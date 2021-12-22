@@ -5,7 +5,7 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 
 interface Props {
-  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { hasError?: boolean };
+  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
   onSuggestionClick?: (suggestion: any) => void;
   Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
   options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };

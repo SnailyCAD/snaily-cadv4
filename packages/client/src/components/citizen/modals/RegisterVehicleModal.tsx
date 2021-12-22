@@ -2,7 +2,6 @@ import { useTranslations } from "use-intl";
 import { Formik } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -24,7 +23,7 @@ interface Props {
   citizens: Citizen[];
   onCreate?: (newV: RegisteredVehicle) => void;
   onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function RegisterVehicleModal({
@@ -96,26 +95,23 @@ export function RegisterVehicleModal({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={tVehicle("plate")}>
+            <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
               <Input
                 disabled={!!vehicle}
-                hasError={!!errors.plate}
                 onChange={handleChange}
                 name="plate"
                 value={values.plate.toUpperCase()}
                 max={maxPlateLength}
                 maxLength={maxPlateLength}
               />
-              <Error>{errors.plate}</Error>
             </FormField>
 
-            <FormField label={tVehicle("vinNumber")}>
+            <FormField errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
               <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 
-            <FormField label={tVehicle("model")}>
+            <FormField errorMessage={errors.model} label={tVehicle("model")}>
               <Select
-                hasError={!!errors.model}
                 values={vehicles.values.map((vehicle) => ({
                   label: vehicle.value.value,
                   value: vehicle.id,
@@ -124,12 +120,10 @@ export function RegisterVehicleModal({
                 name="model"
                 onChange={handleChange}
               />
-              <Error>{errors.model}</Error>
             </FormField>
 
-            <FormField label={tVehicle("owner")}>
+            <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <Select
-                hasError={!!errors.citizenId}
                 values={
                   isDisabled
                     ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
@@ -143,12 +137,13 @@ export function RegisterVehicleModal({
                 onChange={handleChange}
                 disabled={isDisabled}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={tVehicle("registrationStatus")}>
+            <FormField
+              errorMessage={errors.registrationStatus}
+              label={tVehicle("registrationStatus")}
+            >
               <Select
-                hasError={!!errors.registrationStatus}
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
@@ -157,27 +152,19 @@ export function RegisterVehicleModal({
                 name="registrationStatus"
                 onChange={handleChange}
               />
-              <Error>{errors.registrationStatus}</Error>
             </FormField>
 
-            <FormField label={tVehicle("color")}>
-              <Input
-                hasError={!!errors.color}
-                onChange={handleChange}
-                name="color"
-                value={values.color}
-              />
-              <Error>{errors.color}</Error>
+            <FormField errorMessage={errors.color} label={tVehicle("color")}>
+              <Input onChange={handleChange} name="color" value={values.color} />
             </FormField>
 
             {vehicle ? (
-              <FormField label={tVehicle("reportAsStolen")}>
+              <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
                 <Toggle
                   onClick={handleChange}
                   name="reportedStolen"
                   toggled={values.reportedStolen}
                 />
-                <Error>{errors.reportedStolen}</Error>
               </FormField>
             ) : null}
 

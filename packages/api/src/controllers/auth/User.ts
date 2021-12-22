@@ -3,14 +3,14 @@ import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares/IsAuth";
-import { setCookie } from "../../utils/setCookie";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/IsAuth";
+import { setCookie } from "utils/setCookie";
 import { User } from ".prisma/client";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, validate } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
-import { userProperties } from "../../lib/auth";
+import { userProperties } from "lib/auth";
 
 @Controller("/user")
 @UseBefore(IsAuth)

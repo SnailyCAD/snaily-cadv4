@@ -7,11 +7,11 @@ import {
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
-import { prisma } from "../../../lib/prisma";
-import { IsAuth, setDiscordAUth } from "../../../middlewares";
+import { prisma } from "lib/prisma";
+import { IsAuth, setDiscordAUth } from "middlewares/index";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
-import { Socket } from "../../../services/SocketService";
+import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 
 @Controller("/admin/manage/cad-settings")

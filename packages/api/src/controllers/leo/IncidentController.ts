@@ -2,11 +2,11 @@ import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares";
-import { unitProperties } from "../../lib/officer";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
+import { unitProperties } from "lib/officer";
 import { LEO_INCIDENT_SCHEMA, validate } from "@snailycad/schemas";
-import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Officer } from ".prisma/client";
 
 @Controller("/incidents")

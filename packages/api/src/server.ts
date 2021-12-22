@@ -4,7 +4,7 @@ import "@tsed/socketio";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { IsEnabled } from "./middlewares/IsEnabled";
+import { IsEnabled } from "middlewares/IsEnabled";
 import { join } from "node:path";
 
 const rootDir = __dirname;

@@ -3,12 +3,12 @@ import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "../../middlewares";
-import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
-import { Socket } from "../../services/SocketService";
-import { unitProperties } from "../../lib/officer";
+import { IsAuth } from "middlewares/index";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { Socket } from "services/SocketService";
+import { unitProperties } from "lib/officer";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)

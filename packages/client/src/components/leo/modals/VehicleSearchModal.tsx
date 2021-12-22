@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -75,14 +74,8 @@ export function VehicleSearchModal() {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("plateOrVin")}>
-              <Input
-                value={values.plateOrVin}
-                hasError={!!errors.plateOrVin}
-                name="plateOrVin"
-                onChange={handleChange}
-              />
-              <Error>{errors.plateOrVin}</Error>
+            <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
+              <Input value={values.plateOrVin} name="plateOrVin" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? (

@@ -74,7 +74,6 @@ export function BanArea({ user, setUser }: Props) {
             <form className="mt-3" onSubmit={handleSubmit}>
               <FormField errorMessage={errors.reason} label={common("reason")}>
                 <Input
-                  hasError={!!errors.reason}
                   className="bg-gray-100"
                   value={values.reason}
                   onChange={handleChange}

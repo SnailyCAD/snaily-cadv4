@@ -13,7 +13,6 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { Citizen } from "types/prisma";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
-import { Error } from "components/form/Error";
 
 export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
@@ -55,11 +54,10 @@ export function CreateWarrantModal() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField label="Name">
+            <FormField errorMessage={errors.citizenName} label="Name">
               <InputSuggestions
                 inputProps={{
                   value: values.citizenName,
-                  hasError: !!errors.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
                 }}
@@ -92,10 +90,9 @@ export function CreateWarrantModal() {
                   </div>
                 )}
               />
-              <Error>{errors.citizenName}</Error>
             </FormField>
 
-            <FormField label={t("status")}>
+            <FormField errorMessage={errors.status} label={t("status")}>
               <Select
                 values={[
                   { label: "Active", value: "ACTIVE" },
@@ -103,20 +100,12 @@ export function CreateWarrantModal() {
                 ]}
                 name="status"
                 onChange={handleChange}
-                hasError={!!errors.status}
                 value={values.status}
               />
-              <Error>{errors.status}</Error>
             </FormField>
 
-            <FormField label={common("description")}>
-              <Textarea
-                name="description"
-                onChange={handleChange}
-                hasError={!!errors.description}
-                value={values.description}
-              />
-              <Error>{errors.description}</Error>
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

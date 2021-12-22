@@ -1,6 +1,5 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -65,10 +64,12 @@ export function CreateIncidentModal() {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("involvedOfficers")}>
+            <FormField
+              errorMessage={errors.involvedOfficers as string}
+              label={t("involvedOfficers")}
+            >
               <Select
                 value={values.involvedOfficers}
-                hasError={!!errors.involvedOfficers}
                 name="involvedOfficers"
                 onChange={handleChange}
                 values={allOfficers
@@ -78,42 +79,35 @@ export function CreateIncidentModal() {
                     value: v.id,
                   }))}
               />
-              <Error>{errors.involvedOfficers}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={t("firearmsInvolved")}>
+              <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
                 <Toggle
                   toggled={values.firearmsInvolved}
                   name="firearmsInvolved"
                   onClick={handleChange}
                 />
-                <Error>{errors.firearmsInvolved}</Error>
               </FormField>
 
-              <FormField label={t("injuriesOrFatalities")}>
+              <FormField
+                errorMessage={errors.injuriesOrFatalities}
+                label={t("injuriesOrFatalities")}
+              >
                 <Toggle
                   toggled={values.injuriesOrFatalities}
                   name="injuriesOrFatalities"
                   onClick={handleChange}
                 />
-                <Error>{errors.injuriesOrFatalities}</Error>
               </FormField>
 
-              <FormField label={t("arrestsMade")}>
+              <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
                 <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
-                <Error>{errors.arrestsMade}</Error>
               </FormField>
             </FormRow>
 
-            <FormField label={common("description")}>
-              <Textarea
-                value={values.description}
-                hasError={!!errors.description}
-                name="description"
-                onChange={handleChange}
-              />
-              <Error>{errors.description}</Error>
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Textarea value={values.description} name="description" onChange={handleChange} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

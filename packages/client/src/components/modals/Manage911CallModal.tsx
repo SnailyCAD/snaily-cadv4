@@ -25,7 +25,7 @@ import { FormRow } from "components/form/FormRow";
 interface Props {
   call: Full911Call | null;
   setCall?: React.Dispatch<React.SetStateAction<Full911Call | null>>;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function Manage911CallModal({ setCall, call, onClose }: Props) {

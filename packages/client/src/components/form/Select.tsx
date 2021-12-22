@@ -27,7 +27,7 @@ interface Props extends Exclude<SelectProps, "options"> {
   onChange: (event: any) => void;
   value: SelectValue | SelectValue[] | string | null;
   values: SelectValue[];
-  hasError?: boolean;
+  errorMessage?: string;
   isClearable?: boolean;
   disabled?: boolean;
   showContextMenuForUnits?: boolean;
@@ -123,23 +123,24 @@ export function Select({ name, onChange, ...rest }: Props) {
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
-      styles={styles(theme)}
-      className="border-gray-500"
+      styles={styles({ ...theme, hasError: !!rest.errorMessage })}
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={rest.showContextMenuForUnits ? { MultiValueContainer } : undefined}
     />
   );
 }
 
-export interface SelectTheme {
+export interface SelectStylesOptions {
   backgroundColor?: string;
   color?: string;
+  hasError?: boolean;
 }
 
 export function styles({
   backgroundColor = "white",
   color = "var(--dark)",
-}: SelectTheme): StylesConfig<unknown, boolean, GroupBase<unknown>> {
+  hasError = false,
+}: SelectStylesOptions): StylesConfig<unknown, boolean, GroupBase<unknown>> {
   return {
     valueContainer: (base) => ({
       ...base,
@@ -224,17 +225,27 @@ export function styles({
       background: backgroundColor,
       borderRadius: "0.375rem",
       overflow: "hidden",
-      border: state.isFocused
+      border: hasError
+        ? "1.5px solid #EF4444"
+        : state.isFocused
         ? "1.5px solid rgb(107, 114, 128)"
         : `1.5px solid ${backgroundColor === "white" ? "rgb(229, 231, 235)" : "rgb(75, 85, 99)"}`,
       boxShadow: "none",
       ":hover": {
         boxShadow: "none",
-        borderColor: "rgb(107, 114, 128)",
+        borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
       },
       ":focus": {
-        borderColor: "rgb(107, 114, 128)",
+        borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
         boxShadow: "none",
+        ":hover": {
+          boxShadow: "none",
+          borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+        },
+        ":focus": {
+          borderColor: hasError ? "#EF4444" : "rgb(107, 114, 128)",
+          boxShadow: "none",
+        },
       },
     }),
     placeholder: (base) => ({

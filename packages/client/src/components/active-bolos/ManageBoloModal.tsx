@@ -20,7 +20,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
-  onClose?: () => void;
+  onClose?(): void;
   bolo: FullBolo | null;
 }
 
@@ -140,7 +140,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     inputProps={{
                       id: "plate",
                       onChange: handleChange,
-                      hasError: !!errors.plate,
                       value: values.plate,
                     }}
                     options={{
@@ -163,21 +162,11 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                 </FormField>
 
                 <FormField errorMessage={errors.model} label={leo("model")}>
-                  <Input
-                    name="model"
-                    onChange={handleChange}
-                    hasError={!!errors.model}
-                    value={values.model}
-                  />
+                  <Input name="model" onChange={handleChange} value={values.model} />
                 </FormField>
 
                 <FormField errorMessage={errors.color} label={leo("color")}>
-                  <Input
-                    name="color"
-                    onChange={handleChange}
-                    hasError={!!errors.color}
-                    value={values.color}
-                  />
+                  <Input name="color" onChange={handleChange} value={values.color} />
                 </FormField>
               </>
             ) : null}
@@ -188,7 +177,6 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   inputProps={{
                     id: "name",
                     onChange: handleChange,
-                    hasError: !!errors.name,
                     value: values.name,
                     autoComplete: "false",
                     autoCorrect: "false",
@@ -226,12 +214,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
             ) : null}
 
             <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea
-                name="description"
-                onChange={handleChange}
-                hasError={!!errors.description}
-                value={values.description}
-              />
+              <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
@@ -10,7 +10,7 @@ import {
   validate,
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
 
 @UseBeforeEach(IsAuth)

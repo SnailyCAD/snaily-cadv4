@@ -16,6 +16,14 @@
 
     "outDir": "dist",
     "strict": true,
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "utils/*": ["./src/utils/*"],
+      "lib/*": ["./src/lib/*"],
+      "middlewares/*": ["./src/middlewares/*"],
+      "services/*": ["./src/services/*"],
+      "controllers/*": ["./src/controllers/*"]
+    }
   }
 }

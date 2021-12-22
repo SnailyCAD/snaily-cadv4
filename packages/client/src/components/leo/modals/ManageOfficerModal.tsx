@@ -1,7 +1,6 @@
 import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Select } from "components/form/Select";
@@ -24,7 +23,7 @@ interface Props {
   officer: FullOfficer | null;
   onCreate?: (officer: FullOfficer) => void;
   onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Props) {
@@ -122,7 +121,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, setFieldValue, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField label={t("image")}>
+            <FormField errorMessage={errors.image} label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
@@ -153,14 +152,12 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                   {common("delete")}
                 </Button>
               </div>
-              <Error>{errors.image}</Error>
             </FormField>
 
-            <FormField label={t("citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <Select
                 isClearable
                 value={values.citizenId}
-                hasError={!!errors.citizenId}
                 name="citizenId"
                 onChange={handleChange}
                 values={citizens.map((value) => ({
@@ -168,14 +165,12 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                   value: value.id,
                 }))}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={t("badgeNumber")}>
+            <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
               <Input
                 type="number"
                 value={values.badgeNumber}
-                hasError={!!errors.badgeNumber}
                 name="badgeNumber"
                 onChange={(e) =>
                   handleChange({
@@ -188,35 +183,21 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                   })
                 }
               />
-              <Error>{errors.badgeNumber}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={"Callsign Symbol 1"}>
-                <Input
-                  value={values.callsign}
-                  hasError={!!errors.callsign}
-                  name="callsign"
-                  onChange={handleChange}
-                />
-                <Error>{errors.callsign}</Error>
+              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+                <Input value={values.callsign} name="callsign" onChange={handleChange} />
               </FormField>
 
-              <FormField label={"Callsign Symbol 2"}>
-                <Input
-                  value={values.callsign2}
-                  hasError={!!errors.callsign2}
-                  name="callsign2"
-                  onChange={handleChange}
-                />
-                <Error>{errors.callsign2}</Error>
+              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
               </FormField>
             </FormRow>
 
-            <FormField label={t("department")}>
+            <FormField errorMessage={errors.department} label={t("department")}>
               <Select
                 value={values.department}
-                hasError={!!errors.department}
                 name="department"
                 onChange={handleChange}
                 values={department.values
@@ -226,13 +207,11 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                     value: value.id,
                   }))}
               />
-              <Error>{errors.department}</Error>
             </FormField>
 
-            <FormField label={t("division")}>
+            <FormField errorMessage={errors.division} label={t("division")}>
               <Select
                 value={values.division}
-                hasError={!!errors.division}
                 name="division"
                 onChange={handleChange}
                 values={division.values
@@ -242,7 +221,6 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                     value: value.id,
                   }))}
               />
-              <Error>{errors.division}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

@@ -33,12 +33,7 @@ export function AccountSettingsTab() {
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
             <FormField label="Username" errorMessage={errors.username}>
-              <Input
-                hasError={!!errors.username}
-                value={values.username}
-                onChange={handleChange}
-                name="username"
-              />
+              <Input value={values.username} onChange={handleChange} name="username" />
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>

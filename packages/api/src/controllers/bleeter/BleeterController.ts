@@ -14,8 +14,8 @@ import {
 } from "@tsed/common";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Delete, JsonRequestBody, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
