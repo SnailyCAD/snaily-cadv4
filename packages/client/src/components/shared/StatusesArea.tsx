@@ -1,3 +1,5 @@
+import { useListener } from "@casper124578/use-socket.io";
+import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
@@ -21,6 +23,28 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
   const router = useRouter();
   const isEmsFd = router.pathname.includes("/ems-fd");
   const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
+  const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
+
+  async function getActiveUnit() {
+    const path = isEmsFd ? "/ems-fd/active-deputy" : "/leo/active-officer";
+    const { json, error } = await execute(path, { noToast: true });
+
+    if (json.id) {
+      setActiveUnit({ ...activeUnit, ...json });
+    }
+
+    if (error && error === "noActiveOfficer") {
+      setActiveUnit(null);
+    }
+  }
+
+  useListener(
+    socketEvent,
+    () => {
+      getActiveUnit();
+    },
+    [setActiveUnit, activeUnit],
+  );
 
   async function handleStatusUpdate(status: StatusValue) {
     if (!activeUnit) return;
@@ -68,7 +92,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
 
       {codes10.values
         .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY && v.type === "STATUS_CODE")
-        .sort((a, b) => Number(a.position) - Number(b.position))
+        .sort((a, b) => Number(a.value.position) - Number(b.value.position))
         .map((code) => {
           const isActive = code.id === activeUnit?.statusId;
           const variant =

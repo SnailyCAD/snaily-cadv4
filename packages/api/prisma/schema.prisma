@@ -372,6 +372,7 @@ model TowCall {
   assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
   assignedUnitId    String?
   location          String   @db.VarChar(255)
+  postal            String?  @db.Text
   deliveryAddress   Value?   @relation(fields: [deliveryAddressId], references: [id])
   deliveryAddressId String?
   plate             String?  @db.VarChar(255)
@@ -393,6 +394,7 @@ model TaxiCall {
   assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
   assignedUnitId String?
   location       String   @db.VarChar(255)
+  postal         String?  @db.Text
   description    String   @db.Text
   creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id])
   creatorId      String?
@@ -591,6 +593,7 @@ model Call911 {
   userId        String
   assignedUnits AssignedUnit[]
   location      String         @db.Text
+  postal        String?        @db.Text
   description   String         @db.Text
   name          String         @db.VarChar(255)
   events        Call911Event[]

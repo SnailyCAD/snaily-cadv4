@@ -100,6 +100,14 @@ export default function EditCitizen() {
 
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
+  const weightPrefix = cad?.miscCadSettings.weightPrefix
+    ? `(${cad?.miscCadSettings.weightPrefix})`
+    : "";
+
+  const heightPrefix = cad?.miscCadSettings.heightPrefix
+    ? `(${cad?.miscCadSettings.heightPrefix})`
+    : "";
+
   return (
     <Layout className="dark:text-white">
       <Head>
@@ -240,7 +248,7 @@ export default function EditCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField label={`${t("weight")} (${cad?.miscCadSettings.weightPrefix})`}>
+              <FormField label={`${t("weight")} ${weightPrefix}`}>
                 <Input
                   value={values.weight}
                   hasError={!!errors.weight}
@@ -250,7 +258,7 @@ export default function EditCitizen() {
                 <Error>{errors.weight}</Error>
               </FormField>
 
-              <FormField label={`${t("height")} (${cad?.miscCadSettings.heightPrefix})`}>
+              <FormField label={`${t("height")} ${heightPrefix}`}>
                 <Input
                   value={values.height}
                   hasError={!!errors.height}

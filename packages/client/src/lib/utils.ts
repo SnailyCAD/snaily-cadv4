@@ -69,3 +69,7 @@ export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;
 }
+
+export function yesOrNoText(t: boolean): "yes" | "no" {
+  return t === true ? "yes" : "no";
+}

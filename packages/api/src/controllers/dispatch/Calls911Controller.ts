@@ -66,6 +66,7 @@ export class Calls911Controller {
     const call = await prisma.call911.create({
       data: {
         location: body.get("location"),
+        postal: body.get("postal"),
         description: body.get("description"),
         name: body.get("name"),
         userId: ctx.get("user").id,
@@ -145,6 +146,7 @@ export class Calls911Controller {
       },
       data: {
         location: body.get("location"),
+        postal: body.get("postal"),
         description: body.get("description"),
         name: body.get("name"),
         userId: ctx.get("user").id,

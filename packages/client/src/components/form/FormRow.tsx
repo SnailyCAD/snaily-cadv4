@@ -22,7 +22,7 @@ export const FormRow = ({
     <div
       {...rest}
       className={classNames(
-        "mb-3 w-full gap-2",
+        "w-full gap-2",
         flexLike ? "grid grid-cols-1 sm:flex" : cols,
         justify && "justify-between",
         className,

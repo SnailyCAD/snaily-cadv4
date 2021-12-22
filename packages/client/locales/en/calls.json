@@ -26,6 +26,7 @@
     "viewEvents": "View Events",
     "callEvents": "Call Events",
     "deleteCallEvent": "Delete Event",
+    "postal": "Postal",
     "noEvents": "This call does not have any events",
     "alert_deleteCallEvent": "Are you sure you want to delete this event? This action cannot be undone.",
     "alert_end911Call": "Are you sure you want to end this call?",

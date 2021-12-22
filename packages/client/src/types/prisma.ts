@@ -195,6 +195,7 @@ export type TowCall = {
   userId: string;
   assignedUnitId: string | null;
   location: string;
+  postal: string | null;
   description: string;
   creatorId: string;
 };
@@ -209,6 +210,7 @@ export type TaxiCall = {
   userId: string;
   assignedUnitId: string | null;
   location: string;
+  postal: string | null;
   description: string;
   creatorId: string;
 };
@@ -309,7 +311,10 @@ export type StatusValue = {
   valueId: string;
   value: Value<"CODES_10">;
   shouldDo: ShouldDoType;
-  position: number | null;
+  /**
+   * @deprecated use `<StatusValue>.value.position`
+   */
+  position: null;
   whatPages: WhatPages[];
   departmentId: string;
   color?: string;
@@ -327,6 +332,7 @@ export type Call911 = {
   userId: string;
   assignedUnits: AssignedUnit[];
   location: string;
+  postal: string | null;
   description: string;
   name: string;
   position: Position | null;

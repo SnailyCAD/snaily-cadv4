@@ -3,7 +3,7 @@ import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll, yesOrNoText } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -52,7 +52,6 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const router = useRouter();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
-  const yesOrNoText = (t: boolean) => (t === true ? "yes" : "no");
 
   function onDeleteClick(incident: FullIncident) {
     openModal(ModalIds.AlertDeleteIncident);

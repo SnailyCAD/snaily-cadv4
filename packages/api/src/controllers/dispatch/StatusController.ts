@@ -1,6 +1,6 @@
 import { User, ShouldDoType, MiscCadSettings, cad, Officer } from ".prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
-import { Req, Res, UseBeforeEach, UseBefore } from "@tsed/common";
+import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
@@ -8,9 +8,6 @@ import { JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "../../lib/prisma";
 import { findUnit } from "./Calls911Controller";
 import { unitProperties } from "../../lib/officer";
-import { setCookie } from "../../utils/setCookie";
-import { Cookie } from "@snailycad/config";
-import { signJWT } from "../../utils/jwt";
 import { getWebhookData, sendDiscordWebhook } from "../../lib/discord";
 import { Socket } from "../../services/SocketService";
 import { APIWebhook } from "discord-api-types";
@@ -30,7 +27,6 @@ export class StatusController {
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
     @BodyParams() body: JsonRequestBody,
-    @Res() res: Res,
     @Req() req: Req,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
@@ -39,7 +35,7 @@ export class StatusController {
       throw new BadRequest(error);
     }
 
-    const statusId = body.get("status");
+    const bodyStatusId = body.get("status");
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch = isFromDispatch && user.isDispatch;
@@ -58,6 +54,10 @@ export class StatusController {
       throw new BadRequest("unitSuspended");
     }
 
+    /**
+     * officer's status cannot be changed when in a combined unit
+     * -> the combined unit's status must be updated.
+     */
     if (type === "leo" && !isDispatch) {
       const hasCombinedUnit = await prisma.combinedLeoUnit.findFirst({
         where: {
@@ -71,7 +71,7 @@ export class StatusController {
     }
 
     const code = await prisma.statusValue.findFirst({
-      where: { id: statusId },
+      where: { id: bodyStatusId },
       include: { value: true },
     });
 
@@ -97,33 +97,32 @@ export class StatusController {
     }
 
     let updatedUnit;
+    const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
+
     if (type === "leo") {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
-        data: {
-          statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
-        },
+        data: { statusId },
         include: unitProperties,
       });
     } else if (type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.id },
-        data: {
-          statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
-        },
+        data: { statusId },
         include: unitProperties,
       });
     } else {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
-        data: {
-          statusId: code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id,
-        },
+        data: { statusId },
         include: { status: { include: { value: true } }, officers: { include: unitProperties } },
       });
     }
 
     if (type === "leo") {
+      /**
+       * find an officer-log that has not ended yet.
+       */
       const officerLog = await prisma.officerLog.findFirst({
         where: {
           officerId: unit.id,
@@ -132,6 +131,9 @@ export class StatusController {
       });
 
       if (code.shouldDo === ShouldDoType.SET_ON_DUTY) {
+        /**
+         * if the officer is being set on-duty, it will create the officer-log.
+         */
         if (!officerLog) {
           await prisma.officerLog.create({
             data: {
@@ -141,64 +143,45 @@ export class StatusController {
             },
           });
         }
-      } else {
-        if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-          // unassign officer from call
-          await prisma.assignedUnit.deleteMany({
+      } else if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        // unassign officer from call
+        await prisma.assignedUnit.deleteMany({
+          where: {
+            officerId: unit.id,
+          },
+        });
+
+        /**
+         * end the officer-log.
+         */
+        if (officerLog) {
+          await prisma.officerLog.update({
             where: {
-              officerId: unit.id,
+              id: officerLog.id,
+            },
+            data: {
+              endedAt: new Date(),
             },
           });
-
-          if (officerLog) {
-            await prisma.officerLog.update({
-              where: {
-                id: officerLog.id,
-              },
-              data: {
-                endedAt: new Date(),
-              },
-            });
-          }
         }
       }
     } else if (type === "ems-fd") {
       // unassign deputy from call
-      await prisma.assignedUnit.deleteMany({
-        where: {
-          emsFdDeputyId: unit.id,
-        },
-      });
-    }
-
-    if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-      setCookie({
-        res,
-        name: Cookie.ActiveOfficer,
-        value: "",
-        expires: -1,
-      });
-
-      if (type === "combined") {
+      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        await prisma.assignedUnit.deleteMany({
+          where: {
+            emsFdDeputyId: unit.id,
+          },
+        });
+      }
+    } else if (type === "combined") {
+      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         await prisma.combinedLeoUnit.delete({
           where: {
             id: unit.id,
           },
         });
       }
-    } else {
-      const cookieName = ["leo", "combined"].includes(type)
-        ? Cookie.ActiveOfficer
-        : Cookie.ActiveDeputy;
-      const cookiePayloadName = ["leo", "combined"].includes(type) ? "officerId" : "deputyId";
-
-      // expires after 3 hours.
-      setCookie({
-        res,
-        name: cookieName,
-        value: signJWT({ [cookiePayloadName]: updatedUnit?.id }, 60 * 60 * 3),
-        expires: 60 * 60 * 1000 * 3,
-      });
     }
 
     if (cad.discordWebhookURL) {

@@ -21,6 +21,7 @@ import { OfficerLog } from "types/prisma";
 import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import { Table } from "components/table/Table";
+import { Toggle } from "components/form/Toggle";
 
 type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
 
@@ -59,6 +60,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
     division: unit.divisionId,
     callsign: unit.callsign,
     rank: unit.rankId,
+    suspended: unit.suspended,
   };
 
   return (
@@ -124,6 +126,10 @@ export default function SupervisorPanelPage({ unit }: Props) {
                   value: value.id,
                 }))}
               />
+            </FormField>
+
+            <FormField label={t("suspended")}>
+              <Toggle onClick={handleChange} name="suspended" toggled={values.suspended} />
             </FormField>
 
             <footer className="flex justify-end">

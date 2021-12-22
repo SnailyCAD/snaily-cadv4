@@ -1,6 +1,11 @@
 import { Rank, User } from ".prisma/client";
 import { cad } from "@prisma/client";
-import { API_TOKEN_HEADER, DISABLED_API_TOKEN_ROUTES, PERMISSION_ROUTES } from "@snailycad/config";
+import {
+  API_TOKEN_HEADER,
+  DISABLED_API_TOKEN_ROUTES,
+  Method,
+  PERMISSION_ROUTES,
+} from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser } from "../lib/auth";
@@ -88,7 +93,7 @@ export class IsAuth implements MiddlewareMethods {
       });
     }
 
-    ctx.set("cad", setDiscordAUth(cad as any));
+    ctx.set("cad", setDiscordAUth(cad));
   }
 }
 
@@ -109,7 +114,7 @@ export function setDiscordAUth<T extends Pick<cad, "disabledFeatures"> | null = 
 
 function isRouteDisabled(req: Req) {
   const url = req.originalUrl.toLowerCase();
-  const requestMethod = req.method as any;
+  const requestMethod = req.method as Method;
 
   const route = DISABLED_API_TOKEN_ROUTES.find(([r]) => r.startsWith(url) || url.startsWith(r));
 
@@ -130,7 +135,7 @@ function isRouteDisabled(req: Req) {
 
 function hasPermissionForReq(req: Req, user: User) {
   const url = req.originalUrl.toLowerCase();
-  const requestMethod = req.method as any;
+  const requestMethod = req.method.toUpperCase() as Method;
 
   const [route] = PERMISSION_ROUTES.filter(([m, r]) => {
     if (typeof r === "string") {
@@ -140,7 +145,7 @@ function hasPermissionForReq(req: Req, user: User) {
         return isTrue;
       }
 
-      return m.includes(requestMethod.toUpperCase()) && isTrue;
+      return m.includes(requestMethod) && isTrue;
     }
 
     const isTrue = r.test(url) || url.match(r);
@@ -149,7 +154,7 @@ function hasPermissionForReq(req: Req, user: User) {
       return isTrue;
     }
 
-    return m.includes(requestMethod.toUpperCase()) && isTrue;
+    return m.includes(requestMethod) && isTrue;
   });
 
   if (route) {

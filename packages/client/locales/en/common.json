@@ -58,6 +58,7 @@
     "discordNameInUse": "Could not create a new account with Discord since the username is already in-use.",
     "discordAccountAlreadyLinked": "This Discord account is already linked to another account.",
     "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created.",
-    "invalidRegistrationCode": "The registration code you provided is invalid."
+    "invalidRegistrationCode": "The registration code you provided is invalid.",
+    "unitSuspended": "This unit is suspended. Please contact your supervisor."
   }
 }

@@ -71,11 +71,6 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
   value: v,
 }));
 
-const POSITION_VALUES = new Array(50).fill(0).map((_, idx) => ({
-  value: String(idx + 1),
-  label: String(idx + 1),
-}));
-
 export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, value }: Props) => {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -115,8 +110,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
     shouldDo:
       typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
-    position:
-      typeof value?.value === "string" ? "" : value && "position" in value ? value.position : "",
     departmentId:
       typeof value?.value === "string"
         ? ""
@@ -217,15 +210,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                     name="shouldDo"
                     onChange={handleChange}
                     value={values.shouldDo}
-                  />
-                </FormField>
-
-                <FormField label="Position">
-                  <Select
-                    values={POSITION_VALUES}
-                    name="position"
-                    onChange={handleChange}
-                    value={String(values.position)}
                   />
                 </FormField>
 
