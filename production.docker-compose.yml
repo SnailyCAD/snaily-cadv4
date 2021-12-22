@@ -18,7 +18,7 @@ services:
 
     user: node
     image: node:16
-    command: "yarn workspace @snailycad/api start"
+    command: "yarn workspace @snailycad/api start:docker"
     ports:
       - "8080:8080"
     expose:
