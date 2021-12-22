@@ -27,7 +27,7 @@
     "@prisma/client": "^3.7.0",
     "@snailycad/config": "1.0.0-beta.20",
     "@snailycad/schemas": "1.0.0-beta.20",
-    "@tsed/common": "^6.95.9",
+    "@tsed/common": "^6.90.0",
     "@tsed/core": "^6.95.9",
     "@tsed/di": "^6.95.9",
     "@tsed/exceptions": "^6.95.9",
