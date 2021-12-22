@@ -76,7 +76,6 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
                 }))}
                 name="citizenId"
                 onChange={handleChange}
-                hasError={!!errors.citizenId}
                 value={values.citizenId}
               />
             </FormField>
@@ -89,7 +88,6 @@ export const JoinBusinessModal = ({ onCreate }: Props) => {
                 }))}
                 name="businessId"
                 onChange={handleChange}
-                hasError={!!errors.businessId}
                 value={values.businessId}
               />
             </FormField>

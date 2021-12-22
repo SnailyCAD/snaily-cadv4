@@ -27,7 +27,7 @@ interface Props extends Exclude<SelectProps, "options"> {
   onChange: (event: any) => void;
   value: SelectValue | SelectValue[] | string | null;
   values: SelectValue[];
-  hasError?: boolean;
+  errorMessage?: string;
   isClearable?: boolean;
   disabled?: boolean;
   showContextMenuForUnits?: boolean;
@@ -123,7 +123,7 @@ export const Select = ({ name, onChange, ...rest }: Props) => {
       options={rest.values}
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
-      styles={styles({ ...theme, hasError: rest.hasError })}
+      styles={styles({ ...theme, hasError: !!rest.errorMessage })}
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={rest.showContextMenuForUnits ? { MultiValueContainer } : undefined}
     />

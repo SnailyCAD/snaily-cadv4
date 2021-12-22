@@ -90,20 +90,11 @@ export default function Login() {
               ) : null}
 
               <FormField errorMessage={errors.username} label={t("username")}>
-                <Input
-                  hasError={!!errors.username}
-                  type="text"
-                  name="username"
-                  onChange={handleChange}
-                />
+                <Input type="text" name="username" onChange={handleChange} />
               </FormField>
 
               <FormField errorMessage={errors.password} label={t("password")}>
-                <PasswordInput
-                  hasError={!!errors.password}
-                  name="password"
-                  onChange={handleChange}
-                />
+                <PasswordInput name="password" onChange={handleChange} />
               </FormField>
 
               <div className="mt-3">

@@ -1,6 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/Input";
@@ -80,7 +79,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
         {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             {unit ? (
-              <FormField label={"Citizen"}>
+              <FormField errorMessage={errors.creatorId as string} label={"Citizen"}>
                 <Select
                   disabled
                   name="creatorId"
@@ -91,7 +90,6 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                   }))}
                   value={values.creatorId || null}
                 />
-                <Error>{errors.creatorId}</Error>
               </FormField>
             ) : null}
 
@@ -107,7 +105,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
 
             {isLeo || isDispatch ? (
               <>
-                <FormField label={"Delivery Address"}>
+                <FormField errorMessage={errors.deliveryAddress} label={"Delivery Address"}>
                   <Select
                     isClearable
                     name="deliveryAddress"
@@ -118,22 +116,23 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                     }))}
                     value={values.deliveryAddress}
                   />
-                  <Error>{errors.deliveryAddress}</Error>
                 </FormField>
 
-                <FormField label={"Plate"}>
+                <FormField errorMessage={errors.plate} label={"Plate"}>
                   <Input onChange={handleChange} name="plate" value={values.plate} />
-                  <Error>{errors.plate}</Error>
                 </FormField>
 
-                <FormField label={"Model"}>
+                <FormField errorMessage={errors.model} label={"Model"}>
                   <Input onChange={handleChange} name="model" value={values.model} />
-                  <Error>{errors.model}</Error>
                 </FormField>
               </>
             ) : null}
 
-            <FormField checkbox label={"Call County Service"}>
+            <FormField
+              errorMessage={errors.callCountyService}
+              checkbox
+              label={"Call County Service"}
+            >
               <Input
                 type="checkbox"
                 name="callCountyService"
@@ -141,12 +140,10 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                 checked={values.callCountyService}
                 className="w-[max-content] ml-1"
               />
-              <Error>{errors.callCountyService}</Error>
             </FormField>
 
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

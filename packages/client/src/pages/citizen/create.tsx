@@ -8,7 +8,6 @@ import { allowedFileExtensions, AllowedFileExtension } from "@snailycad/config";
 import Head from "next/head";
 
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
@@ -125,7 +124,7 @@ export default function CreateCitizen() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("image")}>
+            <FormField errorMessage={errors.image} label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
@@ -156,7 +155,6 @@ export default function CreateCitizen() {
                   {common("delete")}
                 </Button>
               </div>
-              <Error>{errors.image}</Error>
             </FormField>
 
             <FormRow>

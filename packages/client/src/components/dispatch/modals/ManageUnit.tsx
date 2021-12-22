@@ -5,7 +5,6 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
-import { Error } from "components/form/Error";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
@@ -95,7 +94,7 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form>
-            <FormField label={t("status")}>
+            <FormField errorMessage={errors.status} label={t("status")}>
               <Select
                 name="status"
                 value={values.status}
@@ -105,7 +104,6 @@ export const ManageUnitModal = ({ type = "leo", unit, onClose }: Props) => {
                 }))}
                 onChange={handleChange}
               />
-              <Error>{errors.status}</Error>
             </FormField>
 
             <footer

@@ -1,6 +1,5 @@
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/Input";
@@ -87,18 +86,16 @@ export const ManageTruckLogModal = ({
         {({ handleSubmit, handleChange, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormRow>
-              <FormField label={t("startedAt")}>
+              <FormField errorMessage={errors.startedAt} label={t("startedAt")}>
                 <Input onChange={handleChange} name="startedAt" value={values.startedAt} />
-                <Error>{errors.startedAt}</Error>
               </FormField>
 
-              <FormField label={t("endedAt")}>
+              <FormField errorMessage={errors.endedAt} label={t("endedAt")}>
                 <Input onChange={handleChange} name="endedAt" value={values.endedAt} />
-                <Error>{errors.endedAt}</Error>
               </FormField>
             </FormRow>
 
-            <FormField label={t("driver")}>
+            <FormField errorMessage={errors.citizenId} label={t("driver")}>
               <Select
                 name="citizenId"
                 onChange={handleChange}
@@ -108,10 +105,9 @@ export const ManageTruckLogModal = ({
                 }))}
                 value={values.citizenId}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={t("vehicle")}>
+            <FormField errorMessage={errors.vehicleId} label={t("vehicle")}>
               <Select
                 name="vehicleId"
                 onChange={handleChange}
@@ -121,10 +117,9 @@ export const ManageTruckLogModal = ({
                 }))}
                 value={values.vehicleId}
               />
-              <Error>{errors.vehicleId}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <div className="flex items-center">
                 <Button type="reset" onClick={handleClose} variant="cancel">
                   {common("cancel")}

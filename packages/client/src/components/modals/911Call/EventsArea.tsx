@@ -6,7 +6,6 @@ import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { FormField } from "components/form/FormField";
-import { Error } from "components/form/Error";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { Textarea } from "components/form/Textarea";
@@ -66,14 +65,13 @@ export const CallEventsArea = ({ call }: Props) => {
       >
         {({ handleChange, values, errors }) => (
           <Form className="absolute bottom-0 w-full">
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
                 required
                 name="description"
                 value={values.description}
                 onChange={handleChange}
               />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">

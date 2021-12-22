@@ -71,21 +71,11 @@ export const MiscFeatures = () => {
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
             <FormRow>
               <FormField errorMessage={errors.weightPrefix} label="Weight Prefix">
-                <Input
-                  name="weightPrefix"
-                  hasError={!!errors.weightPrefix}
-                  value={values.weightPrefix}
-                  onChange={handleChange}
-                />
+                <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
               </FormField>
 
               <FormField errorMessage={errors.heightPrefix} label="Height Prefix">
-                <Input
-                  name="heightPrefix"
-                  hasError={!!errors.heightPrefix}
-                  value={values.heightPrefix}
-                  onChange={handleChange}
-                />
+                <Input name="heightPrefix" value={values.heightPrefix} onChange={handleChange} />
               </FormField>
             </FormRow>
 
@@ -97,7 +87,6 @@ export const MiscFeatures = () => {
                 <Input
                   name="maxBusinessesPerCitizen"
                   type="number"
-                  hasError={!!errors.maxBusinessesPerCitizen}
                   value={values.maxBusinessesPerCitizen}
                   onChange={handleChange}
                 />
@@ -107,7 +96,6 @@ export const MiscFeatures = () => {
                 <Input
                   name="maxCitizensPerUser"
                   type="number"
-                  hasError={!!errors.maxCitizensPerUser}
                   value={values.maxCitizensPerUser}
                   onChange={handleChange}
                 />
@@ -118,7 +106,6 @@ export const MiscFeatures = () => {
               <Input
                 name="maxPlateLength"
                 type="number"
-                hasError={!!errors.maxPlateLength}
                 value={values.maxPlateLength}
                 onChange={handleChange}
               />
@@ -128,7 +115,6 @@ export const MiscFeatures = () => {
               <FormField errorMessage={errors.pairedUnitSymbol} label="Paired unit symbol">
                 <Input
                   name="pairedUnitSymbol"
-                  hasError={!!errors.pairedUnitSymbol}
                   value={values.pairedUnitSymbol}
                   onChange={handleChange}
                 />
@@ -137,7 +123,6 @@ export const MiscFeatures = () => {
               <FormField errorMessage={errors.callsignTemplate} label="Callsign Template">
                 <Input
                   name="callsignTemplate"
-                  hasError={!!errors.callsignTemplate}
                   value={values.callsignTemplate}
                   onChange={handleChange}
                 />
@@ -148,7 +133,6 @@ export const MiscFeatures = () => {
               <Input
                 type="url"
                 name="liveMapURL"
-                hasError={!!errors.liveMapURL}
                 value={values.liveMapURL}
                 onChange={handleChange}
                 placeholder="ws://my-host:my-port"

@@ -6,7 +6,6 @@ import { useTranslations } from "use-intl";
 
 import useFetch from "lib/useFetch";
 
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/Input";
 import { Loader } from "components/Loader";
@@ -74,22 +73,12 @@ export default function TempPassword() {
 
               <p className="my-3 text-base italic">{t("savePasswordInfo")}</p>
 
-              <FormField label={t("password")}>
-                <PasswordInput
-                  hasError={!!errors.newPassword}
-                  name="newPassword"
-                  onChange={handleChange}
-                />
-                <Error>{errors.newPassword}</Error>
+              <FormField errorMessage={errors.newPassword} label={t("password")}>
+                <PasswordInput name="newPassword" onChange={handleChange} />
               </FormField>
 
-              <FormField label={t("confirmPassword")}>
-                <PasswordInput
-                  hasError={!!errors.confirmPassword}
-                  name="confirmPassword"
-                  onChange={handleChange}
-                />
-                <Error>{errors.confirmPassword}</Error>
+              <FormField errorMessage={errors.confirmPassword} label={t("confirmPassword")}>
+                <PasswordInput name="confirmPassword" onChange={handleChange} />
               </FormField>
 
               <div className="mt-3">
