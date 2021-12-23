@@ -142,7 +142,6 @@ export class ValuesController {
           whatPages: body.get("whatPages") ?? [],
           shouldDo: body.get("shouldDo"),
           valueId: value.id,
-          position: Number(body.get("position")),
           color: body.get("color") || null,
           type: body.get("type") || "STATUS_CODE",
         },
