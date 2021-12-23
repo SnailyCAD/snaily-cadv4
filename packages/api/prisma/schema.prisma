@@ -504,7 +504,6 @@ model StatusValue {
   value     Value           @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId   String
   shouldDo  ShouldDoType    @default(SET_STATUS)
-  position  Int?
   whatPages WhatPages[]
   color     String?
   type      StatusValueType @default(STATUS_CODE)
