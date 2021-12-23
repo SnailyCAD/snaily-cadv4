@@ -26,7 +26,11 @@ interface Counts {
   };
 }
 
-export default function Admin({ counts }: { counts: Counts }) {
+export default function Admin({ counts }: { counts: Counts | null }) {
+  if (!counts) {
+    return null;
+  }
+
   return (
     <AdminLayout className="dark:text-white">
       <Head>
@@ -118,7 +122,7 @@ const Item = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [data] = await requestAll(req, [["/admin/", {}]]);
+  const [data] = await requestAll(req, [["/admin/", null]]);
 
   return {
     props: {

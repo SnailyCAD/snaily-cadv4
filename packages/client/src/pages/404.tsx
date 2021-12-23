@@ -1,5 +1,7 @@
 import Head from "next/head";
 import { Layout } from "components/Layout";
+import { GetStaticProps } from "next";
+import { getTranslations } from "lib/getTranslation";
 
 export default function FourOhFour() {
   return (
@@ -12,3 +14,13 @@ export default function FourOhFour() {
     </Layout>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      messages: {
+        ...(await getTranslations(["common"], locale)),
+      },
+    },
+  };
+};

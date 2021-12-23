@@ -7,7 +7,7 @@ export function useAreaOfPlay() {
   const { cad } = useAuth();
   const [aop, setAop] = React.useState(cad?.areaOfPlay ?? "");
 
-  const showAop = !cad?.disabledFeatures.includes("AOP");
+  const showAop = !cad?.disabledFeatures?.includes("AOP");
 
   useListener(SocketEvents.UpdateAreaOfPlay, (aop: string | null) => {
     setAop(aop ?? "");

@@ -20,7 +20,7 @@ export function DisabledFeaturesArea() {
     const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
     for (const feature of FEATURES) {
-      obj[feature] = !cad?.disabledFeatures.includes(feature) ?? true;
+      obj[feature] = !cad?.disabledFeatures?.includes(feature) ?? true;
     }
 
     return obj;
