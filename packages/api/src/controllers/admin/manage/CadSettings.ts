@@ -108,6 +108,8 @@ export class ManageCitizensController {
         maxBusinessesPerCitizen: body.get("maxBusinessesPerCitizen"),
         maxCitizensPerUser: body.get("maxCitizensPerUser"),
         maxPlateLength: body.get("maxPlateLength"),
+        pairedUnitSymbol: body.get("pairedUnitSymbol"),
+        callsignTemplate: body.get("callsignTemplate"),
         liveMapURL: body.get("liveMapURL"),
       },
     });

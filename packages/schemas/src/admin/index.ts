@@ -20,6 +20,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxBusinessesPerCitizen: z.number().nullable(),
   maxPlateLength: z.number().min(1),
   pairedUnitSymbol: z.string().max(255),
+  callsignTemplate: z.string(),
   liveMapURL: z.string().nullable(),
 });
 

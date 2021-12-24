@@ -17,7 +17,7 @@ export function MiscFeatures() {
   // infinity -> null, "" -> null
   function cleanValues(values: typeof INITIAL_VALUES) {
     const newValues: Record<string, any> = {};
-    const excluded = ["heightPrefix", "weightPrefix"];
+    const excluded = ["heightPrefix", "weightPrefix", "pairedUnitSymbol", "callsignTemplate"];
 
     for (const key in values) {
       const value = values[key as keyof typeof INITIAL_VALUES];
