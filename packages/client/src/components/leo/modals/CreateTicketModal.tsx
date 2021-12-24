@@ -49,7 +49,12 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
       data: {
         ...values,
         type,
-        violations: values.violations.map((v) => v.value),
+        violations: values.violations.map(({ value }: { value: any }) => ({
+          penalCodeId: value.id,
+          bail: value.jailTime?.enabled ? value.bail.value : null,
+          jailTime: value.jailTime?.enabled ? value.jailTime.value : null,
+          fine: value.fine?.enabled ? value.fine.value : null,
+        })),
       },
     });
 

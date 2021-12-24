@@ -85,10 +85,14 @@ export class RecordsController {
           }) => {
             const violation = await prisma.violation.create({
               data: {
-                penalCodeId: item.penalCodeId,
                 fine: item.fine,
                 bail: item.bail,
                 jailTime: item.jailTime,
+                penalCode: {
+                  connect: {
+                    id: item.penalCodeId,
+                  },
+                },
                 records: {
                   connect: {
                     id: ticket.id,
