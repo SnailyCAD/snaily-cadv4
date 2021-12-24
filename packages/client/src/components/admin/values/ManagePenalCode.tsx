@@ -30,10 +30,17 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
   const footerTitle = !penalCode ? t("ADD") : common("save");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const data = {
+      ...values,
+      fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
+      prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
+      bail: values.warningApplicable ? null : values.bail.values,
+    };
+
     if (penalCode) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${penalCode.id}`, {
         method: "PATCH",
-        data: values,
+        data,
       });
 
       if (json?.id) {
@@ -43,7 +50,7 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
     } else {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
-        data: values,
+        data,
       });
 
       if (json?.id) {
