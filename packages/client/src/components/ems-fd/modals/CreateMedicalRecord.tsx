@@ -2,7 +2,6 @@ import { useTranslations } from "use-intl";
 import { Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -18,10 +17,10 @@ import { useCitizen } from "context/CitizenContext";
 
 interface Props {
   onCreate?: (newV: MedicalRecord) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
-export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
+export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -63,38 +62,24 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <Select
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
                   value: citizen.id,
                 }))}
-                hasError={!!errors.citizenId}
                 onChange={handleChange}
                 name="citizenId"
                 value={values.citizenId}
               />
-              <Error>{errors.citizenId}</Error>
             </FormField>
 
-            <FormField label={common("type")}>
-              <Input
-                hasError={!!errors.type}
-                onChange={handleChange}
-                name="type"
-                value={values.type}
-              />
-              <Error>{errors.type}</Error>
+            <FormField errorMessage={errors.type} label={common("type")}>
+              <Input onChange={handleChange} name="type" value={values.type} />
             </FormField>
 
-            <FormField label={common("description")}>
-              <Textarea
-                hasError={!!errors.description}
-                value={values.description}
-                name="description"
-                onChange={handleChange}
-              />
-              <Error>{errors.description}</Error>
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Textarea value={values.description} name="description" onChange={handleChange} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -119,4 +104,4 @@ export const CreateMedicalRecordModal = ({ onClose, onCreate }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

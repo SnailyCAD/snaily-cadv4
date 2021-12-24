@@ -4,8 +4,8 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { JsonRequestBody, Put } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares/IsAuth";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/IsAuth";
 import { linkDlCategories, unlinkDlCategories } from "./CitizenController";
 
 @Controller("/licenses")

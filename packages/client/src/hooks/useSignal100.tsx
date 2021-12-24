@@ -21,7 +21,7 @@ export function useSignal100() {
   return { signal100Enabled, Component };
 }
 
-const Component = () => {
+function Component() {
   const t = useTranslations("Leo");
 
   return (
@@ -29,4 +29,4 @@ const Component = () => {
       <p>{t("signal100enabled")}</p>
     </div>
   );
-};
+}

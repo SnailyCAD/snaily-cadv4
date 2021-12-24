@@ -18,13 +18,14 @@ import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
 import { InputSuggestions } from "components/form/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useSSRSafeId } from "@react-aria/ssr";
 
 interface Props {
-  onClose?: () => void;
+  onClose?(): void;
   bolo: FullBolo | null;
 }
 
-export const ManageBoloModal = ({ onClose, bolo }: Props) => {
+export function ManageBoloModal({ onClose, bolo }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -32,6 +33,10 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Bolos");
   const leo = useTranslations("Leo");
+
+  const personTypeId = useSSRSafeId();
+  const vehicleTypeId = useSSRSafeId();
+  const otherTypeId = useSSRSafeId();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
@@ -99,8 +104,10 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Person type"
+                  aria-label="Person Type"
+                  id={personTypeId}
                 >
-                  <Person width={30} height={30} />
+                  <Person aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
                   disabled={!!bolo}
@@ -109,8 +116,11 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Vehicle type"
+                  aria-label="Vehicle Type"
+                  id={vehicleTypeId}
                 >
                   <svg
+                    aria-labelledby={vehicleTypeId}
                     width={30}
                     height={30}
                     xmlns="http://www.w3.org/2000/svg"
@@ -127,20 +137,21 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Other type"
+                  aria-label="Other Type"
+                  id={otherTypeId}
                 >
-                  <ThreeDots width={30} height={30} />
+                  <ThreeDots aria-labelledby={otherTypeId} width={30} height={30} />
                 </Button>
               </FormRow>
             </FormField>
 
             {values.type === BoloType.VEHICLE ? (
               <>
-                <FormField errorMessage={errors.plate} label={leo("plate")}>
+                <FormField optional errorMessage={errors.plate} label={leo("plate")}>
                   <InputSuggestions
                     inputProps={{
                       id: "plate",
                       onChange: handleChange,
-                      hasError: !!errors.plate,
                       value: values.plate,
                     }}
                     options={{
@@ -162,33 +173,22 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.model} label={leo("model")}>
-                  <Input
-                    name="model"
-                    onChange={handleChange}
-                    hasError={!!errors.model}
-                    value={values.model}
-                  />
+                <FormField optional errorMessage={errors.model} label={leo("model")}>
+                  <Input name="model" onChange={handleChange} value={values.model} />
                 </FormField>
 
-                <FormField errorMessage={errors.color} label={leo("color")}>
-                  <Input
-                    name="color"
-                    onChange={handleChange}
-                    hasError={!!errors.color}
-                    value={values.color}
-                  />
+                <FormField optional errorMessage={errors.color} label={leo("color")}>
+                  <Input name="color" onChange={handleChange} value={values.color} />
                 </FormField>
               </>
             ) : null}
 
             {values.type === BoloType.PERSON ? (
-              <FormField errorMessage={errors.name} label={common("name")}>
+              <FormField optional errorMessage={errors.name} label={common("name")}>
                 <InputSuggestions
                   inputProps={{
                     id: "name",
                     onChange: handleChange,
-                    hasError: !!errors.name,
                     value: values.name,
                     autoComplete: "false",
                     autoCorrect: "false",
@@ -226,12 +226,7 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
             ) : null}
 
             <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea
-                name="description"
-                onChange={handleChange}
-                hasError={!!errors.description}
-                value={values.description}
-              />
+              <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -252,4 +247,4 @@ export const ManageBoloModal = ({ onClose, bolo }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

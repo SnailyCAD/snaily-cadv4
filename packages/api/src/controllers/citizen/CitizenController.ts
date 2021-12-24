@@ -2,14 +2,14 @@ import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { prisma } from "../../lib/prisma";
-import { IsAuth } from "../../middlewares/IsAuth";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
-import { unitProperties } from "../../lib/officer";
+import { unitProperties } from "lib/officer";
 
 export const citizenInclude = {
   vehicles: {

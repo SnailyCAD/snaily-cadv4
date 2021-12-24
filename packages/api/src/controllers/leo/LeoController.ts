@@ -9,14 +9,14 @@ import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import { Officer, ShouldDoType, User } from ".prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "../../middlewares";
-import { ActiveOfficer } from "../../middlewares/ActiveOfficer";
-import { Socket } from "../../services/SocketService";
+import { IsAuth } from "middlewares/index";
+import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { Socket } from "services/SocketService";
 import fs from "node:fs";
-import { unitProperties } from "../../lib/officer";
+import { unitProperties } from "lib/officer";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)

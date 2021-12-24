@@ -1,6 +1,5 @@
 import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/Input";
@@ -25,9 +24,9 @@ interface Props {
   call: Full911Call | null;
 }
 
-export const DispatchCallTowModal = ({ call }: Props) => {
+export function DispatchCallTowModal({ call }: Props) {
   const common = useTranslations("Common");
-  const t = useTranslations("Calls");
+  const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
   const { activeOfficer, officers } = useLeoState();
@@ -60,7 +59,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   const INITIAL_VALUES = {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
-    // @ts-expect-error ignore
+    // @ts-expect-error TS should allow this tbh!
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
     callCountyService: false,
@@ -72,7 +71,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
   return (
     <Modal
       onClose={() => closeModal(ModalIds.ManageTowCall)}
-      title={t("createTowCall")}
+      title={t("Calls.createTowCall")}
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
     >
@@ -80,7 +79,7 @@ export const DispatchCallTowModal = ({ call }: Props) => {
         {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             {unit ? (
-              <FormField label={"Citizen"}>
+              <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
                 <Select
                   disabled
                   name="creatorId"
@@ -91,23 +90,26 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                   }))}
                   value={values.creatorId || null}
                 />
-                <Error>{errors.creatorId}</Error>
               </FormField>
             ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.location} label={t("location")}>
+              <FormField errorMessage={errors.location} label={t("Calls.location")}>
                 <Input name="location" value={values.location} onChange={handleChange} />
               </FormField>
 
-              <FormField errorMessage={errors.postal} label={t("postal")}>
+              <FormField errorMessage={errors.postal} label={t("Calls.postal")}>
                 <Input name="postal" value={values.postal} onChange={handleChange} />
               </FormField>
             </FormRow>
 
             {isLeo || isDispatch ? (
               <>
-                <FormField label={"Delivery Address"}>
+                <FormField
+                  optional
+                  errorMessage={errors.deliveryAddress}
+                  label={t("Calls.deliveryAddress")}
+                >
                   <Select
                     isClearable
                     name="deliveryAddress"
@@ -118,22 +120,23 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                     }))}
                     value={values.deliveryAddress}
                   />
-                  <Error>{errors.deliveryAddress}</Error>
                 </FormField>
 
-                <FormField label={"Plate"}>
+                <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
                   <Input onChange={handleChange} name="plate" value={values.plate} />
-                  <Error>{errors.plate}</Error>
                 </FormField>
 
-                <FormField label={"Model"}>
+                <FormField optional errorMessage={errors.model} label={t("Vehicles.model")}>
                   <Input onChange={handleChange} name="model" value={values.model} />
-                  <Error>{errors.model}</Error>
                 </FormField>
               </>
             ) : null}
 
-            <FormField checkbox label={"Call County Service"}>
+            <FormField
+              errorMessage={errors.callCountyService}
+              checkbox
+              label={"Call County Service"}
+            >
               <Input
                 type="checkbox"
                 name="callCountyService"
@@ -141,12 +144,10 @@ export const DispatchCallTowModal = ({ call }: Props) => {
                 checked={values.callCountyService}
                 className="w-[max-content] ml-1"
               />
-              <Error>{errors.callCountyService}</Error>
             </FormField>
 
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -173,4 +174,4 @@ export const DispatchCallTowModal = ({ call }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -14,7 +13,7 @@ import { Citizen, RegisteredVehicle, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 
-export const VehicleSearchModal = () => {
+export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
 
   const { isOpen, closeModal } = useModal();
@@ -75,14 +74,8 @@ export const VehicleSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("plateOrVin")}>
-              <Input
-                value={values.plateOrVin}
-                hasError={!!errors.plateOrVin}
-                name="plateOrVin"
-                onChange={handleChange}
-              />
-              <Error>{errors.plateOrVin}</Error>
+            <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
+              <Input value={values.plateOrVin} name="plateOrVin" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? (
@@ -171,7 +164,7 @@ export const VehicleSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;

@@ -4,13 +4,15 @@ import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import Link from "next/link";
 import { useAuth } from "context/AuthContext";
+import { useTranslations } from "next-intl";
 
-export const OfficerDropdown = () => {
+export function OfficerDropdown() {
   const router = useRouter();
+  const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { user } = useAuth();
 
-  const items = ["My Officers", "My Officer Logs", "Incidents", "Impound Lot"];
+  const items = [t("myOfficers"), t("myOfficerLogs"), t("incidents"), t("impoundLot")];
 
   return (
     <>
@@ -20,7 +22,7 @@ export const OfficerDropdown = () => {
             isActive("/officer") && "font-semibold"
           }`}
         >
-          Officer
+          {t("officer")}
           <span className="mt-1 ml-1">
             <ChevronDown width={15} height={15} className="text-gray-700 dark:text-gray-300" />
           </span>
@@ -40,7 +42,7 @@ export const OfficerDropdown = () => {
               <Menu.Item>
                 <Link href="/officer">
                   <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                    Dashboard
+                    {t("dashboard")}
                   </a>
                 </Link>
               </Menu.Item>
@@ -63,7 +65,7 @@ export const OfficerDropdown = () => {
                 <Menu.Item>
                   <Link href="/admin/manage/units">
                     <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                      Manage Units
+                      {t("manageUnits")}
                     </a>
                   </Link>
                 </Menu.Item>
@@ -74,4 +76,4 @@ export const OfficerDropdown = () => {
       </Menu>
     </>
   );
-};
+}

@@ -9,11 +9,13 @@
 this is a web based integration for communities who love police roleplaying and dispatching.
 Built with next.js
 
-**This is currently in beta.**
-
 <a href="https://discord.gg/eGnrPqEH7U ">
   <img src="http://invidget.switchblade.xyz/eGnrPqEH7U" />
 </a>
+
+## Documentation
+
+[Documentation can be found here](https://cad-docs.netlify.app/)
 
 ## Contributing
 

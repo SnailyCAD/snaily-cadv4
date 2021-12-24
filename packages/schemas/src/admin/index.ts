@@ -10,6 +10,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   steamApiKey: z.string().max(255),
   towWhitelisted: z.boolean(),
   whitelisted: z.boolean(),
+  roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
 });
 
@@ -19,6 +20,9 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxCitizensPerUser: z.number().nullable(),
   maxBusinessesPerCitizen: z.number().nullable(),
   maxPlateLength: z.number().min(1),
+  pairedUnitSymbol: z.string().max(255),
+  callsignTemplate: z.string(),
+  liveMapURL: z.string().nullable(),
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({

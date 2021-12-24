@@ -9,7 +9,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/table/Table";
 
-export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
+export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("MedicalRecords");
@@ -126,4 +126,4 @@ export const MedicalRecords = (props: { medicalRecords: MedicalRecord[] }) => {
       />
     </>
   );
-};
+}

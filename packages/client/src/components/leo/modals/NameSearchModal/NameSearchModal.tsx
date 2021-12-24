@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -27,7 +26,7 @@ const enum Toggled {
   RECORDS,
 }
 
-const AutoSubmit = () => {
+function AutoSubmit() {
   const { getPayload } = useModal();
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
   const { submitForm } = useFormikContext();
@@ -40,9 +39,9 @@ const AutoSubmit = () => {
   }, [payloadName, submitForm]);
 
   return null;
-};
+}
 
-export const NameSearchModal = () => {
+export function NameSearchModal() {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
@@ -124,14 +123,8 @@ export const NameSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={cT("fullName")}>
-              <Input
-                value={values.name}
-                hasError={!!errors.name}
-                name="name"
-                onChange={handleChange}
-              />
-              <Error>{errors.name}</Error>
+            <FormField errorMessage={errors.name} label={cT("fullName")}>
+              <Input value={values.name} name="name" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}
@@ -358,4 +351,4 @@ export const NameSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

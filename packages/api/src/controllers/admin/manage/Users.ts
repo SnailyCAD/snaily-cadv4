@@ -4,14 +4,14 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { userProperties } from "../../../lib/auth";
-import { prisma } from "../../../lib/prisma";
-import { IsAuth } from "../../../middlewares";
+import { userProperties } from "lib/auth";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
-import { Socket } from "../../../services/SocketService";
+import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
-import { citizenInclude } from "../../citizen/CitizenController";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")

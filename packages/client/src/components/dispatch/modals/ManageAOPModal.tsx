@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 
-export const ManageAOPModal = () => {
+export function ManageAOPModal() {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
   const { cad, setCad } = useAuth();
@@ -44,15 +44,8 @@ export const ManageAOPModal = () => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors, isValid }) => (
           <Form>
-            <FormField label={t("areaOfPlay")}>
-              <Input
-                autoFocus
-                name="aop"
-                onChange={handleChange}
-                value={values.aop}
-                hasError={!!errors.aop}
-                required
-              />
+            <FormField errorMessage={errors.aop} label={t("areaOfPlay")}>
+              <Input autoFocus name="aop" onChange={handleChange} value={values.aop} required />
             </FormField>
 
             <footer className="flex justify-end">
@@ -70,4 +63,4 @@ export const ManageAOPModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

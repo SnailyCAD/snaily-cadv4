@@ -6,7 +6,6 @@ import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { FormField } from "components/form/FormField";
-import { Error } from "components/form/Error";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { Textarea } from "components/form/Textarea";
@@ -22,7 +21,7 @@ interface Props {
   call: Full911Call;
 }
 
-export const CallEventsArea = ({ call }: Props) => {
+export function CallEventsArea({ call }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -66,14 +65,13 @@ export const CallEventsArea = ({ call }: Props) => {
       >
         {({ handleChange, values, errors }) => (
           <Form className="absolute bottom-0 w-full">
-            <FormField label={common("description")}>
+            <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea
                 required
                 name="description"
                 value={values.description}
                 onChange={handleChange}
               />
-              <Error>{errors.description}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -99,9 +97,9 @@ export const CallEventsArea = ({ call }: Props) => {
       </Formik>
     </div>
   );
-};
+}
 
-const EventItem = ({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) => {
+function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) {
   const { openModal, closeModal } = useModal();
   const formatted = format(new Date(event.createdAt), "yyyy-MM-dd HH:mm:ss");
   const actionsRef = React.useRef<HTMLLIElement>(null);
@@ -161,9 +159,9 @@ const EventItem = ({ event, setTempEvent }: { event: Call911Event; setTempEvent:
       ) : null}
     </li>
   );
-};
+}
 
-const AutoForm = ({ event }: { event: Call911Event | null }) => {
+function AutoForm({ event }: { event: Call911Event | null }) {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {
@@ -175,4 +173,4 @@ const AutoForm = ({ event }: { event: Call911Event | null }) => {
   }, [event, setFieldValue]);
 
   return null;
-};
+}

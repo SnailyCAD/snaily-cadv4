@@ -29,7 +29,36 @@
     "categories": "Categories",
     "continue": "Continue",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "stopRoleplay": "Stop Roleplay",
+    "roleplayStopped": "Admins issued all players to stop all roleplay.",
+    "optionalField": "Optional"
+  },
+  "Nav": {
+    "citizen": "Citizen",
+    "citizens": "Citizens",
+    "bleeter": "Bleeter",
+    "taxi": "Taxi",
+    "business": "Business",
+    "truckLogs": "Truck Logs",
+    "admin": "Admin",
+    "dispatch": "Dispatch",
+    "liveMap": "Live Map",
+    "officer": "Officer",
+    "dashboard": "Dashboard",
+    "myOfficers": "My Officers",
+    "myOfficerLogs": "My Officer Logs",
+    "incidents": "Incidents",
+    "impoundLot": "Impound Lot",
+    "manageUnits": "Manage Units",
+    "tow": "Tow",
+    "towLogs": "Tow Logs",
+    "emsFd": "EMS/FD",
+    "myDeputies": "My Deputies",
+    "account": "Account",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -58,6 +87,7 @@
     "discordNameInUse": "Could not create a new account with Discord since the username is already in-use.",
     "discordAccountAlreadyLinked": "This Discord account is already linked to another account.",
     "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created.",
-    "invalidRegistrationCode": "The registration code you provided is invalid."
+    "invalidRegistrationCode": "The registration code you provided is invalid.",
+    "unitSuspended": "This unit is suspended. Please contact your supervisor."
   }
 }

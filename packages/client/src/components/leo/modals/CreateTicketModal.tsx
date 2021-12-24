@@ -1,6 +1,5 @@
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Select, SelectValue } from "components/form/Select";
@@ -19,7 +18,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 
-export const CreateTicketModal = ({ type }: { type: RecordType }) => {
+export function CreateTicketModal({ type }: { type: RecordType }) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -79,11 +78,10 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <FormField label={t("citizen")}>
+            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
               <InputSuggestions
                 inputProps={{
                   value: values.citizenName,
-                  hasError: !!errors.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
                 }}
@@ -116,23 +114,15 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                   </div>
                 )}
               />
-              <Error>{errors.citizenName}</Error>
             </FormField>
 
-            <FormField label={t("postal")}>
-              <Input
-                value={values.postal}
-                hasError={!!errors.postal}
-                name="postal"
-                onChange={handleChange}
-              />
-              <Error>{errors.postal}</Error>
+            <FormField errorMessage={errors.postal} label={t("postal")}>
+              <Input value={values.postal} name="postal" onChange={handleChange} />
             </FormField>
 
-            <FormField label={t("violations")}>
+            <FormField errorMessage={errors.violations as string} label={t("violations")}>
               <Select
                 value={values.violations}
-                hasError={!!errors.violations}
                 name="violations"
                 onChange={handleChange}
                 isMulti
@@ -141,17 +131,10 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
                   value: value.id,
                 }))}
               />
-              <Error>{errors.violations}</Error>
             </FormField>
 
-            <FormField label={t("notes")}>
-              <Textarea
-                value={values.notes}
-                hasError={!!errors.notes}
-                name="notes"
-                onChange={handleChange}
-              />
-              <Error>{errors.notes}</Error>
+            <FormField optional errorMessage={errors.notes} label={t("notes")}>
+              <Textarea value={values.notes} name="notes" onChange={handleChange} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -172,4 +155,4 @@ export const CreateTicketModal = ({ type }: { type: RecordType }) => {
       </Formik>
     </Modal>
   );
-};
+}

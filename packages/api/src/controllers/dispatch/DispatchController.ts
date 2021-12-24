@@ -2,10 +2,10 @@ import { Controller } from "@tsed/di";
 import { Get, JsonRequestBody, Post } from "@tsed/schema";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
-import { prisma } from "../../lib/prisma";
-import { Socket } from "../../services/SocketService";
+import { prisma } from "lib/prisma";
+import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 import { cad } from ".prisma/client";
 
 @Controller("/dispatch")

@@ -7,7 +7,6 @@ import Link from "next/link";
 import Head from "next/head";
 
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
@@ -120,7 +119,7 @@ export default function EditCitizen() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("image")}>
+            <FormField optional errorMessage={errors.image} label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
@@ -151,38 +150,22 @@ export default function EditCitizen() {
                   {common("delete")}
                 </Button>
               </div>
-              <Error>{errors.image}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={t("name")}>
-                <Input
-                  value={values.name}
-                  hasError={!!errors.name}
-                  onChange={handleChange}
-                  name="name"
-                  disabled
-                />
-                <Error>{errors.name}</Error>
+              <FormField errorMessage={errors.name} label={t("name")}>
+                <Input value={values.name} onChange={handleChange} name="name" disabled />
               </FormField>
 
-              <FormField label={t("surname")}>
-                <Input
-                  value={values.surname}
-                  hasError={!!errors.surname}
-                  onChange={handleChange}
-                  name="surname"
-                  disabled
-                />
-                <Error>{errors.surname}</Error>
+              <FormField errorMessage={errors.surname} label={t("surname")}>
+                <Input value={values.surname} onChange={handleChange} name="surname" disabled />
               </FormField>
             </FormRow>
 
-            <FormField label={t("dateOfBirth")}>
+            <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
               <Input
                 type="date"
                 value={new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)}
-                hasError={!!errors.dateOfBirth}
                 onChange={(e) =>
                   handleChange({
                     ...e,
@@ -191,103 +174,65 @@ export default function EditCitizen() {
                 }
                 name="dateOfBirth"
               />
-              <Error>{errors.dateOfBirth}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={t("gender")}>
+              <FormField errorMessage={errors.gender} label={t("gender")}>
                 <Select
                   name="gender"
                   value={values.gender}
                   onChange={handleChange}
-                  hasError={!!errors.gender}
                   values={gender.values.map((gender) => ({
                     label: gender.value,
                     value: gender.id,
                   }))}
                 />
-                <Error>{errors.gender}</Error>
               </FormField>
 
-              <FormField label={t("ethnicity")}>
+              <FormField errorMessage={errors.ethnicity} label={t("ethnicity")}>
                 <Select
                   name="ethnicity"
                   value={values.ethnicity}
                   onChange={handleChange}
-                  hasError={!!errors.ethnicity}
                   values={ethnicity.values.map((ethnicity) => ({
                     label: ethnicity.value,
                     value: ethnicity.id,
                   }))}
                 />
-
-                <Error>{errors.ethnicity}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={t("eyeColor")}>
-                <Input
-                  value={values.eyeColor}
-                  hasError={!!errors.hairColor}
-                  onChange={handleChange}
-                  name="hairColor"
-                />
-                <Error>{errors.hairColor}</Error>
+              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
+                <Input value={values.eyeColor} onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField label={t("hairColor")}>
-                <Input
-                  value={values.hairColor}
-                  hasError={!!errors.eyeColor}
-                  onChange={handleChange}
-                  name="eyeColor"
-                />
-                <Error>{errors.eyeColor}</Error>
+              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
+                <Input value={values.hairColor} onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={`${t("weight")} ${weightPrefix}`}>
-                <Input
-                  value={values.weight}
-                  hasError={!!errors.weight}
-                  onChange={handleChange}
-                  name="weight"
-                />
-                <Error>{errors.weight}</Error>
+              <FormField errorMessage={errors.weight} label={`${t("weight")} ${weightPrefix}`}>
+                <Input value={values.weight} onChange={handleChange} name="weight" />
               </FormField>
 
-              <FormField label={`${t("height")} ${heightPrefix}`}>
-                <Input
-                  value={values.height}
-                  hasError={!!errors.height}
-                  onChange={handleChange}
-                  name="height"
-                />
-                <Error>{errors.height}</Error>
+              <FormField errorMessage={errors.height} label={`${t("height")} ${heightPrefix}`}>
+                <Input value={values.height} onChange={handleChange} name="height" />
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={t("address")}>
-                <Input
-                  value={values.address}
-                  hasError={!!errors.address}
-                  onChange={handleChange}
-                  name="address"
-                />
-                <Error>{errors.address}</Error>
+              <FormField errorMessage={errors.address} label={t("address")}>
+                <Input value={values.address} onChange={handleChange} name="address" />
               </FormField>
 
-              <FormField label={t("phoneNumber")}>
+              <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
                 <Input
                   value={values.phoneNumber ?? ""}
-                  hasError={!!errors.phoneNumber}
                   onChange={handleChange}
                   name="phoneNumber"
                 />
-                <Error>{errors.phoneNumber}</Error>
               </FormField>
             </FormRow>
 

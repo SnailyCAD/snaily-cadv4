@@ -16,7 +16,7 @@ import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 
-export const ManageBusinessTab = () => {
+export function ManageBusinessTab() {
   const { state, execute } = useFetch();
   const { openModal } = useModal();
   const common = useTranslations("Common");
@@ -72,21 +72,11 @@ export const ManageBusinessTab = () => {
         {({ handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.name} label={t("name")}>
-              <Input
-                name="name"
-                onChange={handleChange}
-                hasError={!!errors.name}
-                value={values.name}
-              />
+              <Input name="name" onChange={handleChange} value={values.name} />
             </FormField>
 
             <FormField errorMessage={errors.address} label={t("address")}>
-              <Input
-                name="address"
-                onChange={handleChange}
-                hasError={!!errors.address}
-                value={values.address}
-              />
+              <Input name="address" onChange={handleChange} value={values.address} />
             </FormField>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
@@ -133,4 +123,4 @@ export const ManageBusinessTab = () => {
       />
     </Tab.Panel>
   );
-};
+}

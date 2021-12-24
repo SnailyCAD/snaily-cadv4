@@ -2,7 +2,6 @@ import { useTranslations } from "use-intl";
 import { Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -21,15 +20,10 @@ interface Props {
   medicalRecord: MedicalRecord | null;
   onCreate?: (newV: MedicalRecord) => void;
   onUpdate?: (old: MedicalRecord, newV: MedicalRecord) => void;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
-export const ManageMedicalRecordsModal = ({
-  medicalRecord,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) => {
+export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { citizen } = useCitizen(false);
@@ -82,46 +76,28 @@ export const ManageMedicalRecordsModal = ({
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("diseases")}>
-              <Input
-                hasError={!!errors.type}
-                onChange={handleChange}
-                name="type"
-                value={values.type}
-              />
-              <Error>{errors.type}</Error>
+            <FormField errorMessage={errors.type} label={t("diseases")}>
+              <Input onChange={handleChange} name="type" value={values.type} />
             </FormField>
 
-            <FormField label={t("bloodGroup")}>
+            <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
               <Select
                 values={bloodGroup.values.map((v) => ({
                   value: v.id,
                   label: v.value,
                 }))}
-                hasError={!!errors.bloodGroup}
                 onChange={handleChange}
                 name="bloodGroup"
                 value={values.bloodGroup}
               />
-              <Error>{errors.bloodGroup}</Error>
             </FormField>
 
-            <FormField label={common("description")}>
-              <Textarea
-                hasError={!!errors.description}
-                value={values.description}
-                name="description"
-                onChange={handleChange}
-              />
-              <Error>{errors.description}</Error>
+            <FormField errorMessage={errors.description} label={common("description")}>
+              <Textarea value={values.description} name="description" onChange={handleChange} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageMedicalRecords)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
@@ -138,4 +114,4 @@ export const ManageMedicalRecordsModal = ({
       </Formik>
     </Modal>
   );
-};
+}

@@ -17,11 +17,11 @@ import { BusinessPost } from "types/prisma";
 interface Props {
   onCreate: (post: BusinessPost) => void;
   onUpdate: (old: BusinessPost, newPost: BusinessPost) => void;
-  onClose?: () => void;
+  onClose?(): void;
   post: BusinessPost | null;
 }
 
-export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: Props) => {
+export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: Props) {
   const { currentBusiness, currentEmployee } = useBusinessState();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -81,21 +81,11 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
         {({ handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.title} label={t("postTitle")}>
-              <Input
-                name="title"
-                onChange={handleChange}
-                hasError={!!errors.title}
-                value={values.title}
-              />
+              <Input name="title" onChange={handleChange} value={values.title} />
             </FormField>
 
             <FormField errorMessage={errors.body} label={t("postBody")}>
-              <Textarea
-                name="body"
-                onChange={handleChange}
-                hasError={!!errors.body}
-                value={values.body}
-              />
+              <Textarea name="body" onChange={handleChange} value={values.body} />
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -116,4 +106,4 @@ export const ManageBusinessPostModal = ({ onClose, onCreate, onUpdate, post }: P
       </Formik>
     </Modal>
   );
-};
+}

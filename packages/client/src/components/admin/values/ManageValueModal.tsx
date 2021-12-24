@@ -71,12 +71,7 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
   value: v,
 }));
 
-const POSITION_VALUES = new Array(50).fill(0).map((_, idx) => ({
-  value: String(idx + 1),
-  label: String(idx + 1),
-}));
-
-export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, value }: Props) => {
+export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -115,8 +110,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
     as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
     shouldDo:
       typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
-    position:
-      typeof value?.value === "string" ? "" : value && "position" in value ? value.position : "",
     departmentId:
       typeof value?.value === "string"
         ? ""
@@ -135,7 +128,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
-    const errors = handleValidate(VALUE_SCHEMA);
+    const errors = handleValidate(VALUE_SCHEMA)(values);
 
     if (values.color && !hexColor().test(values.color)) {
       return {
@@ -176,7 +169,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             </FormField>
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
-              <FormField label="Callsign Symbol">
+              <FormField optional label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
               </FormField>
             ) : null}
@@ -204,7 +197,7 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {["VEHICLE", "WEAPON"].includes(type) ? (
-              <FormField label="Game Hash">
+              <FormField optional label="Game Hash">
                 <Input name="hash" onChange={handleChange} value={values.hash} />
               </FormField>
             ) : null}
@@ -217,15 +210,6 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
                     name="shouldDo"
                     onChange={handleChange}
                     value={values.shouldDo}
-                  />
-                </FormField>
-
-                <FormField label="Position">
-                  <Select
-                    values={POSITION_VALUES}
-                    name="position"
-                    onChange={handleChange}
-                    value={String(values.position)}
                   />
                 </FormField>
 
@@ -290,4 +274,4 @@ export const ManageValueModal = ({ onCreate, onUpdate, clType: dlType, type, val
       </Formik>
     </Modal>
   );
-};
+}

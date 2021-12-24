@@ -50,14 +50,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       console.error({ DEBUG: errorObj });
 
       if (!options.noToast) {
-        toast.error(
-          <div
-            onClick={() => handleToastClick(response)}
-            className="absolute inset-0 flex items-center justify-center rounded-md"
-          >
-            {t(key)}
-          </div>,
-        );
+        toast.error(t(key));
       }
 
       setState("error");
@@ -110,13 +103,4 @@ function getErrorObj(error: unknown) {
   }
 
   return errorObj;
-}
-
-function handleToastClick(error: unknown) {
-  const errorObj = getErrorObj(error);
-
-  try {
-    navigator.clipboard.writeText(JSON.stringify(errorObj, null, 4));
-    // eslint-disable-next-line no-empty
-  } catch {}
 }

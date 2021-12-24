@@ -7,13 +7,13 @@ type Props = JSX.IntrinsicElements["div"] & {
   flexLike?: boolean;
 };
 
-export const FormRow = ({
+export function FormRow({
   justify = true,
   flexLike = false,
   children,
   className = "",
   ...rest
-}: Props) => {
+}: Props) {
   const cols = Array.isArray(children)
     ? `grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${children.length}`
     : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4";
@@ -31,4 +31,4 @@ export const FormRow = ({
       {children}
     </div>
   );
-};
+}

@@ -46,7 +46,7 @@ interface ProviderProps {
   };
 }
 
-export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
+export function ValuesProvider({ initialData, children }: ProviderProps) {
   const [values, setValues] = React.useState<ProviderProps["initialData"]["values"]>(
     Array.isArray(initialData.values) ? initialData.values : [],
   );
@@ -68,7 +68,7 @@ export const ValuesProvider = ({ initialData, children }: ProviderProps) => {
   }, [initialData.values]);
 
   return <ValuesContext.Provider value={value}>{children}</ValuesContext.Provider>;
-};
+}
 
 export function useValues() {
   const context = React.useContext(ValuesContext);

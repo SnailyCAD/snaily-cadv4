@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -12,7 +11,7 @@ import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen, Value, Weapon } from "types/prisma";
 
-export const WeaponSearchModal = () => {
+export function WeaponSearchModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const wT = useTranslations("Weapons");
@@ -55,14 +54,8 @@ export const WeaponSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("serialNumber")}>
-              <Input
-                value={values.serialNumber}
-                hasError={!!errors.serialNumber}
-                name="serialNumber"
-                onChange={handleChange}
-              />
-              <Error>{errors.serialNumber}</Error>
+            <FormField errorMessage={errors.serialNumber} label={t("serialNumber")}>
+              <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? <p>{t("weaponNotFound")}</p> : null}
@@ -116,7 +109,7 @@ export const WeaponSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface WeaponSearchResult extends Weapon {
   citizen: Citizen;

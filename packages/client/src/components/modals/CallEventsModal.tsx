@@ -10,10 +10,10 @@ import { SocketEvents } from "@snailycad/config";
 
 interface Props {
   call: Full911Call | null;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
-export const CallEventsModal = ({ call, onClose }: Props) => {
+export function CallEventsModal({ call, onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Calls");
   const { setCalls, calls } = useDispatchState();
@@ -61,7 +61,7 @@ export const CallEventsModal = ({ call, onClose }: Props) => {
 
               return (
                 <li key={event.id}>
-                  <span className="select-none text-gray-800 mr-1 font-semibold">{formatted}:</span>
+                  <span className="mr-1 font-semibold text-gray-800 select-none">{formatted}:</span>
                   <span>{event.description}</span>
                 </li>
               );
@@ -70,4 +70,4 @@ export const CallEventsModal = ({ call, onClose }: Props) => {
       </ul>
     </Modal>
   );
-};
+}

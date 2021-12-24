@@ -2,7 +2,6 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Formik } from "formik";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -14,10 +13,10 @@ import { Input } from "components/form/Input";
 import { Table } from "components/table/Table";
 
 interface Props {
-  onClose?: () => void;
+  onClose?(): void;
 }
 
-export const SearchMedicalRecordModal = ({ onClose }: Props) => {
+export function SearchMedicalRecordModal({ onClose }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -77,15 +76,8 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("citizen")}>
-              <Input
-                required
-                hasError={!!errors.name}
-                onChange={handleChange}
-                name="name"
-                value={values.name}
-              />
-              <Error>{errors.name}</Error>
+            <FormField errorMessage={errors.name} label={t("citizen")}>
+              <Input required onChange={handleChange} name="name" value={values.name} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? (
@@ -153,7 +145,7 @@ export const SearchMedicalRecordModal = ({ onClose }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}
 
 interface SearchResult extends Citizen {
   medicalRecords: MedicalRecord[];

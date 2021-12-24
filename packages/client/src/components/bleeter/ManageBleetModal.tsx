@@ -21,7 +21,7 @@ interface Props {
   post: BleeterPost | null;
 }
 
-export const ManageBleetModal = ({ post }: Props) => {
+export function ManageBleetModal({ post }: Props) {
   const { state, execute } = useFetch();
   const { openModal, isOpen, closeModal } = useModal();
   const t = useTranslations("Bleeter");
@@ -92,13 +92,12 @@ export const ManageBleetModal = ({ post }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, isValid, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FormField label={t("headerImage")}>
+            <FormField optional errorMessage={errors.image as string} label={t("headerImage")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
                   type="file"
                   name="image"
-                  hasError={!!errors.image}
                   onChange={(e) => {
                     setFieldValue("image", e.currentTarget.files?.[0]);
                   }}
@@ -116,19 +115,13 @@ export const ManageBleetModal = ({ post }: Props) => {
             </FormField>
 
             <FormField errorMessage={errors.title} label={t("bleetTitle")}>
-              <Input
-                name="title"
-                value={values.title}
-                hasError={!!errors.title}
-                onChange={handleChange}
-              />
+              <Input name="title" value={values.title} onChange={handleChange} />
             </FormField>
 
             <FormField errorMessage={errors.body} label={t("bleetBody")}>
               <Textarea
                 name="body"
                 value={values.body}
-                hasError={!!errors.body}
                 onChange={handleChange}
                 className="min-h-[20em]"
               />
@@ -164,4 +157,4 @@ export const ManageBleetModal = ({ post }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

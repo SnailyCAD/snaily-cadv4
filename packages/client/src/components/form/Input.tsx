@@ -2,24 +2,30 @@ import { Button } from "components/Button";
 import * as React from "react";
 
 type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
-  hasError?: boolean;
+  errorMessage?: string;
 };
 
-export const Input = React.forwardRef<HTMLInputElement, Props>(({ hasError, ...rest }, ref) => (
+export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, ...rest }, ref) => (
   <input
     ref={ref}
     {...rest}
     className={`
-    w-full p-1.5 px-3 bg-white rounded-md border-[1.5px] border-gray-200 dark:border-gray-600
+    w-full p-1.5 px-3 bg-white rounded-md border-[1.5px]
     outline-none focus:border-gray-800 dark:focus:border-gray-200
     dark:bg-gray-2 dark:text-white
     disabled:cursor-not-allowed disabled:opacity-80
     placeholder:opacity-50
-    transition-all ${rest.className} ${hasError && "border-red-500"} `}
+    transition-all ${rest.className} ${
+      errorMessage
+        ? "border-red-500 focus:border-red-700 dark:focus:border-red-700"
+        : "border-gray-200 dark:border-gray-600"
+    } `}
   />
 ));
 
-export const PasswordInput = (props: Omit<Props, "type" | "ref">) => {
+Input.displayName = "__Input__";
+
+export function PasswordInput(props: Omit<Props, "type" | "ref">) {
   const [type, setType] = React.useState("password");
   const ref = React.useRef<HTMLInputElement>(null);
 
@@ -44,4 +50,4 @@ export const PasswordInput = (props: Omit<Props, "type" | "ref">) => {
       </Button>
     </div>
   );
-};
+}

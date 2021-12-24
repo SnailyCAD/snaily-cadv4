@@ -93,6 +93,7 @@
     "toggleVehiclesWeapons": "Toggle vehicles and weapons",
     "unmerge": "Unmerge",
     "merge": "Merge",
+    "suspended": "Suspended",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
     "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?",

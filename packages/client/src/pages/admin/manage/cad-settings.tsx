@@ -10,7 +10,6 @@ import { getTranslations } from "lib/getTranslation";
 import { Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
-import { Error } from "components/form/Error";
 import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
@@ -22,6 +21,8 @@ import { Tab } from "@headlessui/react";
 import { MiscFeatures } from "components/admin/manage/MiscFeatures";
 import { requestAll } from "lib/utils";
 import { ApiTokenTab } from "components/admin/manage/ApiTokenTab";
+import { handleValidate } from "lib/handleValidate";
+import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 
 export default function CadSettings() {
   const { state, execute } = useFetch();
@@ -39,7 +40,7 @@ export default function CadSettings() {
     });
 
     if (json?.id) {
-      setCad(json);
+      setCad({ ...cad, ...json });
     }
   }
 
@@ -51,6 +52,7 @@ export default function CadSettings() {
     return null;
   }
 
+  const validate = handleValidate(CAD_SETTINGS_SCHEMA);
   const INITIAL_VALUES = {
     name: cad.name ?? "",
     areaOfPlay: cad.areaOfPlay ?? "",
@@ -59,6 +61,7 @@ export default function CadSettings() {
     towWhitelisted: cad.towWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
+    roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
   };
 
   return (
@@ -73,65 +76,77 @@ export default function CadSettings() {
         <Tab.Panel className="mt-3">
           <h2 className="text-2xl font-semibold">General Settings</h2>
 
-          <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+          <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
               <form className="mt-3" onSubmit={handleSubmit}>
-                <FormField label="CAD Name">
+                <FormField errorMessage={errors.name} label="CAD Name">
                   <Input onChange={handleChange} value={values.name} name="name" />
-                  <Error>{errors.name}</Error>
                 </FormField>
 
-                <FormField label="Area of Play">
+                <FormField errorMessage={errors.areaOfPlay} label="Area of Play">
                   <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
-                  <Error>{errors.areaOfPlay}</Error>
                 </FormField>
 
-                <FormField label="Steam API Key">
+                <FormField optional errorMessage={errors.steamApiKey} label="Steam API Key">
                   <PasswordInput
                     onChange={handleChange}
                     value={values.steamApiKey}
                     name="steamApiKey"
                   />
-                  <Error>{errors.steamApiKey}</Error>
                 </FormField>
 
-                <FormField label="Discord webhook URL">
+                <FormField
+                  optional
+                  errorMessage={errors.discordWebhookURL}
+                  label="Discord webhook URL"
+                >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.discordWebhookURL}
                     name="discordWebhookURL"
                   />
-                  <Error>{errors.discordWebhookURL}</Error>
                 </FormField>
 
-                <FormField label="Registration Code">
+                <FormField
+                  optional
+                  errorMessage={errors.registrationCode}
+                  label="Registration Code"
+                >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.registrationCode}
                     name="registrationCode"
                   />
-                  <Error>{errors.registrationCode}</Error>
                 </FormField>
 
                 <FormRow>
-                  <FormField label="Tow Whitelisted">
+                  <FormField errorMessage={errors.towWhitelisted} label="Tow Whitelisted">
                     <Toggle
                       name="towWhitelisted"
                       onClick={handleChange}
                       toggled={values.towWhitelisted}
                     />
-                    <Error>{errors.towWhitelisted}</Error>
                   </FormField>
 
-                  <FormField label="CAD Whitelisted">
+                  <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
                     <Toggle
                       name="whitelisted"
                       onClick={handleChange}
                       toggled={values.whitelisted}
                     />
-                    <Error>{errors.whitelisted}</Error>
                   </FormField>
                 </FormRow>
+
+                <FormField errorMessage={errors.roleplayEnabled} label="Roleplay enabled">
+                  <Toggle
+                    name="roleplayEnabled"
+                    onClick={handleChange}
+                    toggled={values.roleplayEnabled}
+                  />
+                  <small className="mt-1 text-sm">
+                    When disabled, this will add a banner that says that roleplay must be stopped.
+                  </small>
+                </FormField>
 
                 <Button disabled={state === "loading"} className="flex items-center" type="submit">
                   {state === "loading" ? <Loader className="mr-3" /> : null}

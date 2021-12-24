@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import toast from "react-hot-toast";
 import { useTranslations } from "use-intl";
 
-export const ChangePasswordArea = () => {
+export function ChangePasswordArea() {
   const t = useTranslations("Account");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -47,7 +47,6 @@ export const ChangePasswordArea = () => {
           <Form className="mt-2">
             <FormField errorMessage={errors.currentPassword} label={t("currentPassword")}>
               <PasswordInput
-                hasError={!!errors.currentPassword}
                 value={values.currentPassword}
                 onChange={handleChange}
                 name="currentPassword"
@@ -56,7 +55,6 @@ export const ChangePasswordArea = () => {
 
             <FormField errorMessage={errors.currentPassword} label={t("newPassword")}>
               <PasswordInput
-                hasError={!!errors.newPassword}
                 value={values.newPassword}
                 onChange={handleChange}
                 name="newPassword"
@@ -65,7 +63,6 @@ export const ChangePasswordArea = () => {
 
             <FormField errorMessage={errors.confirmPassword} label={t("confirmNewPassword")}>
               <PasswordInput
-                hasError={!!errors.confirmPassword}
                 value={values.confirmPassword}
                 onChange={handleChange}
                 name="confirmPassword"
@@ -80,4 +77,4 @@ export const ChangePasswordArea = () => {
       </Formik>
     </section>
   );
-};
+}

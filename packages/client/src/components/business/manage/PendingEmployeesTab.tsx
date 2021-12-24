@@ -6,7 +6,7 @@ import { FullEmployee, useBusinessState } from "state/businessState";
 import { EmployeeAsEnum, whitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 
-export const PendingEmployeesTab = () => {
+export function PendingEmployeesTab() {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
@@ -82,4 +82,4 @@ export const PendingEmployeesTab = () => {
       </ul>
     </Tab.Panel>
   );
-};
+}

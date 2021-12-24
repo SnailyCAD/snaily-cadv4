@@ -83,14 +83,15 @@ export default function Taxi(props: Props) {
     });
   }
 
-  const assignedUnit = (call: FullTaxiCall) =>
-    call.assignedUnit ? (
+  function assignedUnit(call: FullTaxiCall) {
+    return call.assignedUnit ? (
       <span>
         {call.assignedUnit.name} {call.assignedUnit.surname}
       </span>
     ) : (
       <span>{common("none")}</span>
     );
+  }
 
   React.useEffect(() => {
     setCalls(props.calls);

@@ -8,8 +8,9 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/Input";
 import { FormRow } from "components/form/FormRow";
+import { MiscCadSettings } from "types/prisma";
 
-export const MiscFeatures = () => {
+export function MiscFeatures() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
@@ -17,7 +18,7 @@ export const MiscFeatures = () => {
   // infinity -> null, "" -> null
   function cleanValues(values: typeof INITIAL_VALUES) {
     const newValues: Record<string, any> = {};
-    const excluded = ["heightPrefix", "weightPrefix"];
+    const excluded = ["heightPrefix", "weightPrefix", "pairedUnitSymbol", "callsignTemplate"];
 
     for (const key in values) {
       const value = values[key as keyof typeof INITIAL_VALUES];
@@ -50,7 +51,7 @@ export const MiscFeatures = () => {
     }
   }
 
-  const miscSettings = cad!.miscCadSettings;
+  const miscSettings = cad?.miscCadSettings ?? ({} as MiscCadSettings);
   const INITIAL_VALUES = {
     weightPrefix: miscSettings.weightPrefix,
     heightPrefix: miscSettings.heightPrefix,
@@ -59,6 +60,7 @@ export const MiscFeatures = () => {
     maxPlateLength: miscSettings.maxPlateLength,
     pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
     callsignTemplate: miscSettings.callsignTemplate ?? "",
+    liveMapURL: miscSettings.liveMapURL ?? "",
   };
 
   return (
@@ -70,21 +72,11 @@ export const MiscFeatures = () => {
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
             <FormRow>
               <FormField errorMessage={errors.weightPrefix} label="Weight Prefix">
-                <Input
-                  name="weightPrefix"
-                  hasError={!!errors.weightPrefix}
-                  value={values.weightPrefix}
-                  onChange={handleChange}
-                />
+                <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
               </FormField>
 
               <FormField errorMessage={errors.heightPrefix} label="Height Prefix">
-                <Input
-                  name="heightPrefix"
-                  hasError={!!errors.heightPrefix}
-                  value={values.heightPrefix}
-                  onChange={handleChange}
-                />
+                <Input name="heightPrefix" value={values.heightPrefix} onChange={handleChange} />
               </FormField>
             </FormRow>
 
@@ -96,7 +88,6 @@ export const MiscFeatures = () => {
                 <Input
                   name="maxBusinessesPerCitizen"
                   type="number"
-                  hasError={!!errors.maxBusinessesPerCitizen}
                   value={values.maxBusinessesPerCitizen}
                   onChange={handleChange}
                 />
@@ -106,7 +97,6 @@ export const MiscFeatures = () => {
                 <Input
                   name="maxCitizensPerUser"
                   type="number"
-                  hasError={!!errors.maxCitizensPerUser}
                   value={values.maxCitizensPerUser}
                   onChange={handleChange}
                 />
@@ -117,7 +107,6 @@ export const MiscFeatures = () => {
               <Input
                 name="maxPlateLength"
                 type="number"
-                hasError={!!errors.maxPlateLength}
                 value={values.maxPlateLength}
                 onChange={handleChange}
               />
@@ -127,7 +116,6 @@ export const MiscFeatures = () => {
               <FormField errorMessage={errors.pairedUnitSymbol} label="Paired unit symbol">
                 <Input
                   name="pairedUnitSymbol"
-                  hasError={!!errors.pairedUnitSymbol}
                   value={values.pairedUnitSymbol}
                   onChange={handleChange}
                 />
@@ -136,12 +124,21 @@ export const MiscFeatures = () => {
               <FormField errorMessage={errors.callsignTemplate} label="Callsign Template">
                 <Input
                   name="callsignTemplate"
-                  hasError={!!errors.callsignTemplate}
                   value={values.callsignTemplate}
                   onChange={handleChange}
                 />
               </FormField>
             </FormRow>
+
+            <FormField errorMessage={errors.liveMapURL} label="Live Map URL">
+              <Input
+                type="url"
+                name="liveMapURL"
+                value={values.liveMapURL}
+                onChange={handleChange}
+                placeholder="ws://my-host:my-port"
+              />
+            </FormField>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
@@ -152,4 +149,4 @@ export const MiscFeatures = () => {
       </Formik>
     </div>
   );
-};
+}

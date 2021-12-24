@@ -1,11 +1,11 @@
 import { Controller } from "@tsed/di";
 import { Get } from "@tsed/schema";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "../../middlewares";
+import { IsAuth } from "middlewares/index";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)

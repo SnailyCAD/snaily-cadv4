@@ -1,8 +1,9 @@
 import { useAuth } from "context/AuthContext";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
+import { CombinedLeoUnit } from "types/prisma";
 
 type P = "callsign" | "callsign2" | "department" | "division";
-type FullUnit = Pick<FullOfficer, P> | Pick<FullDeputy, P>;
+type FullUnit = Pick<FullOfficer, P> | Pick<FullDeputy, P> | CombinedLeoUnit;
 
 export function useGenerateCallsign() {
   const { cad } = useAuth();
@@ -10,6 +11,10 @@ export function useGenerateCallsign() {
 
   function generateCallsign(unit: FullUnit) {
     if (!unit) return "NULL";
+    if (!("department" in unit)) {
+      return "NULL";
+    }
+
     const { callsign, callsign2, department, division } = unit;
     const template = miscCadSettings?.callsignTemplate ?? "";
 

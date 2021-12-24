@@ -10,7 +10,7 @@ import { Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 
-export const ApiTokenTab = () => {
+export function ApiTokenTab() {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad } = useAuth();
@@ -104,4 +104,4 @@ export const ApiTokenTab = () => {
       </Formik>
     </Tab.Panel>
   );
-};
+}

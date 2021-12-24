@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 
-export const AccountSettingsTab = () => {
+export function AccountSettingsTab() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
@@ -33,12 +33,7 @@ export const AccountSettingsTab = () => {
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
             <FormField label="Username" errorMessage={errors.username}>
-              <Input
-                hasError={!!errors.username}
-                value={values.username}
-                onChange={handleChange}
-                name="username"
-              />
+              <Input value={values.username} onChange={handleChange} name="username" />
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>
@@ -51,4 +46,4 @@ export const AccountSettingsTab = () => {
       <ChangePasswordArea />
     </Tab.Panel>
   );
-};
+}

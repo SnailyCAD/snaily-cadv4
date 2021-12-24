@@ -16,12 +16,12 @@ export function usePanicButton() {
   return { unit, PanicButton: Component };
 }
 
-const Component = ({ unit }: { unit: FullOfficer | FullDeputy }) => {
+function Component({ unit }: { unit: FullOfficer | FullDeputy }) {
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
 
   return (
-    <div role="alert" className="font-semibold text-white bg-red-500 p-2 px-3 rounded-md my-2">
+    <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
       <p>
         {t.rich("panicButtonLeo", {
           officer: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
@@ -29,4 +29,4 @@ const Component = ({ unit }: { unit: FullOfficer | FullDeputy }) => {
       </p>
     </div>
   );
-};
+}

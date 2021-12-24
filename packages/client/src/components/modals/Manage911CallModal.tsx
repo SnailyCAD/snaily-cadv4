@@ -25,10 +25,10 @@ import { FormRow } from "components/form/FormRow";
 interface Props {
   call: Full911Call | null;
   setCall?: React.Dispatch<React.SetStateAction<Full911Call | null>>;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
-export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
+export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -36,7 +36,7 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
   const { setCalls, calls } = useDispatchState();
   const router = useRouter();
   const { user } = useAuth();
-  const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
+  const isDispatch = router.pathname.startsWith("/dispatch") && user?.isDispatch;
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const generateCallsign = useGenerateCallsign();
 
@@ -298,4 +298,4 @@ export const Manage911CallModal = ({ setCall, call, onClose }: Props) => {
       ) : null}
     </Modal>
   );
-};
+}

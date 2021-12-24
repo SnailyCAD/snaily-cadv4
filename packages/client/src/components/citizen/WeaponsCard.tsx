@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { Table } from "components/table/Table";
 import format from "date-fns/format";
 
-export const WeaponsCard = (props: { weapons: Weapon[] }) => {
+export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -134,4 +134,4 @@ export const WeaponsCard = (props: { weapons: Weapon[] }) => {
       />
     </>
   );
-};
+}

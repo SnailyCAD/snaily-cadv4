@@ -35,7 +35,7 @@ const PERMISSIONS: Record<string, (user: User) => boolean> = {
 
 const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
 
-export const AuthProvider = ({ initialData, children }: ProviderProps) => {
+export function AuthProvider({ initialData, children }: ProviderProps) {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(null);
   const [isForbidden, setForbidden] = React.useState(false);
@@ -125,7 +125,7 @@ export const AuthProvider = ({ initialData, children }: ProviderProps) => {
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 export function useAuth() {
   const context = React.useContext(AuthContext);

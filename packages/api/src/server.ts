@@ -4,7 +4,7 @@ import "@tsed/socketio";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { IsEnabled } from "./middlewares/IsEnabled";
+import { IsEnabled } from "middlewares/IsEnabled";
 import { join } from "node:path";
 
 const rootDir = __dirname;
@@ -14,7 +14,7 @@ const rootDir = __dirname;
   port: process.env.PORT_API ? parseInt(process.env.PORT_API) : 8080,
   logger: {
     debug: true,
-    level: process.env.NODE_ENV === "production" ? "off" : undefined,
+    level: process.env.NODE_ENV === "production" ? "off" : "error",
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],

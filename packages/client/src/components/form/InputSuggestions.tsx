@@ -5,13 +5,13 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 
 interface Props {
-  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { hasError?: boolean };
+  inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
   onSuggestionClick?: (suggestion: any) => void;
   Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
   options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };
 }
 
-export const InputSuggestions = ({ Component, onSuggestionClick, options, inputProps }: Props) => {
+export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
@@ -87,4 +87,4 @@ export const InputSuggestions = ({ Component, onSuggestionClick, options, inputP
       ) : null}
     </div>
   );
-};
+}

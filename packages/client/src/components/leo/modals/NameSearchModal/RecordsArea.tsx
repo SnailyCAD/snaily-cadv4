@@ -20,10 +20,14 @@ interface Props {
   records: FullRecord[];
 }
 
-export const RecordsArea = ({ records }: Props) => {
+export function RecordsArea({ records }: Props) {
   const t = useTranslations();
   const router = useRouter();
+  const { state, execute } = useFetch();
   const isCitizen = router.pathname.startsWith("/citizen");
+  const { getPayload, closeModal } = useModal();
+  const { currentResult, setCurrentResult } = useNameSearch();
+  const tempItem = getPayload<FullRecord>(ModalIds.AlertDeleteRecord);
 
   const tickets = records.filter((v) => v.type === RecordType.TICKET);
   const writtenWarnings = records.filter((v) => v.type === RecordType.WRITTEN_WARNING);
@@ -34,42 +38,6 @@ export const RecordsArea = ({ records }: Props) => {
     [t("Leo.writtenWarnings"), t("Leo.noWrittenWarnings"), writtenWarnings],
     [t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
   ];
-
-  return (
-    <div className={isCitizen ? "bg-gray-200/60 p-4 dark:bg-gray-2 rounded-md" : ""}>
-      {isCitizen ? (
-        <header className="flex items-center justify-between mb-3">
-          <h1 className="text-2xl font-semibold">{t("Leo.records")}</h1>
-        </header>
-      ) : null}
-
-      {data.map(([title, noValuesText, data]) => (
-        <section className="my-2 mb-5" key={title} id={title}>
-          <h3 className="text-xl font-semibold">{title}</h3>
-
-          {data!.length <= 0 ? <p>{noValuesText}</p> : <RecordsTable data={data} />}
-        </section>
-      ))}
-    </div>
-  );
-};
-
-const RecordsTable = ({ data }: { data: FullRecord[] }) => {
-  const [tempItem, setTempItem] = React.useState<FullRecord | null>(null);
-  const common = useTranslations("Common");
-  const { openModal, closeModal } = useModal();
-  const t = useTranslations();
-  const router = useRouter();
-  const isCitizen = router.pathname.startsWith("/citizen");
-  const { state, execute } = useFetch();
-  const generateCallsign = useGenerateCallsign();
-
-  const { currentResult, setCurrentResult } = useNameSearch();
-
-  function handleDeleteClick(record: FullRecord) {
-    openModal(ModalIds.AlertDeleteRecord);
-    setTempItem(record);
-  }
 
   async function handleDelete() {
     if (!tempItem) return;
@@ -86,13 +54,51 @@ const RecordsTable = ({ data }: { data: FullRecord[] }) => {
         });
       }
 
-      setTempItem(null);
       closeModal(ModalIds.AlertDeleteRecord);
     }
   }
 
   return (
-    <>
+    <div className={isCitizen ? "bg-gray-200/60 p-4 dark:bg-gray-2 rounded-md" : ""}>
+      {isCitizen ? (
+        <header className="flex items-center justify-between mb-3">
+          <h1 className="text-2xl font-semibold">{t("Leo.records")}</h1>
+        </header>
+      ) : null}
+
+      {data.map(([title, noValuesText, data]) => (
+        <section className="my-2 mb-5" key={title} id={title}>
+          <h3 className="text-xl font-semibold">{title}</h3>
+
+          {data!.length <= 0 ? <p>{noValuesText}</p> : <RecordsTable data={data} />}
+        </section>
+      ))}
+
+      <AlertModal
+        id={ModalIds.AlertDeleteRecord}
+        onDeleteClick={handleDelete}
+        description={t("Leo.alert_deleteRecord")}
+        title={t("Leo.deleteRecord")}
+        state={state}
+      />
+    </div>
+  );
+}
+
+function RecordsTable({ data }: { data: FullRecord[] }) {
+  const common = useTranslations("Common");
+  const { openModal } = useModal();
+  const t = useTranslations();
+  const router = useRouter();
+  const isCitizen = router.pathname.startsWith("/citizen");
+  const generateCallsign = useGenerateCallsign();
+
+  function handleDeleteClick(record: FullRecord) {
+    openModal(ModalIds.AlertDeleteRecord, record);
+  }
+
+  return (
+    <div>
       <Table
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
@@ -142,14 +148,6 @@ const RecordsTable = ({ data }: { data: FullRecord[] }) => {
               },
         ]}
       />
-
-      <AlertModal
-        id={ModalIds.AlertDeleteRecord}
-        onDeleteClick={handleDelete}
-        description={t("Leo.alert_deleteRecord")}
-        title={t("Leo.deleteRecord")}
-        state={state}
-      />
-    </>
+    </div>
   );
-};
+}

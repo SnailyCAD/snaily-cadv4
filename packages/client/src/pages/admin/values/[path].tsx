@@ -20,7 +20,6 @@ import type {
   ValueType,
   VehicleValue,
 } from "types/prisma";
-// eslint-disable-next-line no-duplicate-imports
 import { valueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
@@ -49,7 +48,7 @@ interface Props {
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<TValue[]>(data);
+  const [values, setValues] = React.useState<TValue[]>(data ?? []);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 
@@ -68,7 +67,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         const prev = p.find((a) => a.id === v.id);
 
         if (prev) {
-          if ("createdAt" in prev) {
+          if ("position" in prev) {
             prev.position = idx;
           } else {
             prev.value.position = idx;
@@ -230,7 +229,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   return {
     props: {
       values,
-      pathValues: values?.[0] ?? {},
+      pathValues: values?.[0] ?? { type: "CODES_10", values: [] },
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["admin", "values", "common"], locale)),
@@ -251,7 +250,7 @@ export function sortValues(values: TValue[]): any[] {
 }
 
 export function findCreatedAtAndPosition(value: TValue) {
-  if ("createdAt" in value) {
+  if ("position" in value) {
     return {
       createdAt: new Date(value.createdAt),
       position: value.position,

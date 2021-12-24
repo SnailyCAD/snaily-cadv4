@@ -19,7 +19,7 @@ interface Props {
   onUpdate: (oldValue: PenalCode, newValue: PenalCode) => void;
 }
 
-export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) => {
+export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -91,4 +91,4 @@ export const ManagePenalCode = ({ onCreate, onUpdate, type, penalCode }: Props) 
       </Formik>
     </Modal>
   );
-};
+}

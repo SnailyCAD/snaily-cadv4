@@ -1,6 +1,5 @@
 import { SELECT_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -17,7 +16,7 @@ import { ShouldDoType } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 
-export const SelectOfficerModal = () => {
+export function SelectOfficerModal() {
   const { officers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -60,10 +59,9 @@ export const SelectOfficerModal = () => {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("officer")}>
+            <FormField errorMessage={errors.officer} label={t("officer")}>
               <Select
                 value={values.officer}
-                hasError={!!errors.officer}
                 name="officer"
                 onChange={handleChange}
                 isClearable
@@ -72,10 +70,9 @@ export const SelectOfficerModal = () => {
                   value: officer.id,
                 }))}
               />
-              <Error>{errors.officer}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.SelectOfficer)}
@@ -97,4 +94,4 @@ export const SelectOfficerModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

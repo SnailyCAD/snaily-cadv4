@@ -12,14 +12,14 @@ export interface ModalProps {
   onClose: () => void;
 }
 
-export const Modal = ({
+export function Modal({
   modalStyles = {},
   title,
   children,
   isOpen,
   className,
   onClose,
-}: ModalProps) => {
+}: ModalProps) {
   const { canBeClosed } = useModal();
 
   function handleClose() {
@@ -33,7 +33,7 @@ export const Modal = ({
       <Dialog
         open={isOpen}
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto"
+        className="fixed inset-0 z-50 overflow-y-auto"
         onClose={handleClose}
       >
         <div className="min-h-screen px-4 text-center">
@@ -88,4 +88,4 @@ export const Modal = ({
       </Dialog>
     </Transition>
   );
-};
+}

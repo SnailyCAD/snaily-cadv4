@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -13,7 +12,7 @@ import { Input } from "components/form/Input";
 import { Citizen } from "types/prisma";
 import { Table } from "components/table/Table";
 
-export const AddressSearchModal = () => {
+export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -59,14 +58,8 @@ export const AddressSearchModal = () => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("enterAddress")}>
-              <Input
-                value={values.address}
-                hasError={!!errors.address}
-                name="address"
-                onChange={handleChange}
-              />
-              <Error>{errors.address}</Error>
+            <FormField errorMessage={errors.address} label={t("enterAddress")}>
+              <Input value={values.address} name="address" onChange={handleChange} />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? <p>{t("noResults")}</p> : null}
@@ -130,6 +123,6 @@ export const AddressSearchModal = () => {
       </Formik>
     </Modal>
   );
-};
+}
 
 type AddressSearchResult = Citizen[];

@@ -24,7 +24,7 @@ interface ProviderProps {
   initialData: Pick<Context, "citizen" | "citizens">;
 }
 
-export const CitizenProvider = ({ initialData, children }: ProviderProps) => {
+export function CitizenProvider({ initialData, children }: ProviderProps) {
   const [citizens, setCitizens] = React.useState<Citizen[]>([]);
   const [citizen, setCurrentCitizen] = React.useState<CitizenWithVehAndWep | null>(
     initialData.citizen ?? null,
@@ -45,7 +45,7 @@ export const CitizenProvider = ({ initialData, children }: ProviderProps) => {
   const value = { citizens, citizen, setCitizens, setCurrentCitizen };
 
   return <CitizenContext.Provider value={value}>{children}</CitizenContext.Provider>;
-};
+}
 
 /**
  *

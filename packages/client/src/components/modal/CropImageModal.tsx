@@ -13,7 +13,7 @@ interface Props {
   options?: { width?: number; height?: number; aspectRatio: number };
 }
 
-export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, options }: Props) => {
+export function CropImageModal({ onSuccess, image, isOpen = false, onClose, options }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Errors");
 
@@ -33,7 +33,7 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, opti
     reader.readAsDataURL(image);
   }, [image]);
 
-  const getCropData = () => {
+  function getCropData() {
     if (!image) return;
 
     if (typeof cropper !== "undefined") {
@@ -43,7 +43,7 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, opti
         onSuccess?.(blob, image.name);
       });
     }
-  };
+  }
 
   return (
     <Modal modalStyles={{ width }} title="Crop image" isOpen={isOpen} onClose={onClose}>
@@ -80,4 +80,4 @@ export const CropImageModal = ({ onSuccess, image, isOpen = false, onClose, opti
       </div>
     </Modal>
   );
-};
+}

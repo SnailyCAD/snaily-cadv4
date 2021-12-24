@@ -6,7 +6,7 @@ import { useModal } from "context/ModalContext";
 import { useNotepad } from "hooks/useNotepad";
 import { ModalIds } from "types/ModalIds";
 
-export const NotepadModal = () => {
+export function NotepadModal() {
   const { isOpen, closeModal } = useModal();
   const [value, setValue] = useNotepad();
   const common = useTranslations("Common");
@@ -34,4 +34,4 @@ export const NotepadModal = () => {
       </footer>
     </Modal>
   );
-};
+}

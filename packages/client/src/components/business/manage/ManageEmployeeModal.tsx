@@ -1,5 +1,4 @@
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -19,11 +18,11 @@ import { EmployeeAsEnum } from "types/prisma";
 
 interface Props {
   onUpdate: (old: FullEmployee, newPost: FullEmployee) => void;
-  onClose?: () => void;
+  onClose?(): void;
   employee: FullEmployee | null;
 }
 
-export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
+export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
   const { currentBusiness, currentEmployee } = useBusinessState();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
@@ -79,7 +78,7 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField label={t("role")}>
+            <FormField errorMessage={errors.roleId} label={t("role")}>
               <Select
                 name="roleId"
                 onChange={handleChange}
@@ -89,30 +88,27 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
                   value: v.id,
                 }))}
               />
-              <Error>{errors.roleId}</Error>
             </FormField>
 
             <FormRow>
-              <FormField label={t("canCreatePosts")}>
+              <FormField errorMessage={errors.canCreatePosts} label={t("canCreatePosts")}>
                 <Toggle
                   name="canCreatePosts"
                   onClick={handleChange}
                   toggled={values.canCreatePosts}
                 />
-                <Error>{errors.canCreatePosts}</Error>
               </FormField>
 
-              <FormField label={t("employeeOfTheMonth")}>
+              <FormField errorMessage={errors.employeeOfTheMonth} label={t("employeeOfTheMonth")}>
                 <Toggle
                   name="employeeOfTheMonth"
                   onClick={handleChange}
                   toggled={values.employeeOfTheMonth}
                 />
-                <Error>{errors.employeeOfTheMonth}</Error>
               </FormField>
             </FormRow>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
@@ -130,4 +126,4 @@ export const ManageEmployeeModal = ({ onClose, onUpdate, employee }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

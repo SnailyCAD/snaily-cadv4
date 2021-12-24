@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const TabsContainer = ({ defaultIndex, children, tabs }: Props) => {
+export function TabsContainer({ defaultIndex, children, tabs }: Props) {
   return (
     <div className="w-full px-2 sm:px-0">
       <Tab.Group defaultIndex={defaultIndex}>
@@ -34,4 +34,4 @@ export const TabsContainer = ({ defaultIndex, children, tabs }: Props) => {
       </Tab.Group>
     </div>
   );
-};
+}

@@ -1,7 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { Error } from "components/form/Error";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
@@ -19,7 +18,7 @@ interface Props {
   onSuccess: (old: TowCall, newC: TowCall) => void;
 }
 
-export const AssignToCallModal = ({ call, onSuccess }: Props) => {
+export function AssignToCallModal({ call, onSuccess }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -66,10 +65,9 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ values, errors, isValid, handleChange }) => (
           <Form>
-            <FormField label={t("selectCitizen")}>
+            <FormField errorMessage={errors.assignedUnitId} label={t("selectCitizen")}>
               <Select
                 isClearable
-                hasError={!!errors.assignedUnitId}
                 name="assignedUnitId"
                 values={citizens.map((citizen) => ({
                   label: `${citizen.name} ${citizen.surname}`,
@@ -78,10 +76,9 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
                 value={values.assignedUnitId}
                 onChange={handleChange}
               />
-              <Error>{errors.assignedUnitId}</Error>
             </FormField>
 
-            <footer className="mt-5 flex justify-end">
+            <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
                 onClick={() => closeModal(ModalIds.AssignToTowCall)}
@@ -103,4 +100,4 @@ export const AssignToCallModal = ({ call, onSuccess }: Props) => {
       </Formik>
     </Modal>
   );
-};
+}

@@ -7,7 +7,6 @@ import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Error } from "components/form/Error";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
@@ -15,7 +14,7 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { FormRow } from "components/form/FormRow";
 
-export const ManageLicensesModal = () => {
+export function ManageLicensesModal() {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { license, driverslicenseCategory } = useValues();
@@ -74,9 +73,8 @@ export const ManageLicensesModal = () => {
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
             <FormRow>
-              <FormField label={t("driversLicense")}>
+              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
-                  hasError={!!errors.driversLicense}
                   values={license.values.map((license) => ({
                     label: license.value,
                     value: license.id,
@@ -85,13 +83,14 @@ export const ManageLicensesModal = () => {
                   name="driversLicense"
                   onChange={handleChange}
                 />
-                <Error>{errors.driversLicense}</Error>
               </FormField>
 
-              <FormField label={t("driversLicenseCategory")}>
+              <FormField
+                errorMessage={errors.driversLicenseCategory as string}
+                label={t("driversLicenseCategory")}
+              >
                 <Select
                   isMulti
-                  hasError={!!errors.driversLicenseCategory}
                   values={driverslicenseCategory.values
                     .filter((v) => v.type === "AUTOMOTIVE")
                     .map((category) => ({
@@ -102,14 +101,12 @@ export const ManageLicensesModal = () => {
                   name="driversLicenseCategory"
                   onChange={handleChange}
                 />
-                <Error>{errors.driversLicenseCategory}</Error>
               </FormField>
             </FormRow>
 
             <FormRow>
-              <FormField label={t("pilotLicense")}>
+              <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
-                  hasError={!!errors.pilotLicense}
                   values={license.values.map((license) => ({
                     label: license.value,
                     value: license.id,
@@ -118,13 +115,14 @@ export const ManageLicensesModal = () => {
                   name="pilotLicense"
                   onChange={handleChange}
                 />
-                <Error>{errors.pilotLicense}</Error>
               </FormField>
 
-              <FormField label={t("pilotLicenseCategory")}>
+              <FormField
+                errorMessage={errors.pilotLicenseCategory as string}
+                label={t("pilotLicenseCategory")}
+              >
                 <Select
                   isMulti
-                  hasError={!!errors.pilotLicenseCategory}
                   values={driverslicenseCategory.values
                     .filter((v) => v.type === "AVIATION")
                     .map((category) => ({
@@ -135,13 +133,11 @@ export const ManageLicensesModal = () => {
                   name="pilotLicenseCategory"
                   onChange={handleChange}
                 />
-                <Error>{errors.pilotLicenseCategory}</Error>
               </FormField>
             </FormRow>
 
-            <FormField label={t("weaponLicense")}>
+            <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
               <Select
-                hasError={!!errors.weaponLicense}
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
@@ -150,12 +146,10 @@ export const ManageLicensesModal = () => {
                 name="weaponLicense"
                 onChange={handleChange}
               />
-              <Error>{errors.weaponLicense}</Error>
             </FormField>
 
-            <FormField label={t("ccw")}>
+            <FormField errorMessage={errors.ccw} label={t("ccw")}>
               <Select
-                hasError={!!errors.ccw}
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
@@ -164,7 +158,6 @@ export const ManageLicensesModal = () => {
                 name="ccw"
                 onChange={handleChange}
               />
-              <Error>{errors.ccw}</Error>
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -189,4 +182,4 @@ export const ManageLicensesModal = () => {
       </Formik>
     </Modal>
   );
-};
+}

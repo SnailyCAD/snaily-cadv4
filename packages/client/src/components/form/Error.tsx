@@ -7,8 +7,8 @@ interface Props {
 /**
  * @deprecated use `errorMessage` on `FormField`
  */
-export const Error = ({ children }: Props) => {
+export function Error({ children }: Props) {
   if (!children) return null;
 
   return <span className="mt-1 text-red-500">{children}</span>;
-};
+}

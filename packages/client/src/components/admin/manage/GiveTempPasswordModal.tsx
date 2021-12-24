@@ -11,7 +11,7 @@ interface Props {
   user: User;
 }
 
-export const GiveTempPasswordModal = ({ user }: Props) => {
+export function GiveTempPasswordModal({ user }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Management");
@@ -68,4 +68,4 @@ export const GiveTempPasswordModal = ({ user }: Props) => {
       )}
     </Modal>
   );
-};
+}

@@ -37,14 +37,16 @@ model cad {
 model MiscCadSettings {
   id String @id @default(cuid())
 
-  heightPrefix            String  @default("cm") @db.VarChar(255)
-  weightPrefix            String  @default("kg") @db.VarChar(255)
+  heightPrefix            String   @default("cm") @db.VarChar(255)
+  weightPrefix            String   @default("kg") @db.VarChar(255)
   maxCitizensPerUser      Int?
-  maxPlateLength          Int     @default(8)
+  maxPlateLength          Int      @default(8)
   maxBusinessesPerCitizen Int?
-  callsignTemplate        String  @default("{department}{callsign1} - {callsign2}{division}") @db.Text
-  pairedUnitSymbol        String  @default("A") @db.VarChar(255)
-  signal100Enabled        Boolean @default(false)
+  callsignTemplate        String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  pairedUnitSymbol        String   @default("A") @db.VarChar(255)
+  signal100Enabled        Boolean  @default(false)
+  liveMapURL              String?  @db.Text
+  roleplayEnabled         Boolean? @default(true)
 
   cad cad[]
 }
@@ -532,7 +534,6 @@ model StatusValue {
   value     Value           @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId   String
   shouldDo  ShouldDoType    @default(SET_STATUS)
-  position  Int?
   whatPages WhatPages[]
   color     String?
   type      StatusValueType @default(STATUS_CODE)
@@ -617,6 +618,8 @@ model Call911 {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
   user          User           @relation(fields: [userId], references: [id])
+  position      Position?      @relation(fields: [positionId], references: [id])
+  positionId    String?
   userId        String
   assignedUnits AssignedUnit[]
   location      String         @db.Text
@@ -624,6 +627,13 @@ model Call911 {
   description   String         @db.Text
   name          String         @db.VarChar(255)
   events        Call911Event[]
+}
+
+model Position {
+  id      String    @id @default(uuid())
+  lat     Float?
+  lng     Float?
+  Call911 Call911[]
 }
 
 model AssignedUnit {

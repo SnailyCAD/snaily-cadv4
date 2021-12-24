@@ -23,7 +23,7 @@ const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
 );
 
-export const ActiveCalls = () => {
+export function ActiveCalls() {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { calls, setCalls } = useDispatchState();
@@ -120,6 +120,7 @@ export const ActiveCalls = () => {
                   <th className="bg-gray-300">{t("location")}</th>
                   <th className="bg-gray-300">{common("description")}</th>
                   <th className="bg-gray-300">{common("createdAt")}</th>
+                  <th className="bg-gray-300">{t("postal")}</th>
                   <th className="bg-gray-300">{t("assignedUnits")}</th>
                   <th className="bg-gray-300">{common("actions")}</th>
                 </tr>
@@ -133,6 +134,7 @@ export const ActiveCalls = () => {
                       {call.description}
                     </td>
                     <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
+                    <td>{call.postal || common("none")}</td>
                     <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
                     <td>
                       {isDispatch ? (
@@ -165,7 +167,7 @@ export const ActiveCalls = () => {
                         className="ml-2"
                         onClick={() => handleCallTow(call)}
                       >
-                        {"Call Tow"}
+                        {t("callTow")}
                       </Button>
                     </td>
                   </tr>
@@ -189,4 +191,4 @@ export const ActiveCalls = () => {
       )}
     </div>
   );
-};
+}

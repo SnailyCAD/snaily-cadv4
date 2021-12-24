@@ -8,7 +8,7 @@ interface Props {
   weapons: Weapon[];
 }
 
-export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
+export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
 
@@ -90,4 +90,4 @@ export const VehiclesAndWeaponsSection = ({ vehicles, weapons }: Props) => {
       </section>
     </>
   );
-};
+}

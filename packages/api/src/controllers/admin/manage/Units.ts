@@ -3,10 +3,10 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
-import { unitProperties } from "../../../lib/officer";
-import { prisma } from "../../../lib/prisma";
-import { IsAuth } from "../../../middlewares";
-import { Socket } from "../../../services/SocketService";
+import { unitProperties } from "lib/officer";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/index";
+import { Socket } from "services/SocketService";
 
 const include = unitProperties;
 
@@ -102,6 +102,7 @@ export class ManageUnitsController {
         departmentId: body.get("department"),
         divisionId: body.get("division"),
         rankId: body.get("rank") || null,
+        suspended: Boolean(body.get("suspended")),
       },
     });
 

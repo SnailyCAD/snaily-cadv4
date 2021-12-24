@@ -52,7 +52,7 @@ const buttons: MButton[] = [
   },
 ];
 
-export const ModalButtons = () => {
+export function ModalButtons() {
   const { activeOfficer } = useLeoState();
   const { openModal } = useModal();
   const t = useTranslations();
@@ -112,4 +112,4 @@ export const ModalButtons = () => {
       </ul>
     </div>
   );
-};
+}

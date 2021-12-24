@@ -34,6 +34,8 @@ export type MiscCadSettings = {
   callsignTemplate: string | null;
   signal100Enabled: boolean;
   allowDuplicateCitizenNames: boolean;
+  liveMapURL: string | null;
+  roleplayEnabled: boolean | null;
 };
 
 /**
@@ -310,10 +312,6 @@ export type StatusValue = {
   valueId: string;
   value: Value<"CODES_10">;
   shouldDo: ShouldDoType;
-  /**
-   * @deprecated use `<StatusValue>.value.position`
-   */
-  position: null;
   whatPages: WhatPages[];
   departmentId: string;
   color?: string;
@@ -334,6 +332,16 @@ export type Call911 = {
   postal: string | null;
   description: string;
   name: string;
+  position: Position | null;
+};
+
+/**
+ * Model Position
+ */
+export type Position = {
+  id: string;
+  lng: number;
+  lat: number;
 };
 
 /**
