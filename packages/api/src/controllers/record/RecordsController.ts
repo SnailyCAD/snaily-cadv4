@@ -7,6 +7,7 @@ import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
+import { Violation } from "@prisma/client";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -70,24 +71,38 @@ export class RecordsController {
       },
     });
 
+    const violations: Violation[] = [];
+
     await Promise.all(
-      body.get("violations").map(async (item: string) => {
-        await prisma.penalCode.update({
-          where: {
-            id: item,
-          },
-          data: {
-            records: {
-              connect: {
-                id: ticket.id,
+      body
+        .get("violations")
+        .map(
+          async (item: {
+            penalCodeId: string;
+            fine: number | null;
+            jailTime: number | null;
+            bail: number | null;
+          }) => {
+            const violation = await prisma.violation.create({
+              data: {
+                penalCodeId: item.penalCodeId,
+                fine: item.fine,
+                bail: item.bail,
+                jailTime: item.jailTime,
+                records: {
+                  connect: {
+                    id: ticket.id,
+                  },
+                },
               },
-            },
+            });
+
+            violations.push(violation);
           },
-        });
-      }),
+        ),
     );
 
-    return ticket;
+    return { ...ticket, violations };
   }
 
   @UseBefore(ActiveOfficer)

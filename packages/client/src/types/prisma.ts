@@ -371,6 +371,43 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string;
+  warningApplicableId: string | null;
+  warningApplicable: WarningApplicable | null;
+  warningNotApplicableId: string | null;
+  warningNotApplicable: WarningNotApplicable | null;
+};
+
+/**
+ * Model WarningApplicable
+ *
+ */
+export type WarningApplicable = {
+  id: string;
+  fines: [number, number];
+};
+
+/**
+ * Model WarningNotApplicable
+ *
+ */
+export type WarningNotApplicable = {
+  id: string;
+  fines: [number, number];
+  prisonTerm: [number, number];
+  bail: [number, number];
+};
+
+/**
+ * Model Violation
+ *
+ */
+export type Violation = {
+  id: string;
+  fine: number | null;
+  jailTime: number | null;
+  bail: number | null;
+  penalCodeId: string;
+  penalCode: PenalCode;
 };
 
 /**

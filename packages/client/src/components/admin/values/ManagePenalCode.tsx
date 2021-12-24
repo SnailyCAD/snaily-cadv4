@@ -4,13 +4,14 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { PenalCode, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   type: ValueType;
@@ -55,19 +56,36 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     description: penalCode?.description ?? "",
+    warningApplicable: penalCode?.warningApplicable ? true : !penalCode?.warningNotApplicable,
+    fines1: {
+      enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
+      values: penalCode?.warningApplicable?.fines ?? [],
+    },
+    fines2: {
+      enabled: (penalCode?.warningNotApplicable?.fines.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.fines ?? [],
+    },
+    prisonTerm: {
+      enabled: (penalCode?.warningNotApplicable?.prisonTerm.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.prisonTerm ?? [],
+    },
+    bail: {
+      enabled: (penalCode?.warningNotApplicable?.bail.length ?? 0) > 0,
+      values: penalCode?.warningNotApplicable?.bail ?? [],
+    },
   };
 
   const validate = handleValidate(CREATE_PENAL_CODE_SCHEMA);
 
   return (
     <Modal
-      className="w-[600px]"
+      className="w-[1000px] min-h-[600px]"
       title={title}
       onClose={() => closeModal("manageValue")}
       isOpen={isOpen("manageValue")}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.title} label="Title">
               <Input autoFocus name="title" onChange={handleChange} value={values.title} />
@@ -76,6 +94,38 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
             <FormField errorMessage={errors.description} label="Description">
               <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
+
+            <FormRow>
+              <div className="flex flex-col mr-2.5">
+                <FormField checkbox label="Warning applicable">
+                  <Input
+                    checked={values.warningApplicable}
+                    onChange={() => setFieldValue("warningApplicable", true)}
+                    type="radio"
+                  />
+                </FormField>
+
+                <div>
+                  <FieldsRow keyValue="fines1" />
+                </div>
+              </div>
+
+              <div className="ml-2.5">
+                <FormField checkbox label="Warning not applicable">
+                  <Input
+                    checked={!values.warningApplicable}
+                    onChange={() => setFieldValue("warningApplicable", false)}
+                    type="radio"
+                  />
+                </FormField>
+
+                <div>
+                  <FieldsRow keyValue="fines2" />
+                  <FieldsRow keyValue="prisonTerm" />
+                  <FieldsRow keyValue="bail" />
+                </div>
+              </div>
+            </FormRow>
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
@@ -92,3 +142,60 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
     </Modal>
   );
 }
+
+const FieldsRow = ({ keyValue }: { keyValue: string }) => {
+  const { values, handleChange, setFieldValue } = useFormikContext<any>();
+
+  const disabled = keyValue === "fines1" ? !values.warningApplicable : values.warningApplicable;
+  const fieldDisabled = !values[keyValue].enabled;
+  const isDisabled = disabled || fieldDisabled;
+
+  const label = keyValue.startsWith("fines")
+    ? "Fines"
+    : keyValue === "bail"
+    ? "Bail "
+    : "Prison Term";
+
+  return (
+    <FormRow className="mb-0">
+      <FormField className="mb-0" checkbox label={label}>
+        <Input
+          disabled={disabled}
+          onChange={() => setFieldValue(`${keyValue}.enabled`, !values[keyValue].enabled)}
+          checked={values[keyValue].enabled}
+          type="checkbox"
+        />
+      </FormField>
+
+      <FormRow className="items-center" flexLike>
+        <FormField label={null}>
+          <Input
+            required
+            min={0}
+            type="number"
+            onChange={handleChange}
+            name={`${keyValue}.values[0]`}
+            value={values[keyValue].values[0]}
+            placeholder="Min."
+            className="min-w-[100px]"
+            disabled={isDisabled}
+          />
+        </FormField>
+        <span className="mb-2.5">{" - "}</span>
+        <FormField label={null}>
+          <Input
+            required
+            min={0}
+            type="number"
+            onChange={handleChange}
+            name={`${keyValue}.values[1]`}
+            value={values[keyValue].values[1]}
+            placeholder="Max."
+            className="min-w-[100px]"
+            disabled={isDisabled}
+          />
+        </FormField>
+      </FormRow>
+    </FormRow>
+  );
+};

@@ -284,14 +284,12 @@ model WarningNotApplicable {
   PenalCode  PenalCode[]
 }
 
-// Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored
-// field1 = min value, field2 = max value.
 model Violation {
-  id          String    @id @default(uuid())
-  fine        Int[]
-  jailTime    Int[]
-  bail        Int[]
-  penalCode   PenalCode @relation(fields: [penalCodeId], references: [id])
+  id          String      @id @default(uuid())
+  fine        Int?
+  jailTime    Int?
+  bail        Int?
+  penalCode   PenalCode[] @relation(fields: [penalCodeId], references: [id])
   penalCodeId String
   records     Record[]
 }
