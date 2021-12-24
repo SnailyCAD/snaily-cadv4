@@ -12,7 +12,12 @@ export function OfficerDropdown() {
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { user } = useAuth();
 
-  const items = [t("myOfficers"), t("myOfficerLogs"), t("incidents"), t("impoundLot")];
+  const items = [
+    { name: t("myOfficers"), href: "/my-officers" },
+    { name: t("myOfficerLogs"), href: "/my-officer-logs" },
+    { name: t("incidents"), href: "/incidents" },
+    { name: t("impoundLot"), href: "/impound-lot" },
+  ];
 
   return (
     <>
@@ -48,13 +53,13 @@ export function OfficerDropdown() {
               </Menu.Item>
 
               {items.map((item) => {
-                const path = item.replace(/ +/g, "-").toLowerCase();
+                const path = item.href;
 
                 return (
-                  <Menu.Item key={item}>
-                    <Link href={`/officer/${path}`}>
+                  <Menu.Item key={item.href}>
+                    <Link href={`/officer${path}`}>
                       <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        {item}
+                        {item.name}
                       </a>
                     </Link>
                   </Menu.Item>
