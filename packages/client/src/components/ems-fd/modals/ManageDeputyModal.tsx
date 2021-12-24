@@ -122,7 +122,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.image} label={t("Leo.image")}>
+            <FormField optional errorMessage={errors.image} label={t("Leo.image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}

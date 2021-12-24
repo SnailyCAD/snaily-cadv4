@@ -2,6 +2,7 @@ import * as React from "react";
 import { useField } from "@react-aria/label";
 import { classNames } from "lib/classNames";
 import useOnclickOutside from "react-cool-onclickoutside";
+import { useTranslations } from "next-intl";
 
 interface Props {
   label: string;
@@ -10,6 +11,9 @@ interface Props {
   checkbox?: boolean;
   boldLabel?: boolean;
   errorMessage?: string;
+
+  /** make a form field as optional */
+  optional?: boolean;
 }
 
 export function FormField({
@@ -19,10 +23,13 @@ export function FormField({
   label,
   className,
   errorMessage,
+  optional,
 }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const ref = useOnclickOutside(() => setMenuOpen(false));
   const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
+  const common = useTranslations("Common");
+  const optionalText = common("optionalField");
 
   const labelClassnames = classNames(
     "mb-1 dark:text-white",
@@ -65,7 +72,7 @@ export function FormField({
     >
       {!checkbox ? (
         <label onClick={() => setMenuOpen((v) => !v)} {...labelProps} className={labelClassnames}>
-          {label}
+          {label} {optional ? <span className="text-sm italic">({optionalText})</span> : null}
         </label>
       ) : null}
 

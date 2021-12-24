@@ -124,7 +124,7 @@ export default function CreateCitizen() {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.image} label={t("image")}>
+            <FormField optional errorMessage={errors.image} label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}
@@ -231,7 +231,7 @@ export default function CreateCitizen() {
                 <Input onChange={handleChange} name="address" />
               </FormField>
 
-              <FormField errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
+              <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
                 <Input onChange={handleChange} name="phoneNumber" />
               </FormField>
             </FormRow>

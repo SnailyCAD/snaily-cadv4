@@ -32,7 +32,7 @@ const assignedUnitsInclude = {
 
 const callInclude = {
   position: true,
-  assignedUnits: true,
+  assignedUnits: assignedUnitsInclude,
   events: true,
 };
 

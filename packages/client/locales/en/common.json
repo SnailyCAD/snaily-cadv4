@@ -31,7 +31,8 @@
     "yes": "Yes",
     "no": "No",
     "stopRoleplay": "Stop Roleplay",
-    "roleplayStopped": "Admins issued all players to stop all roleplay."
+    "roleplayStopped": "Admins issued all players to stop all roleplay.",
+    "optionalField": "Optional"
   },
   "Nav": {
     "citizen": "Citizen",

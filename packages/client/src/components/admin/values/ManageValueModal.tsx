@@ -128,7 +128,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
-    const errors = handleValidate(VALUE_SCHEMA);
+    const errors = handleValidate(VALUE_SCHEMA)(values);
 
     if (values.color && !hexColor().test(values.color)) {
       return {
@@ -169,7 +169,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             </FormField>
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
-              <FormField label="Callsign Symbol">
+              <FormField optional label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
               </FormField>
             ) : null}
@@ -197,7 +197,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {["VEHICLE", "WEAPON"].includes(type) ? (
-              <FormField label="Game Hash">
+              <FormField optional label="Game Hash">
                 <Input name="hash" onChange={handleChange} value={values.hash} />
               </FormField>
             ) : null}

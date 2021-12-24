@@ -127,7 +127,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               />
             </FormField>
 
-            <FormField errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
+            <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
               <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
 

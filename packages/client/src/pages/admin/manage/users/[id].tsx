@@ -129,11 +129,11 @@ export default function ManageCitizens(props: Props) {
               </FormRow>
 
               <FormRow>
-                <FormField errorMessage={errors.steamId} label="Steam ID">
+                <FormField optional errorMessage={errors.steamId} label="Steam ID">
                   <Input name="steamId" onChange={handleChange} value={values.steamId} />
                 </FormField>
 
-                <FormField errorMessage={errors.discordId} label="Discord ID">
+                <FormField optional errorMessage={errors.discordId} label="Discord ID">
                   <Input name="discordId" onChange={handleChange} value={values.discordId} />
                 </FormField>
               </FormRow>
