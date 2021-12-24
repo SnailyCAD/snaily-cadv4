@@ -121,7 +121,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, setFieldValue, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.image} label={t("image")}>
+            <FormField optional errorMessage={errors.image} label={t("image")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}

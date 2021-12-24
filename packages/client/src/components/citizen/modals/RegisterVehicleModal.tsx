@@ -106,7 +106,7 @@ export function RegisterVehicleModal({
               />
             </FormField>
 
-            <FormField errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
+            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
               <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 

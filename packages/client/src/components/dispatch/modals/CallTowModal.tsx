@@ -79,7 +79,7 @@ export function DispatchCallTowModal({ call }: Props) {
         {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             {unit ? (
-              <FormField errorMessage={errors.creatorId as string} label={t("citizen")}>
+              <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
                 <Select
                   disabled
                   name="creatorId"
@@ -105,7 +105,11 @@ export function DispatchCallTowModal({ call }: Props) {
 
             {isLeo || isDispatch ? (
               <>
-                <FormField errorMessage={errors.deliveryAddress} label={t("Calls.deliveryAddress")}>
+                <FormField
+                  optional
+                  errorMessage={errors.deliveryAddress}
+                  label={t("Calls.deliveryAddress")}
+                >
                   <Select
                     isClearable
                     name="deliveryAddress"
@@ -118,11 +122,11 @@ export function DispatchCallTowModal({ call }: Props) {
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.plate} label={t("Vehicles.plate")}>
+                <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
                   <Input onChange={handleChange} name="plate" value={values.plate} />
                 </FormField>
 
-                <FormField errorMessage={errors.model} label={t("Vehicles.model")}>
+                <FormField optional errorMessage={errors.model} label={t("Vehicles.model")}>
                   <Input onChange={handleChange} name="model" value={values.model} />
                 </FormField>
               </>

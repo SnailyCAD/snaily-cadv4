@@ -8,6 +8,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/Input";
 import { FormRow } from "components/form/FormRow";
+import { MiscCadSettings } from "types/prisma";
 
 export function MiscFeatures() {
   const common = useTranslations("Common");
@@ -50,7 +51,7 @@ export function MiscFeatures() {
     }
   }
 
-  const miscSettings = cad!.miscCadSettings;
+  const miscSettings = cad?.miscCadSettings ?? ({} as MiscCadSettings);
   const INITIAL_VALUES = {
     weightPrefix: miscSettings.weightPrefix,
     heightPrefix: miscSettings.heightPrefix,

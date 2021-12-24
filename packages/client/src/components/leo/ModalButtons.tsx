@@ -93,7 +93,7 @@ export function ModalButtons() {
           <Button
             id={button.nameKey[1]}
             key={idx}
-            disabled={isButtonDisabled}
+            // disabled={isButtonDisabled}
             title={isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))}
             onClick={() => openModal(button.modalId)}
           >

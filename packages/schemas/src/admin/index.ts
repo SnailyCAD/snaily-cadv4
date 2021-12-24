@@ -10,6 +10,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   steamApiKey: z.string().max(255),
   towWhitelisted: z.boolean(),
   whitelisted: z.boolean(),
+  roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
 });
 

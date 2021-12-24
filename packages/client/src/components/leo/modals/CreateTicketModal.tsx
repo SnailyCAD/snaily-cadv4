@@ -133,7 +133,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
               />
             </FormField>
 
-            <FormField errorMessage={errors.notes} label={t("notes")}>
+            <FormField optional errorMessage={errors.notes} label={t("notes")}>
               <Textarea value={values.notes} name="notes" onChange={handleChange} />
             </FormField>
 

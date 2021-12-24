@@ -92,7 +92,7 @@ export function ManageBleetModal({ post }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, isValid, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.image as string} label={t("headerImage")}>
+            <FormField optional errorMessage={errors.image as string} label={t("headerImage")}>
               <div className="flex">
                 <Input
                   style={{ width: "95%", marginRight: "0.5em" }}

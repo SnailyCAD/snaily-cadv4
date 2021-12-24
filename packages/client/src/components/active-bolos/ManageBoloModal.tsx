@@ -18,6 +18,7 @@ import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
 import { InputSuggestions } from "components/form/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useSSRSafeId } from "@react-aria/ssr";
 
 interface Props {
   onClose?(): void;
@@ -32,6 +33,10 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Bolos");
   const leo = useTranslations("Leo");
+
+  const personTypeId = useSSRSafeId();
+  const vehicleTypeId = useSSRSafeId();
+  const otherTypeId = useSSRSafeId();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
@@ -99,8 +104,10 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Person type"
+                  aria-label="Person Type"
+                  id={personTypeId}
                 >
-                  <Person width={30} height={30} />
+                  <Person aria-labelledby={personTypeId} width={30} height={30} />
                 </Button>
                 <Button
                   disabled={!!bolo}
@@ -109,8 +116,11 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Vehicle type"
+                  aria-label="Vehicle Type"
+                  id={vehicleTypeId}
                 >
                   <svg
+                    aria-labelledby={vehicleTypeId}
                     width={30}
                     height={30}
                     xmlns="http://www.w3.org/2000/svg"
@@ -127,15 +137,17 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   className={classNames("flex justify-center")}
                   type="button"
                   title="Other type"
+                  aria-label="Other Type"
+                  id={otherTypeId}
                 >
-                  <ThreeDots width={30} height={30} />
+                  <ThreeDots aria-labelledby={otherTypeId} width={30} height={30} />
                 </Button>
               </FormRow>
             </FormField>
 
             {values.type === BoloType.VEHICLE ? (
               <>
-                <FormField errorMessage={errors.plate} label={leo("plate")}>
+                <FormField optional errorMessage={errors.plate} label={leo("plate")}>
                   <InputSuggestions
                     inputProps={{
                       id: "plate",
@@ -161,18 +173,18 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.model} label={leo("model")}>
+                <FormField optional errorMessage={errors.model} label={leo("model")}>
                   <Input name="model" onChange={handleChange} value={values.model} />
                 </FormField>
 
-                <FormField errorMessage={errors.color} label={leo("color")}>
+                <FormField optional errorMessage={errors.color} label={leo("color")}>
                   <Input name="color" onChange={handleChange} value={values.color} />
                 </FormField>
               </>
             ) : null}
 
             {values.type === BoloType.PERSON ? (
-              <FormField errorMessage={errors.name} label={common("name")}>
+              <FormField optional errorMessage={errors.name} label={common("name")}>
                 <InputSuggestions
                   inputProps={{
                     id: "name",
