@@ -175,7 +175,7 @@ const FieldsRow = ({ keyValue }: { keyValue: string }) => {
       </FormField>
 
       <FormRow className="items-center" flexLike>
-        <FormField label={null}>
+        <FormField label="Min.">
           <Input
             required
             min={0}
@@ -189,7 +189,7 @@ const FieldsRow = ({ keyValue }: { keyValue: string }) => {
           />
         </FormField>
         <span className="mb-2.5">{" - "}</span>
-        <FormField label={null}>
+        <FormField label="Max.">
           <Input
             required
             min={0}

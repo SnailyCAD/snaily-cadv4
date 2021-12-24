@@ -5,12 +5,14 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { useTranslations } from "next-intl";
 
 interface Props {
-  label: string | null;
+  label: string;
   children: React.ReactNode;
   className?: string;
   checkbox?: boolean;
-  boldLabel?: boolean;
   errorMessage?: string;
+
+  hideLabel?: boolean;
+  boldLabel?: boolean;
 
   /** make a form field as optional */
   optional?: boolean;
@@ -24,6 +26,7 @@ export function FormField({
   className,
   errorMessage,
   optional,
+  hideLabel,
 }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const ref = useOnclickOutside(() => setMenuOpen(false));
@@ -35,6 +38,7 @@ export function FormField({
     "mb-1 dark:text-white",
     boldLabel && "font-semibold",
     checkbox && "ml-2 w-full",
+    hideLabel && "hidden",
   );
 
   const [child, ...rest] = Array.isArray(children) ? children : [children];
