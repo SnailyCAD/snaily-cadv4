@@ -583,6 +583,6 @@ export class ValuesController {
     }
 
     const [min, max] = arr;
-    return [parseInt(min), parseInt(max)];
+    return [parseInt(min), parseInt(max)].filter(Boolean) as [number, number];
   }
 }

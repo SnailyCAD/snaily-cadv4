@@ -18,15 +18,16 @@ import { makeUnitName } from "lib/utils";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 
-export interface SelectValue<Value extends string | number = string> {
+export interface SelectValue<Value = string> {
   label: string;
   value: Value;
 }
 
-interface Props extends Exclude<SelectProps, "options"> {
+interface Props<Value extends SelectValue = SelectValue<any>>
+  extends Exclude<SelectProps, "options"> {
   onChange: (event: any) => void;
-  value: SelectValue | SelectValue[] | string | null;
-  values: SelectValue[];
+  value: Value | Value[] | string | null;
+  values: Value[];
   errorMessage?: string;
   isClearable?: boolean;
   disabled?: boolean;
