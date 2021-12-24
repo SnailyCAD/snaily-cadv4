@@ -20,7 +20,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxBusinessesPerCitizen: z.number().nullable(),
   maxPlateLength: z.number().min(1),
   pairedUnitSymbol: z.string().max(255),
-  liveMapURL: z.string(),
+  liveMapURL: z.string().nullable(),
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({
