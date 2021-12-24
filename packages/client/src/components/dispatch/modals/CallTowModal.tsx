@@ -59,7 +59,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const INITIAL_VALUES = {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
-    // @ts-expect-error ignore
+    // @ts-expect-error TS should allow this tbh!
     creatorId: unit?.citizenId ?? null,
     description: call?.description ?? "",
     callCountyService: false,
@@ -71,7 +71,7 @@ export function DispatchCallTowModal({ call }: Props) {
   return (
     <Modal
       onClose={() => closeModal(ModalIds.ManageTowCall)}
-      title={t("createTowCall")}
+      title={t("Calls.createTowCall")}
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
     >
@@ -98,7 +98,7 @@ export function DispatchCallTowModal({ call }: Props) {
                 <Input name="location" value={values.location} onChange={handleChange} />
               </FormField>
 
-              <FormField errorMessage={errors.postal} label={t("postal")}>
+              <FormField errorMessage={errors.postal} label={t("Calls.postal")}>
                 <Input name="postal" value={values.postal} onChange={handleChange} />
               </FormField>
             </FormRow>
