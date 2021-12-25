@@ -47,7 +47,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       const hasKey = Object.keys(Common.Errors).some((e) => e === error);
       const key = hasKey ? error : "unknown";
       const errorObj = getErrorObj(response);
-      console.error({ DEBUG: errorObj });
+      console.error({ DEBUG: JSON.stringify(errorObj, null, 2) });
 
       if (!options.noToast) {
         toast.error(t(key));
@@ -98,8 +98,6 @@ function getErrorObj(error: unknown) {
       data: err.config?.data,
       url: err.config?.url,
     };
-
-    console.error({ DEBUG: errorObj });
   }
 
   return errorObj;
