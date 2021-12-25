@@ -74,7 +74,7 @@ export function TableItemForm({ penalCode }: Props) {
           min={minFine}
           max={maxFine}
           type="number"
-          className="max-w-[100px] ml-5 py-0.5"
+          className="max-w-[125px] ml-5 py-0.5"
           disabled={warningApplicableDisabled || (!currentValue.fine?.enabled ?? true)}
         />
       </div>
@@ -97,7 +97,7 @@ export function TableItemForm({ penalCode }: Props) {
           min={minJailTime}
           max={maxJailTime}
           type="number"
-          className="max-w-[100px] ml-5 py-0.5"
+          className="max-w-[125px] ml-5 py-0.5"
           disabled={warningNotApplicableDisabled || (!currentValue.jailTime?.enabled ?? true)}
         />
 
@@ -107,7 +107,7 @@ export function TableItemForm({ penalCode }: Props) {
             type="number"
             onChange={handleValueChange.bind(null, "bail", undefined)}
             name="bail.value"
-            className="py-0.5 max-w-[100px] ml-5"
+            className="py-0.5 max-w-[125px] ml-5"
             disabled={warningNotApplicableDisabled || (!currentValue.jailTime?.enabled ?? true)}
             min={minBail}
             max={maxBail}

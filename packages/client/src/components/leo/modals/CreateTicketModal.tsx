@@ -42,6 +42,12 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
   const { state, execute } = useFetch();
   const { penalCode } = useValues();
   const { makeImageUrl } = useImageUrl();
+  const penalCodes =
+    type === "WRITTEN_WARNING"
+      ? penalCode.values.filter(
+          (v) => v.warningApplicableId !== null && v.warningNotApplicableId === null,
+        )
+      : penalCode.values;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/records", {
@@ -132,7 +138,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
                 name="violations"
                 onChange={handleChange}
                 isMulti
-                values={penalCode.values.map((value) => ({
+                values={penalCodes.map((value) => ({
                   label: value.title,
                   value: value as any,
                 }))}
