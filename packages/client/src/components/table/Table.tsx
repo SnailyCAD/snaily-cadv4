@@ -3,25 +3,28 @@ import { classNames } from "lib/classNames";
 import * as React from "react";
 import { useTable, Column } from "react-table";
 
-type TableData = {
+type TableData<T extends object> = {
   rowProps?: JSX.IntrinsicElements["tr"];
-  [k: string]: string | null | undefined | number | boolean | object;
-};
+} & T;
 
-interface Props<T extends TableData = TableData> {
-  data: readonly TableData[];
-  columns: (Column<T> | null)[];
+// eslint-disable-next-line @typescript-eslint/ban-types
+interface Props<T extends object = {}> {
+  data: readonly TableData<T>[];
+  columns: readonly (Column<TableData<T>> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
 }
 
-export function Table(props: Props) {
+export function Table<T extends object>(props: Props<T>) {
   const data = React.useMemo(() => props.data, [props.data]);
   const columns = React.useMemo(
-    () => (props.columns.filter(Boolean) as Column<any>[]) ?? [],
+    () => (props.columns.filter(Boolean) as Props["columns"]) ?? [],
     [props.columns],
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<
+    TableData<T>
+  >({
+    // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
     columns,
     data,
   });

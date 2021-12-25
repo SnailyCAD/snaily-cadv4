@@ -13,7 +13,13 @@ export function CitizenDropdown() {
   const isActive = (route: string) => router.pathname.startsWith(route);
   const t = useTranslations("Nav");
 
-  const items = [t("citizens"), t("taxi"), t("bleeter"), t("truckLogs"), t("business")];
+  const items = [
+    { name: t("citizens"), href: "/citizens" },
+    { name: t("taxi"), href: "/taxi" },
+    { name: t("bleeter"), href: "/bleeter" },
+    { name: t("truckLogs"), href: "/truck-logs" },
+    { name: t("business"), href: "/business" },
+  ];
 
   return (
     <>
@@ -49,19 +55,20 @@ export function CitizenDropdown() {
               </Menu.Item>
 
               {items.map((item) => {
-                const upperCase = item.replace(/ +/g, "_").toUpperCase() as Feature;
-                const lower = item.replace(/ +/g, "-").toLowerCase();
-                const isDisabled = ["Courthouse"].includes(item);
+                const upperCase = item.href
+                  .replace("-", "_")
+                  .replace("/", "")
+                  .toUpperCase() as Feature;
 
-                if (!enabled[upperCase] || isDisabled) {
+                if (!enabled[upperCase]) {
                   return null;
                 }
 
                 return (
-                  <Menu.Item key={item}>
-                    <Link href={`/${lower}`}>
+                  <Menu.Item key={item.href}>
+                    <Link href={item.href}>
                       <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        {item}
+                        {item.name}
                       </a>
                     </Link>
                   </Menu.Item>

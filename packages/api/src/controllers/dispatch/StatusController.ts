@@ -1,4 +1,12 @@
-import { User, ShouldDoType, MiscCadSettings, cad, Officer } from ".prisma/client";
+import {
+  User,
+  ShouldDoType,
+  MiscCadSettings,
+  cad,
+  Officer,
+  StatusValue,
+  EmsFdDeputy,
+} from ".prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
 import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -13,6 +21,7 @@ import { Socket } from "services/SocketService";
 import { APIWebhook } from "discord-api-types";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
+import { Citizen, CombinedLeoUnit, DepartmentValue, Value } from "@prisma/client";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -307,13 +316,25 @@ export class StatusController {
   }
 }
 
-function createWebhookData(webhook: APIWebhook, unit: any) {
-  const isNotCombined = !("officers" in unit);
+type V<T> = T & { value: Value };
 
-  const status = unit.status.value.value;
+type Unit = { status: V<StatusValue> | null } & (
+  | ((Officer | EmsFdDeputy) & {
+      department: V<DepartmentValue>;
+      citizen: Pick<Citizen, "name" | "surname">;
+      status: V<StatusValue> | null;
+    })
+  | CombinedLeoUnit
+);
+
+function createWebhookData(webhook: APIWebhook, unit: Unit) {
+  const isNotCombined = "citizenId" in unit;
+
+  const status = unit.status?.value.value ?? "Off-duty";
   const department = isNotCombined && unit.department.value.value;
+  const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
   const officerName = isNotCombined
-    ? `${unit.badgeNumber} - ${unit.name} ${unit.callsign} (${department})`
+    ? `${unit.badgeNumber} - ${unitName} ${unit.callsign} (${department})`
     : `${unit.callsign}`;
 
   return {
