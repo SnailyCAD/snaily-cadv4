@@ -194,11 +194,15 @@ export class StatusController {
     }
 
     if (cad.discordWebhookURL) {
-      const webhook = await getWebhookData(cad.discordWebhookURL);
-      if (!webhook) return;
-      const data = createWebhookData(webhook, updatedUnit);
+      try {
+        const webhook = await getWebhookData(cad.discordWebhookURL);
+        if (!webhook) return;
+        const data = createWebhookData(webhook, updatedUnit);
 
-      await sendDiscordWebhook(webhook, data);
+        await sendDiscordWebhook(webhook, data);
+      } catch (error) {
+        console.log("Could not send Discord webhook.", error);
+      }
     }
 
     if (["leo", "combined"].includes(type)) {
