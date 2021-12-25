@@ -15,17 +15,21 @@ export function PenalCodesTable({ penalCodes }: Props) {
   }
 
   const totalFines = (values.violations as any[]).reduce(
-    (ac, cv) => ac + cv.value.fine?.value ?? 0,
+    (ac, cv) => ac + (parseInt(cv.value.fine?.value) || 0),
     0,
   );
+
   const totalJailTime = (values.violations as any[]).reduce(
-    (ac, cv) => ac + cv.value.jailTime?.value ?? 0,
+    (ac, cv) => ac + (parseInt(cv.value.jailTime?.value) || 0),
     0,
   );
+
   const totalBail = (values.violations as any[]).reduce(
-    (ac, cv) => ac + cv.value.bail?.value ?? 0,
+    (ac, cv) => ac + (parseInt(cv.value.bail?.value) || 0),
     0,
   );
+
+  console.log({ totalFines, totalBail, totalJailTime });
 
   return (
     <div className="w-full my-3 overflow-x-auto">

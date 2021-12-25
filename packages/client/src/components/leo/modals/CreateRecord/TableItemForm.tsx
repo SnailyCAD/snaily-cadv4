@@ -9,7 +9,8 @@ interface Props {
 }
 
 export function TableItemForm({ penalCode }: Props) {
-  const [minFine, maxFine] = penalCode.warningNotApplicable?.fines ?? [];
+  const [minFine, maxFine] =
+    penalCode.warningNotApplicable?.fines ?? penalCode.warningApplicable?.fines ?? [];
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
@@ -37,13 +38,15 @@ export function TableItemForm({ penalCode }: Props) {
 
     const updatedArr = [...values.violations] as SelectValue<PenalCode>[];
 
+    const newValue = e?.target?.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "";
+
     updatedArr[idx] = {
       label: penalCode.title,
       value: {
         ...penalCode,
         [fieldName]: {
           enabled: enabled ?? (penalCode as any)[fieldName]?.enabled ?? true,
-          value: e?.target?.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "",
+          value: newValue,
         },
       },
     };

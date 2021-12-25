@@ -111,7 +111,7 @@ export class ValuesController {
       } else {
         const fines = this.parsePenalCodeValues(body.get("fines"));
         const prisonTerm = this.parsePenalCodeValues(body.get("prisonTerm"));
-        const bail = this.parsePenalCodeValues(body.get("prisonTerm"));
+        const bail = this.parsePenalCodeValues(body.get("bail"));
 
         const data = await prisma.warningNotApplicable.create({
           data: {
