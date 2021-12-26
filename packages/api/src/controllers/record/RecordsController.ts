@@ -83,6 +83,52 @@ export class RecordsController {
             jailTime: number | null;
             bail: number | null;
           }) => {
+            /** validate the penalCode data */
+            const penalCode = await prisma.penalCode.findUnique({
+              where: { id: item.penalCodeId },
+              include: { warningApplicable: true, warningNotApplicable: true },
+            });
+
+            if (!penalCode) {
+              return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
+            }
+
+            const [minFines, maxFines] =
+              penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
+            const [minPrisonTerm, maxPrisonTerm] = penalCode.warningNotApplicable?.prisonTerm ?? [];
+            const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
+
+            // these if statements could be cleaned up?..
+            if (
+              item.fine &&
+              this.exists(minFines, maxFines) &&
+              !this.isCorrect(minFines!, maxFines!, item.fine)
+            ) {
+              return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
+            }
+
+            if (
+              item.jailTime &&
+              this.exists(minPrisonTerm, maxPrisonTerm) &&
+              !this.isCorrect(minPrisonTerm!, maxPrisonTerm!, item.jailTime)
+            ) {
+              return this.handleBadRequest(
+                new BadRequest("jailTime_invalidDataReceived"),
+                ticket.id,
+              );
+            }
+
+            if (
+              item.bail &&
+              this.exists(minBail, maxBail) &&
+              !this.isCorrect(minBail!, maxBail!, item.bail)
+            ) {
+              return this.handleBadRequest(
+                new BadRequest("jailTime_invalidDataReceived"),
+                ticket.id,
+              );
+            }
+
             const violation = await prisma.violation.create({
               data: {
                 fine: item.fine,
@@ -125,5 +171,32 @@ export class RecordsController {
     });
 
     return true;
+  }
+
+  isCorrect(min: number, max: number, value: number) {
+    if (min < 0 || max < 0) {
+      return false;
+    }
+
+    if (min === max) {
+      return value === min;
+    }
+
+    return value > min && value < max;
+  }
+
+  exists(...values: (number | undefined)[]) {
+    return values.every((v) => typeof v !== "undefined");
+  }
+
+  /**
+   * remove the created ticket when there's an error with linking the penal codes.
+   */
+  async handleBadRequest(error: Error, recordId: string) {
+    await prisma.record.delete({
+      where: { id: recordId },
+    });
+
+    throw error;
   }
 }
