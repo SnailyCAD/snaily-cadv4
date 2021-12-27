@@ -10,6 +10,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import { ValueType } from "types/prisma";
+import { useRouter } from "next/router";
 
 interface Props {
   type: ValueType;
@@ -17,6 +18,7 @@ interface Props {
 
 export function ImportValuesModal({ type }: Props) {
   const [file, setFile] = React.useState<File | null>(null);
+  const router = useRouter();
 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -38,6 +40,9 @@ export function ImportValuesModal({ type }: Props) {
       method: "POST",
       data: fd,
     });
+
+    router.replace({ pathname: router.pathname, query: router.query });
+    closeModal(ModalIds.ImportValues);
   }
 
   const INITIAL_VALUES = {

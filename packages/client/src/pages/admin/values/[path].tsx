@@ -30,7 +30,7 @@ import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
 import { getTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
-import { ModalIds } from "types/ModalIds";
+import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -170,7 +170,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
         <div className="flex gap-2">
           <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
-          <Button onClick={() => openModal(ModalIds.ImportValues)}>{t("importValues")}</Button>
+          <OptionsDropdown values={values} />
         </div>
       </header>
 

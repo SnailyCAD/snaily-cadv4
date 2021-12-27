@@ -50,6 +50,7 @@ export class ValuesController {
   }
 }
 
+// todo: use this in `ValuesController`
 const typeHandlers: Partial<
   Record<ValueType | "GENERIC", (body: any, valueType?: ValueType) => Promise<void>>
 > = {
@@ -109,6 +110,8 @@ const typeHandlers: Partial<
   GENDER: async (body) => typeHandlers.GENERIC!(body, "GENDER"),
   ETHNICITY: async (body) => typeHandlers.GENERIC!(body, "ETHNICITY"),
   BLOOD_GROUP: async (body) => typeHandlers.GENERIC!(body, "BLOOD_GROUP"),
+  IMPOUND_LOT: async (body) => typeHandlers.GENERIC!(body, "IMPOUND_LOT"),
+  LICENSE: async (body) => typeHandlers.GENERIC!(body, "LICENSE"),
 
   GENERIC: async (body, type) => {
     const error = validate(BASE_ARR, body, true);
