@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-key */
 import { classNames } from "lib/classNames";
 import * as React from "react";
-import { useTable, Column } from "react-table";
+import { ArrowDownShort } from "react-bootstrap-icons";
+import { useTable, useSortBy, Column } from "react-table";
 
 type TableData<T extends object> = {
   rowProps?: JSX.IntrinsicElements["tr"];
@@ -21,13 +22,13 @@ export function Table<T extends object>(props: Props<T>) {
     [props.columns],
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<
+  const { getTableProps, getTableBodyProps, prepareRow, headerGroups, rows } = useTable<
     TableData<T>
-  >({
+  >(
     // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
-    columns,
-    data,
-  });
+    { autoResetSortBy: false, columns, data },
+    useSortBy,
+  );
 
   const containerProps = {
     ...props?.containerProps,
@@ -44,7 +45,24 @@ export function Table<T extends object>(props: Props<T>) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                <th
+                  // actions don't need a toggle sort
+                  {...column.getHeaderProps(
+                    column.id === "actions" ? {} : column.getSortByToggleProps(),
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    {column.render("Header")}
+                    {column.isSorted ? (
+                      <span>
+                        <ArrowDownShort
+                          className="transition-transform"
+                          style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
+                        />
+                      </span>
+                    ) : null}
+                  </div>
+                </th>
               ))}
             </tr>
           ))}
