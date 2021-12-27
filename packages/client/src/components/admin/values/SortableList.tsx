@@ -34,7 +34,7 @@ export function SortableList({ values, search, setList, handleEdit, handleDelete
   }
 
   return (
-    <ReactSortable animation={200} className="mt-5" tag="tbody" list={values} setList={checkMoved}>
+    <ReactSortable animation={200} className="mt-5" tag="ul" list={values} setList={checkMoved}>
       {sortValues(values)
         .filter((v) => handleFilter(v, search))
         .map((value, idx) => (
