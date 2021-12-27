@@ -30,9 +30,14 @@ import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
 import { getTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
+import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
+});
+
+const ImportValuesModal = dynamic(async () => {
+  return (await import("components/admin/values/ImportValuesModal")).ImportValuesModal;
 });
 
 export type TValue =
@@ -162,7 +167,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             {t("totalItems")}: <span className="font-normal">{values.length}</span>
           </h6>
         </div>
-        <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+
+        <div className="flex gap-2">
+          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <OptionsDropdown values={values} />
+        </div>
       </header>
 
       <FormField label={common("search")} className="my-2">
@@ -184,10 +193,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             ...getTableDataOfType(type, value),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(value)} variant="success">
+                <Button small onClick={() => handleEditClick(value)} variant="success">
                   {common("edit")}
                 </Button>
-                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
+                <Button
+                  small
+                  onClick={() => handleDeleteClick(value)}
+                  variant="danger"
+                  className="ml-2"
+                >
                   {common("delete")}
                 </Button>
               </>
@@ -246,6 +260,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         value={tempValue}
         type={type}
       />
+      <ImportValuesModal type={type} />
     </AdminLayout>
   );
 }

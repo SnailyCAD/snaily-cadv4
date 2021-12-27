@@ -6,6 +6,7 @@ export const enum ModalIds {
   ManageBleetModal = "ManageBleetModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
+  ImportValues = "ImportValuesModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
