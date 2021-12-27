@@ -5,6 +5,8 @@ import { ArrowDownShort, ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons
 import { useTable, useSortBy, useGlobalFilter, Column, Row } from "react-table";
 import { ReactSortable } from "react-sortablejs";
 
+const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
+
 type TableData<T extends object> = {
   rowProps?: JSX.IntrinsicElements["tr"];
 } & T;
@@ -99,6 +101,7 @@ export function Table<T extends object>(props: Props<T>) {
           disabled={!props.dragDrop?.enabled}
           tag="tbody"
           setList={handleMove}
+          handle={`.${DRAGGABLE_TABLE_HANDLE}`}
         >
           {rows.map((row) => {
             prepareRow(row);
@@ -124,10 +127,8 @@ function Row<T extends object>({ dragDropEnabled, row }: RowProps<T>) {
   return (
     <tr {...rowProps}>
       {dragDropEnabled ? (
-        <td>
-          <span className="cursor-move">
-            <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
-          </span>
+        <td className={classNames("cursor-move", DRAGGABLE_TABLE_HANDLE)}>
+          <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
         </td>
       ) : null}
       {row.cells.map((cell) => {
