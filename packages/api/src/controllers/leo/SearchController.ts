@@ -97,7 +97,7 @@ export class SearchController {
       },
       include: {
         citizen: true,
-        model: true,
+        model: { include: { value: true } },
         registrationStatus: true,
       },
     });
