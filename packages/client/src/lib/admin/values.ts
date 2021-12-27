@@ -15,44 +15,50 @@ const TYPE_LABELS = {
   [StatusValueType.STATUS_CODE]: "Status Code",
 };
 
-export function getTableDataOfType(type: ValueType, value: TValue) {
-  switch (type) {
-    case "CODES_10": {
-      const v = value as StatusValue;
-      return {
-        shouldDo: SHOULD_DO_LABELS[v.shouldDo],
-        type: TYPE_LABELS[v.type],
-        color: v.color,
-      };
-    }
-    case "DEPARTMENT": {
-      const v = value as DepartmentValue;
+export function useTableDataOfType(type: ValueType) {
+  const common = useTranslations("Common");
 
-      return {
-        callsign: v.callsign,
-        type: DEPARTMENT_LABELS[v.type],
-      };
-    }
-    case "DIVISION": {
-      const v = value as DivisionValue;
+  function get(value: TValue) {
+    switch (type) {
+      case "CODES_10": {
+        const v = value as StatusValue;
+        return {
+          shouldDo: SHOULD_DO_LABELS[v.shouldDo],
+          type: TYPE_LABELS[v.type],
+          color: v.color || common("none"),
+        };
+      }
+      case "DEPARTMENT": {
+        const v = value as DepartmentValue;
 
-      return {
-        callsign: v.callsign,
-        department: v.department?.value?.value ?? "",
-      };
-    }
-    case "VEHICLE":
-    case "WEAPON": {
-      const v = value as VehicleValue;
+        return {
+          callsign: v.callsign || common("none"),
+          type: DEPARTMENT_LABELS[v.type],
+        };
+      }
+      case "DIVISION": {
+        const v = value as DivisionValue;
 
-      return {
-        gameHash: v.hash,
-      };
-    }
-    default: {
-      return {};
+        return {
+          callsign: v.callsign || common("none"),
+          department: v.department?.value?.value ?? common("none"),
+        };
+      }
+      case "VEHICLE":
+      case "WEAPON": {
+        const v = value as VehicleValue;
+
+        return {
+          gameHash: v.hash || common("none"),
+        };
+      }
+      default: {
+        return {};
+      }
     }
   }
+
+  return get;
 }
 
 export function useTableHeadersOfType(type: ValueType) {

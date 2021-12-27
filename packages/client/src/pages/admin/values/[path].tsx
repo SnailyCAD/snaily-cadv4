@@ -29,7 +29,7 @@ import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
-import { getTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
+import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
 
 const ManageValueModal = dynamic(async () => {
@@ -68,6 +68,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const common = useTranslations("Common");
 
   const extraTableHeaders = useTableHeadersOfType(type);
+  const extraTableData = useTableDataOfType(type);
 
   const tableHeaders: any = React.useMemo(() => {
     return [
@@ -190,7 +191,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
           data={values.map((value) => ({
             rowProps: { value },
             value: getValueStrFromValue(value),
-            ...getTableDataOfType(type, value),
+            ...extraTableData(value),
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(value)} variant="success">
