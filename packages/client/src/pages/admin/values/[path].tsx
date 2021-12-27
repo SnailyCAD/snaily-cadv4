@@ -193,10 +193,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             ...getTableDataOfType(type, value),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(value)} variant="success">
+                <Button small onClick={() => handleEditClick(value)} variant="success">
                   {common("edit")}
                 </Button>
-                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
+                <Button
+                  small
+                  onClick={() => handleDeleteClick(value)}
+                  variant="danger"
+                  className="ml-2"
+                >
                   {common("delete")}
                 </Button>
               </>

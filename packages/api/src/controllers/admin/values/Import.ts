@@ -19,8 +19,15 @@ import {
   BUSINESS_ROLE_ARR,
   DLC_ARR,
   DEPARTMENT_ARR,
+  CODES_10_ARR,
 } from "@snailycad/schemas";
-import { DepartmentType, DriversLicenseCategoryType, EmployeeAsEnum } from "@prisma/client";
+import {
+  DepartmentType,
+  DriversLicenseCategoryType,
+  EmployeeAsEnum,
+  ShouldDoType,
+  StatusValueType,
+} from "@prisma/client";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -190,12 +197,45 @@ const typeHandlers: Partial<
       }),
     );
   },
+  CODES_10: async (body) => {
+    const error = validate(CODES_10_ARR, body, true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const arr = body as {
+      color?: string;
+      type: StatusValueType;
+      shouldDo: ShouldDoType;
+      value: string;
+    }[];
+
+    await Promise.all(
+      arr.map(async (item) => {
+        await prisma.statusValue.create({
+          data: {
+            type: item.type,
+            color: item.color,
+            shouldDo: item.shouldDo,
+            value: {
+              create: {
+                isDefault: false,
+                type: "CODES_10",
+                value: item.value,
+              },
+            },
+          },
+        });
+      }),
+    );
+  },
 
   GENDER: async (body) => typeHandlers.GENERIC!(body, "GENDER"),
   ETHNICITY: async (body) => typeHandlers.GENERIC!(body, "ETHNICITY"),
   BLOOD_GROUP: async (body) => typeHandlers.GENERIC!(body, "BLOOD_GROUP"),
   IMPOUND_LOT: async (body) => typeHandlers.GENERIC!(body, "IMPOUND_LOT"),
   LICENSE: async (body) => typeHandlers.GENERIC!(body, "LICENSE"),
+  OFFICER_RANK: async (body) => typeHandlers.GENERIC!(body, "OFFICER_RANK"),
 
   GENERIC: async (body, type) => {
     const error = validate(BASE_ARR, body, true);
