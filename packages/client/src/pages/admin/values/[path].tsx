@@ -72,25 +72,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     ];
   }, [extraTableHeaders, common]);
 
-  function checkMoved(list: TValue[]) {
-    let wasMoved = false;
-
-    for (let i = 0; i < values.length; i++) {
-      if (values[i]?.id !== list[i]?.id) {
-        wasMoved = true;
-        break;
-      }
-    }
-
-    /**
-     * only update db if the list was actually moved.
-     */
-    if (wasMoved) {
-      setList(list);
-    }
-  }
-
   async function setList(list: TValue[]) {
+    if (!hasTableDataChanged(values, list)) return;
+
     setValues((p) =>
       list.map((v, idx) => {
         const prev = p.find((a) => a.id === v.id);
@@ -191,7 +175,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <Table
           dragDrop={{
             enabled: true,
-            handleMove: checkMoved,
+            handleMove: setList,
           }}
           filter={search}
           data={values.map((value) => ({
@@ -318,4 +302,20 @@ export function handleFilter(value: TValue, search: string) {
 
 function getValueStrFromValue(value: TValue) {
   return "createdAt" in value ? value.value : value.value.value;
+}
+
+/**
+ * only update db if the list was actually moved.
+ */
+function hasTableDataChanged(prevList: TValue[], newList: TValue[]) {
+  let wasMoved = false;
+
+  for (let i = 0; i < prevList.length; i++) {
+    if (prevList[i]?.id !== newList[i]?.id) {
+      wasMoved = true;
+      break;
+    }
+  }
+
+  return wasMoved;
 }

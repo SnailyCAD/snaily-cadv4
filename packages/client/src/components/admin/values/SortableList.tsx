@@ -12,14 +12,7 @@ interface ListProps {
   handleDelete: (value: TValue) => void;
 }
 
-export function SortableList({
-  values,
-  search,
-  setList,
-  handleEdit,
-  handleDelete,
-  ...rest
-}: ListProps) {
+export function SortableList({ values, search, setList, handleEdit, handleDelete }: ListProps) {
   const common = useTranslations("Common");
 
   function checkMoved(list: TValue[]) {
@@ -41,14 +34,7 @@ export function SortableList({
   }
 
   return (
-    <ReactSortable
-      animation={200}
-      className="mt-5"
-      tag="tbody"
-      list={values}
-      setList={checkMoved}
-      {...rest}
-    >
+    <ReactSortable animation={200} className="mt-5" tag="tbody" list={values} setList={checkMoved}>
       {sortValues(values)
         .filter((v) => handleFilter(v, search))
         .map((value, idx) => (
