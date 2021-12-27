@@ -1,4 +1,5 @@
 import { DEPARTMENT_LABELS, SHOULD_DO_LABELS } from "components/admin/values/ManageValueModal";
+import { useTranslations } from "next-intl";
 import { TValue } from "src/pages/admin/values/[path]";
 import {
   type StatusValue,
@@ -13,8 +14,6 @@ const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
   [StatusValueType.STATUS_CODE]: "Status Code",
 };
-
-// todo: translations
 
 export function getTableDataOfType(type: ValueType, value: TValue) {
   switch (type) {
@@ -39,7 +38,7 @@ export function getTableDataOfType(type: ValueType, value: TValue) {
 
       return {
         callsign: v.callsign,
-        department: v.department.value.value,
+        department: v.department?.value?.value ?? "",
       };
     }
     case "VEHICLE":
@@ -56,20 +55,23 @@ export function getTableDataOfType(type: ValueType, value: TValue) {
   }
 }
 
-export function getTableHeadersOfType(type: ValueType) {
+export function useTableHeadersOfType(type: ValueType) {
+  const common = useTranslations("Common");
+  const t = useTranslations("Values");
+
   switch (type) {
     case "CODES_10": {
       return [
         {
-          Header: "Should Do",
+          Header: t("shouldDo"),
           accessor: "shouldDo",
         },
         {
-          Header: "Type",
+          Header: common("type"),
           accessor: "type",
         },
         {
-          Header: "Color",
+          Header: t("color"),
           accessor: "color",
         },
       ];
@@ -77,11 +79,11 @@ export function getTableHeadersOfType(type: ValueType) {
     case "DEPARTMENT": {
       return [
         {
-          Header: "Callsign",
+          Header: t("callsign"),
           accessor: "callsign",
         },
         {
-          Header: "Type",
+          Header: common("type"),
           accessor: "type",
         },
       ];
@@ -89,11 +91,11 @@ export function getTableHeadersOfType(type: ValueType) {
     case "DIVISION": {
       return [
         {
-          Header: "Callsign",
+          Header: t("callsign"),
           accessor: "callsign",
         },
         {
-          Header: "Department",
+          Header: t("department"),
           accessor: "department",
         },
       ];
@@ -102,7 +104,7 @@ export function getTableHeadersOfType(type: ValueType) {
     case "WEAPON": {
       return [
         {
-          Header: "Game hash",
+          Header: t("gameHash"),
           accessor: "gameHash",
         },
       ];

@@ -29,7 +29,7 @@ import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
-import { getTableDataOfType, getTableHeadersOfType } from "lib/admin/values";
+import { getTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -62,16 +62,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
+  const extraTableHeaders = useTableHeadersOfType(type);
+
   const tableHeaders: any = React.useMemo(() => {
-    const arr = [
+    return [
       { Header: "Value", accessor: "value" },
+      ...extraTableHeaders,
       { Header: common("actions"), accessor: "actions" },
     ];
-
-    const [value, actions] = arr;
-
-    return [value, ...getTableHeadersOfType(type), actions];
-  }, [type, common]);
+  }, [extraTableHeaders, common]);
 
   function checkMoved(list: TValue[]) {
     let wasMoved = false;
@@ -275,7 +274,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   return {
     props: {
       values,
-      pathValues: values?.[0] ?? { type: "CODES_10", values: [] },
+      pathValues: values?.[0] ?? { type: path, values: [] },
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["admin", "values", "common"], locale)),
