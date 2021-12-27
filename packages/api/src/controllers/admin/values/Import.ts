@@ -12,7 +12,15 @@ import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 
-import { validate, HASH_SCHEMA_ARR, BASE_ARR } from "@snailycad/schemas";
+import {
+  validate,
+  HASH_SCHEMA_ARR,
+  BASE_ARR,
+  BUSINESS_ROLE_ARR,
+  DLC_ARR,
+  DEPARTMENT_ARR,
+} from "@snailycad/schemas";
+import { DepartmentType, DriversLicenseCategoryType, EmployeeAsEnum } from "@prisma/client";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -98,6 +106,82 @@ const typeHandlers: Partial<
               create: {
                 isDefault: false,
                 type: "WEAPON",
+                value: item.value,
+              },
+            },
+          },
+        });
+      }),
+    );
+  },
+  BUSINESS_ROLE: async (body) => {
+    const error = validate(BUSINESS_ROLE_ARR, body, true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const arr = body as { as: EmployeeAsEnum; value: string }[];
+
+    await Promise.all(
+      arr.map(async (item) => {
+        await prisma.employeeValue.create({
+          data: {
+            as: item.as,
+            value: {
+              create: {
+                isDefault: false,
+                type: "BUSINESS_ROLE",
+                value: item.value,
+              },
+            },
+          },
+        });
+      }),
+    );
+  },
+  DRIVERSLICENSE_CATEGORY: async (body) => {
+    const error = validate(DLC_ARR, body, true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const arr = body as { type: DriversLicenseCategoryType; value: string }[];
+
+    await Promise.all(
+      arr.map(async (item) => {
+        await prisma.driversLicenseCategoryValue.create({
+          data: {
+            type: item.type,
+            value: {
+              create: {
+                isDefault: false,
+                type: "DRIVERSLICENSE_CATEGORY",
+                value: item.value,
+              },
+            },
+          },
+        });
+      }),
+    );
+  },
+  DEPARTMENT: async (body) => {
+    const error = validate(DEPARTMENT_ARR, body, true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const arr = body as { type: DepartmentType; callsign: string; value: string }[];
+
+    await Promise.all(
+      arr.map(async (item) => {
+        await prisma.departmentValue.create({
+          data: {
+            type: item.type,
+            callsign: item.callsign,
+            value: {
+              create: {
+                isDefault: false,
+                type: "DEPARTMENT",
                 value: item.value,
               },
             },
