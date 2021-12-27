@@ -1,17 +1,13 @@
-import { ZodError, ZodObject, ZodRawShape } from "zod";
+import { ZodError } from "zod";
 
-export function validate<TObj extends ZodRawShape, Values = any>(
-  schema: ZodObject<TObj>,
+export function validate<Values = any>(
+  schema: any,
   values: Values,
   oneError?: false,
 ): Record<string, string>;
-export function validate<TObj extends ZodRawShape, Values = any>(
-  schema: ZodObject<TObj>,
-  values: Values,
-  oneError?: true,
-): string;
-export function validate<TObj extends ZodRawShape, Values = any>(
-  schema: ZodObject<TObj>,
+export function validate<Values = any>(schema: any, values: Values, oneError?: true): string;
+export function validate<Values = any>(
+  schema: any,
   values: Values,
   oneError = false,
 ): Record<string, string> | string {

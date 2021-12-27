@@ -7,6 +7,8 @@
     "callsign": "Callsign",
     "department": "Department",
     "gameHash": "Game Hash",
+    "file": "file",
+    "importValues": "Import via file",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!"
   },
   "GENDER": {

@@ -30,9 +30,14 @@ import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
 import { getTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
+import { ModalIds } from "types/ModalIds";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
+});
+
+const ImportValuesModal = dynamic(async () => {
+  return (await import("components/admin/values/ImportValuesModal")).ImportValuesModal;
 });
 
 export type TValue =
@@ -162,7 +167,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             {t("totalItems")}: <span className="font-normal">{values.length}</span>
           </h6>
         </div>
-        <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+
+        <div className="flex gap-2">
+          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <Button onClick={() => openModal(ModalIds.ImportValues)}>{t("importValues")}</Button>
+        </div>
       </header>
 
       <FormField label={common("search")} className="my-2">
@@ -246,6 +255,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         value={tempValue}
         type={type}
       />
+      <ImportValuesModal type={type} />
     </AdminLayout>
   );
 }
