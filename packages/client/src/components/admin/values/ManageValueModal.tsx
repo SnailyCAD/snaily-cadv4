@@ -48,7 +48,7 @@ const BUSINESS_VALUES = [
   },
 ];
 
-const SHOULD_DO_LABELS = {
+export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
   [ShouldDoType.SET_STATUS]: "Set Status",
   [ShouldDoType.SET_OFF_DUTY]: "Set Off duty",
   [ShouldDoType.SET_ON_DUTY]: "Set On duty",
@@ -56,7 +56,7 @@ const SHOULD_DO_LABELS = {
   [ShouldDoType.PANIC_BUTTON]: "Panic Button",
 };
 
-const DEPARTMENT_LABELS = {
+export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
   [DepartmentType.EMS_FD]: "EMS/FD",
 };

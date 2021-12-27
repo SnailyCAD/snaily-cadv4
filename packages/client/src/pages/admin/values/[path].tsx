@@ -28,7 +28,8 @@ import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { SortableList } from "components/admin/values/SortableList";
+import { Table } from "components/table/Table";
+import { getTableDataOfType, getTableHeadersOfType } from "lib/admin/values";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -60,6 +61,35 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const t = useTranslations("Values");
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
+
+  const tableHeaders: any = React.useMemo(() => {
+    const arr = [
+      { Header: "Value", accessor: "value" },
+      { Header: common("actions"), accessor: "actions" },
+    ];
+
+    const [value, actions] = arr;
+
+    return [value, ...getTableHeadersOfType(type), actions];
+  }, [type, common]);
+
+  function checkMoved(list: TValue[]) {
+    let wasMoved = false;
+
+    for (let i = 0; i < values.length; i++) {
+      if (values[i]?.id !== list[i]?.id) {
+        wasMoved = true;
+        break;
+      }
+    }
+
+    /**
+     * only update db if the list was actually moved.
+     */
+    if (wasMoved) {
+      setList(list);
+    }
+  }
 
   async function setList(list: TValue[]) {
     setValues((p) =>
@@ -159,12 +189,28 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <SortableList
-          handleDelete={handleDeleteClick}
-          handleEdit={handleEditClick}
-          search={search}
-          values={values}
-          setList={setList}
+        <Table
+          dragDrop={{
+            enabled: true,
+            handleMove: checkMoved,
+          }}
+          filter={search}
+          data={values.map((value) => ({
+            rowProps: { value },
+            value: getValueStrFromValue(value),
+            ...getTableDataOfType(type, value),
+            actions: (
+              <>
+                <Button onClick={() => handleEditClick(value)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={tableHeaders}
         />
       )}
 
@@ -269,4 +315,8 @@ export function handleFilter(value: TValue, search: string) {
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
+}
+
+function getValueStrFromValue(value: TValue) {
+  return "createdAt" in value ? value.value : value.value.value;
 }
