@@ -14,10 +14,10 @@ interface Props {
   group: PenalCodeGroup | null;
   onClose?(): void;
   onCreate?(group: PenalCodeGroup): void;
-  onUpdate?(group: PenalCodeGroup): void;
+  onUpdate?(oldGroup: PenalCodeGroup, group: PenalCodeGroup): void;
 }
 
-export function ManagePenalCodeGroup({ onCreate: onSuccess, onClose, group }: Props) {
+export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Props) {
   const { closeModal, isOpen } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -32,7 +32,15 @@ export function ManagePenalCodeGroup({ onCreate: onSuccess, onClose, group }: Pr
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (group) {
-      // todo
+      const { json } = await execute(`/admin/penal-code-group/${group.id}`, {
+        method: "PUT",
+        data: values,
+      });
+
+      if (json.id) {
+        onUpdate?.(group, json);
+        handleClose();
+      }
     } else {
       const { json } = await execute("/admin/penal-code-group", {
         method: "POST",
@@ -40,7 +48,7 @@ export function ManagePenalCodeGroup({ onCreate: onSuccess, onClose, group }: Pr
       });
 
       if (json.id) {
-        onSuccess?.(json);
+        onCreate?.(json);
         handleClose();
       }
     }

@@ -30,12 +30,16 @@ interface Props {
   values: { type: ValueType; groups: PenalCodeGroup[]; values: PenalCode[] };
 }
 
-const ungroupedGroup = {
-  id: "ungrouped",
-  name: "ungrouped",
-} as PenalCodeGroup;
-
 export default function ValuePath({ values: { type, groups: groupData, values: data } }: Props) {
+  const common = useTranslations("Common");
+  const t = useTranslations("Values");
+  const typeT = useTranslations(type);
+
+  const ungroupedGroup = {
+    id: "ungrouped",
+    name: t("ungrouped"),
+  } as PenalCodeGroup;
+
   const [values, setValues] = React.useState<PenalCode[]>(data);
 
   const [groups, setGroups] = React.useState<PenalCodeGroup[]>([...groupData, ungroupedGroup]);
@@ -47,9 +51,6 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
-  const t = useTranslations("Values");
-  const typeT = useTranslations(type);
-  const common = useTranslations("Common");
   const router = useRouter();
 
   function handleDeleteClick(value: PenalCode) {
@@ -276,6 +277,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       />
 
       <ManagePenalCodeGroup
+        onUpdate={(old, newG) => {
+          setGroups((prev) => {
+            const index = prev.indexOf(old);
+            prev[index] = newG;
+
+            return prev;
+          });
+        }}
         onCreate={(group) => setGroups((p) => [group, ...p])}
         onClose={() => setTempGroup(null)}
         group={tempGroup}
