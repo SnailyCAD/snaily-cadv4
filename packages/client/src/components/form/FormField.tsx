@@ -45,7 +45,7 @@ export function FormField({
 
   // these are used to auto-focus when the user clicks on the label (how htmlFor=".." and id="..." work)
   const selectProps =
-    child.type?.name === "Select"
+    child?.type?.name === "Select"
       ? {
           menuIsOpen: menuOpen,
           onMenuClose: () => setMenuOpen(false),
@@ -57,8 +57,8 @@ export function FormField({
   const checkboxProps = checkbox ? { className: "max-w-[20px]" } : {};
 
   const isInput =
-    ["__Input__", "__Textarea__"].includes(child.type?.displayName) ||
-    child.type?.name === "Select";
+    ["__Input__", "__Textarea__"].includes(child?.type?.displayName) ||
+    child?.type?.name === "Select";
   const inputProps = isInput ? { errorMessage } : {};
 
   const element = React.cloneElement(child as React.ReactElement<any>, {

@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
+import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 
 const enum Toggled {
   VEHICLES,
@@ -268,6 +269,15 @@ export function NameSearchModal() {
                         {currentResult.ccw?.value ?? common("none")}
                       </li>
                     </ul>
+
+                    <Button
+                      small
+                      type="button"
+                      className="mt-2"
+                      onClick={() => openModal(ModalIds.EditCitizenLicenses)}
+                    >
+                      {t("editLicenses")}
+                    </Button>
                   </div>
                 </div>
 
@@ -346,6 +356,7 @@ export function NameSearchModal() {
             </footer>
 
             <AutoSubmit />
+            <EditCitizenLicenses />
           </Form>
         )}
       </Formik>
