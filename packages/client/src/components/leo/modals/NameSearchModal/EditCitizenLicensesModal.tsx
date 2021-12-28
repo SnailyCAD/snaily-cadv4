@@ -17,6 +17,7 @@ export function EditCitizenLicenses() {
   const { license } = useValues();
   const { currentResult, setCurrentResult } = useNameSearch();
   const { state, execute } = useFetch();
+  const t = useTranslations("Citizen");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
@@ -49,7 +50,7 @@ export function EditCitizenLicenses() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form>
-            <FormField errorMessage={errors.driversLicense} label="Drivers license">
+            <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -61,7 +62,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.weaponLicense} label="Weapon license">
+            <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -73,7 +74,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.pilotLicense} label="Pilot license">
+            <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -85,7 +86,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.ccw} label="CCW">
+            <FormField errorMessage={errors.ccw} label={t("ccw")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,

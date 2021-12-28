@@ -271,11 +271,12 @@ export function NameSearchModal() {
                     </ul>
 
                     <Button
+                      small
                       type="button"
                       className="mt-2"
                       onClick={() => openModal(ModalIds.EditCitizenLicenses)}
                     >
-                      Edit licenses
+                      {t("editLicenses")}
                     </Button>
                   </div>
                 </div>
