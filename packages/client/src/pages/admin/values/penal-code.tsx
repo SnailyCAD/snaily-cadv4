@@ -6,32 +6,52 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { PenalCode, ValueType } from "types/prisma";
+import { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { Table } from "components/table/Table";
+import { FormField } from "components/form/FormField";
+import { Input } from "components/form/Input";
+import { ArrowLeft } from "react-bootstrap-icons";
+import { ModalIds } from "types/ModalIds";
+import { ManagePenalCodeGroup } from "components/admin/values/ManagePenalCodeGroup";
+import { AlertModal } from "components/modal/AlertModal";
+import { useRouter } from "next/router";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/ManagePenalCode")).ManagePenalCode;
 });
 
 interface Props {
-  values: { type: ValueType; values: PenalCode[] };
+  values: { type: ValueType; groups: PenalCodeGroup[]; values: PenalCode[] };
 }
 
-export default function ValuePath({ values: { type, values: data } }: Props) {
+export default function ValuePath({ values: { type, groups: groupData, values: data } }: Props) {
+  const common = useTranslations("Common");
+  const t = useTranslations("Values");
+  const typeT = useTranslations(type);
+
+  const ungroupedGroup = {
+    id: "ungrouped",
+    name: t("ungrouped"),
+  } as PenalCodeGroup;
+
   const [values, setValues] = React.useState<PenalCode[]>(data);
 
+  const [groups, setGroups] = React.useState<PenalCodeGroup[]>([...groupData, ungroupedGroup]);
+  const [currentGroup, setCurrentGroup] = React.useState<PenalCodeGroup | null>(null);
+  const [tempGroup, setTempGroup] = React.useState<PenalCodeGroup | null>(null);
+
+  const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<PenalCode | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
-  const t = useTranslations("Values");
-  const typeT = useTranslations(type);
-  const common = useTranslations("Common");
+  const router = useRouter();
 
   function handleDeleteClick(value: PenalCode) {
     setTempValue(value);
@@ -41,6 +61,30 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
   function handleEditClick(value: PenalCode) {
     setTempValue(value);
     openModal("manageValue");
+  }
+
+  function handleEditGroup(group: PenalCodeGroup) {
+    setTempGroup(group);
+    openModal(ModalIds.ManagePenalCodeGroup);
+  }
+
+  function handleDeleteGroupClick(group: PenalCodeGroup) {
+    setTempGroup(group);
+    openModal(ModalIds.AlertDeleteGroup);
+  }
+
+  async function handleDeleteGroup() {
+    if (!tempGroup) return;
+
+    const { json } = await execute(`/admin/penal-code-group/${tempGroup.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      router.replace({ pathname: router.pathname, query: router.query });
+      setTempGroup(null);
+      closeModal(ModalIds.AlertDeleteGroup);
+    }
   }
 
   async function handleDelete() {
@@ -81,35 +125,105 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
-        <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+
+        <div className="flex gap-2">
+          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
+            {t("addPenalCodeGroup")}
+          </Button>
+        </div>
       </header>
+
+      <FormField label={common("search")} className="my-2">
+        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
+      </FormField>
+
       {values.length <= 0 ? (
         <p className="mt-5">There are no penal codes yet.</p>
+      ) : currentGroup ? (
+        <>
+          <header className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold capitalize">{currentGroup.name}</h1>
+
+            <Button onClick={() => setCurrentGroup(null)} className="flex items-center gap-3">
+              <ArrowLeft /> View all groups
+            </Button>
+          </header>
+
+          <Table
+            filter={search}
+            data={values
+              .filter((v) =>
+                currentGroup.id === "ungrouped" && v.groupId === null
+                  ? true
+                  : v.groupId === currentGroup.id,
+              )
+              .map((code) => ({
+                title: code.title,
+                description: code.description,
+                actions: (
+                  <>
+                    <Button onClick={() => handleEditClick(code)} small variant="success">
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(code)}
+                      small
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ),
+              }))}
+            columns={[
+              { Header: common("title"), accessor: "title" },
+              { Header: common("description"), accessor: "description" },
+              { Header: common("actions"), accessor: "actions" },
+            ]}
+          />
+        </>
       ) : (
-        <ul className="mt-5">
-          {values.map((value, idx) => (
-            <li
-              className="flex items-center justify-between p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-              key={value.id}
-            >
-              <div>
-                <span className="text-gray-500 select-none">{++idx}.</span>
-                <span className="ml-2">{value.title}</span>
-
-                <p className="mt-2 ml-5">{value.description}</p>
-              </div>
-
-              <div>
-                <Button onClick={() => handleEditClick(value)} variant="success">
-                  {common("edit")}
+        <Table
+          filter={search}
+          data={groups.map((group) => ({
+            value: group.name,
+            actions: (
+              <>
+                <Button onClick={() => setCurrentGroup(group)} small>
+                  {common("view")}
                 </Button>
-                <Button onClick={() => handleDeleteClick(value)} variant="danger" className="ml-2">
-                  {common("delete")}
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                {group.id !== "ungrouped" ? (
+                  <>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleEditGroup(group)}
+                      small
+                      variant="success"
+                      disabled={group.id === "ungrouped"}
+                    >
+                      {common("edit")}
+                    </Button>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleDeleteGroupClick(group)}
+                      small
+                      variant="danger"
+                      disabled={group.id === "ungrouped"}
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ) : null}
+              </>
+            ),
+          }))}
+          columns={[
+            { Header: common("name"), accessor: "value" },
+            { Header: common("actions"), accessor: "actions" },
+          ]}
+        />
       )}
 
       <Modal
@@ -146,6 +260,7 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
       </Modal>
 
       <ManagePenalCode
+        groups={groups}
         onCreate={(value) => {
           setValues((p) => [...p, value]);
         }}
@@ -159,6 +274,31 @@ export default function ValuePath({ values: { type, values: data } }: Props) {
         }}
         penalCode={tempValue}
         type={type}
+      />
+
+      <ManagePenalCodeGroup
+        onUpdate={(old, newG) => {
+          setGroups((prev) => {
+            const index = prev.indexOf(old);
+            prev[index] = newG;
+
+            return prev;
+          });
+        }}
+        onCreate={(group) => setGroups((p) => [group, ...p])}
+        onClose={() => setTempGroup(null)}
+        group={tempGroup}
+      />
+
+      <AlertModal
+        id={ModalIds.AlertDeleteGroup}
+        description={t.rich("alert_deletePenalCodeGroup", {
+          span: (children) => <span className="font-bold">{children}</span>,
+          group: tempGroup?.name ?? "",
+        })}
+        onDeleteClick={handleDeleteGroup}
+        title={t("deleteGroup")}
+        state={state}
       />
     </AdminLayout>
   );

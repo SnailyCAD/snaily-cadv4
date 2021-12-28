@@ -60,10 +60,12 @@ export class ValuesController {
         if (type === "PENAL_CODE") {
           return {
             type,
+            groups: await prisma.penalCodeGroup.findMany(),
             values: await prisma.penalCode.findMany({
               include: {
                 warningApplicable: true,
                 warningNotApplicable: true,
+                group: true,
               },
             }),
           };
@@ -129,6 +131,7 @@ export class ValuesController {
         data: {
           title: body.get("title"),
           description: body.get("description"),
+          groupId: body.get("groupId"),
           [key]: id,
         },
         include: {
@@ -374,6 +377,7 @@ export class ValuesController {
         data: {
           title: body.get("title"),
           description: body.get("description"),
+          groupId: body.get("groupId"),
           [key]: warningId,
         },
         include: {

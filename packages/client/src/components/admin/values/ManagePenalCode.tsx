@@ -8,19 +8,21 @@ import { Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
-import { PenalCode, ValueType } from "types/prisma";
+import { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { FormRow } from "components/form/FormRow";
+import { Select } from "components/form/Select";
 
 interface Props {
   type: ValueType;
   penalCode: PenalCode | null;
+  groups: PenalCodeGroup[];
   onCreate: (newValue: PenalCode) => void;
   onUpdate: (oldValue: PenalCode, newValue: PenalCode) => void;
 }
 
-export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) {
+export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -35,6 +37,7 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
       fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
       prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
       bail: values.warningApplicable ? null : values.bail.values,
+      groupId: values.group === "ungrouped" ? null : values.group,
     };
 
     if (penalCode) {
@@ -63,6 +66,7 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     description: penalCode?.description ?? "",
+    group: penalCode?.groupId ?? "",
     warningApplicable: !!penalCode?.warningApplicable,
     fines1: {
       enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
@@ -100,6 +104,18 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
 
             <FormField errorMessage={errors.description} label="Description">
               <Textarea name="description" onChange={handleChange} value={values.description} />
+            </FormField>
+
+            <FormField optional errorMessage={errors.group} label="Group">
+              <Select
+                name="group"
+                onChange={handleChange}
+                value={values.group}
+                values={groups.map((group) => ({
+                  value: group.id,
+                  label: group.name,
+                }))}
+              />
             </FormField>
 
             <FormRow>
