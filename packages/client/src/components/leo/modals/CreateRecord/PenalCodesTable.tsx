@@ -29,8 +29,6 @@ export function PenalCodesTable({ penalCodes }: Props) {
     0,
   );
 
-  console.log({ totalFines, totalBail, totalJailTime });
-
   return (
     <div className="w-full my-3 overflow-x-auto">
       <Table

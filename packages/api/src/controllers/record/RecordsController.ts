@@ -71,6 +71,13 @@ export class RecordsController {
       },
     });
 
+    if (ticket.type === "ARREST_REPORT") {
+      await prisma.citizen.update({
+        where: { id: citizen.id },
+        data: { arrested: true },
+      });
+    }
+
     const violations: Violation[] = [];
 
     await Promise.all(
@@ -182,7 +189,7 @@ export class RecordsController {
       return value === min;
     }
 
-    return value > min && value < max;
+    return value >= min && value <= max;
   }
 
   exists(...values: (number | undefined)[]) {
