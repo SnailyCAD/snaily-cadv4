@@ -17,7 +17,7 @@ export function EditCitizenLicenses() {
   const { license } = useValues();
   const { currentResult, setCurrentResult } = useNameSearch();
   const { state, execute } = useFetch();
-  const t = useTranslations("Citizen");
+  const t = useTranslations();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
@@ -42,7 +42,7 @@ export function EditCitizenLicenses() {
 
   return (
     <Modal
-      title="Edit Licenses"
+      title={t("Leo.editLicenses")}
       isOpen={isOpen(ModalIds.EditCitizenLicenses)}
       onClose={() => closeModal(ModalIds.EditCitizenLicenses)}
       className="min-w-[600px]"
@@ -50,7 +50,7 @@ export function EditCitizenLicenses() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form>
-            <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+            <FormField errorMessage={errors.driversLicense} label={t("Citizen.driversLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -62,7 +62,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+            <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -74,7 +74,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
+            <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
@@ -86,7 +86,7 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.ccw} label={t("ccw")}>
+            <FormField errorMessage={errors.ccw} label={t("Citizen.ccw")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
