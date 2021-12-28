@@ -375,6 +375,20 @@ export type PenalCode = {
   warningApplicable: WarningApplicable | null;
   warningNotApplicableId: string | null;
   warningNotApplicable: WarningNotApplicable | null;
+  group: PenalCodeGroup | null;
+  groupId: string | null;
+  position: number | null;
+};
+
+/**
+ * Model PenalCodeGroup
+ *
+ */
+export type PenalCodeGroup = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
 };
 
 /**

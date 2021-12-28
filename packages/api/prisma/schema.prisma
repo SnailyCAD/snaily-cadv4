@@ -269,6 +269,17 @@ model PenalCode {
   warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
   warningNotApplicableId String?
   violations             Violation[]
+  position               Int?
+  group                  PenalCodeGroup?       @relation(fields: [groupId], references: [id])
+  groupId                String?
+}
+
+model PenalCodeGroup {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now()) @updatedAt
+  name      String
+  PenalCode PenalCode[]
 }
 
 // Int[] = [field1, field2]. Items in this array where idx > 1 will be ignored

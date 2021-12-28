@@ -323,7 +323,7 @@ function getValueStrFromValue(value: TValue) {
 /**
  * only update db if the list was actually moved.
  */
-function hasTableDataChanged(prevList: TValue[], newList: TValue[]) {
+export function hasTableDataChanged(prevList: TValue[], newList: TValue[]) {
   let wasMoved = false;
 
   for (let i = 0; i < prevList.length; i++) {
