@@ -18,6 +18,7 @@ import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
+import compareDesc from "date-fns/compareDesc";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -119,59 +120,61 @@ export function ActiveCalls() {
                   <th className="bg-gray-300">{t("caller")}</th>
                   <th className="bg-gray-300">{t("location")}</th>
                   <th className="bg-gray-300">{common("description")}</th>
-                  <th className="bg-gray-300">{common("createdAt")}</th>
+                  <th className="bg-gray-300">{common("updatedAt")}</th>
                   <th className="bg-gray-300">{t("postal")}</th>
                   <th className="bg-gray-300">{t("assignedUnits")}</th>
                   <th className="bg-gray-300">{common("actions")}</th>
                 </tr>
               </thead>
               <tbody>
-                {calls.map((call) => (
-                  <tr key={call.id}>
-                    <td>{call.name}</td>
-                    <td>{call.location}</td>
-                    <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
-                      {call.description}
-                    </td>
-                    <td>{format(new Date(call.createdAt), "HH:mm:ss - yyyy-MM-dd")}</td>
-                    <td>{call.postal || common("none")}</td>
-                    <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
-                    <td>
-                      {isDispatch ? (
-                        <>
-                          <Button small variant="success" onClick={() => handleManageClick(call)}>
-                            {common("manage")}
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button disabled={!unit} small onClick={() => handleManageClick(call)}>
-                            {t("viewEvents")}
-                          </Button>
-                          {isUnitAssigned(call) ? null : (
-                            <Button
-                              className="ml-2"
-                              disabled={!unit}
-                              small
-                              onClick={() => handleAssignToCall(call)}
-                            >
-                              {t("assignToCall")}
+                {calls
+                  .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
+                  .map((call) => (
+                    <tr key={call.id}>
+                      <td>{call.name}</td>
+                      <td>{call.location}</td>
+                      <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                        {call.description}
+                      </td>
+                      <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
+                      <td>{call.postal || common("none")}</td>
+                      <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
+                      <td>
+                        {isDispatch ? (
+                          <>
+                            <Button small variant="success" onClick={() => handleManageClick(call)}>
+                              {common("manage")}
                             </Button>
-                          )}
-                        </>
-                      )}
+                          </>
+                        ) : (
+                          <>
+                            <Button disabled={!unit} small onClick={() => handleManageClick(call)}>
+                              {t("viewEvents")}
+                            </Button>
+                            {isUnitAssigned(call) ? null : (
+                              <Button
+                                className="ml-2"
+                                disabled={!unit}
+                                small
+                                onClick={() => handleAssignToCall(call)}
+                              >
+                                {t("assignToCall")}
+                              </Button>
+                            )}
+                          </>
+                        )}
 
-                      <Button
-                        disabled={!isDispatch && !unit}
-                        small
-                        className="ml-2"
-                        onClick={() => handleCallTow(call)}
-                      >
-                        {t("callTow")}
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
+                        <Button
+                          disabled={!isDispatch && !unit}
+                          small
+                          className="ml-2"
+                          onClick={() => handleCallTow(call)}
+                        >
+                          {t("callTow")}
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
