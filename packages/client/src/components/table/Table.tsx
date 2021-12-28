@@ -17,6 +17,10 @@ interface Props<T extends object = {}> {
   columns: readonly (Column<TableData<T>> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
+  defaultSort?: {
+    columnId: string;
+    descending?: boolean;
+  };
   dragDrop?: {
     handleMove: (list: any[]) => void;
     enabled?: boolean;
@@ -31,13 +35,20 @@ export function Table<T extends object>(props: Props<T>) {
     [props.columns],
   );
 
-  const { getTableProps, getTableBodyProps, prepareRow, setGlobalFilter, headerGroups, rows } =
-    useTable<TableData<T>>(
-      // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
-      { autoResetSortBy: false, columns, data },
-      useGlobalFilter,
-      useSortBy,
-    );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    prepareRow,
+    setGlobalFilter,
+    toggleSortBy,
+    headerGroups,
+    rows,
+  } = useTable<TableData<T>>(
+    // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
+    { autoResetSortBy: false, columns, data },
+    useGlobalFilter,
+    useSortBy,
+  );
 
   function handleMove(tableList: any[]) {
     const originals = tableList.map((list) => {
@@ -50,6 +61,10 @@ export function Table<T extends object>(props: Props<T>) {
   React.useEffect(() => {
     setGlobalFilter(props.filter);
   }, [props.filter, setGlobalFilter]);
+
+  React.useEffect(() => {
+    props.defaultSort && toggleSortBy(props.defaultSort.columnId, props.defaultSort.descending);
+  }, [props.defaultSort, toggleSortBy]);
 
   const containerProps = {
     ...props?.containerProps,

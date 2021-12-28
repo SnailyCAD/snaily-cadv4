@@ -150,7 +150,7 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
   );
 }
 
-const FieldsRow = ({ keyValue }: { keyValue: string }) => {
+const FieldsRow = ({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) => {
   const { values, handleChange, setFieldValue } = useFormikContext<any>();
 
   const disabled = keyValue === "fines1" ? !values.warningApplicable : values.warningApplicable;
@@ -163,11 +163,14 @@ const FieldsRow = ({ keyValue }: { keyValue: string }) => {
     ? "Bail "
     : "Prison Term";
 
+  // bail cannot be enabled when prisonTerm isn't enabled.
+  const isBailDisabled = keyValue === "bail" ? !values.prisonTerm.enabled : false;
+
   return (
     <FormRow className="mb-0">
       <FormField className="mb-0" checkbox label={label}>
         <Input
-          disabled={disabled}
+          disabled={isBailDisabled || disabled}
           onChange={() => setFieldValue(`${keyValue}.enabled`, !values[keyValue].enabled)}
           checked={values[keyValue].enabled}
           type="checkbox"

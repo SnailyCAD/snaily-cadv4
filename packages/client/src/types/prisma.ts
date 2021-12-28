@@ -422,6 +422,19 @@ export type Record = {
   createdAt: Date;
   postal: string;
   notes: string | null;
+  releaseId: string | null;
+  release: RecordRelease | null;
+};
+
+/**
+ * Model RecordRelease
+ *
+ */
+export type RecordRelease = {
+  id: string;
+  type: ReleaseType;
+  citizenId: string | null;
+  releasedBy: Citizen | null;
 };
 
 /**
@@ -722,3 +735,10 @@ export const StatusValueType = {
 } as const;
 
 export type StatusValueType = typeof StatusValueType[keyof typeof StatusValueType];
+
+export const ReleaseType = {
+  TIME_OUT: "TIME_OUT",
+  BAIL_POSTED: "BAIL_POSTED",
+};
+
+export type ReleaseType = typeof ReleaseType[keyof typeof ReleaseType];

@@ -157,6 +157,7 @@ model Citizen {
   truckLogs        TruckLog[]
   createdAt        DateTime                      @default(now())
   updatedAt        DateTime                      @default(now()) @updatedAt
+  RecordRelease    RecordRelease[]
 }
 
 enum Rank {
@@ -680,17 +681,32 @@ enum BoloType {
 
 // tickets, arrest reports, warrants, written warnings
 model Record {
-  id         String      @id @default(uuid())
+  id         String         @id @default(uuid())
   type       RecordType
-  citizen    Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen    Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId  String
-  officer    Officer     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officer    Officer        @relation(fields: [officerId], references: [id], onDelete: Cascade)
   officerId  String
   violations Violation[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @default(now()) @updatedAt
-  postal     String      @db.VarChar(255)
-  notes      String?     @db.Text
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now()) @updatedAt
+  postal     String         @db.VarChar(255)
+  notes      String?        @db.Text
+  release    RecordRelease? @relation(fields: [releaseId], references: [id])
+  releaseId  String?
+}
+
+model RecordRelease {
+  id         String      @id @default(uuid())
+  type       ReleaseType
+  releasedBy Citizen?    @relation(fields: [citizenId], references: [id])
+  citizenId  String?
+  Record     Record[]
+}
+
+enum ReleaseType {
+  TIME_OUT
+  BAIL_POSTED
 }
 
 enum RecordType {
