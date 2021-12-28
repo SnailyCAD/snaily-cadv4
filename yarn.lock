@@ -1147,8 +1147,8 @@ __metadata:
   resolution: "@snailycad/api@workspace:packages/api"
   dependencies:
     "@prisma/client": ^3.7.0
-    "@snailycad/config": 1.0.0-beta.24
-    "@snailycad/schemas": 1.0.0-beta.24
+    "@snailycad/config": 1.0.0-beta.25
+    "@snailycad/schemas": 1.0.0-beta.25
     "@tsed/common": ^6.95.9
     "@tsed/core": ^6.95.9
     "@tsed/di": ^6.95.9
@@ -1203,8 +1203,8 @@ __metadata:
     "@radix-ui/react-switch": ^0.1.4
     "@react-aria/label": ^3.2.1
     "@react-aria/ssr": ^3.1.0
-    "@snailycad/config": 1.0.0-beta.24
-    "@snailycad/schemas": 1.0.0-beta.24
+    "@snailycad/config": 1.0.0-beta.25
+    "@snailycad/schemas": 1.0.0-beta.25
     "@types/jquery": ^3.5.10
     "@types/leaflet": ^1.7.6
     "@types/leaflet.markercluster": ^1.4.6
@@ -1249,7 +1249,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.0.0-beta.24, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.0.0-beta.25, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
@@ -1259,7 +1259,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.0.0-beta.24, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.0.0-beta.25, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
