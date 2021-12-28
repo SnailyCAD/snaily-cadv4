@@ -103,22 +103,10 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   ),
                 }))}
                 columns={[
-                  {
-                    Header: t("diseases"),
-                    accessor: "type",
-                  },
-                  {
-                    Header: t("bloodGroup"),
-                    accessor: "bloodGroup",
-                  },
-                  {
-                    Header: t("description"),
-                    accessor: "description",
-                  },
-                  {
-                    Header: common("actions"),
-                    accessor: "actions",
-                  },
+                  { Header: t("diseases"), accessor: "type" },
+                  { Header: t("bloodGroup"), accessor: "bloodGroup" },
+                  { Header: t("description"), accessor: "description" },
+                  { Header: common("actions"), accessor: "actions" },
                 ]}
               />
             ) : null}

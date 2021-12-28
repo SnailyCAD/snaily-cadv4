@@ -80,26 +80,11 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
               ),
             }))}
             columns={[
-              {
-                Header: t("model"),
-                accessor: "model",
-              },
-              {
-                Header: t("registrationStatus"),
-                accessor: "registrationStatus",
-              },
-              {
-                Header: t("serialNumber"),
-                accessor: "serialNumber",
-              },
-              {
-                Header: common("createdAt"),
-                accessor: "createdAt",
-              },
-              {
-                Header: common("actions"),
-                accessor: "actions",
-              },
+              { Header: t("model"), accessor: "model" },
+              { Header: t("registrationStatus"), accessor: "registrationStatus" },
+              { Header: t("serialNumber"), accessor: "serialNumber" },
+              { Header: common("createdAt"), accessor: "createdAt" },
+              { Header: common("actions"), accessor: "actions" },
             ]}
           />
         )}

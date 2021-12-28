@@ -104,22 +104,10 @@ export default function MyOfficersLogs({ logs: data }: Props) {
             };
           })}
           columns={[
-            {
-              Header: t("officer"),
-              accessor: "officer",
-            },
-            {
-              Header: t("startedAt"),
-              accessor: "startedAt",
-            },
-            {
-              Header: t("endedAt"),
-              accessor: "endedAt",
-            },
-            {
-              Header: t("totalTime"),
-              accessor: "totalTime",
-            },
+            { Header: t("officer"), accessor: "officer" },
+            { Header: t("startedAt"), accessor: "startedAt" },
+            { Header: t("endedAt"), accessor: "endedAt" },
+            { Header: t("totalTime"), accessor: "totalTime" },
           ]}
         />
       )}

@@ -147,42 +147,15 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
             ) : null,
           }))}
           columns={[
-            {
-              Header: t("caseNumber"),
-              accessor: "caseNumber",
-            },
-            {
-              Header: t("officer"),
-              accessor: "officer",
-            },
-            {
-              Header: t("involvedOfficers"),
-              accessor: "involvedOfficers",
-            },
-            {
-              Header: t("firearmsInvolved"),
-              accessor: "firearmsInvolved",
-            },
-            {
-              Header: t("injuriesOrFatalities"),
-              accessor: "injuriesOrFatalities",
-            },
-            {
-              Header: t("arrestsMade"),
-              accessor: "arrestsMade",
-            },
-            {
-              Header: common("description"),
-              accessor: "description",
-            },
-            {
-              Header: common("createdAt"),
-              accessor: "createdAt",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("caseNumber"), accessor: "caseNumber" },
+            { Header: t("officer"), accessor: "officer" },
+            { Header: t("involvedOfficers"), accessor: "involvedOfficers" },
+            { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
+            { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
+            { Header: t("arrestsMade"), accessor: "arrestsMade" },
+            { Header: common("description"), accessor: "description" },
+            { Header: common("createdAt"), accessor: "createdAt" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

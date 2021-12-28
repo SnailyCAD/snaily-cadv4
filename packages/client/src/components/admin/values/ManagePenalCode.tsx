@@ -63,7 +63,7 @@ export function ManagePenalCode({ onCreate, onUpdate, type, penalCode }: Props) 
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     description: penalCode?.description ?? "",
-    warningApplicable: penalCode?.warningApplicable ? true : !penalCode?.warningNotApplicable,
+    warningApplicable: !!penalCode?.warningApplicable,
     fines1: {
       enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
       values: penalCode?.warningApplicable?.fines ?? [],

@@ -70,22 +70,10 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             ),
           }))}
           columns={[
-            {
-              Header: t("plate"),
-              accessor: "plate",
-            },
-            {
-              Header: t("model"),
-              accessor: "model",
-            },
-            {
-              Header: t("location"),
-              accessor: "location",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("plate"), accessor: "plate" },
+            { Header: t("model"), accessor: "model" },
+            { Header: t("location"), accessor: "location" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

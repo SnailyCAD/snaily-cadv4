@@ -120,32 +120,12 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
             ),
           }))}
         columns={[
-          {
-            Header: t("Leo.violations"),
-            accessor: "violations",
-          },
-          {
-            Header: t("Leo.postal"),
-            accessor: "postal",
-          },
-          {
-            Header: t("Leo.officer"),
-            accessor: "officer",
-          },
-          {
-            Header: common("description"),
-            accessor: "description",
-          },
-          {
-            Header: common("createdAt"),
-            accessor: "createdAt",
-          },
-          isCitizen
-            ? null
-            : {
-                Header: common("actions"),
-                accessor: "actions",
-              },
+          { Header: t("Leo.violations"), accessor: "violations" },
+          { Header: t("Leo.postal"), accessor: "postal" },
+          { Header: t("Leo.officer"), accessor: "officer" },
+          { Header: common("description"), accessor: "description" },
+          { Header: common("createdAt"), accessor: "createdAt" },
+          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
         ]}
       />
     </div>

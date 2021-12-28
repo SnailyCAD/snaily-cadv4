@@ -96,30 +96,12 @@ export default function Jail({ data: citizens }: Props) {
             };
           })}
           columns={[
-            {
-              Header: t("citizen"),
-              accessor: "citizen",
-            },
-            {
-              Header: t("officer"),
-              accessor: "officer",
-            },
-            {
-              Header: t("jailTime"),
-              accessor: "jailTime",
-            },
-            {
-              Header: t("status"),
-              accessor: "status",
-            },
-            {
-              Header: common("createdAt"),
-              accessor: "createdAt",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("citizen"), accessor: "citizen" },
+            { Header: t("officer"), accessor: "officer" },
+            { Header: t("jailTime"), accessor: "jailTime" },
+            { Header: t("status"), accessor: "status" },
+            { Header: common("createdAt"), accessor: "createdAt" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

@@ -30,30 +30,12 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
               createdAt: format(new Date(vehicle.createdAt), "yyyy-MM-dd"),
             }))}
             columns={[
-              {
-                Header: t("Vehicles.plate"),
-                accessor: "plate",
-              },
-              {
-                Header: t("Vehicles.model"),
-                accessor: "model",
-              },
-              {
-                Header: t("Vehicles.color"),
-                accessor: "color",
-              },
-              {
-                Header: t("Vehicles.registrationStatus"),
-                accessor: "registrationStatus",
-              },
-              {
-                Header: t("Vehicles.vinNumber"),
-                accessor: "vinNumber",
-              },
-              {
-                Header: common("createdAt"),
-                accessor: "createdAt",
-              },
+              { Header: t("Vehicles.plate"), accessor: "plate" },
+              { Header: t("Vehicles.model"), accessor: "model" },
+              { Header: t("Vehicles.color"), accessor: "color" },
+              { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
+              { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
+              { Header: common("createdAt"), accessor: "createdAt" },
             ]}
           />
         )}

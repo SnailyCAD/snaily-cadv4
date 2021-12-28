@@ -86,32 +86,12 @@ export function ActiveDeputies() {
             };
           })}
           columns={[
-            {
-              Header: t("Ems.deputy"),
-              accessor: "deputy",
-            },
-            {
-              Header: t("Leo.badgeNumber"),
-              accessor: "badgeNumber",
-            },
-            {
-              Header: t("Leo.department"),
-              accessor: "department",
-            },
-            {
-              Header: t("Leo.division"),
-              accessor: "division",
-            },
-            {
-              Header: t("Leo.status"),
-              accessor: "status",
-            },
-            isDispatch
-              ? {
-                  Header: common("actions"),
-                  accessor: "actions",
-                }
-              : null,
+            { Header: t("Ems.deputy"), accessor: "deputy" },
+            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            { Header: t("Leo.department"), accessor: "department" },
+            { Header: t("Leo.division"), accessor: "division" },
+            { Header: t("Leo.status"), accessor: "status" },
+            isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

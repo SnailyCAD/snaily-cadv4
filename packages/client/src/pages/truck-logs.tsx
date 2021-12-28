@@ -98,26 +98,11 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             ),
           }))}
           columns={[
-            {
-              Header: t("driver"),
-              accessor: "driver",
-            },
-            {
-              Header: t("vehicle"),
-              accessor: "vehicle",
-            },
-            {
-              Header: t("startedAt"),
-              accessor: "startedAt",
-            },
-            {
-              Header: t("endedAt"),
-              accessor: "endedAt",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("driver"), accessor: "driver" },
+            { Header: t("vehicle"), accessor: "vehicle" },
+            { Header: t("startedAt"), accessor: "startedAt" },
+            { Header: t("endedAt"), accessor: "endedAt" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

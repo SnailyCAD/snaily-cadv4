@@ -39,14 +39,8 @@ export function PenalCodesTable({ penalCodes }: Props) {
           data: <TableItemForm penalCode={penalCode} />,
         }))}
         columns={[
-          {
-            accessor: "title",
-            Header: t("penalCode"),
-          },
-          {
-            accessor: "data",
-            Header: "Data",
-          },
+          { accessor: "title", Header: t("penalCode") },
+          { accessor: "data", Header: "Data" },
         ]}
       />
       <p className="flex items-center justify-center w-full gap-2 p-2 px-3">
