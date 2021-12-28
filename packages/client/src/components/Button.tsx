@@ -1,7 +1,7 @@
 import * as React from "react";
 import { classNames } from "lib/classNames";
 
-type Props = JSX.IntrinsicElements["button"] & {
+export type ButtonProps = JSX.IntrinsicElements["button"] & {
   small?: boolean;
   variant?: keyof typeof variants;
 };
@@ -17,7 +17,7 @@ const variants = {
   blue: "bg-blue-500 dark:bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-600",
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, Props>(
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "default", small, className = "", ...rest }, ref) => (
     <button
       className={classNames(
