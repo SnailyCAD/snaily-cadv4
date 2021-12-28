@@ -2,7 +2,7 @@ import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { PenalCode, Record, RecordType } from "types/prisma";
+import { Record, RecordType, Violation } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -15,7 +15,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
 import { Table } from "components/table/Table";
 
-export type FullRecord = Record & { officer: FullOfficer; violations: PenalCode[] };
+export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
 interface Props {
   records: FullRecord[];
 }
@@ -103,7 +103,7 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => ({
-            violations: record.violations.map((v) => v.title).join(", "),
+            violations: record.violations.map((v) => v.penalCode.title).join(", "),
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
             description: record.notes,
@@ -120,32 +120,12 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
             ),
           }))}
         columns={[
-          {
-            Header: t("Leo.violations"),
-            accessor: "violations",
-          },
-          {
-            Header: t("Leo.postal"),
-            accessor: "postal",
-          },
-          {
-            Header: t("Leo.officer"),
-            accessor: "officer",
-          },
-          {
-            Header: common("description"),
-            accessor: "description",
-          },
-          {
-            Header: common("createdAt"),
-            accessor: "createdAt",
-          },
-          isCitizen
-            ? null
-            : {
-                Header: common("actions"),
-                accessor: "actions",
-              },
+          { Header: t("Leo.violations"), accessor: "violations" },
+          { Header: t("Leo.postal"), accessor: "postal" },
+          { Header: t("Leo.officer"), accessor: "officer" },
+          { Header: common("description"), accessor: "description" },
+          { Header: common("createdAt"), accessor: "createdAt" },
+          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
         ]}
       />
     </div>

@@ -28,7 +28,11 @@ const citizenSearchInclude = {
       officer: {
         select: unitProperties,
       },
-      violations: true,
+      violations: {
+        include: {
+          penalCode: true,
+        },
+      },
     },
   },
 };

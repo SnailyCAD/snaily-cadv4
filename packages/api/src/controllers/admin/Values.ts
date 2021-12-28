@@ -60,7 +60,12 @@ export class ValuesController {
         if (type === "PENAL_CODE") {
           return {
             type,
-            values: await prisma.penalCode.findMany(),
+            values: await prisma.penalCode.findMany({
+              include: {
+                warningApplicable: true,
+                warningNotApplicable: true,
+              },
+            }),
           };
         }
 
@@ -92,10 +97,43 @@ export class ValuesController {
         throw new BadRequest(error);
       }
 
+      let id;
+      if (body.get("warningApplicable")) {
+        const fines = this.parsePenalCodeValues(body.get("fines"));
+
+        const data = await prisma.warningApplicable.create({
+          data: {
+            fines,
+          },
+        });
+
+        id = data.id;
+      } else {
+        const fines = this.parsePenalCodeValues(body.get("fines"));
+        const prisonTerm = this.parsePenalCodeValues(body.get("prisonTerm"));
+        const bail = this.parsePenalCodeValues(body.get("bail"));
+
+        const data = await prisma.warningNotApplicable.create({
+          data: {
+            fines,
+            prisonTerm,
+            bail,
+          },
+        });
+
+        id = data.id;
+      }
+
+      const key = body.get("warningApplicable") ? "warningApplicableId" : "warningNotApplicableId";
       const code = await prisma.penalCode.create({
         data: {
           title: body.get("title"),
           description: body.get("description"),
+          [key]: id,
+        },
+        include: {
+          warningApplicable: true,
+          warningNotApplicable: true,
         },
       });
 
@@ -283,8 +321,68 @@ export class ValuesController {
     const error = validate(VALUE_SCHEMA, body.toJSON(), true);
     const type = this.getTypeFromPath(path);
 
-    if (error) {
-      return { error };
+    if (error && !["PENAL_CODE"].includes(type)) {
+      throw new BadRequest(error);
+    }
+
+    if (type === "PENAL_CODE") {
+      const error = validate(CREATE_PENAL_CODE_SCHEMA, body.toJSON(), true);
+      if (error) {
+        throw new BadRequest(error);
+      }
+
+      const penalCode = await prisma.penalCode.findUnique({
+        where: { id },
+      });
+
+      if (!penalCode) {
+        throw new NotFound("penalCodeNotFound");
+      }
+
+      let warningId;
+      if (body.get("warningApplicable")) {
+        const fines = this.parsePenalCodeValues(body.get("fines"));
+
+        const data = await prisma.warningApplicable.upsert({
+          where: {
+            id: penalCode.warningApplicableId ?? "null",
+          },
+          create: { fines },
+          update: { fines },
+        });
+
+        warningId = data.id;
+      } else {
+        const fines = this.parsePenalCodeValues(body.get("fines"));
+        const prisonTerm = this.parsePenalCodeValues(body.get("prisonTerm"));
+        const bail = this.parsePenalCodeValues(body.get("prisonTerm"));
+
+        const data = await prisma.warningNotApplicable.upsert({
+          where: {
+            id: penalCode.warningNotApplicableId ?? "null",
+          },
+          create: { fines, prisonTerm, bail },
+          update: { fines, prisonTerm, bail },
+        });
+
+        warningId = data.id;
+      }
+
+      const key = body.get("warningApplicable") ? "warningApplicableId" : "warningNotApplicableId";
+      const updated = await prisma.penalCode.update({
+        where: { id },
+        data: {
+          title: body.get("title"),
+          description: body.get("description"),
+          [key]: warningId,
+        },
+        include: {
+          warningApplicable: true,
+          warningNotApplicable: true,
+        },
+      });
+
+      return updated;
     }
 
     if (type === "CODES_10") {
@@ -477,5 +575,14 @@ export class ValuesController {
 
   private getTypeFromPath(path: string): ValueType {
     return path.replace("-", "_").toUpperCase() as ValueType;
+  }
+
+  private parsePenalCodeValues(arr: unknown): [number, number] | [] {
+    if (!Array.isArray(arr)) {
+      return [];
+    }
+
+    const [min, max] = arr;
+    return [parseInt(min), parseInt(max)].filter(Boolean) as [number, number];
   }
 }

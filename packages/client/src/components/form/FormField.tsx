@@ -9,8 +9,10 @@ interface Props {
   children: React.ReactNode;
   className?: string;
   checkbox?: boolean;
-  boldLabel?: boolean;
   errorMessage?: string;
+
+  hideLabel?: boolean;
+  boldLabel?: boolean;
 
   /** make a form field as optional */
   optional?: boolean;
@@ -24,6 +26,7 @@ export function FormField({
   className,
   errorMessage,
   optional,
+  hideLabel,
 }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const ref = useOnclickOutside(() => setMenuOpen(false));
@@ -34,7 +37,8 @@ export function FormField({
   const labelClassnames = classNames(
     "mb-1 dark:text-white",
     boldLabel && "font-semibold",
-    checkbox && "ml-2",
+    checkbox && "ml-2 w-full",
+    hideLabel && "hidden",
   );
 
   const [child, ...rest] = Array.isArray(children) ? children : [children];
@@ -50,6 +54,8 @@ export function FormField({
         }
       : {};
 
+  const checkboxProps = checkbox ? { className: "max-w-[20px]" } : {};
+
   const isInput =
     ["__Input__", "__Textarea__"].includes(child.type?.displayName) ||
     child.type?.name === "Select";
@@ -59,6 +65,7 @@ export function FormField({
     ...fieldProps,
     ...selectProps,
     ...inputProps,
+    ...checkboxProps,
   });
 
   return (

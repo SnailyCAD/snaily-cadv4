@@ -17,6 +17,7 @@ export function OfficerDropdown() {
     { name: t("myOfficerLogs"), href: "/my-officer-logs" },
     { name: t("incidents"), href: "/incidents" },
     { name: t("impoundLot"), href: "/impound-lot" },
+    { name: t("jail"), href: "/jail" },
   ];
 
   return (

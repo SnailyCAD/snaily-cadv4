@@ -132,34 +132,13 @@ export default function Taxi(props: Props) {
             ),
           }))}
           columns={[
-            {
-              Header: t("location"),
-              accessor: "location",
-            },
-            {
-              Header: t("postal"),
-              accessor: "postal",
-            },
-            {
-              Header: common("description"),
-              accessor: "description",
-            },
-            {
-              Header: t("caller"),
-              accessor: "caller",
-            },
-            {
-              Header: t("assignedUnit"),
-              accessor: "assignedUnit",
-            },
-            {
-              Header: common("createdAt"),
-              accessor: "createdAt",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("location"), accessor: "location" },
+            { Header: t("postal"), accessor: "postal" },
+            { Header: common("description"), accessor: "description" },
+            { Header: t("caller"), accessor: "caller" },
+            { Header: t("assignedUnit"), accessor: "assignedUnit" },
+            { Header: common("createdAt"), accessor: "createdAt" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

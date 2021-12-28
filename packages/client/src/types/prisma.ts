@@ -371,6 +371,43 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string;
+  warningApplicableId: string | null;
+  warningApplicable: WarningApplicable | null;
+  warningNotApplicableId: string | null;
+  warningNotApplicable: WarningNotApplicable | null;
+};
+
+/**
+ * Model WarningApplicable
+ *
+ */
+export type WarningApplicable = {
+  id: string;
+  fines: [number, number];
+};
+
+/**
+ * Model WarningNotApplicable
+ *
+ */
+export type WarningNotApplicable = {
+  id: string;
+  fines: [number, number];
+  prisonTerm: [number, number];
+  bail: [number, number];
+};
+
+/**
+ * Model Violation
+ *
+ */
+export type Violation = {
+  id: string;
+  fine: number | null;
+  jailTime: number | null;
+  bail: number | null;
+  penalCodeId: string;
+  penalCode: PenalCode;
 };
 
 /**
@@ -385,6 +422,19 @@ export type Record = {
   createdAt: Date;
   postal: string;
   notes: string | null;
+  releaseId: string | null;
+  release: RecordRelease | null;
+};
+
+/**
+ * Model RecordRelease
+ *
+ */
+export type RecordRelease = {
+  id: string;
+  type: ReleaseType;
+  citizenId: string | null;
+  releasedBy: Citizen | null;
 };
 
 /**
@@ -685,3 +735,10 @@ export const StatusValueType = {
 } as const;
 
 export type StatusValueType = typeof StatusValueType[keyof typeof StatusValueType];
+
+export const ReleaseType = {
+  TIME_OUT: "TIME_OUT",
+  BAIL_POSTED: "BAIL_POSTED",
+};
+
+export type ReleaseType = typeof ReleaseType[keyof typeof ReleaseType];

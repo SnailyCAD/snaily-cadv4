@@ -16,7 +16,11 @@ export function useGenerateCallsign() {
     }
 
     const { callsign, callsign2, department, division } = unit;
-    const template = miscCadSettings?.callsignTemplate ?? "";
+    const template = miscCadSettings?.callsignTemplate;
+
+    if (!template) {
+      return "";
+    }
 
     const replacers = {
       department: department.callsign,

@@ -78,22 +78,10 @@ export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
               ),
             }))}
             columns={[
-              {
-                Header: t("diseases"),
-                accessor: "diseases",
-              },
-              {
-                Header: t("bloodGroup"),
-                accessor: "bloodGroup",
-              },
-              {
-                Header: common("description"),
-                accessor: "description",
-              },
-              {
-                Header: common("actions"),
-                accessor: "actions",
-              },
+              { Header: t("diseases"), accessor: "diseases" },
+              { Header: t("bloodGroup"), accessor: "bloodGroup" },
+              { Header: common("description"), accessor: "description" },
+              { Header: common("actions"), accessor: "actions" },
             ]}
           />
         )}

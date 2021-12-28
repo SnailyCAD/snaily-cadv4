@@ -174,18 +174,9 @@ export default function SupervisorPanelPage({ unit }: Props) {
               };
             })}
             columns={[
-              {
-                Header: t("startedAt"),
-                accessor: "startedAt",
-              },
-              {
-                Header: t("endedAt"),
-                accessor: "endedAt",
-              },
-              {
-                Header: t("totalTime"),
-                accessor: "totalTime",
-              },
+              { Header: t("startedAt"), accessor: "startedAt" },
+              { Header: t("endedAt"), accessor: "endedAt" },
+              { Header: t("totalTime"), accessor: "totalTime" },
             ]}
           />
         </div>

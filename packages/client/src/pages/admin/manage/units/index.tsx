@@ -108,46 +108,16 @@ export default function SupervisorPanelPage({ units }: Props) {
             ),
             accessor: "dropdown",
           },
-          {
-            Header: `${t("Ems.deputy")}/${t("Leo.officer")}`,
-            accessor: "unit",
-          },
-          {
-            Header: common("name"),
-            accessor: "name",
-          },
-          {
-            Header: t("Leo.callsign"),
-            accessor: "callsign",
-          },
-          {
-            Header: t("Leo.badgeNumber"),
-            accessor: "badgeNumber",
-          },
-          {
-            Header: t("Leo.department"),
-            accessor: "department",
-          },
-          {
-            Header: t("Leo.division"),
-            accessor: "division",
-          },
-          {
-            Header: t("Leo.rank"),
-            accessor: "rank",
-          },
-          {
-            Header: t("Leo.status"),
-            accessor: "status",
-          },
-          {
-            Header: t("Leo.suspended"),
-            accessor: "suspended",
-          },
-          {
-            Header: common("actions"),
-            accessor: "actions",
-          },
+          { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
+          { Header: common("name"), accessor: "name" },
+          { Header: t("Leo.callsign"), accessor: "callsign" },
+          { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+          { Header: t("Leo.department"), accessor: "department" },
+          { Header: t("Leo.division"), accessor: "division" },
+          { Header: t("Leo.rank"), accessor: "rank" },
+          { Header: t("Leo.status"), accessor: "status" },
+          { Header: t("Leo.suspended"), accessor: "suspended" },
+          { Header: common("actions"), accessor: "actions" },
         ]}
       />
     </AdminLayout>

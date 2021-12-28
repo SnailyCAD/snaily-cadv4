@@ -13,10 +13,11 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { Citizen, RecordType } from "types/prisma";
+import { Citizen, RecordType, PenalCode } from "types/prisma";
 import { InputSuggestions } from "components/form/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
+import { PenalCodesTable } from "./CreateRecord/PenalCodesTable";
 
 export function CreateTicketModal({ type }: { type: RecordType }) {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -41,6 +42,12 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
   const { state, execute } = useFetch();
   const { penalCode } = useValues();
   const { makeImageUrl } = useImageUrl();
+  const penalCodes =
+    type === "WRITTEN_WARNING"
+      ? penalCode.values.filter(
+          (v) => v.warningApplicableId !== null && v.warningNotApplicableId === null,
+        )
+      : penalCode.values;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/records", {
@@ -48,7 +55,12 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
       data: {
         ...values,
         type,
-        violations: values.violations.map((v) => v.value),
+        violations: values.violations.map(({ value }: { value: any }) => ({
+          penalCodeId: value.id,
+          bail: value.jailTime?.enabled ? value.bail.value : null,
+          jailTime: value.jailTime?.enabled ? value.jailTime.value : null,
+          fine: value.fine?.enabled ? value.fine.value : null,
+        })),
       },
     });
 
@@ -63,7 +75,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
     type,
     citizenId: payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
-    violations: [] as SelectValue[],
+    violations: [] as SelectValue<PenalCode>[],
     postal: "",
     notes: "",
   };
@@ -73,7 +85,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
       title={t(data[type].title)}
       onClose={() => closeModal(data[type].id)}
       isOpen={isOpen(data[type].id)}
-      className="w-[600px]"
+      className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
@@ -126,12 +138,14 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
                 name="violations"
                 onChange={handleChange}
                 isMulti
-                values={penalCode.values.map((value) => ({
+                values={penalCodes.map((value) => ({
                   label: value.title,
-                  value: value.id,
+                  value,
                 }))}
               />
             </FormField>
+
+            <PenalCodesTable penalCodes={values.violations.map((v) => v.value)} />
 
             <FormField optional errorMessage={errors.notes} label={t("notes")}>
               <Textarea value={values.notes} name="notes" onChange={handleChange} />

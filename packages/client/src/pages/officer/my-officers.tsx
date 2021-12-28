@@ -115,34 +115,13 @@ export default function MyOfficers({ officers: data }: Props) {
             ),
           }))}
           columns={[
-            {
-              Header: t("officer"),
-              accessor: "officer",
-            },
-            {
-              Header: t("callsign"),
-              accessor: "callsign",
-            },
-            {
-              Header: t("badgeNumber"),
-              accessor: "badgeNumber",
-            },
-            {
-              Header: t("department"),
-              accessor: "department",
-            },
-            {
-              Header: t("division"),
-              accessor: "division",
-            },
-            {
-              Header: t("rank"),
-              accessor: "rank",
-            },
-            {
-              Header: common("actions"),
-              accessor: "actions",
-            },
+            { Header: t("officer"), accessor: "officer" },
+            { Header: t("callsign"), accessor: "callsign" },
+            { Header: t("badgeNumber"), accessor: "badgeNumber" },
+            { Header: t("department"), accessor: "department" },
+            { Header: t("division"), accessor: "division" },
+            { Header: t("rank"), accessor: "rank" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}

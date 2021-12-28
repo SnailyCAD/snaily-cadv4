@@ -68,52 +68,26 @@ export function useTableHeadersOfType(type: ValueType) {
   switch (type) {
     case "CODES_10": {
       return [
-        {
-          Header: t("shouldDo"),
-          accessor: "shouldDo",
-        },
-        {
-          Header: common("type"),
-          accessor: "type",
-        },
-        {
-          Header: t("color"),
-          accessor: "color",
-        },
+        { Header: t("shouldDo"), accessor: "shouldDo" },
+        { Header: common("type"), accessor: "type" },
+        { Header: t("color"), accessor: "color" },
       ];
     }
     case "DEPARTMENT": {
       return [
-        {
-          Header: t("callsign"),
-          accessor: "callsign",
-        },
-        {
-          Header: common("type"),
-          accessor: "type",
-        },
+        { Header: t("callsign"), accessor: "callsign" },
+        { Header: common("type"), accessor: "type" },
       ];
     }
     case "DIVISION": {
       return [
-        {
-          Header: t("callsign"),
-          accessor: "callsign",
-        },
-        {
-          Header: t("department"),
-          accessor: "department",
-        },
+        { Header: t("callsign"), accessor: "callsign" },
+        { Header: t("department"), accessor: "department" },
       ];
     }
     case "VEHICLE":
     case "WEAPON": {
-      return [
-        {
-          Header: t("gameHash"),
-          accessor: "gameHash",
-        },
-      ];
+      return [{ Header: t("gameHash"), accessor: "gameHash" }];
     }
     default: {
       return [];
