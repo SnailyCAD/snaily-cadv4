@@ -69,7 +69,7 @@ export function Table<T extends object>(props: Props<T>) {
   const containerProps = {
     ...props?.containerProps,
     className: classNames(
-      "w-full mt-3 overflow-x-auto thin-scrollbar",
+      "block max-w-full mt-3 overflow-x-auto thin-scrollbar",
       props.containerProps?.className,
     ),
   };

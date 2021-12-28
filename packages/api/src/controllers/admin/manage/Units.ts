@@ -56,6 +56,22 @@ export class ManageUnitsController {
         const [id, rawType] = fullId.split("-");
         const type = rawType === "OFFICER" ? "officer" : "emsFdDeputy";
 
+        if (rawType === "OFFICER") {
+          const log = await prisma.officerLog.findFirst({
+            where: {
+              endedAt: null,
+              officerId: id,
+            },
+          });
+
+          if (log) {
+            await prisma.officerLog.update({
+              where: { id: log.id },
+              data: { endedAt: new Date() },
+            });
+          }
+        }
+
         // @ts-expect-error ignore
         return prisma[type].update({
           where: { id },

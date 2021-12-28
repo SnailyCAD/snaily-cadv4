@@ -27,7 +27,14 @@ li {
 }
 
 table {
-  @apply w-full max-w-full overflow-auto;
+  @apply w-full overflow-auto;
+}
+
+th,
+td {
+  margin: 0;
+  width: 1%;
+  @apply text-left p-2 px-3;
 }
 
 th {
@@ -39,14 +46,6 @@ th {
   &:last-child {
     @apply rounded-tr-md rounded-br-md;
   }
-}
-
-tr {
-  @apply table-row text-left;
-}
-
-td {
-  @apply p-2 px-3;
 }
 
 .bleet-reset {
