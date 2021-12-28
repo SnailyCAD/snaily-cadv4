@@ -22,7 +22,7 @@ export function EditCitizenLicenses() {
     if (!currentResult) return;
 
     const { json } = await execute(`/leo/licenses/${currentResult.id}`, {
-      method: "POST",
+      method: "PUT",
       data: values,
     });
 
@@ -33,10 +33,10 @@ export function EditCitizenLicenses() {
   }
 
   const INITIAL_VALUES = {
-    driversLicenseId: currentResult?.driversLicenseId ?? "",
-    pilotLicenseId: currentResult?.pilotLicenseId ?? "",
-    weaponLicenseId: currentResult?.weaponLicenseId ?? "",
-    ccwId: currentResult?.ccwId ?? "",
+    driversLicense: currentResult?.driversLicenseId ?? "",
+    pilotLicense: currentResult?.pilotLicenseId ?? "",
+    weaponLicense: currentResult?.weaponLicenseId ?? "",
+    ccw: currentResult?.ccwId ?? "",
   };
 
   return (
@@ -49,51 +49,51 @@ export function EditCitizenLicenses() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form>
-            <FormField errorMessage={errors.driversLicenseId} label="Drivers license">
+            <FormField errorMessage={errors.driversLicense} label="Drivers license">
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
-                value={values.driversLicenseId}
+                value={values.driversLicense}
                 onChange={handleChange}
-                name="driversLicenseId"
+                name="driversLicense"
               />
             </FormField>
 
-            <FormField errorMessage={errors.weaponLicenseId} label="Weapon license">
+            <FormField errorMessage={errors.weaponLicense} label="Weapon license">
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
-                value={values.weaponLicenseId}
+                value={values.weaponLicense}
                 onChange={handleChange}
-                name="weaponLicenseId"
+                name="weaponLicense"
               />
             </FormField>
 
-            <FormField errorMessage={errors.pilotLicenseId} label="Pilot license">
+            <FormField errorMessage={errors.pilotLicense} label="Pilot license">
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
-                value={values.pilotLicenseId}
+                value={values.pilotLicense}
                 onChange={handleChange}
-                name="pilotLicenseId"
+                name="pilotLicense"
               />
             </FormField>
 
-            <FormField errorMessage={errors.ccwId} label="CCW">
+            <FormField errorMessage={errors.ccw} label="CCW">
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
-                value={values.ccwId}
+                value={values.ccw}
                 onChange={handleChange}
-                name="ccwId"
+                name="ccw"
               />
             </FormField>
 

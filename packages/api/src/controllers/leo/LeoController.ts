@@ -6,7 +6,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -17,6 +17,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { unitProperties } from "lib/officer";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -311,6 +312,42 @@ export class LeoController {
     });
 
     return vehicles;
+  }
+
+  @Put("/licenses/:citizenId")
+  async updateCitizenLicenses(
+    @BodyParams() body: JsonRequestBody,
+    @PathParams("citizenId") citizenId: string,
+  ) {
+    const error = validate(LICENSE_SCHEMA, body.toJSON(), true);
+    if (error) {
+      return new BadRequest(error);
+    }
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.citizen.update({
+      where: {
+        id: citizen.id,
+      },
+      data: {
+        ccwId: body.get("ccw"),
+        driversLicenseId: body.get("driversLicense"),
+        pilotLicenseId: body.get("pilotLicense"),
+        weaponLicenseId: body.get("weaponLicense"),
+      },
+      include: citizenInclude,
+    });
+
+    return updated;
   }
 
   @Delete("/impounded-vehicles/:id")
