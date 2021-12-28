@@ -2,6 +2,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
+import { useTranslations } from "next-intl";
 import { PenalCode } from "types/prisma";
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function TableItemForm({ penalCode }: Props) {
+  const t = useTranslations("Leo");
   const [minFine, maxFine] =
     penalCode.warningNotApplicable?.fines ?? penalCode.warningApplicable?.fines ?? [];
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
@@ -57,7 +59,7 @@ export function TableItemForm({ penalCode }: Props) {
   return (
     <div className="flex flex-col">
       <div className="flex items-center">
-        <FormField className="mb-0" label={"Fine"} checkbox>
+        <FormField className="mb-0" label={t("fines")} checkbox>
           <Input
             disabled={warningApplicableDisabled}
             onChange={() => handleValueChange("fine", !currentValue.fine?.enabled ?? false)}
@@ -80,7 +82,7 @@ export function TableItemForm({ penalCode }: Props) {
       </div>
 
       <div className="flex items-center mt-1">
-        <FormField className="mb-0" label={"Jail Time"} checkbox>
+        <FormField className="mb-0" label={t("jailTime")} checkbox>
           <Input
             onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled ?? false)}
             checked={currentValue.jailTime?.enabled ?? false}
@@ -102,7 +104,7 @@ export function TableItemForm({ penalCode }: Props) {
         />
 
         <div className="flex flex-row items-center mb-0 ml-5">
-          <label>Bail</label>
+          <label>{t("bail")}</label>
           <Input
             type="number"
             onChange={handleValueChange.bind(null, "bail", undefined)}

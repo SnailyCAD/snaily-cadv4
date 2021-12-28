@@ -130,10 +130,7 @@ export class RecordsController {
               this.exists(minBail, maxBail) &&
               !this.isCorrect(minBail!, maxBail!, item.bail)
             ) {
-              return this.handleBadRequest(
-                new BadRequest("jailTime_invalidDataReceived"),
-                ticket.id,
-              );
+              return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
             }
 
             const violation = await prisma.violation.create({

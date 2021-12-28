@@ -140,7 +140,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
                 isMulti
                 values={penalCodes.map((value) => ({
                   label: value.title,
-                  value: value as any,
+                  value,
                 }))}
               />
             </FormField>

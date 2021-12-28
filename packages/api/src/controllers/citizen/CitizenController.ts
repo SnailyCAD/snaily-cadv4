@@ -37,7 +37,11 @@ export const citizenInclude = {
       officer: {
         include: unitProperties,
       },
-      violations: true,
+      violations: {
+        include: {
+          penalCode: true,
+        },
+      },
     },
   },
 };

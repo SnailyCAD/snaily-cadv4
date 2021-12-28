@@ -1,5 +1,6 @@
 import { Table } from "components/table/Table";
 import { useFormikContext } from "formik";
+import { useTranslations } from "next-intl";
 import { PenalCode } from "types/prisma";
 import { TableItemForm } from "./TableItemForm";
 
@@ -9,9 +10,10 @@ interface Props {
 
 export function PenalCodesTable({ penalCodes }: Props) {
   const { values } = useFormikContext<any>();
+  const t = useTranslations("Leo");
 
   if (penalCodes.length <= 0) {
-    return <p className="mb-3">No penal codes selected.</p>;
+    return <p className="mb-3">{t("noPenalCodesSelected")}</p>;
   }
 
   const totalFines = (values.violations as any[]).reduce(
@@ -39,7 +41,7 @@ export function PenalCodesTable({ penalCodes }: Props) {
         columns={[
           {
             accessor: "title",
-            Header: "Penal Code",
+            Header: t("penalCode"),
           },
           {
             accessor: "data",
@@ -48,19 +50,21 @@ export function PenalCodesTable({ penalCodes }: Props) {
         ]}
       />
       <p className="flex items-center justify-center w-full gap-2 p-2 px-3">
-        <span className="mr-2 font-semibold uppercase select-none">TOTAL </span>
+        <span className="mr-2 font-semibold uppercase select-none">
+          {t("total").toUpperCase()}{" "}
+        </span>
 
         <span className="ml-2">
-          <span className="font-semibold select-none">Fines: </span> ${totalFines || 0}
+          <span className="font-semibold select-none">{t("fines")}: </span> ${totalFines || 0}
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
-          <span className="font-semibold select-none">Jail Time: </span>
+          <span className="font-semibold select-none">{t("jailTime")}: </span>
           {totalJailTime || 0}
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
-          <span className="font-semibold select-none">Bail: </span> ${totalBail || 0}
+          <span className="font-semibold select-none">{t("bail")}: </span> ${totalBail || 0}
         </span>
       </p>
     </div>
