@@ -61,7 +61,9 @@ export function CallEventsModal({ call, onClose }: Props) {
 
               return (
                 <li key={event.id}>
-                  <span className="mr-1 font-semibold text-gray-800 select-none">{formatted}:</span>
+                  <span className="mr-1 font-semibold text-gray-800 select-none dark:text-gray-400">
+                    {formatted}:
+                  </span>
                   <span>{event.description}</span>
                 </li>
               );

@@ -28,10 +28,16 @@ import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { SortableList } from "components/admin/values/SortableList";
+import { Table } from "components/table/Table";
+import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
+import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
+});
+
+const ImportValuesModal = dynamic(async () => {
+  return (await import("components/admin/values/ImportValuesModal")).ImportValuesModal;
 });
 
 export type TValue =
@@ -61,7 +67,20 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const typeT = useTranslations(type);
   const common = useTranslations("Common");
 
+  const extraTableHeaders = useTableHeadersOfType(type);
+  const extraTableData = useTableDataOfType(type);
+
+  const tableHeaders: any = React.useMemo(() => {
+    return [
+      { Header: "Value", accessor: "value" },
+      ...extraTableHeaders,
+      { Header: common("actions"), accessor: "actions" },
+    ];
+  }, [extraTableHeaders, common]);
+
   async function setList(list: TValue[]) {
+    if (!hasTableDataChanged(values, list)) return;
+
     setValues((p) =>
       list.map((v, idx) => {
         const prev = p.find((a) => a.id === v.id);
@@ -149,7 +168,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             {t("totalItems")}: <span className="font-normal">{values.length}</span>
           </h6>
         </div>
-        <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+
+        <div className="flex gap-2">
+          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <OptionsDropdown values={values} />
+        </div>
       </header>
 
       <FormField label={common("search")} className="my-2">
@@ -159,12 +182,33 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <SortableList
-          handleDelete={handleDeleteClick}
-          handleEdit={handleEditClick}
-          search={search}
-          values={values}
-          setList={setList}
+        <Table
+          dragDrop={{
+            enabled: true,
+            handleMove: setList,
+          }}
+          filter={search}
+          data={values.map((value) => ({
+            rowProps: { value },
+            value: getValueStrFromValue(value),
+            ...extraTableData(value),
+            actions: (
+              <>
+                <Button small onClick={() => handleEditClick(value)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  small
+                  onClick={() => handleDeleteClick(value)}
+                  variant="danger"
+                  className="ml-2"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={tableHeaders}
         />
       )}
 
@@ -217,6 +261,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         value={tempValue}
         type={type}
       />
+      <ImportValuesModal type={type} />
     </AdminLayout>
   );
 }
@@ -229,7 +274,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   return {
     props: {
       values,
-      pathValues: values?.[0] ?? { type: "CODES_10", values: [] },
+      pathValues: values?.[0] ?? { type: path, values: [] },
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["admin", "values", "common"], locale)),
@@ -269,4 +314,24 @@ export function handleFilter(value: TValue, search: string) {
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
+}
+
+function getValueStrFromValue(value: TValue) {
+  return "createdAt" in value ? value.value : value.value.value;
+}
+
+/**
+ * only update db if the list was actually moved.
+ */
+function hasTableDataChanged(prevList: TValue[], newList: TValue[]) {
+  let wasMoved = false;
+
+  for (let i = 0; i < prevList.length; i++) {
+    if (prevList[i]?.id !== newList[i]?.id) {
+      wasMoved = true;
+      break;
+    }
+  }
+
+  return wasMoved;
 }

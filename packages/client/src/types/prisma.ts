@@ -433,7 +433,7 @@ export type DivisionValue = {
   valueId: string;
   value: Value<"DIVISION">;
   departmentId: string | null;
-  department: Value<"DEPARTMENT">;
+  department: DepartmentValue;
   callsign: string | null;
 };
 

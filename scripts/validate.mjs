@@ -5,9 +5,9 @@ const [major, minor] = process.version.split(".").map((v) => {
 });
 
 const is16 = major >= 16;
-const isDot6 = minor >= 6;
+const isDot6 = major === 16 ? minor >= 6 : !(major < 16);
 const isSupportedVersion = is16 && isDot6;
-const versionText = chalk.bold(chalk.underline("16.6 or higher"));
+const versionText = chalk.bold(chalk.underline("v16.6 or higher"));
 
 if (!isSupportedVersion) {
   throw warn(

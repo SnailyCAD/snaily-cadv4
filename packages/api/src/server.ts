@@ -14,7 +14,7 @@ const rootDir = __dirname;
   port: process.env.PORT_API ? parseInt(process.env.PORT_API) : 8080,
   logger: {
     debug: true,
-    level: process.env.NODE_ENV === "production" ? "error" : undefined,
+    level: process.env.NODE_ENV === "production" ? "error" : "info",
   },
   mount: {
     "/v1": [`${rootDir}/controllers/**/*.ts`],
