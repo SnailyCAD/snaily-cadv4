@@ -1,5 +1,5 @@
 import { Response } from "@tsed/common";
-import { serialize } from "cookie";
+import { CookieSerializeOptions, serialize } from "cookie";
 
 interface SetCookieOptions {
   name: string;
@@ -9,6 +9,15 @@ interface SetCookieOptions {
 }
 
 export function setCookie(options: SetCookieOptions) {
+  let extraOptions: CookieSerializeOptions = {};
+
+  if (process.env.SECURE_COOKIES_FOR_IFRAME === "true") {
+    extraOptions = {
+      secure: true,
+      sameSite: "none",
+    };
+  }
+
   options.res.setHeader(
     "Set-Cookie",
     serialize(options.name, options.value, {
@@ -16,6 +25,7 @@ export function setCookie(options: SetCookieOptions) {
       expires: new Date(Date.now() + options.expires),
       path: "/",
       domain: process.env.DOMAIN || undefined,
+      ...extraOptions,
     }),
   );
 }
