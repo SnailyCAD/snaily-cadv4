@@ -39,7 +39,7 @@ export function ActiveCalls() {
   const { execute } = useFetch();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
-  const { TOW } = useFeatureEnabled();
+  const { TOW, CALLS_911 } = useFeatureEnabled();
 
   const unit =
     router.pathname === "/officer"
@@ -104,6 +104,10 @@ export function ActiveCalls() {
       method: "POST",
       data: { unit: unit?.id },
     });
+  }
+
+  if (!CALLS_911) {
+    return null;
   }
 
   return (

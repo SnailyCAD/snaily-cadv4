@@ -14,7 +14,7 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
-  const { BUSINESS } = useFeatureEnabled();
+  const { BUSINESS, WEAPON_REGISTRATION } = useFeatureEnabled();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -56,14 +56,16 @@ export function AdminSidebar() {
           <section className="mt-3">
             <h1 className="px-3 text-2xl font-semibold dark:text-white">{t("Values.values")}</h1>
             <ul className="flex flex-col space-y-1.5 mt-3">
-              {types.map((type) => (
-                <SidebarItem
-                  key={type}
-                  isActive={isValueActive(type)}
-                  href={`/admin/values/${type.toLowerCase()}`}
-                  text={t(`${type.replace("-", "_")}.MANAGE`)}
-                />
-              ))}
+              {types.map((type) =>
+                type === "WEAPON" && !WEAPON_REGISTRATION ? null : (
+                  <SidebarItem
+                    key={type}
+                    isActive={isValueActive(type)}
+                    href={`/admin/values/${type.toLowerCase()}`}
+                    text={t(`${type.replace("-", "_")}.MANAGE`)}
+                  />
+                ),
+              )}
             </ul>
           </section>
         ) : null}

@@ -7,6 +7,7 @@ import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface MButton {
   nameKey: [string, string];
@@ -57,6 +58,7 @@ export function ModalButtons() {
   const { openModal } = useModal();
   const t = useTranslations();
   const generateCallsign = useGenerateCallsign();
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   const { execute } = useFetch();
 
@@ -89,17 +91,21 @@ export function ModalButtons() {
       ) : null}
 
       <ul className="mt-2 modal-buttons-grid">
-        {buttons.map((button, idx) => (
-          <Button
-            id={button.nameKey[1]}
-            key={idx}
-            disabled={isButtonDisabled}
-            title={isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))}
-            onClick={() => openModal(button.modalId)}
-          >
-            {t(button.nameKey.join("."))}
-          </Button>
-        ))}
+        {buttons.map((button, idx) =>
+          button.nameKey[1] === "weaponSearch" && !WEAPON_REGISTRATION ? null : (
+            <Button
+              id={button.nameKey[1]}
+              key={idx}
+              disabled={isButtonDisabled}
+              title={
+                isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))
+              }
+              onClick={() => openModal(button.modalId)}
+            >
+              {t(button.nameKey.join("."))}
+            </Button>
+          ),
+        )}
 
         <Button
           id="panicButton"

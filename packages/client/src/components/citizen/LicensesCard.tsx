@@ -5,12 +5,14 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { ManageLicensesModal } from "./modals/ManageLicensesModal";
 import { useCitizen } from "context/CitizenContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function LicensesCard() {
   const { openModal } = useModal();
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
   const { citizen } = useCitizen(false);
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   const types = ["driversLicense", "pilotLicense", "weaponLicense", "ccw"] as const;
 
@@ -33,6 +35,12 @@ export function LicensesCard() {
                 : type === "pilotLicense"
                 ? citizen.dlCategory.filter((v) => v.type === "AVIATION")
                 : null;
+
+            const returnNull = ["weaponLicense", "ccw"].includes(type) && !WEAPON_REGISTRATION;
+
+            if (returnNull) {
+              return null;
+            }
 
             return (
               <div key={type}>

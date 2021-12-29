@@ -78,6 +78,14 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Courthouse",
     description: "When enabled, this will allow citizens to create expungement requests.",
   },
+  WEAPON_REGISTRATION: {
+    name: "Weapon Registration",
+    description: "When disabled, this will disallow citizens to register weapons.",
+  },
+  CALLS_911: {
+    name: "911 Calls",
+    description: "When disabled, this will disable the use of 911-calls.",
+  },
 };
 
 export function DisabledFeaturesArea() {
