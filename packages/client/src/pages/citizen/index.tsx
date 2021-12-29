@@ -66,9 +66,7 @@ export default function CitizenPage({ citizens }: Props) {
             {t("registerWeapon")}
           </Button>
         ) : null}
-      </ul>
 
-      <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         {TOW ? (
           <Button
             onClick={() => {
@@ -97,6 +95,8 @@ export default function CitizenPage({ citizens }: Props) {
           </Button>
         ) : null}
       </ul>
+
+      {/* <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3"></ul> */}
 
       <ul
         className={
