@@ -11,21 +11,19 @@ export function AdminLayout({ children, className }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
 
   return (
-    <div>
-      <>
-        <Nav />
+    <>
+      <Nav />
 
-        <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
-          <div className="flex">
-            <AdminSidebar />
+      <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
+        <div className="flex">
+          <AdminSidebar />
 
-            <div className="w-full ml-4">
-              {roleplayStopped ? <Component /> : null}
-              {children}
-            </div>
+          <div className="w-full ml-4">
+            {roleplayStopped ? <Component /> : null}
+            {children}
           </div>
-        </main>
-      </>
-    </div>
+        </div>
+      </main>
+    </>
   );
 }
