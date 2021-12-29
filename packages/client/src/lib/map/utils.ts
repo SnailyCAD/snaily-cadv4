@@ -44,7 +44,7 @@ export function stringCoordToFloat(coord: XYZ) {
 }
 
 export function createCluster() {
-  return L.markerClusterGroup({
+  return (L as any).markerClusterGroup({
     maxClusterRadius: 20,
     spiderfyOnMaxZoom: false,
     showCoverageOnHover: false,
