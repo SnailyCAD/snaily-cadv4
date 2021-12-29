@@ -13,6 +13,7 @@ import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { FormRow } from "components/form/FormRow";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function ManageLicensesModal() {
   const { state, execute } = useFetch();
@@ -21,6 +22,7 @@ export function ManageLicensesModal() {
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
   const { citizen, setCurrentCitizen } = useCitizen();
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute(`/licenses/${citizen!.id}`, {
@@ -136,29 +138,33 @@ export function ManageLicensesModal() {
               </FormField>
             </FormRow>
 
-            <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
-              <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.weaponLicense}
-                name="weaponLicense"
-                onChange={handleChange}
-              />
-            </FormField>
+            {WEAPON_REGISTRATION ? (
+              <>
+                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                  <Select
+                    values={license.values.map((license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }))}
+                    value={values.weaponLicense}
+                    name="weaponLicense"
+                    onChange={handleChange}
+                  />
+                </FormField>
 
-            <FormField errorMessage={errors.ccw} label={t("ccw")}>
-              <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.ccw}
-                name="ccw"
-                onChange={handleChange}
-              />
-            </FormField>
+                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                  <Select
+                    values={license.values.map((license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }))}
+                    value={values.ccw}
+                    name="ccw"
+                    onChange={handleChange}
+                  />
+                </FormField>
+              </>
+            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button

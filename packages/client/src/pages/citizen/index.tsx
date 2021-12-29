@@ -38,7 +38,7 @@ export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
-  const { TOW, TAXI } = useFeatureEnabled();
+  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const { makeImageUrl } = useImageUrl();
 
@@ -61,12 +61,12 @@ export default function CitizenPage({ citizens }: Props) {
         <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
           {t("registerVehicle")}
         </Button>
-        <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
-          {t("registerWeapon")}
-        </Button>
-      </ul>
+        {WEAPON_REGISTRATION ? (
+          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
+            {t("registerWeapon")}
+          </Button>
+        ) : null}
 
-      <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         {TOW ? (
           <Button
             onClick={() => {
@@ -89,9 +89,11 @@ export default function CitizenPage({ citizens }: Props) {
             {t("createTaxiCall")}
           </Button>
         ) : null}
-        <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
-          {t("create911Call")}
-        </Button>
+        {CALLS_911 ? (
+          <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
+            {t("create911Call")}
+          </Button>
+        ) : null}
       </ul>
 
       <ul

@@ -667,6 +667,8 @@ export const feature = {
   BUSINESS: "BUSINESS",
   ALLOW_DUPLICATE_CITIZEN_NAMES: "ALLOW_DUPLICATE_CITIZEN_NAMES",
   DISCORD_AUTH: "DISCORD_AUTH",
+  CALLS_911: "CALLS_911",
+  WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];

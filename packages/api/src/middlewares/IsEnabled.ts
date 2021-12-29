@@ -11,6 +11,8 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   TRUCK_LOGS: "/v1/truck-logs",
   BUSINESS: "/v1/businesses",
   DISCORD_AUTH: "/v1/auth/discord",
+  WEAPON_REGISTRATION: "/v1/weapons",
+  CALLS_911: "/v1/911-calls",
 };
 
 @Middleware()

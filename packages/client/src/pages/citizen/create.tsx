@@ -25,6 +25,7 @@ import { useAuth } from "context/AuthContext";
 import { useModal } from "context/ModalContext";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { ModalIds } from "types/ModalIds";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const INITIAL_VALUES = {
   name: "",
@@ -57,6 +58,7 @@ export default function CreateCitizen() {
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
   const { openModal, isOpen, closeModal } = useModal();
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   function onCropSuccess(url: Blob, filename: string) {
     setImage(new File([url], filename, { type: url.type }));
@@ -268,17 +270,21 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
-                <Select
-                  values={license.values.map((v) => ({
-                    label: v.value,
-                    value: v.id,
-                  }))}
-                  value={values.weaponLicense}
-                  onChange={handleChange}
-                  name="weaponLicense"
-                />
-              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.weaponLicense}
+                    onChange={handleChange}
+                    name="weaponLicense"
+                  />
+                </FormField>
+              ) : null}
+
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
                   values={license.values.map((v) => ({
@@ -306,17 +312,20 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField errorMessage={errors.ccw} label={t("ccw")}>
-                <Select
-                  values={license.values.map((v) => ({
-                    label: v.value,
-                    value: v.id,
-                  }))}
-                  value={values.ccw}
-                  onChange={handleChange}
-                  name="ccw"
-                />
-              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.ccw}
+                    onChange={handleChange}
+                    name="ccw"
+                  />
+                </FormField>
+              ) : null}
             </FormRow>
 
             <div className="flex items-center justify-end">
