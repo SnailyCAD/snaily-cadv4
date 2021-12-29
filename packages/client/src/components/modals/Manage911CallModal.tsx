@@ -21,6 +21,8 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit } from "types/prisma";
 import { FormRow } from "components/form/FormRow";
+import { handleValidate } from "lib/handleValidate";
+import { CREATE_911_CALL } from "@snailycad/schemas";
 
 interface Props {
   call: Full911Call | null;
@@ -179,6 +181,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     }
   }
 
+  const validate = handleValidate(CREATE_911_CALL);
   const INITIAL_VALUES = {
     name: call?.name ?? "",
     location: call?.location ?? "",
@@ -209,7 +212,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
       className={call ? "w-[1200px]" : "w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">
-        <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+        <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, values, errors }) => (
             <Form className="w-full">
               <FormField errorMessage={errors.name} label={common("name")}>
