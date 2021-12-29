@@ -19,6 +19,7 @@ export function OfficerDropdown() {
     { name: t("incidents"), href: "/incidents" },
     { name: t("impoundLot"), href: "/impound-lot" },
     { name: t("jail"), href: "/jail" },
+    { name: t("callHistory"), href: "/call-history" },
   ];
 
   return (

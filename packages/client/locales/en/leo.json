@@ -107,6 +107,7 @@
     "fines": "Fines",
     "bail": "Bail",
     "editLicenses": "Edit Licenses",
+    "callHistory": "Call History",
     "releaseCitizen": "You are about to release this citizen. Please select the reason why they are getting released.",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",

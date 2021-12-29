@@ -61,7 +61,8 @@
     "account": "Account",
     "logout": "Logout",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "callHistory": "Call History"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
