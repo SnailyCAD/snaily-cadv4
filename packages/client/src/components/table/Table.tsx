@@ -81,7 +81,7 @@ export function Table<T extends object>(props: Props<T>) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {props.dragDrop?.enabled ? (
-                <th className="w-[3em]">
+                <th className="sticky top-0">
                   <ArrowDownUp />
                 </th>
               ) : null}
@@ -91,6 +91,7 @@ export function Table<T extends object>(props: Props<T>) {
                   {...column.getHeaderProps(
                     column.id === "actions" ? undefined : column.getSortByToggleProps(),
                   )}
+                  className="sticky top-0"
                 >
                   <div className="flex items-center gap-3">
                     {column.render("Header")}
@@ -142,7 +143,7 @@ function Row<T extends object>({ dragDropEnabled, row }: RowProps<T>) {
   return (
     <tr {...rowProps}>
       {dragDropEnabled ? (
-        <td className={classNames("cursor-move", DRAGGABLE_TABLE_HANDLE)}>
+        <td className={classNames("cursor-move w-10", DRAGGABLE_TABLE_HANDLE)}>
           <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
         </td>
       ) : null}
