@@ -23,9 +23,12 @@ export const Dropdown = ({ trigger, children, extra, ...rest }: Props) => {
         sideOffset={7}
         alignOffset={10}
         style={{ width: maxWidth, maxWidth }}
-        className="z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright"
         align="start"
         {...rest}
+        className={classNames(
+          rest.className || "dropdown-left",
+          "z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright",
+        )}
       >
         {children}
       </DropdownMenu.Content>

@@ -25,6 +25,7 @@ export function OptionsDropdown({ values }: { values: TValue[] }) {
     <Dropdown
       alignOffset={0}
       align="end"
+      className="dropdown-right"
       trigger={
         <Button className="flex items-center justify-center w-8 h-8">
           <ThreeDots width={15} height={15} className="text-gray-700 dark:text-gray-300" />

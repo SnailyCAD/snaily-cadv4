@@ -1,11 +1,12 @@
 import { useAuth } from "context/AuthContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { rank, valueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
-const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES"];
+const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES"] as const;
 const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
 export function AdminSidebar() {
@@ -13,6 +14,7 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
+  const { BUSINESS } = useFeatureEnabled();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -28,15 +30,17 @@ export function AdminSidebar() {
         <section>
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
-            {management.map((type) => (
-              <SidebarItem
-                disabled={type !== "UNITS" && user?.rank === "USER"}
-                key={type}
-                isActive={isMActive(`/admin/manage/${type.toLowerCase()}`)}
-                href={`/admin/manage/${type.toLowerCase()}`}
-                text={man(`MANAGE_${type}`)}
-              />
-            ))}
+            {management.map((type) =>
+              !BUSINESS && type === "BUSINESSES" ? null : (
+                <SidebarItem
+                  disabled={type !== "UNITS" && user?.rank === "USER"}
+                  key={type}
+                  isActive={isMActive(`/admin/manage/${type.toLowerCase()}`)}
+                  href={`/admin/manage/${type.toLowerCase()}`}
+                  text={man(`MANAGE_${type}`)}
+                />
+              ),
+            )}
 
             {user?.rank === rank.OWNER ? (
               <SidebarItem
