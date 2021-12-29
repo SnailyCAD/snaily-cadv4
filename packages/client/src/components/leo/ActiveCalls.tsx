@@ -46,7 +46,7 @@ export function ActiveCalls() {
       ? activeDeputy
       : null;
 
-  const isUnitAssigned = (call: Full911Call) =>
+  const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit.id === unit?.id);
 
   const makeUnit = (unit: AssignedUnit) =>
@@ -113,7 +113,7 @@ export function ActiveCalls() {
         {calls.length <= 0 ? (
           <p className="py-2">{t("no911Calls")}</p>
         ) : (
-          <div className="w-full mt-3 overflow-x-auto max-h-80">
+          <div className="w-full my-3 overflow-x-auto max-h-80">
             <table className="w-full overflow-hidden whitespace-nowrap">
               <thead className="sticky top-0">
                 <tr>
@@ -129,52 +129,67 @@ export function ActiveCalls() {
               <tbody>
                 {calls
                   .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
-                  .map((call) => (
-                    <tr key={call.id}>
-                      <td>{call.name}</td>
-                      <td>{call.location}</td>
-                      <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
-                        {call.description}
-                      </td>
-                      <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
-                      <td>{call.postal || common("none")}</td>
-                      <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
-                      <td>
-                        {isDispatch ? (
-                          <>
-                            <Button small variant="success" onClick={() => handleManageClick(call)}>
-                              {common("manage")}
-                            </Button>
-                          </>
-                        ) : (
-                          <>
-                            <Button disabled={!unit} small onClick={() => handleManageClick(call)}>
-                              {t("viewEvents")}
-                            </Button>
-                            {isUnitAssigned(call) ? null : (
+                  .map((call) => {
+                    const isUnitAssigned = isUnitAssignedToCall(call);
+
+                    return (
+                      <tr
+                        className={isUnitAssigned ? "bg-neutral-300 dark:bg-neutral-700" : ""}
+                        key={call.id}
+                      >
+                        <td>{call.name}</td>
+                        <td>{call.location}</td>
+                        <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                          {call.description}
+                        </td>
+                        <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
+                        <td>{call.postal || common("none")}</td>
+                        <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
+                        <td>
+                          {isDispatch ? (
+                            <>
                               <Button
-                                className="ml-2"
+                                small
+                                variant="success"
+                                onClick={() => handleManageClick(call)}
+                              >
+                                {common("manage")}
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
                                 disabled={!unit}
                                 small
-                                onClick={() => handleAssignToCall(call)}
+                                onClick={() => handleManageClick(call)}
                               >
-                                {t("assignToCall")}
+                                {t("viewEvents")}
                               </Button>
-                            )}
-                          </>
-                        )}
+                              {isUnitAssigned ? null : (
+                                <Button
+                                  className="ml-2"
+                                  disabled={!unit}
+                                  small
+                                  onClick={() => handleAssignToCall(call)}
+                                >
+                                  {t("assignToCall")}
+                                </Button>
+                              )}
+                            </>
+                          )}
 
-                        <Button
-                          disabled={!isDispatch && !unit}
-                          small
-                          className="ml-2"
-                          onClick={() => handleCallTow(call)}
-                        >
-                          {t("callTow")}
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                          <Button
+                            disabled={!isDispatch && !unit}
+                            small
+                            className="ml-2"
+                            onClick={() => handleCallTow(call)}
+                          >
+                            {t("callTow")}
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
