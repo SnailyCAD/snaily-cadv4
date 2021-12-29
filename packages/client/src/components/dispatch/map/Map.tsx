@@ -40,6 +40,7 @@ interface Props {
   update911Call(call: Omit<Full911Call, "events" | "assignedUnits">): Promise<void>;
   calls: Call911[];
   cad: cad;
+  t(key: string): string;
 }
 
 interface MapState {
@@ -695,10 +696,10 @@ class MapClass extends Component<Props, MapState> {
               this.toggleBlips(!this.state.blipsShown);
             }}
           >
-            {this.state.blipsShown ? "Hide Blips" : "Show Blips"}
+            {this.state.blipsShown ? this.props.t("Leo.hideBlips") : this.props.t("Leo.showBlips")}
           </Button>
           <Button onClick={() => this.props.openModal(ModalIds.Manage911Call)}>
-            {"Create 911 Call"}
+            {this.props.t("Calls.create911Call")}
           </Button>
           {["owner", "admin", "moderator"].includes(`${this.props?.user?.rank}`) ? (
             <button
