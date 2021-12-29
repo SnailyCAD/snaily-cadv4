@@ -52,11 +52,17 @@ Dropdown.LinkItem = ({ children, ...rest }: JSX.IntrinsicElements["a"]) => {
   const router = useRouter();
 
   // next/link doesn't support a "ref" prop. :(
-  function handleClick(e: any) {
+  function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
     e.preventDefault();
 
     const target = e.target as HTMLAnchorElement;
-    router.push(target.href);
+    const href = target.href;
+
+    if (e.shiftKey || e.ctrlKey) {
+      open(href, "_blank");
+    } else {
+      router.push(target.href);
+    }
   }
 
   return (
@@ -65,7 +71,7 @@ Dropdown.LinkItem = ({ children, ...rest }: JSX.IntrinsicElements["a"]) => {
         {...rest}
         onClick={handleClick}
         className={classNames(
-          "text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all",
+          "text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg rounded-md items-center w-full px-3 py-1.5 text-sm transition-all",
           rest.className,
         )}
       >
