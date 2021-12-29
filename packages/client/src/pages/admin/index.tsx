@@ -28,7 +28,7 @@ interface Counts {
 }
 
 export default function Admin({ counts }: { counts: Counts | null }) {
-  const t = useTranslations("Admin");
+  const t = useTranslations("Management");
 
   if (!counts) {
     return null;
