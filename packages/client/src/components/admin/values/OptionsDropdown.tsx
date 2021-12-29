@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Menu, Transition } from "@headlessui/react";
 import { ThreeDots } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
@@ -7,6 +6,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { useDownload } from "@casper124578/useful";
 import { TValue } from "src/pages/admin/values/[path]";
+import { Dropdown } from "components/Dropdown";
 
 export function OptionsDropdown({ values }: { values: TValue[] }) {
   const t = useTranslations("Values");
@@ -22,38 +22,21 @@ export function OptionsDropdown({ values }: { values: TValue[] }) {
   }
 
   return (
-    <>
-      <Menu as="div" className="relative z-50 inline-block text-left">
-        <Menu.Button as={Button} className="flex items-center h-full">
+    <Dropdown
+      alignOffset={0}
+      align="end"
+      trigger={
+        <Button className="flex items-center justify-center w-8 h-8">
           <ThreeDots width={15} height={15} className="text-gray-700 dark:text-gray-300" />
-        </Menu.Button>
-
-        <Transition
-          as={React.Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 mt-2 origin-top-left bg-white rounded-md shadow-lg w-36 dark:bg-dark-bright">
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                <Button onClick={() => openModal(ModalIds.ImportValues)}>
-                  {t("importValues")}
-                </Button>
-              </Menu.Item>
-
-              <Menu.Item disabled>
-                <Button onClick={handleExport} disabled>
-                  {t("exportValues")}
-                </Button>
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    </>
+        </Button>
+      }
+    >
+      <Dropdown.Item onClick={() => openModal(ModalIds.ImportValues)}>
+        {t("importValues")}
+      </Dropdown.Item>
+      <Dropdown.Item onClick={handleExport} disabled>
+        {t("exportValues")}
+      </Dropdown.Item>
+    </Dropdown>
   );
 }

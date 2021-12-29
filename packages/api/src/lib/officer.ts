@@ -38,9 +38,18 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     where: {
       userId: user.id,
       NOT: {
-        status: {
-          shouldDo: "SET_OFF_DUTY",
-        },
+        OR: [
+          {
+            status: {
+              shouldDo: "SET_OFF_DUTY",
+            },
+          },
+          {
+            status: {
+              is: null,
+            },
+          },
+        ],
       },
     },
     include: unitProperties,

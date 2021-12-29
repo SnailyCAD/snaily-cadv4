@@ -37,8 +37,10 @@ Dropdown.Item = ({ children, ...rest }: Omit<ButtonProps, "ref">) => (
   <DropdownMenu.Item asChild>
     <Button
       {...rest}
+      variant="transparent"
       className={classNames(
         "p-1 my-1 px-1.5 rounded-md transition-colors w-full text-left bg-transparent",
+        "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
         rest.className,
       )}
     >

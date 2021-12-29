@@ -45,7 +45,7 @@ export function RegisterVehicleModal({
   const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
-  const maxPlateLength = cad?.miscCadSettings.maxPlateLength ?? 8;
+  const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);

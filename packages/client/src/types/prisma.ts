@@ -17,7 +17,7 @@ export type cad = {
   towWhitelisted: boolean;
   apiTokenId: string | null;
   disabledFeatures: Feature[];
-} & { miscCadSettings: MiscCadSettings; apiToken: ApiToken | null };
+} & { miscCadSettings?: MiscCadSettings | null; apiToken: ApiToken | null };
 
 /**
  * Model MiscCadSettings

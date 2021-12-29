@@ -119,11 +119,11 @@ export default function CitizenId() {
           <div className="flex flex-col sm:ml-5">
             <p>
               <span className="font-semibold">{t("weight")}: </span>
-              {citizen.weight} {cad?.miscCadSettings.weightPrefix}
+              {citizen.weight} {cad?.miscCadSettings?.weightPrefix}
             </p>
             <p>
               <span className="font-semibold">{t("height")}: </span>
-              {citizen.height} {cad?.miscCadSettings.heightPrefix}
+              {citizen.height} {cad?.miscCadSettings?.heightPrefix}
             </p>
             <p>
               <span className="font-semibold">{t("address")}: </span>

@@ -99,11 +99,11 @@ export default function EditCitizen() {
 
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
-  const weightPrefix = cad?.miscCadSettings.weightPrefix
+  const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad?.miscCadSettings.weightPrefix})`
     : "";
 
-  const heightPrefix = cad?.miscCadSettings.heightPrefix
+  const heightPrefix = cad?.miscCadSettings?.heightPrefix
     ? `(${cad?.miscCadSettings.heightPrefix})`
     : "";
 

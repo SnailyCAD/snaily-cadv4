@@ -84,8 +84,15 @@ th {
 }
 
 .dropdown-fade {
-  transform-origin: top left;
   animation: dropdownFade 100ms ease-out;
+}
+
+.dropdown-fade[data-side="left"] {
+  transform-origin: top right;
+}
+
+.dropdown-fade[data-side="right"] {
+  transform-origin: top left;
 }
 
 @keyframes dropdownFade {

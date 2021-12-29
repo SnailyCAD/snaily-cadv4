@@ -89,20 +89,22 @@ export class StatusController {
     }
 
     // reset all units for user
-    if (type === "leo") {
-      await prisma.officer.updateMany({
-        where: { userId: user.id },
-        data: {
-          statusId: null,
-        },
-      });
-    } else if (type === "ems-fd") {
-      await prisma.emsFdDeputy.updateMany({
-        where: { userId: user.id },
-        data: {
-          statusId: null,
-        },
-      });
+    if (!isDispatch) {
+      if (type === "leo") {
+        await prisma.officer.updateMany({
+          where: { userId: user.id },
+          data: {
+            statusId: null,
+          },
+        });
+      } else if (type === "ems-fd") {
+        await prisma.emsFdDeputy.updateMany({
+          where: { userId: user.id },
+          data: {
+            statusId: null,
+          },
+        });
+      }
     }
 
     let updatedUnit;

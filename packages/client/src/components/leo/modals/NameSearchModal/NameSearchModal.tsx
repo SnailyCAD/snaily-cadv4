@@ -237,11 +237,11 @@ export function NameSearchModal() {
                     <div className="flex flex-col">
                       <p>
                         <span className="font-semibold">{cT("weight")}: </span>
-                        {currentResult.weight} {cad?.miscCadSettings.weightPrefix}
+                        {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("height")}: </span>
-                        {currentResult.height} {cad?.miscCadSettings.heightPrefix}
+                        {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("address")}: </span>
