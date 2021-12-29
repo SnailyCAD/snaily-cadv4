@@ -1,6 +1,5 @@
-import { Layout } from "components/Layout";
+import { Nav } from "components/Nav";
 import { useRoleplayStopped } from "hooks/useRoleplayStopped";
-import { classNames } from "lib/classNames";
 import { AdminSidebar } from "./Sidebar";
 
 interface Props {
@@ -12,15 +11,21 @@ export function AdminLayout({ children, className }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
 
   return (
-    <Layout hideAlerts className={classNames("relative z-10 flex", className)}>
-      <div className="w-60">
-        <AdminSidebar />
-      </div>
+    <div>
+      <>
+        <Nav />
 
-      <div className="w-full ml-4">
-        {roleplayStopped ? <Component /> : null}
-        {children}
-      </div>
-    </Layout>
+        <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
+          <div className="flex">
+            <AdminSidebar />
+
+            <div className="w-full ml-4">
+              {roleplayStopped ? <Component /> : null}
+              {children}
+            </div>
+          </div>
+        </main>
+      </>
+    </div>
   );
 }

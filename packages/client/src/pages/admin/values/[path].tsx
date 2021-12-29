@@ -31,6 +31,7 @@ import dynamic from "next/dynamic";
 import { Table } from "components/table/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
+import format from "date-fns/format";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -74,6 +75,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     return [
       { Header: "Value", accessor: "value" },
       ...extraTableHeaders,
+      { Header: common("createdAt"), accessor: "createdAt" },
       { Header: common("actions"), accessor: "actions" },
     ];
   }, [extraTableHeaders, common]);
@@ -183,15 +185,23 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <Table
+          containerProps={{
+            style: { overflowY: "auto", maxHeight: "75vh" },
+          }}
           dragDrop={{
             enabled: true,
             handleMove: setList,
+          }}
+          defaultSort={{
+            columnId: "createdAt",
+            descending: true,
           }}
           filter={search}
           data={values.map((value) => ({
             rowProps: { value },
             value: getValueStrFromValue(value),
             ...extraTableData(value),
+            createdAt: format(new Date(getCreatedAtFromValue(value)), "yyyy-MM-dd hh:mm:ss"),
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(value)} variant="success">
@@ -318,6 +328,10 @@ export function handleFilter(value: TValue, search: string) {
 
 function getValueStrFromValue(value: TValue) {
   return "createdAt" in value ? value.value : value.value.value;
+}
+
+function getCreatedAtFromValue(value: TValue) {
+  return "createdAt" in value ? value.createdAt : value.value.createdAt;
 }
 
 /**

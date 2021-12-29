@@ -25,8 +25,8 @@ export function AdminSidebar() {
   return (
     <div className="w-60">
       <aside
-        style={{ minHeight: "calc(100vh - 5rem)" }}
-        className="absolute w-60 left-4 top-0 bg-gray-200 dark:bg-[#171717] rounded-md py-2"
+        // style={{ minHeight: "calc(100vh - 5rem)" }}
+        className="sticky w-60 left-4 top-5 bg-gray-200 dark:bg-[#171717] rounded-md py-2"
       >
         <section>
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
