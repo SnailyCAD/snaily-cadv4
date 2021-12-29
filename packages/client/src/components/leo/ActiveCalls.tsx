@@ -134,7 +134,7 @@ export function ActiveCalls() {
 
                     return (
                       <tr
-                        className={isUnitAssigned ? "bg-neutral-300 dark:bg-neutral-700" : ""}
+                        className={isUnitAssigned ? "bg-gray-200 dark:bg-gray-3" : ""}
                         key={call.id}
                       >
                         <td>{call.name}</td>
