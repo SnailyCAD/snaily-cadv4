@@ -321,7 +321,7 @@ export class LeoController {
   ) {
     const error = validate(LICENSE_SCHEMA, body.toJSON(), true);
     if (error) {
-      return new BadRequest(error);
+      throw new BadRequest(error);
     }
 
     const citizen = await prisma.citizen.findUnique({
