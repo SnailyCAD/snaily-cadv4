@@ -192,10 +192,6 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             enabled: true,
             handleMove: setList,
           }}
-          defaultSort={{
-            columnId: "createdAt",
-            descending: true,
-          }}
           filter={search}
           data={values.map((value) => ({
             rowProps: { value },
