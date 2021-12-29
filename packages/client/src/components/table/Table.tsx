@@ -2,7 +2,7 @@
 import { classNames } from "lib/classNames";
 import * as React from "react";
 import { ArrowDownShort, ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
-import { useTable, useSortBy, useGlobalFilter, Column, Row } from "react-table";
+import { useTable, useSortBy, useGlobalFilter, useRowSelect, Column, Row } from "react-table";
 import { ReactSortable } from "react-sortablejs";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
@@ -25,6 +25,10 @@ interface Props<T extends object = {}> {
     handleMove: (list: any[]) => void;
     enabled?: boolean;
   };
+  selection?: {
+    enabled: boolean;
+    onSelect?(originals: TableData<T>[], selectedFlatRows: Row<TableData<T>>[]): void;
+  };
 }
 
 export function Table<T extends object>(props: Props<T>) {
@@ -43,11 +47,48 @@ export function Table<T extends object>(props: Props<T>) {
     toggleSortBy,
     headerGroups,
     rows,
+    selectedFlatRows,
   } = useTable<TableData<T>>(
     // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
     { autoResetSortBy: false, columns, data },
     useGlobalFilter,
     useSortBy,
+    useRowSelect,
+    (hooks) => {
+      if (props.selection?.enabled) {
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            Cell: ({ row }: any) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ]);
+      }
+
+      if (props.dragDrop?.enabled) {
+        hooks.visibleColumns.push((columns) => [
+          {
+            id: "move",
+            Header: () => <ArrowDownUp />,
+            Cell: () => (
+              <span className={classNames("cursor-move", DRAGGABLE_TABLE_HANDLE)}>
+                <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
+              </span>
+            ),
+          },
+          ...columns,
+        ]);
+      }
+    },
   );
 
   function handleMove(tableList: any[]) {
@@ -57,6 +98,13 @@ export function Table<T extends object>(props: Props<T>) {
 
     props.dragDrop?.handleMove(originals);
   }
+
+  React.useEffect(() => {
+    if (!props.selection?.enabled) return;
+    const originals = selectedFlatRows.map((r) => r.original);
+
+    props.selection.onSelect?.(originals, selectedFlatRows);
+  }, [selectedFlatRows, props.selection]);
 
   React.useEffect(() => {
     setGlobalFilter(props.filter);
@@ -80,11 +128,6 @@ export function Table<T extends object>(props: Props<T>) {
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {props.dragDrop?.enabled ? (
-                <th className="sticky top-0">
-                  <ArrowDownUp />
-                </th>
-              ) : null}
               {headerGroup.headers.map((column) => (
                 <th
                   // actions don't need a toggle sort
@@ -122,9 +165,7 @@ export function Table<T extends object>(props: Props<T>) {
           {rows.map((row) => {
             prepareRow(row);
 
-            return (
-              <Row dragDropEnabled={props.dragDrop?.enabled} row={row} {...row.getRowProps()} />
-            );
+            return <Row row={row} {...row.getRowProps()} />;
           })}
         </ReactSortable>
       </table>
@@ -134,24 +175,22 @@ export function Table<T extends object>(props: Props<T>) {
 
 type RowProps<T extends object> = {
   row: Row<TableData<T>>;
-  dragDropEnabled: boolean | undefined;
 };
 
-function Row<T extends object>({ dragDropEnabled, row }: RowProps<T>) {
+function Row<T extends object>({ row }: RowProps<T>) {
   const rowProps = row.original.rowProps ?? {};
 
   return (
     <tr {...rowProps}>
-      {dragDropEnabled ? (
-        <td className={classNames("cursor-move w-10", DRAGGABLE_TABLE_HANDLE)}>
-          <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
-        </td>
-      ) : null}
       {row.cells.map((cell) => {
         const isActions = cell.column.id === "actions";
+        const isMove = ["move", "selection"].includes(cell.column.id);
 
         return (
-          <td {...cell.getCellProps()} className={isActions ? "w-[10rem]" : ""}>
+          <td
+            {...cell.getCellProps()}
+            className={classNames(isActions && "w-[10rem]", isMove && "w-10")}
+          >
             {cell.render("Cell")}
           </td>
         );
@@ -159,3 +198,21 @@ function Row<T extends object>({ dragDropEnabled, row }: RowProps<T>) {
     </tr>
   );
 }
+
+const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef<HTMLInputElement>(null);
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      // @ts-expect-error ignore
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    );
+  },
+);
