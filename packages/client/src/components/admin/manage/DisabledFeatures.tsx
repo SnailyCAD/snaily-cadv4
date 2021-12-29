@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Formik } from "formik";
 import { useTranslations } from "use-intl";
 
@@ -8,10 +9,80 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { feature, Feature } from "types/prisma";
+import { Input } from "components/form/Input";
 
 const FEATURES = Object.keys(feature) as Feature[];
 
+interface FeatureItem {
+  name: string;
+  description: string | React.ReactNode;
+}
+
+const FEATURES_LIST: Record<Feature, FeatureItem> = {
+  TOW: {
+    name: "Tow",
+    description: "Enable/Disable tow. When enabled, this will allow citizens to call tow.",
+  },
+  TAXI: {
+    name: "Taxi",
+    description: "When enabled, this will allow citizens to call a taxi to pick them up.",
+  },
+  TRUCK_LOGS: {
+    name: "Truck Logs",
+    description:
+      "When enabled, this will allow citizens to create truck logs and track their progress.",
+  },
+  AOP: {
+    name: "Area Of Play",
+    // eslint-disable-next-line quotes
+    description: 'When disabled, this will hide "- AOP: aop here"',
+  },
+  BUSINESS: {
+    name: "Businesses",
+    description: "When enabled, citizens will be able to create and join businesses",
+  },
+  ALLOW_DUPLICATE_CITIZEN_NAMES: {
+    name: "Allow Duplicate Citizen Names",
+    description:
+      "When enabled, this will allow users to create citizens with the same name (name and surname)",
+  },
+  DISCORD_AUTH: {
+    name: "Allow users to authenticate with Discord.",
+    description: (
+      <>
+        When enabled, this will allow users to login and register with Discord.{" "}
+        <a href="https://cad-docs.netlify.app/other/discord-authentication">
+          Click here for Documentation
+        </a>
+      </>
+    ),
+  },
+  BLEETER: {
+    name: "Bleeter",
+    description: (
+      <>
+        Bleeter is like twitter but for GTA,{" "}
+        <a
+          href="https://gta.fandom.com/wiki/Bleeter"
+          rel="noreferrer noopener"
+          target="_blank"
+          className="underline"
+        >
+          find more information here
+        </a>
+        .
+      </>
+    ),
+  },
+  COURTHOUSE: {
+    name: "Courthouse",
+    description: "When enabled, this will allow citizens to create expungement requests.",
+  },
+};
+
 export function DisabledFeaturesArea() {
+  const [search, setSearch] = React.useState("");
+
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
@@ -40,119 +111,47 @@ export function DisabledFeaturesArea() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
+      setSearch("");
     }
   }
 
   const INITIAL_VALUES = createInitialValues();
+  const features = Object.entries(FEATURES_LIST).filter(([, v]) =>
+    !search.trim() ? true : v.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <div className="mt-3">
       <h2 className="text-2xl font-semibold">Enable or disable features</h2>
 
+      <FormField label={common("search")} className="mt-3 mb-10">
+        <Input
+          placeholder="Find features.."
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          className=""
+        />
+      </FormField>
+
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
-            <FormField boldLabel label={"Tow"}>
-              <Toggle toggled={values[feature.TOW]} onClick={handleChange} name={feature.TOW} />
-              <small className="mt-2 text-base">
-                Enable/Disable tow. When enabled, this will allow citizens to call tow.
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Bleeter"}>
-              <Toggle
-                toggled={values[feature.BLEETER]}
-                onClick={handleChange}
-                name={feature.BLEETER}
-              />
-              <small className="mt-2 text-base">
-                Bleeter is like twitter but for GTA,{" "}
-                <a
-                  href="https://gta.fandom.com/wiki/Bleeter"
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  className="underline"
-                >
-                  find more information here
-                </a>
-                .
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Courthouse"}>
-              <Toggle
-                toggled={values[feature.COURTHOUSE]}
-                onClick={handleChange}
-                name={feature.COURTHOUSE}
-              />
-              <small className="mt-2 text-base">
-                When enabled, this will allow citizens to create expungement requests
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Taxi"}>
-              <Toggle toggled={values[feature.TAXI]} onClick={handleChange} name={feature.TAXI} />
-              <small className="mt-2 text-base">
-                When enabled, this will allow citizens to call a taxi to pick them up.
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Truck Logs"}>
-              <Toggle
-                toggled={values[feature.TRUCK_LOGS]}
-                onClick={handleChange}
-                name={feature.TRUCK_LOGS}
-              />
-              <small className="mt-2 text-base">
-                When enabled, this will allow citizens to create truck logs and track their
-                progress.
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Area of Play"}>
-              <Toggle toggled={values[feature.AOP]} onClick={handleChange} name={feature.AOP} />
-              <small className="mt-2 text-base">
-                {/* eslint-disable-next-line quotes */}
-                {'When disabled, this will hide "- AOP: aop here"'}
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Businesses"}>
-              <Toggle
-                toggled={values[feature.BUSINESS]}
-                onClick={handleChange}
-                name={feature.BUSINESS}
-              />
-              <small className="mt-2 text-base">
-                When enabled, citizens will be able to create and join businesses
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Allow Duplicate Citizen Names"}>
-              <Toggle
-                toggled={values[feature.ALLOW_DUPLICATE_CITIZEN_NAMES]}
-                onClick={handleChange}
-                name={feature.ALLOW_DUPLICATE_CITIZEN_NAMES}
-              />
-              <small className="mt-2 text-base">
-                When enabled, this will allow users to create citizens with the same name (name and
-                surname)
-              </small>
-            </FormField>
-
-            <FormField boldLabel label={"Allow users to authenticate with Discord."}>
-              <Toggle
-                toggled={values[feature.DISCORD_AUTH]}
-                onClick={handleChange}
-                name={feature.DISCORD_AUTH}
-              />
-              <small className="mt-2 text-base">
-                When enabled, this will allow users to login and register with Discord.{" "}
-                <a href="https://cad-docs.netlify.app/other/discord-authentication">
-                  Click here for Documentation
-                </a>
-              </small>
-            </FormField>
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+              {features.map(([key, value]) => {
+                return (
+                  <div key={key}>
+                    <FormField checkbox boldLabel label={value.name}>
+                      <Toggle
+                        toggled={values[feature[key as Feature]]}
+                        onClick={handleChange}
+                        name={feature[key as Feature]}
+                      />
+                    </FormField>
+                    <small className="mt-2 text-base">{value.description}</small>
+                  </div>
+                );
+              })}
+            </div>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
