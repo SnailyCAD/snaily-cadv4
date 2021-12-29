@@ -5,6 +5,7 @@ import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import prettyBytes from "pretty-bytes";
 import Head from "next/head";
+import { useTranslations } from "next-intl";
 
 interface Counts {
   activeUsers: number;
@@ -27,6 +28,8 @@ interface Counts {
 }
 
 export default function Admin({ counts }: { counts: Counts | null }) {
+  const t = useTranslations("Admin");
+
   if (!counts) {
     return null;
   }
@@ -49,7 +52,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
         <Item count={counts.createdCitizens} name="created" />
         <Item
           count={counts.citizensInBolo}
-          name="in BOLO"
+          name={t("inBolo")}
           percentage={(100 / counts.createdCitizens) * counts.citizensInBolo}
         />
         <Item
@@ -68,7 +71,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
         <Item count={counts.vehicles} name="registered" />
         <Item
           count={counts.vehiclesInBOLO}
-          name="in BOLO"
+          name={t("inBolo")}
           percentage={(100 / counts.vehicles) * counts.vehiclesInBOLO}
         />
         <Item
