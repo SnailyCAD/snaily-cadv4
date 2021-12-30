@@ -10,6 +10,7 @@ import { IsAuth } from "middlewares/index";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs";
 import { unitProperties } from "lib/officer";
+import { validateImgurURL } from "utils/image";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -72,7 +73,7 @@ export class EmsFdController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
-        imageId: body.get("image") || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: unitProperties,
     });
@@ -135,7 +136,7 @@ export class EmsFdController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
-        imageId: body.get("image") || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: unitProperties,
     });

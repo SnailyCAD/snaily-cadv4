@@ -10,6 +10,7 @@ import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { unitProperties } from "lib/officer";
+import { validateImgurURL } from "utils/image";
 
 export const citizenInclude = {
   vehicles: {
@@ -139,7 +140,6 @@ export class CitizenController {
       pilotLicenseCategory,
       ccw,
       phoneNumber,
-      image,
     } = body.toJSON() as {
       [key: string]: any;
       driversLicenseCategory: string[];
@@ -185,7 +185,7 @@ export class CitizenController {
         pilotLicenseId: pilotLicense || undefined,
         ccwId: ccw || undefined,
         phoneNumber: phoneNumber || null,
-        imageId: image || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: {
         gender: true,
@@ -233,7 +233,6 @@ export class CitizenController {
       ethnicity,
       gender,
       phoneNumber,
-      image,
     } = body.toJSON();
 
     const date = new Date(dateOfBirth).getTime();
@@ -257,7 +256,7 @@ export class CitizenController {
         genderId: gender,
         eyeColor,
         phoneNumber: phoneNumber || null,
-        imageId: image || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: {
         gender: true,

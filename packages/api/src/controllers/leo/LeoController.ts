@@ -18,6 +18,7 @@ import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { unitProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { validateImgurURL } from "utils/image";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -86,7 +87,7 @@ export class LeoController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
-        imageId: body.get("image") || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: unitProperties,
     });
@@ -149,7 +150,7 @@ export class LeoController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
-        imageId: body.get("image") || undefined,
+        imageId: validateImgurURL(body.get("image")),
       },
       include: unitProperties,
     });
