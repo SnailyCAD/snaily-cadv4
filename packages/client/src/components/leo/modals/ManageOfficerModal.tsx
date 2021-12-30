@@ -113,6 +113,39 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
+            {/* <FormField optional errorMessage={errors.image} label={t("image")}>
+              <div className="flex">
+                <Input
+                  style={{ width: "95%", marginRight: "0.5em" }}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setImage(e.target.files?.[0] ?? null);
+                  }}
+                  type="file"
+                  name="image"
+                  value={values.image ?? ""}
+                />
+                <Button
+                  className="mr-2"
+                  type="button"
+                  onClick={() => {
+                    openModal(ModalIds.CropImageModal);
+                  }}
+                >
+                  Crop
+                </Button>
+                <Button
+                  type="button"
+                  variant="danger"
+                  onClick={() => {
+                    setFieldValue("image", "");
+                  }}
+                >
+                  {common("delete")}
+                </Button>
+              </div>
+            </FormField> */}
+
             <ImageSelectInput setImage={setImage} image={image} />
 
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>

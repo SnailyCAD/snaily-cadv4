@@ -10,8 +10,6 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@snailycad/config": "1.0.0-beta.27",
-    "@snailycad/schemas": "1.0.0-beta.27",
     "zod": "^3.11.6"
   },
   "tsup": {
