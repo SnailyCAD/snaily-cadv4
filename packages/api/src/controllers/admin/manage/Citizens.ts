@@ -4,6 +4,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody } from "@tsed/schema";
 import { userProperties } from "lib/auth";
+import { unitProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 
@@ -19,6 +20,26 @@ export class ManageCitizensController {
         },
         gender: true,
         ethnicity: true,
+      },
+    });
+
+    return citizens;
+  }
+
+  @Get("/records-logs")
+  async getRecordLogsForCitizen() {
+    const citizens = await prisma.recordLog.findMany({
+      include: {
+        warrant: { include: { officer: { include: unitProperties } } },
+        records: {
+          include: {
+            officer: { include: unitProperties },
+            violations: { include: { penalCode: true } },
+          },
+        },
+        citizen: {
+          include: { user: { select: userProperties }, gender: true, ethnicity: true },
+        },
       },
     });
 
