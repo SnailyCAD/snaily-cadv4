@@ -159,6 +159,7 @@ model Citizen {
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @default(now()) @updatedAt
   RecordRelease        RecordRelease[]
+  RecordLog            RecordLog[]
 }
 
 enum Rank {
@@ -706,6 +707,7 @@ model Record {
   notes      String?        @db.Text
   release    RecordRelease? @relation(fields: [releaseId], references: [id])
   releaseId  String?
+  RecordLog  RecordLog[]
 }
 
 model RecordRelease {
@@ -737,6 +739,17 @@ model Warrant {
   status      WarrantStatus @default(ACTIVE)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @default(now()) @updatedAt
+  RecordLog   RecordLog[]
+}
+
+model RecordLog {
+  id        String   @id @default(uuid())
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  records   Record?  @relation(fields: [recordId], references: [id])
+  recordId  String?
+  warrant   Warrant? @relation(fields: [warrantId], references: [id])
+  warrantId String?
 }
 
 enum WarrantStatus {
