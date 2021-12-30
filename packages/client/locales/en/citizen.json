@@ -32,6 +32,7 @@
     "ccw": "CCW",
     "createTaxiCall": "Create Taxi Call",
     "create911Call": "Create 911 Call",
+    "socialSecurityNumber": "Social Security Number",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {

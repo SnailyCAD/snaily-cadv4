@@ -106,6 +106,8 @@ export type Citizen = {
   dateOfDead: Date | null;
   dlCategory: DriversLicenseCategoryValue[];
   phoneNumber: string | null;
+  /** nullable since no default is set. */
+  socialSecurityNumber: string | null;
 };
 
 /**
@@ -669,6 +671,7 @@ export const feature = {
   DISCORD_AUTH: "DISCORD_AUTH",
   CALLS_911: "CALLS_911",
   WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
+  SOCIAL_SECURITY_NUMBERS: "SOCIAL_SECURITY_NUMBERS",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];

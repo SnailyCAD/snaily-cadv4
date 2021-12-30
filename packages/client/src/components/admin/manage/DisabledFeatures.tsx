@@ -86,6 +86,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "911 Calls",
     description: "When disabled, this will disable the use of 911-calls.",
   },
+  SOCIAL_SECURITY_NUMBERS: {
+    name: "Social Security Numbers",
+    description: "When disabled, this will hide social security numbers",
+  },
 };
 
 export function DisabledFeaturesArea() {
