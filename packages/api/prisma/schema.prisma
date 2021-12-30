@@ -111,53 +111,54 @@ enum StatusViewMode {
 }
 
 model Citizen {
-  id               String                        @id @default(cuid())
-  user             User                          @relation(fields: [userId], references: [id])
-  userId           String
-  name             String                        @db.VarChar(255)
-  surname          String                        @db.VarChar(255)
-  dateOfBirth      DateTime
-  gender           Value                         @relation("genderToValue", fields: [genderId], references: [id])
-  genderId         String
-  ethnicity        Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
-  ethnicityId      String
-  hairColor        String                        @db.VarChar(255)
-  eyeColor         String                        @db.VarChar(255)
-  address          String                        @db.VarChar(255)
-  height           String                        @db.VarChar(255)
-  weight           String                        @db.VarChar(255)
-  driversLicense   Value?                        @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
-  driversLicenseId String?
-  dlCategory       DriversLicenseCategoryValue[] @relation("dlCategoryToDLCategory")
-  weaponLicense    Value?                        @relation("weaponLicenseToValue", fields: [weaponLicenseId], references: [id])
-  weaponLicenseId  String?
-  pilotLicense     Value?                        @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
-  pilotLicenseId   String?
-  ccw              Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
-  ccwId            String?
-  imageId          String?                       @db.Text
-  note             String?                       @db.Text
-  dead             Boolean?                      @default(false)
-  arrested         Boolean?                      @default(false)
-  phoneNumber      String?
-  dateOfDead       DateTime?
-  vehicles         RegisteredVehicle[]
-  weapons          Weapon[]
-  medicalRecords   MedicalRecord[]
-  towCalls         TowCall[]
-  createdTowCalls  TowCall[]                     @relation("towCallCreator")
-  businesses       Business[]
-  Employee         Employee[]
-  officers         Officer[]
-  warrants         Warrant[]
-  Record           Record[]
-  emsFdDeputies    EmsFdDeputy[]
-  TaxiCall         TaxiCall[]
-  createdTaxiCalls TaxiCall[]                    @relation("taxiCallCreator")
-  truckLogs        TruckLog[]
-  createdAt        DateTime                      @default(now())
-  updatedAt        DateTime                      @default(now()) @updatedAt
-  RecordRelease    RecordRelease[]
+  id                   String                        @id @default(cuid())
+  user                 User                          @relation(fields: [userId], references: [id])
+  socialSecurityNumber String?
+  userId               String
+  name                 String                        @db.VarChar(255)
+  surname              String                        @db.VarChar(255)
+  dateOfBirth          DateTime
+  gender               Value                         @relation("genderToValue", fields: [genderId], references: [id])
+  genderId             String
+  ethnicity            Value                         @relation("ethnicityToValue", fields: [ethnicityId], references: [id])
+  ethnicityId          String
+  hairColor            String                        @db.VarChar(255)
+  eyeColor             String                        @db.VarChar(255)
+  address              String                        @db.VarChar(255)
+  height               String                        @db.VarChar(255)
+  weight               String                        @db.VarChar(255)
+  driversLicense       Value?                        @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
+  driversLicenseId     String?
+  dlCategory           DriversLicenseCategoryValue[] @relation("dlCategoryToDLCategory")
+  weaponLicense        Value?                        @relation("weaponLicenseToValue", fields: [weaponLicenseId], references: [id])
+  weaponLicenseId      String?
+  pilotLicense         Value?                        @relation("pilotLicenseToValue", fields: [pilotLicenseId], references: [id])
+  pilotLicenseId       String?
+  ccw                  Value?                        @relation("ccwToValue", fields: [ccwId], references: [id])
+  ccwId                String?
+  imageId              String?                       @db.Text
+  note                 String?                       @db.Text
+  dead                 Boolean?                      @default(false)
+  arrested             Boolean?                      @default(false)
+  phoneNumber          String?
+  dateOfDead           DateTime?
+  vehicles             RegisteredVehicle[]
+  weapons              Weapon[]
+  medicalRecords       MedicalRecord[]
+  towCalls             TowCall[]
+  createdTowCalls      TowCall[]                     @relation("towCallCreator")
+  businesses           Business[]
+  Employee             Employee[]
+  officers             Officer[]
+  warrants             Warrant[]
+  Record               Record[]
+  emsFdDeputies        EmsFdDeputy[]
+  TaxiCall             TaxiCall[]
+  createdTaxiCalls     TaxiCall[]                    @relation("taxiCallCreator")
+  truckLogs            TruckLog[]
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @default(now()) @updatedAt
+  RecordRelease        RecordRelease[]
 }
 
 enum Rank {
@@ -796,4 +797,5 @@ enum Feature {
   DISCORD_AUTH
   CALLS_911
   WEAPON_REGISTRATION
+  SOCIAL_SECURITY_NUMBERS
 }

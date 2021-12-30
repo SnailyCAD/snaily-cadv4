@@ -59,6 +59,15 @@ export class SearchController {
     if (citizen.length <= 0) {
       citizen = await prisma.citizen.findMany({
         where: {
+          socialSecurityNumber: name,
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (citizen.length <= 0) {
+      citizen = await prisma.citizen.findMany({
+        where: {
           name: { contains: surname, mode: "insensitive" },
           surname: { contains: name, mode: "insensitive" },
         },

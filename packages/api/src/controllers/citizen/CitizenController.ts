@@ -11,6 +11,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { unitProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
+import { generateString } from "utils/generateString";
 
 export const citizenInclude = {
   vehicles: {
@@ -186,6 +187,7 @@ export class CitizenController {
         ccwId: ccw || undefined,
         phoneNumber: phoneNumber || null,
         imageId: validateImgurURL(body.get("image")),
+        socialSecurityNumber: generateString(9, { numbersOnly: true }),
       },
       include: {
         gender: true,
@@ -257,6 +259,9 @@ export class CitizenController {
         eyeColor,
         phoneNumber: phoneNumber || null,
         imageId: validateImgurURL(body.get("image")),
+        socialSecurityNumber: !citizen.socialSecurityNumber
+          ? generateString(9, { numbersOnly: true })
+          : undefined,
       },
       include: {
         gender: true,
