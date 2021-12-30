@@ -131,7 +131,7 @@ export class ValuesController {
         data: {
           title: body.get("title"),
           description: body.get("description"),
-          groupId: body.get("groupId"),
+          groupId: body.get("groupId") || null,
           [key]: id,
         },
         include: {
@@ -377,7 +377,7 @@ export class ValuesController {
         data: {
           title: body.get("title"),
           description: body.get("description"),
-          groupId: body.get("groupId"),
+          groupId: body.get("groupId") || null,
           [key]: warningId,
         },
         include: {
