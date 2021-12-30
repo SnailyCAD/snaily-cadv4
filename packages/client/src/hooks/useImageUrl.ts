@@ -12,7 +12,7 @@ export function useImageUrl() {
   function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {
     if (!mounted) return;
 
-    if (id.match(IMGUR_REGEX)) {
+    if (id?.match(IMGUR_REGEX)) {
       return id;
     }
 
