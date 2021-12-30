@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IMGUR_REGEX } from "@snailycad/config";
 
 export const CREATE_OFFICER_SCHEMA = z.object({
   department: z.string().min(2).max(255),
@@ -7,6 +8,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   rank: z.string().max(255).nullable(),
   badgeNumber: z.number().min(1),
   division: z.string().min(2).max(255),
+  image: z.string().regex(IMGUR_REGEX).optional(),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({

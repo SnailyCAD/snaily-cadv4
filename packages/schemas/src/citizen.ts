@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { IMGUR_REGEX } from "@snailycad/config";
 
 export const CREATE_CITIZEN_SCHEMA = z.object({
   name: z.string().min(2).max(255),
@@ -11,6 +12,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   hairColor: z.string().min(2).max(255),
   eyeColor: z.string().min(2).max(255),
   address: z.string().min(2).max(255),
+  image: z.string().regex(IMGUR_REGEX).optional(),
 });
 
 export const VEHICLE_SCHEMA = z.object({
