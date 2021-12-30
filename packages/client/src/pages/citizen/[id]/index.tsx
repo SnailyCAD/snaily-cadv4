@@ -22,6 +22,7 @@ import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -37,6 +38,7 @@ export default function CitizenId() {
   const { citizen } = useCitizen();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   async function handleDelete() {
     if (!citizen) return;
@@ -93,6 +95,12 @@ export default function CitizenId() {
               <span className="font-semibold">{t("fullName")}: </span>
               {citizen.name} {citizen.surname}
             </p>
+            {SOCIAL_SECURITY_NUMBERS && citizen.socialSecurityNumber ? (
+              <p>
+                <span className="font-semibold">{t("socialSecurityNumber")}: </span>
+                {citizen.socialSecurityNumber}
+              </p>
+            ) : null}
             <p>
               <span className="font-semibold">{t("dateOfBirth")}: </span>
               {format(new Date(citizen.dateOfBirth), "yyyy-MM-dd")} ({t("age")}:{" "}
