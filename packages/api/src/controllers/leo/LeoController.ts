@@ -86,6 +86,7 @@ export class LeoController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
+        imageId: body.get("image"),
       },
       include: unitProperties,
     });
@@ -148,6 +149,7 @@ export class LeoController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
+        imageId: body.get("image"),
       },
       include: unitProperties,
     });

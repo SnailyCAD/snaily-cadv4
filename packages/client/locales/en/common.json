@@ -34,7 +34,9 @@
     "stopRoleplay": "Stop Roleplay",
     "roleplayStopped": "Admins issued all players to stop all roleplay.",
     "optionalField": "Optional",
-    "title": "Title"
+    "title": "Title",
+    "image": "Image",
+    "imgur": "Imgur URL"
   },
   "Nav": {
     "citizen": "Citizen",

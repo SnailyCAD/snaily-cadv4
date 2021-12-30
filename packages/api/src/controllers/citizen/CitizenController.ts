@@ -139,6 +139,7 @@ export class CitizenController {
       pilotLicenseCategory,
       ccw,
       phoneNumber,
+      image,
     } = body.toJSON() as {
       [key: string]: any;
       driversLicenseCategory: string[];
@@ -184,6 +185,7 @@ export class CitizenController {
         pilotLicenseId: pilotLicense || undefined,
         ccwId: ccw || undefined,
         phoneNumber: phoneNumber || null,
+        imageId: image,
       },
       include: {
         gender: true,
@@ -231,6 +233,7 @@ export class CitizenController {
       ethnicity,
       gender,
       phoneNumber,
+      image,
     } = body.toJSON();
 
     const date = new Date(dateOfBirth).getTime();
@@ -254,6 +257,7 @@ export class CitizenController {
         genderId: gender,
         eyeColor,
         phoneNumber: phoneNumber || null,
+        imageId: image,
       },
       include: {
         gender: true,
