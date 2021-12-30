@@ -185,7 +185,7 @@ export class CitizenController {
         pilotLicenseId: pilotLicense || undefined,
         ccwId: ccw || undefined,
         phoneNumber: phoneNumber || null,
-        imageId: image,
+        imageId: image || undefined,
       },
       include: {
         gender: true,
@@ -257,7 +257,7 @@ export class CitizenController {
         genderId: gender,
         eyeColor,
         phoneNumber: phoneNumber || null,
-        imageId: image,
+        imageId: image || undefined,
       },
       include: {
         gender: true,

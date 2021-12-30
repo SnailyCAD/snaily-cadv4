@@ -72,6 +72,7 @@ export class EmsFdController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
+        imageId: body.get("image") || undefined,
       },
       include: unitProperties,
     });
@@ -134,6 +135,7 @@ export class EmsFdController {
         divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: body.get("citizenId"),
+        imageId: body.get("image") || undefined,
       },
       include: unitProperties,
     });
