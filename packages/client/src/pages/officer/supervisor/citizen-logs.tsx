@@ -124,16 +124,8 @@ export default function CitizenLogs({ logs: data }: Props) {
             <Table
               filter={search}
               data={logs.map((item) => {
-                const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
-                const formatted = format(new Date(createdAt!), "yyyy-MM-dd HH:mm:ss");
-                const officer = item.warrant?.officer ?? item.records?.officer;
-                const officerName = officer && makeUnitName(officer);
-                const callsign = officer && generateCallsign(officer);
-
                 return {
                   citizen: `${item.citizen.name} ${item.citizen.surname}`,
-                  officer: `${callsign} ${officerName}`,
-                  createdAt: formatted,
                   actions: (
                     <>
                       <Button onClick={() => setCurrentLog(item)}>{common("view")}</Button>
@@ -143,8 +135,6 @@ export default function CitizenLogs({ logs: data }: Props) {
               })}
               columns={[
                 { Header: t("citizen"), accessor: "citizen" },
-                { Header: t("officer"), accessor: "officer" },
-                { Header: common("createdAt"), accessor: "createdAt" },
                 { Header: common("actions"), accessor: "actions" },
               ]}
             />
