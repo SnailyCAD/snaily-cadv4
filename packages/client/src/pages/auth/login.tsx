@@ -16,6 +16,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Cookie } from "@snailycad/config";
 
 const INITIAL_VALUES = {
   username: "",
@@ -55,6 +56,10 @@ export default function Login() {
         query: { tp: values.password },
       });
     } else if (json?.userId) {
+      if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
+        localStorage.setItem(Cookie.Session, json.session);
+      }
+
       router.push("/citizen");
     }
   }

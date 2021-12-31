@@ -63,6 +63,10 @@ export class AuthController {
       return res.json({ hasTempPassword: true });
     }
 
+    if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
+      return res.json({ userId: user.id, session: jwtToken });
+    }
+
     return res.json({ userId: user.id });
   }
 
@@ -142,6 +146,14 @@ export class AuthController {
       expires: AUTH_TOKEN_EXPIRES_MS,
       value: jwtToken,
     });
+
+    if (process.env.IFRAME_SUPPORT_ENABLED === "true") {
+      return res.json({
+        userId: user.id,
+        session: jwtToken,
+        isOwner: extraUserData.rank === Rank.OWNER,
+      });
+    }
 
     return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };
   }
