@@ -686,6 +686,7 @@ export const feature = {
   CALLS_911: "CALLS_911",
   WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
   SOCIAL_SECURITY_NUMBERS: "SOCIAL_SECURITY_NUMBERS",
+  DISALLOW_TEXTFIELD_SELECTION: "DISALLOW_TEXTFIELD_SELECTION",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];

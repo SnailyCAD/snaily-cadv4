@@ -1,4 +1,5 @@
 import { MiscCadSettings, User } from ".prisma/client";
+import { Feature } from "@prisma/client";
 import { validate, VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -40,10 +41,32 @@ export class VehiclesController {
       throw new BadRequest("plateAlreadyInUse");
     }
 
-    const cad = ctx.get("cad") as { miscCadSettings?: MiscCadSettings };
+    const cad = ctx.get("cad") as {
+      disabledFeatures: Feature[];
+      miscCadSettings?: MiscCadSettings;
+    };
     const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
     if (body.get("plate").length > plateLength) {
       throw new BadRequest("plateToLong");
+    }
+
+    const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
+    let modelId = body.get("model");
+
+    if (isCustomEnabled) {
+      const newModel = await prisma.vehicleValue.create({
+        data: {
+          value: {
+            create: {
+              isDefault: false,
+              type: "VEHICLE",
+              value: body.get("model"),
+            },
+          },
+        },
+      });
+
+      modelId = newModel.id;
     }
 
     const vehicle = await prisma.registeredVehicle.create({
@@ -51,7 +74,7 @@ export class VehiclesController {
         plate: body.get("plate").toUpperCase(),
         color: body.get("color"),
         citizenId: citizen.id,
-        modelId: body.get("model"),
+        modelId,
         registrationStatusId: body.get("registrationStatus"),
         // todo
         insuranceStatus: "TEST",

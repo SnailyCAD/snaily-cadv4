@@ -1,4 +1,5 @@
 import { User } from ".prisma/client";
+import { Feature } from "@prisma/client";
 import { validate, WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -15,6 +16,7 @@ export class WeaponController {
   async registerWeapon(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
     const error = validate(WEAPON_SCHEMA, body.toJSON(), true);
     const user = ctx.get("user") as User;
+    const cad = ctx.get("cad") as { disabledFeatures: Feature[] };
 
     if (error) {
       return new BadRequest(error);
@@ -30,13 +32,32 @@ export class WeaponController {
       throw new NotFound("notFound");
     }
 
+    const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
+    let modelId = body.get("model");
+
+    if (isCustomEnabled) {
+      const newModel = await prisma.weaponValue.create({
+        data: {
+          value: {
+            create: {
+              isDefault: false,
+              type: "WEAPON",
+              value: body.get("model"),
+            },
+          },
+        },
+      });
+
+      modelId = newModel.id;
+    }
+
     const weapon = await prisma.weapon.create({
       data: {
         citizenId: citizen.id,
-        modelId: body.get("model"),
         registrationStatusId: body.get("registrationStatus"),
         serialNumber: body.get("serialNumber") || generateString(10),
         userId: user.id,
+        modelId,
       },
       include: {
         model: { include: { value: true } },
