@@ -90,6 +90,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Social Security Numbers",
     description: "When disabled, this will hide social security numbers",
   },
+  DISALLOW_TEXTFIELD_SELECTION: {
+    name: "Disallow custom values",
+    description:
+      "When enabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
+  },
 };
 
 export function DisabledFeaturesArea() {
