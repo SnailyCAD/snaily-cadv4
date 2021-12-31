@@ -162,12 +162,12 @@ export default function EditCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
-                <Input value={values.eyeColor} onChange={handleChange} name="hairColor" />
+              <FormField errorMessage={errors.hairColor} label={t("hairColor")}>
+                <Input value={values.hairColor} onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
-                <Input value={values.hairColor} onChange={handleChange} name="eyeColor" />
+              <FormField errorMessage={errors.eyeColor} label={t("eyeColor")}>
+                <Input value={values.eyeColor} onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
 
