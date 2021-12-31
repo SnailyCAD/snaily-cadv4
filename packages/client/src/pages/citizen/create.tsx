@@ -167,11 +167,11 @@ export default function CreateCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
+              <FormField errorMessage={errors.hairColor} label={t("hairColor")}>
                 <Input onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
+              <FormField errorMessage={errors.eyeColor} label={t("eyeColor")}>
                 <Input onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
