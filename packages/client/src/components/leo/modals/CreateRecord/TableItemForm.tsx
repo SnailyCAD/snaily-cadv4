@@ -66,7 +66,7 @@ export function TableItemForm({ penalCode }: Props) {
             checked={currentValue.fine?.enabled ?? false}
             name="fine.enabled"
             type="checkbox"
-            className="min-w-[1em]"
+            style={{ width: 20 }}
           />
         </FormField>
 
@@ -88,8 +88,8 @@ export function TableItemForm({ penalCode }: Props) {
             checked={currentValue.jailTime?.enabled ?? false}
             name="jailTime.enabled"
             type="checkbox"
-            className="min-w-[1em]"
             disabled={warningNotApplicableDisabled}
+            style={{ width: 20 }}
           />
         </FormField>
 
