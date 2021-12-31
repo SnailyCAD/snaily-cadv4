@@ -63,7 +63,8 @@
     "account": "Account",
     "logout": "Logout",
     "login": "Login",
-    "register": "Register"
+    "register": "Register",
+    "citizenLogs": "Citizen Logs"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

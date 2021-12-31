@@ -38,6 +38,13 @@ export class RecordsController {
       },
     });
 
+    await prisma.recordLog.create({
+      data: {
+        citizenId: citizen.id,
+        warrantId: warrant.id,
+      },
+    });
+
     return warrant;
   }
 
@@ -155,6 +162,13 @@ export class RecordsController {
           },
         ),
     );
+
+    await prisma.recordLog.create({
+      data: {
+        citizenId: citizen.id,
+        recordId: ticket.id,
+      },
+    });
 
     return { ...ticket, violations };
   }

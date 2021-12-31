@@ -3,6 +3,7 @@
  * Model cad
  */
 
+import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 
 export type cad = {
@@ -451,6 +452,19 @@ export type RecordRelease = {
   type: ReleaseType;
   citizenId: string | null;
   releasedBy: Citizen | null;
+};
+
+/**
+ * Model RecordLog
+ *
+ */
+export type RecordLog = {
+  id: string;
+  citizenId: string;
+  recordId: string | null;
+  records: FullRecord | null;
+  warrantId: string | null;
+  warrant: (Warrant & { officer: FullOfficer }) | null;
 };
 
 /**
