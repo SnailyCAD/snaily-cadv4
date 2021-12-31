@@ -32,6 +32,7 @@
     "leaflet.markercluster": "^1.5.3",
     "next": "^12.0.7",
     "next-intl": "2.3.3",
+    "nookies": "^2.5.2",
     "pretty-bytes": "^5.6.0",
     "react": "^17.0.2",
     "react-bootstrap-icons": "^1.7.2",
