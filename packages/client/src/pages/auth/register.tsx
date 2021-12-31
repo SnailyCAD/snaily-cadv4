@@ -15,7 +15,6 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import type { cad } from "types/prisma";
 import { handleRequest } from "lib/fetch";
-import { Cookie } from "@snailycad/config";
 
 const INITIAL_VALUES = {
   username: "",
@@ -49,7 +48,10 @@ export default function Register({ cad }: Props) {
     });
 
     if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-      localStorage.setItem(Cookie.Session, json.session);
+      await fetch("/api/token", {
+        method: "POST",
+        body: json.session,
+      });
     }
 
     if (json.isOwner) {

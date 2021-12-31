@@ -55,9 +55,7 @@ export default function Login() {
         query: { tp: values.password },
       });
     } else if (json?.userId) {
-      // TODO
-      // if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
-      if (json.session) {
+      if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
         await fetch("/api/token", {
           method: "POST",
           body: json.session,
