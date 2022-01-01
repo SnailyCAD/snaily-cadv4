@@ -28,7 +28,9 @@ export enum SocketEvents {
   DeleteCallEvent = "DELETE_CALL_EVENT",
 
   Signal100 = "SIGNAL_100",
-  PANIC_BUTTON = "PANIC_BUTTON",
+
+  PANIC_BUTTON_ON = "PANIC_BUTTON_ON",
+  PANIC_BUTTON_OFF = "PANIC_BUTTON_OFF",
 
   RoleplayStopped = "ROLEPLAY_STOPPED",
 }

@@ -100,7 +100,11 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(officer: any) {
-    this.io.sockets.emit(SocketEvents.PANIC_BUTTON, officer);
+  emitPanicButtonLeo(officer: any, type?: "ON" | "OFF") {
+    if (type === "OFF") {
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, officer);
+    } else {
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, officer);
+    }
   }
 }
