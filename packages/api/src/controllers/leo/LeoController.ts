@@ -287,20 +287,50 @@ export class LeoController {
       },
     });
 
+    let type: "ON" | "OFF" = "ON";
     if (code) {
-      fullOfficer = await prisma.officer.update({
-        where: {
-          id: officer.id,
-        },
-        data: {
-          statusId: code.id,
-        },
-        include: unitProperties,
-      });
+      /**
+       * officer is already in panic-mode -> set status back to `ON_DUTY`
+       */
+      if (fullOfficer?.statusId === code?.id) {
+        const onDutyCode = await prisma.statusValue.findFirst({
+          where: {
+            shouldDo: ShouldDoType.SET_ON_DUTY,
+          },
+        });
+
+        if (!onDutyCode) {
+          throw new BadRequest("mustHaveOnDutyCode");
+        }
+
+        type = "OFF";
+        fullOfficer = await prisma.officer.update({
+          where: {
+            id: officer.id,
+          },
+          data: {
+            statusId: onDutyCode?.id,
+          },
+          include: unitProperties,
+        });
+      } else {
+        /**
+         * officer is not yet in panic-mode -> set status to panic button status
+         */
+        fullOfficer = await prisma.officer.update({
+          where: {
+            id: officer.id,
+          },
+          data: {
+            statusId: code.id,
+          },
+          include: unitProperties,
+        });
+      }
     }
 
     this.socket.emitUpdateOfficerStatus();
-    this.socket.emitPanicButtonLeo(fullOfficer);
+    this.socket.emitPanicButtonLeo(fullOfficer, type);
   }
 
   @Get("/impounded-vehicles")
