@@ -16,7 +16,6 @@ export function TableItemForm({ penalCode }: Props) {
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-  const warningApplicableDisabled = !penalCode.warningApplicableId;
   const warningNotApplicableDisabled = !penalCode.warningNotApplicableId;
 
   const { setFieldValue, values } = useFormikContext<any>();
@@ -61,7 +60,6 @@ export function TableItemForm({ penalCode }: Props) {
       <div className="flex items-center">
         <FormField className="mb-0" label={t("fines")} checkbox>
           <Input
-            disabled={warningApplicableDisabled}
             onChange={() => handleValueChange("fine", !currentValue.fine?.enabled ?? false)}
             checked={currentValue.fine?.enabled ?? false}
             name="fine.enabled"
@@ -77,7 +75,7 @@ export function TableItemForm({ penalCode }: Props) {
           max={maxFine}
           type="number"
           className="max-w-[125px] ml-5 py-0.5"
-          disabled={warningApplicableDisabled || (!currentValue.fine?.enabled ?? true)}
+          disabled={!currentValue.fine?.enabled ?? true}
         />
       </div>
 
