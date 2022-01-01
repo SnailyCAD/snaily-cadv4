@@ -29,9 +29,6 @@ export enum SocketEvents {
 
   Signal100 = "SIGNAL_100",
 
-  /** @deprecated use `PANIC_BUTTON_ON` */
-  PANIC_BUTTON = "PANIC_BUTTON",
-
   PANIC_BUTTON_ON = "PANIC_BUTTON_ON",
   PANIC_BUTTON_OFF = "PANIC_BUTTON_OFF",
 
