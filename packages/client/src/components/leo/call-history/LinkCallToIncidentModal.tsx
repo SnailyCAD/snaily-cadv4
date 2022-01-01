@@ -1,3 +1,4 @@
+import { LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -5,6 +6,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { Form, Formik } from "formik";
+import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
@@ -38,6 +40,7 @@ export function LinkCallToIncidentModal({ incidents, call }: Props) {
     }
   }
 
+  const validate = handleValidate(LINK_INCIDENT_TO_CALL);
   const INITIAL_VALUES = {
     incidentId: "",
   };
@@ -49,7 +52,7 @@ export function LinkCallToIncidentModal({ incidents, call }: Props) {
       onClose={() => closeModal(ModalIds.LinkCallToIncident)}
       className="min-w-[600px]"
     >
-      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.incidentId} label={t("caseNumber")}>

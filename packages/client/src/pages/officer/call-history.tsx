@@ -15,6 +15,8 @@ import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
+import { FormField } from "components/form/FormField";
+import { Input } from "components/form/Input";
 
 interface Props {
   data: (Full911Call & { incidents: LeoIncident[] })[];
@@ -23,6 +25,7 @@ interface Props {
 
 export default function CallHistory({ data: calls, incidents }: Props) {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
+  const [search, setSearch] = React.useState("");
 
   const { openModal } = useModal();
   const t = useTranslations("Calls");
@@ -49,10 +52,15 @@ export default function CallHistory({ data: calls, incidents }: Props) {
 
       <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
 
+      <FormField label={common("search")} className="my-2">
+        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
+      </FormField>
+
       {calls.length <= 0 ? (
         <p className="mt-5">{"No calls ended yet."}</p>
       ) : (
         <Table
+          filter={search}
           defaultSort={{ columnId: "createdAt", descending: true }}
           data={calls.map((call) => {
             const createdAt = format(new Date(call.createdAt), "yyyy-MM-dd");

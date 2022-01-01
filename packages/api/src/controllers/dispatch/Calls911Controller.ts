@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, validate } from "@snailycad/schemas";
+import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -355,11 +355,12 @@ export class Calls911Controller {
     @PathParams("callId") callId: string,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const { incidentId } = body.toJSON();
-
-    if (!incidentId) {
-      throw new BadRequest("incidentId");
+    const error = validate(LINK_INCIDENT_TO_CALL, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
     }
+
+    const incidentId = body.get("incidentId") as string;
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
