@@ -22,11 +22,11 @@ const citizenSearchInclude = {
   driversLicense: true,
   ccw: true,
   pilotLicense: true,
-  warrants: true,
+  warrants: { include: { officer: { include: unitProperties } } },
   Record: {
     include: {
       officer: {
-        select: unitProperties,
+        include: unitProperties,
       },
       violations: {
         include: {

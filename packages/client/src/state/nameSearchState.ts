@@ -1,12 +1,13 @@
 import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import type { Citizen, RegisteredVehicle, Warrant, Weapon } from "types/prisma";
 import create from "zustand";
+import { FullOfficer } from "./dispatchState";
 
 export interface NameSearchResult extends Citizen {
   vehicles: RegisteredVehicle[];
   weapons: Weapon[];
   Record: FullRecord[];
-  warrants: Warrant[];
+  warrants: (Warrant & { officer: FullOfficer })[];
 }
 
 interface NameSearchState {

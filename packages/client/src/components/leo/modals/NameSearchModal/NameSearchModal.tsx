@@ -319,7 +319,10 @@ export function NameSearchModal() {
                     ) : null}
 
                     {toggled === Toggled.RECORDS ? (
-                      <RecordsArea records={currentResult.Record} />
+                      <RecordsArea
+                        warrants={currentResult.warrants}
+                        records={currentResult.Record}
+                      />
                     ) : null}
                   </>
                 </div>

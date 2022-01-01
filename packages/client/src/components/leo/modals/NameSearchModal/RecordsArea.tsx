@@ -2,7 +2,7 @@ import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { Record, RecordType, Violation } from "types/prisma";
+import { Record, RecordType, Violation, Warrant } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -14,13 +14,15 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
 import { Table } from "components/table/Table";
+import { Select } from "components/form/Select";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
 interface Props {
   records: FullRecord[];
+  warrants?: (Warrant & { officer: FullOfficer })[];
 }
 
-export function RecordsArea({ records }: Props) {
+export function RecordsArea({ warrants, records }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const { state, execute } = useFetch();
@@ -47,7 +49,7 @@ export function RecordsArea({ records }: Props) {
     });
 
     if (json) {
-      if (typeof currentResult === "object" && currentResult) {
+      if (currentResult) {
         setCurrentResult({
           ...currentResult,
           Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
@@ -73,6 +75,14 @@ export function RecordsArea({ records }: Props) {
           {data!.length <= 0 ? <p>{noValuesText}</p> : <RecordsTable data={data} />}
         </section>
       ))}
+
+      {warrants ? (
+        <section className="my-2 mb-5">
+          <h3 className="text-xl font-semibold">{t("Leo.warrants")}</h3>
+
+          {warrants.length <= 0 ? <p>{t("Leo.noWarrants")}</p> : <WarrantsTable data={warrants} />}
+        </section>
+      ) : null}
 
       <AlertModal
         id={ModalIds.AlertDeleteRecord}
@@ -127,6 +137,116 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
           { Header: common("createdAt"), accessor: "createdAt" },
           isCitizen ? null : { Header: common("actions"), accessor: "actions" },
         ]}
+      />
+    </div>
+  );
+}
+
+const values = [
+  { label: "Inactive", value: "inactive" },
+  { label: "Active", value: "active" },
+];
+
+function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] }) {
+  const common = useTranslations("Common");
+  const { openModal, closeModal, getPayload } = useModal();
+  const t = useTranslations();
+  const generateCallsign = useGenerateCallsign();
+  const { state, execute } = useFetch();
+  const { currentResult, setCurrentResult } = useNameSearch();
+
+  async function handleDelete() {
+    const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
+    if (!warrant) return;
+
+    const { json } = await execute(`/records/${warrant.id}`, {
+      data: { type: "WARRANT" },
+      method: "DELETE",
+    });
+
+    if (json) {
+      if (currentResult) {
+        setCurrentResult({
+          ...currentResult,
+          warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
+        });
+      }
+
+      closeModal(ModalIds.AlertRevokeWarrant);
+    }
+  }
+
+  function handleDeleteClick(warrant: Warrant) {
+    openModal(ModalIds.AlertRevokeWarrant, warrant);
+  }
+
+  async function handleChange(value: string, warrant: Warrant) {
+    const { json } = await execute(`/records/${warrant.id}`, {
+      data: { status: value.toUpperCase(), type: "WARRANT" },
+      method: "PUT",
+    });
+
+    if (json && currentResult) {
+      setCurrentResult({
+        ...currentResult,
+        warrants: currentResult.warrants.map((v) => {
+          if (v.id === warrant.id) {
+            return { ...v, ...json };
+          }
+
+          return v;
+        }),
+      });
+    }
+  }
+
+  return (
+    <div>
+      <Table
+        data={data
+          .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
+          .map((warrant) => {
+            const value = values.find((v) => v.value === warrant.status.toLowerCase());
+
+            return {
+              officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
+              description: warrant.description,
+              createdAt: format(new Date(warrant.createdAt), "yyyy-MM-dd"),
+              actions: (
+                <div className="flex gap-2">
+                  <Select
+                    onChange={(e) => handleChange(e.target.value, warrant)}
+                    className="w-40"
+                    values={values}
+                    value={value ?? null}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => handleDeleteClick(warrant)}
+                    small
+                    variant="danger"
+                  >
+                    {t("Leo.revoke")}
+                  </Button>
+                </div>
+              ),
+            };
+          })}
+        columns={[
+          { Header: t("Leo.officer"), accessor: "officer" },
+          { Header: common("description"), accessor: "description" },
+          { Header: common("createdAt"), accessor: "createdAt" },
+          { Header: common("actions"), accessor: "actions" },
+        ]}
+      />
+
+      <AlertModal
+        id={ModalIds.AlertRevokeWarrant}
+        onDeleteClick={handleDelete}
+        description={t("Leo.alert_revokeWarrant")}
+        title={t("Leo.revokeWarrant")}
+        deleteText={t("Leo.revoke")}
+        state={state}
       />
     </div>
   );
