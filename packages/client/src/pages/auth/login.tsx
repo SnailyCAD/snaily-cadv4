@@ -37,7 +37,6 @@ export default function Login() {
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
-
   const validate = handleValidate(AUTH_SCHEMA);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -55,6 +54,13 @@ export default function Login() {
         query: { tp: values.password },
       });
     } else if (json?.userId) {
+      if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {
+        await fetch("/api/token", {
+          method: "POST",
+          body: json.session,
+        });
+      }
+
       router.push("/citizen");
     }
   }

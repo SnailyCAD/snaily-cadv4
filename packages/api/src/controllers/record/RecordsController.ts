@@ -1,4 +1,4 @@
-import { Delete, JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { CREATE_TICKET_SCHEMA, CREATE_WARRANT_SCHEMA, validate } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -38,7 +38,38 @@ export class RecordsController {
       },
     });
 
+    await prisma.recordLog.create({
+      data: {
+        citizenId: citizen.id,
+        warrantId: warrant.id,
+      },
+    });
+
     return warrant;
+  }
+
+  @Put("/:id")
+  async updateWarrant(@BodyParams() body: JsonRequestBody, @PathParams("id") warrantId: string) {
+    if (!body.get("status")) {
+      throw new BadRequest("statusIsRequired");
+    }
+
+    const warrant = await prisma.warrant.findUnique({
+      where: { id: warrantId },
+    });
+
+    if (!warrant) {
+      throw new NotFound("warrantNotFound");
+    }
+
+    const updated = await prisma.warrant.update({
+      where: { id: warrantId },
+      data: {
+        status: body.get("status"),
+      },
+    });
+
+    return updated;
   }
 
   @Post("/")
@@ -156,21 +187,44 @@ export class RecordsController {
         ),
     );
 
+    await prisma.recordLog.create({
+      data: {
+        citizenId: citizen.id,
+        recordId: ticket.id,
+      },
+    });
+
     return { ...ticket, violations };
   }
 
   @UseBefore(ActiveOfficer)
   @Delete("/:id")
-  async deleteRecord(@PathParams("id") id: string) {
-    const record = await prisma.record.findUnique({
-      where: { id },
-    });
+  async deleteRecord(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const type = body.get("type") as "WARRANT" | (string & {});
 
-    if (!record) {
-      throw new NotFound("recordNotFound");
+    if (type === "WARRANT") {
+      const warrant = await prisma.warrant.findUnique({
+        where: { id },
+      });
+
+      if (!warrant) {
+        throw new NotFound("warrantNotFound");
+      }
+    } else {
+      const record = await prisma.record.findUnique({
+        where: { id },
+      });
+
+      if (!record) {
+        throw new NotFound("recordNotFound");
+      }
     }
 
-    await prisma.record.delete({
+    const name = type === "WARRANT" ? "warrant" : "record";
+
+    // @ts-expect-error simple shortcut
+    await prisma[name].delete({
       where: { id },
     });
 

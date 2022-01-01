@@ -21,6 +21,7 @@ import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const enum Toggled {
   VEHICLES,
@@ -51,6 +52,7 @@ export function NameSearchModal() {
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
@@ -147,7 +149,10 @@ export function NameSearchModal() {
                         )}
                       </div>
                       <p>
-                        {result.name} {result.surname}
+                        {result.name} {result.surname}{" "}
+                        {SOCIAL_SECURITY_NUMBERS && result.socialSecurityNumber ? (
+                          <>(SSN: {result.socialSecurityNumber})</>
+                        ) : null}
                       </p>
                     </div>
 
@@ -211,6 +216,12 @@ export function NameSearchModal() {
                         <span className="font-semibold">{cT("fullName")}: </span>
                         {currentResult.name} {currentResult.surname}
                       </p>
+                      {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
+                        <p>
+                          <span className="font-semibold">{cT("socialSecurityNumber")}: </span>
+                          {currentResult.socialSecurityNumber}
+                        </p>
+                      ) : null}
                       <p>
                         <span className="font-semibold">{cT("dateOfBirth")}: </span>
                         {format(new Date(currentResult.dateOfBirth), "yyyy-MM-dd")} ({cT("age")}:{" "}
@@ -237,11 +248,11 @@ export function NameSearchModal() {
                     <div className="flex flex-col">
                       <p>
                         <span className="font-semibold">{cT("weight")}: </span>
-                        {currentResult.weight} {cad?.miscCadSettings.weightPrefix}
+                        {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("height")}: </span>
-                        {currentResult.height} {cad?.miscCadSettings.heightPrefix}
+                        {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
                       </p>
                       <p>
                         <span className="font-semibold">{cT("address")}: </span>
@@ -308,7 +319,10 @@ export function NameSearchModal() {
                     ) : null}
 
                     {toggled === Toggled.RECORDS ? (
-                      <RecordsArea records={currentResult.Record} />
+                      <RecordsArea
+                        warrants={currentResult.warrants}
+                        records={currentResult.Record}
+                      />
                     ) : null}
                   </>
                 </div>

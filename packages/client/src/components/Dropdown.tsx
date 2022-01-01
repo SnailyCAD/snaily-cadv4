@@ -23,9 +23,12 @@ export const Dropdown = ({ trigger, children, extra, ...rest }: Props) => {
         sideOffset={7}
         alignOffset={10}
         style={{ width: maxWidth, maxWidth }}
-        className="z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright"
         align="start"
         {...rest}
+        className={classNames(
+          rest.className || "dropdown-left",
+          "z-50 p-1 bg-white rounded-md shadow-lg dropdown-fade w-36 dark:bg-dark-bright",
+        )}
       >
         {children}
       </DropdownMenu.Content>
@@ -37,8 +40,10 @@ Dropdown.Item = ({ children, ...rest }: Omit<ButtonProps, "ref">) => (
   <DropdownMenu.Item asChild>
     <Button
       {...rest}
+      variant="transparent"
       className={classNames(
         "p-1 my-1 px-1.5 rounded-md transition-colors w-full text-left bg-transparent",
+        "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
         rest.className,
       )}
     >

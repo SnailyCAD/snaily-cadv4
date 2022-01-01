@@ -19,18 +19,14 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Select } from "components/form/Select";
 import { useCitizen } from "context/CitizenContext";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
-import { CropImageModal } from "components/modal/CropImageModal";
-import { useModal } from "context/ModalContext";
-import { ModalIds } from "types/ModalIds";
+import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
 
 export default function EditCitizen() {
-  const [image, setImage] = React.useState<File | null>(null);
+  const [image, setImage] = React.useState<File | string | null>(null);
 
-  const { openModal, isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const router = useRouter();
   const t = useTranslations("Citizen");
@@ -59,11 +55,6 @@ export default function EditCitizen() {
     phoneNumber: citizen.phoneNumber,
   };
 
-  function onCropSuccess(url: Blob, filename: string) {
-    setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
-  }
-
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
@@ -71,13 +62,12 @@ export default function EditCitizen() {
     if (!citizen) return;
 
     const fd = new FormData();
-    if (image && image.size && image.name) {
-      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
-        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
-        return;
-      }
+    const validatedImage = validateFile(image, helpers);
 
-      fd.set("image", image, image.name);
+    if (validatedImage) {
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
+      }
     }
 
     const { json } = await execute(`/citizen/${citizen.id}`, {
@@ -85,7 +75,7 @@ export default function EditCitizen() {
       data: values,
     });
 
-    if (image && image.size && image.name) {
+    if (validatedImage && typeof validatedImage === "object") {
       await execute(`/citizen/${citizen.id}`, {
         method: "POST",
         data: fd,
@@ -99,11 +89,11 @@ export default function EditCitizen() {
 
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
 
-  const weightPrefix = cad?.miscCadSettings.weightPrefix
+  const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad?.miscCadSettings.weightPrefix})`
     : "";
 
-  const heightPrefix = cad?.miscCadSettings.heightPrefix
+  const heightPrefix = cad?.miscCadSettings?.heightPrefix
     ? `(${cad?.miscCadSettings.heightPrefix})`
     : "";
 
@@ -117,40 +107,9 @@ export default function EditCitizen() {
       <h1 className="mb-3 text-3xl font-semibold">{t("editCitizen")}</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
+        {({ handleSubmit, handleChange, values, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField optional errorMessage={errors.image} label={t("image")}>
-              <div className="flex">
-                <Input
-                  style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setImage(e.target.files?.[0] ?? null);
-                  }}
-                  type="file"
-                  name="image"
-                  value={values.image ?? ""}
-                />
-                <Button
-                  className="mr-2"
-                  type="button"
-                  onClick={() => {
-                    openModal(ModalIds.CropImageModal);
-                  }}
-                >
-                  Crop
-                </Button>
-                <Button
-                  type="button"
-                  variant="danger"
-                  onClick={() => {
-                    setFieldValue("image", "");
-                  }}
-                >
-                  {common("delete")}
-                </Button>
-              </div>
-            </FormField>
+            <ImageSelectInput image={image} setImage={setImage} />
 
             <FormRow>
               <FormField errorMessage={errors.name} label={t("name")}>
@@ -203,12 +162,12 @@ export default function EditCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
-                <Input value={values.eyeColor} onChange={handleChange} name="hairColor" />
+              <FormField errorMessage={errors.hairColor} label={t("hairColor")}>
+                <Input value={values.hairColor} onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
-                <Input value={values.hairColor} onChange={handleChange} name="eyeColor" />
+              <FormField errorMessage={errors.eyeColor} label={t("eyeColor")}>
+                <Input value={values.eyeColor} onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
 
@@ -249,13 +208,6 @@ export default function EditCitizen() {
                 {state === "loading" ? <Loader /> : null} {common("save")}
               </Button>
             </div>
-
-            <CropImageModal
-              isOpen={isOpen(ModalIds.CropImageModal)}
-              onClose={() => closeModal(ModalIds.CropImageModal)}
-              image={image}
-              onSuccess={onCropSuccess}
-            />
           </form>
         )}
       </Formik>

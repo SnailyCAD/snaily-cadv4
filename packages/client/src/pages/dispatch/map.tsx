@@ -10,6 +10,7 @@ import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import useFetch from "lib/useFetch";
+import { useTranslations } from "next-intl";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -21,6 +22,7 @@ export default function MapPage(props: any) {
   const { cad, user } = useAuth();
   const state = useDispatchState();
   const { execute } = useFetch();
+  const t = useTranslations();
 
   async function update911Call(call: Omit<Full911Call, "events" | "assignedUnits">) {
     await execute(`/911-calls/${call.id}`, { method: "PUT", data: call });
@@ -70,6 +72,7 @@ export default function MapPage(props: any) {
           calls={state.calls}
           openModal={openModal}
           user={user}
+          t={t}
         />
       </Layout>
     </>

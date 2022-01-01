@@ -4,7 +4,6 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { allowedFileExtensions, AllowedFileExtension } from "@snailycad/config";
 import Head from "next/head";
 
 import { Button } from "components/Button";
@@ -22,9 +21,8 @@ import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
-import { useModal } from "context/ModalContext";
-import { CropImageModal } from "components/modal/CropImageModal";
-import { ModalIds } from "types/ModalIds";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
 
 const INITIAL_VALUES = {
   name: "",
@@ -48,7 +46,7 @@ const INITIAL_VALUES = {
 };
 
 export default function CreateCitizen() {
-  const [image, setImage] = React.useState<File | null>(null);
+  const [image, setImage] = React.useState<File | string | null>(null);
 
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -56,26 +54,19 @@ export default function CreateCitizen() {
   const common = useTranslations("Common");
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
-  const { openModal, isOpen, closeModal } = useModal();
-
-  function onCropSuccess(url: Blob, filename: string) {
-    setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
-  }
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     const fd = new FormData();
+    const validatedImage = validateFile(image, helpers);
 
-    if (image && image.size && image.name) {
-      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
-        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
-        return;
+    if (validatedImage) {
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
       }
-
-      fd.set("image", image, image.name);
     }
 
     const { json } = await execute("/citizen", {
@@ -92,7 +83,7 @@ export default function CreateCitizen() {
     });
 
     if (json?.id) {
-      if (image && image.size && image.name) {
+      if (validatedImage && typeof validatedImage === "object") {
         await execute(`/citizen/${json.id}`, {
           method: "POST",
           data: fd,
@@ -104,11 +95,11 @@ export default function CreateCitizen() {
     }
   }
 
-  const weightPrefix = cad?.miscCadSettings.weightPrefix
+  const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad?.miscCadSettings.weightPrefix})`
     : "";
 
-  const heightPrefix = cad?.miscCadSettings.heightPrefix
+  const heightPrefix = cad?.miscCadSettings?.heightPrefix
     ? `(${cad?.miscCadSettings.heightPrefix})`
     : "";
 
@@ -122,40 +113,9 @@ export default function CreateCitizen() {
       <h1 className="mb-3 text-3xl font-semibold">Create citizen</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, values, errors, isValid }) => (
+        {({ handleSubmit, handleChange, values, errors, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField optional errorMessage={errors.image} label={t("image")}>
-              <div className="flex">
-                <Input
-                  style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setImage(e.target.files?.[0] ?? null);
-                  }}
-                  type="file"
-                  name="image"
-                  value={values.image ?? ""}
-                />
-                <Button
-                  className="mr-2"
-                  type="button"
-                  onClick={() => {
-                    openModal(ModalIds.CropImageModal);
-                  }}
-                >
-                  Crop
-                </Button>
-                <Button
-                  type="button"
-                  variant="danger"
-                  onClick={() => {
-                    setFieldValue("image", "");
-                  }}
-                >
-                  {common("delete")}
-                </Button>
-              </div>
-            </FormField>
+            <ImageSelectInput image={image} setImage={setImage} />
 
             <FormRow>
               <FormField errorMessage={errors.name} label={t("name")}>
@@ -207,11 +167,11 @@ export default function CreateCitizen() {
             </FormRow>
 
             <FormRow>
-              <FormField errorMessage={errors.hairColor} label={t("eyeColor")}>
+              <FormField errorMessage={errors.hairColor} label={t("hairColor")}>
                 <Input onChange={handleChange} name="hairColor" />
               </FormField>
 
-              <FormField errorMessage={errors.eyeColor} label={t("hairColor")}>
+              <FormField errorMessage={errors.eyeColor} label={t("eyeColor")}>
                 <Input onChange={handleChange} name="eyeColor" />
               </FormField>
             </FormRow>
@@ -268,17 +228,21 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
-                <Select
-                  values={license.values.map((v) => ({
-                    label: v.value,
-                    value: v.id,
-                  }))}
-                  value={values.weaponLicense}
-                  onChange={handleChange}
-                  name="weaponLicense"
-                />
-              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.weaponLicense}
+                    onChange={handleChange}
+                    name="weaponLicense"
+                  />
+                </FormField>
+              ) : null}
+
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
                   values={license.values.map((v) => ({
@@ -306,17 +270,20 @@ export default function CreateCitizen() {
                   />
                 </FormField>
               </FormField>
-              <FormField errorMessage={errors.ccw} label={t("ccw")}>
-                <Select
-                  values={license.values.map((v) => ({
-                    label: v.value,
-                    value: v.id,
-                  }))}
-                  value={values.ccw}
-                  onChange={handleChange}
-                  name="ccw"
-                />
-              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.ccw}
+                    onChange={handleChange}
+                    name="ccw"
+                  />
+                </FormField>
+              ) : null}
             </FormRow>
 
             <div className="flex items-center justify-end">
@@ -332,13 +299,6 @@ export default function CreateCitizen() {
                 {state === "loading" ? <Loader /> : null} {t("createCitizen")}
               </Button>
             </div>
-
-            <CropImageModal
-              isOpen={isOpen(ModalIds.CropImageModal)}
-              onClose={() => closeModal(ModalIds.CropImageModal)}
-              image={image}
-              onSuccess={onCropSuccess}
-            />
           </form>
         )}
       </Formik>

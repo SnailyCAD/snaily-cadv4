@@ -15,6 +15,7 @@ import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/Input";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   weapon: Weapon | null;
@@ -28,6 +29,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
+  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
@@ -83,17 +85,34 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.model} label={tVehicle("model")}>
-              <Select
-                values={weapons.values.map((weapon) => ({
-                  label: weapon.value.value,
-                  value: weapon.id,
-                }))}
-                value={values.model}
-                name="model"
-                onChange={handleChange}
-              />
-            </FormField>
+            {DISALLOW_TEXTFIELD_SELECTION ? (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Select
+                  values={weapons.values.map((weapon) => ({
+                    label: weapon.value.value,
+                    value: weapon.id,
+                  }))}
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
+              </FormField>
+            ) : (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Input
+                  list="weaponModelsList"
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
+
+                <datalist id="weaponModelsList">
+                  {weapons.values.map((weapon) => (
+                    <span key={weapon.id}>{weapon.value.value}</span>
+                  ))}
+                </datalist>
+              </FormField>
+            )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <Select

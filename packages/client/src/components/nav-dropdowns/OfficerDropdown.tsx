@@ -49,7 +49,12 @@ export function OfficerDropdown() {
       })}
 
       {user?.isSupervisor ? (
-        <Dropdown.LinkItem href="/admin/manage/units">{t("manageUnits")}</Dropdown.LinkItem>
+        <>
+          <Dropdown.LinkItem href="/admin/manage/units">{t("manageUnits")}</Dropdown.LinkItem>
+          <Dropdown.LinkItem href="/officer/supervisor/citizen-logs">
+            {t("citizenLogs")}
+          </Dropdown.LinkItem>
+        </>
       ) : null}
     </Dropdown>
   );

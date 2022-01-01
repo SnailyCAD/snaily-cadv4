@@ -14,10 +14,9 @@ import useFetch from "lib/useFetch";
 import { FullDeputy } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { FormRow } from "components/form/FormRow";
 import { useCitizen } from "context/CitizenContext";
-import { CropImageModal } from "components/modal/CropImageModal";
+import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
 
 interface Props {
   deputy: FullDeputy | null;
@@ -27,8 +26,8 @@ interface Props {
 }
 
 export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props) {
-  const [image, setImage] = React.useState<File | null>(null);
-  const { openModal, isOpen, closeModal } = useModal();
+  const [image, setImage] = React.useState<File | string | null>(null);
+  const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -42,24 +41,17 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     onClose?.();
   }
 
-  function onCropSuccess(url: Blob, filename: string) {
-    setImage(new File([url], filename, { type: url.type }));
-    closeModal(ModalIds.CropImageModal);
-  }
-
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     const fd = new FormData();
+    const validatedImage = validateFile(image, helpers);
 
-    if (image && image.size && image.name) {
-      if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
-        helpers.setFieldError("image", `Only ${allowedFileExtensions.join(", ")} are supported`);
-        return;
+    if (validatedImage) {
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
       }
-
-      fd.set("image", image, image.name);
     }
 
     let deputyId;
@@ -88,7 +80,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       }
     }
 
-    if (image && image.size && image.name) {
+    if (validatedImage && typeof validatedImage === "object") {
       await execute(`/ems-fd/image/${deputyId}`, {
         method: "POST",
         data: fd,
@@ -120,40 +112,9 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
-            <FormField optional errorMessage={errors.image} label={t("Leo.image")}>
-              <div className="flex">
-                <Input
-                  style={{ width: "95%", marginRight: "0.5em" }}
-                  onChange={(e) => {
-                    handleChange(e);
-                    setImage(e.target.files?.[0] ?? null);
-                  }}
-                  type="file"
-                  name="image"
-                  value={values.image ?? ""}
-                />
-                <Button
-                  className="mr-2"
-                  type="button"
-                  onClick={() => {
-                    openModal(ModalIds.CropImageModal);
-                  }}
-                >
-                  Crop
-                </Button>
-                <Button
-                  type="button"
-                  className="bg-red-400 hover:bg-red-500"
-                  onClick={() => {
-                    setFieldValue("image", "");
-                  }}
-                >
-                  {common("delete")}
-                </Button>
-              </div>
-            </FormField>
+            <ImageSelectInput image={image} setImage={setImage} />
 
             <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
               <Select
@@ -239,13 +200,6 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                 {deputy ? common("save") : common("create")}
               </Button>
             </footer>
-
-            <CropImageModal
-              isOpen={isOpen(ModalIds.CropImageModal)}
-              onClose={() => closeModal(ModalIds.CropImageModal)}
-              image={image}
-              onSuccess={onCropSuccess}
-            />
           </form>
         )}
       </Formik>

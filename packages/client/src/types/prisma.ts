@@ -3,6 +3,7 @@
  * Model cad
  */
 
+import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 
 export type cad = {
@@ -17,7 +18,7 @@ export type cad = {
   towWhitelisted: boolean;
   apiTokenId: string | null;
   disabledFeatures: Feature[];
-} & { miscCadSettings: MiscCadSettings; apiToken: ApiToken | null };
+} & { miscCadSettings?: MiscCadSettings | null; apiToken: ApiToken | null };
 
 /**
  * Model MiscCadSettings
@@ -106,6 +107,8 @@ export type Citizen = {
   dateOfDead: Date | null;
   dlCategory: DriversLicenseCategoryValue[];
   phoneNumber: string | null;
+  /** nullable since no default is set. */
+  socialSecurityNumber: string | null;
 };
 
 /**
@@ -452,6 +455,19 @@ export type RecordRelease = {
 };
 
 /**
+ * Model RecordLog
+ *
+ */
+export type RecordLog = {
+  id: string;
+  citizenId: string;
+  recordId: string | null;
+  records: FullRecord | null;
+  warrantId: string | null;
+  warrant: (Warrant & { officer: FullOfficer }) | null;
+};
+
+/**
  * Model DivisionValue
  */
 
@@ -667,6 +683,10 @@ export const feature = {
   BUSINESS: "BUSINESS",
   ALLOW_DUPLICATE_CITIZEN_NAMES: "ALLOW_DUPLICATE_CITIZEN_NAMES",
   DISCORD_AUTH: "DISCORD_AUTH",
+  CALLS_911: "CALLS_911",
+  WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
+  SOCIAL_SECURITY_NUMBERS: "SOCIAL_SECURITY_NUMBERS",
+  DISALLOW_TEXTFIELD_SELECTION: "DISALLOW_TEXTFIELD_SELECTION",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];

@@ -19,6 +19,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -38,6 +39,7 @@ export function ActiveCalls() {
   const { execute } = useFetch();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
+  const { TOW, CALLS_911 } = useFeatureEnabled();
 
   const unit =
     router.pathname === "/officer"
@@ -92,6 +94,7 @@ export function ActiveCalls() {
   }
 
   function handleCallTow(call: Full911Call) {
+    if (!TOW) return;
     setTempCall(call);
     openModal(ModalIds.ManageTowCall, { call911Id: call.id });
   }
@@ -101,6 +104,10 @@ export function ActiveCalls() {
       method: "POST",
       data: { unit: unit?.id },
     });
+  }
+
+  if (!CALLS_911) {
+    return null;
   }
 
   return (
@@ -178,14 +185,16 @@ export function ActiveCalls() {
                             </>
                           )}
 
-                          <Button
-                            disabled={!isDispatch && !unit}
-                            small
-                            className="ml-2"
-                            onClick={() => handleCallTow(call)}
-                          >
-                            {t("callTow")}
-                          </Button>
+                          {TOW ? (
+                            <Button
+                              disabled={!isDispatch && !unit}
+                              small
+                              className="ml-2"
+                              onClick={() => handleCallTow(call)}
+                            >
+                              {t("callTow")}
+                            </Button>
+                          ) : null}
                         </td>
                       </tr>
                     );

@@ -9,8 +9,12 @@ import { makeUnitName } from "lib/utils";
 export function usePanicButton() {
   const [unit, setUnit] = React.useState<FullDeputy | FullOfficer | null>(null);
 
-  useListener(SocketEvents.PANIC_BUTTON, (officer: FullOfficer) => {
+  useListener(SocketEvents.PANIC_BUTTON_ON, (officer: FullOfficer) => {
     setUnit(officer);
+  });
+
+  useListener(SocketEvents.PANIC_BUTTON_OFF, () => {
+    setUnit(null);
   });
 
   return { unit, PanicButton: Component };

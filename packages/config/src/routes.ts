@@ -52,13 +52,18 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
 
   ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
   [["GET"], "/v1/admin/values", () => true],
-  ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
+  [
+    ["GET"],
+    "/v1/admin/manage/citizens/records-logs",
+    (u) => u.isSupervisor || ["ADMIN", "OWNER"].includes(u.rank),
+  ],
   ["*", "/v1/admin/manage/units", (u) => u.isSupervisor || ["ADMIN", "OWNER"].includes(u.rank)],
   [
     ["PATCH", "DELETE", "PUT", "POST"],
     "/v1/admin/values/",
     (u) => ["ADMIN", "OWNER"].includes(u.rank),
   ],
+  ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
   [["PUT", "DELETE", "POST"], "/v1/911-calls/events", (u) => u.isDispatch],
   [["POST"], "/v1/911-calls/assign-to/", (u) => u.isLeo || u.isEmsFd],
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],

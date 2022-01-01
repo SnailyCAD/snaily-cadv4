@@ -9,12 +9,14 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/table/Table";
 import format from "date-fns/format";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Weapons");
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   const [weapons, setWeapons] = React.useState<Weapon[]>(props.weapons);
   const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
@@ -41,6 +43,11 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
   function handleDeleteClick(weapon: Weapon) {
     setTempWeapon(weapon);
     openModal(ModalIds.AlertDeleteWeapon);
+  }
+
+  // weapon registration is disabled, don't bother showing this card.
+  if (!WEAPON_REGISTRATION) {
+    return null;
   }
 
   return (

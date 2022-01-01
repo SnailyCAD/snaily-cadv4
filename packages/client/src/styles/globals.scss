@@ -83,8 +83,17 @@ th {
   scrollbar-width: thin;
 }
 
-.dropdown-fade {
+.dropdown-right,
+.dropdown-fade[data-side="left"] {
+  transform-origin: top right;
+}
+
+.dropdown-left,
+.dropdown-fade[data-side="right"] {
   transform-origin: top left;
+}
+
+.dropdown-fade {
   animation: dropdownFade 100ms ease-out;
 }
 

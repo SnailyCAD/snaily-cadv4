@@ -20,8 +20,8 @@ export class AdminController {
 
     const [createdCitizens, citizensInBolo, arrestCitizens, deadCitizens] = await Promise.all([
       await prisma.citizen.count(),
-      await prisma.citizen.count({ where: { Record: { some: { type: "ARREST_REPORT" } } } }),
       await prisma.bolo.count({ where: { type: "PERSON" } }),
+      await prisma.citizen.count({ where: { Record: { some: { type: "ARREST_REPORT" } } } }),
       await prisma.citizen.count({ where: { dead: true } }),
     ]);
 

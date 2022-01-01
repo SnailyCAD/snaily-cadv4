@@ -1,5 +1,22 @@
-export function generateString(length: number, extraChars = "") {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+interface Options {
+  extraChars?: string;
+  numbersOnly?: boolean;
+}
+
+const NUMBERS = "0123456789";
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+export function generateString(length: number, options?: Options) {
+  const { numbersOnly, extraChars = "" } = options ?? {};
+
+  let chars = "";
+
+  if (numbersOnly) {
+    chars = NUMBERS;
+  } else {
+    chars = LETTERS + NUMBERS;
+  }
+
   let result = "";
   const allChars = chars + extraChars;
 

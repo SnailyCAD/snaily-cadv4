@@ -3,6 +3,8 @@ import React from "react";
 import { FullDeputy } from "state/dispatchState";
 import { cad as CAD, CombinedLeoUnit, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
+import { IncomingMessage } from "connect";
+import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const [age] = ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))
@@ -50,7 +52,10 @@ export function useIsFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeatures">>)
 }
 
 type Config = [string, any?][];
-export async function requestAll(req: any, config: Config) {
+export async function requestAll(
+  req: IncomingMessage & { cookies?: NextApiRequestCookies },
+  config: Config,
+) {
   return Promise.all(
     config.map(async ([path, defaultValue = {}]) => {
       return handleRequest(path, {

@@ -17,6 +17,7 @@ import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -41,11 +42,12 @@ export function RegisterVehicleModal({
   const { citizen } = useCitizen(false);
   const router = useRouter();
   const { cad } = useAuth();
+  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
 
   const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
-  const maxPlateLength = cad?.miscCadSettings.maxPlateLength ?? 8;
+  const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);
@@ -110,17 +112,34 @@ export function RegisterVehicleModal({
               <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 
-            <FormField errorMessage={errors.model} label={tVehicle("model")}>
-              <Select
-                values={vehicles.values.map((vehicle) => ({
-                  label: vehicle.value.value,
-                  value: vehicle.id,
-                }))}
-                value={values.model}
-                name="model"
-                onChange={handleChange}
-              />
-            </FormField>
+            {DISALLOW_TEXTFIELD_SELECTION ? (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Select
+                  values={vehicles.values.map((vehicle) => ({
+                    label: vehicle.value.value,
+                    value: vehicle.id,
+                  }))}
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
+              </FormField>
+            ) : (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Input
+                  list="vehicle-models-list"
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
+
+                <datalist id="vehicle-models-list">
+                  {vehicles.values.map((vehicle) => (
+                    <span key={vehicle.id}>{vehicle.value.value}</span>
+                  ))}
+                </datalist>
+              </FormField>
+            )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               <Select

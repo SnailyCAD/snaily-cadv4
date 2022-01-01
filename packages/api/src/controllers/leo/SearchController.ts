@@ -22,11 +22,11 @@ const citizenSearchInclude = {
   driversLicense: true,
   ccw: true,
   pilotLicense: true,
-  warrants: true,
+  warrants: { include: { officer: { include: unitProperties } } },
   Record: {
     include: {
       officer: {
-        select: unitProperties,
+        include: unitProperties,
       },
       violations: {
         include: {
@@ -55,6 +55,15 @@ export class SearchController {
       },
       include: citizenSearchInclude,
     });
+
+    if (citizen.length <= 0) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          socialSecurityNumber: name,
+        },
+        include: citizenSearchInclude,
+      });
+    }
 
     if (citizen.length <= 0) {
       citizen = await prisma.citizen.findMany({
