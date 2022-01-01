@@ -2,7 +2,7 @@ import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
-import { Record, RecordType, Violation } from "types/prisma";
+import { Record, RecordType, Violation, Warrant } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -14,13 +14,15 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
 import { Table } from "components/table/Table";
+import { Select } from "components/form/Select";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
 interface Props {
   records: FullRecord[];
+  warrants?: (Warrant & { officer: FullOfficer })[];
 }
 
-export function RecordsArea({ records }: Props) {
+export function RecordsArea({ warrants, records }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const { state, execute } = useFetch();
@@ -74,6 +76,8 @@ export function RecordsArea({ records }: Props) {
         </section>
       ))}
 
+      {warrants ? <WarrantsTable data={warrants} /> : null}
+
       <AlertModal
         id={ModalIds.AlertDeleteRecord}
         onDeleteClick={handleDelete}
@@ -122,6 +126,70 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
         columns={[
           { Header: t("Leo.violations"), accessor: "violations" },
           { Header: t("Leo.postal"), accessor: "postal" },
+          { Header: t("Leo.officer"), accessor: "officer" },
+          { Header: common("description"), accessor: "description" },
+          { Header: common("createdAt"), accessor: "createdAt" },
+          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
+        ]}
+      />
+    </div>
+  );
+}
+
+const values = [
+  { label: "Inactive", value: "inactive" },
+  { label: "Active", value: "active" },
+];
+
+function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] }) {
+  const common = useTranslations("Common");
+  const { openModal } = useModal();
+  const t = useTranslations();
+  const router = useRouter();
+  const isCitizen = router.pathname.startsWith("/citizen");
+  const generateCallsign = useGenerateCallsign();
+
+  function handleDeleteClick(warrant: Warrant) {
+    openModal(ModalIds.AlertRevokeWarrant, warrant);
+  }
+
+  function handleChange() {
+    // todo
+  }
+
+  return (
+    <div>
+      <Table
+        data={data
+          .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
+          .map((warrant) => {
+            const value = values.find((v) => v.value === warrant.status.toLowerCase());
+
+            return {
+              officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
+              description: warrant.description,
+              createdAt: format(new Date(warrant.createdAt), "yyyy-MM-dd"),
+              actions: (
+                <div className="flex gap-2">
+                  <Select
+                    onChange={handleChange}
+                    className="w-40"
+                    values={values}
+                    value={value ?? null}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => handleDeleteClick(warrant)}
+                    small
+                    variant="danger"
+                  >
+                    {t("Leo.revoke")}
+                  </Button>
+                </div>
+              ),
+            };
+          })}
+        columns={[
           { Header: t("Leo.officer"), accessor: "officer" },
           { Header: common("description"), accessor: "description" },
           { Header: common("createdAt"), accessor: "createdAt" },
