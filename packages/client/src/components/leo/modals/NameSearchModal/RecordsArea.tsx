@@ -243,7 +243,6 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
       <AlertModal
         id={ModalIds.AlertRevokeWarrant}
         onDeleteClick={handleDelete}
-        // todo: change to revoke warrant
         description={t("Leo.alert_revokeWarrant")}
         title={t("Leo.revokeWarrant")}
         deleteText={t("Leo.revoke")}
