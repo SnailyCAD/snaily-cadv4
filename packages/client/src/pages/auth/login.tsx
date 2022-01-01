@@ -37,7 +37,6 @@ export default function Login() {
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
-
   const validate = handleValidate(AUTH_SCHEMA);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
