@@ -49,7 +49,7 @@ export function RecordsArea({ warrants, records }: Props) {
     });
 
     if (json) {
-      if (typeof currentResult === "object" && currentResult) {
+      if (currentResult) {
         setCurrentResult({
           ...currentResult,
           Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
@@ -76,7 +76,13 @@ export function RecordsArea({ warrants, records }: Props) {
         </section>
       ))}
 
-      {warrants ? <WarrantsTable data={warrants} /> : null}
+      {warrants ? (
+        <section className="my-2 mb-5">
+          <h3 className="text-xl font-semibold">{t("Leo.warrants")}</h3>
+
+          {warrants.length <= 0 ? <p>{t("Leo.noWarrants")}</p> : <WarrantsTable data={warrants} />}
+        </section>
+      ) : null}
 
       <AlertModal
         id={ModalIds.AlertDeleteRecord}
@@ -143,18 +149,55 @@ const values = [
 
 function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] }) {
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const { openModal, closeModal, getPayload } = useModal();
   const t = useTranslations();
-  const router = useRouter();
-  const isCitizen = router.pathname.startsWith("/citizen");
   const generateCallsign = useGenerateCallsign();
+  const { state, execute } = useFetch();
+  const { currentResult, setCurrentResult } = useNameSearch();
+
+  async function handleDelete() {
+    const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
+    if (!warrant) return;
+
+    const { json } = await execute(`/records/${warrant.id}`, {
+      data: { type: "WARRANT" },
+      method: "DELETE",
+    });
+
+    if (json) {
+      if (currentResult) {
+        setCurrentResult({
+          ...currentResult,
+          warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
+        });
+      }
+
+      closeModal(ModalIds.AlertRevokeWarrant);
+    }
+  }
 
   function handleDeleteClick(warrant: Warrant) {
     openModal(ModalIds.AlertRevokeWarrant, warrant);
   }
 
-  function handleChange() {
-    // todo
+  async function handleChange(value: string, warrant: Warrant) {
+    const { json } = await execute(`/records/${warrant.id}`, {
+      data: { status: value.toUpperCase(), type: "WARRANT" },
+      method: "PUT",
+    });
+
+    if (json && currentResult) {
+      setCurrentResult({
+        ...currentResult,
+        warrants: currentResult.warrants.map((v) => {
+          if (v.id === warrant.id) {
+            return { ...v, ...json };
+          }
+
+          return v;
+        }),
+      });
+    }
   }
 
   return (
@@ -172,7 +215,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
               actions: (
                 <div className="flex gap-2">
                   <Select
-                    onChange={handleChange}
+                    onChange={(e) => handleChange(e.target.value, warrant)}
                     className="w-40"
                     values={values}
                     value={value ?? null}
@@ -193,8 +236,18 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
           { Header: t("Leo.officer"), accessor: "officer" },
           { Header: common("description"), accessor: "description" },
           { Header: common("createdAt"), accessor: "createdAt" },
-          isCitizen ? null : { Header: common("actions"), accessor: "actions" },
+          { Header: common("actions"), accessor: "actions" },
         ]}
+      />
+
+      <AlertModal
+        id={ModalIds.AlertRevokeWarrant}
+        onDeleteClick={handleDelete}
+        // todo: change to revoke warrant
+        description={t("Leo.alert_revokeWarrant")}
+        title={t("Leo.revokeWarrant")}
+        deleteText={t("Leo.revoke")}
+        state={state}
       />
     </div>
   );
