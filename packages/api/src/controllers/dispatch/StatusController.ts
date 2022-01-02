@@ -21,7 +21,8 @@ import { Socket } from "services/SocketService";
 import { APIWebhook } from "discord-api-types";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Citizen, CombinedLeoUnit, DepartmentValue, Value } from "@prisma/client";
+import { Citizen, CombinedLeoUnit, DepartmentValue, DivisionValue, Value } from "@prisma/client";
+import { generateCallsign } from "utils/callsign";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -199,7 +200,7 @@ export class StatusController {
       try {
         const webhook = await getWebhookData(cad.discordWebhookURL);
         if (!webhook) return;
-        const data = createWebhookData(webhook, updatedUnit);
+        const data = createWebhookData(webhook, cad.miscCadSettings, updatedUnit);
 
         await sendDiscordWebhook(webhook, data);
       } catch (error) {
@@ -324,24 +325,25 @@ export class StatusController {
 
 type V<T> = T & { value: Value };
 
-type Unit = { status: V<StatusValue> | null } & (
+export type Unit = { status: V<StatusValue> | null } & (
   | ((Officer | EmsFdDeputy) & {
       department: V<DepartmentValue>;
+      division: V<DivisionValue>;
       citizen: Pick<Citizen, "name" | "surname">;
       status: V<StatusValue> | null;
     })
   | CombinedLeoUnit
 );
 
-function createWebhookData(webhook: APIWebhook, unit: Unit) {
+function createWebhookData(webhook: APIWebhook, miscCadSettings: MiscCadSettings, unit: Unit) {
   const isNotCombined = "citizenId" in unit;
 
   const status = unit.status?.value.value ?? "Off-duty";
-  const department = isNotCombined && unit.department.value.value;
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
+  const callsign = isNotCombined ? generateCallsign(unit, miscCadSettings) : unit.callsign;
   const officerName = isNotCombined
-    ? `${unit.badgeNumber} - ${unitName} ${unit.callsign} (${department})`
-    : `${unit.callsign}`;
+    ? `${unit.badgeNumber} - ${callsign} ${unitName}`
+    : `${callsign}`;
 
   return {
     avatar_url: webhook.avatar,
