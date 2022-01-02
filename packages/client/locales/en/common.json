@@ -64,6 +64,7 @@
     "logout": "Logout",
     "login": "Login",
     "register": "Register",
+    "callHistory": "Call History",
     "citizenLogs": "Citizen Logs"
   },
   "Errors": {

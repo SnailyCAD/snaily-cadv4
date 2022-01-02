@@ -590,6 +590,7 @@ model LeoIncident {
   arrestsMade          Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
+  calls                Call911[]
 }
 
 model CombinedLeoUnit {
@@ -639,7 +640,9 @@ model Call911 {
   postal        String?        @db.Text
   description   String         @db.Text
   name          String         @db.VarChar(255)
+  ended         Boolean?       @default(false)
   events        Call911Event[]
+  incidents     LeoIncident[]
 }
 
 model Position {

@@ -1,8 +1,7 @@
-/* eslint-disable no-dupe-class-members */
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, validate } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL, validate } from "@snailycad/schemas";
+import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
@@ -34,6 +33,7 @@ const callInclude = {
   position: true,
   assignedUnits: assignedUnitsInclude,
   events: true,
+  incidents: true,
 };
 
 @Controller("/911-calls")
@@ -45,12 +45,13 @@ export class Calls911Controller {
   }
 
   @Get("/")
-  async get911Calls() {
+  async get911Calls(@QueryParams("includeEnded") includeEnded: boolean) {
     const calls = await prisma.call911.findMany({
       include: callInclude,
       orderBy: {
         createdAt: "desc",
       },
+      where: includeEnded ? undefined : { ended: false },
     });
 
     return calls.map(this.officerOrDeputyToUnit);
@@ -179,9 +180,12 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
-    await prisma.call911.delete({
+    await prisma.call911.update({
       where: {
         id: call.id,
+      },
+      data: {
+        ended: true,
       },
     });
 
@@ -344,6 +348,42 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
 
     return this.officerOrDeputyToUnit(updated);
+  }
+
+  @Post("/link-incident/:callId")
+  async linkCallToIncident(
+    @PathParams("callId") callId: string,
+    @BodyParams() body: JsonRequestBody,
+  ) {
+    const error = validate(LINK_INCIDENT_TO_CALL, body.toJSON(), true);
+    if (error) {
+      throw new BadRequest(error);
+    }
+
+    const incidentId = body.get("incidentId") as string;
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id: incidentId },
+    });
+
+    if (!incident) {
+      throw new NotFound("incidentNotFound");
+    }
+
+    await prisma.leoIncident.update({
+      where: { id: incident.id },
+      data: { calls: { connect: { id: call.id } } },
+    });
+
+    return true;
   }
 
   private officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
