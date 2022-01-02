@@ -2,21 +2,30 @@
 import { classNames } from "lib/classNames";
 import * as React from "react";
 import { ArrowDownShort, ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
-import { useTable, useSortBy, useGlobalFilter, useRowSelect, Column, Row } from "react-table";
+import {
+  useTable,
+  useSortBy,
+  useGlobalFilter,
+  useRowSelect,
+  Column,
+  Row,
+  TableInstance,
+} from "react-table";
 import { ReactSortable } from "react-sortablejs";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 
-type TableData<T extends object> = {
-  rowProps?: JSX.IntrinsicElements["tr"];
+type TableData<T extends object, RP extends object> = {
+  rowProps?: JSX.IntrinsicElements["tr"] & RP;
 } & T;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-interface Props<T extends object = {}> {
-  data: readonly TableData<T>[];
-  columns: readonly (Column<TableData<T>> | null)[];
+interface Props<T extends object = {}, RowProps extends object = {}> {
+  data: readonly TableData<T, RowProps>[];
+  columns: readonly (Column<TableData<T, RowProps>> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
+  Toolbar?: ({ instance }: { instance: TableInstance<TableData<T, RowProps>> }) => JSX.Element;
   defaultSort?: {
     columnId: string;
     descending?: boolean;
@@ -27,11 +36,14 @@ interface Props<T extends object = {}> {
   };
   selection?: {
     enabled: boolean;
-    onSelect?(originals: TableData<T>[], selectedFlatRows: Row<TableData<T>>[]): void;
+    onSelect?(
+      originals: TableData<T, RowProps>[],
+      selectedFlatRows: Row<TableData<T, RowProps>>[],
+    ): void;
   };
 }
 
-export function Table<T extends object>(props: Props<T>) {
+export function Table<T extends object, RowProps extends object>(props: Props<T, RowProps>) {
   const data = React.useMemo(() => props.data, [props.data]);
 
   const columns = React.useMemo(
@@ -39,16 +51,7 @@ export function Table<T extends object>(props: Props<T>) {
     [props.columns],
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    prepareRow,
-    setGlobalFilter,
-    toggleSortBy,
-    headerGroups,
-    rows,
-    selectedFlatRows,
-  } = useTable<TableData<T>>(
+  const instance = useTable<TableData<T, RowProps>>(
     // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
     { autoResetSortBy: false, columns, data },
     useGlobalFilter,
@@ -91,6 +94,17 @@ export function Table<T extends object>(props: Props<T>) {
     },
   );
 
+  const {
+    getTableProps,
+    getTableBodyProps,
+    prepareRow,
+    setGlobalFilter,
+    toggleSortBy,
+    headerGroups,
+    rows,
+    selectedFlatRows,
+  } = instance;
+
   function handleMove(tableList: any[]) {
     const originals = tableList.map((list) => {
       return list.original?.rowProps?.value;
@@ -124,6 +138,8 @@ export function Table<T extends object>(props: Props<T>) {
 
   return (
     <div {...containerProps}>
+      {props?.Toolbar?.({ instance })}
+
       <table {...getTableProps()} className="w-full overflow-hidden whitespace-nowrap max-h-64">
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -173,11 +189,11 @@ export function Table<T extends object>(props: Props<T>) {
   );
 }
 
-type RowProps<T extends object> = {
-  row: Row<TableData<T>>;
+type RowProps<T extends object, RowProps extends object> = {
+  row: Row<TableData<T, RowProps>>;
 };
 
-function Row<T extends object>({ row }: RowProps<T>) {
+function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
   const rowProps = row.original.rowProps ?? {};
 
   return (
