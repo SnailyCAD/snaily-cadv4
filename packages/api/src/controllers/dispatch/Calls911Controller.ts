@@ -170,6 +170,23 @@ export class Calls911Controller {
     return this.officerOrDeputyToUnit(updated);
   }
 
+  @Delete("/purge")
+  async purgeCalls(@BodyParams("ids") ids: string[]) {
+    if (!Array.isArray(ids)) return;
+
+    await Promise.all(
+      ids.map(async (id) => {
+        const call = await prisma.call911.delete({
+          where: { id },
+        });
+
+        this.socket.emit911CallDelete(call);
+      }),
+    );
+
+    return true;
+  }
+
   @Delete("/:id")
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({

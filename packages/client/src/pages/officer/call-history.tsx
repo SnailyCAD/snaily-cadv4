@@ -17,6 +17,9 @@ import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
+import useFetch from "lib/useFetch";
+import { Loader } from "components/Loader";
+import { useRouter } from "next/router";
 
 interface Props {
   data: (Full911Call & { incidents: LeoIncident[] })[];
@@ -26,6 +29,8 @@ interface Props {
 export default function CallHistory({ data: calls, incidents }: Props) {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
+  const { state, execute } = useFetch();
+  const router = useRouter();
 
   const { openModal } = useModal();
   const t = useTranslations("Calls");
@@ -36,6 +41,17 @@ export default function CallHistory({ data: calls, incidents }: Props) {
   function handleLinkClick(call: Full911Call) {
     setTempCall(call);
     openModal(ModalIds.LinkCallToIncident);
+  }
+
+  async function handlePurge(ids: string[]) {
+    const { json } = await execute("/911-calls/purge", {
+      method: "DELETE",
+      data: { ids },
+    });
+
+    if (json) {
+      router.replace({ pathname: router.pathname, query: router.query });
+    }
   }
 
   function makeUnit(unit: AssignedUnit) {
@@ -52,14 +68,35 @@ export default function CallHistory({ data: calls, incidents }: Props) {
 
       <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
 
-      <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-      </FormField>
-
       {calls.length <= 0 ? (
         <p className="mt-5">{"No calls ended yet."}</p>
       ) : (
         <Table
+          selection={{
+            enabled: true,
+          }}
+          Toolbar={({ instance }) => {
+            const rows = instance.selectedFlatRows ?? [];
+            const isDisabled = state === "loading" || rows.length <= 0;
+
+            return (
+              <div className="mb-2">
+                <FormField label={common("search")} className="my-2">
+                  <div className="flex gap-2">
+                    <Input onChange={(e) => setSearch(e.target.value)} value={search} />
+                    <Button
+                      onClick={() => handlePurge(rows.map((r) => r.original.rowProps.call.id))}
+                      className="ml-2 min-w-fit flex gap-2 items-center"
+                      disabled={isDisabled}
+                    >
+                      {state === "loading" ? <Loader /> : null}
+                      Purge selected
+                    </Button>
+                  </div>
+                </FormField>
+              </div>
+            );
+          }}
           filter={search}
           defaultSort={{ columnId: "createdAt", descending: true }}
           data={calls.map((call) => {
@@ -67,6 +104,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
             const caseNumbers = call.incidents.map((i) => `#${i.caseNumber}`).join(", ");
 
             return {
+              rowProps: { call },
               caller: call.name,
               location: call.location,
               postal: call.postal,
