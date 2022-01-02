@@ -1,0 +1,10 @@
+{
+  "Courthouse": {
+    "courthouse": "San Andreas Court",
+    "requestExpungement": "Request Expungement",
+    "request": "Request",
+    "warrants": "Warrants",
+    "arrestReports": "Arrest Reports",
+    "tickets": "Tickets"
+  }
+}
