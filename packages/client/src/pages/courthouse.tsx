@@ -20,7 +20,7 @@ interface Props {
 
 export default function Taxi(props: Props) {
   const { openModal } = useModal();
-  const [requests, setRequests] = React.useState<FullRequest[]>(props.requests);
+  const [requests] = React.useState<FullRequest[]>(props.requests);
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
 
@@ -33,11 +33,11 @@ export default function Taxi(props: Props) {
       <header className="flex items-center justify-between mb-5">
         <h1 className="text-3xl font-semibold">{t("courthouse")}</h1>
 
-        <Button onClick={() => openModal("")}>{t("createTaxiCall")}</Button>
+        <Button onClick={() => openModal("")}>{t("requestExpungement")}</Button>
       </header>
 
       {requests.length <= 0 ? (
-        <p className="mt-5">{t("noTaxirequests")}</p>
+        <p className="mt-5">{t("noExpungementRequests")}</p>
       ) : (
         <Table
           data={requests.map((request) => ({
@@ -48,13 +48,10 @@ export default function Taxi(props: Props) {
             actions: <></>,
           }))}
           columns={[
-            { Header: t("location"), accessor: "location" },
-            { Header: t("postal"), accessor: "postal" },
-            { Header: common("description"), accessor: "description" },
-            { Header: t("caller"), accessor: "caller" },
-            { Header: t("assignedUnit"), accessor: "assignedUnit" },
+            { Header: t("warrants"), accessor: "warrants" },
+            { Header: t("arrestReports"), accessor: "arrestReports" },
+            { Header: t("tickets"), accessor: "tickets" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}
