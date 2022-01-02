@@ -93,7 +93,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
   DISALLOW_TEXTFIELD_SELECTION: {
     name: "Disallow custom values",
     description:
-      "When enabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
+      "When disabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
   },
 };
 
