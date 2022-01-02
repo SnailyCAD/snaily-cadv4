@@ -1,3 +1,6 @@
+-- AlterTable
+ALTER TABLE "Call911" ADD COLUMN     "ended" BOOLEAN DEFAULT false;
+
 -- CreateTable
 CREATE TABLE "_Call911ToLeoIncident" (
     "A" TEXT NOT NULL,
