@@ -14,7 +14,7 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
-  const { BUSINESS, WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { BUSINESS, COURTHOUSE, WEAPON_REGISTRATION } = useFeatureEnabled();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -34,9 +34,9 @@ export function AdminSidebar() {
         <section>
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
-            {/* todo: hide courthouse when disabled */}
             {management.map((type) =>
-              !BUSINESS && type === "BUSINESSES" ? null : (
+              (!BUSINESS && type === "BUSINESSES") ||
+              (!COURTHOUSE && type === "EXPUNGEMENT_REQUESTS") ? null : (
                 <SidebarItem
                   disabled={type !== "UNITS" && user?.rank === "USER"}
                   key={type}
