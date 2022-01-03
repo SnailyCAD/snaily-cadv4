@@ -10,12 +10,12 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Citizen, Warrant } from "types/prisma";
 import { useCitizen } from "context/CitizenContext";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 
 type Result = Citizen & { Record: FullRecord[]; warrants: Warrant[] };
 
-export function RequestExpungement() {
+export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }) {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
   const { citizens } = useCitizen();
@@ -88,15 +88,22 @@ export function RequestExpungement() {
       {result === false ? (
         <p>Citizen not found</p>
       ) : result ? (
-        <ResultsForm handleClose={handleClose} result={result} />
+        <ResultsForm onSuccess={onSuccess} handleClose={handleClose} result={result} />
       ) : null}
     </Modal>
   );
 }
 
-function ResultsForm({ result, handleClose }: { handleClose(): void; result: Result }) {
+interface ResultProps {
+  handleClose(): void;
+  result: Result;
+  onSuccess(json: any): void;
+}
+
+function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   const { state, execute } = useFetch();
   const leo = useTranslations("Leo");
+  const t = useTranslations("Courthouse");
   const common = useTranslations("Common");
 
   const arrestReports = result.Record.filter((v) => v.type === "ARREST_REPORT");
@@ -105,25 +112,28 @@ function ResultsForm({ result, handleClose }: { handleClose(): void; result: Res
   const isDisabled =
     arrestReports.length <= 0 && tickets.length <= 0 && result.warrants.length <= 0;
 
-  function getTitles(record: FullRecord) {
-    const titles = record.violations.map((v) => v.penalCode.title);
-    return titles.join(", ");
-  }
-
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute(`/expungement-requests/${result.id}`, {
-      data: values,
-      method: "GET",
-      noToast: true,
+      data: Object.entries(values).reduce(
+        (ac, [key, data]) => ({
+          ...ac,
+          [key]: data.map((v) => v.value),
+        }),
+        {},
+      ),
+      method: "POST",
     });
 
-    console.log({ json });
+    if (json.id) {
+      handleClose();
+      onSuccess(json);
+    }
   }
 
   const INITIAL_VALUES = {
-    warrants: [],
-    tickets: [],
-    arrestReports: [],
+    warrants: [] as SelectValue[],
+    tickets: [] as SelectValue[],
+    arrestReports: [] as SelectValue[],
   };
 
   return (
@@ -142,6 +152,7 @@ function ResultsForm({ result, handleClose }: { handleClose(): void; result: Res
               }))}
               value={values.warrants}
               name="warrants"
+              isMulti
               onChange={handleChange}
             />
           </FormField>
@@ -158,6 +169,7 @@ function ResultsForm({ result, handleClose }: { handleClose(): void; result: Res
               }))}
               value={values.arrestReports}
               name="arrestReports"
+              isMulti
               onChange={handleChange}
             />
           </FormField>
@@ -174,6 +186,7 @@ function ResultsForm({ result, handleClose }: { handleClose(): void; result: Res
               }))}
               value={values.tickets}
               name="tickets"
+              isMulti
               onChange={handleChange}
             />
           </FormField>
@@ -188,11 +201,16 @@ function ResultsForm({ result, handleClose }: { handleClose(): void; result: Res
               type="submit"
             >
               {state === "loading" ? <Loader className="mr-2" /> : null}
-              {common("search")}
+              {t("request")}
             </Button>
           </footer>
         </Form>
       )}
     </Formik>
   );
+}
+
+export function getTitles(record: FullRecord) {
+  const titles = record.violations.map((v) => v.penalCode.title);
+  return titles.join(", ");
 }

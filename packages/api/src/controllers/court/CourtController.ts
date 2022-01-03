@@ -7,6 +7,12 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 
+export const expungementRequestInclude = {
+  citizen: true,
+  warrants: true,
+  records: { include: { violations: { include: { penalCode: true } } } },
+};
+
 @Controller("/expungement-requests")
 @UseBeforeEach(IsAuth)
 export class CourtController {
@@ -16,6 +22,7 @@ export class CourtController {
       where: {
         userId: user.id,
       },
+      include: expungementRequestInclude,
     });
 
     return requests;
@@ -57,6 +64,7 @@ export class CourtController {
         citizenId: citizen.id,
         userId: user.id,
       },
+      include: expungementRequestInclude,
     });
 
     const warrants = body.get("warrants") as string[];
@@ -69,6 +77,14 @@ export class CourtController {
 
     const updatedRecords = await Promise.all(
       [...arrestReports, ...tickets].map(async (id) => {
+        const existing = await prisma.expungementRequest.findFirst({
+          where: { records: { some: { id } }, status: "PENDING" },
+        });
+
+        if (existing) {
+          return error(new BadRequest("recordOrWarrantAlreadyLinked"), request.id);
+        }
+
         return prisma.expungementRequest.update({
           where: { id: request.id },
           data: {
@@ -80,6 +96,14 @@ export class CourtController {
 
     const updatedWarrants = await Promise.all(
       warrants.map(async (id) => {
+        const existing = await prisma.expungementRequest.findFirst({
+          where: { warrants: { some: { id } }, status: "PENDING" },
+        });
+
+        if (existing) {
+          return error(new BadRequest("recordOrWarrantAlreadyLinked"), request.id);
+        }
+
         return prisma.expungementRequest.update({
           where: { id: request.id },
           data: {
@@ -91,4 +115,12 @@ export class CourtController {
 
     return { ...request, warrants: updatedWarrants, records: updatedRecords };
   }
+}
+
+async function error<T extends Error = Error>(error: T, id: string) {
+  await prisma.expungementRequest.delete({
+    where: { id },
+  });
+
+  throw error;
 }

@@ -4,7 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
-import { ExpungementRequest, Warrant, Record, Citizen } from "types/prisma";
+import { ExpungementRequest, Warrant, Citizen } from "types/prisma";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -13,6 +13,8 @@ import { Table } from "components/table/Table";
 import format from "date-fns/format";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
+import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
+import { getTitles } from "components/courthouse/RequestExpungement";
 
 const RequestExpungement = dynamic(
   async () => (await import("components/courthouse/RequestExpungement")).RequestExpungement,
@@ -20,7 +22,7 @@ const RequestExpungement = dynamic(
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
-  records: Record[];
+  records: FullRecord[];
   citizen: Citizen;
 };
 
@@ -30,9 +32,10 @@ interface Props {
 
 export default function Courthouse(props: Props) {
   const { openModal } = useModal();
-  const [requests] = React.useState<FullRequest[]>(props.requests);
+  const [requests, setRequests] = React.useState<FullRequest[]>(props.requests);
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
+  const leo = useTranslations("Leo");
 
   return (
     <Layout className="dark:text-white">
@@ -52,25 +55,55 @@ export default function Courthouse(props: Props) {
         <p className="mt-5">{t("noExpungementRequests")}</p>
       ) : (
         <Table
-          data={requests.map((request) => ({
-            citizen: `${request.citizen.name} ${request.citizen.surname}`,
-            warrants: request.warrants.map((w) => w.description).join(", "),
-            arrestReports: "",
-            tickets: "",
-            createdAt: format(new Date(request.createdAt), "yyyy-MM-dd - hh:mm:ss"),
-            actions: <></>,
-          }))}
+          data={requests.map((request) => {
+            // accept requests delete the db entity, this results in show "NONE" for the type
+            // therefore it shows "ACCEPTED"
+            const warrants =
+              request.status === "ACCEPTED"
+                ? "accepted"
+                : request.warrants.map((w) => w.description).join(", ") || common("none");
+
+            const arrestReports =
+              request.status === "ACCEPTED"
+                ? "accepted"
+                : request.records
+                    .filter((v) => v.type === "ARREST_REPORT")
+                    .map((w) => getTitles(w))
+                    .join(", ") || common("none");
+
+            const tickets =
+              request.status === "ACCEPTED"
+                ? "accepted"
+                : request.records
+                    .filter((v) => v.type === "TICKET")
+                    .map((w) => getTitles(w))
+                    .join(", ") || common("none");
+
+            return {
+              rowProps: {
+                className: request.status !== "PENDING" ? "opacity-50 cursor-not-allowed" : "",
+              },
+              citizen: `${request.citizen.name} ${request.citizen.surname}`,
+              warrants,
+              arrestReports,
+              tickets,
+              status: request.status.toLowerCase(),
+              createdAt: format(new Date(request.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+              actions: <></>,
+            };
+          })}
           columns={[
-            { Header: t("citizen"), accessor: "warrants" },
-            { Header: t("warrants"), accessor: "warrants" },
-            { Header: t("arrestReports"), accessor: "arrestReports" },
-            { Header: t("tickets"), accessor: "tickets" },
+            { Header: leo("citizen"), accessor: "citizen" },
+            { Header: leo("warrants"), accessor: "warrants" },
+            { Header: leo("arrestReports"), accessor: "arrestReports" },
+            { Header: leo("tickets"), accessor: "tickets" },
+            { Header: leo("status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
           ]}
         />
       )}
 
-      <RequestExpungement />
+      <RequestExpungement onSuccess={(json) => setRequests((p) => [json, ...p])} />
     </Layout>
   );
 }
