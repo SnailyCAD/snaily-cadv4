@@ -48,7 +48,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>
 
       {pendingRequests.length <= 0 ? (
-        <p className="my-2">{"There are no pending requests"}</p>
+        <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
       ) : (
         <Table
           data={pendingRequests.map((request) => ({
@@ -73,7 +73,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                   onClick={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
                   variant="success"
                 >
-                  Accept
+                  {common("accept")}
                 </Button>
                 <Button
                   className="ml-2"
@@ -81,7 +81,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                   onClick={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
                   variant="danger"
                 >
-                  Decline
+                  {common("decline")}
                 </Button>
               </>
             ),
@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       requests,
       session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["admin", "leo", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "leo", "courthouse", "values", "common"], locale)),
       },
     },
   };

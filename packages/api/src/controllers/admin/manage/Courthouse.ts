@@ -2,8 +2,8 @@ import { ExpungementRequestStatus } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
+import { BodyParams, PathParams } from "@tsed/platform-params";
+import { Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/CourtController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -66,41 +66,5 @@ export class ManageCourthouseController {
     });
 
     return updated;
-  }
-
-  @Delete("/:id")
-  async deleteCitizen(
-    @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
-    @PathParams("id") citizenId: string,
-  ) {
-    const reason = body.get("reason");
-
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: citizenId,
-      },
-    });
-
-    if (!citizen) {
-      throw new NotFound("notFound");
-    }
-
-    await prisma.notification.create({
-      data: {
-        userId: citizen.userId,
-        executorId: ctx.get("user").id,
-        description: reason,
-        title: "CITIZEN_DELETED",
-      },
-    });
-
-    await prisma.citizen.delete({
-      where: {
-        id: citizenId,
-      },
-    });
-
-    return true;
   }
 }

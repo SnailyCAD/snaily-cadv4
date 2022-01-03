@@ -4,8 +4,6 @@
     "requestExpungement": "Request Expungement",
     "noExpungementRequests": "You do not have any expungement requests",
     "request": "Request",
-    "warrants": "Warrants",
-    "arrestReports": "Arrest Reports",
-    "tickets": "Tickets"
+    "noPendingRequests": "There are no pending expungement requests"
   }
 }
