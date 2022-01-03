@@ -1,0 +1,9 @@
+{
+  "Courthouse": {
+    "courthouse": "San Andreas Court",
+    "requestExpungement": "Request Expungement",
+    "noExpungementRequests": "You do not have any expungement requests",
+    "request": "Request",
+    "noPendingRequests": "There are no pending expungement requests"
+  }
+}

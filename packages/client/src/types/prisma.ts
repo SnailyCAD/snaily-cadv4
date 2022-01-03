@@ -552,6 +552,17 @@ export type Warrant = {
 };
 
 /**
+ * Model ExpungementRequest
+ *
+ */
+export type ExpungementRequest = {
+  id: string;
+  citizenId: string;
+  status: ExpungementRequestStatus;
+  createdAt: Date;
+};
+
+/**
  * Model DriversLicenseCategoryValue
  */
 
@@ -776,3 +787,12 @@ export const ReleaseType = {
 };
 
 export type ReleaseType = typeof ReleaseType[keyof typeof ReleaseType];
+
+export const ExpungementRequestStatus = {
+  ACCEPTED: "ACCEPTED",
+  DENIED: "DENIED",
+  PENDING: "PENDING",
+};
+
+export type ExpungementRequestStatus =
+  typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];

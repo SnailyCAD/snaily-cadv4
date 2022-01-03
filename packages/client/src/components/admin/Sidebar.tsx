@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { rank, valueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
-const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES"] as const;
+const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES", "EXPUNGEMENT_REQUESTS"] as const;
 const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
 export function AdminSidebar() {
@@ -14,7 +14,7 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
-  const { BUSINESS, WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { BUSINESS, COURTHOUSE, WEAPON_REGISTRATION } = useFeatureEnabled();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -24,6 +24,10 @@ export function AdminSidebar() {
     return router.asPath.endsWith(type.toLowerCase());
   }
 
+  function makeType(t: string) {
+    return t.replace("_", "-").toLowerCase();
+  }
+
   return (
     <div className="w-60">
       <aside className="sticky w-60 left-4 top-5 bg-gray-200 dark:bg-[#171717] rounded-md py-2">
@@ -31,12 +35,13 @@ export function AdminSidebar() {
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
           <ul className="flex flex-col space-y-1.5 mt-3">
             {management.map((type) =>
-              !BUSINESS && type === "BUSINESSES" ? null : (
+              (!BUSINESS && type === "BUSINESSES") ||
+              (!COURTHOUSE && type === "EXPUNGEMENT_REQUESTS") ? null : (
                 <SidebarItem
                   disabled={type !== "UNITS" && user?.rank === "USER"}
                   key={type}
-                  isActive={isMActive(`/admin/manage/${type.toLowerCase()}`)}
-                  href={`/admin/manage/${type.toLowerCase()}`}
+                  isActive={isMActive(`/admin/manage/${makeType(type)}`)}
+                  href={`/admin/manage/${makeType(type)}`}
                   text={man(`MANAGE_${type}`)}
                 />
               ),

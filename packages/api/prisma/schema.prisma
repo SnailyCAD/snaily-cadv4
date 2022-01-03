@@ -90,7 +90,7 @@ model User {
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   notifications        Notification[]
-  executedNotifictions Notification[]      @relation("executor")
+  executedNotifictions Notification[]       @relation("executor")
   medicalRecords       MedicalRecord[]
   bleeterPosts         BleeterPost[]
   towCalls             TowCall[]
@@ -103,6 +103,7 @@ model User {
   emsFdDeputies        EmsFdDeputy[]
   TaxiCall             TaxiCall[]
   TruckLog             TruckLog[]
+  ExpungementRequest   ExpungementRequest[]
 }
 
 enum StatusViewMode {
@@ -160,6 +161,7 @@ model Citizen {
   updatedAt            DateTime                      @default(now()) @updatedAt
   RecordRelease        RecordRelease[]
   RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest[]
 }
 
 enum Rank {
@@ -697,20 +699,22 @@ enum BoloType {
 
 // tickets, arrest reports, warrants, written warnings
 model Record {
-  id         String         @id @default(uuid())
-  type       RecordType
-  citizen    Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId  String
-  officer    Officer        @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId  String
-  violations Violation[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @default(now()) @updatedAt
-  postal     String         @db.VarChar(255)
-  notes      String?        @db.Text
-  release    RecordRelease? @relation(fields: [releaseId], references: [id])
-  releaseId  String?
-  RecordLog  RecordLog[]
+  id                   String              @id @default(uuid())
+  type                 RecordType
+  citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  officer              Officer             @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId            String
+  violations           Violation[]
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @default(now()) @updatedAt
+  postal               String              @db.VarChar(255)
+  notes                String?             @db.Text
+  release              RecordRelease?      @relation(fields: [releaseId], references: [id])
+  releaseId            String?
+  RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
+  expungementRequestId String?
 }
 
 model RecordRelease {
@@ -733,16 +737,18 @@ enum RecordType {
 }
 
 model Warrant {
-  id          String        @id @default(uuid())
-  citizen     Citizen       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId   String
-  officer     Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId   String
-  description String        @db.Text
-  status      WarrantStatus @default(ACTIVE)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
-  RecordLog   RecordLog[]
+  id                   String              @id @default(uuid())
+  citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  officer              Officer             @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId            String
+  description          String              @db.Text
+  status               WarrantStatus       @default(ACTIVE)
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @default(now()) @updatedAt
+  RecordLog            RecordLog[]
+  ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
+  expungementRequestId String?
 }
 
 model RecordLog {
@@ -753,11 +759,33 @@ model RecordLog {
   recordId  String?
   warrant   Warrant? @relation(fields: [warrantId], references: [id])
   warrantId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum WarrantStatus {
   ACTIVE
   INACTIVE
+}
+
+// Expungement requests
+model ExpungementRequest {
+  id        String                   @id @default(uuid())
+  citizen   Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId String
+  user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  status    ExpungementRequestStatus @default(PENDING)
+  createdAt DateTime                 @default(now())
+  updatedAt DateTime                 @default(now()) @updatedAt
+  warrants  Warrant[]
+  records   Record[]
+}
+
+enum ExpungementRequestStatus {
+  ACCEPTED
+  DENIED
+  PENDING
 }
 
 // ems-fd

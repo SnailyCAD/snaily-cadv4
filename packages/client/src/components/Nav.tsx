@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 
 export function Nav() {
   const { user, cad } = useAuth();
-  const { TOW } = useFeatureEnabled();
+  const { TOW, COURTHOUSE } = useFeatureEnabled();
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
@@ -45,6 +45,19 @@ export function Nav() {
               {user?.isEmsFd ? <EmsFdDropdown /> : null}
 
               {user?.isDispatch ? <DispatchDropdown /> : null}
+
+              {COURTHOUSE ? (
+                <Link href="/courthouse">
+                  <a
+                    className={classNames(
+                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                      isActive("/courthouse") && "font-semibold",
+                    )}
+                  >
+                    {t("courthouse")}
+                  </a>
+                </Link>
+              ) : null}
 
               {user && user.rank !== "USER" ? (
                 <Link href="/admin">

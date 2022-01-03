@@ -65,7 +65,8 @@
     "login": "Login",
     "register": "Register",
     "callHistory": "Call History",
-    "citizenLogs": "Citizen Logs"
+    "citizenLogs": "Citizen Logs",
+    "courthouse": "Courthouse"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -95,6 +96,7 @@
     "discordAccountAlreadyLinked": "This Discord account is already linked to another account.",
     "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created.",
     "invalidRegistrationCode": "The registration code you provided is invalid.",
-    "unitSuspended": "This unit is suspended. Please contact your supervisor."
+    "unitSuspended": "This unit is suspended. Please contact your supervisor.",
+    "recordOrWarrantAlreadyLinked": "A record or a warrant has already been requested. PLease remove the already requested record/warrant."
   }
 }

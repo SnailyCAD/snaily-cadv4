@@ -13,6 +13,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   DISCORD_AUTH: "/v1/auth/discord",
   WEAPON_REGISTRATION: "/v1/weapons",
   CALLS_911: "/v1/911-calls",
+  COURTHOUSE: "/v1/expungement-requests",
 };
 
 @Middleware()
