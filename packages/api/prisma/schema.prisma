@@ -90,7 +90,7 @@ model User {
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   notifications        Notification[]
-  executedNotifictions Notification[]      @relation("executor")
+  executedNotifictions Notification[]       @relation("executor")
   medicalRecords       MedicalRecord[]
   bleeterPosts         BleeterPost[]
   towCalls             TowCall[]
@@ -103,6 +103,7 @@ model User {
   emsFdDeputies        EmsFdDeputy[]
   TaxiCall             TaxiCall[]
   TruckLog             TruckLog[]
+  ExpungementRequest   ExpungementRequest[]
 }
 
 enum StatusViewMode {
@@ -772,6 +773,8 @@ model ExpungementRequest {
   id        String                   @id @default(uuid())
   citizen   Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String
+  user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
   status    ExpungementRequestStatus @default(PENDING)
   createdAt DateTime                 @default(now())
   updatedAt DateTime                 @default(now()) @updatedAt
