@@ -232,7 +232,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
               {isDispatch ? (
                 <FormField errorMessage={errors.assignedUnits as string} label={t("assignedUnits")}>
                   <Select
-                    showContextMenuForUnits
+                    extra={{ showContextMenuForUnits: true }}
                     isMulti
                     name="assignedUnits"
                     value={values.assignedUnits.map((value) => ({
