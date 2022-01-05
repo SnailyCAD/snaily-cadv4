@@ -51,7 +51,12 @@ export function VehicleSearchModal() {
 
     const { json } = await execute(`/bolos/mark-stolen/${results.id}`, {
       method: "POST",
-      data: results,
+      data: {
+        id: results.id,
+        color: results.color,
+        modelId: results.modelId,
+        plate: results.plate,
+      },
     });
 
     if (json) {
