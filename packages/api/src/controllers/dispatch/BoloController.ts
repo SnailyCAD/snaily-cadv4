@@ -125,7 +125,7 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Post("/mark-stolen/:id")
   async reportVehicleStolen(@BodyParams() body: JsonRequestBody) {
-    const { id, color, model, plate } = body.toJSON();
+    const { id, color, modelId, plate } = body.toJSON();
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id },
@@ -149,7 +149,7 @@ export class BoloController {
         description: "stolen",
         type: "VEHICLE",
         color: color || null,
-        model: model?.value || null,
+        model: modelId || null,
         plate: plate || null,
       },
     });
