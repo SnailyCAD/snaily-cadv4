@@ -29,7 +29,7 @@ export function AppearanceTab() {
   async function onSubmit(data: typeof INITIAL_VALUES) {
     const { json } = await execute("/user", {
       method: "PATCH",
-      data: { ...user, ...data },
+      data: { username: user?.username, ...data },
     });
 
     if (json.id) {
