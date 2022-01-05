@@ -2,7 +2,7 @@ import { components, MultiValueGenericProps } from "react-select";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { PenalCode } from "types/prisma";
 
-export function MultiValueContainerPenalCode(props: MultiValueGenericProps<PenalCode>) {
+export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>) {
   const value = props.data.value as PenalCode;
 
   return (

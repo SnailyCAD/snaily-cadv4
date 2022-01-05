@@ -46,7 +46,6 @@ export function Select({ name, onChange, ...rest }: Props) {
   return (
     <ReactSelect
       {...rest}
-      className="relative"
       isDisabled={rest.disabled ?? !canBeClosed}
       value={value}
       options={rest.values}
