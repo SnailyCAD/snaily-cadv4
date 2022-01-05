@@ -8,13 +8,12 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/Input";
 import { Citizen, RecordType } from "types/prisma";
 import { calculateAge } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
-import { useNameSearch } from "state/nameSearchState";
+import { NameSearchResult, useNameSearch } from "state/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
@@ -22,6 +21,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { InputSuggestions } from "components/form/InputSuggestions";
 
 const enum Toggled {
   VEHICLES,
@@ -124,10 +124,35 @@ export function NameSearchModal() {
       className="w-[850px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.name} label={cT("fullName")}>
-              <Input value={values.name} name="name" onChange={handleChange} />
+              <InputSuggestions
+                onSuggestionClick={(suggestion: NameSearchResult) => {
+                  setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
+                  setCurrentResult(suggestion);
+                }}
+                Component={({ suggestion }: { suggestion: Citizen }) => (
+                  <div className="flex items-center">
+                    <p>
+                      {suggestion.name} {suggestion.surname}{" "}
+                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                        <>(SSN: {suggestion.socialSecurityNumber})</>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/name",
+                  method: "POST",
+                  dataKey: "name",
+                }}
+                inputProps={{
+                  value: values.name,
+                  name: "name",
+                  onChange: handleChange,
+                }}
+              />
             </FormField>
 
             {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}
