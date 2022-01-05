@@ -8,10 +8,12 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/Input";
 import { Citizen, RegisteredVehicle, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
+import { InputSuggestions } from "components/form/InputSuggestions";
+import { yesOrNoText } from "lib/utils";
+import { classNames } from "lib/classNames";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -72,10 +74,32 @@ export function VehicleSearchModal() {
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
-              <Input value={values.plateOrVin} name="plateOrVin" onChange={handleChange} />
+              <InputSuggestions
+                onSuggestionClick={(suggestion: VehicleSearchResult) => {
+                  setFieldValue("plateOrVin", suggestion.vinNumber);
+                  setResults(suggestion);
+                }}
+                Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                  <div className="flex items-center">
+                    <p>
+                      {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/vehicle?includeMany=true",
+                  method: "POST",
+                  dataKey: "plateOrVin",
+                }}
+                inputProps={{
+                  value: values.plateOrVin,
+                  name: "plateOrVin",
+                  onChange: handleChange,
+                }}
+              />
             </FormField>
 
             {typeof results === "boolean" && results !== null ? (
@@ -121,6 +145,17 @@ export function VehicleSearchModal() {
                     <span className="font-semibold">{t("owner")}: </span>
                     <span className="capitalize">
                       {results.citizen.name} {results.citizen.surname}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="font-semibold">{t("reportedStolen")}: </span>
+                    <span
+                      className={classNames(
+                        "capitalize",
+                        results.reportedStolen && "text-red-700 font-semibold",
+                      )}
+                    >
+                      {common(yesOrNoText(results.reportedStolen))}
                     </span>
                   </li>
                 </ul>

@@ -146,10 +146,7 @@ export class SearchController {
     };
 
     if (includeMany) {
-      const vehicles = await prisma.registeredVehicle.findMany({
-        where: { plate: { startsWith: plateOrVin.toUpperCase() } },
-        include: data.include,
-      });
+      const vehicles = await prisma.registeredVehicle.findMany(data);
 
       return vehicles;
     }
