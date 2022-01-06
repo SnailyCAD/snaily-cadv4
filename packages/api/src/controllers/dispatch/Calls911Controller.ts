@@ -29,7 +29,7 @@ const assignedUnitsInclude = {
   },
 };
 
-const callInclude = {
+export const callInclude = {
   position: true,
   assignedUnits: assignedUnitsInclude,
   events: true,

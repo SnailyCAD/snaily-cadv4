@@ -16,7 +16,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Create911Call, call);
   }
 
-  async emitUpdate911Call(call: Call911) {
+  async emitUpdate911Call(call: Call911 & { [key: string]: any }) {
     this.io.sockets.emit(SocketEvents.Update911Call, call);
   }
 
