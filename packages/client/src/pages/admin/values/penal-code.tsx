@@ -160,7 +160,11 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
               )
               .map((code) => ({
                 title: code.title,
-                description: code.description,
+                description: (
+                  <p className="max-w-4xl min-w-[300px] break-words whitespace-pre-wrap">
+                    {code.description}
+                  </p>
+                ),
                 actions: (
                   <>
                     <Button onClick={() => handleEditClick(code)} small variant="success">

@@ -26,6 +26,7 @@ interface Props<T extends object = {}, RowProps extends object = {}> {
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
   Toolbar?: ({ instance }: { instance: TableInstance<TableData<T, RowProps>> }) => JSX.Element;
+  disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
   defaultSort?: {
     columnId: string;
     descending?: boolean;
@@ -144,27 +145,33 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th
+              {headerGroup.headers.map((column) => {
+                const isSortingDisabledForColumn =
+                  props.disabledColumnId?.includes(column.id as any) ||
                   // actions don't need a toggle sort
-                  {...column.getHeaderProps(
-                    column.id === "actions" ? undefined : column.getSortByToggleProps(),
-                  )}
-                  className="sticky top-0"
-                >
-                  <div className="flex items-center gap-3">
-                    {column.render("Header")}
-                    {column.isSorted ? (
-                      <span>
-                        <ArrowDownShort
-                          className="transition-transform"
-                          style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
-                        />
-                      </span>
-                    ) : null}
-                  </div>
-                </th>
-              ))}
+                  column.id === "actions";
+
+                return (
+                  <th
+                    {...column.getHeaderProps(
+                      isSortingDisabledForColumn ? undefined : column.getSortByToggleProps(),
+                    )}
+                    className="sticky top-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      {column.render("Header")}
+                      {column.isSorted ? (
+                        <span>
+                          <ArrowDownShort
+                            className="transition-transform"
+                            style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
+                          />
+                        </span>
+                      ) : null}
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           ))}
         </thead>

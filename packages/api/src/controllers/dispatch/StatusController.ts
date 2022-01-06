@@ -14,7 +14,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { findUnit } from "./Calls911Controller";
+import { callInclude, findUnit } from "./Calls911Controller";
 import { unitProperties } from "lib/officer";
 import { getWebhookData, sendDiscordWebhook } from "lib/discord";
 import { Socket } from "services/SocketService";
@@ -156,6 +156,18 @@ export class StatusController {
           });
         }
       } else if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        const calls = await prisma.call911.findMany({
+          where: {
+            assignedUnits: { some: { officerId: unit.id } },
+          },
+          include: callInclude,
+        });
+
+        calls.forEach((call) => {
+          const assignedUnits = call.assignedUnits.filter((v) => v.officerId !== unit.id);
+          this.socket.emitUpdate911Call({ ...call, assignedUnits });
+        });
+
         // unassign officer from call
         await prisma.assignedUnit.deleteMany({
           where: {
@@ -180,6 +192,18 @@ export class StatusController {
     } else if (type === "ems-fd") {
       // unassign deputy from call
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+        const calls = await prisma.call911.findMany({
+          where: {
+            assignedUnits: { some: { emsFdDeputyId: unit.id } },
+          },
+          include: callInclude,
+        });
+
+        calls.forEach((call) => {
+          const assignedUnits = call.assignedUnits.filter((v) => v.emsFdDeputyId !== unit.id);
+          this.socket.emitUpdate911Call({ ...call, assignedUnits });
+        });
+
         await prisma.assignedUnit.deleteMany({
           where: {
             emsFdDeputyId: unit.id,

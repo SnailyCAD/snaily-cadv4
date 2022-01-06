@@ -145,16 +145,20 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
             errorMessage={errors.warrants as string}
             label={leo("warrants")}
           >
-            <Select
-              values={result.warrants.map((v) => ({
-                value: v.id,
-                label: v.description,
-              }))}
-              value={values.warrants}
-              name="warrants"
-              isMulti
-              onChange={handleChange}
-            />
+            {result.warrants.length <= 0 ? (
+              <p>{leo("noWarrants")}</p>
+            ) : (
+              <Select
+                values={result.warrants.map((v) => ({
+                  value: v.id,
+                  label: v.description,
+                }))}
+                value={values.warrants}
+                name="warrants"
+                isMulti
+                onChange={handleChange}
+              />
+            )}
           </FormField>
 
           <FormField
@@ -162,16 +166,20 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
             errorMessage={errors.arrestReports as string}
             label={leo("arrestReports")}
           >
-            <Select
-              values={arrestReports.map((v) => ({
-                value: v.id,
-                label: getTitles(v),
-              }))}
-              value={values.arrestReports}
-              name="arrestReports"
-              isMulti
-              onChange={handleChange}
-            />
+            {arrestReports.length <= 0 ? (
+              <p>{leo("noArrestReports")}</p>
+            ) : (
+              <Select
+                values={arrestReports.map((v) => ({
+                  value: v.id,
+                  label: getTitles(v),
+                }))}
+                value={values.arrestReports}
+                name="arrestReports"
+                isMulti
+                onChange={handleChange}
+              />
+            )}
           </FormField>
 
           <FormField
@@ -179,16 +187,20 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
             errorMessage={errors.tickets as string}
             label={leo("tickets")}
           >
-            <Select
-              values={tickets.map((v) => ({
-                value: v.id,
-                label: getTitles(v),
-              }))}
-              value={values.tickets}
-              name="tickets"
-              isMulti
-              onChange={handleChange}
-            />
+            {tickets.length <= 0 ? (
+              <p>{leo("noTicketsCitizen")}</p>
+            ) : (
+              <Select
+                values={tickets.map((v) => ({
+                  value: v.id,
+                  label: getTitles(v),
+                }))}
+                value={values.tickets}
+                name="tickets"
+                isMulti
+                onChange={handleChange}
+              />
+            )}
           </FormField>
 
           <footer className="flex justify-end mt-5">

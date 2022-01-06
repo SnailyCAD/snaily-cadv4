@@ -1,3 +1,4 @@
+import { FocusScope, useFocusManager } from "@react-aria/focus";
 import { Method } from "axios";
 import useFetch from "lib/useFetch";
 import * as React from "react";
@@ -16,7 +17,9 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
   const { execute } = useFetch();
+
   const ref = useOnclickOutside(() => setOpen(false));
+  const firstItemRef = React.useRef<HTMLButtonElement>(null);
 
   async function onSearch(e: React.ChangeEvent<HTMLInputElement>) {
     const target = e.target as HTMLInputElement;
@@ -56,6 +59,15 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
+  /** focus on the first element in the menu when there are results. */
+  function focusOnMenu(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (suggestions.length <= 0 || !isOpen) return;
+
+    if (e.key === "ArrowDown") {
+      firstItemRef.current?.focus();
+    }
+  }
+
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
     // todo: debounce
@@ -64,27 +76,69 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
   return (
     <div ref={ref} className="relative w-full">
-      <Input {...inputProps} autoComplete="off" onFocus={handleFocus} onChange={handleChange} />
+      <Input
+        {...inputProps}
+        autoComplete="off"
+        onKeyDown={focusOnMenu}
+        onFocus={handleFocus}
+        onChange={handleChange}
+      />
 
       {isOpen && suggestions.length > 0 ? (
-        <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">
-          <ul>
-            {suggestions.map((suggestion) => (
-              <li
-                className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 dark:hover:bg-dark-bg"
-                key={suggestion.id}
-                onClick={() => handleSuggestionClick(suggestion)}
-              >
-                {Component ? (
-                  <Component suggestion={suggestion} />
-                ) : (
-                  <p>{JSON.stringify(suggestion)}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FocusScope>
+          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">
+            <ul className="flex flex-col gap-y-1">
+              {suggestions.map((suggestion, idx) => (
+                <Suggestion
+                  onSuggestionClick={handleSuggestionClick}
+                  key={suggestion.id}
+                  suggestion={suggestion}
+                  Component={Component}
+                  ref={idx === 0 ? firstItemRef : undefined}
+                />
+              ))}
+            </ul>
+          </div>
+        </FocusScope>
       ) : null}
     </div>
   );
 }
+
+type SuggestionProps = Pick<Props, "Component" | "onSuggestionClick"> & {
+  suggestion: any;
+};
+
+const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(
+  ({ suggestion, onSuggestionClick, Component }, ref) => {
+    const focusManager = useFocusManager();
+
+    function onKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+      const key = e.key;
+
+      switch (key) {
+        case "ArrowDown": {
+          focusManager.focusNext({ wrap: true });
+          break;
+        }
+        case "ArrowUp": {
+          focusManager.focusPrevious({ wrap: true });
+          break;
+        }
+        default:
+          break;
+      }
+    }
+
+    return (
+      <button
+        ref={ref}
+        onKeyDown={onKeyDown}
+        className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-dark-bg dark:focus:bg-dark-bg w-full"
+        onClick={() => onSuggestionClick?.(suggestion)}
+      >
+        {Component ? <Component suggestion={suggestion} /> : <p>{JSON.stringify(suggestion)}</p>}
+      </button>
+    );
+  },
+);

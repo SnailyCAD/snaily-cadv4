@@ -60,7 +60,19 @@ export class AccountController {
 
   @Post("/logout")
   async logoutUser(@Res() res: Res, @Context() ctx: Context) {
+    const userId = ctx.get("user").id;
+
     ctx.delete("user");
+
+    await prisma.officer.updateMany({
+      where: { userId },
+      data: { statusId: null },
+    });
+
+    await prisma.emsFdDeputy.updateMany({
+      where: { userId },
+      data: { statusId: null },
+    });
 
     setCookie({
       res,

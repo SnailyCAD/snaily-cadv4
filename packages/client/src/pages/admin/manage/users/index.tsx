@@ -7,19 +7,20 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { Tab } from "@headlessui/react";
 import { PendingUsersTab } from "components/admin/manage/PendingUsersTab";
 import { Button } from "components/Button";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
+import { Table } from "components/table/Table";
 
 interface Props {
   users: User[];
 }
 
-export default function ManageCitizens({ users: data }: Props) {
+export default function ManageUsers({ users: data }: Props) {
   const [users, setUsers] = React.useState<User[]>(data);
   const [search, setSearch] = React.useState("");
 
@@ -42,45 +43,41 @@ export default function ManageCitizens({ users: data }: Props) {
       <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
 
       <FormField label={common("search")} className="my-2">
-        <Input
-          placeholder="john doe"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-          className=""
-        />
+        <Input placeholder="john doe" onChange={(e) => setSearch(e.target.value)} value={search} />
       </FormField>
 
       <TabsContainer tabs={tabs}>
-        <Tab.Panel>
-          <ul className="mt-5">
-            {users.filter(handleFilter.bind(null, search)).map((user, idx) => (
-              <li
-                className="flex flex-col w-full px-4 py-3 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-                key={user.id}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-gray-500 select-none">{idx + 1}.</span>
-                    <span className="ml-2">{user.username}</span>
-                  </div>
-
-                  <div>
-                    <Link href={`/admin/manage/users/${user.id}`}>
-                      <a>
-                        <Button>{common("manage")}</Button>
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <Tab.Panel className="mt-5">
+          <Table
+            filter={search}
+            data={users.map((user) => ({
+              username: user.username,
+              rank: user.rank,
+              isLeo: common(yesOrNoText(user.isLeo)),
+              isSupervisor: common(yesOrNoText(user.isSupervisor)),
+              isEmsFd: common(yesOrNoText(user.isEmsFd)),
+              isDispatch: common(yesOrNoText(user.isDispatch)),
+              actions: (
+                <Link href={`/admin/manage/users/${user.id}`}>
+                  <a>
+                    <Button small>{common("manage")}</Button>
+                  </a>
+                </Link>
+              ),
+            }))}
+            columns={[
+              { Header: "Username", accessor: "username" },
+              { Header: "Rank", accessor: "rank" },
+              { Header: "LEO Access", accessor: "isLeo" },
+              { Header: "LEO Supervisor", accessor: "isSupervisor" },
+              { Header: "EMS/FD Access", accessor: "isEmsFd" },
+              { Header: "Dispatch Access", accessor: "isDispatch" },
+              { Header: common("actions"), accessor: "actions" },
+            ]}
+          />
         </Tab.Panel>
 
-        <PendingUsersTab
-          setUsers={setUsers}
-          users={pending.filter(handleFilter.bind(null, search))}
-        />
+        <PendingUsersTab setUsers={setUsers} users={pending} search={search} />
       </TabsContainer>
     </AdminLayout>
   );
@@ -99,13 +96,3 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     },
   };
 };
-
-function handleFilter(search: string, user: User) {
-  if (!search) {
-    return true;
-  }
-
-  const { username } = user;
-
-  return username.toLowerCase().includes(search.toLowerCase());
-}
