@@ -1,16 +1,19 @@
+import { useTranslations } from "use-intl";
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
+import { Table } from "components/table/Table";
 import useFetch from "lib/useFetch";
 import { User } from "types/prisma";
-import { useTranslations } from "use-intl";
 
 interface Props {
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  search: string;
 }
 
-export function PendingUsersTab({ setUsers, users }: Props) {
+export function PendingUsersTab({ setUsers, search, users }: Props) {
   const t = useTranslations("Management");
+  const common = useTranslations("Common");
   const { execute } = useFetch();
 
   async function handleAcceptOrDecline(user: Pick<User, "id">, type: "accept" | "decline") {
@@ -33,31 +36,35 @@ export function PendingUsersTab({ setUsers, users }: Props) {
     <Tab.Panel>
       <h3 className="my-4 text-xl font-semibold">{t("pendingUsers")}</h3>
 
-      <ul className="">
-        {users.map((user, idx) => (
-          <li className="flex flex-col w-full px-4 py-3 my-1 bg-gray-200 rounded-md" key={user.id}>
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-gray-500 select-none">{idx + 1}.</span>
-                <span className="ml-2">{user.username}</span>
-              </div>
+      {users.length <= 0 ? (
+        <p>There are no users pending access.</p>
+      ) : (
+        <Table
+          filter={search}
+          data={users.map((user) => ({
+            username: user.username,
 
-              <div>
+            actions: (
+              <>
                 <Button
                   onClick={() => handleAcceptOrDecline(user, "accept")}
                   className="mr-2"
                   variant="success"
                 >
-                  Accept
+                  {common("accept")}
                 </Button>
                 <Button onClick={() => handleAcceptOrDecline(user, "decline")} variant="danger">
-                  Decline
+                  {common("decline")}
                 </Button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+              </>
+            ),
+          }))}
+          columns={[
+            { Header: "Username", accessor: "username" },
+            { Header: common("actions"), accessor: "actions" },
+          ]}
+        />
+      )}
     </Tab.Panel>
   );
 }
