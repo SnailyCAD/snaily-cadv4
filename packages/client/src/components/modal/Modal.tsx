@@ -65,7 +65,7 @@ export function Modal({
           >
             <div
               style={modalStyles}
-              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg ${className}`}
+              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg ${className}`}
             >
               <Dialog.Title
                 as="h3"
