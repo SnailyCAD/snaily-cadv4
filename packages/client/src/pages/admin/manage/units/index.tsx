@@ -74,6 +74,7 @@ export default function SupervisorPanelPage({ units }: Props) {
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
 
       <Table
+        disabledColumnId={["dropdown"]}
         data={units.map((unit) => ({
           dropdown: (
             <input
