@@ -103,7 +103,12 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             </FormField>
 
             <FormField errorMessage={errors.description} label="Description">
-              <Textarea name="description" onChange={handleChange} value={values.description} />
+              <Textarea
+                className="min-h-[10em]"
+                name="description"
+                onChange={handleChange}
+                value={values.description}
+              />
             </FormField>
 
             <FormField optional errorMessage={errors.group} label="Group">
