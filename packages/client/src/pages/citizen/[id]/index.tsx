@@ -24,6 +24,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
+import { Infofield } from "components/shared/Infofield";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -92,56 +93,38 @@ export default function CitizenId() {
           )}
 
           <div className="flex flex-col mt-2 sm:ml-3 sm:mt-0">
-            <p>
-              <span className="font-semibold">{t("fullName")}: </span>
+            <Infofield label={t("fullName")}>
               {citizen.name} {citizen.surname}
-            </p>
+            </Infofield>
+
             {SOCIAL_SECURITY_NUMBERS && citizen.socialSecurityNumber ? (
-              <p>
-                <span className="font-semibold">{t("socialSecurityNumber")}: </span>
+              <Infofield label={t("socialSecurityNumber")}>
                 {citizen.socialSecurityNumber}
-              </p>
+              </Infofield>
             ) : null}
-            <p>
-              <span className="font-semibold">{t("dateOfBirth")}: </span>
+
+            <Infofield label={t("dateOfBirth")}>
               {format(new Date(citizen.dateOfBirth), "yyyy-MM-dd")} ({t("age")}:{" "}
               {calculateAge(citizen.dateOfBirth)})
-            </p>
-            <p>
-              <span className="font-semibold">{t("gender")}: </span>
-              {citizen.gender.value}
-            </p>
-            <p>
-              <span className="font-semibold">{t("ethnicity")}: </span>
-              {citizen.ethnicity.value}
-            </p>
-            <p>
-              <span className="font-semibold">{t("hairColor")}: </span>
-              {citizen.hairColor}
-            </p>
-            <p>
-              <span className="font-semibold">{t("eyeColor")}: </span>
-              {citizen.eyeColor}
-            </p>
+            </Infofield>
+            <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>
+            <Infofield label={t("ethnicity")}>{citizen.ethnicity.value}</Infofield>
+            <Infofield label={t("hairColor")}>{citizen.hairColor}</Infofield>
+            <Infofield label={t("eyeColor")}>{citizen.eyeColor}</Infofield>
           </div>
 
           <div className="flex flex-col sm:ml-5">
-            <p>
-              <span className="font-semibold">{t("weight")}: </span>
+            <Infofield label={t("weight")}>
               {citizen.weight} {cad?.miscCadSettings?.weightPrefix}
-            </p>
-            <p>
-              <span className="font-semibold">{t("height")}: </span>
+            </Infofield>
+
+            <Infofield label={t("height")}>
               {citizen.height} {cad?.miscCadSettings?.heightPrefix}
-            </p>
-            <p>
-              <span className="font-semibold">{t("address")}: </span>
-              {citizen.address}
-            </p>
-            <p>
-              <span className="font-semibold">{t("phoneNumber")}: </span>
-              {citizen.phoneNumber ?? common("none")}
-            </p>
+            </Infofield>
+
+            <Infofield label={t("address")}>{citizen.address}</Infofield>
+            <Infofield label={t("phoneNumber")}>{citizen.phoneNumber ?? common("none")}</Infofield>
+
             <ManageOccupationModal occupation={citizen.occupation} />
           </div>
         </div>

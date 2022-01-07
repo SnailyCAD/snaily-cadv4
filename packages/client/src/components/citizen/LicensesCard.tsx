@@ -6,6 +6,7 @@ import { useModal } from "context/ModalContext";
 import { ManageLicensesModal } from "./modals/ManageLicensesModal";
 import { useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Infofield } from "components/shared/Infofield";
 
 export function LicensesCard() {
   const { openModal } = useModal();
@@ -27,7 +28,7 @@ export function LicensesCard() {
           </Button>
         </header>
 
-        <div>
+        <div className="mt-2">
           {types.map((type) => {
             const category =
               type === "driversLicense"
@@ -44,16 +45,12 @@ export function LicensesCard() {
 
             return (
               <div key={type}>
-                <p>
-                  <span className="font-semibold">{t(type)}: </span>
-                  {citizen[type]?.value ?? common("none")}
-                </p>
+                <Infofield label={t(type)}>{citizen[type]?.value ?? common("none")}</Infofield>
 
                 {category && category.length > 0 ? (
-                  <p className="pl-3">
-                    <span className="font-semibold">{common("categories")}: </span>
+                  <Infofield label={common("categories")} className="pl-3">
                     {category.map((v) => v?.value?.value).join(", ")}
-                  </p>
+                  </Infofield>
                 ) : null}
               </div>
             );

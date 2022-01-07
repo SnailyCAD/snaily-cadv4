@@ -23,6 +23,7 @@ import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/InputSuggestions";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
+import { Infofield } from "components/shared/Infofield";
 
 const enum Toggled {
   VEHICLES,
@@ -238,74 +239,59 @@ export function NameSearchModal() {
                   </div>
                   <div className="w-full">
                     <div className="flex flex-col">
-                      <p>
-                        <span className="font-semibold">{cT("fullName")}: </span>
+                      <Infofield label={cT("fullName")}>
                         {currentResult.name} {currentResult.surname}
-                      </p>
+                      </Infofield>
+
                       {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
-                        <p>
-                          <span className="font-semibold">{cT("socialSecurityNumber")}: </span>
+                        <Infofield label={cT("socialSecurityNumber")}>
                           {currentResult.socialSecurityNumber}
-                        </p>
+                        </Infofield>
                       ) : null}
-                      <p>
-                        <span className="font-semibold">{cT("dateOfBirth")}: </span>
+
+                      <Infofield label={cT("dateOfBirth")}>
                         {format(new Date(currentResult.dateOfBirth), "yyyy-MM-dd")} ({cT("age")}:{" "}
                         {calculateAge(currentResult.dateOfBirth)})
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("gender")}: </span>
-                        {currentResult.gender.value}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("ethnicity")}: </span>
-                        {currentResult.ethnicity.value}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("hairColor")}: </span>
-                        {currentResult.hairColor}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("eyeColor")}: </span>
-                        {currentResult.eyeColor}
-                      </p>
+                      </Infofield>
+
+                      <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
+                      <Infofield label={cT("ethnicity")}>{currentResult.ethnicity.value}</Infofield>
+                      <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
+                      <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
                     </div>
 
                     <div className="flex flex-col">
-                      <p>
-                        <span className="font-semibold">{cT("weight")}: </span>
+                      <Infofield label={cT("weight")}>
                         {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("height")}: </span>
+                      </Infofield>
+
+                      <Infofield label={cT("height")}>
                         {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{cT("address")}: </span>
-                        {currentResult.address}
-                      </p>
+                      </Infofield>
+
+                      <Infofield label={cT("address")}>{currentResult.address}</Infofield>
+
                       <ManageOccupationModal isLeo occupation={currentResult.occupation} />
                     </div>
                   </div>
 
                   <div className="w-full">
                     <ul className="flex flex-col">
-                      <li>
-                        <span className="font-semibold">{cT("driversLicense")}: </span>
+                      <Infofield label={cT("driversLicense")}>
                         {currentResult.driversLicense?.value ?? common("none")}
-                      </li>
-                      <li>
-                        <span className="font-semibold">{cT("weaponLicense")}: </span>
+                      </Infofield>
+
+                      <Infofield label={cT("weaponLicense")}>
                         {currentResult.weaponLicense?.value ?? common("none")}
-                      </li>
-                      <li>
-                        <span className="font-semibold">{cT("pilotLicense")}: </span>
+                      </Infofield>
+
+                      <Infofield label={cT("pilotLicense")}>
                         {currentResult.pilotLicense?.value ?? common("none")}
-                      </li>
-                      <li>
-                        <span className="font-semibold">{cT("ccw")}: </span>
+                      </Infofield>
+
+                      <Infofield label={cT("ccw")}>
                         {currentResult.ccw?.value ?? common("none")}
-                      </li>
+                      </Infofield>
                     </ul>
 
                     <Button

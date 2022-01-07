@@ -15,6 +15,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
+import { Infofield } from "components/shared/Infofield";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -124,45 +125,44 @@ export function VehicleSearchModal() {
 
                 <ul className="mt-2">
                   <li>
-                    <span className="font-semibold">{vT("plate")}: </span>
-                    {results.plate.toUpperCase()}
+                    <Infofield label={vT("plate")}>{results.plate.toUpperCase()}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{vT("model")}: </span>
-                    {results.model.value.value}
+                    <Infofield label={vT("model")}>{results.model.value.value}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{vT("color")}: </span>
-                    {results.color}
+                    <Infofield label={vT("color")}> {results.color}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{vT("vinNumber")}: </span>
-                    {results.vinNumber}
+                    <Infofield label={vT("vinNumber")}>{results.vinNumber}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{vT("registrationStatus")}: </span>
-                    {results.registrationStatus.value}
+                    <Infofield label={vT("vinNumber")}>
+                      {results.registrationStatus.value}
+                    </Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{common("createdAt")}: </span>
-                    {format(new Date(results.createdAt), "yyyy-MM-dd HH:mm")}
+                    <Infofield label={common("createdAt")}>
+                      {format(new Date(results.createdAt), "yyyy-MM-dd HH:mm")}
+                    </Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{t("owner")}: </span>
-                    <span className="capitalize">
+                    <Infofield className="capitalize" label={vT("owner")}>
                       {results.citizen.name} {results.citizen.surname}
-                    </span>
+                    </Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{t("reportedStolen")}: </span>
-                    <span
-                      className={classNames(
-                        "capitalize",
-                        results.reportedStolen && "text-red-700 font-semibold",
-                      )}
+                    <Infofield
+                      childrenProps={{
+                        className: classNames(
+                          "capitalize",
+                          results.reportedStolen && "text-red-700 font-semibold",
+                        ),
+                      }}
+                      label={t("reportedStolen")}
                     >
                       {common(yesOrNoText(results.reportedStolen))}
-                    </span>
+                    </Infofield>
                   </li>
                 </ul>
 
