@@ -538,6 +538,8 @@ export type TruckLog = {
   vehicleId: string | null;
   startedAt: string;
   endedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 /**
