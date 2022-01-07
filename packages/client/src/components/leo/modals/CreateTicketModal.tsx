@@ -2,7 +2,7 @@ import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { Select, SelectValue } from "components/form/Select";
+import { SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
@@ -18,6 +18,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./CreateRecord/PenalCodesTable";
+import { SelectPenalCode } from "./CreateRecord/SelectPenalCode";
 
 export function CreateTicketModal({ type }: { type: RecordType }) {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -133,16 +134,10 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
             </FormField>
 
             <FormField errorMessage={errors.violations as string} label={t("violations")}>
-              <Select
-                extra={{ showPenalCodeDescriptions: true }}
+              <SelectPenalCode
+                penalCodes={penalCodes}
                 value={values.violations}
-                name="violations"
-                onChange={handleChange}
-                isMulti
-                values={penalCodes.map((value) => ({
-                  label: value.title,
-                  value,
-                }))}
+                handleChange={handleChange}
               />
             </FormField>
 

@@ -5,6 +5,7 @@ import {
   DriversLicenseCategoryValue,
   EmployeeValue,
   PenalCode,
+  PenalCodeGroup,
   StatusValue,
   Value,
   valueType,
@@ -29,6 +30,7 @@ interface Context {
   codes10: ContextValue<"CODES_10", StatusValue>;
   vehicle: ContextValue<"VEHICLE", VehicleValue>;
   penalCode: ContextValue<"PENAL_CODE", PenalCode>;
+  penalCodeGroups: PenalCodeGroup[];
   department: ContextValue<"DEPARTMENT", DepartmentValue>;
   driverslicenseCategory: ContextValue<"DRIVERSLICENSE_CATEGORY", DriversLicenseCategoryValue>;
   impoundLot: ContextValue<"IMPOUND_LOT">;
@@ -54,6 +56,10 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
   const data = React.useMemo(() => {
     return Object.values(valueType).reduce((obj, valueType) => {
       const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
+
+      if (v.type === "PENAL_CODE") {
+        obj["penalCodeGroups"] = (v as any)?.groups ?? [];
+      }
 
       return { ...obj, [normalizeValue(valueType)]: v };
     }, {} as Context);
