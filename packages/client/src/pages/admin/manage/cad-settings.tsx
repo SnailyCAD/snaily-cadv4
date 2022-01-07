@@ -105,7 +105,12 @@ export default function CadSettings() {
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
               <form className="mt-3" onSubmit={handleSubmit}>
-                <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
+                <div>
+                  <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
+                  <small className="block text-[15px] -mt-2 mb-3">
+                    <b>Note:</b> page reload may be required.
+                  </small>
+                </div>
 
                 <FormField errorMessage={errors.name} label="CAD Name">
                   <Input onChange={handleChange} value={values.name} name="name" />
