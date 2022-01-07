@@ -97,66 +97,74 @@ function NavDropdown() {
   }
 
   return (
-    <>
-      <Menu as="div" className="relative z-50 inline-block text-left">
-        <Menu.Button className="inline-flex justify-center w-full px-1 py-2 text-sm font-medium text-white bg-transparent rounded-md focus:outline-none">
-          <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
-        </Menu.Button>
+    <Menu as="div" className="relative z-50 inline-block text-left">
+      {({ open }) => (
+        <>
+          <Menu.Button
+            className={classNames(
+              "inline-flex justify-center w-full px-2 py-2 text-sm font-medium text-neutral-800 dark:text-white bg-transparent rounded-md transition-colors hover:bg-gray-200 dark:hover:bg-dark-bright focus:outline-none",
+              open && "bg-gray-200 dark:bg-dark-bright",
+            )}
+          >
+            <span className="mr-2.5"> {user ? user.username : null}</span>
 
-        <Transition
-          as={React.Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 w-32 mt-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-xl dark:bg-dark-bright dark:divide-dark-bg focus:outline-none">
-            {user ? (
-              <>
-                <div className="px-1 py-1">
+            <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
+          </Menu.Button>
+          <Transition
+            as={React.Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute right-0 w-32 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-xl dark:bg-dark-bright dark:divide-dark-bg focus:outline-none">
+              {user ? (
+                <>
+                  <div className="px-1 py-1">
+                    <Menu.Item>
+                      <Link href="/account">
+                        <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                          {t("account")}
+                        </a>
+                      </Link>
+                    </Menu.Item>
+                  </div>
+
+                  <div className="px-1 py-1">
+                    <Menu.Item>
+                      <button
+                        onClick={handleLogout}
+                        className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
+                      >
+                        {t("logout")}
+                      </button>
+                    </Menu.Item>
+                  </div>
+                </>
+              ) : (
+                <div className="px-1 py-1 ">
                   <Menu.Item>
-                    <Link href="/account">
+                    <Link href="/auth/login">
                       <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        {t("account")}
+                        {t("login")}
+                      </a>
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link href="/auth/register">
+                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                        {t("register")}
                       </a>
                     </Link>
                   </Menu.Item>
                 </div>
-
-                <div className="px-1 py-1">
-                  <Menu.Item>
-                    <button
-                      onClick={handleLogout}
-                      className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
-                    >
-                      {t("logout")}
-                    </button>
-                  </Menu.Item>
-                </div>
-              </>
-            ) : (
-              <div className="px-1 py-1 ">
-                <Menu.Item>
-                  <Link href="/auth/login">
-                    <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                      {t("login")}
-                    </a>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item>
-                  <Link href="/auth/register">
-                    <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                      {t("register")}
-                    </a>
-                  </Link>
-                </Menu.Item>
-              </div>
-            )}
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    </>
+              )}
+            </Menu.Items>
+          </Transition>
+        </>
+      )}
+    </Menu>
   );
 }
