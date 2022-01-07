@@ -14,14 +14,21 @@ import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
+import { FullEmployee } from "state/businessState";
+import toast from "react-hot-toast";
 
-export function CreateBusinessModal() {
+interface Props {
+  onCreate?(business: FullEmployee): void;
+}
+
+export function CreateBusinessModal({ onCreate }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { citizens } = useCitizen();
   const router = useRouter();
   const common = useTranslations("Common");
   const t = useTranslations("Business");
+  const error = useTranslations("Errors");
 
   function handleClose() {
     closeModal(ModalIds.CreateBusiness);
@@ -34,8 +41,14 @@ export function CreateBusinessModal() {
     });
 
     if (json.id) {
+      if (json.business.status === "PENDING") {
+        toast.error(error("businessCreatedButPending"));
+      } else {
+        router.push(`/business/${json.id}/${json.employee?.id}`);
+      }
+
+      onCreate?.(json.employee);
       closeModal(ModalIds.CreateBusiness);
-      router.push(`/business/${json.id}/${json.employeeId}`);
     }
   }
 

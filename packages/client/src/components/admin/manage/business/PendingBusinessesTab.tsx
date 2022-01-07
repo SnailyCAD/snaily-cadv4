@@ -8,10 +8,10 @@ import { WhitelistStatus } from "types/prisma";
 
 interface Props {
   businesses: FullBusiness[];
-  onSuccess(prevBusiness: FullBusiness, business: FullBusiness): void;
+  setBusinesses: React.Dispatch<React.SetStateAction<FullBusiness[]>>;
 }
 
-export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
+export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
 
@@ -23,8 +23,11 @@ export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
       data: { status: type },
     });
 
-    if (json.id) {
-      onSuccess(business, json);
+    if (json) {
+      setBusinesses((p) => {
+        const idx = p.filter((v) => v.id !== business.id);
+        return [json, ...idx];
+      });
     }
   }
 
@@ -61,22 +64,10 @@ export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
           ),
         }))}
         columns={[
-          {
-            Header: common("name"),
-            accessor: "name",
-          },
-          {
-            Header: t("owner"),
-            accessor: "owner",
-          },
-          {
-            Header: t("user"),
-            accessor: "user",
-          },
-          {
-            Header: common("actions"),
-            accessor: "actions",
-          },
+          { Header: common("name"), accessor: "name" },
+          { Header: t("owner"), accessor: "owner" },
+          { Header: t("user"), accessor: "user" },
+          { Header: common("actions"), accessor: "actions" },
         ]}
       />
     </Tab.Panel>

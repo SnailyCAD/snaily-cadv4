@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Disclosure, Tab } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
@@ -15,10 +15,11 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { TabsContainer } from "components/tabs/TabsContainer";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
+import { Table } from "components/table/Table";
 
 export type FullBusiness = Business & {
   user: User;
@@ -91,68 +92,46 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             : [t("allBusinesses")]
         }
       >
-        <Tab.Panel>
+        <Tab.Panel className="mt-3">
+          <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
+
           {businesses.length <= 0 ? (
             <p className="mt-5">{t("noBusinesses")}</p>
           ) : (
-            <ul className="mt-5">
-              {businesses.map((business, idx) => (
-                <li
-                  className="flex flex-col w-full p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-                  key={business.id}
-                >
-                  <Disclosure>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-gray-500 select-none">{idx + 1}.</span>
-                        <span className="ml-2">{business.name}</span>
-                      </div>
-
-                      <div>
-                        <Disclosure.Button as={Button}>{t("viewInfo")}</Disclosure.Button>
-                        <Button
-                          onClick={() => handleDeleteClick(business)}
-                          variant="danger"
-                          className="ml-2"
-                        >
-                          {common("delete")}
-                        </Button>
-                      </div>
-                    </div>
-
-                    <Disclosure.Panel className="px-5">
-                      <p>
-                        <span className="font-semibold">{t("owner")}: </span>
-                        {business.citizen.name} {business.citizen.surname}
-                      </p>
-                      <p>
-                        <span className="font-semibold">{t("user")}: </span>
-                        {business.user.username}
-                      </p>
-                      {businessWhitelisted ? (
-                        <p>
-                          <span className="font-semibold">{t("status")}: </span>
-                          {business.status}
-                        </p>
-                      ) : null}
-                    </Disclosure.Panel>
-                  </Disclosure>
-                </li>
-              ))}
-            </ul>
+            <Table
+              defaultSort={{
+                columnId: "status",
+                descending: false,
+              }}
+              data={businesses.map((business) => ({
+                name: business.name,
+                owner: `${business.citizen.name} ${business.citizen.surname}`,
+                user: business.user.username,
+                status: business.status,
+                whitelisted: common(yesOrNoText(business.whitelisted)),
+                actions: (
+                  <Button
+                    className="ml-2"
+                    onClick={() => handleDeleteClick(business)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                ),
+              }))}
+              columns={[
+                { Header: common("name"), accessor: "name" },
+                { Header: t("owner"), accessor: "owner" },
+                { Header: t("user"), accessor: "user" },
+                { Header: t("status"), accessor: "status" },
+                { Header: t("whitelisted"), accessor: "whitelisted" },
+                { Header: common("actions"), accessor: "actions" },
+              ]}
+            />
           )}
         </Tab.Panel>
-        <PendingBusinessesTab
-          onSuccess={(business, newB) =>
-            setBusinesses((prev) => {
-              const idx = prev.indexOf(business);
-
-              prev[idx] = newB;
-              return prev;
-            })
-          }
-          businesses={pendingBusinesses}
-        />
+        <PendingBusinessesTab setBusinesses={setBusinesses} businesses={pendingBusinesses} />
       </TabsContainer>
 
       <Modal

@@ -13,6 +13,22 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
 
+const businessInclude = {
+  citizen: {
+    select: {
+      id: true,
+      name: true,
+      surname: true,
+    },
+  },
+  business: true,
+  role: {
+    include: {
+      value: true,
+    },
+  },
+};
+
 @UseBeforeEach(IsAuth)
 @Controller("/businesses")
 export class BusinessController {
@@ -272,21 +288,7 @@ export class BusinessController {
         roleId: employeeRole.id,
         whitelistStatus: business.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
-      include: {
-        citizen: {
-          select: {
-            id: true,
-            name: true,
-            surname: true,
-          },
-        },
-        business: true,
-        role: {
-          include: {
-            value: true,
-          },
-        },
-      },
+      include: businessInclude,
     });
 
     await prisma.business.update({
@@ -389,9 +391,10 @@ export class BusinessController {
         roleId: ownerRole.id,
         canCreatePosts: true,
       },
+      include: businessInclude,
     });
 
-    await prisma.business.update({
+    const updated = await prisma.business.update({
       where: {
         id: business.id,
       },
@@ -404,10 +407,6 @@ export class BusinessController {
       },
     });
 
-    if (businessWhitelisted) {
-      throw new BadRequest("businessCreatedButPending");
-    }
-
-    return { id: business.id, employeeId: employee.id };
+    return { business: updated, id: business.id, employee };
   }
 }
