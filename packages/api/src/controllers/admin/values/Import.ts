@@ -70,8 +70,6 @@ const typeHandlers: Partial<
   Record<ValueType | "GENERIC", (body: any, valueType?: ValueType) => Promise<void>>
 > = {
   VEHICLE: async (body) => {
-    console.log({ body });
-
     const error = validate(HASH_SCHEMA_ARR, body, true);
     if (error) {
       throw new BadRequest(error);
