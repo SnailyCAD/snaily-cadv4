@@ -99,10 +99,14 @@ export default function ManageBusinesses({ businesses: data }: Props) {
             <p className="mt-5">{t("noBusinesses")}</p>
           ) : (
             <Table
-              defaultSort={{
-                columnId: "status",
-                descending: false,
-              }}
+              defaultSort={
+                businessWhitelisted
+                  ? {
+                      columnId: "status",
+                      descending: false,
+                    }
+                  : undefined
+              }
               data={businesses.map((business) => ({
                 name: business.name,
                 owner: `${business.citizen.name} ${business.citizen.surname}`,
@@ -124,7 +128,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 { Header: common("name"), accessor: "name" },
                 { Header: t("owner"), accessor: "owner" },
                 { Header: t("user"), accessor: "user" },
-                { Header: t("status"), accessor: "status" },
+                businessWhitelisted ? { Header: t("status"), accessor: "status" } : null,
                 { Header: t("whitelisted"), accessor: "whitelisted" },
                 { Header: common("actions"), accessor: "actions" },
               ]}

@@ -48,7 +48,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
   const data = React.useMemo(() => props.data, [props.data]);
 
   const columns = React.useMemo(
-    () => (props.columns.filter(Boolean) as Props["columns"]) ?? [],
+    () => props.columns.filter((v) => v !== null) ?? [],
     [props.columns],
   );
 
