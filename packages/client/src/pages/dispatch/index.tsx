@@ -1,6 +1,5 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
@@ -24,6 +23,7 @@ import { DispatchAOP } from "components/dispatch/DispatchAOP";
 import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/useSignal100";
 import { usePanicButton } from "hooks/usePanicButton";
+import { Title } from "components/shared/Title";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -82,9 +82,7 @@ export default function OfficerDashboard(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("dispatch")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("dispatch")}</Title>
 
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}

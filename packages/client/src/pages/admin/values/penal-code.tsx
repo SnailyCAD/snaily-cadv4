@@ -12,7 +12,7 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
-import Head from "next/head";
+
 import { Table } from "components/table/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
@@ -21,6 +21,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/ManagePenalCodeGroup";
 import { AlertModal } from "components/modal/AlertModal";
 import { useRouter } from "next/router";
+import { Title } from "components/shared/Title";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/ManagePenalCode")).ManagePenalCode;
@@ -119,9 +120,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{typeT("MANAGE")} - SnailyCAD</title>
-      </Head>
+      <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>

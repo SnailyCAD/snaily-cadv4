@@ -1,14 +1,12 @@
 import { Layout } from "components/Layout";
+import { Title } from "components/shared/Title";
 import { getTranslations } from "lib/getTranslation";
 import { GetStaticProps } from "next";
-import Head from "next/head";
 
 export default function FourOhFour() {
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>Forbidden.</title>
-      </Head>
+      <Title>Forbidden.</Title>
 
       <h1 className="text-2xl font-semibold">Forbidden.</h1>
     </Layout>

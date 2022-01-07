@@ -1,7 +1,6 @@
 import * as React from "react";
 import type { GetServerSideProps } from "next";
 import Link from "next/link";
-import Head from "next/head";
 import { PersonFill } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
@@ -16,6 +15,7 @@ import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { useImageUrl } from "hooks/useImageUrl";
+import { Title } from "components/shared/Title";
 
 const RegisterVehicleModal = dynamic(
   async () => (await import("components/citizen/modals/RegisterVehicleModal")).RegisterVehicleModal,
@@ -44,9 +44,7 @@ export default function CitizenPage({ citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("citizens")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("citizens")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">
         Citizens{showAop ? <span> - AOP: {areaOfPlay}</span> : null}

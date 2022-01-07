@@ -6,7 +6,6 @@ import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
@@ -22,6 +21,7 @@ import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
 import { Table } from "components/table/Table";
 import { Toggle } from "components/form/Toggle";
+import { Title } from "components/shared/Title";
 
 type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
 
@@ -65,11 +65,9 @@ export default function SupervisorPanelPage({ unit }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>
-          {common("manage")} {makeUnitName(unit)} - SnailyCAD
-        </title>
-      </Head>
+      <Title>
+        {common("manage")} {makeUnitName(unit)}
+      </Title>
 
       <h1 className="mb-3 text-2xl font-semibold capitalize">{makeUnitName(unit)}</h1>
 

@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -14,6 +13,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -49,9 +49,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("impoundLot")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("impoundLot")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>
 

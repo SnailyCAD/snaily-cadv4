@@ -2,7 +2,6 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { PersonFill } from "react-bootstrap-icons";
 import format from "date-fns/format";
 import { GetServerSideProps } from "next";
@@ -25,6 +24,7 @@ import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
+import { Title } from "components/shared/Title";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -72,11 +72,9 @@ export default function CitizenId() {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>
-          {citizen.name} {citizen.surname} - SnailyCAD
-        </title>
-      </Head>
+      <Title>
+        {citizen.name} {citizen.surname}
+      </Title>
 
       <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">

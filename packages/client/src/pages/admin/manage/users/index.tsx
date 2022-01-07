@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import Head from "next/head";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
@@ -15,6 +14,7 @@ import { Button } from "components/Button";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 interface Props {
   users: User[];
@@ -36,9 +36,7 @@ export default function ManageUsers({ users: data }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("MANAGE_USERS")}</title>
-      </Head>
+      <Title>{t("MANAGE_USERS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
 

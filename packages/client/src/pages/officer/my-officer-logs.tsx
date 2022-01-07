@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -15,6 +14,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/table/Table";
 import { useImageUrl } from "hooks/useImageUrl";
 import { FullOfficer } from "state/dispatchState";
+import { Title } from "components/shared/Title";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: FullOfficer };
 
@@ -45,9 +45,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("myOfficerLogs")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("myOfficerLogs")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("myOfficerLogs")}</h1>

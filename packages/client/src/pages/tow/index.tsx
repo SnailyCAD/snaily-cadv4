@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { useListener } from "@casper124578/use-socket.io";
 import dynamic from "next/dynamic";
@@ -15,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
 import format from "date-fns/format";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -99,9 +99,7 @@ export default function Tow(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("tow")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("tow")}</Title>
 
       <header className="flex items-center justify-between mb-5">
         <h1 className="text-3xl font-semibold">{t("tow")}</h1>

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import Head from "next/head";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -17,6 +16,7 @@ import { useMounted, usePortal } from "@casper124578/useful";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });
 
@@ -67,9 +67,7 @@ export default function SupervisorPanelPage({ units }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("Management.MANAGE_UNITS")}</title>
-      </Head>
+      <Title>{t("Management.MANAGE_UNITS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
 
