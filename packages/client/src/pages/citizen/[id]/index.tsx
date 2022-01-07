@@ -23,6 +23,7 @@ import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -141,6 +142,7 @@ export default function CitizenId() {
               <span className="font-semibold">{t("phoneNumber")}: </span>
               {citizen.phoneNumber ?? common("none")}
             </p>
+            <ManageOccupationModal occupation={citizen.occupation} />
           </div>
         </div>
 
