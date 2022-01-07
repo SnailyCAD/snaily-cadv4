@@ -18,7 +18,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
         <h3 className="text-xl font-semibold">{t("Vehicles.registeredVehicles")}</h3>
 
         {vehicles.length <= 0 ? (
-          <p>{t("Leo.noVehiclesCitizen")}</p>
+          <p className="text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
         ) : (
           <Table
             data={vehicles.map((vehicle) => ({
@@ -45,7 +45,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
         <h3 className="text-xl font-semibold">{t("Weapons.registeredWeapons")}</h3>
 
         {weapons.length <= 0 ? (
-          <p>{t("Leo.noWeaponsCitizen")}</p>
+          <p className="text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
         ) : (
           <Table
             data={weapons.map((weapon) => ({

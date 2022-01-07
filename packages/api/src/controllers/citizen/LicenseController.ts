@@ -41,10 +41,10 @@ export class LicensesController {
         id: citizen.id,
       },
       data: {
-        ccwId: body.get("ccw"),
-        driversLicenseId: body.get("driversLicense"),
-        pilotLicenseId: body.get("pilotLicense"),
-        weaponLicenseId: body.get("weaponLicense"),
+        ccwId: body.get("ccw") || undefined,
+        driversLicenseId: body.get("driversLicense") || undefined,
+        pilotLicenseId: body.get("pilotLicense") || undefined,
+        weaponLicenseId: body.get("weaponLicense") || undefined,
       },
     });
 

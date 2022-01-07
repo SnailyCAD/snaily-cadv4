@@ -59,6 +59,8 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
         <span className="flex items-center gap-1 text-gray-300/70">
           {isLeo ? null : (
             <Button
+              aria-label={t("manageOccupation")}
+              title={t("manageOccupation")}
               onClick={() => openModal(ModalIds.ManageOccupation)}
               variant="default"
               className="px-1.5"
