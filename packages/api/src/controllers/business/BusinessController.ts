@@ -21,24 +21,13 @@ export class BusinessController {
     const businesses = await prisma.employee.findMany({
       where: {
         userId: ctx.get("user").id,
-        NOT: {
-          whitelistStatus: WhitelistStatus.DECLINED,
-        },
+        business: { NOT: { status: WhitelistStatus.DECLINED } },
+        NOT: { whitelistStatus: WhitelistStatus.DECLINED },
       },
       include: {
-        citizen: {
-          select: {
-            id: true,
-            name: true,
-            surname: true,
-          },
-        },
+        citizen: { select: { id: true, name: true, surname: true } },
         business: true,
-        role: {
-          include: {
-            value: true,
-          },
-        },
+        role: { include: { value: true } },
       },
     });
 
@@ -226,8 +215,12 @@ export class BusinessController {
       },
     });
 
-    if (!business) {
+    if (!business || business.status === "DECLINED") {
       throw new NotFound("notFound");
+    }
+
+    if (business.status === "PENDING") {
+      throw new BadRequest("businessIsPending");
     }
 
     const inBusiness = await prisma.employee.findFirst({
@@ -330,7 +323,10 @@ export class BusinessController {
       throw new NotFound("notFound");
     }
 
-    const { miscCadSettings } = ctx.get("cad") as { miscCadSettings: MiscCadSettings | null };
+    const { miscCadSettings, businessWhitelisted } = ctx.get("cad") as {
+      businessWhitelisted: boolean;
+      miscCadSettings: MiscCadSettings | null;
+    };
 
     if (miscCadSettings && miscCadSettings.maxBusinessesPerCitizen !== null) {
       const length = await prisma.business.count({
@@ -351,6 +347,7 @@ export class BusinessController {
         address: body.get("address"),
         whitelisted: body.get("whitelisted") ?? false,
         userId: ctx.get("user").id,
+        status: businessWhitelisted ? "PENDING" : "ACCEPTED",
       },
     });
 
@@ -406,6 +403,10 @@ export class BusinessController {
         },
       },
     });
+
+    if (businessWhitelisted) {
+      throw new BadRequest("businessCreatedButPending");
+    }
 
     return { id: business.id, employeeId: employee.id };
   }

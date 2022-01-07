@@ -10,6 +10,7 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
+import { validateBusinessAcceptance } from "utils/businesses";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
@@ -21,10 +22,11 @@ export class BusinessPostsController {
     @PathParams("id") businessId: string,
   ) {
     const error = validate(CREATE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findUnique({
       where: {
@@ -61,10 +63,11 @@ export class BusinessPostsController {
     @PathParams("postId") postId: string,
   ) {
     const error = validate(CREATE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
@@ -118,6 +121,8 @@ export class BusinessPostsController {
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, id);
 
     const post = await prisma.businessPost.findFirst({
       where: {

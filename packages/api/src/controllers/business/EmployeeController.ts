@@ -7,6 +7,7 @@ import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA, validate } from "@snailyc
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
+import { validateBusinessAcceptance } from "utils/businesses";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -19,10 +20,11 @@ export class BusinessEmployeeController {
     @BodyParams() body: JsonRequestBody,
   ) {
     const error = validate(UPDATE_EMPLOYEE_SCHEMA, body.toJSON(), true);
-
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
@@ -97,10 +99,11 @@ export class BusinessEmployeeController {
     @BodyParams() body: JsonRequestBody,
   ) {
     const error = validate(FIRE_EMPLOYEE_SCHEMA, body.toJSON(), true);
-
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
@@ -155,6 +158,8 @@ export class BusinessEmployeeController {
     if (error) {
       throw new BadRequest(error);
     }
+
+    await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
