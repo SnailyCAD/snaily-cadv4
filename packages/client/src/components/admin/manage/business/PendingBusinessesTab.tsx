@@ -8,7 +8,7 @@ import { WhitelistStatus } from "types/prisma";
 
 interface Props {
   businesses: FullBusiness[];
-  onSuccess(business: FullBusiness): void;
+  onSuccess(prevBusiness: FullBusiness, business: FullBusiness): void;
 }
 
 export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
@@ -17,14 +17,14 @@ export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
 
   const { state, execute } = useFetch();
 
-  async function acceptOrDecline(id: string, type: WhitelistStatus) {
-    const { json } = await execute(`/admin/manage/businesses/${id}`, {
+  async function acceptOrDecline(business: FullBusiness, type: WhitelistStatus) {
+    const { json } = await execute(`/admin/manage/businesses/${business.id}`, {
       method: "PUT",
       data: { status: type },
     });
 
     if (json.id) {
-      onSuccess(json);
+      onSuccess(business, json);
     }
   }
 
@@ -41,7 +41,7 @@ export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
           actions: (
             <>
               <Button
-                onClick={() => acceptOrDecline(business.id, "ACCEPTED")}
+                onClick={() => acceptOrDecline(business, "ACCEPTED")}
                 disabled={state === "loading"}
                 small
                 variant="success"
@@ -50,7 +50,7 @@ export function PendingBusinessesTab({ onSuccess, businesses }: Props) {
               </Button>
               <Button
                 className="ml-2"
-                onClick={() => acceptOrDecline(business.id, "DECLINED")}
+                onClick={() => acceptOrDecline(business, "DECLINED")}
                 disabled={state === "loading"}
                 small
                 variant="danger"

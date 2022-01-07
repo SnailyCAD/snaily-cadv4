@@ -7,25 +7,25 @@ import { userProperties } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 
+const businessInclude = {
+  citizen: {
+    select: {
+      name: true,
+      surname: true,
+      id: true,
+    },
+  },
+  user: {
+    select: userProperties,
+  },
+};
+
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/businesses")
 export class ManageBusinessesController {
   @Get("/")
   async getBusinesses() {
-    const businesses = await prisma.business.findMany({
-      include: {
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-        user: {
-          select: userProperties,
-        },
-      },
-    });
+    const businesses = await prisma.business.findMany({ include: businessInclude });
 
     return businesses;
   }
@@ -45,6 +45,7 @@ export class ManageBusinessesController {
     const updated = await prisma.business.update({
       where: { id: businessId },
       data: { status: body.get("status") },
+      include: businessInclude,
     });
 
     return updated;

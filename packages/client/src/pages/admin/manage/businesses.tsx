@@ -87,8 +87,8 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       <TabsContainer
         tabs={
           businessWhitelisted
-            ? ["All businesses", `Pending Businesses (${pendingBusinesses.length})`]
-            : ["All Businesses"]
+            ? [t("allBusinesses"), `${t("pendingBusinesses")} (${pendingBusinesses.length})`]
+            : [t("allBusinesses")]
         }
       >
         <Tab.Panel>
@@ -143,13 +143,14 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           )}
         </Tab.Panel>
         <PendingBusinessesTab
-          onSuccess={(business) => {
+          onSuccess={(business, newB) =>
             setBusinesses((prev) => {
-              const idx = prev.findIndex((b) => b.id === business.id);
-              prev[idx] = business;
+              const idx = prev.indexOf(business);
+
+              prev[idx] = newB;
               return prev;
-            });
-          }}
+            })
+          }
           businesses={pendingBusinesses}
         />
       </TabsContainer>
