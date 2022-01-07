@@ -15,19 +15,28 @@ const ungroupedGroup = {
   name: "Ungrouped",
 } as PenalCodeGroup;
 
+const allPenalCodesGroup = {
+  id: "all",
+  name: "All",
+} as PenalCodeGroup;
+
 export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
   const { penalCodeGroups } = useValues();
-  const [currentGroup, setCurrentGroup] = React.useState<SelectValue | null>(null);
+  const [currentGroup, setCurrentGroup] = React.useState<string | null>("all");
 
-  const groups = [ungroupedGroup, ...penalCodeGroups];
-  const [codes, setCodes] = React.useState<PenalCode[]>([]);
+  const groups = [allPenalCodesGroup, ungroupedGroup, ...penalCodeGroups];
+  const [codes, setCodes] = React.useState<PenalCode[]>(penalCodes);
 
   function onGroupChange(e: { target: { value: string } }) {
-    const group = e.target;
-    console.log({ group });
+    const group = e.target.value;
 
-    setCurrentGroup(e.target);
-    setCodes(penalCodes.filter((v) => (v.groupId || "ungrouped") === group));
+    setCurrentGroup(e.target.value);
+
+    if (group === "all") {
+      setCodes(penalCodes);
+    } else {
+      setCodes(penalCodes.filter((v) => (v.groupId || "ungrouped") === group));
+    }
   }
 
   return (
@@ -48,10 +57,10 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
           extra={{ showPenalCodeDescriptions: true }}
           value={value}
           name="violations"
+          onChange={handleChange}
           isMulti
           values={codes.map((value) => ({
             label: value.title,
-            // value: "title" in value ? { ...value, type: "PN" } : { ...value, type: "PNG" },
             value,
           }))}
         />
