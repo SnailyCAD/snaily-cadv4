@@ -18,6 +18,7 @@ import { InputSuggestions } from "components/form/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./CreateRecord/PenalCodesTable";
+import { SelectPenalCode } from "./CreateRecord/SelectPenalCode";
 
 export function CreateTicketModal({ type }: { type: RecordType }) {
   const { isOpen, closeModal, getPayload } = useModal();
@@ -133,7 +134,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
             </FormField>
 
             <FormField errorMessage={errors.violations as string} label={t("violations")}>
-              <Select
+              {/* <Select
                 extra={{ showPenalCodeDescriptions: true }}
                 value={values.violations}
                 name="violations"
@@ -143,6 +144,11 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
                   label: value.title,
                   value,
                 }))}
+              /> */}
+              <SelectPenalCode
+                penalCodes={penalCodes}
+                value={values.violations}
+                handleChange={handleChange}
               />
             </FormField>
 
