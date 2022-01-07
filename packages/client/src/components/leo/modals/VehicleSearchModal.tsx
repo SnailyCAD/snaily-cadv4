@@ -8,12 +8,13 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RegisteredVehicle, Value } from "types/prisma";
+import { Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
+import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -164,6 +165,8 @@ export function VehicleSearchModal() {
                     </span>
                   </li>
                 </ul>
+
+                <TruckLogsTable results={results} />
               </div>
             ) : null}
 
@@ -206,7 +209,8 @@ export function VehicleSearchModal() {
   );
 }
 
-interface VehicleSearchResult extends RegisteredVehicle {
+export interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;
   registrationStatus: Value<"LICENSE">;
+  TruckLog: TruckLog[];
 }
