@@ -2,7 +2,7 @@ import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { Select, SelectValue } from "components/form/Select";
+import { SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
