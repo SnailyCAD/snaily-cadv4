@@ -27,6 +27,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   discordWebhookURL: true,
   miscCadSettings: true,
   miscCadSettingsId: true,
+  logoId: true,
 });
 
 @Middleware()

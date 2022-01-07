@@ -7,7 +7,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/Input";
 import { FormRow } from "components/form/FormRow";
@@ -23,8 +23,10 @@ import { requestAll } from "lib/utils";
 import { ApiTokenTab } from "components/admin/manage/ApiTokenTab";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
+import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
 
 export default function CadSettings() {
+  const [logo, setLogo] = React.useState<(File | string) | null>(null);
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
 
@@ -33,13 +35,36 @@ export default function CadSettings() {
 
   const SETTINGS_TABS = [t("GENERAL_SETTINGS"), t("FEATURES"), t("MISC_SETTINGS"), "Api Token"];
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const fd = new FormData();
+    const validatedImage = validateFile(logo, helpers);
+
+    if (validatedImage) {
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+    }
+
     const { json } = await execute("/admin/manage/cad-settings", {
       method: "PUT",
       data: values,
     });
 
     if (json?.id) {
+      if (validatedImage && typeof validatedImage === "object") {
+        const {
+          json: { logoId },
+        } = await execute("/admin/manage/cad-settings/image", {
+          method: "POST",
+          data: fd,
+        });
+
+        json.logoId = logoId;
+      }
+
       setCad({ ...cad, ...json });
     }
   }
@@ -62,6 +87,7 @@ export default function CadSettings() {
     whitelisted: cad.whitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
     roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
+    logoId: cad.logoId ?? "",
   };
 
   return (
@@ -79,6 +105,8 @@ export default function CadSettings() {
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
               <form className="mt-3" onSubmit={handleSubmit}>
+                <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
+
                 <FormField errorMessage={errors.name} label="CAD Name">
                   <Input onChange={handleChange} value={values.name} name="name" />
                 </FormField>

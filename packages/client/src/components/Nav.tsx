@@ -13,6 +13,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { TowDropdown } from "./nav-dropdowns/TowDropdown";
 import { DispatchDropdown } from "./nav-dropdowns/DispatchDropdown";
 import { useTranslations } from "next-intl";
+import { useImageUrl } from "hooks/useImageUrl";
 
 export function Nav() {
   const { user, cad } = useAuth();
@@ -21,19 +22,27 @@ export function Nav() {
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
 
+  const { makeImageUrl } = useImageUrl();
+  const url = cad && makeImageUrl("cad", cad.logoId);
+
   return (
     <nav className="bg-white dark:bg-[#171717] shadow-sm">
       <div className="max-w-[100rem] mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
-            <h1 className="text-2xl">
-              <a
-                href="/citizen"
-                className="flex items-center py-3 font-bold text-gray-800 dark:text-white"
-              >
-                {cad?.name || "SnailyCAD"}
-              </a>
-            </h1>
+            <div className="flex items-center gap-1">
+              {url ? (
+                <img width={30} height={30} className="max-h-[30px] min-w-[30px]" src={url} />
+              ) : null}
+              <h1 className="text-2xl">
+                <a
+                  href="/citizen"
+                  className="flex items-center py-3 font-bold text-gray-800 dark:text-white"
+                >
+                  {cad?.name || "SnailyCAD"}
+                </a>
+              </h1>
+            </div>
 
             <ul className="items-center hidden space-x-1 md:flex">
               <CitizenDropdown />

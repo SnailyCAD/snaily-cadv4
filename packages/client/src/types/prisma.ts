@@ -14,6 +14,7 @@ export type cad = {
   steamApiKey: string | null;
   registrationCode: string | null;
   discordWebhookURL: string | null;
+  logoId: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
   apiTokenId: string | null;

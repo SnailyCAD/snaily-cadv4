@@ -9,8 +9,11 @@ export function useImageUrl() {
     setMounted(true);
   }, []);
 
-  function makeImageUrl(type: "citizens" | "users" | "bleeter" | "units", id: string) {
-    if (!mounted) return;
+  function makeImageUrl(
+    type: "citizens" | "users" | "bleeter" | "units" | "cad",
+    id: string | null,
+  ) {
+    if (!mounted || !id) return;
 
     if (id?.match(IMGUR_REGEX)) {
       return id;
