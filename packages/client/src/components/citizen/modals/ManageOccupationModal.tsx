@@ -56,8 +56,8 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
   return (
     <>
       <p className="flex items-start gap-1">
-        {isLeo ? null : (
-          <span className="flex items-center gap-1">
+        <span className="flex items-center gap-1">
+          {isLeo ? null : (
             <Button
               onClick={() => openModal(ModalIds.ManageOccupation)}
               variant="default"
@@ -65,9 +65,9 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
             >
               <Pencil width={18} height={18} />
             </Button>
-            <span className="font-semibold">{t("occupation")}: </span>
-          </span>
-        )}
+          )}
+          <span className="font-semibold">{t("occupation")}: </span>
+        </span>
         <span className="max-w-[400px]">{occupation ?? common("none")}</span>
       </p>
 

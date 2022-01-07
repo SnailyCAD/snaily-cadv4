@@ -22,6 +22,7 @@ import { useAuth } from "context/AuthContext";
 import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/InputSuggestions";
+import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 
 const enum Toggled {
   VEHICLES,
@@ -283,6 +284,7 @@ export function NameSearchModal() {
                         <span className="font-semibold">{cT("address")}: </span>
                         {currentResult.address}
                       </p>
+                      <ManageOccupationModal isLeo occupation={currentResult.occupation} />
                     </div>
                   </div>
 
