@@ -109,6 +109,7 @@ export type Citizen = {
   phoneNumber: string | null;
   /** nullable since no default is set. */
   socialSecurityNumber: string | null;
+  occupation: string | null;
 };
 
 /**

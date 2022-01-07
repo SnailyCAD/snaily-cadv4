@@ -143,6 +143,7 @@ model Citizen {
   arrested             Boolean?                      @default(false)
   phoneNumber          String?
   dateOfDead           DateTime?
+  occupation           String?                       @db.Text
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   medicalRecords       MedicalRecord[]
