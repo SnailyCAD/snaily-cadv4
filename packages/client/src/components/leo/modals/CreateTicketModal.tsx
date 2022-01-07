@@ -134,17 +134,6 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
             </FormField>
 
             <FormField errorMessage={errors.violations as string} label={t("violations")}>
-              {/* <Select
-                extra={{ showPenalCodeDescriptions: true }}
-                value={values.violations}
-                name="violations"
-                onChange={handleChange}
-                isMulti
-                values={penalCodes.map((value) => ({
-                  label: value.title,
-                  value,
-                }))}
-              /> */}
               <SelectPenalCode
                 penalCodes={penalCodes}
                 value={values.violations}
