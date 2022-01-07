@@ -85,6 +85,7 @@ export default function CadSettings() {
     discordWebhookURL: cad.discordWebhookURL ?? "",
     towWhitelisted: cad.towWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
+    businessWhitelisted: cad.businessWhitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
     roleplayEnabled: cad.miscCadSettings?.roleplayEnabled ?? true,
     logoId: cad.logoId ?? "",
@@ -166,6 +167,14 @@ export default function CadSettings() {
                       name="whitelisted"
                       onClick={handleChange}
                       toggled={values.whitelisted}
+                    />
+                  </FormField>
+
+                  <FormField errorMessage={errors.businessWhitelisted} label="Business Whitelisted">
+                    <Toggle
+                      name="businessWhitelisted"
+                      onClick={handleChange}
+                      toggled={values.businessWhitelisted}
                     />
                   </FormField>
                 </FormRow>

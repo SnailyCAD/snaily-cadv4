@@ -31,6 +31,7 @@
     "pendingEmployees": "Pending Employees",
     "noPendingEmployees": "There are no employees pending access.",
     "businessIsWhitelisted": "This business is whitelisted. You will be able to view it once you're accepted.",
+    "businessWhitelistedCAD": "This business is still awaiting approval of an administrator.",
     "postTitle": "Post Title",
     "postBody": "Post Body",
     "alert_fireEmployee": "Are you sure you want to fire <span>{employee}</span>? This action cannot be undone.",

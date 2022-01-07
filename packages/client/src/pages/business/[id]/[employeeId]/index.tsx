@@ -82,6 +82,21 @@ export default function BusinessId(props: Props) {
     );
   }
 
+  if (props.business?.status === whitelistStatus.PENDING) {
+    return (
+      <Layout className="dark:text-white">
+        <p>
+          {t("businessWhitelistedCAD")}{" "}
+          <Link href="/business">
+            <a href="/business" className="underline">
+              Return
+            </a>
+          </Link>
+        </p>
+      </Layout>
+    );
+  }
+
   return (
     <Layout className="dark:text-white">
       <Head>

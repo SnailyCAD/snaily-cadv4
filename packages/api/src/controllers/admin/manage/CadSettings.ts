@@ -56,6 +56,7 @@ export class ManageCitizensController {
         steamApiKey: body.get("steamApiKey"),
         towWhitelisted: body.get("towWhitelisted"),
         whitelisted: body.get("whitelisted"),
+        businessWhitelisted: body.get("businessWhitelisted"),
         registrationCode: body.get("registrationCode"),
         discordWebhookURL: body.get("discordWebhookURL"),
         miscCadSettings: {

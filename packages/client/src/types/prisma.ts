@@ -16,6 +16,7 @@ export type cad = {
   discordWebhookURL: string | null;
   logoId: string | null;
   whitelisted: boolean;
+  businessWhitelisted: boolean;
   towWhitelisted: boolean;
   apiTokenId: string | null;
   disabledFeatures: Feature[];
@@ -233,6 +234,7 @@ export type Business = {
   whitelisted: boolean;
   address: string;
   createdAt: Date;
+  status: WhitelistStatus | null;
 };
 
 /**

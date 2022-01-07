@@ -12,26 +12,27 @@ generator client {
 }
 
 model cad {
-  id                String           @id @default(cuid())
-  name              String           @db.VarChar(255)
-  owner             User             @relation(fields: [ownerId], references: [id])
-  ownerId           String
-  areaOfPlay        String?          @db.VarChar(255)
-  steamApiKey       String?          @db.VarChar(255)
-  discordWebhookURL String?          @db.VarChar(255)
-  whitelisted       Boolean          @default(false)
-  towWhitelisted    Boolean          @default(false)
-  maxPlateLength    Int              @default(8)
-  liveMapSocketURl  String?          @db.VarChar(255)
-  logoId            String?
-  registrationCode  String?
-  disabledFeatures  Feature[]
-  miscCadSettings   MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id])
-  miscCadSettingsId String?
-  apiToken          ApiToken?        @relation(fields: [apiTokenId], references: [id])
-  apiTokenId        String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @default(now()) @updatedAt
+  id                  String           @id @default(cuid())
+  name                String           @db.VarChar(255)
+  owner               User             @relation(fields: [ownerId], references: [id])
+  ownerId             String
+  areaOfPlay          String?          @db.VarChar(255)
+  steamApiKey         String?          @db.VarChar(255)
+  discordWebhookURL   String?          @db.VarChar(255)
+  whitelisted         Boolean          @default(false)
+  towWhitelisted      Boolean          @default(false)
+  businessWhitelisted Boolean          @default(false)
+  maxPlateLength      Int              @default(8)
+  liveMapSocketURl    String?          @db.VarChar(255)
+  logoId              String?
+  registrationCode    String?
+  disabledFeatures    Feature[]
+  miscCadSettings     MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id])
+  miscCadSettingsId   String?
+  apiToken            ApiToken?        @relation(fields: [apiTokenId], references: [id])
+  apiTokenId          String?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @default(now()) @updatedAt
 }
 
 model MiscCadSettings {
@@ -451,16 +452,17 @@ model TaxiCall {
 
 // businesses
 model Business {
-  id            String         @id @default(cuid())
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String           @id @default(cuid())
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  citizen       Citizen        @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen       Citizen          @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId     String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now()) @updatedAt
-  name          String         @db.VarChar(255)
-  whitelisted   Boolean        @default(false)
-  address       String         @db.Text
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+  name          String           @db.VarChar(255)
+  whitelisted   Boolean          @default(false)
+  address       String           @db.Text
+  status        WhitelistStatus?
   businessPosts BusinessPost[]
   employees     Employee[]
 }

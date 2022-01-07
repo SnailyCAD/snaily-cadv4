@@ -172,9 +172,10 @@ export default function CitizenId() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
   const [data, values] = await requestAll(req, [
-    [`/citizen/${query.id}`, []],
+    [`/citizen/${query.id}`, null],
     ["/admin/values/weapon?paths=license,vehicle,driverslicense_category,blood_group", []],
   ]);
+
   return {
     props: {
       session: await getSessionUser(req),
