@@ -147,7 +147,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeDeputies,
       activeOfficers,
       messages: {
-        ...(await getTranslations(["citizen", "ems-fd", "leo", "calls", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "truck-logs", "ems-fd", "leo", "calls", "common"],
+          locale,
+        )),
       },
     },
   };
