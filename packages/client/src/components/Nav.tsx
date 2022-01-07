@@ -30,19 +30,23 @@ export function Nav() {
       <div className="max-w-[100rem] mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
-            <div className="flex items-center gap-1">
-              {url ? (
-                <img width={30} height={30} className="max-h-[30px] min-w-[30px]" src={url} />
-              ) : null}
-              <h1 className="text-2xl">
-                <a
-                  href="/citizen"
-                  className="flex items-center py-3 font-bold text-gray-800 dark:text-white"
-                >
-                  {cad?.name || "SnailyCAD"}
-                </a>
-              </h1>
-            </div>
+            <h1 className="text-2xl">
+              <a
+                href="/citizen"
+                className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
+              >
+                {url ? (
+                  <img
+                    alt={cad?.name || "SnailyCAD"}
+                    width={30}
+                    height={30}
+                    className="max-h-[30px] min-w-[30px]"
+                    src={url}
+                  />
+                ) : null}
+                {cad?.name || "SnailyCAD"}
+              </a>
+            </h1>
 
             <ul className="items-center hidden space-x-1 md:flex">
               <CitizenDropdown />
