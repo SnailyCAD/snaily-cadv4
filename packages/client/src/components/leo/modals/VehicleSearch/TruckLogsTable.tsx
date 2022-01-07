@@ -1,5 +1,6 @@
 import { Table } from "components/table/Table";
 import { compareDesc } from "date-fns";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
 import { VehicleSearchResult } from "../VehicleSearchModal";
 
@@ -9,9 +10,11 @@ interface Props {
 
 export function TruckLogsTable({ results }: Props) {
   const t = useTranslations("TruckLogs");
+  const { TRUCK_LOGS } = useFeatureEnabled();
   const truckLogs = results.TruckLog;
 
-  if (truckLogs.length <= 0) {
+  /** return null if truck-logs are disabled, or if there are no truck-logs for this plate. */
+  if (!TRUCK_LOGS || truckLogs.length <= 0) {
     return null;
   }
 
