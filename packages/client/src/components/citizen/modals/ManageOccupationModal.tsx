@@ -56,7 +56,7 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
   return (
     <>
       <p className="flex items-start gap-1">
-        <span className="flex items-center gap-1">
+        <span className="flex items-center gap-1 text-gray-300/70">
           {isLeo ? null : (
             <Button
               onClick={() => openModal(ModalIds.ManageOccupation)}
