@@ -83,7 +83,7 @@ export default function BusinessPage(props: Props) {
       </section>
 
       <JoinBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
-      <CreateBusinessModal />
+      <CreateBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
     </Layout>
   );
 }

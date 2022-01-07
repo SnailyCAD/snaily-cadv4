@@ -82,10 +82,12 @@ export function JoinBusinessModal({ onCreate }: Props) {
 
             <FormField errorMessage={errors.businessId} label={t("business")}>
               <Select
-                values={joinableBusinesses.map((business) => ({
-                  label: business.name,
-                  value: business.id,
-                }))}
+                values={joinableBusinesses
+                  .filter((v) => v.status !== "DECLINED")
+                  .map((business) => ({
+                    label: business.name,
+                    value: business.id,
+                  }))}
                 name="businessId"
                 onChange={handleChange}
                 value={values.businessId}

@@ -166,8 +166,8 @@ export function ActiveOfficers() {
                       <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
                       <td>{!("officers" in officer) && officer.department.value.value}</td>
                       <td>{!("officers" in officer) && officer.division.value.value}</td>
-                      <td className="flex items-center">
-                        {useDot ? (
+                      <td className={useDot ? "flex items-center" : undefined}>
+                        {useDot && officer.status?.color ? (
                           <span
                             style={{ background: officer.status?.color }}
                             className="block w-3 h-3 mr-2 rounded-full"

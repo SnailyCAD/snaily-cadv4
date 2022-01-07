@@ -1,4 +1,5 @@
 import { Button } from "components/Button";
+import { useAuth } from "context/AuthContext";
 import Link from "next/link";
 import { FullEmployee } from "state/businessState";
 import { Business, whitelistStatus } from "types/prisma";
@@ -11,12 +12,24 @@ interface Props {
 export function BusinessCard({ employee }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
+  const { cad } = useAuth();
 
-  const isDisabled =
-    employee.business.whitelisted && employee.whitelistStatus === whitelistStatus.PENDING;
+  const businessWhitelisted = cad?.businessWhitelisted ?? false;
+
+  /** button is disabled due to the business awaiting approval from an admin */
+  const isDisabledDueToPending =
+    businessWhitelisted && employee.business.status === whitelistStatus.PENDING;
+
+  /** button is disabled due to the employee awaiting approval from the business owner */
+  const isDisabledDueToEmployeePending = employee.whitelistStatus === whitelistStatus.PENDING;
+
+  const isDisabled = isDisabledDueToPending || isDisabledDueToEmployeePending;
+  const disabledMessage = isDisabledDueToEmployeePending
+    ? t("businessIsWhitelisted")
+    : t("businessWhitelistedCAD");
 
   return (
-    <li className="flex items-baseline justify-between p-4 rounded-md bg-gray-200/80">
+    <li className="flex items-baseline justify-between p-4 rounded-md bg-gray-200/80 dark:bg-gray-2 shadow-sm">
       <div>
         <p>
           <span className="font-semibold">{t("business")}: </span> {employee.business.name}
@@ -32,9 +45,9 @@ export function BusinessCard({ employee }: Props) {
         </p>
       </div>
 
-      <Link href={`/business/${employee.businessId}/${employee.id}`}>
+      <Link href={isDisabled ? "#" : `/business/${employee.businessId}/${employee.id}`}>
         <a>
-          <Button title={isDisabled ? t("businessIsWhitelisted") : ""} disabled={isDisabled}>
+          <Button title={disabledMessage} disabled={isDisabled}>
             {common("view")}
           </Button>
         </a>

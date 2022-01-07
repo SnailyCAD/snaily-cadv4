@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Disclosure } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
@@ -15,9 +15,16 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
+import { TabsContainer } from "components/tabs/TabsContainer";
+import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
+import { useAuth } from "context/AuthContext";
+import { Table } from "components/table/Table";
 
-type FullBusiness = Business & { user: User; citizen: Pick<Citizen, "id" | "name" | "surname"> };
+export type FullBusiness = Business & {
+  user: User;
+  citizen: Pick<Citizen, "id" | "name" | "surname">;
+};
 
 interface Props {
   businesses: FullBusiness[];
@@ -28,12 +35,15 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const [tempValue, setTempValue] = React.useState<FullBusiness | null>(null);
   const [reason, setReason] = React.useState("");
   const reasonRef = React.useRef<HTMLInputElement>(null);
+  const { cad } = useAuth();
 
   const { state, execute } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+  const businessWhitelisted = cad?.businessWhitelisted ?? false;
+  const pendingBusinesses = businesses.filter((v) => v.status === "PENDING");
 
   function handleDeleteClick(value: FullBusiness) {
     setTempValue(value);
@@ -73,51 +83,60 @@ export default function ManageBusinesses({ businesses: data }: Props) {
         <title>{t("MANAGE_BUSINESSES")}</title>
       </Head>
 
-      <h1 className="text-3xl font-semibold">{t("MANAGE_BUSINESSES")}</h1>
+      <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 
-      {businesses.length <= 0 ? (
-        <p className="mt-5">{t("noBusinesses")}</p>
-      ) : (
-        <ul className="mt-5">
-          {businesses.map((business, idx) => (
-            <li
-              className="flex flex-col w-full p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-              key={business.id}
-            >
-              <Disclosure>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-gray-500 select-none">{idx + 1}.</span>
-                    <span className="ml-2">{business.name}</span>
-                  </div>
+      <TabsContainer
+        tabs={
+          businessWhitelisted
+            ? [t("allBusinesses"), `${t("pendingBusinesses")} (${pendingBusinesses.length})`]
+            : [t("allBusinesses")]
+        }
+      >
+        <Tab.Panel className="mt-3">
+          <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
 
-                  <div>
-                    <Disclosure.Button as={Button}>{t("viewInfo")}</Disclosure.Button>
-                    <Button
-                      onClick={() => handleDeleteClick(business)}
-                      variant="danger"
-                      className="ml-2"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </div>
-                </div>
-
-                <Disclosure.Panel className="px-5">
-                  <p>
-                    <span className="font-semibold">{t("owner")}: </span>
-                    {business.citizen.name} {business.citizen.surname}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{t("user")}: </span>
-                    {business.user.username}
-                  </p>
-                </Disclosure.Panel>
-              </Disclosure>
-            </li>
-          ))}
-        </ul>
-      )}
+          {businesses.length <= 0 ? (
+            <p className="mt-5">{t("noBusinesses")}</p>
+          ) : (
+            <Table
+              defaultSort={
+                businessWhitelisted
+                  ? {
+                      columnId: "status",
+                      descending: false,
+                    }
+                  : undefined
+              }
+              data={businesses.map((business) => ({
+                name: business.name,
+                owner: `${business.citizen.name} ${business.citizen.surname}`,
+                user: business.user.username,
+                status: business.status,
+                whitelisted: common(yesOrNoText(business.whitelisted)),
+                actions: (
+                  <Button
+                    className="ml-2"
+                    onClick={() => handleDeleteClick(business)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                ),
+              }))}
+              columns={[
+                { Header: common("name"), accessor: "name" },
+                { Header: t("owner"), accessor: "owner" },
+                { Header: t("user"), accessor: "user" },
+                businessWhitelisted ? { Header: t("status"), accessor: "status" } : null,
+                { Header: t("whitelisted"), accessor: "whitelisted" },
+                { Header: common("actions"), accessor: "actions" },
+              ]}
+            />
+          )}
+        </Tab.Panel>
+        <PendingBusinessesTab setBusinesses={setBusinesses} businesses={pendingBusinesses} />
+      </TabsContainer>
 
       <Modal
         title={t("deleteBusiness")}

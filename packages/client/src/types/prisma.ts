@@ -14,7 +14,9 @@ export type cad = {
   steamApiKey: string | null;
   registrationCode: string | null;
   discordWebhookURL: string | null;
+  logoId: string | null;
   whitelisted: boolean;
+  businessWhitelisted: boolean;
   towWhitelisted: boolean;
   apiTokenId: string | null;
   disabledFeatures: Feature[];
@@ -109,6 +111,7 @@ export type Citizen = {
   phoneNumber: string | null;
   /** nullable since no default is set. */
   socialSecurityNumber: string | null;
+  occupation: string | null;
 };
 
 /**
@@ -231,6 +234,7 @@ export type Business = {
   whitelisted: boolean;
   address: string;
   createdAt: Date;
+  status: WhitelistStatus | null;
 };
 
 /**
@@ -536,6 +540,8 @@ export type TruckLog = {
   vehicleId: string | null;
   startedAt: string;
   endedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 /**

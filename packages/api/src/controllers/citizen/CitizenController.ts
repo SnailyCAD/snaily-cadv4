@@ -235,6 +235,7 @@ export class CitizenController {
       ethnicity,
       gender,
       phoneNumber,
+      occupation,
     } = body.toJSON();
 
     const date = new Date(dateOfBirth).getTime();
@@ -257,7 +258,8 @@ export class CitizenController {
         ethnicityId: ethnicity,
         genderId: gender,
         eyeColor,
-        phoneNumber: phoneNumber || null,
+        phoneNumber: phoneNumber || undefined,
+        occupation: occupation || undefined,
         imageId: validateImgurURL(body.get("image")),
         socialSecurityNumber: !citizen.socialSecurityNumber
           ? generateString(9, { numbersOnly: true })

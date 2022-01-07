@@ -6,13 +6,15 @@ import {
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth, setDiscordAUth } from "middlewares/index";
 import { BadRequest } from "@tsed/exceptions";
-import { UseBefore } from "@tsed/common";
+import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
+import fs from "node:fs";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -54,6 +56,7 @@ export class ManageCitizensController {
         steamApiKey: body.get("steamApiKey"),
         towWhitelisted: body.get("towWhitelisted"),
         whitelisted: body.get("whitelisted"),
+        businessWhitelisted: body.get("businessWhitelisted"),
         registrationCode: body.get("registrationCode"),
         discordWebhookURL: body.get("discordWebhookURL"),
         miscCadSettings: {
@@ -88,6 +91,39 @@ export class ManageCitizensController {
     });
 
     return updated;
+  }
+
+  @UseBefore(IsAuth)
+  @Post("/image")
+  async uploadImageToCAD(
+    @Context() ctx: Context,
+    @MultipartFile("image") file: PlatformMulterFile,
+  ) {
+    const cad = ctx.get("cad");
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new BadRequest("invalidImageType");
+    }
+
+    // "image/png" -> "png"
+    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
+    const path = `${process.cwd()}/public/cad/${cad.id}.${extension}`;
+
+    await fs.writeFileSync(path, file.buffer);
+
+    const data = await prisma.cad.update({
+      where: {
+        id: cad.id,
+      },
+      data: {
+        logoId: `${cad.id}.${extension}`,
+      },
+      select: {
+        logoId: true,
+      },
+    });
+
+    return data;
   }
 
   @UseBefore(IsAuth)

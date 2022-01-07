@@ -142,6 +142,7 @@ export class SearchController {
         citizen: true,
         model: { include: { value: true } },
         registrationStatus: true,
+        TruckLog: true,
       },
     };
 

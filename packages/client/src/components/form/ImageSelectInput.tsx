@@ -12,9 +12,10 @@ import { AllowedFileExtension, allowedFileExtensions, IMGUR_REGEX } from "@snail
 interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
   image: (File | string) | null;
+  label?: string;
 }
 
-export function ImageSelectInput({ image, setImage }: Props) {
+export function ImageSelectInput({ label, image, setImage }: Props) {
   const [useURL, setUseURL] = React.useState(false);
   const { errors, values, setFieldValue, handleChange } = useFormikContext<{ image: string }>();
   const common = useTranslations("Common");
@@ -32,7 +33,7 @@ export function ImageSelectInput({ image, setImage }: Props) {
   }
 
   return useURL ? (
-    <FormField optional errorMessage={errors.image} label={common("image")}>
+    <FormField optional errorMessage={errors.image} label={label ?? common("image")}>
       <div className="flex gap-2">
         <Input
           placeholder="https://i.imgur.com/xxxxxx"
@@ -52,7 +53,7 @@ export function ImageSelectInput({ image, setImage }: Props) {
     </FormField>
   ) : (
     <>
-      <FormField optional errorMessage={errors.image} label={common("image")}>
+      <FormField optional errorMessage={errors.image} label={label ?? common("image")}>
         <div className="flex">
           <Input
             style={{ width: "95%", marginRight: "0.5em" }}

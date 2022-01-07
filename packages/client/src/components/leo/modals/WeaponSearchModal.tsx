@@ -10,6 +10,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen, Value, Weapon } from "types/prisma";
+import { Infofield } from "components/shared/Infofield";
 
 export function WeaponSearchModal() {
   const { isOpen, closeModal } = useModal();
@@ -66,22 +67,20 @@ export function WeaponSearchModal() {
 
                 <ul className="mt-2">
                   <li>
-                    <span className="font-semibold">{wT("model")}: </span>
-                    {results.model.value.value}
+                    <Infofield label={wT("model")}>{results.model.value.value}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{wT("registrationStatus")}: </span>
-                    {results.registrationStatus.value}
+                    <Infofield label={wT("registrationStatus")}>
+                      {results.registrationStatus.value}
+                    </Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{wT("serialNumber")}: </span>
-                    {results.serialNumber}
+                    <Infofield label={wT("serialNumber")}>{results.serialNumber}</Infofield>
                   </li>
                   <li>
-                    <span className="font-semibold">{t("owner")}: </span>
-                    <span className="capitalize">
+                    <Infofield className="capitalize" label={t("owner")}>
                       {results.citizen.name} {results.citizen.surname}
-                    </span>
+                    </Infofield>
                   </li>
                 </ul>
               </div>

@@ -18,6 +18,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   maxPlateLength: true,
   towWhitelisted: true,
   whitelisted: true,
+  businessWhitelisted: true,
   disabledFeatures: true,
   liveMapSocketURl: user?.rank === Rank.OWNER,
   registrationCode: user?.rank === Rank.OWNER,
@@ -27,6 +28,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   discordWebhookURL: true,
   miscCadSettings: true,
   miscCadSettingsId: true,
+  logoId: true,
 });
 
 @Middleware()

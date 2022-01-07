@@ -72,7 +72,11 @@ export function RecordsArea({ warrants, records }: Props) {
         <section className="my-2 mb-5" key={title} id={title}>
           <h3 className="text-xl font-semibold">{title}</h3>
 
-          {data!.length <= 0 ? <p>{noValuesText}</p> : <RecordsTable data={data} />}
+          {data!.length <= 0 ? (
+            <p className="text-gray-400 my-2">{noValuesText}</p>
+          ) : (
+            <RecordsTable data={data} />
+          )}
         </section>
       ))}
 
@@ -80,7 +84,11 @@ export function RecordsArea({ warrants, records }: Props) {
         <section className="my-2 mb-5">
           <h3 className="text-xl font-semibold">{t("Leo.warrants")}</h3>
 
-          {warrants.length <= 0 ? <p>{t("Leo.noWarrants")}</p> : <WarrantsTable data={warrants} />}
+          {warrants.length <= 0 ? (
+            <p className="text-gray-400 my-2">{t("Leo.noWarrants")}</p>
+          ) : (
+            <WarrantsTable data={warrants} />
+          )}
         </section>
       ) : null}
 
