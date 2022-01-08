@@ -16,6 +16,9 @@ import { Button } from "components/Button";
 import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
+import { classNames } from "lib/classNames";
+import { useAuth } from "context/AuthContext";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const INITIAL_VALUES = {
   username: "",
@@ -28,6 +31,9 @@ export default function Login() {
   const t = useTranslations("Auth");
   const error = useTranslations("Errors");
   const { DISCORD_AUTH } = useFeatureEnabled();
+  const { cad } = useAuth();
+  const { authScreenBgImageId, authScreenHeaderImageId } = cad?.miscCadSettings ?? {};
+  const { makeImageUrl } = useImageUrl();
 
   const authMessages = {
     banned: error("userBanned"),
@@ -76,11 +82,32 @@ export default function Login() {
     <>
       <Title>{t("login")}</Title>
 
-      <main className="flex justify-center pt-20">
+      <main
+        className={classNames(
+          "flex flex-col items-center justify-center pt-20",
+          authScreenHeaderImageId && "pt-32",
+        )}
+      >
+        {authScreenHeaderImageId ? (
+          <img
+            draggable={false}
+            className="mb-10 z-10 pointer-events-none"
+            style={{ maxWidth: 400, maxHeight: 200 }}
+            src={makeImageUrl("cad", authScreenHeaderImageId)}
+          />
+        ) : null}
+        {authScreenBgImageId ? (
+          <img
+            draggable={false}
+            className="fixed inset-0 z-[1] h-screen w-screen object-cover pointer-events-none"
+            src={makeImageUrl("cad", authScreenBgImageId)}
+          />
+        ) : null}
+
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
+              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
               onSubmit={handleSubmit}
             >
               <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">

@@ -13,11 +13,12 @@ interface Props {
   setImage: React.Dispatch<React.SetStateAction<(File | string) | null>>;
   image: (File | string) | null;
   label?: string;
+  valueKey?: string;
 }
 
-export function ImageSelectInput({ label, image, setImage }: Props) {
+export function ImageSelectInput({ label, valueKey = "image", image, setImage }: Props) {
   const [useURL, setUseURL] = React.useState(false);
-  const { errors, values, setFieldValue, handleChange } = useFormikContext<{ image: string }>();
+  const { errors, values, setFieldValue, handleChange } = useFormikContext<any>();
   const common = useTranslations("Common");
   const { openModal, closeModal, isOpen } = useModal();
 
@@ -29,11 +30,11 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
   function handleSetURL(v: boolean) {
     setUseURL(v);
     setImage(null);
-    setFieldValue("image", "");
+    setFieldValue(valueKey, "");
   }
 
   return useURL ? (
-    <FormField optional errorMessage={errors.image} label={label ?? common("image")}>
+    <FormField optional errorMessage={errors[valueKey] as string} label={label ?? common("image")}>
       <div className="flex gap-2">
         <Input
           placeholder="https://i.imgur.com/xxxxxx"
@@ -41,9 +42,9 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
             handleChange(e);
             setImage(e.target.value);
           }}
-          name="image"
+          name={valueKey}
           type="url"
-          value={values.image}
+          value={values[valueKey]}
         />
 
         <Button type="button" onClick={() => handleSetURL(false)}>
@@ -53,7 +54,11 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
     </FormField>
   ) : (
     <>
-      <FormField optional errorMessage={errors.image} label={label ?? common("image")}>
+      <FormField
+        optional
+        errorMessage={errors[valueKey] as string}
+        label={label ?? common("image")}
+      >
         <div className="flex">
           <Input
             style={{ width: "95%", marginRight: "0.5em" }}
@@ -62,8 +67,8 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
               setImage(e.target.files?.[0] ?? null);
             }}
             type="file"
-            name="image"
-            value={values.image ?? ""}
+            name={valueKey}
+            value={values[valueKey] ?? ""}
           />
           <Button
             className="mr-2"
@@ -81,7 +86,7 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
             type="button"
             variant="danger"
             onClick={() => {
-              setFieldValue("image", "");
+              setFieldValue(valueKey, "");
             }}
           >
             {common("delete")}
@@ -103,6 +108,8 @@ export function ImageSelectInput({ label, image, setImage }: Props) {
 
 export function validateFile(image: File | string | null, helpers: FormikHelpers<any>) {
   if (typeof image === "string") {
+    if (image.trim() === "") return null;
+
     if (!image.match(IMGUR_REGEX)) {
       throw helpers.setFieldError("image", "Image URL must match https://i.imgur.com/xxxxxx");
     }

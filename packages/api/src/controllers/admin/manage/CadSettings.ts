@@ -31,6 +31,7 @@ export class ManageCitizensController {
         areaOfPlay: true,
         registrationCode: true,
         disabledFeatures: true,
+        miscCadSettings: true,
       },
     });
 
@@ -147,6 +148,8 @@ export class ManageCitizensController {
         pairedUnitSymbol: body.get("pairedUnitSymbol"),
         callsignTemplate: body.get("callsignTemplate"),
         liveMapURL: body.get("liveMapURL"),
+        authScreenBgImageId: body.get("authScreenBgImageId"),
+        authScreenHeaderImageId: body.get("authScreenHeaderImageId"),
       },
     });
 

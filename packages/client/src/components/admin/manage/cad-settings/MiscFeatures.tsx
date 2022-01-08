@@ -1,4 +1,5 @@
-import { Formik } from "formik";
+import * as React from "react";
+import { Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Button } from "components/Button";
@@ -9,8 +10,12 @@ import useFetch from "lib/useFetch";
 import { Input } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
 import { MiscCadSettings } from "types/prisma";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 export function MiscFeatures() {
+  const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
+  const [bgId, setBgId] = React.useState<(File | string) | null>(null);
+
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { cad, setCad } = useAuth();
@@ -40,11 +45,38 @@ export function MiscFeatures() {
     return newValues;
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const { json } = await execute("/admin/manage/cad-settings/misc", {
       method: "PUT",
       data: cleanValues(values),
     });
+
+    const fd = new FormData();
+    const header = validateFile(headerId, helpers);
+    const background = validateFile(bgId, helpers);
+
+    if (header || background) {
+      let imgCount = 0;
+      if (header && typeof header === "object") {
+        imgCount += 1;
+        fd.set("authScreenHeaderImageId", header, header.name);
+      }
+
+      if (background && typeof background === "object") {
+        imgCount += 1;
+        fd.set("authScreenBgImageId", background, background.name);
+      }
+
+      if (imgCount > 0) {
+        await execute("/admin/manage/cad-settings/image/auth", {
+          method: "POST",
+          data: fd,
+        });
+      }
+    }
 
     if (json.id) {
       setCad({ ...cad, ...json });
@@ -70,6 +102,20 @@ export function MiscFeatures() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, errors, values }) => (
           <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
+            <ImageSelectInput
+              label="Auth screen header image"
+              image={headerId}
+              setImage={setHeaderId}
+              valueKey="authScreenHeaderImageId"
+            />
+
+            <ImageSelectInput
+              label="Auth screen background image"
+              image={bgId}
+              setImage={setBgId}
+              valueKey="authScreenBgImageId"
+            />
+
             <FormRow>
               <FormField errorMessage={errors.weightPrefix} label="Weight Prefix">
                 <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
