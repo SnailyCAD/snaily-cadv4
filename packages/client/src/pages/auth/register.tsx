@@ -1,5 +1,4 @@
 import { Formik, FormikHelpers } from "formik";
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
@@ -15,6 +14,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import type { cad } from "types/prisma";
 import { handleRequest } from "lib/fetch";
+import { Title } from "components/shared/Title";
 
 const INITIAL_VALUES = {
   username: "",
@@ -63,9 +63,7 @@ export default function Register({ cad }: Props) {
 
   return (
     <>
-      <Head>
-        <title>{t("register")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("register")}</Title>
 
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

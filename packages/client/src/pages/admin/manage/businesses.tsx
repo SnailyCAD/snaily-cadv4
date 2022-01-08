@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { Tab } from "@headlessui/react";
-import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -20,6 +19,7 @@ import { TabsContainer } from "components/tabs/TabsContainer";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 export type FullBusiness = Business & {
   user: User;
@@ -79,9 +79,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("MANAGE_BUSINESSES")}</title>
-      </Head>
+      <Title>{t("MANAGE_BUSINESSES")}</Title>
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 

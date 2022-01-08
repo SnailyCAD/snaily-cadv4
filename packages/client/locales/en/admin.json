@@ -1,6 +1,7 @@
 {
   "Management": {
     "management": "Management",
+    "adminDashboard": "Admin Dashboard",
     "MANAGE_CITIZENS": "Manage Citizens",
     "MANAGE_BUSINESSES": "Manage Businesses",
     "MANAGE_USERS": "Manage Users",

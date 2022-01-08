@@ -7,12 +7,12 @@ import { Business } from "types/prisma";
 import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { BusinessCard } from "components/business/BusinessCard";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
+import { Title } from "components/shared/Title";
 
 interface Props {
   businesses: (FullEmployee & { business: Business })[];
@@ -42,9 +42,8 @@ export default function BusinessPage(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("businesses")}</title>
-      </Head>
+      <Title>{t("businesses")}</Title>
+
       <header className="flex items-center justify-between mb-3">
         <h1 className="text-3xl font-semibold">{t("businesses")}</h1>
 

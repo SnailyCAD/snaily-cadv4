@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import compareAsc from "date-fns/compareAsc";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -32,6 +31,7 @@ import { Table } from "components/table/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
 import format from "date-fns/format";
+import { Title } from "components/shared/Title";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -159,9 +159,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{typeT("MANAGE")} - SnailyCAD</title>
-      </Head>
+      <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">
         <div>

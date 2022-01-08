@@ -1,5 +1,4 @@
 import { Formik } from "formik";
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
@@ -16,6 +15,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Title } from "components/shared/Title";
 
 const INITIAL_VALUES = {
   username: "",
@@ -74,9 +74,7 @@ export default function Login() {
 
   return (
     <>
-      <Head>
-        <title>Login - SnailyCAD</title>
-      </Head>
+      <Title>{t("login")}</Title>
 
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

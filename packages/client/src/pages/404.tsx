@@ -1,14 +1,12 @@
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { GetStaticProps } from "next";
 import { getTranslations } from "lib/getTranslation";
+import { Title } from "components/shared/Title";
 
 export default function FourOhFour() {
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>Page not found.</title>
-      </Head>
+      <Title>Page not found.</Title>
 
       <h1 className="text-2xl font-semibold">Page not found.</h1>
     </Layout>

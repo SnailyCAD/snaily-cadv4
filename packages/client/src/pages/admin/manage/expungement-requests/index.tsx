@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -13,6 +12,7 @@ import { format } from "date-fns";
 import { ExpungementRequestStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
+import { Title } from "components/shared/Title";
 
 interface Props {
   requests: FullRequest[];
@@ -41,9 +41,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</title>
-      </Head>
+      <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>
 

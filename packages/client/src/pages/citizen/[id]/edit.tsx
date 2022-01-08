@@ -4,7 +4,6 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import Head from "next/head";
 
 import { Button } from "components/Button";
 import { FormRow } from "components/form/FormRow";
@@ -23,6 +22,7 @@ import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { Title } from "components/shared/Title";
 
 export default function EditCitizen() {
   const [image, setImage] = React.useState<File | string | null>(null);
@@ -99,11 +99,10 @@ export default function EditCitizen() {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>
-          {t("editCitizen")} - {citizen.name} {citizen.surname}
-        </title>
-      </Head>
+      <Title>
+        {t("editCitizen")} - {citizen.name} {citizen.surname}
+      </Title>
+
       <h1 className="mb-3 text-3xl font-semibold">{t("editCitizen")}</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

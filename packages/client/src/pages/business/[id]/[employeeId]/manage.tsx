@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { GetServerSideProps } from "next";
 
 import { Layout } from "components/Layout";
@@ -12,6 +11,7 @@ import { TabsContainer } from "components/tabs/TabsContainer";
 import { EmployeeAsEnum } from "types/prisma";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
+import { Title } from "components/shared/Title";
 
 interface Props {
   employee: FullEmployee | null;
@@ -65,11 +65,9 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>
-          {currentBusiness.name} - {common("manage")}
-        </title>
-      </Head>
+      <Title>
+        {currentBusiness.name} - {common("manage")}
+      </Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">

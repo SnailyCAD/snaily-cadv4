@@ -5,7 +5,6 @@ import { ModalButtons } from "components/ems-fd/ModalButtons";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { useTime } from "hooks/useTime";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -17,6 +16,7 @@ import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/useSignal100";
+import { Title } from "components/shared/Title";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -59,9 +59,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("Ems.emsFd")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("Ems.emsFd")}</Title>
 
       {signal100Enabled ? <Component /> : null}
 

@@ -3,7 +3,6 @@ import { useAuth } from "context/AuthContext";
 import { rank } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -24,6 +23,7 @@ import { ApiTokenTab } from "components/admin/manage/ApiTokenTab";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { Title } from "components/shared/Title";
 
 export default function CadSettings() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -93,9 +93,7 @@ export default function CadSettings() {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("MANAGE_CAD_SETTINGS")}</title>
-      </Head>
+      <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
 
