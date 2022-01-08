@@ -7,7 +7,6 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { BleeterPost } from "types/prisma";
-
 import { useTranslations } from "use-intl";
 import Markdown from "react-markdown";
 import { ModalIds } from "types/ModalIds";

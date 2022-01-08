@@ -5,7 +5,6 @@ import { ModalButtons } from "components/ems-fd/ModalButtons";
 import { useAreaOfPlay } from "hooks/useAreaOfPlay";
 import { useTime } from "hooks/useTime";
 import dynamic from "next/dynamic";
-
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

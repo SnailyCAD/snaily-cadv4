@@ -12,7 +12,6 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
-
 import { Table } from "components/table/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";

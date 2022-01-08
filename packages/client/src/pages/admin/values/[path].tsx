@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { useRouter } from "next/router";
-
 import compareAsc from "date-fns/compareAsc";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
