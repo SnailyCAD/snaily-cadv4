@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);

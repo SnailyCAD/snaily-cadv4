@@ -6,7 +6,7 @@ import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { AssignedUnit, LeoIncident } from "types/prisma";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import format from "date-fns/format";
 import { Full911Call } from "state/dispatchState";

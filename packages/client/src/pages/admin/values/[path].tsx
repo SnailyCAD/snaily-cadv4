@@ -27,9 +27,9 @@ import { requestAll } from "lib/utils";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
-import { OptionsDropdown } from "components/admin/values/OptionsDropdown";
+import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import format from "date-fns/format";
 import { Title } from "components/shared/Title";
 
@@ -38,7 +38,7 @@ const ManageValueModal = dynamic(async () => {
 });
 
 const ImportValuesModal = dynamic(async () => {
-  return (await import("components/admin/values/ImportValuesModal")).ImportValuesModal;
+  return (await import("components/admin/values/import/ImportValuesModal")).ImportValuesModal;
 });
 
 export type TValue =

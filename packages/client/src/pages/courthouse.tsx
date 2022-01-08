@@ -8,7 +8,7 @@ import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { requestAll } from "lib/utils";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";

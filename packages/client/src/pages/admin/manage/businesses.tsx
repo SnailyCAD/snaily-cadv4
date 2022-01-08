@@ -15,10 +15,10 @@ import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { TabsContainer } from "components/tabs/TabsContainer";
+import { TabList } from "components/shared/TabList";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 export type FullBusiness = Business & {
@@ -83,7 +83,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 
-      <TabsContainer
+      <TabList
         tabs={
           businessWhitelisted
             ? [t("allBusinesses"), `${t("pendingBusinesses")} (${pendingBusinesses.length})`]
@@ -134,7 +134,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
           )}
         </Tab.Panel>
         <PendingBusinessesTab setBusinesses={setBusinesses} businesses={pendingBusinesses} />
-      </TabsContainer>
+      </TabList>
 
       <Modal
         title={t("deleteBusiness")}

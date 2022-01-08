@@ -7,13 +7,13 @@ import { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { TabsContainer } from "components/tabs/TabsContainer";
+import { TabList } from "components/shared/TabList";
 import { Tab } from "@headlessui/react";
-import { PendingUsersTab } from "components/admin/manage/PendingUsersTab";
+import { PendingUsersTab } from "components/admin/manage/users/PendingUsersTab";
 import { Button } from "components/Button";
 import { Input } from "components/form/Input";
 import { FormField } from "components/form/FormField";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 interface Props {
@@ -44,7 +44,7 @@ export default function ManageUsers({ users: data }: Props) {
         <Input placeholder="john doe" onChange={(e) => setSearch(e.target.value)} value={search} />
       </FormField>
 
-      <TabsContainer tabs={tabs}>
+      <TabList tabs={tabs}>
         <Tab.Panel className="mt-5">
           <Table
             filter={search}
@@ -76,7 +76,7 @@ export default function ManageUsers({ users: data }: Props) {
         </Tab.Panel>
 
         <PendingUsersTab setUsers={setUsers} users={pending} search={search} />
-      </TabsContainer>
+      </TabList>
     </AdminLayout>
   );
 }

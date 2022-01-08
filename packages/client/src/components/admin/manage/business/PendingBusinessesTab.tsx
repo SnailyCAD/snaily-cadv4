@@ -1,6 +1,6 @@
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { FullBusiness } from "src/pages/admin/manage/businesses";

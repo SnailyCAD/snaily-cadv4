@@ -1,4 +1,4 @@
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import { PenalCode } from "types/prisma";

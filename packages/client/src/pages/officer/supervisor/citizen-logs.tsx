@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { Citizen, RecordLog, RecordType } from "types/prisma";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import format from "date-fns/format";

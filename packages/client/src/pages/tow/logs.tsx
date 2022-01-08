@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
 import { FullTowCall } from ".";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { Title } from "components/shared/Title";
 

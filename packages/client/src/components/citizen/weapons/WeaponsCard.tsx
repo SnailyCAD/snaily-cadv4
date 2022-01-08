@@ -3,11 +3,11 @@ import { Button } from "components/Button";
 import { Weapon } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { RegisterWeaponModal } from "./modals/RegisterWeaponModal";
+import { RegisterWeaponModal } from "./RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 

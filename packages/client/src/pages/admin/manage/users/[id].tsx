@@ -21,7 +21,7 @@ import { BanArea } from "components/admin/manage/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { requestAll } from "lib/utils";
-import { DangerZone } from "components/admin/manage/DangerZone";
+import { DangerZone } from "components/admin/manage/users/DangerZone";
 import { Title } from "components/shared/Title";
 
 interface Props {

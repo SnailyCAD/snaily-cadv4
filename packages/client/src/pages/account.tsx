@@ -5,7 +5,7 @@ import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 
 import { useAuth } from "src/context/AuthContext";
-import { TabsContainer } from "components/tabs/TabsContainer";
+import { TabList } from "components/shared/TabList";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
@@ -65,7 +65,7 @@ export default function Account() {
 
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
-          <TabsContainer defaultIndex={discordIndex} tabs={TABS_TITLES}>
+          <TabList defaultIndex={discordIndex} tabs={TABS_TITLES}>
             <Tab.Panels className="mt-2 dark:text-white">
               <Tab.Panel>
                 <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
@@ -85,7 +85,7 @@ export default function Account() {
               <AppearanceTab />
               {DISCORD_AUTH ? <ConnectionsTab /> : null}
             </Tab.Panels>
-          </TabsContainer>
+          </TabList>
         </div>
       </div>
     </Layout>

@@ -12,7 +12,7 @@ import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { Title } from "components/shared/Title";
 

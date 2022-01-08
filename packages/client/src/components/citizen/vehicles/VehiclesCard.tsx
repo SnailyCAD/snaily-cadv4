@@ -3,12 +3,12 @@ import { useTranslations } from "use-intl";
 import format from "date-fns/format";
 import { Button } from "components/Button";
 import { RegisteredVehicle } from "types/prisma";
-import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
+import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();

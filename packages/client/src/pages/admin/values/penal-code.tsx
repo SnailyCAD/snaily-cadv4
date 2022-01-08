@@ -12,18 +12,18 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
-import { ManagePenalCodeGroup } from "components/admin/values/ManagePenalCodeGroup";
+import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";
 import { AlertModal } from "components/modal/AlertModal";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 
 const ManagePenalCode = dynamic(async () => {
-  return (await import("components/admin/values/ManagePenalCode")).ManagePenalCode;
+  return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
 });
 
 interface Props {

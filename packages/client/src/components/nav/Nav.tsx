@@ -6,12 +6,12 @@ import { useAuth } from "src/context/AuthContext";
 import { logout } from "lib/auth";
 import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
-import { CitizenDropdown } from "./nav-dropdowns/CitizenDropdown";
-import { OfficerDropdown } from "./nav-dropdowns/OfficerDropdown";
-import { EmsFdDropdown } from "./nav-dropdowns/EmsFdDropdown";
+import { CitizenDropdown } from "./dropdowns/CitizenDropdown";
+import { OfficerDropdown } from "./dropdowns/OfficerDropdown";
+import { EmsFdDropdown } from "./dropdowns/EmsFdDropdown";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { TowDropdown } from "./nav-dropdowns/TowDropdown";
-import { DispatchDropdown } from "./nav-dropdowns/DispatchDropdown";
+import { TowDropdown } from "./dropdowns/TowDropdown";
+import { DispatchDropdown } from "./dropdowns/DispatchDropdown";
 import { useTranslations } from "next-intl";
 import { useImageUrl } from "hooks/useImageUrl";
 

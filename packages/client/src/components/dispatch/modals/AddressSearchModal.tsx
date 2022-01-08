@@ -10,7 +10,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/Input";
 import { Citizen } from "types/prisma";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 
 export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();

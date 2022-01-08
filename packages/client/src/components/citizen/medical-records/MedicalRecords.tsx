@@ -7,7 +7,7 @@ import { useModal } from "context/ModalContext";
 import { ManageMedicalRecordsModal } from "./modals/ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 
 export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
   const { state, execute } = useFetch();
