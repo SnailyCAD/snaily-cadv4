@@ -195,7 +195,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             rowProps: { value },
             value: getValueStrFromValue(value),
             ...extraTableData(value),
-            createdAt: format(new Date(getCreatedAtFromValue(value)), "yyyy-MM-dd hh:mm:ss"),
+            createdAt: format(new Date(getCreatedAtFromValue(value)), "yyyy-MM-dd HH:mm:ss"),
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(value)} variant="success">

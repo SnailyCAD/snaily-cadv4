@@ -117,7 +117,7 @@ export default function Taxi(props: Props) {
             description: call.description,
             caller: `${call.creator.name} ${call.creator.surname}`,
             assignedUnit: assignedUnit(call),
-            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
             actions: (
               <>
                 <Button onClick={() => editClick(call)} small variant="success">

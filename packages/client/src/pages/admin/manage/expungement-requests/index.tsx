@@ -63,7 +63,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                 .map((w) => getTitles(w))
                 .join(", ") || common("none"),
             status: request.status.toLowerCase(),
-            createdAt: format(new Date(request.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+            createdAt: format(new Date(request.createdAt), "yyyy-MM-dd - HH:mm:ss"),
             actions: (
               <>
                 <Button
