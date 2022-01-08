@@ -17,7 +17,7 @@ import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { BanArea } from "components/admin/manage/BanArea";
+import { BanArea } from "components/admin/manage/users/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
