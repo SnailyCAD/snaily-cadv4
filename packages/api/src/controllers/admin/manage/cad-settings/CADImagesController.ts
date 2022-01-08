@@ -59,8 +59,6 @@ export class ManageCitizensController {
           throw new BadRequest("invalidImageType");
         }
 
-        console.log({ file });
-
         // "image/png" -> "png"
         const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
         const id = randomUUID();
