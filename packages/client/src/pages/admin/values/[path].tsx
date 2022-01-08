@@ -24,7 +24,7 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/shared/Table";

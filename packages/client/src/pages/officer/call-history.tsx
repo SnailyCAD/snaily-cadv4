@@ -15,7 +15,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";

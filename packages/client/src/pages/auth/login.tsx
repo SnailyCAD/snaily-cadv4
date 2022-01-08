@@ -6,7 +6,7 @@ import { AUTH_SCHEMA } from "@snailycad/schemas";
 import useFetch from "lib/useFetch";
 
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/Input";
+import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import { useTranslations } from "use-intl";

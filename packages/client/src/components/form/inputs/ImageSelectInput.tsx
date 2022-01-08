@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button } from "components/Button";
 import { FormikHelpers, useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
-import { FormField } from "./FormField";
+import { FormField } from "../FormField";
 import { Input } from "./Input";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";

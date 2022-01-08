@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "components/Button";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Layout } from "components/Layout";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
@@ -20,7 +20,7 @@ import { useValues } from "context/ValuesContext";
 import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
 
 const INITIAL_VALUES = {

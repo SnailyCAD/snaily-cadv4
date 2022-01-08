@@ -12,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusValue, StatusViewMode } from "types/prisma";
 import { useImageUrl } from "hooks/useImageUrl";
-import { ContextMenu } from "components/context-menu/ContextMenu";
+import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";

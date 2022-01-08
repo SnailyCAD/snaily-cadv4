@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";

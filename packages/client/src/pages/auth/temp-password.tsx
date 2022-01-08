@@ -6,7 +6,7 @@ import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 
 import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/Input";
+import { PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";

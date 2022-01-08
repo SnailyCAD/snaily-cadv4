@@ -8,7 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/Input";
+import { Input, PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
@@ -22,7 +22,7 @@ import { requestAll } from "lib/utils";
 import { ApiTokenTab } from "components/admin/manage/cad-settings/ApiTokenTab";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
-import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
 
 export default function CadSettings() {

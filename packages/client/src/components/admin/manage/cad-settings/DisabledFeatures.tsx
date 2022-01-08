@@ -9,7 +9,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { feature, Feature } from "types/prisma";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 
 const FEATURES = Object.keys(feature) as Feature[];
 

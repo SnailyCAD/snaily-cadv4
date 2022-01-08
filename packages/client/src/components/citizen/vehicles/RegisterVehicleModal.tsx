@@ -12,7 +12,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Citizen, RegisteredVehicle } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";

@@ -13,7 +13,7 @@ import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { TabList } from "components/shared/TabList";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";

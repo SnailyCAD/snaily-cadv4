@@ -14,7 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {

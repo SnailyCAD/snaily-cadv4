@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Citizen } from "types/prisma";
 import { Table } from "components/shared/Table";
 

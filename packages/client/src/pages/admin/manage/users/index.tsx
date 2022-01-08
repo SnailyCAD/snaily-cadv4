@@ -11,7 +11,7 @@ import { TabList } from "components/shared/TabList";
 import { Tab } from "@headlessui/react";
 import { PendingUsersTab } from "components/admin/manage/users/PendingUsersTab";
 import { Button } from "components/Button";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";

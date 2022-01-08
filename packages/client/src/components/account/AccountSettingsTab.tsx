@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 
 import { useAuth } from "src/context/AuthContext";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";

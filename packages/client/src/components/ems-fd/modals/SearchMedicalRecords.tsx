@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import type { Citizen, MedicalRecord } from "types/prisma";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
 
 interface Props {
