@@ -15,6 +15,7 @@ import { Button } from "components/Button";
 import type { cad } from "types/prisma";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
+import { AuthScreenImages } from "components/auth/AuthScreenImages";
 
 const INITIAL_VALUES = {
   username: "",
@@ -65,7 +66,9 @@ export default function Register({ cad }: Props) {
     <>
       <Title>{t("register")}</Title>
 
-      <main className="flex justify-center pt-20">
+      <main className="flex flex-col items-center justify-center pt-20">
+        <AuthScreenImages />
+
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form

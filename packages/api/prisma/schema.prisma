@@ -48,6 +48,8 @@ model MiscCadSettings {
   signal100Enabled        Boolean  @default(false)
   liveMapURL              String?  @db.Text
   roleplayEnabled         Boolean? @default(true)
+  authScreenBgImageId     String?
+  authScreenHeaderImageId String?
 
   cad cad[]
 }
