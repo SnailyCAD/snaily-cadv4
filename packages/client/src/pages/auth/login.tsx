@@ -16,9 +16,7 @@ import { Button } from "components/Button";
 import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
-import { classNames } from "lib/classNames";
-import { useAuth } from "context/AuthContext";
-import { useImageUrl } from "hooks/useImageUrl";
+import { AuthScreenImages } from "components/auth/AuthScreenImages";
 
 const INITIAL_VALUES = {
   username: "",
@@ -31,9 +29,6 @@ export default function Login() {
   const t = useTranslations("Auth");
   const error = useTranslations("Errors");
   const { DISCORD_AUTH } = useFeatureEnabled();
-  const { cad } = useAuth();
-  const { authScreenBgImageId, authScreenHeaderImageId } = cad?.miscCadSettings ?? {};
-  const { makeImageUrl } = useImageUrl();
 
   const authMessages = {
     banned: error("userBanned"),
@@ -82,27 +77,8 @@ export default function Login() {
     <>
       <Title>{t("login")}</Title>
 
-      <main
-        className={classNames(
-          "flex flex-col items-center justify-center pt-20",
-          authScreenHeaderImageId && "pt-32",
-        )}
-      >
-        {authScreenHeaderImageId ? (
-          <img
-            draggable={false}
-            className="mb-10 z-10 pointer-events-none"
-            style={{ maxWidth: 400, maxHeight: 200 }}
-            src={makeImageUrl("cad", authScreenHeaderImageId)}
-          />
-        ) : null}
-        {authScreenBgImageId ? (
-          <img
-            draggable={false}
-            className="fixed inset-0 z-[1] h-screen w-screen object-cover pointer-events-none"
-            src={makeImageUrl("cad", authScreenBgImageId)}
-          />
-        ) : null}
+      <main className="flex flex-col items-center justify-center pt-20">
+        <AuthScreenImages />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
