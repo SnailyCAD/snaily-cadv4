@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -16,6 +15,7 @@ import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -65,9 +65,7 @@ export default function MyDeputies({ deputies: data }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("Ems.myDeputies")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("Ems.myDeputies")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("Ems.myDeputies")}</h1>

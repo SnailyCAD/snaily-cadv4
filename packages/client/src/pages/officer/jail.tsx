@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -17,6 +16,7 @@ import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
 import { useRouter } from "next/router";
 import format from "date-fns/format";
+import { Title } from "components/shared/Title";
 
 interface Props {
   data: (Citizen & { Record: FullRecord[] })[];
@@ -46,9 +46,7 @@ export default function Jail({ data: citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("jail")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("jail")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>
 

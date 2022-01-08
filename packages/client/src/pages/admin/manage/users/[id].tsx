@@ -2,7 +2,6 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Head from "next/head";
 import { Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
@@ -23,6 +22,7 @@ import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/Input";
 import { requestAll } from "lib/utils";
 import { DangerZone } from "components/admin/manage/DangerZone";
+import { Title } from "components/shared/Title";
 
 interface Props {
   user: User | null;
@@ -31,7 +31,6 @@ interface Props {
 export default function ManageCitizens(props: Props) {
   const [user, setUser] = React.useState(props.user);
   const { state, execute } = useFetch();
-  const t = useTranslations("Management");
   const common = useTranslations("Common");
   const router = useRouter();
   const { user: session } = useAuth();
@@ -75,9 +74,9 @@ export default function ManageCitizens(props: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("MANAGE_USERS")}</title>
-      </Head>
+      <Title>
+        {common("manage")} {user.username}
+      </Title>
 
       <h1 className="text-3xl font-semibold">{user?.username}</h1>
 

@@ -11,11 +11,11 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import { BusinessPost, whitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
+import { Title } from "components/shared/Title";
 
 interface Props {
   employee: FullEmployee | null;
@@ -99,9 +99,7 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{currentBusiness.name}</title>
-      </Head>
+      <Title>{currentBusiness.name}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{currentBusiness.name}</h1>

@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -13,6 +12,7 @@ import { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageTruckLogModal = dynamic(
@@ -62,9 +62,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("truckLogs")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("truckLogs")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("truckLogs")}</h1>

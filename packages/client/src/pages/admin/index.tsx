@@ -4,8 +4,8 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import prettyBytes from "pretty-bytes";
-import Head from "next/head";
 import { useTranslations } from "next-intl";
+import { Title } from "components/shared/Title";
 
 interface Counts {
   activeUsers: number;
@@ -36,9 +36,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>Admin Dashboard - SnailyCAD</title>
-      </Head>
+      <Title>{t("adminDashboard")}</Title>
 
       <h1 className="text-3xl font-semibold dark:text-white">Dashboard</h1>
 

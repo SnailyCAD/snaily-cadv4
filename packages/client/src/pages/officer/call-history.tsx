@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
@@ -20,6 +19,7 @@ import { Input } from "components/form/Input";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
+import { Title } from "components/shared/Title";
 
 interface Props {
   data: (Full911Call & { incidents: LeoIncident[] })[];
@@ -62,9 +62,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{leo("callHistory")} - SnailyCAD</title>
-      </Head>
+      <Title>{leo("callHistory")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
 

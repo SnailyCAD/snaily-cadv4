@@ -1,5 +1,4 @@
 import { Formik, FormikHelpers } from "formik";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { TEMP_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { useTranslations } from "use-intl";
@@ -15,6 +14,7 @@ import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
 import { getSessionUser } from "lib/auth";
 import { useAuth } from "context/AuthContext";
+import { Title } from "components/shared/Title";
 
 const INITIAL_VALUES = {
   newPassword: "",
@@ -56,9 +56,7 @@ export default function TempPassword() {
 
   return (
     <>
-      <Head>
-        <title>{t("changePassword")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("changePassword")}</Title>
 
       <main className="flex justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

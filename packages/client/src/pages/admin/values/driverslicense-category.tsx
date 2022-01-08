@@ -1,6 +1,5 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -17,6 +16,7 @@ import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { SortableList } from "components/admin/values/SortableList";
 import { handleFilter } from "./[path]";
+import { Title } from "components/shared/Title";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -110,9 +110,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{typeT("MANAGE")} - SnailyCAD</title>
-      </Head>
+      <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex flex-col">
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>

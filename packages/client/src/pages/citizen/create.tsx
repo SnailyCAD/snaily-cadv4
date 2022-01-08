@@ -4,8 +4,6 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import Head from "next/head";
-
 import { Button } from "components/Button";
 import { FormRow } from "components/form/FormRow";
 import { FormField } from "components/form/FormField";
@@ -23,6 +21,7 @@ import { requestAll } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { Title } from "components/shared/Title";
 
 const INITIAL_VALUES = {
   name: "",
@@ -107,10 +106,9 @@ export default function CreateCitizen() {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>Create Citizen</title>
-      </Head>
-      <h1 className="mb-3 text-3xl font-semibold">Create citizen</h1>
+      <Title>{t("createCitizen")}</Title>
+
+      <h1 className="mb-3 text-3xl font-semibold">{t("createCitizen")}</h1>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors, isValid }) => (

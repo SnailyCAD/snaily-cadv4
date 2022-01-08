@@ -7,7 +7,6 @@ import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { BleeterPost } from "types/prisma";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import Markdown from "react-markdown";
 import { ModalIds } from "types/ModalIds";
@@ -16,6 +15,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
+import { Title } from "components/shared/Title";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -52,9 +52,7 @@ export default function BleetPost({ post }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{post.title} - SnailyCAD</title>
-      </Head>
+      <Title>{post.title}</Title>
 
       <header className="flex items-center justify-between pb-2 border-b-2">
         <h1 className="text-3xl font-semibold">{post.title}</h1>

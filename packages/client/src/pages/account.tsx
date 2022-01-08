@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { Tab } from "@headlessui/react";
 import type { GetServerSideProps } from "next";
@@ -14,6 +13,7 @@ import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import toast from "react-hot-toast";
 import { useMounted } from "@casper124578/useful";
+import { Title } from "components/shared/Title";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -61,9 +61,7 @@ export default function Account() {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("account")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("account")}</Title>
 
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">

@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { Disclosure } from "@headlessui/react";
-import Head from "next/head";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -16,6 +15,7 @@ import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/Input";
 import { requestAll } from "lib/utils";
+import { Title } from "components/shared/Title";
 
 interface Props {
   citizens: (Citizen & { user: User })[];
@@ -70,9 +70,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
   return (
     <AdminLayout className="dark:text-white">
-      <Head>
-        <title>{t("MANAGE_CITIZENS")}</title>
-      </Head>
+      <Title>{t("MANAGE_CITIZENS")}</Title>
 
       <h1 className="text-3xl font-semibold">{t("MANAGE_CITIZENS")}</h1>
 

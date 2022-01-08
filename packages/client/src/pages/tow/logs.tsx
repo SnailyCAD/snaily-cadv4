@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
@@ -11,6 +10,7 @@ import { requestAll } from "lib/utils";
 import { FullTowCall } from ".";
 import { Table } from "components/table/Table";
 import format from "date-fns/format";
+import { Title } from "components/shared/Title";
 
 interface Props {
   calls: FullTowCall[];
@@ -43,9 +43,7 @@ export default function TowLogs(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("towLogs")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("towLogs")}</Title>
 
       <header className="flex items-center justify-between mb-5">
         <h1 className="text-3xl font-semibold">{t("towLogs")}</h1>

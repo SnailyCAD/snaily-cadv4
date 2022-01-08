@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -20,6 +19,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table } from "components/table/Table";
+import { Title } from "components/shared/Title";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -94,9 +94,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("incidents")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("incidents")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("incidents")}</h1>

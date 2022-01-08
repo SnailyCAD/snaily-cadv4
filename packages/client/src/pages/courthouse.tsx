@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -15,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { getTitles } from "components/courthouse/RequestExpungement";
+import { Title } from "components/shared/Title";
 
 const RequestExpungement = dynamic(
   async () => (await import("components/courthouse/RequestExpungement")).RequestExpungement,
@@ -39,9 +39,7 @@ export default function Courthouse(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("courthouse")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("courthouse")}</Title>
 
       <header className="flex items-center justify-between mb-5">
         <h1 className="text-3xl font-semibold">{t("courthouse")}</h1>

@@ -1,5 +1,4 @@
 import { useTranslations } from "use-intl";
-import Head from "next/head";
 import Link from "next/link";
 
 import { Layout } from "components/Layout";
@@ -12,6 +11,7 @@ import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
+import { Title } from "components/shared/Title";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -27,9 +27,7 @@ export default function Bleeter({ posts }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("bleeter")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("bleeter")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("bleeter")}</h1>

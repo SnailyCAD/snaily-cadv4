@@ -1,5 +1,4 @@
 import * as React from "react";
-import Head from "next/head";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -14,6 +13,7 @@ import { Input } from "components/form/Input";
 import format from "date-fns/format";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { Title } from "components/shared/Title";
 
 type Log = RecordLog & { citizen: Citizen };
 interface Props {
@@ -37,9 +37,7 @@ export default function CitizenLogs({ logs: data }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Head>
-        <title>{t("citizenLogs")} - SnailyCAD</title>
-      </Head>
+      <Title>{t("citizenLogs")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="mb-3 text-3xl font-semibold">{t("citizenLogs")}</h1>
