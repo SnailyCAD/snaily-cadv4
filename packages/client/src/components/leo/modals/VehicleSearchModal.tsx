@@ -11,7 +11,7 @@ import { useTranslations } from "use-intl";
 import { Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
-import { InputSuggestions } from "components/form/InputSuggestions";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";

@@ -1,7 +1,6 @@
 import { useTranslations } from "use-intl";
 import { Formik } from "formik";
-import { useRouter } from "next/router";
-import { WEAPON_SCHEMA } from "@snailycad/schemas";
+import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -11,53 +10,62 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, Weapon } from "types/prisma";
+import { Citizen, RegisteredVehicle } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
+import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
-import { Input } from "components/form/Input";
+import { useRouter } from "next/router";
+import { useAuth } from "context/AuthContext";
+import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  weapon: Weapon | null;
+  vehicle: RegisteredVehicle | null;
   citizens: Citizen[];
-  onCreate?: (newV: Weapon) => void;
-  onUpdate?: (old: Weapon, newV: Weapon) => void;
+  onCreate?: (newV: RegisteredVehicle) => void;
+  onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
   onClose?(): void;
 }
 
-export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, onUpdate }: Props) {
+export function RegisterVehicleModal({
+  citizens = [],
+  vehicle,
+  onClose,
+  onCreate,
+  onUpdate,
+}: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const { pathname } = useRouter();
-  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
-
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
-  const tWeapon = useTranslations("Weapons");
   const common = useTranslations("Common");
-
   const { citizen } = useCitizen(false);
-  const { weapon: weapons, license } = useValues();
-  const validate = handleValidate(WEAPON_SCHEMA);
-  const isDisabled = pathname === "/citizen/[id]";
+  const router = useRouter();
+  const { cad } = useAuth();
+  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
+
+  const { vehicle: vehicles, license } = useValues();
+  const validate = handleValidate(VEHICLE_SCHEMA);
+  const isDisabled = router.pathname === "/citizen/[id]";
+  const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
 
   function handleClose() {
-    closeModal(ModalIds.RegisterWeapon);
+    closeModal(ModalIds.RegisterVehicle);
     onClose?.();
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (weapon) {
-      const { json } = await execute(`/weapons/${weapon.id}`, {
+    if (vehicle) {
+      const { json } = await execute(`/vehicles/${vehicle.id}`, {
         method: "PUT",
         data: values,
       });
 
       if (json?.id) {
-        onUpdate?.(weapon, json);
+        onUpdate?.(vehicle, json);
       }
     } else {
-      const { json } = await execute("/weapons", {
+      const { json } = await execute("/vehicles", {
         method: "POST",
         data: values,
       });
@@ -69,28 +77,47 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   }
 
   const INITIAL_VALUES = {
-    model: weapon?.modelId ?? "",
-    registrationStatus: weapon?.registrationStatusId ?? "",
-    citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
-    serialNumber: weapon?.serialNumber ?? "",
+    model: vehicle?.modelId ?? "",
+    color: vehicle?.color ?? "",
+    insuranceStatus: vehicle?.insuranceStatus ?? "",
+    registrationStatus: vehicle?.registrationStatusId ?? "",
+    citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
+    plate: vehicle?.plate ?? "",
+    vinNumber: vehicle?.vinNumber ?? "",
+    reportedStolen: vehicle?.reportedStolen ?? false,
   };
 
   return (
     <Modal
-      title={t("registerWeapon")}
+      title={t("registerVehicle")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.RegisterWeapon)}
+      isOpen={isOpen(ModalIds.RegisterVehicle)}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
+            <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
+              <Input
+                disabled={!!vehicle}
+                onChange={handleChange}
+                name="plate"
+                value={values.plate.toUpperCase()}
+                max={maxPlateLength}
+                maxLength={maxPlateLength}
+              />
+            </FormField>
+
+            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
+              <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
+            </FormField>
+
             {DISALLOW_TEXTFIELD_SELECTION ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Select
-                  values={weapons.values.map((weapon) => ({
-                    label: weapon.value.value,
-                    value: weapon.id,
+                  values={vehicles.values.map((vehicle) => ({
+                    label: vehicle.value.value,
+                    value: vehicle.id,
                   }))}
                   value={values.model}
                   name="model"
@@ -100,15 +127,15 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
-                  list="weaponModelsList"
+                  list="vehicle-models-list"
                   value={values.model}
                   name="model"
                   onChange={handleChange}
                 />
 
-                <datalist id="weaponModelsList">
-                  {weapons.values.map((weapon) => (
-                    <span key={weapon.id}>{weapon.value.value}</span>
+                <datalist id="vehicle-models-list">
+                  {vehicles.values.map((vehicle) => (
+                    <span key={vehicle.id}>{vehicle.value.value}</span>
                   ))}
                 </datalist>
               </FormField>
@@ -146,17 +173,27 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               />
             </FormField>
 
-            <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
-              <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
+            <FormField errorMessage={errors.color} label={tVehicle("color")}>
+              <Input onChange={handleChange} name="color" value={values.color} />
             </FormField>
+
+            {vehicle ? (
+              <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
+                <Toggle
+                  onClick={handleChange}
+                  name="reportedStolen"
+                  toggled={values.reportedStolen}
+                />
+              </FormField>
+            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.RegisterWeapon)}
+                onClick={() => closeModal(ModalIds.RegisterVehicle)}
                 variant="cancel"
               >
-                Cancel
+                {common("cancel")}
               </Button>
               <Button
                 className="flex items-center"
@@ -164,7 +201,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {weapon ? common("save") : t("registerWeapon")}
+                {vehicle ? common("save") : t("registerVehicle")}
               </Button>
             </footer>
           </form>

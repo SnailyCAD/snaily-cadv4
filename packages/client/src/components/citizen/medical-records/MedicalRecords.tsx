@@ -4,10 +4,10 @@ import { Button } from "components/Button";
 import { MedicalRecord } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { ManageMedicalRecordsModal } from "./modals/ManageMedicalRecordsModal";
+import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 
 export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
   const { state, execute } = useFetch();

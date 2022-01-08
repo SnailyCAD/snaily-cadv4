@@ -8,21 +8,21 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
-import { Input, PasswordInput } from "components/form/Input";
+import { Input, PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { DisabledFeaturesArea } from "components/admin/manage/DisabledFeatures";
-import { TabsContainer } from "components/tabs/TabsContainer";
+import { DisabledFeaturesArea } from "components/admin/manage/cad-settings/DisabledFeatures";
+import { TabList } from "components/shared/TabList";
 import { Tab } from "@headlessui/react";
-import { MiscFeatures } from "components/admin/manage/MiscFeatures";
+import { MiscFeatures } from "components/admin/manage/cad-settings/MiscFeatures";
 import { requestAll } from "lib/utils";
-import { ApiTokenTab } from "components/admin/manage/ApiTokenTab";
+import { ApiTokenTab } from "components/admin/manage/cad-settings/ApiTokenTab";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
-import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
 
 export default function CadSettings() {
@@ -97,7 +97,7 @@ export default function CadSettings() {
 
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
 
-      <TabsContainer tabs={SETTINGS_TABS}>
+      <TabList tabs={SETTINGS_TABS}>
         <Tab.Panel className="mt-3">
           <h2 className="text-2xl font-semibold">General Settings</h2>
 
@@ -206,7 +206,7 @@ export default function CadSettings() {
         </Tab.Panel>
 
         <ApiTokenTab />
-      </TabsContainer>
+      </TabList>
     </AdminLayout>
   );
 }

@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -16,7 +16,7 @@ import { FullBolo, useDispatchState } from "state/dispatchState";
 import { Person, PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
-import { InputSuggestions } from "components/form/InputSuggestions";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
 

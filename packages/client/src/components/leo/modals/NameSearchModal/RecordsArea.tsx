@@ -13,7 +13,7 @@ import { useNameSearch } from "state/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };

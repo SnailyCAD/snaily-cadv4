@@ -1,5 +1,5 @@
 import { components, MultiValueGenericProps } from "react-select";
-import { ContextMenu } from "components/context-menu/ContextMenu";
+import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { CombinedLeoUnit, StatusValue } from "types/prisma";

@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { InputSuggestions } from "components/form/InputSuggestions";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Citizen } from "types/prisma";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";

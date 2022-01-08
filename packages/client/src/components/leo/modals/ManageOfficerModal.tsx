@@ -2,7 +2,7 @@ import * as React from "react";
 import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -16,7 +16,7 @@ import { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
-import { ImageSelectInput, validateFile } from "components/form/ImageSelectInput";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   officer: FullOfficer | null;

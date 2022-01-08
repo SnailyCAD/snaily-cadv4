@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import { OfficerLog } from "types/prisma";
 import formatDistance from "date-fns/formatDistance";
 import format from "date-fns/format";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 

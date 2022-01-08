@@ -4,7 +4,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import { Textarea } from "components/form/Textarea";
 import useFetch from "lib/useFetch";

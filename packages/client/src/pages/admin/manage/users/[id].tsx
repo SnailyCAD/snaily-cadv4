@@ -17,11 +17,11 @@ import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { BanArea } from "components/admin/manage/BanArea";
+import { BanArea } from "components/admin/manage/users/BanArea";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
-import { DangerZone } from "components/admin/manage/DangerZone";
+import { DangerZone } from "components/admin/manage/users/DangerZone";
 import { Title } from "components/shared/Title";
 
 interface Props {

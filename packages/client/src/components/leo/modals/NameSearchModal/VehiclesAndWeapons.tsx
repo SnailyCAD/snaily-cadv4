@@ -1,4 +1,4 @@
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { RegisteredVehicle, Weapon } from "types/prisma";
 import { useTranslations } from "use-intl";

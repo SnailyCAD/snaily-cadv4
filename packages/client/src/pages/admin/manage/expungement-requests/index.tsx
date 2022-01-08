@@ -5,7 +5,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { FullRequest } from "src/pages/courthouse";
 import { getTitles } from "components/courthouse/RequestExpungement";
 import { format } from "date-fns";

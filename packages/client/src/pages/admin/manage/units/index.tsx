@@ -15,7 +15,7 @@ import { ThreeDots } from "react-bootstrap-icons";
 import { useMounted, usePortal } from "@casper124578/useful";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });

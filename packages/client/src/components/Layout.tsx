@@ -1,5 +1,5 @@
 import { useRoleplayStopped } from "hooks/useRoleplayStopped";
-import { Nav } from "./Nav";
+import { Nav } from "./nav/Nav";
 
 interface Props {
   children: React.ReactNode;

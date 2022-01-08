@@ -18,10 +18,11 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
 
 const RegisterVehicleModal = dynamic(
-  async () => (await import("components/citizen/modals/RegisterVehicleModal")).RegisterVehicleModal,
+  async () =>
+    (await import("components/citizen/vehicles/RegisterVehicleModal")).RegisterVehicleModal,
 );
 const RegisterWeaponModal = dynamic(
-  async () => (await import("components/citizen/modals/RegisterWeaponModal")).RegisterWeaponModal,
+  async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
 );
 const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,

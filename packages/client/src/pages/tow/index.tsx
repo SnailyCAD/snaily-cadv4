@@ -13,7 +13,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
 import format from "date-fns/format";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 const AssignToCallModal = dynamic(

@@ -1,7 +1,7 @@
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/Input";
+import { PasswordInput } from "components/form/inputs/Input";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";

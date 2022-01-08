@@ -12,7 +12,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 interface Props {

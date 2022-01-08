@@ -1,7 +1,7 @@
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
@@ -14,7 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
 import { Citizen, RecordType, PenalCode } from "types/prisma";
-import { InputSuggestions } from "components/form/InputSuggestions";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./CreateRecord/PenalCodesTable";

@@ -14,7 +14,7 @@ import { FullOfficer } from "state/dispatchState";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);

@@ -11,7 +11,7 @@ import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 import { useImageUrl } from "hooks/useImageUrl";
 import { FullOfficer } from "state/dispatchState";
 import { Title } from "components/shared/Title";

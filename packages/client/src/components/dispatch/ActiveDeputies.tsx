@@ -12,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { StatusViewMode } from "types/prisma";
 import { useAuth } from "context/AuthContext";
 import { useImageUrl } from "hooks/useImageUrl";
-import { Table } from "components/table/Table";
+import { Table } from "components/shared/Table";
 
 export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();

@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
-import { TabsContainer } from "components/tabs/TabsContainer";
+import { TabList } from "components/shared/TabList";
 import { EmployeeAsEnum } from "types/prisma";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
@@ -76,11 +76,11 @@ export default function BusinessId(props: Props) {
       </header>
 
       <div className="mt-3">
-        <TabsContainer tabs={tabs}>
+        <TabList tabs={tabs}>
           <EmployeesTab />
           {currentBusiness.whitelisted ? <PendingEmployeesTab /> : null}
           <ManageBusinessTab />
-        </TabsContainer>
+        </TabList>
       </div>
     </Layout>
   );

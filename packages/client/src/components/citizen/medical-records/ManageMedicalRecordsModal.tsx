@@ -10,7 +10,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";

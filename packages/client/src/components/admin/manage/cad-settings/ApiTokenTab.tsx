@@ -2,7 +2,7 @@ import * as React from "react";
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { PasswordInput } from "components/form/Input";
+import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";

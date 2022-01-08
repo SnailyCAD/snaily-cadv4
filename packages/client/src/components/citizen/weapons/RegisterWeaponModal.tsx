@@ -1,6 +1,7 @@
 import { useTranslations } from "use-intl";
 import { Formik } from "formik";
-import { VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { useRouter } from "next/router";
+import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -10,62 +11,53 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle } from "types/prisma";
+import { Citizen, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
-import { Input } from "components/form/Input";
 import { useCitizen } from "context/CitizenContext";
-import { useRouter } from "next/router";
-import { useAuth } from "context/AuthContext";
-import { Toggle } from "components/form/Toggle";
+import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  vehicle: RegisteredVehicle | null;
+  weapon: Weapon | null;
   citizens: Citizen[];
-  onCreate?: (newV: RegisteredVehicle) => void;
-  onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
+  onCreate?: (newV: Weapon) => void;
+  onUpdate?: (old: Weapon, newV: Weapon) => void;
   onClose?(): void;
 }
 
-export function RegisterVehicleModal({
-  citizens = [],
-  vehicle,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) {
+export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const t = useTranslations("Citizen");
-  const tVehicle = useTranslations("Vehicles");
-  const common = useTranslations("Common");
-  const { citizen } = useCitizen(false);
-  const router = useRouter();
-  const { cad } = useAuth();
+  const { pathname } = useRouter();
   const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
 
-  const { vehicle: vehicles, license } = useValues();
-  const validate = handleValidate(VEHICLE_SCHEMA);
-  const isDisabled = router.pathname === "/citizen/[id]";
-  const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
+  const t = useTranslations("Citizen");
+  const tVehicle = useTranslations("Vehicles");
+  const tWeapon = useTranslations("Weapons");
+  const common = useTranslations("Common");
+
+  const { citizen } = useCitizen(false);
+  const { weapon: weapons, license } = useValues();
+  const validate = handleValidate(WEAPON_SCHEMA);
+  const isDisabled = pathname === "/citizen/[id]";
 
   function handleClose() {
-    closeModal(ModalIds.RegisterVehicle);
+    closeModal(ModalIds.RegisterWeapon);
     onClose?.();
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (vehicle) {
-      const { json } = await execute(`/vehicles/${vehicle.id}`, {
+    if (weapon) {
+      const { json } = await execute(`/weapons/${weapon.id}`, {
         method: "PUT",
         data: values,
       });
 
       if (json?.id) {
-        onUpdate?.(vehicle, json);
+        onUpdate?.(weapon, json);
       }
     } else {
-      const { json } = await execute("/vehicles", {
+      const { json } = await execute("/weapons", {
         method: "POST",
         data: values,
       });
@@ -77,47 +69,28 @@ export function RegisterVehicleModal({
   }
 
   const INITIAL_VALUES = {
-    model: vehicle?.modelId ?? "",
-    color: vehicle?.color ?? "",
-    insuranceStatus: vehicle?.insuranceStatus ?? "",
-    registrationStatus: vehicle?.registrationStatusId ?? "",
-    citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
-    plate: vehicle?.plate ?? "",
-    vinNumber: vehicle?.vinNumber ?? "",
-    reportedStolen: vehicle?.reportedStolen ?? false,
+    model: weapon?.modelId ?? "",
+    registrationStatus: weapon?.registrationStatusId ?? "",
+    citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
+    serialNumber: weapon?.serialNumber ?? "",
   };
 
   return (
     <Modal
-      title={t("registerVehicle")}
+      title={t("registerWeapon")}
       onClose={handleClose}
-      isOpen={isOpen(ModalIds.RegisterVehicle)}
+      isOpen={isOpen(ModalIds.RegisterWeapon)}
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
-              <Input
-                disabled={!!vehicle}
-                onChange={handleChange}
-                name="plate"
-                value={values.plate.toUpperCase()}
-                max={maxPlateLength}
-                maxLength={maxPlateLength}
-              />
-            </FormField>
-
-            <FormField optional errorMessage={errors.vinNumber} label={tVehicle("vinNumber")}>
-              <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
-            </FormField>
-
             {DISALLOW_TEXTFIELD_SELECTION ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Select
-                  values={vehicles.values.map((vehicle) => ({
-                    label: vehicle.value.value,
-                    value: vehicle.id,
+                  values={weapons.values.map((weapon) => ({
+                    label: weapon.value.value,
+                    value: weapon.id,
                   }))}
                   value={values.model}
                   name="model"
@@ -127,15 +100,15 @@ export function RegisterVehicleModal({
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
-                  list="vehicle-models-list"
+                  list="weaponModelsList"
                   value={values.model}
                   name="model"
                   onChange={handleChange}
                 />
 
-                <datalist id="vehicle-models-list">
-                  {vehicles.values.map((vehicle) => (
-                    <span key={vehicle.id}>{vehicle.value.value}</span>
+                <datalist id="weaponModelsList">
+                  {weapons.values.map((weapon) => (
+                    <span key={weapon.id}>{weapon.value.value}</span>
                   ))}
                 </datalist>
               </FormField>
@@ -173,27 +146,17 @@ export function RegisterVehicleModal({
               />
             </FormField>
 
-            <FormField errorMessage={errors.color} label={tVehicle("color")}>
-              <Input onChange={handleChange} name="color" value={values.color} />
+            <FormField optional errorMessage={errors.serialNumber} label={tWeapon("serialNumber")}>
+              <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
-
-            {vehicle ? (
-              <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
-                <Toggle
-                  onClick={handleChange}
-                  name="reportedStolen"
-                  toggled={values.reportedStolen}
-                />
-              </FormField>
-            ) : null}
 
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.RegisterVehicle)}
+                onClick={() => closeModal(ModalIds.RegisterWeapon)}
                 variant="cancel"
               >
-                {common("cancel")}
+                Cancel
               </Button>
               <Button
                 className="flex items-center"
@@ -201,7 +164,7 @@ export function RegisterVehicleModal({
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {vehicle ? common("save") : t("registerVehicle")}
+                {weapon ? common("save") : t("registerWeapon")}
               </Button>
             </footer>
           </form>

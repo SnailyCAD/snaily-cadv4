@@ -2,7 +2,7 @@ import { TOW_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
-import { Input } from "components/form/Input";
+import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
