@@ -54,10 +54,12 @@ export default function SupervisorPanelPage({ unit }: Props) {
     return null;
   }
 
+  const divisions = "divisions" in unit && unit.divisions;
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: unit.departmentId,
     division: unit.divisionId,
+    divisions: Array.isArray(divisions) ? divisions : [],
     callsign: unit.callsign,
     rank: unit.rankId,
     suspended: unit.suspended,
@@ -100,17 +102,39 @@ export default function SupervisorPanelPage({ unit }: Props) {
             </FormField>
 
             <FormField label={t("division")}>
-              <Select
-                name="division"
-                onChange={handleChange}
-                value={values.division}
-                values={division.values
-                  .filter((v) => (values.department ? v.departmentId === values.department : true))
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
+              {"divisions" in unit ? (
+                <Select
+                  name="divisions"
+                  onChange={handleChange}
+                  value={values.divisions.map((d) => ({
+                    label: d.value.value,
+                    value: d.id,
                   }))}
-              />
+                  isMulti
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              ) : (
+                <Select
+                  name="division"
+                  onChange={handleChange}
+                  value={values.division}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              )}
             </FormField>
 
             <FormField label={t("rank")}>

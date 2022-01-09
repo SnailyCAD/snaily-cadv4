@@ -33,6 +33,7 @@ export type MiscCadSettings = {
   maxCitizensPerUser: number | null;
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
+  maxDivisionsPerOfficer: number | null;
   pairedUnitSymbol: string | null;
   callsignTemplate: string | null;
   signal100Enabled: boolean;

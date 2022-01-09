@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { makeUnitName, requestAll } from "lib/utils";
+import { getOfficerDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
@@ -23,7 +23,8 @@ const ManageOfficerModal = dynamic(
 );
 
 export type OfficerWithDept = Officer & {
-  division: DivisionValue;
+  division: DivisionValue | null;
+  divisions: DivisionValue[];
   department: DepartmentValue;
   rank?: Value<"OFFICER_RANK">;
 };
@@ -94,7 +95,7 @@ export default function MyOfficers({ officers: data }: Props) {
             callsign: generateCallsign(officer),
             badgeNumber: officer.badgeNumber,
             department: officer.department.value.value,
-            division: officer.division.value.value,
+            division: getOfficerDivisions(officer),
             rank: officer.rank?.value ?? common("none"),
             actions: (
               <>

@@ -4,7 +4,7 @@ import { PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { unitProperties } from "lib/officer";
+import { leoProperties } from "lib/officer";
 import { ReleaseType } from "@prisma/client";
 
 const citizenInclude = {
@@ -16,7 +16,7 @@ const citizenInclude = {
         },
       },
       officer: {
-        include: unitProperties,
+        include: leoProperties,
       },
       violations: true,
     },

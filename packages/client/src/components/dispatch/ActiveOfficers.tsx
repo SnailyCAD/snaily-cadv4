@@ -7,7 +7,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/useActiveOfficers";
 import { useRouter } from "next/router";
-import { makeUnitName } from "lib/utils";
+import { getOfficerDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
 import { CombinedLeoUnit, StatusValue, StatusViewMode } from "types/prisma";
@@ -165,7 +165,7 @@ export function ActiveOfficers() {
                       </ContextMenu>
                       <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
                       <td>{!("officers" in officer) && officer.department.value.value}</td>
-                      <td>{!("officers" in officer) && officer.division.value.value}</td>
+                      <td>{!("officers" in officer) && getOfficerDivisions(officer)}</td>
                       <td className={useDot ? "flex items-center" : undefined}>
                         {useDot && officer.status?.color ? (
                           <span

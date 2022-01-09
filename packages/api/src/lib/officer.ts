@@ -11,6 +11,15 @@ export const unitProperties = {
   rank: true,
 };
 
+export const leoProperties = {
+  department: { include: { value: true } },
+  division: { include: { value: true, department: true } },
+  divisions: { include: { value: true, department: true } },
+  status: { include: { value: true } },
+  citizen: { select: { name: true, surname: true, id: true } },
+  rank: true,
+};
+
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   // dispatch is allowed to use officer routes
   let isDispatch = false;

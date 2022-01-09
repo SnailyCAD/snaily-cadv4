@@ -90,6 +90,7 @@ export function MiscFeatures() {
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
     maxCitizensPerUser: miscSettings.maxCitizensPerUser ?? Infinity,
     maxPlateLength: miscSettings.maxPlateLength,
+    maxDivisionsPerOfficer: miscSettings.maxDivisionsPerOfficer ?? Infinity,
     pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
     callsignTemplate: miscSettings.callsignTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
@@ -144,6 +145,18 @@ export function MiscFeatures() {
                   name="maxCitizensPerUser"
                   type="number"
                   value={values.maxCitizensPerUser}
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField
+                errorMessage={errors.maxDivisionsPerOfficer}
+                label="Max divisions per officer"
+              >
+                <Input
+                  name="maxDivisionsPerOfficer"
+                  type="number"
+                  value={values.maxDivisionsPerOfficer}
                   onChange={handleChange}
                 />
               </FormField>

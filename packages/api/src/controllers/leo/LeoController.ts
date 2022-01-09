@@ -16,7 +16,7 @@ import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
-import { unitProperties } from "lib/officer";
+import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 
@@ -34,7 +34,7 @@ export class LeoController {
       where: {
         userId: ctx.get("user").id,
       },
-      include: unitProperties,
+      include: leoProperties,
     });
 
     const citizens = await prisma.citizen.findMany({
@@ -89,7 +89,7 @@ export class LeoController {
         citizenId: citizen.id,
         imageId: validateImgurURL(body.get("image")),
       },
-      include: unitProperties,
+      include: leoProperties,
     });
 
     return officer;
@@ -152,7 +152,7 @@ export class LeoController {
         citizenId: citizen.id,
         imageId: validateImgurURL(body.get("image")),
       },
-      include: unitProperties,
+      include: leoProperties,
     });
 
     return updated;
@@ -188,7 +188,7 @@ export class LeoController {
       },
       include: {
         officer: {
-          include: unitProperties,
+          include: leoProperties,
         },
       },
       orderBy: {
@@ -216,12 +216,12 @@ export class LeoController {
             },
           },
         },
-        include: unitProperties,
+        include: leoProperties,
       }),
       await prisma.combinedLeoUnit.findMany({
         include: {
           status: { include: { value: true } },
-          officers: { include: unitProperties },
+          officers: { include: leoProperties },
         },
       }),
     ]);
@@ -278,7 +278,7 @@ export class LeoController {
       where: {
         id: officer.id,
       },
-      include: unitProperties,
+      include: leoProperties,
     });
 
     const code = await prisma.statusValue.findFirst({
@@ -311,7 +311,7 @@ export class LeoController {
           data: {
             statusId: onDutyCode?.id,
           },
-          include: unitProperties,
+          include: leoProperties,
         });
       } else {
         /**
@@ -324,7 +324,7 @@ export class LeoController {
           data: {
             statusId: code.id,
           },
-          include: unitProperties,
+          include: leoProperties,
         });
       }
     }

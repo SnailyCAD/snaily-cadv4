@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { FullDeputy } from "state/dispatchState";
+import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { cad as CAD, CombinedLeoUnit, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
 import { IncomingMessage } from "connect";
@@ -77,4 +77,12 @@ export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
 
 export function yesOrNoText(t: boolean): "yes" | "no" {
   return t === true ? "yes" : "no";
+}
+
+export function getOfficerDivisions(unit: FullOfficer | FullDeputy) {
+  const division = unit.division?.value.value;
+  if (!("divisions" in unit)) return division as string;
+  const divisions = unit.divisions.map((d) => d.value.value).join(", ");
+
+  return division ?? divisions;
 }

@@ -9,7 +9,7 @@ import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
-import { unitProperties } from "lib/officer";
+import { leoProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 
@@ -37,7 +37,7 @@ export const citizenInclude = {
   Record: {
     include: {
       officer: {
-        include: unitProperties,
+        include: leoProperties,
       },
       violations: {
         include: {

@@ -26,7 +26,7 @@ export function useGenerateCallsign() {
       department: department.callsign,
       callsign1: callsign,
       callsign2,
-      division: division.callsign,
+      division: division?.callsign,
     };
 
     const templateArr: (string | null)[] = template.split(/[{}]/);
