@@ -5,6 +5,7 @@ import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
+import { validateSchema } from "lib/validateSchema";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -38,14 +39,11 @@ export class TowController {
   @UseBefore(IsAuth)
   @Post("/")
   async createTaxiCall(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(TOW_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(TOW_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("creatorId"),
+        id: data.creatorId!,
       },
     });
 
@@ -55,11 +53,11 @@ export class TowController {
 
     const call = await prisma.taxiCall.create({
       data: {
-        creatorId: body.get("creatorId"),
+        creatorId: data.creatorId,
         userId: ctx.get("user").id,
-        description: body.get("description"),
-        location: body.get("location"),
-        postal: body.get("postal"),
+        description: data.description,
+        location: data.location,
+        postal: data.postal,
       },
       include: {
         assignedUnit: {

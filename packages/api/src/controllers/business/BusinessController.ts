@@ -7,11 +7,11 @@ import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
   DELETE_COMPANY_POST_SCHEMA,
-  validate,
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
+import { validateSchema } from "lib/validateSchema";
 
 const businessInclude = {
   citizen: {
@@ -125,10 +125,7 @@ export class BusinessController {
     @BodyParams() body: JsonRequestBody,
     @Context() ctx: Context,
   ) {
-    const error = validate(CREATE_COMPANY_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_COMPANY_SCHEMA, body.toJSON());
 
     const employee = await prisma.employee.findFirst({
       where: {
@@ -150,9 +147,9 @@ export class BusinessController {
         id: businessId,
       },
       data: {
-        address: body.get("address"),
-        name: body.get("name"),
-        whitelisted: body.get("whitelisted"),
+        address: data.address,
+        name: data.name,
+        whitelisted: data.whitelisted,
       },
     });
 
@@ -165,14 +162,11 @@ export class BusinessController {
     @BodyParams() body: JsonRequestBody,
     @Context() ctx: Context,
   ) {
-    const error = validate(DELETE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body.toJSON());
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         userId: ctx.get("user").id,
         businessId,
         role: {
@@ -196,15 +190,11 @@ export class BusinessController {
 
   @Post("/join")
   async joinBusiness(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(JOIN_COMPANY_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(JOIN_COMPANY_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
@@ -227,7 +217,7 @@ export class BusinessController {
 
     const business = await prisma.business.findUnique({
       where: {
-        id: body.get("businessId"),
+        id: data.businessId,
       },
     });
 
@@ -241,8 +231,8 @@ export class BusinessController {
 
     const inBusiness = await prisma.employee.findFirst({
       where: {
-        businessId: body.get("businessId"),
-        citizenId: body.get("citizenId"),
+        businessId: data.businessId,
+        citizenId: data.citizenId,
       },
     });
 
@@ -309,15 +299,11 @@ export class BusinessController {
 
   @Post("/create")
   async createBusiness(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(CREATE_COMPANY_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_COMPANY_SCHEMA, body.toJSON());
 
     const owner = await prisma.citizen.findUnique({
       where: {
-        id: body.get("ownerId"),
+        id: data.ownerId,
       },
     });
 
@@ -345,9 +331,9 @@ export class BusinessController {
     const business = await prisma.business.create({
       data: {
         citizenId: owner.id,
-        name: body.get("name"),
-        address: body.get("address"),
-        whitelisted: body.get("whitelisted") ?? false,
+        name: data.name,
+        address: data.address,
+        whitelisted: data.whitelisted ?? false,
         userId: ctx.get("user").id,
         status: businessWhitelisted ? "PENDING" : "ACCEPTED",
       },

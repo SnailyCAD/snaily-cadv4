@@ -8,7 +8,8 @@ import { setCookie } from "utils/setCookie";
 import { signJWT } from "utils/jwt";
 import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD } from "lib/cad";
-import { validate, AUTH_SCHEMA } from "@snailycad/schemas";
+import { AUTH_SCHEMA } from "@snailycad/schemas";
+import { validateSchema } from "lib/validateSchema";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -18,14 +19,11 @@ export const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
 export class AuthController {
   @Post("/login")
   async login(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const error = validate(AUTH_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(AUTH_SCHEMA, body.toJSON());
 
     const user = await prisma.user.findUnique({
       where: {
-        username: body.username,
+        username: data.username,
       },
     });
 
@@ -46,7 +44,7 @@ export class AuthController {
     }
 
     const userPassword = user.tempPassword ?? user.password;
-    const isPasswordCorrect = compareSync(body.get("password"), userPassword);
+    const isPasswordCorrect = compareSync(data.password, userPassword);
     if (!isPasswordCorrect) {
       throw new BadRequest("passwordIncorrect");
     }
@@ -72,14 +70,14 @@ export class AuthController {
 
   @Post("/register")
   async register(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const error = validate(AUTH_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema<{ registrationCode?: string }, typeof AUTH_SCHEMA>(
+      AUTH_SCHEMA,
+      body.toJSON(),
+    );
 
     const existing = await prisma.user.findUnique({
       where: {
-        username: body.username,
+        username: data.username,
       },
     });
 
@@ -89,7 +87,7 @@ export class AuthController {
 
     const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
     if (preCad && preCad.registrationCode) {
-      const code = body.get("registrationCode");
+      const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
         throw new BadRequest("invalidRegistrationCode");
       }
@@ -98,11 +96,11 @@ export class AuthController {
     const userCount = await prisma.user.count();
     const salt = genSaltSync();
 
-    const password = hashSync(body.get("password"), salt);
+    const password = hashSync(data.password, salt);
 
     const user = await prisma.user.create({
       data: {
-        username: body.get("username"),
+        username: data.username,
         password,
       },
     });

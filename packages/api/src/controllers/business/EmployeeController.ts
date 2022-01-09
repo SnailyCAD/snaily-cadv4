@@ -3,11 +3,12 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, JsonRequestBody, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
-import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA, validate } from "@snailycad/schemas";
+import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
+import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -19,16 +20,13 @@ export class BusinessEmployeeController {
     @Context() ctx: Context,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(UPDATE_EMPLOYEE_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         businessId,
         userId: ctx.get("user").id,
       },
@@ -60,7 +58,7 @@ export class BusinessEmployeeController {
 
     const role = await prisma.employeeValue.findUnique({
       where: {
-        id: body.get("roleId"),
+        id: data.roleId,
       },
     });
 
@@ -73,9 +71,9 @@ export class BusinessEmployeeController {
         id: employeeToUpdate.id,
       },
       data: {
-        employeeOfTheMonth: body.get("employeeOfTheMonth"),
-        canCreatePosts: body.get("canCreatePosts"),
-        roleId: body.get("roleId"),
+        employeeOfTheMonth: data.employeeOfTheMonth,
+        canCreatePosts: data.canCreatePosts,
+        roleId: data.roleId,
       },
       include: {
         business: true,
@@ -98,16 +96,13 @@ export class BusinessEmployeeController {
     @Context() ctx: Context,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(FIRE_EMPLOYEE_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         businessId,
         userId: ctx.get("user").id,
       },
@@ -154,16 +149,13 @@ export class BusinessEmployeeController {
     @Context() ctx: Context,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(FIRE_EMPLOYEE_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         businessId,
         userId: ctx.get("user").id,
       },

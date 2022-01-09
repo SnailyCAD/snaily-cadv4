@@ -4,17 +4,23 @@ export function validate<Values = any>(
   schema: any,
   values: Values,
   oneError?: false,
-): Record<string, string>;
+  returnValues?: boolean,
+): Record<string, string> | Record<string, any>;
+/** @deprecated use `validateSchema` */
 export function validate<Values = any>(schema: any, values: Values, oneError?: true): string;
 export function validate<Values = any>(
   schema: any,
   values: Values,
   oneError = false,
+  returnValues = false,
 ): Record<string, string> | string {
   const errors: Record<string, string> = {};
 
   try {
-    schema.parse(values);
+    const data = schema.parse(values);
+    if (returnValues) {
+      return data;
+    }
   } catch (e) {
     const zodError = e instanceof ZodError ? e : null;
     if (zodError) {
