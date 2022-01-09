@@ -57,7 +57,7 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
     >
       <div>
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, values, errors, isValid }) => (
+          {({ handleChange, values, errors }) => (
             <Form className="flex items-center gap-2">
               <FormField className="w-full" errorMessage={errors.citizenId} label={leo("citizen")}>
                 <Select
@@ -74,7 +74,7 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
 
               <Button
                 className="flex items-center mt-4"
-                disabled={!isValid || state === "loading"}
+                disabled={!values.citizenId || state === "loading"}
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}

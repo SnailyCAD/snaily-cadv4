@@ -16,6 +16,7 @@ import { Button } from "components/Button";
 import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
+import { AuthScreenImages } from "components/auth/AuthScreenImages";
 
 const INITIAL_VALUES = {
   username: "",
@@ -76,11 +77,13 @@ export default function Login() {
     <>
       <Title>{t("login")}</Title>
 
-      <main className="flex justify-center pt-20">
+      <main className="flex flex-col items-center justify-center pt-20">
+        <AuthScreenImages />
+
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
-              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
+              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
               onSubmit={handleSubmit}
             >
               <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">

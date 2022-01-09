@@ -162,14 +162,14 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
 
         <div>
           {bolo.type === BoloType.PERSON ? (
-            <p id="description">
-              {bolo.description} <br />
+            <div id="description">
+              <p className="mb-1">{bolo.description}</p>
               <span className="font-semibold">{common("name")}: </span>
               {bolo.name}
-            </p>
+            </div>
           ) : bolo.type === BoloType.VEHICLE ? (
-            <p>
-              {bolo.description} <br />
+            <div>
+              <p className="mb-1">{bolo.description}</p>
               <span className="font-semibold">{t("plate")}: </span>
               {bolo.plate?.toUpperCase()}
               <br />
@@ -178,9 +178,9 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
               <br />
               <span className="font-semibold">{t("model")}: </span>
               {bolo.model}
-            </p>
+            </div>
           ) : (
-            <p>{bolo.description}</p>
+            <p className="text-justify">{bolo.description}</p>
           )}
 
           <p>
@@ -190,7 +190,7 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
         </div>
       </div>
 
-      <div>
+      <div className="ml-2 min-w-fit">
         <Button small disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
           {common("edit")}
         </Button>

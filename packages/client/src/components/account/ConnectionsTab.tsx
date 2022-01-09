@@ -28,7 +28,7 @@ export function ConnectionsTab() {
 
   return (
     <Tab.Panel>
-      <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
+      <h3 className="text-2xl font-semibold">{t("connections")}</h3>
       <div className="mt-5">
         {user?.discordId ? (
           <>

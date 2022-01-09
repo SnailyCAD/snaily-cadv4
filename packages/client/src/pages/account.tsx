@@ -52,7 +52,7 @@ export default function Account() {
   const TABS_TITLES = [t("accountInfo"), t("accountSettings"), t("appearanceSettings")];
 
   if (DISCORD_AUTH) {
-    TABS_TITLES.push(t("connections"));
+    TABS_TITLES[3] = t("connections");
   }
 
   if (!user) {

@@ -39,6 +39,8 @@ export type MiscCadSettings = {
   allowDuplicateCitizenNames: boolean;
   liveMapURL: string | null;
   roleplayEnabled: boolean | null;
+  authScreenBgImageId: string | null;
+  authScreenHeaderImageId: string | null;
 };
 
 /**

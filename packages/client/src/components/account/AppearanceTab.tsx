@@ -42,8 +42,8 @@ export function AppearanceTab() {
       <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
-          <Form className="mt-2">
-            <FormField errorMessage={errors.isDarkTheme} label="Dark Theme">
+          <Form className="mt-3">
+            <FormField checkbox errorMessage={errors.isDarkTheme} label="Dark Theme">
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
             </FormField>
 

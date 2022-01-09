@@ -59,7 +59,7 @@ export default function TowLogs(props: Props) {
             description: call.description,
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
-            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - hh:mm:ss"),
+            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
           }))}
           columns={[
             { Header: t("location"), accessor: "location" },
