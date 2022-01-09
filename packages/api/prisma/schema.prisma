@@ -116,7 +116,7 @@ enum StatusViewMode {
 
 model Citizen {
   id                   String                        @id @default(cuid())
-  user                 User                          @relation(fields: [userId], references: [id])
+  user                 User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
   socialSecurityNumber String?
   userId               String
   name                 String                        @db.VarChar(255)
@@ -182,7 +182,7 @@ enum WhitelistStatus {
 
 model RegisteredVehicle {
   id                   String             @id @default(cuid())
-  user                 User               @relation(fields: [userId], references: [id])
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String
   citizen              Citizen            @relation(fields: [citizenId], references: [id])
   citizenId            String
@@ -204,7 +204,7 @@ model RegisteredVehicle {
 
 model Weapon {
   id                   String      @id @default(cuid())
-  user                 User        @relation(fields: [userId], references: [id])
+  user                 User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String
   citizen              Citizen     @relation(fields: [citizenId], references: [id])
   citizenId            String
@@ -219,7 +219,7 @@ model Weapon {
 
 model MedicalRecord {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   citizen   Citizen  @relation(fields: [citizenId], references: [id])
   citizenId String
@@ -392,7 +392,7 @@ enum DriversLicenseCategoryType {
 // notifications
 model Notification {
   id          String   @id @default(uuid())
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   executor    User     @relation("executor", fields: [executorId], references: [id])
   executorId  String
@@ -405,7 +405,7 @@ model Notification {
 // bleeter
 model BleeterPost {
   id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   title     String   @db.VarChar(255)
   body      String   @db.Text
@@ -417,7 +417,7 @@ model BleeterPost {
 // tow
 model TowCall {
   id                String   @id @default(uuid())
-  user              User     @relation(fields: [userId], references: [id])
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String
   assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
   assignedUnitId    String?
@@ -439,7 +439,7 @@ model TowCall {
 // taxi
 model TaxiCall {
   id             String   @id @default(uuid())
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
   assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
   assignedUnitId String?
@@ -638,7 +638,7 @@ model Call911 {
   id            String         @id @default(cuid())
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @default(now()) @updatedAt
-  user          User           @relation(fields: [userId], references: [id])
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   position      Position?      @relation(fields: [positionId], references: [id])
   positionId    String?
   userId        String
