@@ -53,6 +53,7 @@ export class ValuesController {
             // @ts-expect-error ignore
             values: await prisma[data.name].findMany({
               include: { ...(data.include ?? {}), value: true },
+              orderBy: { position: "asc" },
             }),
           };
         }
@@ -62,6 +63,7 @@ export class ValuesController {
             type,
             groups: await prisma.penalCodeGroup.findMany(),
             values: await prisma.penalCode.findMany({
+              orderBy: { position: "asc" },
               include: {
                 warningApplicable: true,
                 warningNotApplicable: true,
@@ -556,7 +558,8 @@ export class ValuesController {
   }
 
   @Put("/positions")
-  async updatePositions(@BodyParams() body: JsonRequestBody) {
+  async updatePositions(@PathParams("path") path: ValueType, @BodyParams() body: JsonRequestBody) {
+    const type = this.getTypeFromPath(path);
     const ids = body.get("ids");
 
     if (!Array.isArray(ids)) {
@@ -565,7 +568,9 @@ export class ValuesController {
 
     await Promise.all(
       ids.map(async (id: string, idx) => {
-        await prisma.value.update({
+        const key = type === "PENAL_CODE" ? "penalCode" : "value";
+        // @ts-expect-error shortcut
+        await prisma[key].update({
           where: {
             id,
           },

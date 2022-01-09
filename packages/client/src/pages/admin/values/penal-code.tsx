@@ -21,6 +21,7 @@ import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/Manage
 import { AlertModal } from "components/modal/AlertModal";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
+import { hasTableDataChanged } from "./[path]";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -87,6 +88,31 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
     }
   }
 
+  async function setList(list: PenalCode[]) {
+    if (!hasTableDataChanged(values, list)) return;
+
+    setValues((p) =>
+      list.map((v, idx) => {
+        const prev = p.find((a) => a.id === v.id);
+
+        if (prev) {
+          prev.position = idx;
+        }
+
+        return v;
+      }),
+    );
+
+    await execute(`/admin/values/${type.toLowerCase()}/positions`, {
+      method: "PUT",
+      data: {
+        ids: list.map((v) => {
+          return v.id;
+        }),
+      },
+    });
+  }
+
   async function handleDelete() {
     if (!tempValue) return;
 
@@ -150,6 +176,10 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 
           <Table
             filter={search}
+            dragDrop={{
+              enabled: true,
+              handleMove: setList,
+            }}
             data={values
               .filter((v) =>
                 currentGroup.id === "ungrouped" && v.groupId === null
@@ -157,6 +187,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                   : v.groupId === currentGroup.id,
               )
               .map((code) => ({
+                rowProps: { value: code },
                 title: code.title,
                 description: (
                   <p className="max-w-4xl min-w-[300px] break-words whitespace-pre-wrap">
