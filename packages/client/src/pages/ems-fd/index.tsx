@@ -2,8 +2,8 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
-import { useAreaOfPlay } from "hooks/useAreaOfPlay";
-import { useTime } from "hooks/useTime";
+import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
+import { useTime } from "hooks/shared/useTime";
 import dynamic from "next/dynamic";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
@@ -15,7 +15,7 @@ import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
-import { useSignal100 } from "hooks/useSignal100";
+import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 
 interface Props {

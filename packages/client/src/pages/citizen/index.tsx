@@ -13,7 +13,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
 

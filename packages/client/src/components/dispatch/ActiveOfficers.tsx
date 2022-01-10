@@ -5,7 +5,7 @@ import { ActiveOfficer, useLeoState } from "state/leoState";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { useActiveOfficers } from "hooks/useActiveOfficers";
+import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
