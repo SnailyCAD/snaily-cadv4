@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
-import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Pencil } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManageAOPModal } from "./modals/ManageAOPModal";

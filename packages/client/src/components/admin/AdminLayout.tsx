@@ -1,5 +1,5 @@
 import { Nav } from "components/nav/Nav";
-import { useRoleplayStopped } from "hooks/useRoleplayStopped";
+import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { AdminSidebar } from "./Sidebar";
 
 interface Props {

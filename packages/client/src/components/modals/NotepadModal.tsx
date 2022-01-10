@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Textarea } from "components/form/Textarea";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
-import { useNotepad } from "hooks/useNotepad";
+import { useNotepad } from "hooks/shared/useNotepad";
 import { ModalIds } from "types/ModalIds";
 
 export function NotepadModal() {

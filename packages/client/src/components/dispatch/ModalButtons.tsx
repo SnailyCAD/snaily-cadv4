@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
-import { useSignal100 } from "hooks/useSignal100";
+import { useSignal100 } from "hooks/shared/useSignal100";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Feature } from "types/prisma";
 

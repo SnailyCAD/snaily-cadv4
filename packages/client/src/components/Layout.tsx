@@ -1,4 +1,4 @@
-import { useRoleplayStopped } from "hooks/useRoleplayStopped";
+import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { Nav } from "./nav/Nav";
 
 interface Props {

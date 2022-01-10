@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { StatusesArea } from "components/shared/StatusesArea";
-import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
@@ -13,12 +13,12 @@ import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
-import { useTime } from "hooks/useTime";
+import { useTime } from "hooks/shared/useTime";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
-import { useSignal100 } from "hooks/useSignal100";
-import { usePanicButton } from "hooks/usePanicButton";
+import { useSignal100 } from "hooks/shared/useSignal100";
+import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 
 const NotepadModal = dynamic(async () => {
