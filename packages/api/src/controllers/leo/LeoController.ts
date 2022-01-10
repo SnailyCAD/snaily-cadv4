@@ -81,7 +81,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await this.linkDivisionsToOfficer(officer, body.get("divisions"));
+    const updated = await linkDivisionsToOfficer(officer, body.get("divisions"));
     return updated;
   }
 
@@ -119,7 +119,7 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    await this.unlinkDivisionsToOfficer(officer);
+    await unlinkDivisionsFromOfficer(officer);
 
     const updatedOfficer = await prisma.officer.update({
       where: {
@@ -136,7 +136,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await this.linkDivisionsToOfficer(updatedOfficer, body.get("divisions"));
+    const updated = await linkDivisionsToOfficer(updatedOfficer, body.get("divisions"));
     return updated;
   }
 
@@ -390,41 +390,43 @@ export class LeoController {
 
     return true;
   }
+}
 
-  private async linkDivisionsToOfficer(
-    officer: Officer & { divisions: DivisionValue[] },
-    divisions: string[],
-  ) {
-    await Promise.all(
-      divisions.map(async (id) => {
-        return prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            divisions: { connect: { id } },
-          },
-          include: leoProperties,
-        });
-      }),
-    );
+export async function linkDivisionsToOfficer(
+  officer: Officer & { divisions: DivisionValue[] },
+  divisions: string[],
+) {
+  await Promise.all(
+    divisions.map(async (id) => {
+      return prisma.officer.update({
+        where: { id: officer.id },
+        data: {
+          divisions: { connect: { id } },
+        },
+        include: leoProperties,
+      });
+    }),
+  );
 
-    const updated = await prisma.officer.findUnique({
-      where: { id: officer.id },
-      include: leoProperties,
-    });
+  const updated = await prisma.officer.findUnique({
+    where: { id: officer.id },
+    include: leoProperties,
+  });
 
-    return updated!;
-  }
+  return updated!;
+}
 
-  private async unlinkDivisionsToOfficer(officer: Officer & { divisions: DivisionValue[] }) {
-    await Promise.all(
-      officer.divisions.map(async ({ id }) => {
-        return prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            divisions: { disconnect: { id } },
-          },
-        });
-      }),
-    );
-  }
+export async function unlinkDivisionsFromOfficer(
+  officer: Officer & { divisions: DivisionValue[] },
+) {
+  await Promise.all(
+    officer.divisions.map(async ({ id }) => {
+      return prisma.officer.update({
+        where: { id: officer.id },
+        data: {
+          divisions: { disconnect: { id } },
+        },
+      });
+    }),
+  );
 }

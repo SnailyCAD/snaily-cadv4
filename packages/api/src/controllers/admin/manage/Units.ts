@@ -3,6 +3,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
+import { linkDivisionsToOfficer, unlinkDivisionsFromOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -112,6 +113,10 @@ export class ManageUnitsController {
       throw new NotFound("unitNotFound");
     }
 
+    if (type === "officer") {
+      await unlinkDivisionsFromOfficer(unit);
+    }
+
     // @ts-expect-error ignore
     const updated = await prisma[type].update({
       where: { id: unit.id },
@@ -123,6 +128,10 @@ export class ManageUnitsController {
         suspended: Boolean(body.get("suspended")),
       },
     });
+
+    if (type === "officer") {
+      return linkDivisionsToOfficer(unit, body.get("divisions"));
+    }
 
     return updated;
   }
