@@ -53,6 +53,7 @@ export default function EditCitizen() {
     address: citizen.address,
     image: undefined,
     phoneNumber: citizen.phoneNumber,
+    postal: citizen.postal ?? "",
   };
 
   async function onSubmit(
@@ -180,19 +181,24 @@ export default function EditCitizen() {
               </FormField>
             </FormRow>
 
-            <FormRow>
-              <FormField errorMessage={errors.address} label={t("address")}>
+            <FormRow flexLike>
+              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
                 <Input value={values.address} onChange={handleChange} name="address" />
               </FormField>
 
-              <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
+              <FormField optional errorMessage={errors.postal} label={common("postal")}>
                 <Input
-                  value={values.phoneNumber ?? ""}
+                  className="min-w-[300px]"
+                  name="postal"
                   onChange={handleChange}
-                  name="phoneNumber"
+                  value={values.postal}
                 />
               </FormField>
             </FormRow>
+
+            <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
+              <Input value={values.phoneNumber ?? ""} onChange={handleChange} name="phoneNumber" />
+            </FormField>
 
             <div className="flex items-center justify-end">
               <Link href={`/citizen/${citizen.id}`}>

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
-import { cad as CAD, CombinedLeoUnit, Feature, Officer } from "types/prisma";
+import { cad as CAD, Citizen, CombinedLeoUnit, Feature, Officer } from "types/prisma";
 import { handleRequest } from "./fetch";
 import { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -85,4 +85,9 @@ export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 
   return division ?? divisions;
+}
+
+export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal">) {
+  const { address, postal } = citizen;
+  return `${address} ${postal ? `(${postal})` : ""}`;
 }

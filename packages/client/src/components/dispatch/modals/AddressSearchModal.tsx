@@ -11,6 +11,7 @@ import { useTranslations } from "use-intl";
 import { Input } from "components/form/inputs/Input";
 import { Citizen } from "types/prisma";
 import { Table } from "components/shared/Table";
+import { formatCitizenAddress } from "lib/utils";
 
 export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();
@@ -71,7 +72,7 @@ export function AddressSearchModal() {
                 <Table
                   data={results.map((result) => ({
                     citizen: `${result.name} ${result.surname}`,
-                    fullAddress: result.address,
+                    fullAddress: formatCitizenAddress(result),
                     actions: (
                       <Button
                         type="button"

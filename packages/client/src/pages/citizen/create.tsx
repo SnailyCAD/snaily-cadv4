@@ -42,6 +42,7 @@ const INITIAL_VALUES = {
   driversLicenseCategory: "",
   pilotLicenseCategory: "",
   phoneNumber: "",
+  postal: "f",
 };
 
 export default function CreateCitizen() {
@@ -184,15 +185,24 @@ export default function CreateCitizen() {
               </FormField>
             </FormRow>
 
-            <FormRow>
-              <FormField errorMessage={errors.address} label={t("address")}>
+            <FormRow flexLike>
+              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
                 <Input onChange={handleChange} name="address" />
               </FormField>
 
-              <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
-                <Input onChange={handleChange} name="phoneNumber" />
+              <FormField optional errorMessage={errors.postal} label={common("postal")}>
+                <Input
+                  className="min-w-[300px]"
+                  name="postal"
+                  onChange={handleChange}
+                  value={values.postal}
+                />
               </FormField>
             </FormRow>
+
+            <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
+              <Input onChange={handleChange} name="phoneNumber" />
+            </FormField>
 
             <FormRow className="mt-5">
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>

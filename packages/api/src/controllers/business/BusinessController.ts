@@ -150,6 +150,7 @@ export class BusinessController {
         address: data.address,
         name: data.name,
         whitelisted: data.whitelisted,
+        postal: data.postal || null,
       },
     });
 
@@ -331,9 +332,10 @@ export class BusinessController {
     const business = await prisma.business.create({
       data: {
         citizenId: owner.id,
-        name: data.name,
         address: data.address,
-        whitelisted: data.whitelisted ?? false,
+        name: data.name,
+        whitelisted: data.whitelisted,
+        postal: data.postal || null,
         userId: ctx.get("user").id,
         status: businessWhitelisted ? "PENDING" : "ACCEPTED",
       },

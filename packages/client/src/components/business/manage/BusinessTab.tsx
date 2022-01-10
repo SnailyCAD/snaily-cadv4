@@ -15,6 +15,7 @@ import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
+import { FormRow } from "components/form/FormRow";
 
 export function ManageBusinessTab() {
   const { state, execute } = useFetch();
@@ -60,6 +61,7 @@ export function ManageBusinessTab() {
   const INITIAL_VALUES = {
     name: currentBusiness.name,
     address: currentBusiness.address,
+    postal: currentBusiness.postal ?? "",
     ownerId: currentBusiness.citizenId,
     whitelisted: currentBusiness.whitelisted,
   };
@@ -75,9 +77,25 @@ export function ManageBusinessTab() {
               <Input name="name" onChange={handleChange} value={values.name} />
             </FormField>
 
-            <FormField errorMessage={errors.address} label={t("address")}>
-              <Input name="address" onChange={handleChange} value={values.address} />
-            </FormField>
+            <FormRow flexLike>
+              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
+                <Input
+                  className="w-full"
+                  name="address"
+                  onChange={handleChange}
+                  value={values.address}
+                />
+              </FormField>
+
+              <FormField optional errorMessage={errors.postal} label={common("postal")}>
+                <Input
+                  className="min-w-[200px]"
+                  name="postal"
+                  onChange={handleChange}
+                  value={values.postal}
+                />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />

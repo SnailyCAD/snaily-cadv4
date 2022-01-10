@@ -141,6 +141,7 @@ export class CitizenController {
       pilotLicenseCategory,
       ccw,
       phoneNumber,
+      postal,
     } = body.toJSON() as {
       [key: string]: any;
       driversLicenseCategory: string[];
@@ -172,6 +173,7 @@ export class CitizenController {
       data: {
         userId: ctx.get("user").id,
         address,
+        postal: postal || null,
         weight,
         height,
         hairColor,
@@ -236,6 +238,7 @@ export class CitizenController {
       gender,
       phoneNumber,
       occupation,
+      postal,
     } = body.toJSON();
 
     const date = new Date(dateOfBirth).getTime();
@@ -251,6 +254,7 @@ export class CitizenController {
       },
       data: {
         address,
+        postal: postal || null,
         weight,
         height,
         hairColor,
