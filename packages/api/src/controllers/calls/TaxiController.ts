@@ -1,8 +1,8 @@
 import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { validate, TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
+import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
@@ -77,10 +77,7 @@ export class TowController {
   @UseBefore(IsAuth)
   @Put("/:id")
   async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: JsonRequestBody) {
-    const error = validate(UPDATE_TOW_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(UPDATE_TOW_SCHEMA, body.toJSON());
 
     const call = await prisma.taxiCall.findUnique({
       where: {
@@ -92,14 +89,14 @@ export class TowController {
       throw new NotFound("notFound");
     }
 
-    const rawAssignedUnitId = body.get("assignedUnitId");
+    const rawAssignedUnitId = data.assignedUnitId;
     const assignedUnitId =
       rawAssignedUnitId === null
         ? {
             disconnect: true,
           }
-        : body.get("assignedUnitId")
-        ? { connect: { id: body.get("assignedUnitId") } }
+        : data.assignedUnitId
+        ? { connect: { id: data.assignedUnitId } }
         : undefined;
 
     const updated = await prisma.taxiCall.update({
@@ -107,9 +104,9 @@ export class TowController {
         id: callId,
       },
       data: {
-        description: body.get("description"),
-        location: body.get("location"),
-        postal: body.get("postal"),
+        description: data.description,
+        location: data.location,
+        postal: data.postal,
         assignedUnit: assignedUnitId,
       },
       include: {
