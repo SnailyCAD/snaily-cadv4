@@ -3,7 +3,7 @@ import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { CombinedLeoUnit } from "types/prisma";
 
 type P = "callsign" | "callsign2" | "department" | "division";
-type FullUnit = Pick<FullOfficer, P> | Pick<FullDeputy, P> | CombinedLeoUnit;
+type FullUnit = Pick<FullOfficer, P | "divisions"> | Pick<FullDeputy, P> | CombinedLeoUnit;
 
 export function useGenerateCallsign() {
   const { cad } = useAuth();
@@ -15,8 +15,11 @@ export function useGenerateCallsign() {
       return "NULL";
     }
 
-    const { callsign, callsign2, department, division } = unit;
+    const { callsign, callsign2, department } = unit;
+    const unitDivision = unit.division ?? ("divisions" in unit && unit.divisions);
+
     const template = miscCadSettings?.callsignTemplate;
+    const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
     if (!template) {
       return "";
@@ -26,7 +29,7 @@ export function useGenerateCallsign() {
       department: department.callsign,
       callsign1: callsign,
       callsign2,
-      division: division.callsign,
+      division: division && division.callsign,
     };
 
     const templateArr: (string | null)[] = template.split(/[{}]/);

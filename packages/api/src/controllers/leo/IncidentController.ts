@@ -4,7 +4,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { unitProperties } from "lib/officer";
+import { leoProperties } from "lib/officer";
 import { LEO_INCIDENT_SCHEMA, validate } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Officer } from ".prisma/client";
@@ -16,8 +16,8 @@ export class IncidentController {
   async getAllIncidents() {
     const incidents = await prisma.leoIncident.findMany({
       include: {
-        creator: { include: unitProperties },
-        officersInvolved: { include: unitProperties },
+        creator: { include: leoProperties },
+        officersInvolved: { include: leoProperties },
       },
     });
 

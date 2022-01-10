@@ -1,12 +1,18 @@
 import { z } from "zod";
 
+const SELECT_VALUE = z.object({
+  value: z.any(),
+  label: z.any(),
+});
+
 export const CREATE_OFFICER_SCHEMA = z.object({
   department: z.string().min(2).max(255),
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),
   rank: z.string().max(255).nullable(),
   badgeNumber: z.number().min(1),
-  division: z.string().min(2).max(255),
+  division: z.string().min(2).max(255).optional(),
+  divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({

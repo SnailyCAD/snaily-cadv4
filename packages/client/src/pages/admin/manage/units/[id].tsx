@@ -39,12 +39,17 @@ export default function SupervisorPanelPage({ unit }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!unit) return;
 
+    const data = {
+      ...values,
+      divisions: values.divisions.map((v) => v.value),
+    };
+
     const { json } = await execute(`/admin/manage/units/${unit.id}`, {
       method: "PUT",
-      data: values,
+      data,
     });
 
-    if (json) {
+    if (json.id) {
       toast.success("Updated.");
       router.push("/admin/manage/units");
     }
@@ -54,10 +59,12 @@ export default function SupervisorPanelPage({ unit }: Props) {
     return null;
   }
 
+  const divisions = ("divisions" in unit && unit.divisions) || [];
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: unit.departmentId,
     division: unit.divisionId,
+    divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     callsign: unit.callsign,
     rank: unit.rankId,
     suspended: unit.suspended,
@@ -100,17 +107,36 @@ export default function SupervisorPanelPage({ unit }: Props) {
             </FormField>
 
             <FormField label={t("division")}>
-              <Select
-                name="division"
-                onChange={handleChange}
-                value={values.division}
-                values={division.values
-                  .filter((v) => (values.department ? v.departmentId === values.department : true))
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
-                  }))}
-              />
+              {"divisions" in unit ? (
+                <Select
+                  isMulti
+                  value={values.divisions}
+                  name="divisions"
+                  onChange={handleChange}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              ) : (
+                <Select
+                  name="division"
+                  onChange={handleChange}
+                  value={values.division}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
+              )}
             </FormField>
 
             <FormField label={t("rank")}>

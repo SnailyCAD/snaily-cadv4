@@ -8,12 +8,12 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
-import { unitProperties } from "lib/officer";
+import { unitProperties, leoProperties } from "lib/officer";
 
 const assignedUnitsInclude = {
   include: {
     officer: {
-      include: unitProperties,
+      include: leoProperties,
     },
     deputy: {
       include: unitProperties,
@@ -22,7 +22,7 @@ const assignedUnitsInclude = {
       include: {
         status: { include: { value: true } },
         officers: {
-          include: unitProperties,
+          include: leoProperties,
         },
       },
     },
@@ -506,7 +506,7 @@ export async function findUnit(id: string, extraFind?: any, searchCombined?: boo
         id,
       },
       include: {
-        officers: { select: unitProperties },
+        officers: { include: leoProperties },
       },
     });
 

@@ -33,6 +33,7 @@ export type MiscCadSettings = {
   maxCitizensPerUser: number | null;
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
+  maxDivisionsPerOfficer: number | null;
   pairedUnitSymbol: string | null;
   callsignTemplate: string | null;
   signal100Enabled: boolean;
@@ -285,7 +286,7 @@ export type EmployeeValue = {
 export type Officer = {
   id: string;
   departmentId: string;
-  divisionId: string;
+  divisionId: string | null;
   callsign: string;
   callsign2: string;
   rankId: string;

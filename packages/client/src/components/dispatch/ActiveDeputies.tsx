@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/useActiveDeputies";
 import { useRouter } from "next/router";
-import { makeUnitName } from "lib/utils";
+import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { StatusViewMode } from "types/prisma";
 import { useAuth } from "context/AuthContext";
@@ -64,7 +64,7 @@ export function ActiveDeputies() {
               ),
               badgeNumber: deputy.badgeNumber,
               department: deputy.department.value.value,
-              division: deputy.division.value.value,
+              division: formatUnitDivisions(deputy),
               status: (
                 <span className="flex items-center">
                   {useDot && color ? (
