@@ -15,6 +15,7 @@ import type {
   DriversLicenseCategoryValue,
   EmployeeValue,
   PenalCode,
+  PenalCodeGroup,
   StatusValue,
   Value,
   ValueType,
@@ -333,8 +334,8 @@ function getCreatedAtFromValue(value: TValue) {
  * only update db if the list was actually moved.
  */
 export function hasTableDataChanged(
-  prevList: (TValue | PenalCode)[],
-  newList: (TValue | PenalCode)[],
+  prevList: (TValue | PenalCode | PenalCodeGroup)[],
+  newList: (TValue | PenalCode | PenalCodeGroup)[],
 ) {
   let wasMoved = false;
 
