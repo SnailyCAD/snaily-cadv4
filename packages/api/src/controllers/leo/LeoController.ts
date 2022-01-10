@@ -19,6 +19,7 @@ import fs from "node:fs";
 import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
+import { DivisionValue } from "@prisma/client";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -56,17 +57,6 @@ export class LeoController {
       throw new BadRequest(error);
     }
 
-    const division = await prisma.divisionValue.findFirst({
-      where: {
-        id: body.get("division"),
-        departmentId: body.get("department"),
-      },
-    });
-
-    if (!division) {
-      throw new BadRequest("divisionNotInDepartment");
-    }
-
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: body.get("citizenId"),
@@ -84,7 +74,6 @@ export class LeoController {
         callsign2: body.get("callsign2"),
         userId: user.id,
         departmentId: body.get("department"),
-        divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
         imageId: validateImgurURL(body.get("image")),
@@ -92,7 +81,8 @@ export class LeoController {
       include: leoProperties,
     });
 
-    return officer;
+    const updated = await this.linkDivisionsToOfficer(officer, body.get("divisions"));
+    return updated;
   }
 
   @Put("/:id")
@@ -111,21 +101,11 @@ export class LeoController {
         id: officerId,
         userId: user.id,
       },
+      include: leoProperties,
     });
 
     if (!officer) {
       throw new NotFound("officerNotFound");
-    }
-
-    const division = await prisma.divisionValue.findFirst({
-      where: {
-        id: body.get("division"),
-        departmentId: body.get("department"),
-      },
-    });
-
-    if (!division) {
-      throw new BadRequest("divisionNotInDepartment");
     }
 
     const citizen = await prisma.citizen.findFirst({
@@ -139,7 +119,9 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    const updated = await prisma.officer.update({
+    await this.unlinkDivisionsToOfficer(officer);
+
+    const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
       },
@@ -147,7 +129,6 @@ export class LeoController {
         callsign: body.get("callsign"),
         callsign2: body.get("callsign2"),
         departmentId: body.get("department"),
-        divisionId: body.get("division"),
         badgeNumber: parseInt(body.get("badgeNumber")),
         citizenId: citizen.id,
         imageId: validateImgurURL(body.get("image")),
@@ -155,6 +136,7 @@ export class LeoController {
       include: leoProperties,
     });
 
+    const updated = await this.linkDivisionsToOfficer(updatedOfficer, body.get("divisions"));
     return updated;
   }
 
@@ -407,5 +389,42 @@ export class LeoController {
     });
 
     return true;
+  }
+
+  private async linkDivisionsToOfficer(
+    officer: Officer & { divisions: DivisionValue[] },
+    divisions: string[],
+  ) {
+    await Promise.all(
+      divisions.map(async (id) => {
+        return prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            divisions: { connect: { id } },
+          },
+          include: leoProperties,
+        });
+      }),
+    );
+
+    const updated = await prisma.officer.findUnique({
+      where: { id: officer.id },
+      include: leoProperties,
+    });
+
+    return updated!;
+  }
+
+  private async unlinkDivisionsToOfficer(officer: Officer & { divisions: DivisionValue[] }) {
+    await Promise.all(
+      officer.divisions.map(async ({ id }) => {
+        return prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            divisions: { disconnect: { id } },
+          },
+        });
+      }),
+    );
   }
 }

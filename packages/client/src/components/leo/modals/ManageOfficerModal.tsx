@@ -55,10 +55,14 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
 
     let officerId;
+    const data = {
+      ...values,
+      divisions: values.divisions.map((v) => v.value),
+    };
     if (officer) {
       const { json } = await execute(`/leo/${officer.id}`, {
         method: "PUT",
-        data: values,
+        data,
       });
 
       officerId = officer.id;
@@ -69,7 +73,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     } else {
       const { json } = await execute("/leo", {
         method: "POST",
-        data: values,
+        data,
       });
 
       officerId = json.id;
@@ -97,7 +101,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
     callsign2: officer?.callsign2 ?? "",
-    division: officer?.divisionId ?? "",
+    divisions: officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     badgeNumber: officer?.badgeNumber ?? "",
     citizenId: officer?.citizenId ?? "",
     image: undefined,
@@ -170,10 +174,11 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               />
             </FormField>
 
-            <FormField errorMessage={errors.division} label={t("division")}>
+            <FormField errorMessage={errors.divisions as string} label={t("division")}>
               <Select
-                value={values.division}
-                name="division"
+                isMulti
+                value={values.divisions}
+                name="divisions"
                 onChange={handleChange}
                 values={division.values
                   .filter((v) => (values.department ? v.departmentId === values.department : true))
