@@ -3,6 +3,7 @@ import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { useRouter } from "next/router";
@@ -155,6 +156,8 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
     ? false
     : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
+  const generateCallsign = useGenerateCallsign();
+
   return (
     <li key={bolo.id} className="flex justify-between">
       <div className="flex">
@@ -185,7 +188,9 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
 
           <p>
             <span className="font-semibold">{t("officer")}: </span>
-            {bolo.officer ? makeUnitName(bolo.officer) : t("dispatch")}
+            {bolo.officer
+              ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
+              : t("dispatch")}
           </p>
         </div>
       </div>

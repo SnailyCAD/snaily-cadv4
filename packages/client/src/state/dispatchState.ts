@@ -1,18 +1,10 @@
 import { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
 import { OfficerWithDept } from "src/pages/officer/my-officers";
-import type {
-  Bolo,
-  Call911,
-  Citizen,
-  Officer,
-  StatusValue,
-  Call911Event,
-  Value,
-} from "types/prisma";
+import type { Bolo, Call911, Citizen, StatusValue, Call911Event, Value } from "types/prisma";
 import create from "zustand";
 
 export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };
-export type FullBolo = Bolo & { officer: Officer | null };
+export type FullBolo = Bolo & { officer: FullOfficer | null };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
