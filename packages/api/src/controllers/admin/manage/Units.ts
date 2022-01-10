@@ -1,9 +1,13 @@
-import { PathParams, BodyParams } from "@tsed/common";
+import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Get, JsonRequestBody, Put } from "@tsed/schema";
-import { linkDivisionsToOfficer, unlinkDivisionsFromOfficer } from "controllers/leo/LeoController";
+import {
+  linkDivisionsToOfficer,
+  unlinkDivisionsFromOfficer,
+  validateMaxDivisionsPerOfficer,
+} from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -92,7 +96,11 @@ export class ManageUnitsController {
   }
 
   @Put("/:id")
-  async updateUnit(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
+  async updateUnit(
+    @PathParams("id") id: string,
+    @BodyParams() body: JsonRequestBody,
+    @Context("cad") cad: any,
+  ) {
     body;
 
     let type: "officer" | "emsFdDeputy" = "officer";
@@ -114,6 +122,8 @@ export class ManageUnitsController {
     }
 
     if (type === "officer") {
+      await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+
       await unlinkDivisionsFromOfficer(unit);
     }
 

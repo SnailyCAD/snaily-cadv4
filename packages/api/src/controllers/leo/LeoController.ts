@@ -19,7 +19,7 @@ import fs from "node:fs";
 import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { DivisionValue } from "@prisma/client";
+import { DivisionValue, MiscCadSettings } from "@prisma/client";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -50,7 +50,11 @@ export class LeoController {
   }
 
   @Post("/")
-  async createOfficer(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
+  async createOfficer(
+    @BodyParams() body: JsonRequestBody,
+    @Context("user") user: User,
+    @Context("cad") cad: any,
+  ) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
 
     if (error) {
@@ -67,6 +71,8 @@ export class LeoController {
     if (!citizen) {
       throw new NotFound("citizenNotFound");
     }
+
+    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
 
     const officer = await prisma.officer.create({
       data: {
@@ -90,6 +96,7 @@ export class LeoController {
     @PathParams("id") officerId: string,
     @BodyParams() body: JsonRequestBody,
     @Context("user") user: User,
+    @Context("cad") cad: any,
   ) {
     const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
     if (error) {
@@ -107,6 +114,8 @@ export class LeoController {
     if (!officer) {
       throw new NotFound("officerNotFound");
     }
+
+    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -429,4 +438,15 @@ export async function unlinkDivisionsFromOfficer(
       });
     }),
   );
+}
+
+export async function validateMaxDivisionsPerOfficer(
+  arr: any[],
+  cad: { miscCadSettings: MiscCadSettings } | null,
+) {
+  const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};
+
+  if (maxDivisionsPerOfficer && arr.length > maxDivisionsPerOfficer) {
+    throw new BadRequest("maxDivisionsReached");
+  }
 }
