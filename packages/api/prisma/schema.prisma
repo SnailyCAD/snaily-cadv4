@@ -284,6 +284,7 @@ model PenalCode {
 
 model PenalCodeGroup {
   id        String      @id @default(cuid())
+  position  Int?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @default(now()) @updatedAt
   name      String

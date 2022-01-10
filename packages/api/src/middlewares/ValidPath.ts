@@ -2,7 +2,8 @@ import { PathParams, QueryParams, Middleware, MiddlewareMethods } from "@tsed/co
 import { BadRequest } from "@tsed/exceptions";
 import { ValueType } from ".prisma/client";
 
-const validPaths = Object.keys(ValueType).map((v) => v.toLowerCase());
+// penal code groups are only allowed for /position
+const validPaths = [...Object.keys(ValueType).map((v) => v.toLowerCase()), "penal_code_group"];
 
 @Middleware()
 export class IsValidPath implements MiddlewareMethods {

@@ -398,6 +398,7 @@ export type PenalCodeGroup = {
   createdAt: Date;
   updatedAt: Date;
   name: string;
+  position: number | null;
 };
 
 /**

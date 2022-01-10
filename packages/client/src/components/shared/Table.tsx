@@ -10,6 +10,7 @@ import {
   Column,
   Row,
   TableInstance,
+  useRowState,
 } from "react-table";
 import { ReactSortable } from "react-sortablejs";
 
@@ -34,6 +35,7 @@ interface Props<T extends object = {}, RowProps extends object = {}> {
   dragDrop?: {
     handleMove: (list: any[]) => void;
     enabled?: boolean;
+    disabledIndices?: number[];
   };
   selection?: {
     enabled: boolean;
@@ -57,6 +59,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
     { autoResetSortBy: false, columns, data },
     useGlobalFilter,
     useSortBy,
+    useRowState,
     useRowSelect,
     (hooks) => {
       if (props.selection?.enabled) {
@@ -83,11 +86,20 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
           {
             id: "move",
             Header: () => <ArrowDownUp />,
-            Cell: () => (
-              <span className={classNames("cursor-move", DRAGGABLE_TABLE_HANDLE)}>
-                <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
-              </span>
-            ),
+            Cell: (props: any) => {
+              const isDisabled = props.row?.state?.disabled;
+
+              return (
+                <span
+                  className={classNames(
+                    isDisabled ? "cursor-not-allowed" : "cursor-move",
+                    !isDisabled && DRAGGABLE_TABLE_HANDLE,
+                  )}
+                >
+                  <ArrowsExpand className="mr-2 text-gray-500 dark:text-gray-400" width={15} />
+                </span>
+              );
+            },
           },
           ...columns,
         ]);
@@ -128,6 +140,17 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
   React.useEffect(() => {
     props.defaultSort && toggleSortBy(props.defaultSort.columnId, props.defaultSort.descending);
   }, [props.defaultSort, toggleSortBy]);
+
+  React.useEffect(() => {
+    if (!props.dragDrop?.enabled) return;
+
+    props.dragDrop.disabledIndices?.forEach((i) => {
+      const row = instance.rows[i];
+      if (!row) return;
+
+      row.setState({ ...row, disabled: true });
+    });
+  }, [instance.rows, props.dragDrop]);
 
   const containerProps = {
     ...props?.containerProps,
