@@ -60,7 +60,7 @@ export class ValuesController {
         if (type === "PENAL_CODE") {
           return {
             type,
-            groups: await prisma.penalCodeGroup.findMany(),
+            groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
             values: await prisma.penalCode.findMany({
               orderBy: { position: "asc" },
               include: {
@@ -567,7 +567,13 @@ export class ValuesController {
 
     await Promise.all(
       ids.map(async (id: string, idx) => {
-        const key = type === "PENAL_CODE" ? "penalCode" : "value";
+        const keyMap = new Map([
+          ["PENAL_CODE", "penalCode"],
+          ["PENAL_CODE_GROUP", "penalCodeGroup"],
+        ]);
+
+        const key = keyMap.has(type) ? keyMap.get(type) : "value";
+
         // @ts-expect-error shortcut
         await prisma[key].update({
           where: {
