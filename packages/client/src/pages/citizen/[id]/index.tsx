@@ -15,7 +15,7 @@ import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
 import { WeaponsCard } from "components/citizen/weapons/WeaponsCard";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
-import { calculateAge, requestAll } from "lib/utils";
+import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
@@ -120,7 +120,7 @@ export default function CitizenId() {
               {citizen.height} {cad?.miscCadSettings?.heightPrefix}
             </Infofield>
 
-            <Infofield label={t("address")}>{citizen.address}</Infofield>
+            <Infofield label={t("address")}>{formatCitizenAddress(citizen)}</Infofield>
             <Infofield label={t("phoneNumber")}>{citizen.phoneNumber ?? common("none")}</Infofield>
 
             <ManageOccupationModal occupation={citizen.occupation} />

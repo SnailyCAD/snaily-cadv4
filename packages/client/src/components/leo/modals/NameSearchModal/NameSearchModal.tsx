@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Citizen, RecordType } from "types/prisma";
-import { calculateAge } from "lib/utils";
+import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
@@ -269,7 +269,9 @@ export function NameSearchModal() {
                         {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
                       </Infofield>
 
-                      <Infofield label={cT("address")}>{currentResult.address}</Infofield>
+                      <Infofield label={cT("address")}>
+                        {formatCitizenAddress(currentResult)}
+                      </Infofield>
 
                       <ManageOccupationModal isLeo occupation={currentResult.occupation} />
                     </div>
