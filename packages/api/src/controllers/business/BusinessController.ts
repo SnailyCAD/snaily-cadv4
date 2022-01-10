@@ -151,6 +151,7 @@ export class BusinessController {
       },
       data: {
         address: body.get("address"),
+        postal: body.get("postal") || null,
         name: body.get("name"),
         whitelisted: body.get("whitelisted"),
       },
@@ -347,6 +348,7 @@ export class BusinessController {
         citizenId: owner.id,
         name: body.get("name"),
         address: body.get("address"),
+        postal: body.get("postal") || null,
         whitelisted: body.get("whitelisted") ?? false,
         userId: ctx.get("user").id,
         status: businessWhitelisted ? "PENDING" : "ACCEPTED",

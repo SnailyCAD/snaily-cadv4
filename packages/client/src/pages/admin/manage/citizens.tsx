@@ -14,7 +14,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
-import { requestAll } from "lib/utils";
+import { formatCitizenAddress, requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 
 interface Props {
@@ -144,7 +144,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
                   </p>
                   <p>
                     <span className="font-semibold">{tCitizen("address")}: </span>
-                    {citizen.address}
+                    {formatCitizenAddress(citizen)}
                   </p>
                   <p>
                     <span className="font-semibold">{tCitizen("phoneNumber")}: </span>

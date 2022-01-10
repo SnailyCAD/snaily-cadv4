@@ -16,6 +16,7 @@ import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import { FullEmployee } from "state/businessState";
 import toast from "react-hot-toast";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   onCreate?(business: FullEmployee): void;
@@ -56,13 +57,14 @@ export function CreateBusinessModal({ onCreate }: Props) {
   const INITIAL_VALUES = {
     name: "",
     address: "",
+    postal: "",
     ownerId: "",
     whitelisted: false,
   };
 
   return (
     <Modal
-      className="w-[600px]"
+      className="w-[700px]"
       title={t("createBusiness")}
       isOpen={isOpen(ModalIds.CreateBusiness)}
       onClose={handleClose}
@@ -86,9 +88,25 @@ export function CreateBusinessModal({ onCreate }: Props) {
               <Input name="name" onChange={handleChange} value={values.name} />
             </FormField>
 
-            <FormField errorMessage={errors.address} label={t("address")}>
-              <Input name="address" onChange={handleChange} value={values.address} />
-            </FormField>
+            <FormRow flexLike>
+              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
+                <Input
+                  className="w-full"
+                  name="address"
+                  onChange={handleChange}
+                  value={values.address}
+                />
+              </FormField>
+
+              <FormField optional errorMessage={errors.postal} label={common("postal")}>
+                <Input
+                  className="min-w-[200px]"
+                  name="postal"
+                  onChange={handleChange}
+                  value={values.postal}
+                />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />

@@ -36,7 +36,8 @@
     "optionalField": "Optional",
     "title": "Title",
     "image": "Image",
-    "imgur": "Imgur URL"
+    "imgur": "Imgur URL",
+    "postal": "Postal"
   },
   "Nav": {
     "citizen": "Citizen",
