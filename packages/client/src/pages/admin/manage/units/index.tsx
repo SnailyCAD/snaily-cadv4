@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { getOfficerDivisions, makeUnitName, requestAll, yesOrNoText } from "lib/utils";
+import { formatUnitDivisions, makeUnitName, requestAll, yesOrNoText } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
@@ -86,7 +86,7 @@ export default function SupervisorPanelPage({ units }: Props) {
           callsign: generateCallsign(unit),
           badgeNumber: unit.badgeNumber,
           department: unit.department.value.value,
-          division: getOfficerDivisions(unit),
+          division: formatUnitDivisions(unit),
           rank: unit.rank?.value ?? common("none"),
           status: unit.status?.value.value ?? common("none"),
           suspended: common(yesOrNoText(unit.suspended)),

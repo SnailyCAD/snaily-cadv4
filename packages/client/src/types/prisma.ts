@@ -286,7 +286,7 @@ export type EmployeeValue = {
 export type Officer = {
   id: string;
   departmentId: string;
-  divisionId: string;
+  divisionId: string | null;
   callsign: string;
   callsign2: string;
   rankId: string;

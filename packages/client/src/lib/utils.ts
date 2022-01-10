@@ -79,7 +79,7 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
   return t === true ? "yes" : "no";
 }
 
-export function getOfficerDivisions(unit: FullOfficer | FullDeputy) {
+export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
   const division = unit.division?.value.value;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
