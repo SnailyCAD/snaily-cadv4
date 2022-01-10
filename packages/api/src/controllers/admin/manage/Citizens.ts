@@ -4,7 +4,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody } from "@tsed/schema";
 import { userProperties } from "lib/auth";
-import { unitProperties } from "lib/officer";
+import { leoProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 
@@ -30,10 +30,10 @@ export class ManageCitizensController {
   async getRecordLogsForCitizen() {
     const citizens = await prisma.recordLog.findMany({
       include: {
-        warrant: { include: { officer: { include: unitProperties } } },
+        warrant: { include: { officer: { include: leoProperties } } },
         records: {
           include: {
-            officer: { include: unitProperties },
+            officer: { include: leoProperties },
             violations: { include: { penalCode: true } },
           },
         },

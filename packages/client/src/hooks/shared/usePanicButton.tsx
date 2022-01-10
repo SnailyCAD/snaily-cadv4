@@ -3,7 +3,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
-import { useGenerateCallsign } from "./useGenerateCallsign";
+import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 
 export function usePanicButton() {

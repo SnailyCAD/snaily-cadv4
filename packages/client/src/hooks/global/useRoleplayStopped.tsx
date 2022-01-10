@@ -6,7 +6,6 @@ import { useTranslations } from "use-intl";
 
 export function useRoleplayStopped() {
   const { cad } = useAuth();
-
   const [roleplayStopped, setRoleplay] = React.useState<boolean>(false);
 
   useListener(SocketEvents.RoleplayStopped, (value: boolean) => {

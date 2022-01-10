@@ -15,7 +15,7 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./Calls911Controller";
-import { unitProperties } from "lib/officer";
+import { leoProperties, unitProperties } from "lib/officer";
 import { getWebhookData, sendDiscordWebhook } from "lib/discord";
 import { Socket } from "services/SocketService";
 import { APIWebhook } from "discord-api-types";
@@ -115,7 +115,7 @@ export class StatusController {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
         data: { statusId },
-        include: unitProperties,
+        include: leoProperties,
       });
     } else if (type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
@@ -127,7 +127,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
         data: { statusId },
-        include: { status: { include: { value: true } }, officers: { include: unitProperties } },
+        include: { status: { include: { value: true } }, officers: { include: leoProperties } },
       });
     }
 

@@ -74,6 +74,11 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
     openModal(ModalIds.AlertDeleteGroup);
   }
 
+  function handleViewAllGroups() {
+    setCurrentGroup(null);
+    setValues(data);
+  }
+
   async function handleDeleteGroup() {
     if (!tempGroup) return;
 
@@ -88,27 +93,49 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
     }
   }
 
-  async function setList(list: PenalCode[]) {
-    if (!hasTableDataChanged(values, list)) return;
+  async function setList(
+    type: "PENAL_CODE" | "PENAL_CODE_GROUP",
+    list: (PenalCode | PenalCodeGroup)[],
+  ) {
+    const valuesToCheck = type === "PENAL_CODE" ? values : groups;
+    if (!hasTableDataChanged(valuesToCheck, list)) return;
 
-    setValues((p) =>
-      list.map((v, idx) => {
-        const prev = p.find((a) => a.id === v.id);
+    if (type === "PENAL_CODE") {
+      // @ts-expect-error todo: setup `type` check
+      setValues((p) =>
+        list.map((v, idx) => {
+          const prev = p.find((a) => a.id === v.id);
 
-        if (prev) {
-          prev.position = idx;
-        }
+          if (prev) {
+            prev.position = idx;
+          }
 
-        return v;
-      }),
-    );
+          return v;
+        }),
+      );
+    } else {
+      // @ts-expect-error todo: setup `type` check
+      setGroups((p) =>
+        list.map((v, idx) => {
+          const prev = p.find((a) => a.id === v.id);
+
+          if (prev) {
+            prev.position = idx;
+          }
+
+          return v;
+        }),
+      );
+    }
 
     await execute(`/admin/values/${type.toLowerCase()}/positions`, {
       method: "PUT",
       data: {
-        ids: list.map((v) => {
-          return v.id;
-        }),
+        ids: list
+          .filter((v) => v.id !== "ungrouped")
+          .map((v) => {
+            return v.id;
+          }),
       },
     });
   }
@@ -162,14 +189,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
       </FormField>
 
-      {values.length <= 0 ? (
+      {values.length <= 0 && !currentGroup ? (
         <p className="mt-5">There are no penal codes yet.</p>
       ) : currentGroup ? (
         <>
           <header className="flex items-center justify-between">
             <h1 className="text-xl font-semibold capitalize">{currentGroup.name}</h1>
 
-            <Button onClick={() => setCurrentGroup(null)} className="flex items-center gap-3">
+            <Button onClick={handleViewAllGroups} className="flex items-center gap-3">
               <ArrowLeft /> View all groups
             </Button>
           </header>
@@ -178,7 +205,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             filter={search}
             dragDrop={{
               enabled: true,
-              handleMove: setList,
+              handleMove: (list) => setList("PENAL_CODE", list),
             }}
             data={values
               .filter((v) =>
@@ -220,7 +247,13 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       ) : (
         <Table
           filter={search}
+          dragDrop={{
+            enabled: true,
+            handleMove: (list) => setList("PENAL_CODE_GROUP", list),
+            disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+          }}
           data={groups.map((group) => ({
+            rowProps: { value: group },
             value: group.name,
             actions: (
               <>

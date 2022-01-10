@@ -43,6 +43,7 @@ model MiscCadSettings {
   maxCitizensPerUser      Int?
   maxPlateLength          Int      @default(8)
   maxBusinessesPerCitizen Int?
+  maxDivisionsPerOfficer  Int?
   callsignTemplate        String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitSymbol        String   @default("A") @db.VarChar(255)
   signal100Enabled        Boolean  @default(false)
@@ -284,6 +285,7 @@ model PenalCode {
 
 model PenalCodeGroup {
   id        String      @id @default(cuid())
+  position  Int?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @default(now()) @updatedAt
   name      String
@@ -316,14 +318,15 @@ model Violation {
 }
 
 model DivisionValue {
-  id           String           @id @default(cuid())
-  value        Value            @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  valueId      String
-  department   DepartmentValue? @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
-  departmentId String?
-  callsign     String?
-  officers     Officer[]        @relation("officerDivisionToDivision")
-  deputies     EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
+  id                         String           @id @default(cuid())
+  value                      Value            @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId                    String
+  department                 DepartmentValue? @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId               String?
+  callsign                   String?
+  officers                   Officer[]        @relation("officerDivisionToDivision")
+  officerDivisionsToDivision Officer[]        @relation("officerDivisionsToDivision")
+  deputies                   EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
 }
 
 model DepartmentValue {
@@ -523,8 +526,10 @@ model Officer {
   departmentId                String
   callsign                    String           @db.VarChar(255)
   callsign2                   String           @db.VarChar(255)
-  division                    DivisionValue    @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId                  String
+  // `division` is deprecated. Use `divisions` instead.
+  division                    DivisionValue?   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId                  String?
+  divisions                   DivisionValue[]  @relation("officerDivisionsToDivision")
   rank                        Value?           @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
   status                      StatusValue?     @relation("officerStatusToValue", fields: [statusId], references: [id])

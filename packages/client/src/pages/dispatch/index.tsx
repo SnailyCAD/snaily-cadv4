@@ -1,7 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { Layout } from "components/Layout";
-import { useAreaOfPlay } from "hooks/useAreaOfPlay";
+import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
@@ -14,15 +14,15 @@ import {
   useDispatchState,
 } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
-import { useTime } from "hooks/useTime";
+import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
 import { useTranslations } from "use-intl";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { DispatchAOP } from "components/dispatch/DispatchAOP";
 import { requestAll } from "lib/utils";
-import { useSignal100 } from "hooks/useSignal100";
-import { usePanicButton } from "hooks/usePanicButton";
+import { useSignal100 } from "hooks/shared/useSignal100";
+import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 
 const NotepadModal = dynamic(async () => {
