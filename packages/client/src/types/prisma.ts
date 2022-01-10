@@ -96,6 +96,7 @@ export type Citizen = {
   hairColor: string;
   eyeColor: string;
   address: string;
+  postal: string | null;
   height: string;
   weight: string;
   driversLicenseId: string | null;
@@ -236,6 +237,7 @@ export type Business = {
   name: string;
   whitelisted: boolean;
   address: string;
+  postal: string | null;
   createdAt: Date;
   status: WhitelistStatus | null;
 };

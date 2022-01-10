@@ -130,6 +130,7 @@ model Citizen {
   hairColor            String                        @db.VarChar(255)
   eyeColor             String                        @db.VarChar(255)
   address              String                        @db.VarChar(255)
+  postal               String?                       @db.VarChar(255)
   height               String                        @db.VarChar(255)
   weight               String                        @db.VarChar(255)
   driversLicense       Value?                        @relation("driversLicenseToValue", fields: [driversLicenseId], references: [id])
@@ -467,6 +468,7 @@ model Business {
   name          String           @db.VarChar(255)
   whitelisted   Boolean          @default(false)
   address       String           @db.Text
+  postal        String?          @db.VarChar(255)
   status        WhitelistStatus?
   businessPosts BusinessPost[]
   employees     Employee[]
