@@ -13,7 +13,6 @@ import { BadRequest } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 
 import {
-  validate,
   HASH_SCHEMA_ARR,
   BASE_ARR,
   BUSINESS_ROLE_ARR,
@@ -28,6 +27,7 @@ import {
   ShouldDoType,
   StatusValueType,
 } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -70,15 +70,10 @@ const typeHandlers: Partial<
   Record<ValueType | "GENERIC", (body: any, valueType?: ValueType) => Promise<void>>
 > = {
   VEHICLE: async (body) => {
-    const error = validate(HASH_SCHEMA_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { hash?: string; value: string }[];
+    const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.vehicleValue.create({
           data: {
             hash: item.hash,
@@ -95,15 +90,10 @@ const typeHandlers: Partial<
     );
   },
   WEAPON: async (body) => {
-    const error = validate(HASH_SCHEMA_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { hash?: string; value: string }[];
+    const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.weaponValue.create({
           data: {
             hash: item.hash,
@@ -120,18 +110,13 @@ const typeHandlers: Partial<
     );
   },
   BUSINESS_ROLE: async (body) => {
-    const error = validate(BUSINESS_ROLE_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { as: EmployeeAsEnum; value: string }[];
+    const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.employeeValue.create({
           data: {
-            as: item.as,
+            as: item.as as EmployeeAsEnum,
             value: {
               create: {
                 isDefault: false,
@@ -145,18 +130,13 @@ const typeHandlers: Partial<
     );
   },
   DRIVERSLICENSE_CATEGORY: async (body) => {
-    const error = validate(DLC_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { type: DriversLicenseCategoryType; value: string }[];
+    const data = validateSchema(DLC_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.driversLicenseCategoryValue.create({
           data: {
-            type: item.type,
+            type: item.type as DriversLicenseCategoryType,
             value: {
               create: {
                 isDefault: false,
@@ -170,18 +150,13 @@ const typeHandlers: Partial<
     );
   },
   DEPARTMENT: async (body) => {
-    const error = validate(DEPARTMENT_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { type: DepartmentType; callsign: string; value: string }[];
+    const data = validateSchema(DEPARTMENT_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.departmentValue.create({
           data: {
-            type: item.type,
+            type: item.type as DepartmentType,
             callsign: item.callsign,
             value: {
               create: {
@@ -196,25 +171,15 @@ const typeHandlers: Partial<
     );
   },
   CODES_10: async (body) => {
-    const error = validate(CODES_10_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as {
-      color?: string;
-      type: StatusValueType;
-      shouldDo: ShouldDoType;
-      value: string;
-    }[];
+    const data = validateSchema(CODES_10_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.statusValue.create({
           data: {
-            type: item.type,
+            type: item.type as StatusValueType,
             color: item.color,
-            shouldDo: item.shouldDo,
+            shouldDo: item.shouldDo as ShouldDoType,
             value: {
               create: {
                 isDefault: false,
@@ -236,15 +201,10 @@ const typeHandlers: Partial<
   OFFICER_RANK: async (body) => typeHandlers.GENERIC!(body, "OFFICER_RANK"),
 
   GENERIC: async (body, type) => {
-    const error = validate(BASE_ARR, body, true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const arr = body as { value: string }[];
+    const data = validateSchema(BASE_ARR, body);
 
     await Promise.all(
-      arr.map(async (item) => {
+      data.map(async (item) => {
         await prisma.value.create({
           data: {
             isDefault: false,
