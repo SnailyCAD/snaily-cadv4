@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { validate, BLEETER_SCHEMA } from "@snailycad/schemas";
+import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import {
   Controller,
   Get,
@@ -16,6 +16,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Delete, JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
+import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -51,15 +52,12 @@ export class BleeterController {
 
   @Post("/")
   async createPost(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(BLEETER_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(BLEETER_SCHEMA, body.toJSON());
 
     const post = await prisma.bleeterPost.create({
       data: {
-        title: body.get("title"),
-        body: body.get("body"),
+        title: data.title,
+        body: data.body,
         userId: ctx.get("user").id,
       },
     });
@@ -73,10 +71,7 @@ export class BleeterController {
     @BodyParams() body: JsonRequestBody,
     @Context() ctx: Context,
   ) {
-    const error = validate(BLEETER_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(BLEETER_SCHEMA, body.toJSON());
 
     const post = await prisma.bleeterPost.findUnique({
       where: {
@@ -93,8 +88,8 @@ export class BleeterController {
         id: post.id,
       },
       data: {
-        title: body.get("title"),
-        body: body.get("body"),
+        title: data.title,
+        body: data.body,
       },
     });
 

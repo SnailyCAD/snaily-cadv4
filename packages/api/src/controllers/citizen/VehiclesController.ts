@@ -1,11 +1,12 @@
 import { MiscCadSettings, User } from ".prisma/client";
 import { Feature } from "@prisma/client";
-import { validate, VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
+import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { generateString } from "utils/generateString";
 
@@ -14,16 +15,12 @@ import { generateString } from "utils/generateString";
 export class VehiclesController {
   @Post("/")
   async registerVehicle(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(VEHICLE_SCHEMA, body.toJSON(), true);
+    const data = validateSchema(VEHICLE_SCHEMA, body.toJSON());
     const user = ctx.get("user") as User;
-
-    if (error) {
-      return new BadRequest(error);
-    }
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
@@ -33,7 +30,7 @@ export class VehiclesController {
 
     const existing = await prisma.registeredVehicle.findUnique({
       where: {
-        plate: body.get("plate").toUpperCase(),
+        plate: data.plate.toUpperCase(),
       },
     });
 
@@ -46,12 +43,12 @@ export class VehiclesController {
       miscCadSettings?: MiscCadSettings;
     };
     const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
-    if (body.get("plate").length > plateLength) {
+    if (data.plate.length > plateLength) {
       throw new BadRequest("plateToLong");
     }
 
     const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
-    let modelId = body.get("model");
+    let modelId = data.model;
 
     if (isCustomEnabled) {
       const newModel = await prisma.vehicleValue.create({
@@ -60,7 +57,7 @@ export class VehiclesController {
             create: {
               isDefault: false,
               type: "VEHICLE",
-              value: body.get("model"),
+              value: data.model,
             },
           },
         },
@@ -71,14 +68,14 @@ export class VehiclesController {
 
     const vehicle = await prisma.registeredVehicle.create({
       data: {
-        plate: body.get("plate").toUpperCase(),
-        color: body.get("color"),
+        plate: data.plate.toUpperCase(),
+        color: data.color,
         citizenId: citizen.id,
         modelId,
-        registrationStatusId: body.get("registrationStatus"),
+        registrationStatusId: data.registrationStatus,
         // todo
         insuranceStatus: "TEST",
-        vinNumber: body.get("vinNumber") || generateString(17),
+        vinNumber: data.vinNumber || generateString(17),
         userId: user.id,
       },
       include: {
@@ -96,11 +93,7 @@ export class VehiclesController {
     @PathParams("id") vehicleId: string,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(VEHICLE_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(VEHICLE_SCHEMA, body.toJSON());
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: {
@@ -117,11 +110,11 @@ export class VehiclesController {
         id: vehicle.id,
       },
       data: {
-        modelId: body.get("model"),
-        color: body.get("color"),
-        registrationStatusId: body.get("registrationStatus"),
-        vinNumber: body.get("vinNumber") || vehicle.vinNumber,
-        reportedStolen: body.get("reportedStolen") ?? false,
+        modelId: data.model,
+        color: data.color,
+        registrationStatusId: data.registrationStatus,
+        vinNumber: data.vinNumber || vehicle.vinNumber,
+        reportedStolen: data.reportedStolen ?? false,
       },
       include: {
         model: { include: { value: true } },

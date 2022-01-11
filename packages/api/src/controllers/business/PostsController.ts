@@ -3,14 +3,11 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
-import {
-  CREATE_COMPANY_POST_SCHEMA,
-  DELETE_COMPANY_POST_SCHEMA,
-  validate,
-} from "@snailycad/schemas";
-import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
+import { CREATE_COMPANY_POST_SCHEMA, DELETE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
+import { Forbidden, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { validateBusinessAcceptance } from "utils/businesses";
+import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
@@ -21,10 +18,7 @@ export class BusinessPostsController {
     @Context() ctx: Context,
     @PathParams("id") businessId: string,
   ) {
-    const error = validate(CREATE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, businessId);
 
@@ -44,8 +38,8 @@ export class BusinessPostsController {
 
     const post = await prisma.businessPost.create({
       data: {
-        body: body.get("body"),
-        title: body.get("title"),
+        body: data.body,
+        title: data.title,
         businessId,
         employeeId: employee.id,
         userId: ctx.get("user").id,
@@ -62,16 +56,13 @@ export class BusinessPostsController {
     @PathParams("id") businessId: string,
     @PathParams("postId") postId: string,
   ) {
-    const error = validate(CREATE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         userId: ctx.get("user").id,
         businessId,
       },
@@ -89,7 +80,7 @@ export class BusinessPostsController {
       where: {
         id: postId,
         businessId: employee.businessId,
-        employeeId: body.get("employeeId"),
+        employeeId: data.employeeId,
       },
     });
 
@@ -102,8 +93,8 @@ export class BusinessPostsController {
         id: postId,
       },
       data: {
-        body: body.get("body"),
-        title: body.get("title"),
+        body: data.body,
+        title: data.title,
       },
     });
 
@@ -117,10 +108,7 @@ export class BusinessPostsController {
     @PathParams("id") id: string,
     @PathParams("postId") postId: string,
   ) {
-    const error = validate(DELETE_COMPANY_POST_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body.toJSON());
 
     await validateBusinessAcceptance(ctx, id);
 
@@ -129,7 +117,7 @@ export class BusinessPostsController {
         id: postId,
         businessId: id,
         userId: ctx.get("user").id,
-        employeeId: body.get("employeeId"),
+        employeeId: data.employeeId,
       },
     });
 

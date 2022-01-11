@@ -1,10 +1,11 @@
 import { User } from ".prisma/client";
-import { validate, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
+import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 
 @Controller("/medical-records")
@@ -12,16 +13,12 @@ import { IsAuth } from "middlewares/IsAuth";
 export class MedicalRecordsController {
   @Post("/")
   async createMedicalRecord(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(MEDICAL_RECORD_SCHEMA, body.toJSON(), true);
     const user = ctx.get("user") as User;
-
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
@@ -33,9 +30,9 @@ export class MedicalRecordsController {
       data: {
         citizenId: citizen.id,
         userId: ctx.get("user").id,
-        type: body.get("type"),
-        description: body.get("description"),
-        bloodGroupId: body.get("bloodGroup") || null,
+        type: data.type,
+        description: data.description,
+        bloodGroupId: data.bloodGroup || null,
       },
       include: {
         bloodGroup: true,
@@ -51,11 +48,7 @@ export class MedicalRecordsController {
     @PathParams("id") recordId: string,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(MEDICAL_RECORD_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body.toJSON());
 
     const record = await prisma.medicalRecord.findUnique({
       where: {
@@ -72,9 +65,9 @@ export class MedicalRecordsController {
         id: record.id,
       },
       data: {
-        description: body.get("description"),
-        type: body.get("type"),
-        bloodGroupId: body.get("bloodGroup") || null,
+        description: data.description,
+        type: data.type,
+        bloodGroupId: data.bloodGroup || null,
       },
       include: {
         bloodGroup: true,

@@ -1,13 +1,14 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { leoProperties } from "lib/officer";
-import { LEO_INCIDENT_SCHEMA, validate } from "@snailycad/schemas";
+import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Officer } from ".prisma/client";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/incidents")
 @UseBeforeEach(IsAuth)
@@ -34,24 +35,20 @@ export class IncidentController {
     @BodyParams() body: JsonRequestBody,
     @Context("activeOfficer") { id: officerId }: Officer,
   ) {
-    const error = validate(LEO_INCIDENT_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(LEO_INCIDENT_SCHEMA, body.toJSON());
 
     const incident = await prisma.leoIncident.create({
       data: {
         creatorId: officerId,
-        description: body.get("description"),
-        arrestsMade: body.get("arrestsMade"),
-        firearmsInvolved: body.get("firearmsInvolved"),
-        injuriesOrFatalities: body.get("injuriesOrFatalities"),
+        description: data.description,
+        arrestsMade: data.arrestsMade,
+        firearmsInvolved: data.firearmsInvolved,
+        injuriesOrFatalities: data.injuriesOrFatalities,
       },
     });
 
     await Promise.all(
-      body.get("involvedOfficers").map(async (id: string) => {
+      (data.involvedOfficers ?? []).map(async (id: string) => {
         await prisma.leoIncident.update({
           where: {
             id: incident.id,

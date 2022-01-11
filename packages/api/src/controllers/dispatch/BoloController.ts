@@ -1,14 +1,16 @@
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_BOLO_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Use, UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/officer";
+import { validateSchema } from "lib/validateSchema";
+import { BoloType } from "@prisma/client";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -34,19 +36,16 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Post("/")
   async createBolo(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(CREATE_BOLO_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_BOLO_SCHEMA, body.toJSON());
 
     const bolo = await prisma.bolo.create({
       data: {
-        description: body.get("description"),
-        type: body.get("type"),
-        color: body.get("color") ?? null,
-        name: body.get("name") ?? null,
-        plate: body.get("plate") ?? null,
-        model: body.get("model") ?? null,
+        description: data.description,
+        type: data.type as BoloType,
+        color: data.color ?? null,
+        name: data.name ?? null,
+        plate: data.plate ?? null,
+        model: data.model ?? null,
         officerId: ctx.get("activeOfficer")?.id ?? null,
       },
       include: {
@@ -64,10 +63,7 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Put("/:id")
   async updateBolo(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_BOLO_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_BOLO_SCHEMA, body.toJSON());
 
     const bolo = await prisma.bolo.findUnique({
       where: { id },
@@ -82,11 +78,11 @@ export class BoloController {
         id,
       },
       data: {
-        description: body.get("description"),
-        color: body.get("color") ?? null,
-        name: body.get("name") ?? null,
-        plate: body.get("plate") ?? null,
-        model: body.get("model") ?? null,
+        description: data.description,
+        color: data.color ?? null,
+        name: data.name ?? null,
+        plate: data.plate ?? null,
+        model: data.model ?? null,
       },
       include: {
         officer: {

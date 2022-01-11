@@ -9,7 +9,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   citizenName: z.string().min(2).max(255),
   violations: z.array(z.any()).min(1),
-  postal: z.string().min(1).max(255).nullable(),
+  postal: z.string().min(1).max(255),
   notes: z.string(),
 });
 

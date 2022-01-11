@@ -1,6 +1,6 @@
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -11,6 +11,7 @@ import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs";
 import { unitProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -37,15 +38,12 @@ export class EmsFdController {
 
   @Post("/")
   async createEmsFdDeputy(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
-    const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
 
     const division = await prisma.divisionValue.findFirst({
       where: {
-        id: body.get("division"),
-        departmentId: body.get("department"),
+        id: data.division,
+        departmentId: data.department,
       },
     });
 
@@ -55,7 +53,7 @@ export class EmsFdController {
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -66,14 +64,14 @@ export class EmsFdController {
 
     const deputy = await prisma.emsFdDeputy.create({
       data: {
-        callsign: body.get("callsign"),
-        callsign2: body.get("callsign2"),
+        callsign: data.callsign,
+        callsign2: data.callsign2,
         userId: user.id,
-        departmentId: body.get("department"),
-        divisionId: body.get("division"),
-        badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId"),
-        imageId: validateImgurURL(body.get("image")),
+        departmentId: data.department,
+        divisionId: data.division!,
+        badgeNumber: data.badgeNumber,
+        citizenId: citizen.id,
+        imageId: validateImgurURL(data.image),
       },
       include: unitProperties,
     });
@@ -87,10 +85,7 @@ export class EmsFdController {
     @BodyParams() body: JsonRequestBody,
     @Context("user") user: User,
   ) {
-    const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
 
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -105,8 +100,8 @@ export class EmsFdController {
 
     const division = await prisma.divisionValue.findFirst({
       where: {
-        id: body.get("division"),
-        departmentId: body.get("department"),
+        id: data.division,
+        departmentId: data.department,
       },
     });
 
@@ -116,7 +111,7 @@ export class EmsFdController {
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -130,13 +125,13 @@ export class EmsFdController {
         id: deputy.id,
       },
       data: {
-        callsign: body.get("callsign"),
-        callsign2: body.get("callsign2"),
-        departmentId: body.get("department"),
-        divisionId: body.get("division"),
-        badgeNumber: parseInt(body.get("badgeNumber")),
-        citizenId: body.get("citizenId"),
-        imageId: validateImgurURL(body.get("image")),
+        callsign: data.callsign,
+        callsign2: data.callsign2,
+        departmentId: data.department,
+        divisionId: data.division!,
+        badgeNumber: data.badgeNumber,
+        citizenId: citizen.id,
+        imageId: validateImgurURL(data.image),
       },
       include: unitProperties,
     });
@@ -190,15 +185,11 @@ export class EmsFdController {
   @Use(ActiveDeputy)
   @Post("/medical-record")
   async createMedicalRecord(@BodyParams() body: JsonRequestBody) {
-    const error = validate(MEDICAL_RECORD_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
@@ -210,8 +201,8 @@ export class EmsFdController {
       data: {
         citizenId: citizen.id,
         userId: citizen.userId,
-        type: body.get("type"),
-        description: body.get("description"),
+        type: data.type,
+        description: data.description,
       },
     });
 

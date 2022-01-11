@@ -4,7 +4,8 @@ export function validate<Values = any>(
   schema: any,
   values: Values,
   oneError?: false,
-): Record<string, string>;
+): Record<string, string> | Record<string, any>;
+/** @deprecated use `validateSchema` */
 export function validate<Values = any>(schema: any, values: Values, oneError?: true): string;
 export function validate<Values = any>(
   schema: any,

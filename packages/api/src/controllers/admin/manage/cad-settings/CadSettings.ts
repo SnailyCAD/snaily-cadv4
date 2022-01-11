@@ -1,5 +1,4 @@
 import {
-  validate,
   CAD_MISC_SETTINGS_SCHEMA,
   CAD_SETTINGS_SCHEMA,
   DISABLED_FEATURES_SCHEMA,
@@ -13,6 +12,8 @@ import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
+import { validateSchema } from "lib/validateSchema";
+import { Feature } from "@prisma/client";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -39,28 +40,24 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Put("/")
   async updateCadSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CAD_SETTINGS_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CAD_SETTINGS_SCHEMA, body.toJSON());
 
     const updated = await prisma.cad.update({
       where: {
         id: ctx.get("cad").id,
       },
       data: {
-        name: body.get("name"),
-        areaOfPlay: body.get("areaOfPlay"),
-        steamApiKey: body.get("steamApiKey"),
-        towWhitelisted: body.get("towWhitelisted"),
-        whitelisted: body.get("whitelisted"),
-        businessWhitelisted: body.get("businessWhitelisted"),
-        registrationCode: body.get("registrationCode"),
-        discordWebhookURL: body.get("discordWebhookURL"),
+        name: data.name,
+        areaOfPlay: data.areaOfPlay,
+        steamApiKey: data.steamApiKey,
+        towWhitelisted: data.towWhitelisted,
+        whitelisted: data.whitelisted,
+        businessWhitelisted: data.businessWhitelisted,
+        registrationCode: data.registrationCode,
+        discordWebhookURL: data.discordWebhookURL,
         miscCadSettings: {
           update: {
-            roleplayEnabled: Boolean(body.get("roleplayEnabled")),
+            roleplayEnabled: data.roleplayEnabled,
           },
         },
       },
@@ -75,17 +72,14 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Put("/features")
   async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(DISABLED_FEATURES_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(DISABLED_FEATURES_SCHEMA, body.toJSON());
 
     const updated = await prisma.cad.update({
       where: {
         id: ctx.get("cad").id,
       },
       data: {
-        disabledFeatures: body.get("features"),
+        disabledFeatures: data.features as Feature[],
       },
     });
 
@@ -95,27 +89,24 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Put("/misc")
   async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CAD_MISC_SETTINGS_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body.toJSON());
 
     const updated = await prisma.miscCadSettings.update({
       where: {
         id: ctx.get("cad")?.miscCadSettings?.id,
       },
       data: {
-        heightPrefix: body.get("heightPrefix"),
-        weightPrefix: body.get("weightPrefix"),
-        maxBusinessesPerCitizen: body.get("maxBusinessesPerCitizen"),
-        maxCitizensPerUser: body.get("maxCitizensPerUser"),
-        maxPlateLength: body.get("maxPlateLength"),
-        maxDivisionsPerOfficer: body.get("maxDivisionsPerOfficer"),
-        pairedUnitSymbol: body.get("pairedUnitSymbol"),
-        callsignTemplate: body.get("callsignTemplate"),
-        liveMapURL: body.get("liveMapURL"),
-        authScreenBgImageId: body.get("authScreenBgImageId"),
-        authScreenHeaderImageId: body.get("authScreenHeaderImageId"),
+        heightPrefix: data.heightPrefix,
+        weightPrefix: data.weightPrefix,
+        maxBusinessesPerCitizen: data.maxBusinessesPerCitizen,
+        maxCitizensPerUser: data.maxCitizensPerUser,
+        maxPlateLength: data.maxPlateLength,
+        maxDivisionsPerOfficer: data.maxDivisionsPerOfficer,
+        pairedUnitSymbol: data.pairedUnitSymbol,
+        callsignTemplate: data.callsignTemplate,
+        liveMapURL: data.liveMapURL,
+        authScreenBgImageId: data.authScreenBgImageId,
+        authScreenHeaderImageId: data.authScreenHeaderImageId,
       },
     });
 

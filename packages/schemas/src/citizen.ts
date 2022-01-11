@@ -19,12 +19,15 @@ export const VEHICLE_SCHEMA = z.object({
   color: z.string().min(2).max(255),
   registrationStatus: z.string().min(2).max(255),
   citizenId: z.string().min(2).max(255),
+  vinNumber: z.string().max(17).optional(),
+  reportedStolen: z.boolean().optional(),
 });
 
 export const WEAPON_SCHEMA = z.object({
   model: z.string().min(2),
   registrationStatus: z.string().min(2).max(255),
   citizenId: z.string().min(2).max(255),
+  serialNumber: z.string().max(10).optional(),
 });
 
 export const LICENSE_SCHEMA = z.object({
@@ -32,6 +35,8 @@ export const LICENSE_SCHEMA = z.object({
   weaponLicense: z.string().max(255),
   pilotLicense: z.string().max(255),
   ccw: z.string().max(255),
+  driversLicenseCategory: z.array(z.string()),
+  pilotLicenseCategory: z.array(z.string()),
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({

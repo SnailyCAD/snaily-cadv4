@@ -6,7 +6,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -20,6 +20,7 @@ import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import { DivisionValue, MiscCadSettings } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -55,15 +56,11 @@ export class LeoController {
     @Context("user") user: User,
     @Context("cad") cad: any,
   ) {
-    const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -76,13 +73,13 @@ export class LeoController {
 
     const officer = await prisma.officer.create({
       data: {
-        callsign: body.get("callsign"),
-        callsign2: body.get("callsign2"),
+        callsign: data.callsign,
+        callsign2: data.callsign2,
         userId: user.id,
-        departmentId: body.get("department"),
-        badgeNumber: parseInt(body.get("badgeNumber")),
+        departmentId: data.department,
+        badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(body.get("image")),
+        imageId: validateImgurURL(data.image),
       },
       include: leoProperties,
     });
@@ -98,10 +95,7 @@ export class LeoController {
     @Context("user") user: User,
     @Context("cad") cad: any,
   ) {
-    const error = validate(CREATE_OFFICER_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
 
     const officer = await prisma.officer.findFirst({
       where: {
@@ -135,12 +129,12 @@ export class LeoController {
         id: officer.id,
       },
       data: {
-        callsign: body.get("callsign"),
-        callsign2: body.get("callsign2"),
-        departmentId: body.get("department"),
-        badgeNumber: parseInt(body.get("badgeNumber")),
+        callsign: data.callsign,
+        callsign2: data.callsign2,
+        departmentId: data.department,
+        badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
-        imageId: validateImgurURL(body.get("image")),
+        imageId: validateImgurURL(data.image),
       },
       include: leoProperties,
     });
@@ -343,10 +337,7 @@ export class LeoController {
     @BodyParams() body: JsonRequestBody,
     @PathParams("citizenId") citizenId: string,
   ) {
-    const error = validate(LICENSE_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(LICENSE_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -363,10 +354,10 @@ export class LeoController {
         id: citizen.id,
       },
       data: {
-        ccwId: body.get("ccw"),
-        driversLicenseId: body.get("driversLicense"),
-        pilotLicenseId: body.get("pilotLicense"),
-        weaponLicenseId: body.get("weaponLicense"),
+        ccwId: data.ccw,
+        driversLicenseId: data.driversLicense,
+        pilotLicenseId: data.pilotLicense,
+        weaponLicenseId: data.weaponLicense,
       },
       include: citizenInclude,
     });

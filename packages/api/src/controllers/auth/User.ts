@@ -8,9 +8,10 @@ import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
 import { User } from ".prisma/client";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { CHANGE_PASSWORD_SCHEMA, validate } from "@snailycad/schemas";
+import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -86,10 +87,7 @@ export class AccountController {
 
   @Post("/password")
   async updatePassword(@Context("user") user: User, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CHANGE_PASSWORD_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body.toJSON());
 
     const u = await prisma.user.findUnique({ where: { id: user.id } });
 
@@ -97,7 +95,7 @@ export class AccountController {
       throw new NotFound("notFound");
     }
 
-    const { currentPassword, newPassword, confirmPassword } = body.toJSON();
+    const { currentPassword, newPassword, confirmPassword } = data;
     if (confirmPassword !== newPassword) {
       throw new BadRequest("passwordsDoNotMatch");
     }
