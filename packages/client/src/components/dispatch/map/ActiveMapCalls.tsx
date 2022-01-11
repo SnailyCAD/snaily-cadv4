@@ -138,7 +138,7 @@ function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
                 <p id="caller">
                   <Span>{common("name")}:</Span> {call.name}
                 </p>
-                <p id="description">
+                <p className="max-h-52 overflow-y-auto" id="description">
                   <Span>{common("description")}:</Span> {call.description}
                 </p>
                 <p id="location">
