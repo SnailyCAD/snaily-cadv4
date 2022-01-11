@@ -70,10 +70,7 @@ export class AuthController {
 
   @Post("/register")
   async register(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const data = validateSchema<{ registrationCode?: string }, typeof AUTH_SCHEMA>(
-      AUTH_SCHEMA,
-      body.toJSON(),
-    );
+    const data = validateSchema(AUTH_SCHEMA, body.toJSON());
 
     const existing = await prisma.user.findUnique({
       where: {

@@ -25,8 +25,6 @@ export function validateSchema<Extra extends object, Schema extends z.ZodType<an
     throw new InvalidSchema(errors);
   }
 
-  console.log({ data });
-
   return data as z.infer<Schema> & Extra;
 }
 
