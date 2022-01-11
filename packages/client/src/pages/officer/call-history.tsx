@@ -106,7 +106,11 @@ export default function CallHistory({ data: calls, incidents }: Props) {
               caller: call.name,
               location: call.location,
               postal: call.postal,
-              description: call.description,
+              description: (
+                <p className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                  {call.description}
+                </p>
+              ),
               assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
               caseNumbers: caseNumbers || common("none"),
               createdAt,
