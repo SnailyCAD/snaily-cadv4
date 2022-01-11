@@ -1,10 +1,11 @@
 import { User } from ".prisma/client";
-import { validate, LICENSE_SCHEMA } from "@snailycad/schemas";
+import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { JsonRequestBody, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
+import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { linkDlCategories, unlinkDlCategories } from "./CitizenController";
 
@@ -17,12 +18,8 @@ export class LicensesController {
     @Context() ctx: Context,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(LICENSE_SCHEMA, body.toJSON(), true);
+    const data = validateSchema(LICENSE_SCHEMA, body.toJSON());
     const user = ctx.get("user") as User;
-
-    if (error) {
-      return new BadRequest(error);
-    }
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -41,18 +38,14 @@ export class LicensesController {
         id: citizen.id,
       },
       data: {
-        ccwId: body.get("ccw") || undefined,
-        driversLicenseId: body.get("driversLicense") || undefined,
-        pilotLicenseId: body.get("pilotLicense") || undefined,
-        weaponLicenseId: body.get("weaponLicense") || undefined,
+        ccwId: data.ccw || undefined,
+        driversLicenseId: data.driversLicense || undefined,
+        pilotLicenseId: data.pilotLicense || undefined,
+        weaponLicenseId: data.weaponLicense || undefined,
       },
     });
 
-    await linkDlCategories(
-      citizen.id,
-      body.get("driversLicenseCategory"),
-      body.get("pilotLicenseCategory"),
-    );
+    await linkDlCategories(citizen.id, data.driversLicenseCategory, data.pilotLicenseCategory);
 
     const updated = await prisma.citizen.findUnique({
       where: {

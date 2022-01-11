@@ -1,12 +1,13 @@
 import { User } from ".prisma/client";
-import { validate, CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
+import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
@@ -39,14 +40,11 @@ export class TruckLogsController {
 
   @Post("/")
   async createTruckLog(@Context("user") user: User, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_TRUCK_LOG_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -57,7 +55,7 @@ export class TruckLogsController {
 
     const vehicle = await prisma.registeredVehicle.findFirst({
       where: {
-        id: body.get("vehicleId"),
+        id: data.vehicleId,
         userId: user.id,
         citizenId: citizen.id,
       },
@@ -70,10 +68,10 @@ export class TruckLogsController {
     const log = await prisma.truckLog.create({
       data: {
         userId: user.id,
-        citizenId: body.get("citizenId"),
-        endedAt: body.get("endedAt"),
-        startedAt: body.get("startedAt"),
-        vehicleId: body.get("vehicleId"),
+        citizenId: data.citizenId,
+        endedAt: data.endedAt,
+        startedAt: data.startedAt,
+        vehicleId: data.vehicleId,
       },
       include: {
         citizen: true,
@@ -95,10 +93,7 @@ export class TruckLogsController {
     @BodyParams() body: JsonRequestBody,
     @PathParams("id") id: string,
   ) {
-    const error = validate(CREATE_TRUCK_LOG_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body.toJSON());
 
     const log = await prisma.truckLog.findFirst({
       where: {
@@ -113,7 +108,7 @@ export class TruckLogsController {
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -124,7 +119,7 @@ export class TruckLogsController {
 
     const vehicle = await prisma.registeredVehicle.findFirst({
       where: {
-        id: body.get("vehicleId"),
+        id: data.vehicleId,
         userId: user.id,
         citizenId: citizen.id,
       },
@@ -139,9 +134,9 @@ export class TruckLogsController {
         id,
       },
       data: {
-        citizenId: body.get("citizenId"),
-        endedAt: body.get("endedAt"),
-        vehicleId: body.get("vehicleId"),
+        citizenId: data.citizenId,
+        endedAt: data.endedAt,
+        vehicleId: data.vehicleId,
       },
       include: {
         citizen: true,

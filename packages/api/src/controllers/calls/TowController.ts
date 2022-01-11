@@ -123,7 +123,7 @@ export class TowController {
         userId: user.id,
         description: data.description,
         location: data.location,
-        postal: data.postal,
+        postal: data.postal ? String(data.postal) : null,
         deliveryAddressId: data.deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
@@ -180,7 +180,7 @@ export class TowController {
       data: {
         description: data.description,
         location: data.location,
-        postal: data.postal,
+        postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
       },
       include: {

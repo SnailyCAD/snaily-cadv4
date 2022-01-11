@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL, validate } from "@snailycad/schemas";
+import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -9,6 +9,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties } from "lib/officer";
+import { validateSchema } from "lib/validateSchema";
 
 const assignedUnitsInclude = {
   include: {
@@ -59,23 +60,20 @@ export class Calls911Controller {
 
   @Post("/")
   async create911Call(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(CREATE_911_CALL, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_911_CALL, body.toJSON());
 
     const call = await prisma.call911.create({
       data: {
-        location: body.get("location"),
-        postal: body.get("postal"),
-        description: body.get("description"),
-        name: body.get("name"),
+        location: data.location,
+        postal: String(data.postal),
+        description: data.description,
+        name: data.name,
         userId: ctx.get("user").id,
       },
       include: callInclude,
     });
 
-    const units = (body.get("assignedUnits") ?? []) as string[];
+    const units = (data.assignedUnits ?? []) as string[];
     await this.assignUnitsToCall(call.id, units);
 
     const updated = await prisma.call911.findUnique({
@@ -96,10 +94,7 @@ export class Calls911Controller {
     @BodyParams() body: JsonRequestBody,
     @Context() ctx: Context,
   ) {
-    const error = validate(CREATE_911_CALL, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_911_CALL, body.toJSON());
 
     const call = await prisma.call911.findUnique({
       where: {
@@ -123,20 +118,20 @@ export class Calls911Controller {
       }),
     );
 
-    const data = body.get("position") ?? null;
+    const positionData = data.position ?? null;
 
-    const position = data
+    const position = positionData
       ? await prisma.position.upsert({
           where: {
             id: call.positionId ?? "undefined",
           },
           create: {
-            lat: data.lat ? parseFloat(data.lat) : 0.0,
-            lng: data.lng ? parseFloat(data.lng) : 0.0,
+            lat: positionData.lat ? parseFloat(positionData.lat) : 0.0,
+            lng: positionData.lng ? parseFloat(positionData.lng) : 0.0,
           },
           update: {
-            lat: data.lat ? parseFloat(data.lat) : 0.0,
-            lng: data.lng ? parseFloat(data.lng) : 0.0,
+            lat: positionData.lat ? parseFloat(positionData.lat) : 0.0,
+            lng: positionData.lng ? parseFloat(positionData.lng) : 0.0,
           },
         })
       : null;
@@ -146,16 +141,16 @@ export class Calls911Controller {
         id: call.id,
       },
       data: {
-        location: body.get("location"),
-        postal: body.get("postal"),
-        description: body.get("description"),
-        name: body.get("name"),
+        location: data.location,
+        postal: String(data.postal),
+        description: data.description,
+        name: data.name,
         userId: ctx.get("user").id,
         positionId: position?.id ?? call.positionId,
       },
     });
 
-    const units = (body.get("assignedUnits") ?? []) as string[];
+    const units = (data.assignedUnits ?? []) as string[];
     await this.assignUnitsToCall(call.id, units);
 
     const updated = await prisma.call911.findUnique({
@@ -372,12 +367,8 @@ export class Calls911Controller {
     @PathParams("callId") callId: string,
     @BodyParams() body: JsonRequestBody,
   ) {
-    const error = validate(LINK_INCIDENT_TO_CALL, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const incidentId = body.get("incidentId") as string;
+    const data = validateSchema(LINK_INCIDENT_TO_CALL, body.toJSON());
+    const incidentId = data.incidentId;
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },

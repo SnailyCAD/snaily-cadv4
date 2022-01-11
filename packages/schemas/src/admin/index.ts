@@ -12,6 +12,8 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   whitelisted: z.boolean(),
   roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
+  businessWhitelisted: z.boolean(),
+  discordWebhookURL: z.string().optional(),
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
@@ -24,6 +26,8 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   pairedUnitSymbol: z.string().max(255),
   callsignTemplate: z.string(),
   liveMapURL: z.string().nullable(),
+  authScreenBgImageId: z.any().or(z.string()).optional(),
+  authScreenHeaderImageId: z.any().or(z.string()).optional(),
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({

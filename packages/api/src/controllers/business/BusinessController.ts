@@ -150,7 +150,7 @@ export class BusinessController {
         address: data.address,
         name: data.name,
         whitelisted: data.whitelisted,
-        postal: data.postal || null,
+        postal: data.postal ? String(data.postal) : null,
       },
     });
 
@@ -335,7 +335,7 @@ export class BusinessController {
         address: data.address,
         name: data.name,
         whitelisted: data.whitelisted,
-        postal: data.postal || null,
+        postal: data.postal ? String(data.postal) : null,
         userId: ctx.get("user").id,
         status: businessWhitelisted ? "PENDING" : "ACCEPTED",
       },

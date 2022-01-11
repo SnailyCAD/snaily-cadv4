@@ -7,7 +7,7 @@ import {
   StatusValue,
   EmsFdDeputy,
 } from ".prisma/client";
-import { UPDATE_OFFICER_STATUS_SCHEMA, validate } from "@snailycad/schemas";
+import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -23,6 +23,7 @@ import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Citizen, CombinedLeoUnit, DepartmentValue, DivisionValue, Value } from "@prisma/client";
 import { generateCallsign } from "utils/callsign";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -40,12 +41,8 @@ export class StatusController {
     @Req() req: Req,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
-    const error = validate(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
-
-    const bodyStatusId = body.get("status");
+    const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON());
+    const bodyStatusId = data.status;
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch = isFromDispatch && user.isDispatch;

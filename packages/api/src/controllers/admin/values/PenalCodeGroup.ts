@@ -1,23 +1,21 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
-import { validate, CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
+import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
+import { validateSchema } from "lib/validateSchema";
 
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
 export class ValuesController {
   @Post("/")
   async createPenalCodeGroup(@BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_PENAL_CODE_GROUP_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body.toJSON());
 
     const group = await prisma.penalCodeGroup.create({
       data: {
-        name: body.get("name"),
+        name: data.name,
       },
     });
 
@@ -26,10 +24,7 @@ export class ValuesController {
 
   @Put("/:id")
   async editPenalCodeGroup(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_PENAL_CODE_GROUP_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body.toJSON());
 
     const group = await prisma.penalCodeGroup.findUnique({
       where: { id },
@@ -41,7 +36,7 @@ export class ValuesController {
 
     const updated = await prisma.penalCodeGroup.update({
       where: { id },
-      data: { name: body.get("name") },
+      data: { name: data.name },
     });
 
     return updated;

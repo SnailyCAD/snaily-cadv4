@@ -1,5 +1,5 @@
 import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_TICKET_SCHEMA, CREATE_WARRANT_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_TICKET_SCHEMA, CREATE_WARRANT_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -7,21 +7,19 @@ import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
-import { Violation } from "@prisma/client";
+import { RecordType, Violation, WarrantStatus } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")
   async createWarrant(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(CREATE_WARRANT_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_WARRANT_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
@@ -33,8 +31,8 @@ export class RecordsController {
       data: {
         citizenId: citizen.id,
         officerId: ctx.get("activeOfficer").id,
-        description: body.get("description"),
-        status: body.get("status"),
+        description: data.description,
+        status: data.status as WarrantStatus,
       },
     });
 
@@ -74,28 +72,25 @@ export class RecordsController {
 
   @Post("/")
   async createTicket(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const error = validate(CREATE_TICKET_SCHEMA, body.toJSON(), true);
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_TICKET_SCHEMA, body.toJSON());
 
     const citizen = await prisma.citizen.findUnique({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
       },
     });
 
-    if (!citizen || `${citizen.name} ${citizen.surname}` !== body.get("citizenName")) {
+    if (!citizen || `${citizen.name} ${citizen.surname}` !== data.citizenName) {
       throw new NotFound("citizenNotFound");
     }
 
     const ticket = await prisma.record.create({
       data: {
-        type: body.get("type"),
+        type: data.type as RecordType,
         citizenId: citizen.id,
         officerId: ctx.get("activeOfficer").id,
-        notes: body.get("notes"),
-        postal: body.get("postal"),
+        notes: data.notes,
+        postal: String(data.postal),
       },
       include: {
         violations: true,

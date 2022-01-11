@@ -12,6 +12,7 @@ import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -55,11 +56,7 @@ export class ManageUsersController {
 
   @Put("/:id")
   async updateUserById(@PathParams("id") userId: string, @BodyParams() body: JsonRequestBody) {
-    const error = validate(UPDATE_USER_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(UPDATE_USER_SCHEMA, body.toJSO());
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -67,7 +64,7 @@ export class ManageUsersController {
       throw new NotFound("notFound");
     }
 
-    if (user.rank === Rank.OWNER && body.get("rank") !== Rank.OWNER) {
+    if (user.rank === Rank.OWNER && data.rank !== Rank.OWNER) {
       throw new BadRequest("cannotUpdateOwnerRank");
     }
 
@@ -76,12 +73,12 @@ export class ManageUsersController {
         id: user.id,
       },
       data: {
-        isLeo: body.get("isLeo"),
-        isSupervisor: body.get("isSupervisor"),
-        isDispatch: body.get("isDispatch"),
-        isEmsFd: body.get("isEmsFd"),
-        isTow: body.get("isTow"),
-        steamId: body.get("steamId"),
+        isLeo: data.isLeo,
+        isSupervisor: data.isSupervisor,
+        isDispatch: data.isDispatch,
+        isEmsFd: data.isEmsFd,
+        isTow: data.isTow,
+        steamId: data.steamId,
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[body.get("rank") as Rank],
       },
       select: userProperties,

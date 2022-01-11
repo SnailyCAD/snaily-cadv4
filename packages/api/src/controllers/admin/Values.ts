@@ -6,6 +6,7 @@ import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
+import { validateSchema } from "lib/validateSchema";
 
 type NameType = Exclude<
   keyof PrismaClient,
@@ -144,16 +145,12 @@ export class ValuesController {
       return code;
     }
 
-    const error = validate(VALUE_SCHEMA, body.toJSON(), true);
-
-    if (error) {
-      throw new BadRequest(error);
-    }
+    const data = validateSchema(VALUE_SCHEMA, body.toJSON());
 
     const value = await prisma.value.create({
       data: {
         type,
-        value: body.get("value"),
+        value: data.value,
         isDefault: false,
       },
     });
