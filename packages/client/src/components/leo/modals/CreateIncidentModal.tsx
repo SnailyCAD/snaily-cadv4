@@ -1,7 +1,7 @@
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
@@ -31,9 +31,14 @@ export function CreateIncidentModal() {
   const { allOfficers } = useDispatchState();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const data = {
+      ...values,
+      involvedOfficers: values.involvedOfficers.map((v) => v.value),
+    };
+
     const { json } = await execute("/incidents", {
       method: "POST",
-      data: values,
+      data,
     });
 
     if (json.id) {
@@ -48,7 +53,7 @@ export function CreateIncidentModal() {
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
     description: "",
-    involvedOfficers: [],
+    involvedOfficers: [] as SelectValue[],
     firearmsInvolved: false,
     injuriesOrFatalities: false,
     arrestsMade: false,
@@ -69,6 +74,7 @@ export function CreateIncidentModal() {
               label={t("involvedOfficers")}
             >
               <Select
+                isMulti
                 value={values.involvedOfficers}
                 name="involvedOfficers"
                 onChange={handleChange}

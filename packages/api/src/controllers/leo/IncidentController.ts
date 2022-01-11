@@ -21,7 +21,11 @@ export class IncidentController {
       },
     });
 
-    return incidents;
+    const officers = await prisma.officer.findMany({
+      include: leoProperties,
+    });
+
+    return { incidents, officers };
   }
 
   @UseBefore(ActiveOfficer)

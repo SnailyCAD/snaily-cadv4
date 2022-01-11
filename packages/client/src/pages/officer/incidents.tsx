@@ -112,6 +112,10 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         <p className="mt-5">{t("noIncidents")}</p>
       ) : (
         <Table
+          defaultSort={{
+            columnId: "caseNumber",
+            descending: true,
+          }}
           data={incidents.map((incident) => ({
             caseNumber: `#${incident.caseNumber}`,
             officer: (
@@ -174,10 +178,9 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [incidents, activeOfficer, { officers }] = await requestAll(req, [
-    ["/incidents", []],
+  const [{ incidents, officers }, activeOfficer] = await requestAll(req, [
+    ["/incidents", [{ officers: [], incidents: [] }]],
     ["/leo/active-officer", null],
-    ["/leo", { officers: [] }],
   ]);
 
   return {

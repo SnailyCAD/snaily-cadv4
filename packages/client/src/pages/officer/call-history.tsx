@@ -142,9 +142,9 @@ export default function CallHistory({ data: calls, incidents }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [calls, incidents] = await requestAll(req, [
+  const [calls, { incidents }] = await requestAll(req, [
     ["/911-calls?includeEnded=true", []],
-    ["/incidents", []],
+    ["/incidents", [{ incidents: [] }]],
   ]);
 
   return {
