@@ -36,3 +36,12 @@ Made with ❤️ and TypeScript!
 ## License
 
 [MIT © Dev-CasperTheGhost](./LICENSE)
+
+
+## Archived versions
+
+*A list of previous (archived) versions of SnailyCAD. This list is here so people can view older versions if needed.*
+
+- [SnailyCADv3](https://github.com/Dev-CasperTheGhost/snaily-cadv3)
+- [SnailyCADv2](https://github.com/Dev-CasperTheGhost/snaily-cadv2)
+- [SnailyCAD](https://github.com/Dev-CasperTheGhost/snaily-cad)
