@@ -7,7 +7,7 @@ export const AUTH_SCHEMA = z.object({
     .max(255)
     .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
   password: z.string().min(8).max(255),
-  registrationCode: z.string().min(1).optional(),
+  registrationCode: z.string().optional(),
 });
 
 export const CHANGE_PASSWORD_SCHEMA = z.object({
