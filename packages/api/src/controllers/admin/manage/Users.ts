@@ -56,7 +56,7 @@ export class ManageUsersController {
 
   @Put("/:id")
   async updateUserById(@PathParams("id") userId: string, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(UPDATE_USER_SCHEMA, body.toJSO());
+    const data = validateSchema(UPDATE_USER_SCHEMA, body.toJSON());
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
