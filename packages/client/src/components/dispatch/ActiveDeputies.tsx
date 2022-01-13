@@ -65,6 +65,7 @@ export function ActiveDeputies() {
               badgeNumber: deputy.badgeNumber,
               department: deputy.department.value.value,
               division: formatUnitDivisions(deputy),
+              rank: deputy.rank?.value ?? common("none"),
               status: (
                 <span className="flex items-center">
                   {useDot && color ? (
@@ -90,6 +91,7 @@ export function ActiveDeputies() {
             { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
+            { Header: t("Leo.rank"), accessor: "rank" },
             { Header: t("Leo.status"), accessor: "status" },
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}

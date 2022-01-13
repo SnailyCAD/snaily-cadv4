@@ -87,6 +87,7 @@ export function ActiveOfficers() {
                   <th className="bg-gray-300">{t("badgeNumber")}</th>
                   <th className="bg-gray-300">{t("department")}</th>
                   <th className="bg-gray-300">{t("division")}</th>
+                  <th className="bg-gray-300">{t("rank")}</th>
                   <th className="bg-gray-300">{t("status")}</th>
                   {isDispatch ? <th className="bg-gray-300">{common("actions")}</th> : null}
                 </tr>
@@ -166,6 +167,7 @@ export function ActiveOfficers() {
                       <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
                       <td>{!("officers" in officer) && officer.department.value.value}</td>
                       <td>{!("officers" in officer) && formatUnitDivisions(officer)}</td>
+                      <td>{(!("officers" in officer) && officer.rank?.value) ?? common("none")}</td>
                       <td className={useDot ? "flex items-center" : undefined}>
                         {useDot && officer.status?.color ? (
                           <span
