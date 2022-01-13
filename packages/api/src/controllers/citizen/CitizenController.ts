@@ -142,6 +142,7 @@ export class CitizenController {
       ccw,
       phoneNumber,
       postal,
+      occupation,
     } = body.toJSON() as {
       [key: string]: any;
       driversLicenseCategory: string[];
@@ -190,6 +191,7 @@ export class CitizenController {
         phoneNumber: phoneNumber || null,
         imageId: validateImgurURL(body.get("image")),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
+        occupation: occupation || null,
       },
       include: {
         gender: true,
