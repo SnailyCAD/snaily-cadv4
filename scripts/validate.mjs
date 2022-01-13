@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { bold, underline, yellow } from "colorette";
 
 const [major, minor] = process.version.split(".").map((v) => {
   return parseInt(v.replace("v", ""));
@@ -7,7 +7,7 @@ const [major, minor] = process.version.split(".").map((v) => {
 const is16 = major >= 16;
 const isDot6 = major === 16 ? minor >= 6 : !(major < 16);
 const isSupportedVersion = is16 && isDot6;
-const versionText = chalk.bold(chalk.underline("v16.6 or higher"));
+const versionText = bold(underline("v16.6 or higher"));
 
 if (!isSupportedVersion) {
   throw warn(
@@ -16,5 +16,5 @@ if (!isSupportedVersion) {
 }
 
 function warn(message) {
-  console.warn(`${chalk.yellow("warn")} -`, message);
+  console.warn(`${yellow("warn")} -`, message);
 }
