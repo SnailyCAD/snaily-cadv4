@@ -27,12 +27,7 @@ export const userProperties = {
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
-  let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)?.[Cookie.Session];
-
-  if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
-    const name = "snaily-cad-iframe-cookie";
-    header = req.cookies[name] || parse(`${req.headers.session}`)?.[name];
-  }
+  const header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)?.[Cookie.Session];
 
   if (throwErrors && !header) {
     throw new Unauthorized("Unauthorized");

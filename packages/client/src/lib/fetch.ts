@@ -1,9 +1,7 @@
 import axios, { Method, AxiosRequestConfig, AxiosResponse } from "axios";
 import { serialize } from "cookie";
 import { IncomingMessage } from "connect";
-import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { IFRAME_COOKIE_NAME } from "src/pages/api/token";
 
 export type RequestData = Record<string, unknown>;
 
@@ -24,12 +22,7 @@ export async function handleRequest<T = any>(
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  let parsedCookie = req?.headers.cookie || serialize("snaily-cad-session", cookie as string);
-  const cookies = nookies.get({ req });
-
-  if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !parsedCookie) {
-    parsedCookie = cookies[IFRAME_COOKIE_NAME]!;
-  }
+  const parsedCookie = req?.headers.cookie || serialize("snaily-cad-session", cookie as string);
 
   const res = await axios({
     url: `${url}${path}`,
