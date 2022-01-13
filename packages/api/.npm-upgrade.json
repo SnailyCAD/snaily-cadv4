@@ -1,8 +1,0 @@
-{
-  "ignore": {
-    "discord-api-types": {
-      "versions": "0.26.1",
-      "reason": ""
-    }
-  }
-}
