@@ -17,8 +17,7 @@
   "devDependencies": {
     "@casper124578/eslint-config": "^2.3.2",
     "@casper124578/eslint-config-next": "^1.2.1",
-    "@casper124578/eslint-config-react": "^2.2.0",
-    "chalk": "^5.0.0",
+    "@casper124578/eslint-config-react": "^2.2.1",
     "colorette": "2.0.16",
     "copy": "^0.3.2",
     "eslint": "^8.6.0",
