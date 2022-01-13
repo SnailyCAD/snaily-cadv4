@@ -15,33 +15,36 @@ import { Formik, FormikHelpers } from "formik";
 import { Citizen } from "types/prisma";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   citizen: Citizen | null;
-  onSubmit(arg0: { data: any; formData?: FormData }): void | Promise<void>;
   state: "error" | "loading" | null;
+  showLicenseFields?: boolean;
+  onSubmit(arg0: { data: any; formData?: FormData }): void | Promise<void>;
 }
 
-export function ManageCitizenForm({ onSubmit, state, citizen }: Props) {
+export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
-  const { gender, ethnicity } = useValues();
+  const { gender, ethnicity, license, driverslicenseCategory } = useValues();
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
 
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
-    ? `(${cad?.miscCadSettings.weightPrefix})`
+    ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
 
   const heightPrefix = cad?.miscCadSettings?.heightPrefix
-    ? `(${cad?.miscCadSettings.heightPrefix})`
+    ? `(${cad.miscCadSettings.heightPrefix})`
     : "";
 
   const INITIAL_VALUES = {
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
-    dateOfBirth: citizen?.dateOfBirth ?? "",
+    dateOfBirth: citizen?.dateOfBirth ?? new Date(),
     gender: citizen?.genderId ?? "",
     ethnicity: citizen?.ethnicityId ?? "",
     weight: citizen?.weight ?? "",
@@ -53,6 +56,14 @@ export function ManageCitizenForm({ onSubmit, state, citizen }: Props) {
     phoneNumber: citizen?.phoneNumber ?? "",
     postal: citizen?.postal ?? "",
     occupation: citizen?.occupation ?? "",
+
+    // only for /citizen/create
+    driversLicense: "",
+    pilotLicense: "",
+    weaponLicense: "",
+    driversLicenseCategory: "",
+    pilotLicenseCategory: "",
+    ccw: "",
   };
 
   async function handleSubmit(
@@ -80,11 +91,16 @@ export function ManageCitizenForm({ onSubmit, state, citizen }: Props) {
 
           <FormRow>
             <FormField errorMessage={errors.name} label={t("name")}>
-              <Input value={values.name} onChange={handleChange} name="name" disabled />
+              <Input value={values.name} onChange={handleChange} name="name" disabled={!!citizen} />
             </FormField>
 
             <FormField errorMessage={errors.surname} label={t("surname")}>
-              <Input value={values.surname} onChange={handleChange} name="surname" disabled />
+              <Input
+                value={values.surname}
+                onChange={handleChange}
+                name="surname"
+                disabled={!!citizen}
+              />
             </FormField>
           </FormRow>
 
@@ -164,12 +180,104 @@ export function ManageCitizenForm({ onSubmit, state, citizen }: Props) {
           </FormRow>
 
           <FormField optional errorMessage={errors.phoneNumber} label={t("phoneNumber")}>
-            <Input value={values.phoneNumber ?? ""} onChange={handleChange} name="phoneNumber" />
+            <Input value={values.phoneNumber} onChange={handleChange} name="phoneNumber" />
           </FormField>
 
           <FormField optional errorMessage={errors.occupation} label={t("occupation")}>
             <Textarea name="occupation" onChange={handleChange} value={values.occupation} />
           </FormField>
+
+          {showLicenseFields ? (
+            <FormRow className="mt-5">
+              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.driversLicense}
+                  onChange={handleChange}
+                  name="driversLicense"
+                />
+
+                <FormField
+                  errorMessage={errors.driversLicenseCategory}
+                  className="mt-2"
+                  label="Type"
+                >
+                  <Select
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === "AUTOMOTIVE")
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: [v.id, v.type].join("-"),
+                      }))}
+                    value={values.driversLicenseCategory}
+                    onChange={handleChange}
+                    name="driversLicenseCategory"
+                    isMulti
+                    isClearable
+                  />
+                </FormField>
+              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.weaponLicense}
+                    onChange={handleChange}
+                    name="weaponLicense"
+                  />
+                </FormField>
+              ) : null}
+
+              <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
+                <Select
+                  values={license.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.pilotLicense}
+                  onChange={handleChange}
+                  name="pilotLicense"
+                />
+
+                <FormField errorMessage={errors.pilotLicenseCategory} className="mt-2" label="Type">
+                  <Select
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === "AVIATION")
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: [v.id, v.type].join("-"),
+                      }))}
+                    value={values.pilotLicenseCategory}
+                    onChange={handleChange}
+                    name="pilotLicenseCategory"
+                    isMulti
+                    isClearable
+                  />
+                </FormField>
+              </FormField>
+
+              {WEAPON_REGISTRATION ? (
+                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                  <Select
+                    values={license.values.map((v) => ({
+                      label: v.value,
+                      value: v.id,
+                    }))}
+                    value={values.ccw}
+                    onChange={handleChange}
+                    name="ccw"
+                  />
+                </FormField>
+              ) : null}
+            </FormRow>
+          ) : null}
 
           <div className="flex items-center justify-end">
             <Link href={citizen ? `/citizen/${citizen.id}` : "/citizen"}>
@@ -181,7 +289,8 @@ export function ManageCitizenForm({ onSubmit, state, citizen }: Props) {
               type="submit"
               disabled={!isValid || state === "loading"}
             >
-              {state === "loading" ? <Loader /> : null} {common("save")}
+              {state === "loading" ? <Loader /> : null}
+              {citizen ? common("save") : common("create")}
             </Button>
           </div>
         </form>
