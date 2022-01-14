@@ -20,6 +20,7 @@ import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -59,11 +60,12 @@ interface Props {
 export default function OfficerDashboard({ officers, bolos, calls, activeOfficer }: Props) {
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const state = useLeoState();
-  const { setCalls, setBolos } = useDispatchState();
+  const { setCalls, setBolos, ...rest } = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
+  const { activeDispatchers } = useActiveDispatchers(rest.activeDispatchers);
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -81,6 +83,8 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
     officers,
     activeOfficer,
   ]);
+
+  console.log({ activeDispatchers });
 
   return (
     <Layout className="dark:text-white">

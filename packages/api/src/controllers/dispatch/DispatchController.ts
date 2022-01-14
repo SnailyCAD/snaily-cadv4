@@ -7,6 +7,7 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { cad } from ".prisma/client";
+import { Feature, User } from "@prisma/client";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -91,5 +92,44 @@ export class Calls911Controller {
     this.socket.emitSignal100(value);
 
     return { value };
+  }
+
+  @Post("/dispatchers-state")
+  async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
+    const cad = ctx.get("cad") as cad;
+    const user = ctx.get("user") as User;
+    const value = Boolean(body.get("value"));
+
+    if (cad.disabledFeatures.includes(Feature.ACTIVE_DISAPTCHERS)) {
+      throw new BadRequest("featureDisabled");
+    }
+
+    let dispatcher = await prisma.activeDispatchers.findFirst({
+      where: { userId: user.id },
+    });
+
+    if (value === true) {
+      dispatcher = await prisma.activeDispatchers.create({
+        data: { userId: user.id },
+      });
+    } else {
+      if (!dispatcher) {
+        return;
+      }
+
+      dispatcher = await prisma.activeDispatchers.delete({
+        where: { id: dispatcher.id },
+      });
+    }
+
+    if (!dispatcher) {
+      dispatcher = await prisma.activeDispatchers.create({
+        data: { userId: user.id },
+      });
+    }
+
+    this.socket.emitActiveDispatchers();
+
+    return { dispatcher };
   }
 }

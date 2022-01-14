@@ -6,8 +6,8 @@ import useFetch from "lib/useFetch";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Feature } from "types/prisma";
-import { useDispatchState } from "state/dispatchState";
 import { useAuth } from "context/AuthContext";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface MButton {
   nameKey: [string, string];
@@ -55,7 +55,7 @@ export function DispatchModalButtons() {
   const { execute } = useFetch();
   const { signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
-  const { activeDispatchers } = useDispatchState();
+  const { activeDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
 
   const isActive = activeDispatchers.some((v) => v.userId === user?.id);
@@ -63,7 +63,7 @@ export function DispatchModalButtons() {
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
 
-    await execute("/dispatch/dispatcher-state", {
+    await execute("/dispatch/dispatchers-state", {
       method: "POST",
       data: { value: newState },
     });
