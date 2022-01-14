@@ -4,11 +4,13 @@ import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveDispatchers } from "types/prisma";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
   const [dispatchers, setActiveDispatchers] = React.useState(initDeputies);
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
+  const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   const getActiveDispatchers = React.useCallback(async () => {
     const { json } = await execute("/dispatch", {
@@ -31,5 +33,9 @@ export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
     getActiveDispatchers();
   });
 
-  return { activeDispatchers: dispatchers, state };
+  return {
+    activeDispatchers: dispatchers,
+    state,
+    hasActiveDispatchers: ACTIVE_DISPATCHERS && dispatchers.length >= 1,
+  };
 }
