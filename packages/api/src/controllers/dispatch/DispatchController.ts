@@ -41,7 +41,15 @@ export class Calls911Controller {
       ...includeData,
     });
 
-    return { deputies, officers };
+    const activeDispatchers = await prisma.activeDispatchers.findMany({
+      include: {
+        user: {
+          select: { id: true, username: true, rank: true, isLeo: true, isEmsFd: true },
+        },
+      },
+    });
+
+    return { deputies, officers, activeDispatchers };
   }
 
   @Post("/aop")

@@ -95,6 +95,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When disabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
   },
+  ACTIVE_DISPATCHERS: {
+    name: "Active Dispatchers",
+    description:
+      "When enabled, curtain buttons on the LEO and EMS/FD dashboard will become disabled when there is an active dispatcher.",
+  },
 };
 
 export function DisabledFeaturesArea() {

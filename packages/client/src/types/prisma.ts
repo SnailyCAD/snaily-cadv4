@@ -648,6 +648,17 @@ export type CombinedLeoUnit = {
 };
 
 /**
+ * Model ActiveDispatchers
+ *
+ */
+export type ActiveDispatchers = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+};
+
+/**
  * Enums
  */
 
@@ -710,6 +721,7 @@ export const feature = {
   WEAPON_REGISTRATION: "WEAPON_REGISTRATION",
   SOCIAL_SECURITY_NUMBERS: "SOCIAL_SECURITY_NUMBERS",
   DISALLOW_TEXTFIELD_SELECTION: "DISALLOW_TEXTFIELD_SELECTION",
+  ACTIVE_DISPATCHERS: "ACTIVE_DISPATCHERS",
 } as const;
 
 export type Feature = typeof feature[keyof typeof feature];
