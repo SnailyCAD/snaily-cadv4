@@ -13,6 +13,7 @@ import { StatusViewMode } from "types/prisma";
 import { useAuth } from "context/AuthContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
@@ -22,6 +23,7 @@ export function ActiveDeputies() {
   const generateCallsign = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -79,7 +81,12 @@ export function ActiveDeputies() {
               ),
               actions: isDispatch ? (
                 <>
-                  <Button onClick={() => handleEditClick(deputy)} small variant="success">
+                  <Button
+                    disabled={!hasActiveDispatchers}
+                    onClick={() => handleEditClick(deputy)}
+                    small
+                    variant="success"
+                  >
                     {common("manage")}
                   </Button>
                 </>

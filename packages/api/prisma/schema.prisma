@@ -108,6 +108,7 @@ model User {
   TaxiCall             TaxiCall[]
   TruckLog             TruckLog[]
   ExpungementRequest   ExpungementRequest[]
+  ActiveDispatchers    ActiveDispatchers[]
 }
 
 enum StatusViewMode {
@@ -640,6 +641,15 @@ enum ShouldDoType {
   PANIC_BUTTON
 }
 
+// dispatching
+model ActiveDispatchers {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
+
 // 911 calls & bolos
 model Call911 {
   id            String         @id @default(cuid())
@@ -855,4 +865,5 @@ enum Feature {
   WEAPON_REGISTRATION
   SOCIAL_SECURITY_NUMBERS
   DISALLOW_TEXTFIELD_SELECTION
+  ACTIVE_DISPATCHERS
 }

@@ -107,4 +107,8 @@ export class Socket {
       this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, officer);
     }
   }
+
+  emitActiveDispatchers() {
+    this.io.sockets.emit(SocketEvents.UpdateDispatchersState);
+  }
 }
