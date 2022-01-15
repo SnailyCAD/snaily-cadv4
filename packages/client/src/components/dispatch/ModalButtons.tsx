@@ -55,7 +55,7 @@ export function DispatchModalButtons() {
   const { execute } = useFetch();
   const { signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
-  const { activeDispatchers } = useActiveDispatchers();
+  const { activeDispatchers, hasActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
 
   const isActive = activeDispatchers.some((v) => v.userId === user?.id);
@@ -82,6 +82,7 @@ export function DispatchModalButtons() {
         (button, idx) =>
           (button.isEnabled?.(features) ?? true) && (
             <Button
+              disabled={!hasActiveDispatchers}
               id={button.nameKey[1]}
               key={idx}
               title={t(button.nameKey.join("."))}
