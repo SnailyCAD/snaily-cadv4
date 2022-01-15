@@ -3,11 +3,9 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
-import { ActiveDispatchers } from "types/prisma";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
-export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
-  const [dispatchers, setActiveDispatchers] = React.useState(initDeputies);
+export function useActiveDispatchers() {
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState();
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
@@ -18,7 +16,7 @@ export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
     });
 
     if (json && "activeDispatchers" in json) {
-      setActiveDispatchers(json.activeDispatchers);
+      dispatchState.setActiveDispatchers(json.activeDispatchers);
       dispatchState.setActiveDispatchers(json.activeDispatchers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -34,8 +32,8 @@ export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
   });
 
   return {
-    activeDispatchers: dispatchers,
+    activeDispatchers: dispatchState.activeDispatchers,
     state,
-    hasActiveDispatchers: ACTIVE_DISPATCHERS && dispatchers.length >= 1,
+    hasActiveDispatchers: ACTIVE_DISPATCHERS && dispatchState.activeDispatchers.length >= 1,
   };
 }

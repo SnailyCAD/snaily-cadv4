@@ -3,6 +3,7 @@ import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
@@ -151,9 +152,10 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
   const common = useTranslations("Common");
   const { activeOfficer } = useLeoState();
   const { pathname } = useRouter();
+  const { hasActiveDispatchers } = useActiveDispatchers();
   const isDispatchRoute = pathname === "/dispatch";
   const isDisabled = isDispatchRoute
-    ? false
+    ? !hasActiveDispatchers
     : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
   const generateCallsign = useGenerateCallsign();

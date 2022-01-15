@@ -158,6 +158,7 @@ export function ActiveCalls() {
                           {isDispatch ? (
                             <>
                               <Button
+                                disabled={!hasActiveDispatchers}
                                 small
                                 variant="success"
                                 onClick={() => handleManageClick(call)}

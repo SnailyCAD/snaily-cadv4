@@ -16,6 +16,7 @@ import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -28,6 +29,7 @@ export function ActiveOfficers() {
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();
   const { execute } = useFetch();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -179,7 +181,12 @@ export function ActiveOfficers() {
                       </td>
                       {isDispatch ? (
                         <td className="w-36">
-                          <Button onClick={() => handleEditClick(officer)} small variant="success">
+                          <Button
+                            disabled={!hasActiveDispatchers}
+                            onClick={() => handleEditClick(officer)}
+                            small
+                            variant="success"
+                          >
                             {common("manage")}
                           </Button>
                         </td>
