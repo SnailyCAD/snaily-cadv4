@@ -29,7 +29,7 @@ export function useActiveDispatchers(initDeputies: ActiveDispatchers[] = []) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useListener(SocketEvents.UpdateDispatchersState, () => {
+  useListener({ eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true }, () => {
     getActiveDispatchers();
   });
 

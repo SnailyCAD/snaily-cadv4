@@ -125,16 +125,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/use-socket.io@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@casper124578/use-socket.io@npm:2.1.0"
+"@casper124578/use-socket.io@npm:2.2.0":
+  version: 2.2.0
+  resolution: "@casper124578/use-socket.io@npm:2.2.0"
   dependencies:
     react: 17.0.2
-    socket.io-client: 4.4.0
+    socket.io-client: 4.4.1
   peerDependencies:
     react: 17.0.2
     socket.io-client: 4.2.0
-  checksum: 7dd07569d5426fcdce294ecb1f366d05363d229c655675c32cdfc50972dc61980f4a9a747c0dadf879d0d82bc19211a7b2fae2b989562421eec13923d1f47807
+  checksum: 135f809555abe3b95951682e2fd7218dbdb31e9731160da98e9bcb890ba1b12891d967e586f5f7eaca1dc02082e1fb8712188705b49792576ea356a251ae600a
   languageName: node
   linkType: hard
 
@@ -331,13 +331,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@headlessui/react@npm:1.4.2"
+"@headlessui/react@npm:^1.4.3":
+  version: 1.4.3
+  resolution: "@headlessui/react@npm:1.4.3"
   peerDependencies:
     react: ^16 || ^17 || ^18
     react-dom: ^16 || ^17 || ^18
-  checksum: 28c36204430365190c05cbd48235f8239897360c8d55189583c03868fe640b171051238a8672a501b441de79281bb08285966105bfeb4534ca0e612382dcd41f
+  checksum: 0c55bba6dc09a81576ec7d41320e3beb57b3f4576637ac4aad6048af851d5fe5434fd0d10dfb5c7b2db16eca6ded5eb3368822ddb87ff4dcb99fc3592ef63b0a
   languageName: node
   linkType: hard
 
@@ -1178,9 +1178,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/client@workspace:packages/client"
   dependencies:
-    "@casper124578/use-socket.io": 2.1.0
+    "@casper124578/use-socket.io": 2.2.0
     "@casper124578/useful": ^1.4.5
-    "@headlessui/react": ^1.4.2
+    "@headlessui/react": ^1.4.3
     "@radix-ui/react-context-menu": ^0.1.4
     "@radix-ui/react-dropdown-menu": ^0.1.4
     "@radix-ui/react-hover-card": ^0.1.3
@@ -1218,15 +1218,15 @@ __metadata:
     react-dom: ^17.0.2
     react-hot-toast: ^2.2.0
     react-markdown: ^7.1.2
-    react-select: ^5.2.1
-    react-sortablejs: ^6.0.0
+    react-select: ^5.2.2
+    react-sortablejs: ^6.0.3
     react-table: ^7.7.0
     react-use: ^17.3.2
     rimraf: ^3.0.2
     sass: ^1.48.0
     socket.io-client: ^4.4.1
     sortablejs: ^1.14.0
-    tailwindcss: ^3.0.13
+    tailwindcss: ^3.0.15
     typescript: ^4.5.4
     uuid: ^8.3.2
     zustand: ^3.6.9
@@ -2881,7 +2881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.6":
+"classnames@npm:2.3.1":
   version: 2.3.1
   resolution: "classnames@npm:2.3.1"
   checksum: 14db8889d56c267a591f08b0834989fe542d47fac659af5a539e110cc4266694e8de86e4e3bbd271157dbd831361310a8293e0167141e80b0f03a0f175c80960
@@ -7974,7 +7974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-select@npm:^5.2.1":
+"react-select@npm:^5.2.2":
   version: 5.2.2
   resolution: "react-select@npm:5.2.2"
   dependencies:
@@ -7992,18 +7992,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-sortablejs@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "react-sortablejs@npm:6.0.0"
+"react-sortablejs@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "react-sortablejs@npm:6.0.3"
   dependencies:
-    classnames: ^2.2.6
-    tiny-invariant: ^1.1.0
+    classnames: 2.3.1
+    tiny-invariant: 1.2.0
   peerDependencies:
-    "@types/sortablejs": ^1.10.0
-    react: ^16.9.0
-    react-dom: ^16.9.0
-    sortablejs: ^1.10.0
-  checksum: 28c496b2e1618996ecf11e5cc3d5560e2f398b53e5a5f86f4e34f02dcca77f1c4cf52c1a2aca41ccd7b4392e82558481929759a11844bcd44727a58ba7b3bd49
+    "@types/sortablejs": 1
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+    sortablejs: 1
+  checksum: ca905993b0c4a7f7be1e9ea1fb05cdfa2bd7d60a7416c69f2ddc1c3e2227985a8dfc119c1067de46954a9a3848b785477d1c671c437400eaf69d361660af37f0
   languageName: node
   linkType: hard
 
@@ -8595,21 +8595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:4.4.0":
-  version: 4.4.0
-  resolution: "socket.io-client@npm:4.4.0"
-  dependencies:
-    "@socket.io/component-emitter": ~3.0.0
-    backo2: ~1.0.2
-    debug: ~4.3.2
-    engine.io-client: ~6.1.1
-    parseuri: 0.0.6
-    socket.io-parser: ~4.1.1
-  checksum: a56c2327709439dbf84a06130fabc9234b074b8d4e469de220af631ad686896ce51860209a209d10650f878f82d3068129545ed32ca55f6b606786a61b303a34
-  languageName: node
-  linkType: hard
-
-"socket.io-client@npm:^4.4.1":
+"socket.io-client@npm:4.4.1, socket.io-client@npm:^4.4.1":
   version: 4.4.1
   resolution: "socket.io-client@npm:4.4.1"
   dependencies:
@@ -9055,9 +9041,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.0.13":
-  version: 3.0.13
-  resolution: "tailwindcss@npm:3.0.13"
+"tailwindcss@npm:^3.0.15":
+  version: 3.0.15
+  resolution: "tailwindcss@npm:3.0.15"
   dependencies:
     arg: ^5.0.1
     chalk: ^4.1.2
@@ -9085,7 +9071,7 @@ __metadata:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: ede2b886587be42ef2e3fdd6cc87a5f6853e8eb86c0124960e325c04aabb90d71bb037464f8dbb6b5a719f7602b48d829132a408469a952d2911700b519a7a35
+  checksum: acbf45202d3046e87c3a55e80ca93f7344960fb4d0daa3d5f5a2b28e8afd7a26d023f9142632168d1a3076eff701499bed40cafa3823c371de596f42e98ba84d
   languageName: node
   linkType: hard
 
@@ -9145,7 +9131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-invariant@npm:^1.1.0":
+"tiny-invariant@npm:1.2.0":
   version: 1.2.0
   resolution: "tiny-invariant@npm:1.2.0"
   checksum: e09a718a7c4a499ba592cdac61f015d87427a0867ca07f50c11fd9b623f90cdba18937b515d4a5e4f43dac92370498d7bdaee0d0e7a377a61095e02c4a92eade

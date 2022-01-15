@@ -20,12 +20,14 @@ import { makeUnitName } from "lib/utils";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
 );
 
 export function ActiveCalls() {
+  const { hasActiveDispatchers } = useActiveDispatchers();
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { calls, setCalls } = useDispatchState();
@@ -187,7 +189,7 @@ export function ActiveCalls() {
 
                           {TOW ? (
                             <Button
-                              disabled={!isDispatch && !unit}
+                              disabled={!hasActiveDispatchers || (!isDispatch && !unit)}
                               small
                               className="ml-2"
                               onClick={() => handleCallTow(call)}
