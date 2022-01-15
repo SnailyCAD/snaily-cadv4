@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { StatusesArea } from "components/shared/StatusesArea";
-import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
@@ -13,13 +12,13 @@ import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
-import { useTime } from "hooks/shared/useTime";
 import { requestAll } from "lib/utils";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
+import { UtilityPanel } from "components/shared/UtilityPanel";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -57,10 +56,8 @@ interface Props {
 }
 
 export default function OfficerDashboard({ officers, bolos, calls, activeOfficer }: Props) {
-  const { showAop, areaOfPlay } = useAreaOfPlay();
   const state = useLeoState();
   const { setCalls, setBolos } = useDispatchState();
-  const timeRef = useTime();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
@@ -89,22 +86,13 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
       {signal100Enabled ? <Component /> : null}
       {unit ? <PanicButton unit={unit} /> : null}
 
-      <div className="w-full mb-3 overflow-hidden card">
-        <header className="flex items-center justify-between px-4 py-2 mb-2 bg-gray-300 dark:bg-gray-3">
-          <h3 className="text-xl font-semibold">
-            {t("utilityPanel")}
-            {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
-          </h3>
-
-          <span ref={timeRef} />
-        </header>
-
+      <UtilityPanel>
         <div className="px-4">
           <ModalButtons />
         </div>
 
         <StatusesArea activeUnit={state.activeOfficer} setActiveUnit={state.setActiveOfficer} />
-      </div>
+      </UtilityPanel>
 
       <ActiveCalls />
       <ActiveBolos />

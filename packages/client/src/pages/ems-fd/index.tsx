@@ -2,8 +2,6 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { ModalButtons } from "components/ems-fd/ModalButtons";
-import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
-import { useTime } from "hooks/shared/useTime";
 import dynamic from "next/dynamic";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
@@ -17,6 +15,7 @@ import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
+import { UtilityPanel } from "components/shared/UtilityPanel";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -41,8 +40,6 @@ const SearchMedicalRecordModal = dynamic(async () => {
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
-  const { showAop, areaOfPlay } = useAreaOfPlay();
-  const timeRef = useTime();
   const { signal100Enabled, Component } = useSignal100();
 
   const state = useEmsFdState();
@@ -63,22 +60,13 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
       {signal100Enabled ? <Component /> : null}
 
-      <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3 dark:text-white dark:border-b-[1px] dark:border-dark-gray mb-2">
-          <h3 className="text-xl font-semibold">
-            {t("Leo.utilityPanel")}
-            {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
-          </h3>
-
-          <span ref={timeRef} />
-        </header>
-
+      <UtilityPanel>
         <div className="px-4">
           <ModalButtons />
         </div>
 
         <StatusesArea setActiveUnit={state.setActiveDeputy} activeUnit={state.activeDeputy} />
-      </div>
+      </UtilityPanel>
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">
         <div className="w-full">
