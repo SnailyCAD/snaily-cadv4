@@ -1,5 +1,5 @@
 -- AlterEnum
-ALTER TYPE "Feature" ADD VALUE 'ACTIVE_DISAPTCHERS';
+ALTER TYPE "Feature" ADD VALUE 'ACTIVE_DISPATCHERS';
 
 -- CreateTable
 CREATE TABLE "ActiveDispatchers" (

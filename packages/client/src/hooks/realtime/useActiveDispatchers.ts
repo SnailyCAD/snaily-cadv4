@@ -34,6 +34,6 @@ export function useActiveDispatchers() {
   return {
     activeDispatchers: dispatchState.activeDispatchers,
     state,
-    hasActiveDispatchers: ACTIVE_DISPATCHERS && dispatchState.activeDispatchers.length >= 1,
+    hasActiveDispatchers: ACTIVE_DISPATCHERS ? dispatchState.activeDispatchers.length >= 1 : true,
   };
 }

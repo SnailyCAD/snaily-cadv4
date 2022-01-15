@@ -100,7 +100,7 @@ export class Calls911Controller {
     const user = ctx.get("user") as User;
     const value = Boolean(body.get("value"));
 
-    if (cad.disabledFeatures.includes(Feature.ACTIVE_DISAPTCHERS)) {
+    if (cad.disabledFeatures.includes(Feature.ACTIVE_DISPATCHERS)) {
       throw new BadRequest("featureDisabled");
     }
 
