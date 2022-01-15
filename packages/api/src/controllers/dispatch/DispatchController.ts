@@ -109,9 +109,11 @@ export class Calls911Controller {
     });
 
     if (value === true) {
-      dispatcher = await prisma.activeDispatchers.create({
-        data: { userId: user.id },
-      });
+      dispatcher =
+        dispatcher ??
+        (await prisma.activeDispatchers.create({
+          data: { userId: user.id },
+        }));
     } else {
       if (!dispatcher) {
         return;
@@ -119,12 +121,6 @@ export class Calls911Controller {
 
       dispatcher = await prisma.activeDispatchers.delete({
         where: { id: dispatcher.id },
-      });
-    }
-
-    if (!dispatcher) {
-      dispatcher = await prisma.activeDispatchers.create({
-        data: { userId: user.id },
       });
     }
 
