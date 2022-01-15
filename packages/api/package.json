@@ -36,7 +36,6 @@
     "@tsed/platform-express": "^6.98.0",
     "@tsed/schema": "^6.98.0",
     "@tsed/socketio": "^6.98.0",
-    "@types/socket.io": "^3.0.2",
     "bcrypt": "^5.0.1",
     "compression": "1.7.4",
     "cookie": "^0.4.1",

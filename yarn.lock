@@ -1151,7 +1151,6 @@ __metadata:
     "@types/jsonwebtoken": 8.5.7
     "@types/node": ^17.0.8
     "@types/node-fetch": 2
-    "@types/socket.io": ^3.0.2
     bcrypt: ^5.0.1
     compression: 1.7.4
     cookie: ^0.4.1
@@ -1955,15 +1954,6 @@ __metadata:
   version: 2.3.3
   resolution: "@types/sizzle@npm:2.3.3"
   checksum: 586a9fb1f6ff3e325e0f2cc1596a460615f0bc8a28f6e276ac9b509401039dd242fa8b34496d3a30c52f5b495873922d09a9e76c50c2ab2bcc70ba3fb9c4e160
-  languageName: node
-  linkType: hard
-
-"@types/socket.io@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "@types/socket.io@npm:3.0.2"
-  dependencies:
-    socket.io: "*"
-  checksum: 168cf77e48b466582bd69d1c25930bb657225e742288d658a03a1e8af254350daa61f9441ec2be0d8354f1dcc747966e4342000bce875549fe54ec03e2fafec3
   languageName: node
   linkType: hard
 
@@ -8648,7 +8638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io@npm:*, socket.io@npm:^4.4.1":
+"socket.io@npm:^4.4.1":
   version: 4.4.1
   resolution: "socket.io@npm:4.4.1"
   dependencies:
