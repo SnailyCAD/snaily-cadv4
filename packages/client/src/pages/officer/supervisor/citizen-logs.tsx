@@ -44,7 +44,7 @@ export default function CitizenLogs({ logs: data }: Props) {
       </header>
 
       {logs.length <= 0 ? (
-        <p className="mt-5">{t("noLogs")}</p>
+        <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (
         <>
           <FormField label={common("search")} className="my-2">

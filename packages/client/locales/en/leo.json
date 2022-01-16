@@ -113,7 +113,7 @@
     "hideBlips": "Hide Blips",
     "showBlips": "Show Blips",
     "citizenLogs": "Citizen Logs",
-    "noLogs": "There are no logs yet.",
+    "noCitizenLogs": "There are no citizen logs yet. When a citizen gets arrested, ticketed, etc, these will show up here.",
     "revoke": "Revoke",
     "warrants": "Warrants",
     "noWarrants": "This citizen does not have any warrants",
