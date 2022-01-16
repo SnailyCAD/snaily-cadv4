@@ -187,7 +187,7 @@ model RegisteredVehicle {
   id                   String             @id @default(cuid())
   user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String
-  citizen              Citizen            @relation(fields: [citizenId], references: [id])
+  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
   vinNumber            String             @unique @db.VarChar(255)
   plate                String             @unique @db.VarChar(255)
@@ -209,7 +209,7 @@ model Weapon {
   id                   String      @id @default(cuid())
   user                 User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String
-  citizen              Citizen     @relation(fields: [citizenId], references: [id])
+  citizen              Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @default(now()) @updatedAt
@@ -224,7 +224,7 @@ model MedicalRecord {
   id        String   @id @default(cuid())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  citizen   Citizen  @relation(fields: [citizenId], references: [id])
+  citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -424,7 +424,7 @@ model TowCall {
   id                String   @id @default(uuid())
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            String
-  assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id])
+  assignedUnit      Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
   assignedUnitId    String?
   location          String   @db.VarChar(255)
   postal            String?  @db.Text
@@ -433,7 +433,7 @@ model TowCall {
   plate             String?  @db.VarChar(255)
   model             String?  @db.VarChar(255)
   description       String   @db.Text
-  creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id])
+  creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId         String?
   ended             Boolean  @default(false)
   callCountyService Boolean  @default(false)
@@ -446,12 +446,12 @@ model TaxiCall {
   id             String   @id @default(uuid())
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
-  assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id])
+  assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
   assignedUnitId String?
   location       String   @db.VarChar(255)
   postal         String?  @db.Text
   description    String   @db.Text
-  creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id])
+  creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId      String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt
@@ -742,7 +742,7 @@ model Record {
 model RecordRelease {
   id         String      @id @default(uuid())
   type       ReleaseType
-  releasedBy Citizen?    @relation(fields: [citizenId], references: [id])
+  releasedBy Citizen?    @relation(fields: [citizenId], references: [id], onDelete: SetNull)
   citizenId  String?
   Record     Record[]
 }
