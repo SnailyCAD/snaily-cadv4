@@ -11,7 +11,8 @@
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx",
     "prepare": "husky install",
-    "bump-version": "node scripts/bump-version.mjs"
+    "bump-version": "node scripts/bump-version.mjs",
+    "postinstall": "patch-package"
   },
   "license": "MIT",
   "devDependencies": {
@@ -23,6 +24,7 @@
     "eslint": "^8.6.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
+    "patch-package": "^6.4.7",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.3"
   }
