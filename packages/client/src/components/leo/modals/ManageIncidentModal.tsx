@@ -72,8 +72,10 @@ export function ManageIncidentModal({ incident }: Props) {
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
     involvedOfficers:
-      incident?.officersInvolved.map((v) => ({ label: makeUnitName(v), value: v.id })) ??
-      ([] as SelectValue[]),
+      incident?.officersInvolved.map((v) => ({
+        label: `${generateCallsign(v)} ${makeUnitName(v)}`,
+        value: v.id,
+      })) ?? ([] as SelectValue[]),
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
