@@ -217,7 +217,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 rowProps: { value: code },
                 title: code.title,
                 description: (
-                  <p className="max-w-4xl min-w-[300px] break-words whitespace-pre-wrap">
+                  <p className="max-w-4xl text-base min-w-[300px] break-words whitespace-pre-wrap">
                     {code.description}
                   </p>
                 ),

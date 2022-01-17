@@ -84,7 +84,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
                     <Input onChange={(e) => setSearch(e.target.value)} value={search} />
                     <Button
                       onClick={() => handlePurge(rows.map((r) => r.original.rowProps.call.id))}
-                      className="ml-2 min-w-fit flex gap-2 items-center"
+                      className="flex items-center gap-2 ml-2 min-w-fit"
                       disabled={isDisabled}
                     >
                       {state === "loading" ? <Loader /> : null}
@@ -107,7 +107,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
               location: call.location,
               postal: call.postal,
               description: (
-                <p className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                <p className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
                   {call.description}
                 </p>
               ),

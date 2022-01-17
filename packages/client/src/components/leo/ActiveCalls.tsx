@@ -148,7 +148,7 @@ export function ActiveCalls() {
                       >
                         <td>{call.name}</td>
                         <td>{call.location}</td>
-                        <td className="max-w-4xl min-w-[250px] break-words whitespace-pre-wrap">
+                        <td className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
                           {call.description}
                         </td>
                         <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
