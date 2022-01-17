@@ -35,6 +35,7 @@ const citizenSearchInclude = {
       },
     },
   },
+  dlCategory: { include: { value: true } },
 };
 
 @Controller("/search")

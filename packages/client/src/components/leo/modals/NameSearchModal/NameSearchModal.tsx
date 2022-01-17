@@ -24,6 +24,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
+import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 
 const enum Toggled {
   VEHICLES,
@@ -279,21 +280,7 @@ export function NameSearchModal() {
 
                   <div className="w-full">
                     <ul className="flex flex-col">
-                      <Infofield label={cT("driversLicense")}>
-                        {currentResult.driversLicense?.value ?? common("none")}
-                      </Infofield>
-
-                      <Infofield label={cT("weaponLicense")}>
-                        {currentResult.weaponLicense?.value ?? common("none")}
-                      </Infofield>
-
-                      <Infofield label={cT("pilotLicense")}>
-                        {currentResult.pilotLicense?.value ?? common("none")}
-                      </Infofield>
-
-                      <Infofield label={cT("ccw")}>
-                        {currentResult.ccw?.value ?? common("none")}
-                      </Infofield>
+                      <CitizenLicenses citizen={currentResult} />
                     </ul>
 
                     <Button
