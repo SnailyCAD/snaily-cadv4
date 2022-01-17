@@ -5,7 +5,7 @@ import {
   MultipartFile,
   UseBefore,
 } from "@tsed/common";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -52,11 +52,11 @@ export class LeoController {
 
   @Post("/")
   async createOfficer(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: any,
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -69,7 +69,7 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+    await validateMaxDivisionsPerOfficer(data.divisions, cad);
 
     const officer = await prisma.officer.create({
       data: {
@@ -84,18 +84,18 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(officer, body.get("divisions"));
+    const updated = await linkDivisionsToOfficer(officer, data.divisions as string[]);
     return updated;
   }
 
   @Put("/:id")
   async updateOfficer(
     @PathParams("id") officerId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: any,
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const officer = await prisma.officer.findFirst({
       where: {
@@ -109,11 +109,11 @@ export class LeoController {
       throw new NotFound("officerNotFound");
     }
 
-    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+    await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -139,7 +139,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(updatedOfficer, body.get("divisions"));
+    const updated = await linkDivisionsToOfficer(updatedOfficer, data.divisions as string[]);
     return updated;
   }
 
@@ -334,10 +334,10 @@ export class LeoController {
 
   @Put("/licenses/:citizenId")
   async updateCitizenLicenses(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
   ) {
-    const data = validateSchema(LICENSE_SCHEMA, body.toJSON());
+    const data = validateSchema(LICENSE_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {

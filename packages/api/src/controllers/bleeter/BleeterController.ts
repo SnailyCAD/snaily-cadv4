@@ -13,7 +13,7 @@ import {
   MultipartFile,
 } from "@tsed/common";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Delete, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
@@ -51,8 +51,8 @@ export class BleeterController {
   }
 
   @Post("/")
-  async createPost(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(BLEETER_SCHEMA, body.toJSON());
+  async createPost(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(BLEETER_SCHEMA, body);
 
     const post = await prisma.bleeterPost.create({
       data: {
@@ -68,10 +68,10 @@ export class BleeterController {
   @Put("/:id")
   async updatePost(
     @PathParams("id") postId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
   ) {
-    const data = validateSchema(BLEETER_SCHEMA, body.toJSON());
+    const data = validateSchema(BLEETER_SCHEMA, body);
 
     const post = await prisma.bleeterPost.findUnique({
       where: {

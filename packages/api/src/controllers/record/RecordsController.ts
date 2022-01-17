@@ -1,5 +1,9 @@
-import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_TICKET_SCHEMA, CREATE_WARRANT_SCHEMA } from "@snailycad/schemas";
+import { Delete, Post, Put } from "@tsed/schema";
+import {
+  CREATE_TICKET_SCHEMA,
+  CREATE_WARRANT_SCHEMA,
+  UPDATE_WARRANT_SCHEMA,
+} from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -14,8 +18,8 @@ import { validateSchema } from "lib/validateSchema";
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")
-  async createWarrant(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_WARRANT_SCHEMA, body.toJSON());
+  async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -47,10 +51,8 @@ export class RecordsController {
   }
 
   @Put("/:id")
-  async updateWarrant(@BodyParams() body: JsonRequestBody, @PathParams("id") warrantId: string) {
-    if (!body.get("status")) {
-      throw new BadRequest("statusIsRequired");
-    }
+  async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
+    const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
     const warrant = await prisma.warrant.findUnique({
       where: { id: warrantId },
@@ -63,7 +65,7 @@ export class RecordsController {
     const updated = await prisma.warrant.update({
       where: { id: warrantId },
       data: {
-        status: body.get("status"),
+        status: data.status as WarrantStatus,
       },
     });
 
@@ -71,8 +73,8 @@ export class RecordsController {
   }
 
   @Post("/")
-  async createTicket(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_TICKET_SCHEMA, body.toJSON());
+  async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -107,79 +109,74 @@ export class RecordsController {
     const violations: Violation[] = [];
 
     await Promise.all(
-      body
-        .get("violations")
-        .map(
-          async (item: {
-            penalCodeId: string;
-            fine: number | null;
-            jailTime: number | null;
-            bail: number | null;
-          }) => {
-            /** validate the penalCode data */
-            const penalCode = await prisma.penalCode.findUnique({
-              where: { id: item.penalCodeId },
-              include: { warningApplicable: true, warningNotApplicable: true },
-            });
+      data.violations.map(
+        async (item: {
+          penalCodeId: string;
+          fine: number | null;
+          jailTime: number | null;
+          bail: number | null;
+        }) => {
+          /** validate the penalCode data */
+          const penalCode = await prisma.penalCode.findUnique({
+            where: { id: item.penalCodeId },
+            include: { warningApplicable: true, warningNotApplicable: true },
+          });
 
-            if (!penalCode) {
-              return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
-            }
+          if (!penalCode) {
+            return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
+          }
 
-            const [minFines, maxFines] =
-              penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
-            const [minPrisonTerm, maxPrisonTerm] = penalCode.warningNotApplicable?.prisonTerm ?? [];
-            const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
+          const [minFines, maxFines] =
+            penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
+          const [minPrisonTerm, maxPrisonTerm] = penalCode.warningNotApplicable?.prisonTerm ?? [];
+          const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-            // these if statements could be cleaned up?..
-            if (
-              item.fine &&
-              this.exists(minFines, maxFines) &&
-              !this.isCorrect(minFines!, maxFines!, item.fine)
-            ) {
-              return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
-            }
+          // these if statements could be cleaned up?..
+          if (
+            item.fine &&
+            this.exists(minFines, maxFines) &&
+            !this.isCorrect(minFines!, maxFines!, item.fine)
+          ) {
+            return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
+          }
 
-            if (
-              item.jailTime &&
-              this.exists(minPrisonTerm, maxPrisonTerm) &&
-              !this.isCorrect(minPrisonTerm!, maxPrisonTerm!, item.jailTime)
-            ) {
-              return this.handleBadRequest(
-                new BadRequest("jailTime_invalidDataReceived"),
-                ticket.id,
-              );
-            }
+          if (
+            item.jailTime &&
+            this.exists(minPrisonTerm, maxPrisonTerm) &&
+            !this.isCorrect(minPrisonTerm!, maxPrisonTerm!, item.jailTime)
+          ) {
+            return this.handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), ticket.id);
+          }
 
-            if (
-              item.bail &&
-              this.exists(minBail, maxBail) &&
-              !this.isCorrect(minBail!, maxBail!, item.bail)
-            ) {
-              return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
-            }
+          if (
+            item.bail &&
+            this.exists(minBail, maxBail) &&
+            !this.isCorrect(minBail!, maxBail!, item.bail)
+          ) {
+            return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
+          }
 
-            const violation = await prisma.violation.create({
-              data: {
-                fine: item.fine,
-                bail: item.bail,
-                jailTime: item.jailTime,
-                penalCode: {
-                  connect: {
-                    id: item.penalCodeId,
-                  },
-                },
-                records: {
-                  connect: {
-                    id: ticket.id,
-                  },
+          const violation = await prisma.violation.create({
+            data: {
+              fine: item.fine,
+              bail: item.bail,
+              jailTime: item.jailTime,
+              penalCode: {
+                connect: {
+                  id: item.penalCodeId,
                 },
               },
-            });
+              records: {
+                connect: {
+                  id: ticket.id,
+                },
+              },
+            },
+          });
 
-            violations.push(violation);
-          },
-        ),
+          violations.push(violation);
+        },
+      ),
     );
 
     await prisma.recordLog.create({
@@ -194,10 +191,11 @@ export class RecordsController {
 
   @UseBefore(ActiveOfficer)
   @Delete("/:id")
-  async deleteRecord(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
+  async deleteRecord(
+    @PathParams("id") id: string,
     // eslint-disable-next-line @typescript-eslint/ban-types
-    const type = body.get("type") as "WARRANT" | (string & {});
-
+    @BodyParams("type") type: "WARRANT" | (string & {}),
+  ) {
     if (type === "WARRANT") {
       const warrant = await prisma.warrant.findUnique({
         where: { id },

@@ -4,7 +4,7 @@ import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { JsonRequestBody, Post, Delete, Put } from "@tsed/schema";
+import { Post, Delete, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -14,8 +14,8 @@ import { generateString } from "utils/generateString";
 @UseBeforeEach(IsAuth)
 export class WeaponController {
   @Post("/")
-  async registerWeapon(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(WEAPON_SCHEMA, body.toJSON());
+  async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(WEAPON_SCHEMA, body);
     const user = ctx.get("user") as User;
     const cad = ctx.get("cad") as { disabledFeatures: Feature[] };
 
@@ -69,9 +69,9 @@ export class WeaponController {
   async updateWeapon(
     @Context() ctx: Context,
     @PathParams("id") weaponId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(WEAPON_SCHEMA, body.toJSON());
+    const data = validateSchema(WEAPON_SCHEMA, body);
 
     const weapon = await prisma.weapon.findUnique({
       where: {

@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -31,7 +31,7 @@ export class ManageBusinessesController {
   }
 
   @Put("/:id")
-  async updateBusiness(@BodyParams() body: JsonRequestBody, @PathParams("id") businessId: string) {
+  async updateBusiness(@BodyParams() body: any, @PathParams("id") businessId: string) {
     const business = await prisma.business.findUnique({
       where: {
         id: businessId,
@@ -44,7 +44,7 @@ export class ManageBusinessesController {
 
     const updated = await prisma.business.update({
       where: { id: businessId },
-      data: { status: body.get("status") },
+      data: { status: body.status },
       include: businessInclude,
     });
 
@@ -54,10 +54,10 @@ export class ManageBusinessesController {
   @Delete("/:id")
   async deleteBusiness(
     @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: any,
     @PathParams("id") businessId: string,
   ) {
-    const reason = body.get("reason");
+    const reason = body.reason;
 
     const business = await prisma.business.findUnique({
       where: {

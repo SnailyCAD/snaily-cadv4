@@ -4,7 +4,7 @@ import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -14,8 +14,8 @@ import { generateString } from "utils/generateString";
 @UseBeforeEach(IsAuth)
 export class VehiclesController {
   @Post("/")
-  async registerVehicle(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(VEHICLE_SCHEMA, body.toJSON());
+  async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
 
     const citizen = await prisma.citizen.findUnique({
@@ -91,9 +91,9 @@ export class VehiclesController {
   async updateVehicle(
     @Context() ctx: Context,
     @PathParams("id") vehicleId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(VEHICLE_SCHEMA, body.toJSON());
+    const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: {

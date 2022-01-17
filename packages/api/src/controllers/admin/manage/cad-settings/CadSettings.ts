@@ -5,7 +5,7 @@ import {
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth, setDiscordAUth } from "middlewares/index";
 import { BadRequest } from "@tsed/exceptions";
@@ -39,8 +39,8 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/")
-  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CAD_SETTINGS_SCHEMA, body.toJSON());
+  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.cad.update({
       where: {
@@ -64,15 +64,15 @@ export class ManageCitizensController {
     });
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
-    this.socket.emitUpdateRoleplayStopped(Boolean(body.get("roleplayEnabled")));
+    this.socket.emitUpdateRoleplayStopped(data.roleplayEnabled);
 
     return updated;
   }
 
   @UseBefore(IsAuth)
   @Put("/features")
-  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(DISABLED_FEATURES_SCHEMA, body.toJSON());
+  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
     const updated = await prisma.cad.update({
       where: {
@@ -88,8 +88,8 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/misc")
-  async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body.toJSON());
+  async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.miscCadSettings.update({
       where: {
@@ -115,7 +115,7 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/api-token")
-  async updateApiToken(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
+  async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad");
 
     const existing =
@@ -132,7 +132,7 @@ export class ManageCitizensController {
           id: existing.id,
         },
         data: {
-          enabled: body.get("enabled"),
+          enabled: body.enabled,
         },
       });
 

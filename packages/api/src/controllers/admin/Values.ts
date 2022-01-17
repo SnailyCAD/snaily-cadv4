@@ -91,19 +91,15 @@ export class ValuesController {
   }
 
   @Post("/")
-  async createValueByPath(@BodyParams() body: JsonRequestBody, @PathParams("path") path: string) {
+  async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
 
     if (type === "PENAL_CODE") {
-      const error = validate(CREATE_PENAL_CODE_SCHEMA, body.toJSON(), true);
-
-      if (error) {
-        throw new BadRequest(error);
-      }
+      validateSchema(CREATE_PENAL_CODE_SCHEMA, body);
 
       let id;
-      if (body.get("warningApplicable")) {
-        const fines = this.parsePenalCodeValues(body.get("fines"));
+      if (body.warningApplicable) {
+        const fines = this.parsePenalCodeValues(body.fines);
 
         const data = await prisma.warningApplicable.create({
           data: {
@@ -113,9 +109,9 @@ export class ValuesController {
 
         id = data.id;
       } else {
-        const fines = this.parsePenalCodeValues(body.get("fines"));
-        const prisonTerm = this.parsePenalCodeValues(body.get("prisonTerm"));
-        const bail = this.parsePenalCodeValues(body.get("bail"));
+        const fines = this.parsePenalCodeValues(body.fines);
+        const prisonTerm = this.parsePenalCodeValues(body.prisonTerm);
+        const bail = this.parsePenalCodeValues(body.bail);
 
         const data = await prisma.warningNotApplicable.create({
           data: {
@@ -128,12 +124,12 @@ export class ValuesController {
         id = data.id;
       }
 
-      const key = body.get("warningApplicable") ? "warningApplicableId" : "warningNotApplicableId";
+      const key = body.warningApplicable ? "warningApplicableId" : "warningNotApplicableId";
       const code = await prisma.penalCode.create({
         data: {
-          title: body.get("title"),
-          description: body.get("description"),
-          groupId: body.get("groupId") || null,
+          title: body.title,
+          description: body.description,
+          groupId: body.groupId || null,
           [key]: id,
         },
         include: {
@@ -156,13 +152,13 @@ export class ValuesController {
     });
 
     if (type === "DRIVERSLICENSE_CATEGORY") {
-      if (!body.get("type")) {
+      if (!body.type) {
         throw new BadRequest("typeIsRequired");
       }
 
       const dlCategory = await prisma.driversLicenseCategoryValue.create({
         data: {
-          type: body.get("type"),
+          type: body.type,
           valueId: value.id,
         },
         include: { value: true },
@@ -172,17 +168,17 @@ export class ValuesController {
     }
 
     if (type === "CODES_10") {
-      if (!body.get("shouldDo")) {
+      if (!body.shouldDo) {
         throw new BadRequest("codes10FieldsRequired");
       }
 
       const status = await prisma.statusValue.create({
         data: {
-          whatPages: body.get("whatPages") ?? [],
-          shouldDo: body.get("shouldDo"),
+          whatPages: body.whatPages ?? [],
+          shouldDo: body.shouldDo,
           valueId: value.id,
-          color: body.get("color") || null,
-          type: body.get("type") || "STATUS_CODE",
+          color: body.color || null,
+          type: body.type || "STATUS_CODE",
         },
         include: {
           value: true,
@@ -193,13 +189,13 @@ export class ValuesController {
     }
 
     if (type === "BUSINESS_ROLE") {
-      if (!body.get("as")) {
+      if (!body.as) {
         throw new BadRequest("asRequired");
       }
 
       await prisma.employeeValue.create({
         data: {
-          as: body.get("as"),
+          as: body.as,
           valueId: value.id,
         },
       });
@@ -209,7 +205,7 @@ export class ValuesController {
       const vehicleValue = await prisma.vehicleValue.create({
         data: {
           valueId: value.id,
-          hash: body.get("hash") || null,
+          hash: body.hash || null,
         },
         include: { value: true },
       });
@@ -221,7 +217,7 @@ export class ValuesController {
       const weaponValue = await prisma.weaponValue.create({
         data: {
           valueId: value.id,
-          hash: body.get("hash") || null,
+          hash: body.hash || null,
         },
         include: { value: true },
       });
@@ -230,15 +226,15 @@ export class ValuesController {
     }
 
     if (type === "DIVISION") {
-      if (!body.get("departmentId")) {
+      if (!body.departmentId) {
         throw new BadRequest("departmentIdRequired");
       }
 
       const division = await prisma.divisionValue.create({
         data: {
           valueId: value.id,
-          callsign: body.get("callsign") || null,
-          departmentId: body.get("departmentId"),
+          callsign: body.callsign || null,
+          departmentId: body.departmentId,
         },
         include: {
           value: true,
@@ -257,8 +253,8 @@ export class ValuesController {
       const department = await prisma.departmentValue.create({
         data: {
           valueId: value.id,
-          callsign: body.get("callsign") || null,
-          type: body.get("type"),
+          callsign: body.callsign || null,
+          type: body.type,
         },
         include: {
           value: true,

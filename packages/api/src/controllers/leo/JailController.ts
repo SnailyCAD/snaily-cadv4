@@ -1,11 +1,13 @@
 import { Controller, UseBeforeEach, BodyParams } from "@tsed/common";
-import { Delete, Get, JsonRequestBody } from "@tsed/schema";
+import { Delete, Get } from "@tsed/schema";
 import { PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { leoProperties } from "lib/officer";
 import { ReleaseType } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
+import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 
 const citizenInclude = {
   Record: {
@@ -52,7 +54,8 @@ export class LeoController {
   }
 
   @Delete("/:id")
-  async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
+  async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
+    const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
     const citizen = await prisma.citizen.findUnique({
       where: { id },
     });
@@ -65,9 +68,9 @@ export class LeoController {
       throw new BadRequest("citizenNotArrested");
     }
 
-    const type = body.get("type") as ReleaseType;
-    const releasedBy = body.get("releasedBy");
-    const recordId = body.get("recordId");
+    const type = data.type as ReleaseType;
+    const releasedBy = data.releasedBy;
+    const recordId = data.recordId;
 
     const record = await prisma.record.findFirst({
       where: {

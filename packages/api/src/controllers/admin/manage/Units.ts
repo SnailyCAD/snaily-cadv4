@@ -1,8 +1,9 @@
+import { UPDATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get, JsonRequestBody, Put } from "@tsed/schema";
+import { Get, Put } from "@tsed/schema";
 import {
   linkDivisionsToOfficer,
   unlinkDivisionsFromOfficer,
@@ -10,6 +11,7 @@ import {
 } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
+import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 
@@ -98,10 +100,10 @@ export class ManageUnitsController {
   @Put("/:id")
   async updateUnit(
     @PathParams("id") id: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context("cad") cad: any,
   ) {
-    body;
+    const data = validateSchema(UPDATE_OFFICER_SCHEMA, body);
 
     let type: "officer" | "emsFdDeputy" = "officer";
     let unit: any = await prisma.officer.findUnique({
@@ -122,7 +124,7 @@ export class ManageUnitsController {
     }
 
     if (type === "officer") {
-      await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+      await validateMaxDivisionsPerOfficer(data.divisions, cad);
 
       await unlinkDivisionsFromOfficer(unit);
     }
@@ -131,16 +133,16 @@ export class ManageUnitsController {
     const updated = await prisma[type].update({
       where: { id: unit.id },
       data: {
-        statusId: body.get("status"),
-        departmentId: body.get("department"),
-        divisionId: body.get("division"),
-        rankId: body.get("rank") || null,
-        suspended: Boolean(body.get("suspended")),
+        statusId: data.status,
+        departmentId: data.department,
+        divisionId: data.division,
+        rankId: data.rank || null,
+        suspended: data.suspended,
       },
     });
 
     if (type === "officer") {
-      return linkDivisionsToOfficer(unit, body.get("divisions"));
+      return linkDivisionsToOfficer(unit, data.divisions as string[]);
     }
 
     return updated;

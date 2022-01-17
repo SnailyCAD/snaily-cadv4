@@ -2,7 +2,7 @@ import { User } from "@prisma/client";
 import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Get, Post } from "@tsed/schema";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -49,7 +49,7 @@ export class CourtController {
   async requestExpungement(
     @Context("user") user: User,
     @PathParams("citizenId") citizenId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: any,
   ) {
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
@@ -67,9 +67,9 @@ export class CourtController {
       include: expungementRequestInclude,
     });
 
-    const warrants = body.get("warrants") as string[];
-    const arrestReports = body.get("arrestReports") as string[];
-    const tickets = body.get("tickets") as string[];
+    const warrants = body.warrants as string[];
+    const arrestReports = body.arrestReports as string[];
+    const tickets = body.tickets as string[];
 
     if (arrestReports.length <= 0 && tickets.length <= 0 && warrants.length <= 0) {
       throw new BadRequest("mustSpecifyMinOneArray");
