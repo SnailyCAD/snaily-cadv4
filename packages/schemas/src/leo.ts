@@ -17,8 +17,14 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   image: z.any().or(z.string()).optional(),
 });
 
+export const UPDATE_OFFICER_SCHEMA = CREATE_OFFICER_SCHEMA.extend({
+  status: z.string().max(255).optional(),
+  suspended: z.boolean().optional(),
+});
+
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
+  suspended: z.boolean().optional(),
 });
 
 export const SELECT_OFFICER_SCHEMA = z.object({

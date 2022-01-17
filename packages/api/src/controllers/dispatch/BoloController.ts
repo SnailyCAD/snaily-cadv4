@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
@@ -120,8 +120,8 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Post("/mark-stolen/:id")
-  async reportVehicleStolen(@BodyParams() body: JsonRequestBody) {
-    const { id, color, plate } = body.toJSON();
+  async reportVehicleStolen(@BodyParams() body: any) {
+    const { id, color, plate } = body;
 
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id },

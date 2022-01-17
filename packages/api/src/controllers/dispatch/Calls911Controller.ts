@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
+import { Delete, Get, Post, Put } from "@tsed/schema";
+import { CREATE_911_CALL, CREATE_911_CALL_EVENT, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -207,10 +207,8 @@ export class Calls911Controller {
   }
 
   @Post("/events/:callId")
-  async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: JsonRequestBody) {
-    if (!body.get("description")) {
-      throw new BadRequest("descriptionRequired");
-    }
+  async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(CREATE_911_CALL_EVENT, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
@@ -223,7 +221,7 @@ export class Calls911Controller {
     const event = await prisma.call911Event.create({
       data: {
         call911Id: call.id,
-        description: body.get("description"),
+        description: data.description,
       },
     });
 
@@ -236,11 +234,9 @@ export class Calls911Controller {
   async updateCallEvent(
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    if (!body.get("description")) {
-      throw new BadRequest("descriptionRequired");
-    }
+    const data = validateSchema(CREATE_911_CALL_EVENT, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
@@ -266,7 +262,7 @@ export class Calls911Controller {
         id: event.id,
       },
       data: {
-        description: body.get("description"),
+        description: data.description,
       },
     });
 
@@ -311,8 +307,8 @@ export class Calls911Controller {
   }
 
   @Post("/assign-to/:callId")
-  async assignToCall(@PathParams("callId") callId: string, @BodyParams() body: JsonRequestBody) {
-    const { unit: rawUnit } = body.toJSON();
+  async assignToCall(@PathParams("callId") callId: string, @BodyParams() body: any) {
+    const { unit: rawUnit } = body;
 
     if (!rawUnit) {
       throw new BadRequest("unitIsRequired");

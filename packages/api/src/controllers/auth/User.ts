@@ -1,7 +1,7 @@
 import { Context, Res, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { Delete, JsonRequestBody, Patch, Post } from "@tsed/schema";
+import { Delete, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -22,8 +22,8 @@ export class AccountController {
   }
 
   @Patch("/")
-  async patchAuthUser(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
-    const { username, isDarkTheme, statusViewMode } = body.toJSON();
+  async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
+    const { username, isDarkTheme, statusViewMode } = body;
 
     const existing = await prisma.user.findUnique({
       where: {

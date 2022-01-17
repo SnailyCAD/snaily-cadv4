@@ -69,7 +69,7 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+    await validateMaxDivisionsPerOfficer(data.divisions, cad);
 
     const officer = await prisma.officer.create({
       data: {
@@ -84,7 +84,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(officer, data.divisions);
+    const updated = await linkDivisionsToOfficer(officer, data.divisions as string[]);
     return updated;
   }
 
@@ -109,11 +109,11 @@ export class LeoController {
       throw new NotFound("officerNotFound");
     }
 
-    await validateMaxDivisionsPerOfficer(body.get("divisions"), cad);
+    await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
 
     const citizen = await prisma.citizen.findFirst({
       where: {
-        id: body.get("citizenId"),
+        id: data.citizenId,
         userId: user.id,
       },
     });
@@ -139,7 +139,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(updatedOfficer, body.get("divisions"));
+    const updated = await linkDivisionsToOfficer(updatedOfficer, data.divisions as string[]);
     return updated;
   }
 

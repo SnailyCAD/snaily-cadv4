@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody } from "@tsed/schema";
+import { Delete, Get } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { leoProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
@@ -49,10 +49,10 @@ export class ManageCitizensController {
   @Delete("/:id")
   async deleteCitizen(
     @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: any,
     @PathParams("id") citizenId: string,
   ) {
-    const reason = body.get("reason");
+    const reason = body.reason;
 
     const citizen = await prisma.citizen.findUnique({
       where: {

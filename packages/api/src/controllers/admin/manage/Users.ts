@@ -3,11 +3,11 @@ import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { BAN_SCHEMA, UPDATE_USER_SCHEMA, validate } from "@snailycad/schemas";
+import { BAN_SCHEMA, UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
@@ -120,18 +120,13 @@ export class ManageUsersController {
     @Context() ctx: Context,
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
     if (!["ban", "unban"].includes(banType)) {
       throw new NotFound("notFound");
     }
 
-    if (banType === "ban") {
-      const error = validate(BAN_SCHEMA, body.toJSON(), true);
-      if (error) {
-        throw new BadRequest(error);
-      }
-    }
+    const data = banType === "ban" ? validateSchema(BAN_SCHEMA, body) : null;
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) {
@@ -147,7 +142,7 @@ export class ManageUsersController {
         id: user.id,
       },
       data: {
-        banReason: banType === "ban" ? body.get("reason") : null,
+        banReason: banType === "ban" ? data?.reason : null,
         banned: banType === "ban",
       },
       select: userProperties,

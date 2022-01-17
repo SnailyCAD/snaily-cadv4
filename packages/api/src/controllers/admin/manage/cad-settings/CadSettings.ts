@@ -5,7 +5,7 @@ import {
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth, setDiscordAUth } from "middlewares/index";
 import { BadRequest } from "@tsed/exceptions";
@@ -115,7 +115,7 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/api-token")
-  async updateApiToken(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
+  async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad");
 
     const existing =
@@ -132,7 +132,7 @@ export class ManageCitizensController {
           id: existing.id,
         },
         data: {
-          enabled: body.get("enabled"),
+          enabled: body.enabled,
         },
       });
 

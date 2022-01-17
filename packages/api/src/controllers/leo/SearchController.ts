@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { JsonRequestBody, Post } from "@tsed/schema";
+import { Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -42,8 +42,8 @@ const citizenSearchInclude = {
 @UseBeforeEach(IsAuth, ActiveOfficer)
 export class SearchController {
   @Post("/name")
-  async searchName(@BodyParams() body: JsonRequestBody) {
-    const [name, surname] = body.get("name").toString().toLowerCase().split(/ +/g);
+  async searchName(@BodyParams("name") fullName: string) {
+    const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
       return [];

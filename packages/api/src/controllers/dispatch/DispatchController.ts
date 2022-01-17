@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Get, Post } from "@tsed/schema";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -8,6 +8,8 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { cad } from ".prisma/client";
 import { Feature, User } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
+import { UPDATE_AOP_SCHEMA } from "@snailycad/schemas";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -54,17 +56,15 @@ export class Calls911Controller {
   }
 
   @Post("/aop")
-  async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: JsonRequestBody) {
-    if (!body.get("aop")) {
-      throw new BadRequest("body.aopIsRequired");
-    }
+  async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
     const updated = await prisma.cad.update({
       where: {
         id: cad.id,
       },
       data: {
-        areaOfPlay: body.get("aop"),
+        areaOfPlay: data.aop,
       },
       select: { areaOfPlay: true },
     });
@@ -95,10 +95,10 @@ export class Calls911Controller {
   }
 
   @Post("/dispatchers-state")
-  async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
+  async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad") as cad;
     const user = ctx.get("user") as User;
-    const value = Boolean(body.get("value"));
+    const value = Boolean(body.value);
 
     if (cad.disabledFeatures.includes(Feature.ACTIVE_DISPATCHERS)) {
       throw new BadRequest("featureDisabled");

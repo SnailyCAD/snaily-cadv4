@@ -22,3 +22,11 @@ export const CREATE_WARRANT_SCHEMA = z.object({
     .regex(/ACTIVE|INACTIVE/),
   description: z.string(),
 });
+
+export const UPDATE_WARRANT_SCHEMA = z.object({
+  status: z
+    .string()
+    .min(1)
+    .max(255)
+    .regex(/ACTIVE|INACTIVE/),
+});
