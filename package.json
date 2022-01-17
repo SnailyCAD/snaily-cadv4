@@ -12,8 +12,7 @@
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx",
     "lint:fix": "eslint . --ext .ts,.js,.tsx,.jsx --fix",
     "prepare": "husky install",
-    "bump-version": "node scripts/bump-version.mjs",
-    "postinstall": "patch-package"
+    "bump-version": "node scripts/bump-version.mjs"
   },
   "license": "MIT",
   "devDependencies": {
