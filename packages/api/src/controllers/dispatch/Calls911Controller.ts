@@ -59,8 +59,8 @@ export class Calls911Controller {
   }
 
   @Post("/")
-  async create911Call(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_911_CALL, body.toJSON());
+  async create911Call(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_911_CALL, body);
 
     const call = await prisma.call911.create({
       data: {
@@ -91,10 +91,10 @@ export class Calls911Controller {
   @Put("/:id")
   async update911Call(
     @PathParams("id") id: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
   ) {
-    const data = validateSchema(CREATE_911_CALL, body.toJSON());
+    const data = validateSchema(CREATE_911_CALL, body);
 
     const call = await prisma.call911.findUnique({
       where: {
@@ -363,11 +363,8 @@ export class Calls911Controller {
   }
 
   @Post("/link-incident/:callId")
-  async linkCallToIncident(
-    @PathParams("callId") callId: string,
-    @BodyParams() body: JsonRequestBody,
-  ) {
-    const data = validateSchema(LINK_INCIDENT_TO_CALL, body.toJSON());
+  async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
     const incidentId = data.incidentId;
 
     const call = await prisma.call911.findUnique({

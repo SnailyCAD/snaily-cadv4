@@ -1,5 +1,5 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
-import { Delete, Get, JsonRequestBody, Post } from "@tsed/schema";
+import { Delete, Get, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -32,10 +32,10 @@ export class IncidentController {
   @UseBefore(ActiveOfficer)
   @Post("/")
   async createIncident(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context("activeOfficer") { id: officerId }: Officer,
   ) {
-    const data = validateSchema(LEO_INCIDENT_SCHEMA, body.toJSON());
+    const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.create({
       data: {

@@ -86,8 +86,8 @@ export class AccountController {
   }
 
   @Post("/password")
-  async updatePassword(@Context("user") user: User, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body.toJSON());
+  async updatePassword(@Context("user") user: User, @BodyParams() body: unknown) {
+    const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body);
 
     const u = await prisma.user.findUnique({ where: { id: user.id } });
 

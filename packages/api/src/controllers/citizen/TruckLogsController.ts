@@ -3,7 +3,7 @@ import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -39,8 +39,8 @@ export class TruckLogsController {
   }
 
   @Post("/")
-  async createTruckLog(@Context("user") user: User, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body.toJSON());
+  async createTruckLog(@Context("user") user: User, @BodyParams() body: unknown) {
+    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -90,10 +90,10 @@ export class TruckLogsController {
   @Put("/:id")
   async updateTruckLog(
     @Context("user") user: User,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @PathParams("id") id: string,
   ) {
-    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
     const log = await prisma.truckLog.findFirst({
       where: {

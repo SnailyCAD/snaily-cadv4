@@ -67,7 +67,7 @@ export class ValuesController {
 
 // todo: use this in `ValuesController`
 const typeHandlers: Partial<
-  Record<ValueType | "GENERIC", (body: any, valueType?: ValueType) => Promise<void>>
+  Record<ValueType | "GENERIC", (body: unknown, valueType?: ValueType) => Promise<void>>
 > = {
   VEHICLE: async (body) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);

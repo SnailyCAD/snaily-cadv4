@@ -55,9 +55,8 @@ export class ManageUsersController {
   }
 
   @Put("/:id")
-  async updateUserById(@PathParams("id") userId: string, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(UPDATE_USER_SCHEMA, body.toJSON());
-
+  async updateUserById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
@@ -79,7 +78,7 @@ export class ManageUsersController {
         isEmsFd: data.isEmsFd,
         isTow: data.isTow,
         steamId: data.steamId,
-        rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[body.get("rank") as Rank],
+        rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
       },
       select: userProperties,
     });

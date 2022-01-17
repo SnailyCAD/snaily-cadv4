@@ -12,7 +12,7 @@ import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./Calls911Controller";
 import { leoProperties, unitProperties } from "lib/officer";
@@ -37,11 +37,11 @@ export class StatusController {
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Req() req: Req,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body.toJSON());
+    const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";

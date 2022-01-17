@@ -35,8 +35,8 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Post("/")
-  async createBolo(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_BOLO_SCHEMA, body.toJSON());
+  async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
     const bolo = await prisma.bolo.create({
       data: {
@@ -62,8 +62,8 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Put("/:id")
-  async updateBolo(@PathParams("id") id: string, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CREATE_BOLO_SCHEMA, body.toJSON());
+  async updateBolo(@PathParams("id") id: string, @BodyParams() body: unknown) {
+    const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
     const bolo = await prisma.bolo.findUnique({
       where: { id },

@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, JsonRequestBody, Put } from "@tsed/schema";
+import { Delete, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -18,9 +18,9 @@ export class BusinessEmployeeController {
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
     @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body.toJSON());
+    const data = validateSchema(UPDATE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, businessId);
 
@@ -94,9 +94,9 @@ export class BusinessEmployeeController {
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
     @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body.toJSON());
+    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, businessId);
 
@@ -147,9 +147,9 @@ export class BusinessEmployeeController {
     @PathParams("id") employeeId: string,
     @PathParams("businessId") businessId: string,
     @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body.toJSON());
+    const data = validateSchema(FIRE_EMPLOYEE_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, businessId);
 

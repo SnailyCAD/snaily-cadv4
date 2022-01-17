@@ -18,8 +18,8 @@ export const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
 @Controller("/auth")
 export class AuthController {
   @Post("/login")
-  async login(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const data = validateSchema(AUTH_SCHEMA, body.toJSON());
+  async login(@BodyParams() body: unknown, @Res() res: Response) {
+    const data = validateSchema(AUTH_SCHEMA, body);
 
     const user = await prisma.user.findUnique({
       where: {
@@ -69,8 +69,8 @@ export class AuthController {
   }
 
   @Post("/register")
-  async register(@BodyParams() body: JsonRequestBody, @Res() res: Response) {
-    const data = validateSchema(AUTH_SCHEMA, body.toJSON());
+  async register(@BodyParams() body: unknown, @Res() res: Response) {
+    const data = validateSchema(AUTH_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
       where: {

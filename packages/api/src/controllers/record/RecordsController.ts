@@ -71,8 +71,8 @@ export class RecordsController {
   }
 
   @Post("/")
-  async createTicket(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_TICKET_SCHEMA, body.toJSON());
+  async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {

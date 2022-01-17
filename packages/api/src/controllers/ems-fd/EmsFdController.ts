@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -37,8 +37,8 @@ export class EmsFdController {
   }
 
   @Post("/")
-  async createEmsFdDeputy(@BodyParams() body: JsonRequestBody, @Context("user") user: User) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
+  async createEmsFdDeputy(@BodyParams() body: unknown, @Context("user") user: User) {
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const division = await prisma.divisionValue.findFirst({
       where: {
@@ -82,10 +82,10 @@ export class EmsFdController {
   @Put("/:id")
   async updateDeputy(
     @PathParams("id") deputyId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context("user") user: User,
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -184,8 +184,8 @@ export class EmsFdController {
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")
-  async createMedicalRecord(@BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body.toJSON());
+  async createMedicalRecord(@BodyParams() body: unknown) {
+    const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {

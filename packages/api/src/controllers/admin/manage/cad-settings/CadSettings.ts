@@ -39,8 +39,8 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/")
-  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CAD_SETTINGS_SCHEMA, body.toJSON());
+  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.cad.update({
       where: {
@@ -64,15 +64,15 @@ export class ManageCitizensController {
     });
 
     this.socket.emitUpdateAop(updated.areaOfPlay);
-    this.socket.emitUpdateRoleplayStopped(Boolean(body.get("roleplayEnabled")));
+    this.socket.emitUpdateRoleplayStopped(data.roleplayEnabled);
 
     return updated;
   }
 
   @UseBefore(IsAuth)
   @Put("/features")
-  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(DISABLED_FEATURES_SCHEMA, body.toJSON());
+  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
     const updated = await prisma.cad.update({
       where: {
@@ -88,8 +88,8 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/misc")
-  async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body.toJSON());
+  async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.miscCadSettings.update({
       where: {

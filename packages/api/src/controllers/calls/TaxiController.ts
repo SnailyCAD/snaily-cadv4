@@ -1,5 +1,5 @@
 import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -38,8 +38,8 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Post("/")
-  async createTaxiCall(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(TOW_SCHEMA, body.toJSON());
+  async createTaxiCall(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(TOW_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -76,8 +76,8 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Put("/:id")
-  async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: JsonRequestBody) {
-    const data = validateSchema(UPDATE_TOW_SCHEMA, body.toJSON());
+  async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.taxiCall.findUnique({
       where: {

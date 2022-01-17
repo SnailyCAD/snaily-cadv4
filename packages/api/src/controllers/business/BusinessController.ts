@@ -122,14 +122,14 @@ export class BusinessController {
   @Put("/:id")
   async updateBusiness(
     @PathParams("id") businessId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
   ) {
-    const data = validateSchema(CREATE_COMPANY_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
         userId: ctx.get("user").id,
         businessId,
         role: {
@@ -160,10 +160,10 @@ export class BusinessController {
   @Delete("/:id")
   async deleteBusiness(
     @PathParams("id") businessId: string,
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
   ) {
-    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body.toJSON());
+    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
       where: {
@@ -190,8 +190,8 @@ export class BusinessController {
   }
 
   @Post("/join")
-  async joinBusiness(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(JOIN_COMPANY_SCHEMA, body.toJSON());
+  async joinBusiness(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(JOIN_COMPANY_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -299,8 +299,8 @@ export class BusinessController {
   }
 
   @Post("/create")
-  async createBusiness(@BodyParams() body: JsonRequestBody, @Context() ctx: Context) {
-    const data = validateSchema(CREATE_COMPANY_SCHEMA, body.toJSON());
+  async createBusiness(@BodyParams() body: unknown, @Context() ctx: Context) {
+    const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const owner = await prisma.citizen.findUnique({
       where: {

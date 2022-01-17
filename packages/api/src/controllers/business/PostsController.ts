@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Post, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
 import { CREATE_COMPANY_POST_SCHEMA, DELETE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { Forbidden, NotFound } from "@tsed/exceptions";
@@ -14,17 +14,17 @@ import { validateSchema } from "lib/validateSchema";
 export class BusinessPostsController {
   @Post("/:id")
   async createPost(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
     @PathParams("id") businessId: string,
   ) {
-    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, businessId);
 
     const employee = await prisma.employee.findUnique({
       where: {
-        id: body.get("employeeId"),
+        id: data.employeeId,
       },
     });
 
@@ -51,12 +51,12 @@ export class BusinessPostsController {
 
   @Put("/:id/:postId")
   async updatePost(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
     @PathParams("id") businessId: string,
     @PathParams("postId") postId: string,
   ) {
-    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body.toJSON());
+    const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, businessId);
 
@@ -103,12 +103,12 @@ export class BusinessPostsController {
 
   @Delete("/:id/:postId")
   async deletePost(
-    @BodyParams() body: JsonRequestBody,
+    @BodyParams() body: unknown,
     @Context() ctx: Context,
     @PathParams("id") id: string,
     @PathParams("postId") postId: string,
   ) {
-    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body.toJSON());
+    const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(ctx, id);
 
