@@ -112,7 +112,7 @@ export class CitizenController {
 
     const disabledFeatures = (ctx.get("cad") as cad).disabledFeatures;
     const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings | null;
-    if (miscSettings && miscSettings.maxCitizensPerUser) {
+    if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
         where: {
           userId: ctx.get("user").id,

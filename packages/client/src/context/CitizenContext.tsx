@@ -51,7 +51,7 @@ export function CitizenProvider({ initialData, children }: ProviderProps) {
  *
  * @param citizenNull `true` = citizen can be null, `false` = citizen is never null
  */
-export function useCitizen(citizenNull?: true): Context<true>;
+export function useCitizen(citizenNull?: true): Context;
 // @ts-expect-error not sure how to fix TS this error
 export function useCitizen(citizenNull?: false): Context<false>;
 export function useCitizen(citizenNull = true): Context {

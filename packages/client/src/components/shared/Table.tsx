@@ -167,7 +167,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
                 const isSortingDisabledForColumn =
-                  props.disabledColumnId?.includes(column.id as any) ||
+                  (props.disabledColumnId ?? []).includes(column.id as any) ||
                   // actions don't need a toggle sort
                   column.id === "actions";
 
@@ -245,7 +245,7 @@ function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
 const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef<HTMLInputElement>(null);
-    const resolvedRef = ref || defaultRef;
+    const resolvedRef = ref ?? defaultRef;
 
     React.useEffect(() => {
       // @ts-expect-error ignore

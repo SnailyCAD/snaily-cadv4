@@ -205,7 +205,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             filter={search}
             dragDrop={{
               enabled: true,
-              handleMove: (list) => setList("PENAL_CODE", list),
+              handleMove: async (list) => setList("PENAL_CODE", list),
             }}
             data={values
               .filter((v) =>
@@ -249,7 +249,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           filter={search}
           dragDrop={{
             enabled: true,
-            handleMove: (list) => setList("PENAL_CODE_GROUP", list),
+            handleMove: async (list) => setList("PENAL_CODE_GROUP", list),
             disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
           }}
           data={groups.map((group) => ({

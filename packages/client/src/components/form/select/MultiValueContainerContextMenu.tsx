@@ -46,7 +46,7 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
 
   const codesMapped: any[] = codes10.values.map((v) => ({
     name: v.value.value,
-    onClick: () => setCode(v),
+    onClick: async () => setCode(v),
     "aria-label":
       v.type === "STATUS_CODE"
         ? `Set status to ${v.value.value}`

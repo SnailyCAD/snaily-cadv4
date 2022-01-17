@@ -61,7 +61,7 @@ export function FormField({
     child?.type?.name === "Select";
   const inputProps = isInput ? { errorMessage } : {};
 
-  const element = React.cloneElement(child as React.ReactElement<any>, {
+  const element = React.cloneElement(child as React.ReactElement, {
     ...fieldProps,
     ...selectProps,
     ...inputProps,

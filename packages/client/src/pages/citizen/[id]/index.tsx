@@ -128,7 +128,7 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => router.push(`/citizen/${citizen.id}/edit`)}>
+          <Button onClick={async () => router.push(`/citizen/${citizen.id}/edit`)}>
             <Link href={`/citizen/${citizen.id}/edit`}>
               <a>{t("editCitizen")}</a>
             </Link>

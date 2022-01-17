@@ -204,7 +204,7 @@ export class BusinessController {
     }
 
     const { miscCadSettings } = ctx.get("cad") as { miscCadSettings: MiscCadSettings | null };
-    if (miscCadSettings && miscCadSettings.maxBusinessesPerCitizen !== null) {
+    if (miscCadSettings?.maxBusinessesPerCitizen) {
       const length = await prisma.business.count({
         where: {
           citizenId: citizen.id,
@@ -317,7 +317,7 @@ export class BusinessController {
       miscCadSettings: MiscCadSettings | null;
     };
 
-    if (miscCadSettings && miscCadSettings.maxBusinessesPerCitizen !== null) {
+    if (miscCadSettings?.maxBusinessesPerCitizen) {
       const length = await prisma.business.count({
         where: {
           citizenId: owner.id,

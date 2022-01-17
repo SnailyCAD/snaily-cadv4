@@ -80,7 +80,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   return { execute, state };
 }
 
-function parseError(error: AxiosError<any>): ErrorMessage | "unknown" {
+function parseError(error: AxiosError): ErrorMessage | "unknown" {
   return error.response?.data?.message ?? "unknown";
 }
 

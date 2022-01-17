@@ -82,7 +82,7 @@ export class AuthController {
     }
 
     const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
-    if (preCad && preCad.registrationCode) {
+    if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
         throw new BadRequest("invalidRegistrationCode");

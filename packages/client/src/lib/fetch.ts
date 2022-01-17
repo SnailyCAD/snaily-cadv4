@@ -7,7 +7,7 @@ import { IFRAME_COOKIE_NAME } from "src/pages/api/token";
 
 export type RequestData = Record<string, unknown>;
 
-interface Options extends Omit<AxiosRequestConfig<any>, "headers"> {
+interface Options extends Omit<AxiosRequestConfig, "headers"> {
   headers?: any;
   req?: IncomingMessage & { cookies?: NextApiRequestCookies };
   method?: Method;
@@ -24,7 +24,7 @@ export async function handleRequest<T = any>(
   const url = findUrl();
   const location = typeof window !== "undefined" ? window.location : null;
   const isDispatchUrl = (location?.pathname ?? req?.url) === "/dispatch";
-  let parsedCookie = req?.headers.cookie || serialize("snaily-cad-session", cookie as string);
+  let parsedCookie = req?.headers.cookie ?? serialize("snaily-cad-session", cookie as string);
   const cookies = nookies.get({ req });
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !parsedCookie) {

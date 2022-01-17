@@ -76,7 +76,7 @@ export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
 }
 
 export function yesOrNoText(t: boolean): "yes" | "no" {
-  return t === true ? "yes" : "no";
+  return t ? "yes" : "no";
 }
 
 export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {

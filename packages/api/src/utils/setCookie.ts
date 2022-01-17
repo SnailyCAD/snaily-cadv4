@@ -24,7 +24,7 @@ export function setCookie(options: SetCookieOptions) {
       httpOnly: true,
       expires: new Date(Date.now() + options.expires),
       path: "/",
-      domain: process.env.DOMAIN || undefined,
+      domain: process.env.DOMAIN ?? undefined,
       ...extraOptions,
     }),
   );

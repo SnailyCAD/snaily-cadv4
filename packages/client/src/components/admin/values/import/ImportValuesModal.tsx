@@ -27,7 +27,7 @@ export function ImportValuesModal({ type }: Props) {
   async function onSubmit(_: any, helpers: FormikHelpers<typeof INITIAL_VALUES>) {
     const fd = new FormData();
 
-    if (file && file.size && file.name) {
+    if (file?.size && file.name) {
       if (file.type !== "application/json") {
         helpers.setFieldError("file", "Only .json is supported");
         return;

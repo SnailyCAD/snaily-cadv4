@@ -180,7 +180,7 @@ export function ActiveCalls() {
                                   className="ml-2"
                                   disabled={!unit}
                                   small
-                                  onClick={() => handleAssignToCall(call)}
+                                  onClick={async () => handleAssignToCall(call)}
                                 >
                                   {t("assignToCall")}
                                 </Button>

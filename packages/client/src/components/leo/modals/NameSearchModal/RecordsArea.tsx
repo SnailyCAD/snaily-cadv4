@@ -223,7 +223,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
               actions: (
                 <div className="flex gap-2">
                   <Select
-                    onChange={(e) => handleChange(e.target.value, warrant)}
+                    onChange={async (e) => handleChange(e.target.value, warrant)}
                     className="w-40"
                     values={values}
                     value={value ?? null}

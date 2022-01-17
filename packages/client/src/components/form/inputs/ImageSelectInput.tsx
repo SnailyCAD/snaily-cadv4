@@ -117,7 +117,7 @@ export function validateFile(image: File | string | null, helpers: FormikHelpers
     return image;
   }
 
-  if (image && image.size && image.name) {
+  if (image?.size && image.name) {
     if (!allowedFileExtensions.includes(image.type as AllowedFileExtension)) {
       throw helpers.setFieldError(
         "image",

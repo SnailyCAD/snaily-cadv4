@@ -16,7 +16,7 @@ export function useGenerateCallsign() {
     }
 
     const { callsign, callsign2, department } = unit;
-    const unitDivision = unit.division ?? ("divisions" in unit && unit.divisions);
+    const unitDivision = unit.division ?? ("divisions" in unit ? unit.divisions : []);
 
     const template = miscCadSettings?.callsignTemplate;
     const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
@@ -29,7 +29,7 @@ export function useGenerateCallsign() {
       department: department.callsign,
       callsign1: callsign,
       callsign2,
-      division: division && division.callsign,
+      division: division?.callsign,
     };
 
     const templateArr: (string | null)[] = template.split(/[{}]/);

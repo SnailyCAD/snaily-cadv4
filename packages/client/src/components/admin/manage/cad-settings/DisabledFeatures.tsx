@@ -122,7 +122,7 @@ export function DisabledFeaturesArea() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const featuresArr = Object.entries(values)
       .map(([key, value]) => {
-        return value === false ? key : null;
+        return !value ? key : null;
       })
       .filter(Boolean);
 
