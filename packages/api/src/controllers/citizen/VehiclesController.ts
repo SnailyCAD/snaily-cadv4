@@ -84,6 +84,28 @@ export class VehiclesController {
       },
     });
 
+    if (data.businessId) {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          id: citizen.id,
+          businessId: data.businessId,
+          userId: ctx.get("user").id,
+        },
+        include: {
+          role: true,
+        },
+      });
+
+      if (!employee || employee.role?.as === "EMPLOYEE") {
+        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      }
+
+      await prisma.business.update({
+        where: { id: data.businessId },
+        data: { vehicles: { connect: { id: vehicle.id } } },
+      });
+    }
+
     return vehicle;
   }
 
