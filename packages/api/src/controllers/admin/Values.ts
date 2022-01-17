@@ -141,7 +141,7 @@ export class ValuesController {
       return code;
     }
 
-    const data = validateSchema(VALUE_SCHEMA, body.toJSON());
+    const data = validateSchema(VALUE_SCHEMA, body);
 
     const value = await prisma.value.create({
       data: {

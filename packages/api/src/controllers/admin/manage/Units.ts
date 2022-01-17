@@ -1,4 +1,4 @@
-import { UPDATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { UPDATE_UNIT_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
@@ -103,7 +103,7 @@ export class ManageUnitsController {
     @BodyParams() body: unknown,
     @Context("cad") cad: any,
   ) {
-    const data = validateSchema(UPDATE_OFFICER_SCHEMA, body);
+    const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 
     let type: "officer" | "emsFdDeputy" = "officer";
     let unit: any = await prisma.officer.findUnique({
