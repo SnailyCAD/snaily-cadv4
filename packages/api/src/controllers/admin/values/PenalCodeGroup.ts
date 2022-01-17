@@ -1,5 +1,5 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { Delete, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";

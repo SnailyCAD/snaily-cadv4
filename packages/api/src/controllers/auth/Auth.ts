@@ -1,5 +1,4 @@
 import { User, WhitelistStatus, Rank } from ".prisma/client";
-import { JsonRequestBody } from "@tsed/schema";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest, NotFound } from "@tsed/exceptions";
