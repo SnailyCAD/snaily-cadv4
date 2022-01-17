@@ -18,8 +18,13 @@ import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
+import { FullIncident } from "src/pages/officer/incidents";
 
-export function CreateIncidentModal() {
+interface Props {
+  incident?: FullIncident | null;
+}
+
+export function ManageIncidentModal({ incident }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -36,13 +41,26 @@ export function CreateIncidentModal() {
       involvedOfficers: values.involvedOfficers.map((v) => v.value),
     };
 
-    const { json } = await execute("/incidents", {
-      method: "POST",
-      data,
-    });
+    let id = "";
 
-    if (json.id) {
-      closeModal(ModalIds.CreateIncident);
+    if (incident) {
+      const { json } = await execute(`/incidents/${incident.id}`, {
+        method: "PUT",
+        data,
+      });
+
+      id = json.id;
+    } else {
+      const { json } = await execute("/incidents", {
+        method: "POST",
+        data,
+      });
+
+      id = json.id;
+    }
+
+    if (id) {
+      closeModal(ModalIds.ManageIncident);
       router.replace({
         pathname: router.pathname,
         query: router.query,
@@ -52,18 +70,20 @@ export function CreateIncidentModal() {
 
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
-    description: "",
-    involvedOfficers: [] as SelectValue[],
-    firearmsInvolved: false,
-    injuriesOrFatalities: false,
-    arrestsMade: false,
+    description: incident?.description ?? "",
+    involvedOfficers:
+      incident?.officersInvolved.map((v) => ({ label: makeUnitName(v), value: v.id })) ??
+      ([] as SelectValue[]),
+    firearmsInvolved: incident?.firearmsInvolved ?? false,
+    injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
+    arrestsMade: incident?.arrestsMade ?? false,
   };
 
   return (
     <Modal
       title={t("createIncident")}
-      onClose={() => closeModal(ModalIds.CreateIncident)}
-      isOpen={isOpen(ModalIds.CreateIncident)}
+      onClose={() => closeModal(ModalIds.ManageIncident)}
+      isOpen={isOpen(ModalIds.ManageIncident)}
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -119,7 +139,7 @@ export function CreateIncidentModal() {
             <footer className="flex justify-end mt-5">
               <Button
                 type="reset"
-                onClick={() => closeModal(ModalIds.CreateIncident)}
+                onClick={() => closeModal(ModalIds.ManageIncident)}
                 variant="cancel"
               >
                 {common("cancel")}
@@ -130,7 +150,7 @@ export function CreateIncidentModal() {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("create")}
+                {incident ? common("save") : common("create")}
               </Button>
             </footer>
           </Form>
