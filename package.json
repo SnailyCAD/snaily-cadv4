@@ -22,7 +22,7 @@
     "@casper124578/eslint-config-react": "^2.2.1",
     "colorette": "2.0.16",
     "copy": "^0.3.2",
-    "eslint": "^8.6.0",
+    "eslint": "^8.7.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "patch-package": "^6.4.7",

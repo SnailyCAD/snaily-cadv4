@@ -13,7 +13,7 @@
     "validate": "node ../../scripts/validate.mjs"
   },
   "dependencies": {
-    "@casper124578/use-socket.io": "2.2.0",
+    "@casper124578/use-socket.io": "3.0.0",
     "@casper124578/useful": "^1.4.5",
     "@headlessui/react": "^1.4.3",
     "@radix-ui/react-context-menu": "^0.1.4",
