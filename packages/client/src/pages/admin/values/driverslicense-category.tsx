@@ -168,9 +168,9 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         <p className="my-3">
           {t.rich("alert_deleteValue", {
             value:
-              typeof tempValue?.value?.value === "string"
-                ? tempValue?.value?.value
-                : tempValue?.value?.value?.value ?? "",
+              typeof tempValue.value?.value === "string"
+                ? tempValue.value?.value
+                : tempValue.value?.value?.value ?? "",
             span: (children) => {
               return <span className="font-semibold">{children}</span>;
             },

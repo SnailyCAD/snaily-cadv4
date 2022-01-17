@@ -13,6 +13,7 @@
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
+    "project": "./tsconfig.base.json",
     "ecmaFeatures": {
       "jsx": true
     }
@@ -20,6 +21,15 @@
   "rules": {
     "@next/next/no-img-element": "off",
     "promise/always-return": "off",
-    "no-duplicate-imports": "off"
+    "no-duplicate-imports": "off",
+    "@typescript-eslint/no-extra-non-null-assertion": "error",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
+    "@typescript-eslint/no-this-alias": "error",
+    "@typescript-eslint/no-unnecessary-type-constraint": "error",
+    "@typescript-eslint/no-var-requires": "error",
+    "@typescript-eslint/prefer-as-const": "error",
+    "@typescript-eslint/no-non-null-asserted-nullish-coalescing": "error",
+    "@typescript-eslint/no-unnecessary-condition": "error"
   }
 }

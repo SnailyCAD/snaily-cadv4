@@ -57,7 +57,7 @@ interface Props {
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<TValue[]>(data ?? []);
+  const [values, setValues] = React.useState<TValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
 

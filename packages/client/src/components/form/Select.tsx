@@ -40,7 +40,7 @@ export function Select({ name, onChange, ...rest }: Props) {
   const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
 
   function handleChange(value: SelectValue | null) {
-    onChange?.({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
+    onChange({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
   }
 
   return (
@@ -52,6 +52,7 @@ export function Select({ name, onChange, ...rest }: Props) {
       onChange={(v: any) => handleChange(v)}
       noOptionsMessage={() => common("noOptions")}
       styles={styles({ ...theme, hasError: !!rest.errorMessage })}
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       menuPortalTarget={(typeof document !== "undefined" && document.body) || undefined}
       components={
         rest.extra?.showContextMenuForUnits

@@ -11,7 +11,7 @@ export function useSignal100() {
   );
 
   useListener(SocketEvents.Signal100, (value: boolean) => {
-    setSign100(value ?? false);
+    setSign100(value);
   });
 
   React.useEffect(() => {

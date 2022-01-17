@@ -39,7 +39,7 @@ export function TableItemForm({ penalCode }: Props) {
 
     const updatedArr = [...values.violations] as SelectValue<PenalCode>[];
 
-    const newValue = e?.target?.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "";
+    const newValue = e?.target.valueAsNumber ?? (penalCode as any)[fieldName]?.value ?? "";
 
     updatedArr[idx] = {
       label: penalCode.title,
@@ -60,7 +60,7 @@ export function TableItemForm({ penalCode }: Props) {
       <div className="flex items-center">
         <FormField className="mb-0" label={t("fines")} checkbox>
           <Input
-            onChange={() => handleValueChange("fine", !currentValue.fine?.enabled ?? false)}
+            onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
             checked={currentValue.fine?.enabled ?? false}
             name="fine.enabled"
             type="checkbox"
@@ -75,14 +75,14 @@ export function TableItemForm({ penalCode }: Props) {
           max={maxFine}
           type="number"
           className="max-w-[125px] ml-5 py-0.5"
-          disabled={!currentValue.fine?.enabled ?? true}
+          disabled={!currentValue.fine?.enabled}
         />
       </div>
 
       <div className="flex items-center mt-1">
         <FormField className="mb-0" label={t("jailTime")} checkbox>
           <Input
-            onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled ?? false)}
+            onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled)}
             checked={currentValue.jailTime?.enabled ?? false}
             name="jailTime.enabled"
             type="checkbox"
@@ -98,7 +98,7 @@ export function TableItemForm({ penalCode }: Props) {
           max={maxJailTime}
           type="number"
           className="max-w-[125px] ml-5 py-0.5"
-          disabled={warningNotApplicableDisabled || (!currentValue.jailTime?.enabled ?? true)}
+          disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
         />
 
         <div className="flex flex-row items-center mb-0 ml-5">
@@ -108,7 +108,7 @@ export function TableItemForm({ penalCode }: Props) {
             onChange={handleValueChange.bind(null, "bail", undefined)}
             name="bail.value"
             className="py-0.5 max-w-[125px] ml-5"
-            disabled={warningNotApplicableDisabled || (!currentValue.jailTime?.enabled ?? true)}
+            disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
             min={minBail}
             max={maxBail}
           />

@@ -8,8 +8,7 @@ import {
 
 type FullUnit = (Officer | EmsFdDeputy) & { department: DepartmentValue; division: DivisionValue };
 
-export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSettings) {
-  if (!unit) return "NULL";
+export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSettings | null) {
   if (!("department" in unit)) {
     return "NULL";
   }

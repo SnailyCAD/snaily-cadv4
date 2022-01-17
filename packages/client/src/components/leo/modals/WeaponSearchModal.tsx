@@ -59,7 +59,7 @@ export function WeaponSearchModal() {
               <Input value={values.serialNumber} name="serialNumber" onChange={handleChange} />
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? <p>{t("weaponNotFound")}</p> : null}
+            {typeof results === "boolean" ? <p>{t("weaponNotFound")}</p> : null}
 
             {typeof results !== "boolean" && results ? (
               <div className="mt-3">

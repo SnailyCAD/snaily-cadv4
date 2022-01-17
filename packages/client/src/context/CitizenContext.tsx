@@ -21,13 +21,13 @@ const CitizenContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: Pick<Context, "citizen" | "citizens">;
+  initialData?: Partial<Pick<Context, "citizen" | "citizens">>;
 }
 
 export function CitizenProvider({ initialData, children }: ProviderProps) {
   const [citizens, setCitizens] = React.useState<Citizen[]>([]);
   const [citizen, setCurrentCitizen] = React.useState<CitizenWithVehAndWep | null>(
-    initialData.citizen ?? null,
+    initialData?.citizen ?? null,
   );
 
   React.useEffect(() => {

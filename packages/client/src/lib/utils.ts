@@ -28,12 +28,12 @@ export function useIsFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeatures">>)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function checkEnabled() {
-    const disabledFeatures = cad?.disabledFeatures ?? [];
+    const disabledFeatures = cad.disabledFeatures ?? [];
 
     for (const feature of disabledFeatures) {
-      const route = featuresRoute[feature];
+      const route = featuresRoute[feature]!;
 
-      if (router.pathname.includes(route!)) {
+      if (router.pathname.includes(route)) {
         setIsEnabled(false);
         break;
       } else {

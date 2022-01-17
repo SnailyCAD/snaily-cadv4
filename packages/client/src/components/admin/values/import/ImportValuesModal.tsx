@@ -69,7 +69,7 @@ export function ImportValuesModal({ type }: Props) {
                   }}
                   type="file"
                   name="file"
-                  value={values.file ?? ""}
+                  value={values.file}
                   accept=".json"
                 />
               </div>

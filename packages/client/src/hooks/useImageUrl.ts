@@ -15,7 +15,7 @@ export function useImageUrl() {
   ) {
     if (!mounted || !id) return;
 
-    if (id?.match(IMGUR_REGEX)) {
+    if (id.match(IMGUR_REGEX)) {
       return id;
     }
 

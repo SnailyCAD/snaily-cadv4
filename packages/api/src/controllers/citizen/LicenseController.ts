@@ -25,13 +25,14 @@ export class LicensesController {
       where: {
         id: citizenId,
       },
+      include: { dlCategory: true },
     });
 
     if (!citizen || citizen.userId !== user.id) {
       throw new NotFound("notFound");
     }
 
-    await unlinkDlCategories(citizen.id);
+    await unlinkDlCategories(citizen);
 
     await prisma.citizen.update({
       where: {
