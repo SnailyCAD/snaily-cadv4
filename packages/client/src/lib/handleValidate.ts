@@ -6,8 +6,9 @@ export const handleValidate =
     try {
       schema.parse(values);
     } catch (e: any) {
-      const errors = e?.errors ?? [];
-      for (const error of errors) {
+      const errs = e?.issues ?? [];
+
+      for (const error of errs) {
         const [path] = error.path;
         errors[path as string] = error.message;
       }
