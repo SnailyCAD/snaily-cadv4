@@ -1,5 +1,5 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
-import { Delete, Get, Post } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -65,6 +65,61 @@ export class IncidentController {
     );
 
     return incident;
+  }
+
+  @UseBefore(ActiveOfficer)
+  @Put("/:id")
+  async updateIncident(@BodyParams() body: unknown, @PathParams("id") id: string) {
+    const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
+
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id },
+      include: { officersInvolved: true },
+    });
+
+    if (!incident) {
+      throw new NotFound("notFound");
+    }
+
+    await Promise.all(
+      incident.officersInvolved.map(async (officer) => {
+        await prisma.leoIncident.update({
+          where: { id },
+          data: {
+            officersInvolved: { disconnect: { id: officer.id } },
+          },
+        });
+      }),
+    );
+
+    const updated = await prisma.leoIncident.update({
+      where: { id },
+      data: {
+        description: data.description,
+        arrestsMade: data.arrestsMade,
+        firearmsInvolved: data.firearmsInvolved,
+        injuriesOrFatalities: data.injuriesOrFatalities,
+      },
+    });
+
+    const involvedOfficers = await Promise.all(
+      (data.involvedOfficers ?? []).map(async (id: string) => {
+        await prisma.leoIncident.update({
+          where: {
+            id: incident.id,
+          },
+          data: {
+            officersInvolved: {
+              connect: {
+                id,
+              },
+            },
+          },
+        });
+      }),
+    );
+
+    return { ...updated, officersInvolved: involvedOfficers };
   }
 
   @Delete("/:id")

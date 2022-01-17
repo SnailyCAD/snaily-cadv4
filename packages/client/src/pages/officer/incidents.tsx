@@ -29,8 +29,8 @@ interface Props {
   activeOfficer: FullOfficer | null;
 }
 
-const CreateIncidentModal = dynamic(async () => {
-  return (await import("components/leo/modals/CreateIncidentModal")).CreateIncidentModal;
+const ManageIncidentModal = dynamic(async () => {
+  return (await import("components/leo/modals/ManageIncidentModal")).ManageIncidentModal;
 });
 
 const AlertModal = dynamic(async () => {
@@ -55,6 +55,11 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
 
   function onDeleteClick(incident: FullIncident) {
     openModal(ModalIds.AlertDeleteIncident);
+    setTempIncident(incident);
+  }
+
+  function onEditClick(incident: FullIncident) {
+    openModal(ModalIds.ManageIncident);
     setTempIncident(incident);
   }
 
@@ -102,7 +107,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         <Button
           title={!isActive ? "You must have an active officer." : ""}
           disabled={!isActive}
-          onClick={() => openModal(ModalIds.CreateIncident)}
+          onClick={() => openModal(ModalIds.ManageIncident)}
         >
           {t("createIncident")}
         </Button>
@@ -140,13 +145,24 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
               </span>
             ),
             createdAt: format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm"),
-            actions: user?.isSupervisor ? (
-              <td>
-                <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
-                  {common("delete")}
+            actions: (
+              <>
+                <Button
+                  small
+                  variant="success"
+                  className="mr-2"
+                  onClick={() => onEditClick(incident)}
+                  disabled={!isActive}
+                >
+                  {common("edit")}
                 </Button>
-              </td>
-            ) : null,
+                {user?.isSupervisor ? (
+                  <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
+                    {common("delete")}
+                  </Button>
+                ) : null}
+              </>
+            ),
           }))}
           columns={[
             { Header: t("caseNumber"), accessor: "caseNumber" },
@@ -162,7 +178,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         />
       )}
 
-      {isActive ? <CreateIncidentModal /> : null}
+      {isActive ? <ManageIncidentModal incident={tempIncident} /> : null}
       {user?.isSupervisor ? (
         <AlertModal
           id={ModalIds.AlertDeleteIncident}
