@@ -69,11 +69,7 @@ export class IncidentController {
 
   @UseBefore(ActiveOfficer)
   @Put("/:id")
-  async updateIncident(
-    @BodyParams() body: unknown,
-    @Context("activeOfficer") { id: officerId }: Officer,
-    @PathParams("id") id: string,
-  ) {
+  async updateIncident(@BodyParams() body: unknown, @PathParams("id") id: string) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
@@ -99,7 +95,6 @@ export class IncidentController {
     const updated = await prisma.leoIncident.update({
       where: { id },
       data: {
-        creatorId: officerId,
         description: data.description,
         arrestsMade: data.arrestsMade,
         firearmsInvolved: data.firearmsInvolved,
