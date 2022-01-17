@@ -176,13 +176,13 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
             <div>
               <p className="mb-1">{bolo.description}</p>
               <span className="font-semibold">{t("plate")}: </span>
-              {bolo.plate?.toUpperCase()}
+              {bolo.plate?.toUpperCase() || common("none")}
               <br />
               <span className="font-semibold">{t("color")}: </span>
-              {bolo.color}
+              {bolo.color || common("none")}
               <br />
               <span className="font-semibold">{t("model")}: </span>
-              {bolo.model}
+              {bolo.model || common("none")}
             </div>
           ) : (
             <p className="text-justify">{bolo.description}</p>
