@@ -16,10 +16,10 @@ export function VehiclesTab() {
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
-  const t = useTranslations("Business");
-  const veh = useTranslations("Vehicles");
+  const bus = useTranslations("Business");
+  const t = useTranslations();
 
-  const { currentBusiness, setCurrentBusiness } = useBusinessState();
+  const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
 
   function handleManageClick(employee: RegisteredVehicle) {
     setTempVehicle(employee);
@@ -49,9 +49,21 @@ export function VehiclesTab() {
     }
   }
 
+  if (!currentEmployee || !currentBusiness) {
+    return null;
+  }
+
   return (
     <Tab.Panel className="mt-3">
-      <h3 className="text-2xl font-semibold">{t("businessVehicles")}</h3>
+      <header className="flex items-center justify-between">
+        <h3 className="text-2xl font-semibold">{bus("businessVehicles")}</h3>
+
+        <div>
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)}>
+            {t("Citizen.registerVehicle")}
+          </Button>
+        </div>
+      </header>
 
       <ul className="mt-3 space-y-3">
         {(currentBusiness?.vehicles ?? []).map((vehicle) => (
@@ -59,25 +71,34 @@ export function VehiclesTab() {
             <div>
               <span className="text-xl font-semibold">{vehicle.plate}</span>
               <p>
-                <span className="font-semibold">{veh("model")}: </span>
+                <span className="font-semibold">{t("Vehicles.model")}: </span>
                 {vehicle.model.value.value}
               </p>
               <p>
-                <span className="font-semibold">{veh("color")}: </span>
+                <span className="font-semibold">{t("Vehicles.color")}: </span>
                 {vehicle.color}
               </p>
               <p>
-                <span className="font-semibold">{veh("registrationStatus")}: </span>
+                <span className="font-semibold">{t("Vehicles.owner")}: </span>
+                {vehicle.citizen?.name} {vehicle.citizen?.surname}
+              </p>
+              <p>
+                <span className="font-semibold">{t("Vehicles.registrationStatus")}: </span>
                 {vehicle.registrationStatus.value}
               </p>
             </div>
 
             <div>
-              <Button onClick={() => handleManageClick(vehicle)} variant="success">
+              <Button small onClick={() => handleManageClick(vehicle)} variant="success">
                 {common("manage")}
               </Button>
-              <Button onClick={() => handleDeleteClick(vehicle)} className="ml-2" variant="danger">
-                {t("delete")}
+              <Button
+                small
+                onClick={() => handleDeleteClick(vehicle)}
+                className="ml-2"
+                variant="danger"
+              >
+                {common("delete")}
               </Button>
             </div>
           </li>
@@ -86,15 +107,38 @@ export function VehiclesTab() {
 
       <AlertModal
         className="w-[600px]"
-        title={veh("deleteVehicle")}
+        title={t("Vehicles.deleteVehicle")}
         id={ModalIds.AlertDeleteVehicle}
-        description={veh("alert_deleteVehicle")}
+        description={t("Vehicles.alert_deleteVehicle")}
         onDeleteClick={handleDelete}
         state={state}
         onClose={() => setTempVehicle(null)}
       />
 
-      <RegisterVehicleModal citizens={[]} vehicle={tempVehicle} />
+      <RegisterVehicleModal
+        onClose={() => setTempVehicle(null)}
+        onCreate={(vehicle) => {
+          closeModal(ModalIds.RegisterVehicle);
+          setCurrentBusiness({
+            ...currentBusiness,
+            vehicles: [vehicle, ...currentBusiness.vehicles],
+          });
+        }}
+        onUpdate={(oldVehicle, newVehicle) => {
+          closeModal(ModalIds.RegisterVehicle);
+          setCurrentBusiness({
+            ...currentBusiness,
+            vehicles: currentBusiness.vehicles.map((v) => {
+              if (v.id === oldVehicle.id) {
+                return { ...v, ...newVehicle };
+              }
+              return v;
+            }),
+          });
+        }}
+        citizens={[currentEmployee?.citizen]}
+        vehicle={tempVehicle}
+      />
     </Tab.Panel>
   );
 }

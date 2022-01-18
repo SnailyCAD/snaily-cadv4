@@ -51,7 +51,7 @@ export class WeaponController {
     const weapon = await prisma.weapon.create({
       data: {
         citizenId: citizen.id,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         serialNumber: data.serialNumber || generateString(10),
         userId: user.id,
         modelId,
@@ -89,7 +89,7 @@ export class WeaponController {
       },
       data: {
         modelId: data.model,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         serialNumber: data.serialNumber || weapon.serialNumber,
       },
       include: {

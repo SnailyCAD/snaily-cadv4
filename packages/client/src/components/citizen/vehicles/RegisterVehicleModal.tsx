@@ -18,10 +18,11 @@ import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useBusinessState } from "state/businessState";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
-  citizens: Citizen[];
+  citizens: Pick<Citizen, "name" | "surname" | "id">[];
   onCreate?: (newV: RegisteredVehicle) => void;
   onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
   onClose?(): void;
@@ -43,6 +44,7 @@ export function RegisterVehicleModal({
   const router = useRouter();
   const { cad } = useAuth();
   const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
+  const { currentBusiness, currentEmployee } = useBusinessState();
 
   const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
@@ -85,6 +87,8 @@ export function RegisterVehicleModal({
     plate: vehicle?.plate ?? "",
     vinNumber: vehicle?.vinNumber ?? "",
     reportedStolen: vehicle?.reportedStolen ?? false,
+    businessId: currentBusiness?.id ?? null,
+    employeeId: currentEmployee?.id ?? null,
   };
 
   return (

@@ -72,6 +72,7 @@ export class BusinessController {
           include: {
             model: { include: { value: true } },
             registrationStatus: true,
+            citizen: true,
           },
         },
         employees: {
@@ -112,6 +113,13 @@ export class BusinessController {
             role: {
               include: {
                 value: true,
+              },
+            },
+            citizen: {
+              select: {
+                name: true,
+                surname: true,
+                id: true,
               },
             },
           },

@@ -18,6 +18,8 @@ export class VehiclesController {
     const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
 
+    console.log({ data });
+
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: data.citizenId,
@@ -72,7 +74,7 @@ export class VehiclesController {
         color: data.color,
         citizenId: citizen.id,
         modelId,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         // todo
         insuranceStatus: "TEST",
         vinNumber: data.vinNumber || generateString(17),
@@ -84,10 +86,10 @@ export class VehiclesController {
       },
     });
 
-    if (data.businessId) {
+    if (data.businessId && data.employeeId) {
       const employee = await prisma.employee.findFirst({
         where: {
-          id: citizen.id,
+          id: data.employeeId,
           businessId: data.businessId,
           userId: ctx.get("user").id,
         },
@@ -123,6 +125,7 @@ export class VehiclesController {
       },
     });
 
+    // todo: check if vehicle is from business, do not add the userId check
     if (!vehicle || vehicle.userId !== ctx.get("user").id) {
       throw new NotFound("notFound");
     }
@@ -134,7 +137,7 @@ export class VehiclesController {
       data: {
         modelId: data.model,
         color: data.color,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         vinNumber: data.vinNumber || vehicle.vinNumber,
         reportedStolen: data.reportedStolen ?? false,
       },
@@ -155,6 +158,7 @@ export class VehiclesController {
       },
     });
 
+    // todo: check if vehicle is from business, do not add the userId check
     if (!vehicle || vehicle.userId !== ctx.get("user").id) {
       throw new NotFound("notFound");
     }
