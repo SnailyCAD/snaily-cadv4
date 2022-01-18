@@ -29,6 +29,7 @@
     "whitelistStatus": "Whitelist Status",
     "allEmployees": "All Employees",
     "pendingEmployees": "Pending Employees",
+    "businessVehicles": "Business Vehicles",
     "noPendingEmployees": "There are no employees pending access.",
     "businessIsWhitelisted": "This business is whitelisted. You will be able to view it once you're accepted.",
     "businessWhitelistedCAD": "This business is still awaiting approval of an administrator.",

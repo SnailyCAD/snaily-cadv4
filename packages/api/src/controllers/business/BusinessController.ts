@@ -68,6 +68,12 @@ export class BusinessController {
             createdAt: "desc",
           },
         },
+        vehicles: {
+          include: {
+            model: { include: { value: true } },
+            registrationStatus: true,
+          },
+        },
         employees: {
           include: {
             role: {
@@ -129,7 +135,7 @@ export class BusinessController {
 
     const employee = await prisma.employee.findFirst({
       where: {
-        id: data.employeeId,
+        id: data.employeeId!,
         userId: ctx.get("user").id,
         businessId,
         role: {
