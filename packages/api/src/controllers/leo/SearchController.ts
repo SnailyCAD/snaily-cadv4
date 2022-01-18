@@ -6,22 +6,12 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { leoProperties } from "lib/officer";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 const citizenSearchInclude = {
+  ...citizenInclude,
   businesses: true,
-  vehicles: {
-    include: { model: { include: { value: true } }, registrationStatus: true },
-  },
-  weapons: {
-    include: { model: { include: { value: true } }, registrationStatus: true },
-  },
   medicalRecords: true,
-  ethnicity: true,
-  gender: true,
-  weaponLicense: true,
-  driversLicense: true,
-  ccw: true,
-  pilotLicense: true,
   warrants: { include: { officer: { include: leoProperties } } },
   Record: {
     include: {
@@ -144,6 +134,7 @@ export class SearchController {
         model: { include: { value: true } },
         registrationStatus: true,
         TruckLog: true,
+        Business: true,
       },
     };
 

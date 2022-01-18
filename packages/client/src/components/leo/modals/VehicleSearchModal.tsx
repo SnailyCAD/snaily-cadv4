@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
+import { Business, Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
@@ -72,6 +72,8 @@ export function VehicleSearchModal() {
   const INITIAL_VALUES = {
     plateOrVin: "",
   };
+
+  console.log({ results });
 
   return (
     <Modal
@@ -150,6 +152,11 @@ export function VehicleSearchModal() {
                     </Infofield>
                   </li>
                   <li>
+                    <Infofield className="capitalize" label={vT("business")}>
+                      {results.Business[0]?.name ?? common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
                     <Infofield
                       childrenProps={{
                         className: classNames(
@@ -211,4 +218,5 @@ export interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;
   registrationStatus: Value<"LICENSE">;
   TruckLog: TruckLog[];
+  Business: Business[];
 }

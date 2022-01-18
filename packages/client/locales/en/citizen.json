@@ -45,6 +45,7 @@
     "color": "Color",
     "plate": "Plate",
     "vinNumber": "VIN Number",
+    "business": "Business",
     "yourVehicles": "Your Vehicles",
     "addVehicle": "Add Vehicle",
     "noVehicles": "You do not have any vehicles registered yet.",
