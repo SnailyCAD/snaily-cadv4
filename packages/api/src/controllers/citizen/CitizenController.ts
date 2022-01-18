@@ -21,6 +21,10 @@ export const citizenInclude = {
       model: { include: { value: true } },
       registrationStatus: true,
     },
+    where: {
+      // hide business vehicles
+      Business: { every: { id: "null" } },
+    },
   },
   weapons: {
     include: {
@@ -71,16 +75,7 @@ export class CitizenController {
         id: citizenId,
         userId: ctx.get("user").id,
       },
-      include: {
-        ...citizenInclude,
-        vehicles: {
-          ...citizenInclude.vehicles,
-          where: {
-            // hide business vehicles
-            Business: { every: { id: "null" } },
-          },
-        },
-      },
+      include: citizenInclude,
     });
 
     if (!citizen) {
