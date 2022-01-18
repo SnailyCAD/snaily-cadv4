@@ -12,6 +12,7 @@ import { EmployeeAsEnum } from "types/prisma";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
+import { EmployeesTab } from "components/business/manage/EmployeesTab";
 
 interface Props {
   employee: FullEmployee | null;
@@ -24,10 +25,6 @@ const ManageBusinessTab = dynamic(
 
 const PendingEmployeesTab = dynamic(
   async () => (await import("components/business/manage/PendingEmployeesTab")).PendingEmployeesTab,
-);
-
-const EmployeesTab = dynamic(
-  async () => (await import("components/business/manage/EmployeesTab")).EmployeesTab,
 );
 
 const VehiclesTab = dynamic(

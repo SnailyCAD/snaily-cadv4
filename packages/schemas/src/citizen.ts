@@ -25,6 +25,11 @@ export const VEHICLE_SCHEMA = z.object({
   employeeId: z.string().max(255).optional().nullable(),
 });
 
+export const DELETE_VEHICLE_SCHEMA = z.object({
+  businessId: z.string().max(255).optional().nullable(),
+  employeeId: z.string().max(255).optional().nullable(),
+});
+
 export const WEAPON_SCHEMA = z.object({
   model: z.string().min(2),
   registrationStatus: z.string().min(2).max(255),
