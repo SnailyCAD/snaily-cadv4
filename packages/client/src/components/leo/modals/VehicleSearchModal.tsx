@@ -75,8 +75,6 @@ export function VehicleSearchModal() {
     plateOrVin: "",
   };
 
-  console.log({ results });
-
   return (
     <Modal
       title={t("plateSearch")}
