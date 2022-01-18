@@ -109,9 +109,7 @@ export function VehicleSearchModal() {
               />
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? (
-              <p>{t("vehicleNotFound")}</p>
-            ) : null}
+            {typeof results === "boolean" ? <p>{t("vehicleNotFound")}</p> : null}
 
             {typeof results !== "boolean" && results ? (
               <div className="mt-3">

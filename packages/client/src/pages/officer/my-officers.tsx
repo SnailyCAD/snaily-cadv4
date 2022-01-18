@@ -42,7 +42,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const generateCallsign = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
 
-  const [officers, setOfficers] = React.useState(data ?? []);
+  const [officers, setOfficers] = React.useState(data);
   const [tempOfficer, setTempOfficer] = React.useState<FullOfficer | null>(null);
 
   async function handleDeleteOfficer() {

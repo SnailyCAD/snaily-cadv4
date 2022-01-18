@@ -17,7 +17,7 @@ export class WeaponController {
   async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(WEAPON_SCHEMA, body);
     const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { disabledFeatures: Feature[] };
+    const cad = ctx.get("cad") as { disabledFeatures: Feature[] } | null;
 
     const citizen = await prisma.citizen.findUnique({
       where: {

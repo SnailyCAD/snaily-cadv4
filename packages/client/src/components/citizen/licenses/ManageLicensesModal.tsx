@@ -21,11 +21,11 @@ export function ManageLicensesModal() {
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
-  const { citizen, setCurrentCitizen } = useCitizen();
+  const { citizen, setCurrentCitizen } = useCitizen(false);
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/licenses/${citizen!.id}`, {
+    const { json } = await execute(`/licenses/${citizen.id}`, {
       method: "PUT",
       data: {
         ...values,

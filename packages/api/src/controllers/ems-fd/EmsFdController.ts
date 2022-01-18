@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";

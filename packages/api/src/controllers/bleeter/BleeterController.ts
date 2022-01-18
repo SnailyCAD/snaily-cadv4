@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import process from "node:process";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import {

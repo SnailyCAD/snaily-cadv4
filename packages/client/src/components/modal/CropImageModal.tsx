@@ -17,7 +17,7 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
   const common = useTranslations("Common");
   const t = useTranslations("Errors");
 
-  const [src, setSrc] = React.useState(null);
+  const [src, setSrc] = React.useState<string | null>(null);
   const [cropper, setCropper] = React.useState<CropperJS>();
   const width = !src ? 450 : options?.width ?? 900;
   const height = options?.height ?? 400;
@@ -40,7 +40,7 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
       cropper.getCroppedCanvas().toBlob((blob) => {
         if (!blob) return;
 
-        onSuccess?.(blob, image.name);
+        onSuccess(blob, image.name);
       });
     }
   }

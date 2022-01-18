@@ -41,7 +41,7 @@ export class VehiclesController {
     const cad = ctx.get("cad") as {
       disabledFeatures: Feature[];
       miscCadSettings?: MiscCadSettings;
-    };
+    } | null;
     const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
     if (data.plate.length > plateLength) {
       throw new BadRequest("plateToLong");

@@ -201,7 +201,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
       return `${unit.callsign}`;
     }
 
-    return unit ? `${generateCallsign(unit!)} ${makeUnitName(unit!)}` : "";
+    return unit ? `${generateCallsign(unit)} ${makeUnitName(unit)}` : "";
   }
 
   return (

@@ -52,6 +52,7 @@ export function ManageBleetModal({ post }: Props) {
       json = data.json;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (json.id && values.image) {
       const fd = new FormData();
 

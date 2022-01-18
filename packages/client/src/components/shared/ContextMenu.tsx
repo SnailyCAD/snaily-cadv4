@@ -38,7 +38,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild = false, childr
     <Menu.Root
       modal={!canBeClosed}
       onOpenChange={(open) => {
-        if (open === true) {
+        if (open) {
           setCanBeClosed(false);
         } else {
           setTimeout(() => setCanBeClosed(true), 50);

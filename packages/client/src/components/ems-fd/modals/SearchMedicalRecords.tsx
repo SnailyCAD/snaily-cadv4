@@ -80,9 +80,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               <Input required onChange={handleChange} name="name" value={values.name} />
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? (
-              <p>{ems("citizenNoMedicalRecords")}</p>
-            ) : null}
+            {typeof results === "boolean" ? <p>{ems("citizenNoMedicalRecords")}</p> : null}
 
             {typeof results !== "boolean" && results !== null ? (
               <Table

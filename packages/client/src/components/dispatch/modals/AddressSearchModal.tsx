@@ -63,7 +63,7 @@ export function AddressSearchModal() {
               <Input value={values.address} name="address" onChange={handleChange} />
             </FormField>
 
-            {typeof results === "boolean" && results !== null ? <p>{t("noResults")}</p> : null}
+            {typeof results === "boolean" ? <p>{t("noResults")}</p> : null}
 
             {typeof results !== "boolean" && results ? (
               <div className="mt-3">

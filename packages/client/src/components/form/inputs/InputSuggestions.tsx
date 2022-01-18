@@ -137,7 +137,7 @@ const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(
         className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-dark-bg dark:focus:bg-dark-bg w-full"
         onClick={() => onSuggestionClick?.(suggestion)}
       >
-        {Component ? <Component suggestion={suggestion} /> : <p>{JSON.stringify(suggestion)}</p>}
+        <Component suggestion={suggestion} />
       </button>
     );
   },

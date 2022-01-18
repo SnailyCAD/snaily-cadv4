@@ -108,7 +108,7 @@ export class Calls911Controller {
       where: { userId: user.id },
     });
 
-    if (value === true) {
+    if (value) {
       dispatcher =
         dispatcher ??
         (await prisma.activeDispatchers.create({
