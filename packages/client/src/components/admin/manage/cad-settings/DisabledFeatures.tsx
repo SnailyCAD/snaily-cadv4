@@ -113,7 +113,7 @@ export function DisabledFeaturesArea() {
     const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
     for (const feature of FEATURES) {
-      obj[feature] = !cad?.disabledFeatures?.includes(feature) ?? true;
+      obj[feature] = !cad?.disabledFeatures?.includes(feature);
     }
 
     return obj;
@@ -122,7 +122,7 @@ export function DisabledFeaturesArea() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const featuresArr = Object.entries(values)
       .map(([key, value]) => {
-        return value === false ? key : null;
+        return !value ? key : null;
       })
       .filter(Boolean);
 

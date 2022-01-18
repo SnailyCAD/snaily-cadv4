@@ -1,4 +1,6 @@
+import process from "node:process";
 import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/common";
+import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import fetch from "node-fetch";
@@ -25,7 +27,13 @@ export class DiscordAuth {
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
     const url = new URL(`${discordApiUrl}/oauth2/authorize`);
 
-    url.searchParams.append("client_id", DISCORD_CLIENT_ID!);
+    if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
+      throw new BadRequest(
+        "No `DISCORD_CLIENT_ID` was specified in the .env file. Please refer to the documentation: https://cad-docs.netlify.app/other/discord-authentication",
+      );
+    }
+
+    url.searchParams.append("client_id", DISCORD_CLIENT_ID);
     url.searchParams.append("redirect_uri", callbackUrl);
     url.searchParams.append("prompt", "consent");
     url.searchParams.append("response_type", "code");

@@ -163,7 +163,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
     props: {
       values,
       citizens: data ?? [],
-      session: await getSessionUser(req, req.cookies?.["snaily-cad-session"]),
+      session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["citizen", "calls", "common"], locale)),
       },

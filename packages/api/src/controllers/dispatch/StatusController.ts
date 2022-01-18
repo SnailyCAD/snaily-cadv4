@@ -207,7 +207,7 @@ export class StatusController {
           },
         });
       }
-    } else if (type === "combined") {
+    } else {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         await prisma.combinedLeoUnit.delete({
           where: {

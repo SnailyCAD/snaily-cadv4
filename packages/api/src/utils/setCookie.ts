@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Response } from "@tsed/common";
 import { CookieSerializeOptions, serialize } from "cookie";
 
@@ -24,6 +25,7 @@ export function setCookie(options: SetCookieOptions) {
       httpOnly: true,
       expires: new Date(Date.now() + options.expires),
       path: "/",
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
       domain: process.env.DOMAIN || undefined,
       ...extraOptions,
     }),

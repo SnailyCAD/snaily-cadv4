@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Rank, User } from ".prisma/client";
 import { cad } from "@prisma/client";
 import {
@@ -101,7 +102,7 @@ export class IsAuth implements MiddlewareMethods {
 
 export function setDiscordAUth<T extends Pick<cad, "disabledFeatures"> | null = cad>(cad: T) {
   const hasDiscordTokens = process.env["DISCORD_CLIENT_ID"] && process.env["DISCORD_CLIENT_SECRET"];
-  const isEnabled = !cad?.disabledFeatures?.includes("DISCORD_AUTH");
+  const isEnabled = !cad?.disabledFeatures.includes("DISCORD_AUTH");
 
   if (!cad && !hasDiscordTokens) {
     return { disabledFeatures: ["DISCORD_AUTH"] };
@@ -123,7 +124,7 @@ function isRouteDisabled(req: Req) {
   if (route) {
     const [, methods] = route;
 
-    if (typeof methods === "string" && methods === "*") {
+    if (typeof methods === "string") {
       return true;
     } else if (Array.isArray(methods) && methods.includes(requestMethod)) {
       return true;

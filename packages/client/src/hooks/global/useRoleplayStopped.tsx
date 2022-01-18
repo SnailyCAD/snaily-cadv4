@@ -9,12 +9,12 @@ export function useRoleplayStopped() {
   const [roleplayStopped, setRoleplay] = React.useState<boolean>(false);
 
   useListener(SocketEvents.RoleplayStopped, (value: boolean) => {
-    setRoleplay(!value ?? false);
+    setRoleplay(!value);
   });
 
   React.useEffect(() => {
     if (cad?.miscCadSettings) {
-      setRoleplay(!cad?.miscCadSettings?.roleplayEnabled ?? false);
+      setRoleplay(!cad?.miscCadSettings?.roleplayEnabled);
     }
   }, [cad?.miscCadSettings]);
 

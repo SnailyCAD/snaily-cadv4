@@ -1,3 +1,4 @@
+import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
@@ -12,6 +13,7 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
+import { Citizen, DriversLicenseCategoryValue } from "@prisma/client";
 
 export const citizenInclude = {
   vehicles: {
@@ -110,8 +112,8 @@ export class CitizenController {
     }
 
     const disabledFeatures = (ctx.get("cad") as cad).disabledFeatures;
-    const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings;
-    if (miscSettings && miscSettings.maxCitizensPerUser) {
+    const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings | null;
+    if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
         where: {
           userId: ctx.get("user").id,
@@ -347,21 +349,14 @@ export async function linkDlCategories(
   );
 }
 
-export async function unlinkDlCategories(citizenId: string) {
-  const citizen = await prisma.citizen.findUnique({
-    where: {
-      id: citizenId,
-    },
-    select: {
-      dlCategory: true,
-    },
-  });
-
+export async function unlinkDlCategories(
+  citizen: Citizen & { dlCategory: DriversLicenseCategoryValue[] },
+) {
   await Promise.all([
-    citizen!.dlCategory.map(async (v) => {
+    citizen.dlCategory.map(async (v) => {
       await prisma.citizen.update({
         where: {
-          id: citizenId,
+          id: citizen.id,
         },
         data: {
           dlCategory: {

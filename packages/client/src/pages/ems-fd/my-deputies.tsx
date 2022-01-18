@@ -39,7 +39,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const generateCallsign = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
 
-  const [deputies, setDeputies] = React.useState(data ?? []);
+  const [deputies, setDeputies] = React.useState(data);
   const [tempDeputy, setTempDeputy] = React.useState<FullDeputy | null>(null);
 
   async function handleDeleteOfficer() {

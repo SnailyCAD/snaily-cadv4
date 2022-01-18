@@ -1,3 +1,4 @@
+import process from "node:process";
 import { $log } from "@tsed/logger";
 import { sign, verify } from "jsonwebtoken";
 

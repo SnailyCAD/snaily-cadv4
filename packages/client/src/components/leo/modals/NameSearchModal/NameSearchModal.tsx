@@ -27,8 +27,8 @@ import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 
 const enum Toggled {
-  VEHICLES,
-  RECORDS,
+  VEHICLES = 0,
+  RECORDS = 1,
 }
 
 function AutoSubmit() {

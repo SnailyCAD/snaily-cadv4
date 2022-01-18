@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
@@ -27,11 +28,11 @@ export const userProperties = {
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
-  let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)?.[Cookie.Session];
+  let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)[Cookie.Session];
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
     const name = "snaily-cad-iframe-cookie";
-    header = req.cookies[name] || parse(`${req.headers.session}`)?.[name];
+    header = req.cookies[name] || parse(`${req.headers.session}`)[name];
   }
 
   if (throwErrors && !header) {
@@ -61,6 +62,6 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
     throw new NotFound("notFound");
   }
 
-  const { tempPassword, ...rest } = user! ?? {};
+  const { tempPassword, ...rest } = user ?? {};
   return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as unknown as User;
 }

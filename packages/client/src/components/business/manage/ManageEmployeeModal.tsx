@@ -65,7 +65,7 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
     employeeId: employee?.id ?? "",
     canCreatePosts: employee?.canCreatePosts ?? true,
     employeeOfTheMonth: employee?.employeeOfTheMonth ?? false,
-    roleId: employee?.roleId,
+    roleId: employee?.roleId ?? null,
   };
 
   return (
@@ -82,7 +82,7 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
               <Select
                 name="roleId"
                 onChange={handleChange}
-                value={values.roleId!}
+                value={values.roleId}
                 values={filteredRoles.map((v) => ({
                   label: v.value?.value,
                   value: v.id,

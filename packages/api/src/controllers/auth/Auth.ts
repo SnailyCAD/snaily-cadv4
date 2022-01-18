@@ -1,3 +1,4 @@
+import process from "node:process";
 import { User, WhitelistStatus, Rank } from ".prisma/client";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
@@ -82,7 +83,7 @@ export class AuthController {
     }
 
     const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
-    if (preCad && preCad.registrationCode) {
+    if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
         throw new BadRequest("invalidRegistrationCode");

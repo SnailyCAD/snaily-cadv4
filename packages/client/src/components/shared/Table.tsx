@@ -49,10 +49,7 @@ interface Props<T extends object = {}, RowProps extends object = {}> {
 export function Table<T extends object, RowProps extends object>(props: Props<T, RowProps>) {
   const data = React.useMemo(() => props.data, [props.data]);
 
-  const columns = React.useMemo(
-    () => props.columns.filter((v) => v !== null) ?? [],
-    [props.columns],
-  );
+  const columns = React.useMemo(() => props.columns.filter((v) => v !== null), [props.columns]);
 
   const instance = useTable<TableData<T, RowProps>>(
     // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
@@ -153,7 +150,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
   }, [instance.rows, props.dragDrop]);
 
   const containerProps = {
-    ...props?.containerProps,
+    ...props.containerProps,
     className: classNames(
       "block max-w-full mt-3 overflow-x-auto thin-scrollbar",
       props.containerProps?.className,
@@ -162,7 +159,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
 
   return (
     <div {...containerProps}>
-      {props?.Toolbar?.({ instance })}
+      {props.Toolbar?.({ instance })}
 
       <table {...getTableProps()} className="w-full overflow-hidden whitespace-nowrap max-h-64">
         <thead>
@@ -170,7 +167,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
                 const isSortingDisabledForColumn =
-                  props.disabledColumnId?.includes(column.id as any) ||
+                  (props.disabledColumnId ?? []).includes(column.id as any) ||
                   // actions don't need a toggle sort
                   column.id === "actions";
 
@@ -248,7 +245,7 @@ function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
 const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef<HTMLInputElement>(null);
-    const resolvedRef = ref || defaultRef;
+    const resolvedRef = ref ?? defaultRef;
 
     React.useEffect(() => {
       // @ts-expect-error ignore

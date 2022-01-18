@@ -4,7 +4,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 
 export async function validateBusinessAcceptance(ctx: Context, businessId: string) {
-  const cad = ctx.get("cad") as cad;
+  const cad = ctx.get("cad") as cad | null;
   if (!cad) {
     throw new BadRequest("cadNotFound");
   }

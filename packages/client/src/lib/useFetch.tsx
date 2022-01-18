@@ -80,7 +80,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   return { execute, state };
 }
 
-function parseError(error: AxiosError<any>): ErrorMessage | "unknown" {
+function parseError(error: AxiosError): ErrorMessage | "unknown" {
   return error.response?.data?.message ?? "unknown";
 }
 
@@ -94,9 +94,9 @@ function getErrorObj(error: unknown) {
       message: err.message,
       status: err.response?.status,
       response: err.response,
-      method: err.config?.method,
-      data: err.config?.data,
-      url: err.config?.url,
+      method: err.config.method,
+      data: err.config.data,
+      url: err.config.url,
     };
   }
 

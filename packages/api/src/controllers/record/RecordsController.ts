@@ -126,33 +126,25 @@ export class RecordsController {
             return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
           }
 
-          const [minFines, maxFines] =
+          const minMaxFines =
             penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
-          const [minPrisonTerm, maxPrisonTerm] = penalCode.warningNotApplicable?.prisonTerm ?? [];
-          const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
+          const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
+          const minMaxBail = penalCode.warningNotApplicable?.bail ?? [];
 
           // these if statements could be cleaned up?..
-          if (
-            item.fine &&
-            this.exists(minFines, maxFines) &&
-            !this.isCorrect(minFines!, maxFines!, item.fine)
-          ) {
+          if (item.fine && this.exists(minMaxFines) && !this.isCorrect(minMaxFines, item.fine)) {
             return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
           }
 
           if (
             item.jailTime &&
-            this.exists(minPrisonTerm, maxPrisonTerm) &&
-            !this.isCorrect(minPrisonTerm!, maxPrisonTerm!, item.jailTime)
+            this.exists(minMaxPrisonTerm) &&
+            !this.isCorrect(minMaxPrisonTerm, item.jailTime)
           ) {
             return this.handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), ticket.id);
           }
 
-          if (
-            item.bail &&
-            this.exists(minBail, maxBail) &&
-            !this.isCorrect(minBail!, maxBail!, item.bail)
-          ) {
+          if (item.bail && this.exists(minMaxBail) && !this.isCorrect(minMaxBail, item.bail)) {
             return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
           }
 
@@ -224,7 +216,8 @@ export class RecordsController {
     return true;
   }
 
-  isCorrect(min: number, max: number, value: number) {
+  isCorrect(minMax: [number, number], value: number) {
+    const [min, max] = minMax;
     if (min < 0 || max < 0) {
       return false;
     }
@@ -236,7 +229,7 @@ export class RecordsController {
     return value >= min && value <= max;
   }
 
-  exists(...values: (number | undefined)[]) {
+  exists(values: (number | undefined)[]): values is [number, number] {
     return values.every((v) => typeof v !== "undefined");
   }
 

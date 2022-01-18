@@ -77,7 +77,8 @@ export default function CitizenLogs({ logs: data }: Props) {
                   .map((item) => {
                     const type = item.records !== null ? TYPE_LABELS[item.records.type] : "Warrant";
                     const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
-                    const formatted = format(new Date(createdAt!), "yyyy-MM-dd HH:mm:ss");
+                    const formatted =
+                      createdAt && format(new Date(createdAt), "yyyy-MM-dd HH:mm:ss");
                     const officer = item.warrant?.officer ?? item.records?.officer;
                     const officerName = officer && makeUnitName(officer);
                     const callsign = officer && generateCallsign(officer);

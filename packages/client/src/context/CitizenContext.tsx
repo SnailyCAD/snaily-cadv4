@@ -21,13 +21,13 @@ const CitizenContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: Pick<Context, "citizen" | "citizens">;
+  initialData?: Partial<Pick<Context, "citizen" | "citizens">>;
 }
 
 export function CitizenProvider({ initialData, children }: ProviderProps) {
   const [citizens, setCitizens] = React.useState<Citizen[]>([]);
   const [citizen, setCurrentCitizen] = React.useState<CitizenWithVehAndWep | null>(
-    initialData.citizen ?? null,
+    initialData?.citizen ?? null,
   );
 
   React.useEffect(() => {
@@ -51,7 +51,7 @@ export function CitizenProvider({ initialData, children }: ProviderProps) {
  *
  * @param citizenNull `true` = citizen can be null, `false` = citizen is never null
  */
-export function useCitizen(citizenNull?: true): Context<true>;
+export function useCitizen(citizenNull?: true): Context;
 // @ts-expect-error not sure how to fix TS this error
 export function useCitizen(citizenNull?: false): Context<false>;
 export function useCitizen(citizenNull = true): Context {
