@@ -16,6 +16,7 @@ import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -25,6 +26,7 @@ export function VehicleSearchModal() {
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
+  const { BUSINESS } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
   const showMarkStolen =
@@ -151,11 +153,13 @@ export function VehicleSearchModal() {
                       {results.citizen.name} {results.citizen.surname}
                     </Infofield>
                   </li>
-                  <li>
-                    <Infofield className="capitalize" label={vT("business")}>
-                      {results.Business[0]?.name ?? common("none")}
-                    </Infofield>
-                  </li>
+                  {BUSINESS ? (
+                    <li>
+                      <Infofield className="capitalize" label={vT("business")}>
+                        {results.Business[0]?.name ?? common("none")}
+                      </Infofield>
+                    </li>
+                  ) : null}
                   <li>
                     <Infofield
                       childrenProps={{
