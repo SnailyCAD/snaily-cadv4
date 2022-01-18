@@ -47,16 +47,13 @@ export function PendingUsersTab({ setUsers, search, users }: Props) {
             actions: (
               <>
                 <Button
-                  onClick={async () => handleAcceptOrDecline(user, "accept")}
+                  onClick={() => handleAcceptOrDecline(user, "accept")}
                   className="mr-2"
                   variant="success"
                 >
                   {common("accept")}
                 </Button>
-                <Button
-                  onClick={async () => handleAcceptOrDecline(user, "decline")}
-                  variant="danger"
-                >
+                <Button onClick={() => handleAcceptOrDecline(user, "decline")} variant="danger">
                   {common("decline")}
                 </Button>
               </>

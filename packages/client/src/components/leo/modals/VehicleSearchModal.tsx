@@ -173,7 +173,7 @@ export function VehicleSearchModal() {
                 <div>
                   <Button
                     type="button"
-                    onClick={async () => handleMarkStolen()}
+                    onClick={() => handleMarkStolen()}
                     variant="cancel"
                     className="px-1.5"
                   >

@@ -175,7 +175,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
         scope: "identify guilds",
       }),
     },
-  ).then(async (v) => v.json())) as RESTPostOAuth2AccessTokenResult;
+  ).then((v) => v.json())) as RESTPostOAuth2AccessTokenResult;
 
   const accessToken = data.access_token;
 
@@ -184,7 +184,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-    .then(async (v) => v.json())
+    .then((v) => v.json())
     .catch(() => null);
 
   return meData;

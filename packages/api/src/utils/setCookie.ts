@@ -24,7 +24,8 @@ export function setCookie(options: SetCookieOptions) {
       httpOnly: true,
       expires: new Date(Date.now() + options.expires),
       path: "/",
-      domain: process.env.DOMAIN ?? undefined,
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      domain: process.env.DOMAIN || undefined,
       ...extraOptions,
     }),
   );

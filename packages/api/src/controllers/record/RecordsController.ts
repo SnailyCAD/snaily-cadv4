@@ -132,27 +132,19 @@ export class RecordsController {
           const minMaxBail = penalCode.warningNotApplicable?.bail ?? [];
 
           // these if statements could be cleaned up?..
-          if (
-            item.fine &&
-            this.exists(minMaxFines) &&
-            !this.isCorrect(minMaxFines[0], minMaxFines[1], item.fine)
-          ) {
+          if (item.fine && this.exists(minMaxFines) && !this.isCorrect(minMaxFines, item.fine)) {
             return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
           }
 
           if (
             item.jailTime &&
             this.exists(minMaxPrisonTerm) &&
-            !this.isCorrect(minMaxPrisonTerm[0], minMaxPrisonTerm[1], item.jailTime)
+            !this.isCorrect(minMaxPrisonTerm, item.jailTime)
           ) {
             return this.handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), ticket.id);
           }
 
-          if (
-            item.bail &&
-            this.exists(minMaxBail) &&
-            !this.isCorrect(minMaxBail[0], minMaxBail[1], item.bail)
-          ) {
+          if (item.bail && this.exists(minMaxBail) && !this.isCorrect(minMaxBail, item.bail)) {
             return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
           }
 
@@ -224,7 +216,8 @@ export class RecordsController {
     return true;
   }
 
-  isCorrect(min: number, max: number, value: number) {
+  isCorrect(minMax: [number, number], value: number) {
+    const [min, max] = minMax;
     if (min < 0 || max < 0) {
       return false;
     }

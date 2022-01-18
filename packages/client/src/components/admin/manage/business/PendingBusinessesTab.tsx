@@ -44,7 +44,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
           actions: (
             <>
               <Button
-                onClick={async () => acceptOrDecline(business, "ACCEPTED")}
+                onClick={() => acceptOrDecline(business, "ACCEPTED")}
                 disabled={state === "loading"}
                 small
                 variant="success"
@@ -53,7 +53,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
               </Button>
               <Button
                 className="ml-2"
-                onClick={async () => acceptOrDecline(business, "DECLINED")}
+                onClick={() => acceptOrDecline(business, "DECLINED")}
                 disabled={state === "loading"}
                 small
                 variant="danger"

@@ -68,7 +68,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={async () => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
+                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
                   variant="success"
                 >
                   {common("accept")}
@@ -76,7 +76,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                 <Button
                   className="ml-2"
                   disabled={state === "loading"}
-                  onClick={async () => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
+                  onClick={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
                   variant="danger"
                 >
                   {common("decline")}

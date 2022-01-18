@@ -101,7 +101,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
           return (
             <li key={code.id}>
               <Button
-                onClick={async () => handleStatusUpdate(code)}
+                onClick={() => handleStatusUpdate(code)}
                 disabled={isButtonDisabled}
                 variant={variant}
                 className={classNames("w-full min-w-[5em]", isActive && "font-semibold")}

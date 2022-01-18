@@ -61,14 +61,14 @@ export function PendingEmployeesTab() {
                 <div>
                   <Button
                     disabled={state === "loading"}
-                    onClick={async () => handleUpdate(employee, "accept")}
+                    onClick={() => handleUpdate(employee, "accept")}
                     variant="success"
                   >
                     {common("accept")}
                   </Button>
                   <Button
                     disabled={state === "loading"}
-                    onClick={async () => handleUpdate(employee, "decline")}
+                    onClick={() => handleUpdate(employee, "decline")}
                     className="ml-2"
                     variant="danger"
                   >

@@ -83,9 +83,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
                   <div className="flex gap-2">
                     <Input onChange={(e) => setSearch(e.target.value)} value={search} />
                     <Button
-                      onClick={async () =>
-                        handlePurge(rows.map((r) => r.original.rowProps.call.id))
-                      }
+                      onClick={() => handlePurge(rows.map((r) => r.original.rowProps.call.id))}
                       className="flex items-center gap-2 ml-2 min-w-fit"
                       disabled={isDisabled}
                     >

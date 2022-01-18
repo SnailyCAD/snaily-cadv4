@@ -116,7 +116,7 @@ export function ActiveOfficers() {
                     .filter((v) => v.type === "STATUS_CODE")
                     .map((v) => ({
                       name: v.value.value,
-                      onClick: async () => setCode(officer.id, v),
+                      onClick: () => setCode(officer.id, v),
                       "aria-label": `Set status to ${v.value.value}`,
                       title: `Set status to ${v.value.value}`,
                     }));
