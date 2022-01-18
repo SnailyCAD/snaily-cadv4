@@ -1,4 +1,11 @@
-import type { Business, BusinessPost, Citizen, Employee, EmployeeValue } from "types/prisma";
+import type {
+  Business,
+  BusinessPost,
+  Citizen,
+  Employee,
+  EmployeeValue,
+  RegisteredVehicle,
+} from "types/prisma";
 import create from "zustand";
 
 export type FullEmployee = Employee & {
@@ -9,6 +16,7 @@ export type FullBusiness = Business & {
   employees: FullEmployee[];
   citizen: Pick<Citizen, "id" | "name" | "surname">;
   businessPosts: BusinessPost[];
+  vehicles: RegisteredVehicle[];
 };
 
 interface BusinessState {

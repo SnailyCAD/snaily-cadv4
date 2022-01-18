@@ -21,6 +21,13 @@ export const VEHICLE_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   vinNumber: z.string().max(17).optional(),
   reportedStolen: z.boolean().optional(),
+  businessId: z.string().max(255).optional().nullable(),
+  employeeId: z.string().max(255).optional().nullable(),
+});
+
+export const DELETE_VEHICLE_SCHEMA = z.object({
+  businessId: z.string().max(255).optional().nullable(),
+  employeeId: z.string().max(255).optional().nullable(),
 });
 
 export const WEAPON_SCHEMA = z.object({

@@ -203,6 +203,7 @@ model RegisteredVehicle {
   impounded            Boolean            @default(false)
   TruckLog             TruckLog[]
   ImpoundedVehicle     ImpoundedVehicle[]
+  Business             Business[]         @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
@@ -459,20 +460,21 @@ model TaxiCall {
 
 // businesses
 model Business {
-  id            String           @id @default(cuid())
-  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String              @id @default(cuid())
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
-  citizen       Citizen          @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen       Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId     String
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @default(now()) @updatedAt
-  name          String           @db.VarChar(255)
-  whitelisted   Boolean          @default(false)
-  address       String           @db.Text
-  postal        String?          @db.VarChar(255)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @default(now()) @updatedAt
+  name          String              @db.VarChar(255)
+  whitelisted   Boolean             @default(false)
+  address       String              @db.Text
+  postal        String?             @db.VarChar(255)
   status        WhitelistStatus?
   businessPosts BusinessPost[]
   employees     Employee[]
+  vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
 }
 
 model Employee {

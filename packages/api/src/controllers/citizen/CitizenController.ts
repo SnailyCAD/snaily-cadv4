@@ -21,6 +21,10 @@ export const citizenInclude = {
       model: { include: { value: true } },
       registrationStatus: true,
     },
+    where: {
+      // hide business vehicles
+      Business: { every: { id: "null" } },
+    },
   },
   weapons: {
     include: {

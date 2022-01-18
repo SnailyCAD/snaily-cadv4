@@ -12,6 +12,7 @@ import { EmployeeAsEnum } from "types/prisma";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
+import { EmployeesTab } from "components/business/manage/EmployeesTab";
 
 interface Props {
   employee: FullEmployee | null;
@@ -26,8 +27,8 @@ const PendingEmployeesTab = dynamic(
   async () => (await import("components/business/manage/PendingEmployeesTab")).PendingEmployeesTab,
 );
 
-const EmployeesTab = dynamic(
-  async () => (await import("components/business/manage/EmployeesTab")).EmployeesTab,
+const VehiclesTab = dynamic(
+  async () => (await import("components/business/manage/VehiclesTab")).VehiclesTab,
 );
 
 export default function BusinessId(props: Props) {
@@ -55,8 +56,9 @@ export default function BusinessId(props: Props) {
 
   const tabsObj = {
     [t("allEmployees")]: true,
-    [t("pendingEmployees")]: currentBusiness.whitelisted,
+    [t("businessVehicles")]: true,
     [t("business")]: currentEmployee.role.as === EmployeeAsEnum.OWNER,
+    [t("pendingEmployees")]: currentBusiness.whitelisted,
   };
 
   const tabs = Object.entries(tabsObj)
@@ -78,8 +80,9 @@ export default function BusinessId(props: Props) {
       <div className="mt-3">
         <TabList tabs={tabs}>
           <EmployeesTab />
-          {currentBusiness.whitelisted ? <PendingEmployeesTab /> : null}
+          <VehiclesTab />
           <ManageBusinessTab />
+          {currentBusiness.whitelisted ? <PendingEmployeesTab /> : null}
         </TabList>
       </div>
     </Layout>
@@ -89,7 +92,7 @@ export default function BusinessId(props: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
   const [business, values] = await requestAll(req, [
     [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
-    ["/admin/values/business_role", []],
+    ["/admin/values/business_role?paths=vehicle,license", []],
   ]);
 
   const notFound =
@@ -103,7 +106,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
       employee: business?.employee ?? null,
       session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["business", "common"], locale)),
+        ...(await getTranslations(["business", "citizen", "common"], locale)),
       },
     },
   };

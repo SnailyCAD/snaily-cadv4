@@ -1,6 +1,6 @@
 import { MiscCadSettings, User } from ".prisma/client";
 import { Feature } from "@prisma/client";
-import { VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -72,7 +72,7 @@ export class VehiclesController {
         color: data.color,
         citizenId: citizen.id,
         modelId,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         // todo
         insuranceStatus: "TEST",
         vinNumber: data.vinNumber || generateString(17),
@@ -83,6 +83,28 @@ export class VehiclesController {
         registrationStatus: true,
       },
     });
+
+    if (data.businessId && data.employeeId) {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          id: data.employeeId,
+          businessId: data.businessId,
+          userId: ctx.get("user").id,
+        },
+        include: {
+          role: true,
+        },
+      });
+
+      if (!employee || employee.role?.as === "EMPLOYEE") {
+        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      }
+
+      await prisma.registeredVehicle.update({
+        where: { id: vehicle.id },
+        data: { Business: { connect: { id: data.businessId } } },
+      });
+    }
 
     return vehicle;
   }
@@ -101,8 +123,29 @@ export class VehiclesController {
       },
     });
 
-    if (!vehicle || vehicle.userId !== ctx.get("user").id) {
+    if (!vehicle) {
       throw new NotFound("notFound");
+    }
+
+    if (data.businessId && data.employeeId) {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          id: data.employeeId,
+          businessId: data.businessId,
+          userId: ctx.get("user").id,
+        },
+        include: {
+          role: true,
+        },
+      });
+
+      if (!employee || employee.role?.as === "EMPLOYEE") {
+        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      }
+    } else {
+      if (vehicle.userId !== ctx.get("user").id) {
+        throw new NotFound("notFound");
+      }
     }
 
     const updated = await prisma.registeredVehicle.update({
@@ -112,7 +155,7 @@ export class VehiclesController {
       data: {
         modelId: data.model,
         color: data.color,
-        registrationStatusId: data.registrationStatus,
+        registrationStatusId: data.registrationStatus as string,
         vinNumber: data.vinNumber || vehicle.vinNumber,
         reportedStolen: data.reportedStolen ?? false,
       },
@@ -126,17 +169,43 @@ export class VehiclesController {
   }
 
   @Delete("/:id")
-  async deleteVehicle(@Context() ctx: Context, @PathParams("id") vehicleId: string) {
+  async deleteVehicle(
+    @Context() ctx: Context,
+    @PathParams("id") vehicleId: string,
+    @BodyParams() body: unknown,
+  ) {
+    const data = validateSchema(DELETE_VEHICLE_SCHEMA, body);
+
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: {
         id: vehicleId,
       },
     });
 
-    if (!vehicle || vehicle.userId !== ctx.get("user").id) {
+    if (!vehicle) {
       throw new NotFound("notFound");
     }
 
+    if (data.businessId && data.employeeId) {
+      const employee = await prisma.employee.findFirst({
+        where: {
+          id: data.employeeId,
+          businessId: data.businessId,
+          userId: ctx.get("user").id,
+        },
+        include: {
+          role: true,
+        },
+      });
+
+      if (!employee || employee.role?.as === "EMPLOYEE") {
+        throw new NotFound("employeeNotFoundOrInvalidPermissions");
+      }
+    } else {
+      if (vehicle.userId !== ctx.get("user").id) {
+        throw new NotFound("notFound");
+      }
+    }
     await prisma.registeredVehicle.delete({
       where: {
         id: vehicle.id,

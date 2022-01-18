@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
+import { Business, Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
@@ -16,6 +16,7 @@ import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -25,6 +26,7 @@ export function VehicleSearchModal() {
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
+  const { BUSINESS } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
   const showMarkStolen =
@@ -149,6 +151,13 @@ export function VehicleSearchModal() {
                       {results.citizen.name} {results.citizen.surname}
                     </Infofield>
                   </li>
+                  {BUSINESS ? (
+                    <li>
+                      <Infofield className="capitalize" label={vT("business")}>
+                        {results.Business[0]?.name ?? common("none")}
+                      </Infofield>
+                    </li>
+                  ) : null}
                   <li>
                     <Infofield
                       childrenProps={{
@@ -211,4 +220,5 @@ export interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;
   registrationStatus: Value<"LICENSE">;
   TruckLog: TruckLog[];
+  Business: Business[];
 }
