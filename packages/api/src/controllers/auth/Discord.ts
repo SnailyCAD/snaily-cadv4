@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";

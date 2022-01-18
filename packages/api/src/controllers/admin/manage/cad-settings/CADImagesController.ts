@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";

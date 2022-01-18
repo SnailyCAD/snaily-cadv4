@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Rank, User } from ".prisma/client";
 import { cad } from "@prisma/client";
 import {

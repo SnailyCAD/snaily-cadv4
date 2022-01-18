@@ -1,3 +1,4 @@
+import process from "node:process";
 import { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
