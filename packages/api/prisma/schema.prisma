@@ -203,7 +203,7 @@ model RegisteredVehicle {
   impounded            Boolean            @default(false)
   TruckLog             TruckLog[]
   ImpoundedVehicle     ImpoundedVehicle[]
-  Business             Business[]
+  Business             Business[]         @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
@@ -474,7 +474,7 @@ model Business {
   status        WhitelistStatus?
   businessPosts BusinessPost[]
   employees     Employee[]
-  vehicles      RegisteredVehicle[]
+  vehicles      RegisteredVehicle[] @relation("registeredBusinessVehicles")
 }
 
 model Employee {

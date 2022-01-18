@@ -102,9 +102,9 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
 
-      await prisma.business.update({
-        where: { id: data.businessId },
-        data: { vehicles: { connect: { id: vehicle.id } } },
+      await prisma.registeredVehicle.update({
+        where: { id: vehicle.id },
+        data: { Business: { connect: { id: data.businessId } } },
       });
     }
 

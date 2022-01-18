@@ -71,7 +71,16 @@ export class CitizenController {
         id: citizenId,
         userId: ctx.get("user").id,
       },
-      include: citizenInclude,
+      include: {
+        ...citizenInclude,
+        vehicles: {
+          ...citizenInclude.vehicles,
+          where: {
+            // hide business vehicles
+            Business: { every: { id: "null" } },
+          },
+        },
+      },
     });
 
     if (!citizen) {
