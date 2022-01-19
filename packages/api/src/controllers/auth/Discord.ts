@@ -3,7 +3,7 @@ import { Context, Delete, Get, QueryParams, Req, Res, UseBefore } from "@tsed/co
 import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
-import fetch from "node-fetch";
+import { request } from "undici";
 import { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types";
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
@@ -162,7 +162,7 @@ export class DiscordAuth {
 }
 
 async function getDiscordData(code: string): Promise<APIUser | null> {
-  const data = (await fetch(
+  const data = (await request(
     `${discordApiUrl}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
     {
       method: "POST",
@@ -176,16 +176,17 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
         scope: "identify guilds",
       }),
     },
-  ).then((v) => v.json())) as RESTPostOAuth2AccessTokenResult;
+  ).then((v) => v.body.json())) as RESTPostOAuth2AccessTokenResult;
 
   const accessToken = data.access_token;
 
-  const meData = await fetch(`${discordApiUrl}/users/@me`, {
+  const meData = await request(`${discordApiUrl}/users/@me`, {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   })
-    .then((v) => v.json())
+    .then((v) => v.body.json())
     .catch(() => null);
 
   return meData;

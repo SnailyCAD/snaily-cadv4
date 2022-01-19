@@ -1,17 +1,17 @@
-import fetch from "node-fetch";
+import { request } from "undici";
 import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
 
 export async function getWebhookData(url: string): Promise<APIWebhook | null> {
   try {
-    const res = await fetch(url);
+    const res = await request(url, { method: "GET" });
 
-    const header = res.headers.get("Content-Type");
+    const header = res.headers["content-type"];
     if (!header || header !== "application/json") {
       return null;
     }
 
-    const data = await res.json();
+    const data = await res.body.json();
 
     return {
       type: data.type,
@@ -41,7 +41,7 @@ export async function sendDiscordWebhook(
   }
 
   try {
-    await fetch(`${DISCORD_API_URL}/webhooks/${webhook.id}/${webhook.token}`, {
+    await request(`${DISCORD_API_URL}/webhooks/${webhook.id}/${webhook.token}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
