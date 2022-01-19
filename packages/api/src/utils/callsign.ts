@@ -6,15 +6,22 @@ import {
   Officer,
 } from "@prisma/client";
 
-type FullUnit = (Officer | EmsFdDeputy) & { department: DepartmentValue; division: DivisionValue };
+type FullUnit = (Officer | EmsFdDeputy) & {
+  department: DepartmentValue;
+  division?: DivisionValue;
+  divisions?: DivisionValue[];
+};
 
 export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSettings | null) {
   if (!("department" in unit)) {
     return "NULL";
   }
 
-  const { callsign, callsign2, department, division } = unit;
+  const { callsign, callsign2, department } = unit;
+  const unitDivision = unit.division ?? ("divisions" in unit ? unit.divisions : []);
+
   const template = miscCadSettings?.callsignTemplate;
+  const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
   if (!template) {
     return "";
@@ -24,7 +31,7 @@ export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSetting
     department: department.callsign,
     callsign1: callsign,
     callsign2,
-    division: division.callsign,
+    division: division?.callsign,
   };
 
   const templateArr: (string | null)[] = template.split(/[{}]/);
