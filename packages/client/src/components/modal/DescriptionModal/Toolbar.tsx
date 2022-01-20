@@ -1,5 +1,6 @@
 import * as RToolbar from "@radix-ui/react-toolbar";
 import {
+  ListCheck,
   Quote,
   TypeBold,
   TypeH1,
@@ -42,6 +43,7 @@ export function Toolbar() {
         <BlockButton format="heading-one" icon={<TypeH1 aria-label="heading-one" />} />
         <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
         <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
+        <BlockButton format="checklist" icon={<ListCheck aria-label="checklist" />} />
       </RToolbar.ToolbarToggleGroup>
     </RToolbar.Root>
   );
@@ -55,10 +57,12 @@ interface ButtonProps {
 function BlockButton({ format, icon }: ButtonProps) {
   const editor = useSlate();
   const isActive = isBlockActive(editor, format);
+  const isDisabled = ["checklist"].includes(format);
 
   return (
     <RToolbar.ToolbarToggleItem asChild value={format}>
       <Button
+        disabled={isDisabled}
         title={format}
         type="button"
         variant={isActive ? null : "default"}

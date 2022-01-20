@@ -1285,6 +1285,7 @@ __metadata:
     rimraf: ^3.0.2
     sass: ^1.48.0
     slate: ^0.72.3
+    slate-history: ^0.66.0
     slate-react: ^0.72.5
     socket.io-client: ^4.4.1
     sortablejs: ^1.14.0
@@ -8338,6 +8339,17 @@ __metadata:
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
+  languageName: node
+  linkType: hard
+
+"slate-history@npm:^0.66.0":
+  version: 0.66.0
+  resolution: "slate-history@npm:0.66.0"
+  dependencies:
+    is-plain-object: ^5.0.0
+  peerDependencies:
+    slate: ">=0.65.3"
+  checksum: e83d4fbf5d4097a5b434df4846420e593598a9a3f90d3e0638f16915b1014bc8a7dc5cd87e3bc0a31a8ad5eae582a18f96bdc04f4b0b0a5a82cf05bd0377601e
   languageName: node
   linkType: hard
 

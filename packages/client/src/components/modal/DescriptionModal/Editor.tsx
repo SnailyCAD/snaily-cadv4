@@ -2,6 +2,7 @@ import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
+import { withHistory } from "slate-history";
 import { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 
@@ -32,7 +33,7 @@ export const DEFAULT_EDITOR_DATA = [
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
-  const [editor] = React.useState(() => withReact(createEditor()));
+  const editor = React.useMemo(() => withHistory(withReact(createEditor())), []);
 
   function handleChange(value: Descendant[]) {
     onChange?.(value);
