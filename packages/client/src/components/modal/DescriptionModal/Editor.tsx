@@ -15,32 +15,40 @@ declare module "slate" {
   }
 }
 
-export function Editor() {
+interface EditorProps {
+  value: Descendant[];
+  onChange: React.Dispatch<React.SetStateAction<Descendant[]>>;
+}
+
+export const DEFAULT_EDITOR_DATA = [
+  {
+    type: "paragraph",
+    children: [{ text: "" }],
+  },
+];
+
+export function Editor({ value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
   const [editor] = React.useState(() => withReact(createEditor()));
-  const [value, setValue] = React.useState<Descendant[]>([
-    {
-      type: "paragraph",
-      children: [{ text: "" }],
-    },
-  ]);
 
   return (
-    <Slate editor={editor} value={value} onChange={setValue}>
-      <Toolbar />
-      <Editable
-        renderLeaf={renderLeaf}
-        renderElement={renderElement}
-        style={{ minHeight: "5em" }}
-        className={classNames(
-          `
-      w-full p-1.5 px-3 rounded-md bg-transparent
+    <div className="mt-1">
+      <Slate editor={editor} value={value} onChange={onChange}>
+        <Toolbar />
+        <Editable
+          renderLeaf={renderLeaf}
+          renderElement={renderElement}
+          style={{ minHeight: "5em" }}
+          className={classNames(
+            `
+      w-full p-1.5 rounded-md bg-transparent
       disabled:cursor-not-allowed disabled:opacity-80`,
-        )}
-        placeholder="Start typing..."
-      />
-    </Slate>
+          )}
+          placeholder="Start typing..."
+        />
+      </Slate>
+    </div>
   );
 }
 

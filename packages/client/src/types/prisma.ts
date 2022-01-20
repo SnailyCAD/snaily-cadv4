@@ -344,6 +344,7 @@ export type Call911 = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: any;
   name: string;
   position: Position | null;
 };

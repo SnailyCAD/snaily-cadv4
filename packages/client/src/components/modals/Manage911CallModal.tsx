@@ -23,6 +23,7 @@ import type { CombinedLeoUnit } from "types/prisma";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
+import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   call: Full911Call | null;
@@ -187,6 +188,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
     description: call?.description ?? "",
+    descriptionData: call?.descriptionData ?? DEFAULT_EDITOR_DATA,
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),
@@ -213,7 +215,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     >
       <div className="flex flex-col md:flex-row">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, values, errors }) => (
+          {({ handleChange, setFieldValue, values, errors }) => (
             <Form className="w-full">
               <FormField errorMessage={errors.name} label={common("name")}>
                 <Input name="name" value={values.name} onChange={handleChange} />
@@ -249,12 +251,22 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
               ) : null}
 
               <FormField errorMessage={errors.description} label={common("description")}>
-                <Textarea
-                  name="description"
-                  className="min-h-[5em]"
-                  value={values.description}
-                  onChange={handleChange}
-                />
+                {values.descriptionData ? (
+                  <Editor
+                    value={values.descriptionData}
+                    onChange={(v) => {
+                      console.log({ v });
+                      setFieldValue("descriptionData", v);
+                    }}
+                  />
+                ) : (
+                  <Textarea
+                    name="description"
+                    className="min-h-[5em]"
+                    value={values.description}
+                    onChange={handleChange}
+                  />
+                )}
               </FormField>
 
               <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>

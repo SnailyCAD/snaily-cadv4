@@ -41,6 +41,7 @@ function BlockButton({ format, icon }: ButtonProps) {
 
   return (
     <Button
+      type="button"
       variant={isActive ? null : "default"}
       className={classNames(isActive && "dark:bg-neutral-700")}
       onClick={() => {
@@ -58,6 +59,7 @@ const MarkButton = ({ format, icon }: ButtonProps) => {
 
   return (
     <Button
+      type="button"
       variant={isActive ? null : "default"}
       className={classNames(isActive && "dark:bg-neutral-700")}
       onClick={() => {

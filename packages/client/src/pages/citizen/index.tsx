@@ -16,7 +16,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 
 const RegisterVehicleModal = dynamic(
   async () =>
@@ -66,10 +65,6 @@ export default function CitizenPage({ citizens }: Props) {
             {t("registerWeapon")}
           </Button>
         ) : null}
-
-        <Button onClick={() => openModal(ModalIds.Description)} className="text-left">
-          description modal
-        </Button>
 
         {TOW ? (
           <Button
@@ -154,7 +149,6 @@ export default function CitizenPage({ citizens }: Props) {
       />
       <Manage911CallModal call={null} />
       <ManageCallModal isTow={modal === "tow"} call={null} />
-      <DescriptionModal title="Hello world" />
     </Layout>
   );
 }
