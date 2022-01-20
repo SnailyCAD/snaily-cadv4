@@ -24,8 +24,9 @@
     "eslint": "^8.7.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
-    "patch-package": "^6.4.7",
-    "prettier": "^2.5.1",
+    "prettier": "^2.5.1"
+  },
+  "dependencies": {
     "pretty-quick": "^3.1.3"
   }
 }
