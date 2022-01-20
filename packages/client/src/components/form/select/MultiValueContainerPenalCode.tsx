@@ -1,6 +1,7 @@
 import { components, MultiValueGenericProps } from "react-select";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { PenalCode } from "types/prisma";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>) {
   const value = props.data.value as PenalCode;
@@ -28,7 +29,9 @@ const HoverCardDemo = ({ children, penalCode }: HoverCardProps) => (
     >
       <h3 className="text-lg font-semibold">{penalCode.title}</h3>
 
-      <p className="dark:text-gray-200 mt-2 text-base">{penalCode.description}</p>
+      <div className="dark:text-gray-200 mt-2 text-base">
+        <Editor isReadonly value={dataToSlate(penalCode)} />
+      </div>
       <HoverCard.Arrow className="fill-current text-white dark:text-dark-bright" />
     </HoverCard.Content>
   </HoverCard.Root>

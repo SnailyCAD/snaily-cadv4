@@ -6,7 +6,8 @@ export const VALUE_SCHEMA = z.object({
 
 export const CREATE_PENAL_CODE_SCHEMA = z.object({
   title: z.string().min(2).max(255),
-  description: z.string().min(2),
+  description: z.string().optional().nullable(),
+  descriptionData: z.any().optional().nullable(),
 });
 
 export const CREATE_PENAL_CODE_GROUP_SCHEMA = z.object({

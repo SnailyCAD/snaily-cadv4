@@ -129,6 +129,7 @@ export class ValuesController {
         data: {
           title: body.title,
           description: body.description,
+          descriptionData: body.descriptionData,
           groupId: body.groupId || null,
           [key]: id,
         },
@@ -371,6 +372,7 @@ export class ValuesController {
         data: {
           title: body.get("title"),
           description: body.get("description"),
+          descriptionData: body.descriptionData,
           groupId: body.get("groupId") || null,
           [key]: warningId,
         },

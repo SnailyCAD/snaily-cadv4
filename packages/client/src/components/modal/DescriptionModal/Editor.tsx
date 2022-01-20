@@ -19,7 +19,7 @@ declare module "slate" {
 interface EditorProps {
   isReadonly?: boolean;
   value: Descendant[] | JsonArray;
-  onChange: (value: Descendant[]) => void;
+  onChange?: (value: Descendant[]) => void;
 }
 
 export const DEFAULT_EDITOR_DATA = [
@@ -34,15 +34,18 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
   const [editor] = React.useState(() => withReact(createEditor()));
 
+  function handleChange(value: Descendant[]) {
+    onChange?.(value);
+  }
+
   return (
     <div className="mt-1">
-      <Slate editor={editor} value={value as Descendant[]} onChange={onChange}>
+      <Slate editor={editor} value={value as Descendant[]} onChange={handleChange}>
         {isReadonly ? null : <Toolbar />}
         <Editable
           readOnly={isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          style={{ minHeight: "5em" }}
           className={classNames(
             `
       w-full p-1.5 rounded-md bg-transparent

@@ -388,6 +388,7 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string;
+  descriptionData?: JsonArray;
   warningApplicableId: string | null;
   warningApplicable: WarningApplicable | null;
   warningNotApplicableId: string | null;

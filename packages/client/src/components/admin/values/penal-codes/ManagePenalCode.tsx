@@ -10,9 +10,9 @@ import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   type: ValueType;
@@ -66,6 +66,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
   const INITIAL_VALUES = {
     title: penalCode?.title ?? "",
     description: penalCode?.description ?? "",
+    descriptionData: dataToSlate(penalCode),
     group: penalCode?.groupId ?? "",
     warningApplicable: !!penalCode?.warningApplicable,
     fines1: {
@@ -103,11 +104,9 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             </FormField>
 
             <FormField errorMessage={errors.description} label="Description">
-              <Textarea
-                className="min-h-[10em]"
-                name="description"
-                onChange={handleChange}
-                value={values.description}
+              <Editor
+                value={values.descriptionData}
+                onChange={(v) => setFieldValue("descriptionData", v)}
               />
             </FormField>
 
