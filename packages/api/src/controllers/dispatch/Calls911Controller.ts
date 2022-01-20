@@ -67,7 +67,7 @@ export class Calls911Controller {
         location: data.location,
         postal: String(data.postal),
         description: null,
-        descriptionData: data.descriptionData ?? null,
+        descriptionData: data.descriptionData,
         name: data.name,
         userId: ctx.get("user").id,
       },

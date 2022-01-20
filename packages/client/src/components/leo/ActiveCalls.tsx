@@ -33,6 +33,7 @@ export function ActiveCalls() {
 
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
+  const leo = useTranslations("Leo");
   const common = useTranslations("Common");
   const { user } = useAuth();
   const router = useRouter();
@@ -163,7 +164,7 @@ export function ActiveCalls() {
                               small
                               onClick={() => handleViewDescription(call)}
                             >
-                              {t("viewDescription")}
+                              {leo("viewDescription")}
                             </Button>
                           )}
                         </td>

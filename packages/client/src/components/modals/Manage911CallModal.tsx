@@ -6,7 +6,6 @@ import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
-import { Textarea } from "components/form/Textarea";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
@@ -251,19 +250,10 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
               ) : null}
 
               <FormField errorMessage={errors.description} label={common("description")}>
-                {values.descriptionData ? (
-                  <Editor
-                    value={values.descriptionData}
-                    onChange={(v) => setFieldValue("descriptionData", v)}
-                  />
-                ) : (
-                  <Textarea
-                    name="description"
-                    className="min-h-[5em]"
-                    value={values.description}
-                    onChange={handleChange}
-                  />
-                )}
+                <Editor
+                  value={values.descriptionData}
+                  onChange={(v) => setFieldValue("descriptionData", v)}
+                />
               </FormField>
 
               <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>

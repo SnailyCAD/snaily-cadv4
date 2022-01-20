@@ -52,6 +52,7 @@
     "slate-react": "^0.72.5",
     "socket.io-client": "^4.4.1",
     "sortablejs": "^1.14.0",
+    "type-fest": "^2.10.0",
     "uuid": "^8.3.2",
     "zustand": "^3.6.9"
   },

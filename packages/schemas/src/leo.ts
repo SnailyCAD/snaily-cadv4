@@ -37,7 +37,8 @@ export const SELECT_OFFICER_SCHEMA = z.object({
 });
 
 export const LEO_INCIDENT_SCHEMA = z.object({
-  description: z.string().min(2),
+  description: z.string().nullable().optional(),
+  descriptionData: z.any().nullable().optional(),
   firearmsInvolved: z.boolean(),
   injuriesOrFatalities: z.boolean(),
   arrestsMade: z.boolean(),

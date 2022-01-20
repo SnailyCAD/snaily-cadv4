@@ -6,16 +6,19 @@ import { ModalIds } from "types/ModalIds";
 import { Modal } from "../Modal";
 import { DEFAULT_EDITOR_DATA, Editor } from "./Editor";
 import { Descendant } from "slate";
+import { JsonArray } from "type-fest";
 
 interface Props {
-  value?: Descendant[];
+  value?: Descendant[] | JsonArray;
   isReadonly?: boolean;
   onClose?(): void;
-  onSave?(data: Descendant[]): Promise<void>;
+  onSave?(data: Descendant[] | JsonArray): Promise<void>;
 }
 
 export function DescriptionModal(props: Props) {
-  const [value, setValue] = React.useState<Descendant[]>(props.value ?? DEFAULT_EDITOR_DATA);
+  const [value, setValue] = React.useState<Descendant[] | JsonArray>(
+    props.value ?? DEFAULT_EDITOR_DATA,
+  );
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
 

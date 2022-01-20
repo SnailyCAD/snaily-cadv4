@@ -20,6 +20,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -52,6 +53,11 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const router = useRouter();
 
   const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
+
+  function handleViewDescription(incident: FullIncident) {
+    setTempIncident(incident);
+    openModal(ModalIds.Description);
+  }
 
   function onDeleteClick(incident: FullIncident) {
     openModal(ModalIds.AlertDeleteIncident);
@@ -141,7 +147,13 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
             arrestsMade: common(yesOrNoText(incident.arrestsMade)),
             description: (
               <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
-                {incident.description}
+                {incident.description && !incident.descriptionData ? (
+                  incident.description
+                ) : (
+                  <Button small onClick={() => handleViewDescription(incident)}>
+                    {t("viewDescription")}
+                  </Button>
+                )}
               </span>
             ),
             createdAt: format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm"),
@@ -178,7 +190,9 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         />
       )}
 
-      {isActive ? <ManageIncidentModal incident={tempIncident} /> : null}
+      {isActive ? (
+        <ManageIncidentModal onClose={() => setTempIncident(null)} incident={tempIncident} />
+      ) : null}
       {user?.isSupervisor ? (
         <AlertModal
           id={ModalIds.AlertDeleteIncident}
@@ -188,6 +202,10 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
           onClose={() => setTempIncident(null)}
           state={state}
         />
+      ) : null}
+
+      {tempIncident?.descriptionData ? (
+        <DescriptionModal isReadonly value={tempIncident?.descriptionData} />
       ) : null}
     </Layout>
   );

@@ -44,6 +44,7 @@ export class IncidentController {
         arrestsMade: data.arrestsMade,
         firearmsInvolved: data.firearmsInvolved,
         injuriesOrFatalities: data.injuriesOrFatalities,
+        descriptionData: data.descriptionData,
       },
     });
 
@@ -99,6 +100,7 @@ export class IncidentController {
         arrestsMade: data.arrestsMade,
         firearmsInvolved: data.firearmsInvolved,
         injuriesOrFatalities: data.injuriesOrFatalities,
+        descriptionData: data.descriptionData,
       },
     });
 

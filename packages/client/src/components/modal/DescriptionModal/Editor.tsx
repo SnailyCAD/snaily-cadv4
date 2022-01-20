@@ -2,6 +2,7 @@ import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
+import { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
@@ -17,7 +18,7 @@ declare module "slate" {
 
 interface EditorProps {
   isReadonly?: boolean;
-  value: Descendant[];
+  value: Descendant[] | JsonArray;
   onChange: (value: Descendant[]) => void;
 }
 
@@ -35,7 +36,7 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
 
   return (
     <div className="mt-1">
-      <Slate editor={editor} value={value} onChange={onChange}>
+      <Slate editor={editor} value={value as Descendant[]} onChange={onChange}>
         {isReadonly ? null : <Toolbar />}
         <Editable
           readOnly={isReadonly}
