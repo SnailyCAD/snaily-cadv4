@@ -3,8 +3,8 @@ import { SELECT_VALUE } from "../leo";
 
 export const CREATE_911_CALL = z.object({
   location: z.string().min(2),
-  description: z.string().min(2),
-  descriptionData: z.any(),
+  description: z.string().optional(),
+  descriptionData: z.any().nullable().optional(),
   name: z.string().min(2).max(255),
   postal: z.string().optional(),
   assignedUnits: z.array(z.string().or(SELECT_VALUE)),

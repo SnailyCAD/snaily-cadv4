@@ -275,7 +275,7 @@ model PenalCode {
   createdAt              DateTime              @default(now())
   updatedAt              DateTime              @default(now()) @updatedAt
   title                  String                @db.VarChar(255)
-  description            String                @db.Text
+  description            String?               @db.Text
   descriptionData        Json?
   warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
   warningApplicableId    String?
@@ -434,7 +434,7 @@ model TowCall {
   deliveryAddressId String?
   plate             String?  @db.VarChar(255)
   model             String?  @db.VarChar(255)
-  description       String   @db.Text
+  description       String?  @db.Text
   descriptionData   Json?
   creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId         String?
@@ -453,7 +453,7 @@ model TaxiCall {
   assignedUnitId  String?
   location        String   @db.VarChar(255)
   postal          String?  @db.Text
-  description     String   @db.Text
+  description     String?  @db.Text
   descriptionData Json?
   creator         Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId       String?
@@ -601,7 +601,7 @@ model ImpoundedVehicle {
 model LeoIncident {
   id                   String    @id @default(uuid())
   caseNumber           Int       @default(autoincrement())
-  description          String    @db.Text
+  description          String?   @db.Text
   descriptionData      Json?
   creator              Officer   @relation(fields: [creatorId], references: [id])
   creatorId            String
@@ -668,7 +668,7 @@ model Call911 {
   assignedUnits   AssignedUnit[]
   location        String         @db.Text
   postal          String?        @db.Text
-  description     String         @db.Text
+  description     String?         @db.Text
   descriptionData Json?
   name            String         @db.VarChar(255)
   ended           Boolean?       @default(false)
@@ -711,7 +711,7 @@ model Bolo {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
   type            BoloType
-  description     String   @db.Text
+  description     String?   @db.Text
   descriptionData Json?
   plate           String?  @db.VarChar(255)
   model           String?  @db.VarChar(255)

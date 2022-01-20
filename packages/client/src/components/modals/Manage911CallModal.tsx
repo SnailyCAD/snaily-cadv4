@@ -254,10 +254,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                 {values.descriptionData ? (
                   <Editor
                     value={values.descriptionData}
-                    onChange={(v) => {
-                      console.log({ v });
-                      setFieldValue("descriptionData", v);
-                    }}
+                    onChange={(v) => setFieldValue("descriptionData", v)}
                   />
                 ) : (
                   <Textarea
