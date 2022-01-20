@@ -29,7 +29,8 @@ export function DescriptionModal(props: Props) {
 
   function handleSave() {
     if (props.isReadonly) return;
-    closeModal(ModalIds.Description);
+
+    handleClose();
     props.onSave?.(value);
   }
 

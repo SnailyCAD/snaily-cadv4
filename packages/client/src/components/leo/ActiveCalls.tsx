@@ -229,7 +229,11 @@ export function ActiveCalls() {
 
       <DispatchCallTowModal call={tempCall} />
       {tempCall?.descriptionData ? (
-        <DescriptionModal isReadonly value={tempCall?.descriptionData} />
+        <DescriptionModal
+          isReadonly
+          onClose={() => setTempCall(null)}
+          value={tempCall?.descriptionData}
+        />
       ) : null}
 
       {isDispatch ? (
