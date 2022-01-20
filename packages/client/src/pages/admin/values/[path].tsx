@@ -267,7 +267,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         value={tempValue}
         type={type}
       />
-      <ImportValuesModal type={type} />
+      <ImportValuesModal onImport={(data) => setValues((p) => [...data, ...p])} type={type} />
     </AdminLayout>
   );
 }

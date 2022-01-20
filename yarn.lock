@@ -1210,7 +1210,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/glob": ^7.2.0
     "@types/jsonwebtoken": 8.5.8
-    "@types/node": ^17.0.9
+    "@types/node": ^17.0.10
     bcrypt: ^5.0.1
     compression: 1.7.4
     cookie: ^0.4.1
@@ -1259,7 +1259,7 @@ __metadata:
     "@types/sortablejs": ^1.10.7
     "@types/uuid": ^8.3.4
     autoprefixer: ^10.4.2
-    axios: ^0.24.0
+    axios: ^0.25.0
     date-fns: ^2.28.0
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
@@ -1267,7 +1267,7 @@ __metadata:
     leaflet: ^1.7.1
     leaflet.markercluster: ^1.5.3
     next: ^12.0.8
-    next-intl: 2.3.4
+    next-intl: 2.3.5
     nookies: ^2.5.2
     postcss: ^8.4.5
     pretty-bytes: ^5.6.0
@@ -1283,10 +1283,10 @@ __metadata:
     react-table: ^7.7.0
     react-use: ^17.3.2
     rimraf: ^3.0.2
-    sass: ^1.48.0
+    sass: ^1.49.0
     slate: ^0.72.3
     slate-history: ^0.66.0
-    slate-react: ^0.72.5
+    slate-react: ^0.72.6
     socket.io-client: ^4.4.1
     sortablejs: ^1.14.0
     tailwindcss: ^3.0.15
@@ -1885,10 +1885,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.9":
-  version: 17.0.9
-  resolution: "@types/node@npm:17.0.9"
-  checksum: 64a1fa91979e3c37c5f42c6e7836b02aad333f2ed41114b8d975b4754e4f4a7fe3343e77ee4daceed6b5706c6662ade13ec1e955326cd1b1e8bf35800de5faf8
+"@types/node@npm:^17.0.10":
+  version: 17.0.10
+  resolution: "@types/node@npm:17.0.10"
+  checksum: 979e83d642a2b4f18fa1a4233f884822c05abc7acd0836024aa964187f8446432b21f7913e72fe2b3927c4a811c27a0b6cd60ac7c4ac6a6762cfbab70782aa6a
   languageName: node
   linkType: hard
 
@@ -2524,12 +2524,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "axios@npm:0.24.0"
+"axios@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "axios@npm:0.25.0"
   dependencies:
-    follow-redirects: ^1.14.4
-  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
+    follow-redirects: ^1.14.7
+  checksum: 2a8a3787c05f2a0c9c3878f49782357e2a9f38945b93018fb0c4fd788171c43dceefbb577988628e09fea53952744d1ecebde234b561f1e703aa43e0a598a3ad
   languageName: node
   linkType: hard
 
@@ -4713,7 +4713,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4":
+"follow-redirects@npm:^1.14.7":
   version: 1.14.7
   resolution: "follow-redirects@npm:1.14.7"
   peerDependenciesMeta:
@@ -6669,15 +6669,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-intl@npm:2.3.4":
-  version: 2.3.4
-  resolution: "next-intl@npm:2.3.4"
+"next-intl@npm:2.3.5":
+  version: 2.3.5
+  resolution: "next-intl@npm:2.3.5"
   dependencies:
-    use-intl: ^2.3.4
+    use-intl: ^2.3.5
   peerDependencies:
     next: ^10.0.0 || ^11.0.0 || ^12.0.0
     react: ^16.8.0 || ^17.0.0
-  checksum: 2194d29fb95e297f28b20e940de77ac9f85d7d971c78852e5edb77a648a7a6d52960470648e1b53167df00c52805d67338ad5363c96bcbd1bc5ff9831e500c0d
+  checksum: 102e792544ceac38618713b3c0de14bac75728426ba2781464b2bb802e722dc00c9c2d650f3c0d496e0a891a9854335c6d1cb8ca9bdfb841c3642661b1698878
   languageName: node
   linkType: hard
 
@@ -8131,16 +8131,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.48.0":
-  version: 1.48.0
-  resolution: "sass@npm:1.48.0"
+"sass@npm:^1.49.0":
+  version: 1.49.0
+  resolution: "sass@npm:1.49.0"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 0fa57d17a9ac9eff914719a3c9cf986cb81c6714cc09214ace65e9f1af0bd47f750793dfc39bbd1b199c9b8c12b1e4aba669ba08dfbd649cfb581c55d20a839f
+  checksum: 7cd60868594fb0b6fed87bf4870ad5a7da7e3746cb5127f3ede2565380f3e30ba2de72d64e9083f2d55d0de81f756894fe6d9314c97acb704cf9fc97fbbafd0c
   languageName: node
   linkType: hard
 
@@ -8353,9 +8353,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slate-react@npm:^0.72.5":
-  version: 0.72.5
-  resolution: "slate-react@npm:0.72.5"
+"slate-react@npm:^0.72.6":
+  version: 0.72.6
+  resolution: "slate-react@npm:0.72.6"
   dependencies:
     "@types/is-hotkey": ^0.1.1
     "@types/lodash": ^4.14.149
@@ -8369,7 +8369,7 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
     slate: ">=0.65.3"
-  checksum: cb218734811fa865e89139cc974c0fdd3657c45c2a2f7510db442bf081a045769615081726bb67862a5085e07480fa419c59ee298ada8e34e4e03272cd5bc9d9
+  checksum: d75a34f54fcb9c2060df7318c95e1284f3c3de553121f3a865f0f784a3c1c80ee55cc3a30b3e6fc5c5a1f8a4a8fcd236a9bcfac6e9053ac93515b31eafb861e2
   languageName: node
   linkType: hard
 
@@ -9397,14 +9397,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-intl@npm:^2.3.4":
-  version: 2.3.4
-  resolution: "use-intl@npm:2.3.4"
+"use-intl@npm:^2.3.5":
+  version: 2.3.5
+  resolution: "use-intl@npm:2.3.5"
   dependencies:
     intl-messageformat: ^9.3.18
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
-  checksum: 4878660413e2bd8766417539062eeeff604f3ae87c77e5019a7df2f23cd107caede1006d8e9c51541c5dd4a9f012e4939a605645069bd7cacefab37733e6f1ad
+  checksum: 4daf695f2451c9252e7416e3c3e9501fe35f2cc3195ece63cc26574066068ba6d2cc4446a467803c919c339b64275a9a3f0a92f21331cfa8f2fe6f40977aba7b
   languageName: node
   linkType: hard
 

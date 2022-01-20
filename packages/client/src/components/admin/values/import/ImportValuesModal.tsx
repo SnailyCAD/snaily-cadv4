@@ -10,15 +10,14 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import { ValueType } from "types/prisma";
-import { useRouter } from "next/router";
 
 interface Props {
   type: ValueType;
+  onImport: (data: any[]) => void;
 }
 
-export function ImportValuesModal({ type }: Props) {
+export function ImportValuesModal({ onImport, type }: Props) {
   const [file, setFile] = React.useState<File | null>(null);
-  const router = useRouter();
 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -36,12 +35,15 @@ export function ImportValuesModal({ type }: Props) {
       fd.set("file", file, file.name);
     }
 
-    await execute(`/admin/values/import/${type.toLowerCase()}`, {
+    const { json } = await execute(`/admin/values/import/${type.toLowerCase()}`, {
       method: "POST",
       data: fd,
     });
 
-    router.replace({ pathname: router.pathname, query: router.query });
+    if (Array.isArray(json)) {
+      onImport(json);
+    }
+
     closeModal(ModalIds.ImportValues);
   }
 

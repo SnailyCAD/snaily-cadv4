@@ -57,7 +57,8 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    await handler?.(body);
+    const data = await handler?.(body);
+    return data ?? [];
   }
 
   private getTypeFromPath(path: string): ValueType {
@@ -67,14 +68,14 @@ export class ValuesController {
 
 // todo: use this in `ValuesController`
 const typeHandlers: Partial<
-  Record<ValueType | "GENERIC", (body: unknown, valueType?: ValueType) => Promise<void>>
+  Record<ValueType | "GENERIC", (body: unknown, valueType?: ValueType) => Promise<any[]>>
 > = {
   VEHICLE: async (body) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.vehicleValue.create({
+        return prisma.vehicleValue.create({
           data: {
             hash: item.hash,
             value: {
@@ -92,9 +93,9 @@ const typeHandlers: Partial<
   WEAPON: async (body) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.weaponValue.create({
+        return prisma.weaponValue.create({
           data: {
             hash: item.hash,
             value: {
@@ -112,9 +113,9 @@ const typeHandlers: Partial<
   BUSINESS_ROLE: async (body) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.employeeValue.create({
+        return prisma.employeeValue.create({
           data: {
             as: item.as as EmployeeAsEnum,
             value: {
@@ -125,6 +126,7 @@ const typeHandlers: Partial<
               },
             },
           },
+          include: { value: true },
         });
       }),
     );
@@ -132,9 +134,9 @@ const typeHandlers: Partial<
   DRIVERSLICENSE_CATEGORY: async (body) => {
     const data = validateSchema(DLC_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.driversLicenseCategoryValue.create({
+        return prisma.driversLicenseCategoryValue.create({
           data: {
             type: item.type as DriversLicenseCategoryType,
             value: {
@@ -145,6 +147,7 @@ const typeHandlers: Partial<
               },
             },
           },
+          include: { value: true },
         });
       }),
     );
@@ -152,9 +155,9 @@ const typeHandlers: Partial<
   DEPARTMENT: async (body) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.departmentValue.create({
+        return prisma.departmentValue.create({
           data: {
             type: item.type as DepartmentType,
             callsign: item.callsign,
@@ -166,6 +169,7 @@ const typeHandlers: Partial<
               },
             },
           },
+          include: { value: true },
         });
       }),
     );
@@ -173,9 +177,9 @@ const typeHandlers: Partial<
   CODES_10: async (body) => {
     const data = validateSchema(CODES_10_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.statusValue.create({
+        return prisma.statusValue.create({
           data: {
             type: item.type as StatusValueType,
             color: item.color,
@@ -188,6 +192,7 @@ const typeHandlers: Partial<
               },
             },
           },
+          include: { value: true },
         });
       }),
     );
@@ -203,9 +208,9 @@ const typeHandlers: Partial<
   GENERIC: async (body, type) => {
     const data = validateSchema(BASE_ARR, body);
 
-    await Promise.all(
+    return Promise.all(
       data.map(async (item) => {
-        await prisma.value.create({
+        return prisma.value.create({
           data: {
             isDefault: false,
             type: type!,
