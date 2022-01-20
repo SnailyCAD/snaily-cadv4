@@ -48,6 +48,8 @@
     "react-sortablejs": "^6.0.3",
     "react-table": "^7.7.0",
     "react-use": "^17.3.2",
+    "slate": "^0.72.3",
+    "slate-react": "^0.72.5",
     "socket.io-client": "^4.4.1",
     "sortablejs": "^1.14.0",
     "uuid": "^8.3.2",

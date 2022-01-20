@@ -3,7 +3,7 @@ import { classNames } from "lib/classNames";
 
 export type ButtonProps = JSX.IntrinsicElements["button"] & {
   small?: boolean;
-  variant?: keyof typeof variants;
+  variant?: keyof typeof variants | null;
 };
 
 const variants = {
@@ -23,7 +23,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className={classNames(
         "rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed",
         small ? "p-0.5 px-2" : "p-1 px-4",
-        variants[variant],
+        variant && variants[variant],
         className,
       )}
       {...rest}

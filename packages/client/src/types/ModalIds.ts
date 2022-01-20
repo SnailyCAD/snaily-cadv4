@@ -52,6 +52,8 @@ export const enum ModalIds {
 
   RequestExpungement = "RequestExpungementModal",
 
+  Description = "DescriptionModal",
+
   AlertDeleteCitizen = "alert_DeleteCitizenModal",
   AlertDeleteVehicle = "alert_DeleteVehicleModal",
   AlertDeleteWeapon = "alert_DeleteWeaponModal",
