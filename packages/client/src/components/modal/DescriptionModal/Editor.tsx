@@ -109,3 +109,17 @@ function Element({ attributes, children, element }: any) {
       return <p {...attributes}>{children}</p>;
   }
 }
+
+export function dataToSlate(
+  data: { description?: string | null; descriptionData?: JsonArray } | null | undefined,
+) {
+  if (Array.isArray(data?.descriptionData)) {
+    return data?.descriptionData as Descendant[];
+  }
+
+  if (typeof data?.description === "string") {
+    return [{ type: "paragraph", children: [{ text: data.description }] }] as Descendant[];
+  }
+
+  return DEFAULT_EDITOR_DATA;
+}

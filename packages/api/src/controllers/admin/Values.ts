@@ -8,7 +8,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
 
-type NameType = Exclude<
+export type NameType = Exclude<
   keyof PrismaClient,
   | "$use"
   | "$on"

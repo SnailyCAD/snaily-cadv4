@@ -23,7 +23,8 @@
       "lib/*": ["./src/lib/*"],
       "middlewares/*": ["./src/middlewares/*"],
       "services/*": ["./src/services/*"],
-      "controllers/*": ["./src/controllers/*"]
+      "controllers/*": ["./src/controllers/*"],
+      "migrations/*": ["./src/migrations/*"]
     }
   }
 }

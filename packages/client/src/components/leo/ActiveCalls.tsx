@@ -21,7 +21,10 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
+
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
 
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
@@ -33,7 +36,6 @@ export function ActiveCalls() {
 
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
-  const leo = useTranslations("Leo");
   const common = useTranslations("Common");
   const { user } = useAuth();
   const router = useRouter();
@@ -164,7 +166,7 @@ export function ActiveCalls() {
                               small
                               onClick={() => handleViewDescription(call)}
                             >
-                              {leo("viewDescription")}
+                              {common("viewDescription")}
                             </Button>
                           )}
                         </td>

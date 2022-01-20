@@ -22,7 +22,7 @@ import type { CombinedLeoUnit } from "types/prisma";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
-import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   call: Full911Call | null;
@@ -187,7 +187,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
     description: call?.description ?? "",
-    descriptionData: call?.descriptionData ?? DEFAULT_EDITOR_DATA,
+    descriptionData: dataToSlate(call),
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),

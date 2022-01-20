@@ -210,6 +210,7 @@ export type TowCall = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: JsonArray;
   creatorId: string;
 };
 
@@ -225,6 +226,7 @@ export type TaxiCall = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: JsonArray;
   creatorId: string;
 };
 

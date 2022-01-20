@@ -20,7 +20,6 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -37,6 +36,10 @@ const ManageIncidentModal = dynamic(async () => {
 const AlertModal = dynamic(async () => {
   return (await import("components/modal/AlertModal")).AlertModal;
 });
+
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
 
 export default function LeoIncidents({ officers, activeOfficer, incidents }: Props) {
   const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
@@ -151,7 +154,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                   incident.description
                 ) : (
                   <Button small onClick={() => handleViewDescription(incident)}>
-                    {t("viewDescription")}
+                    {common("viewDescription")}
                   </Button>
                 )}
               </span>

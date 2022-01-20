@@ -18,7 +18,7 @@ import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
 import { FullIncident } from "src/pages/officer/incidents";
-import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   incident?: FullIncident | null;
@@ -77,7 +77,7 @@ export function ManageIncidentModal({ onClose, incident }: Props) {
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
-    descriptionData: incident?.descriptionData ?? DEFAULT_EDITOR_DATA,
+    descriptionData: dataToSlate(incident),
     involvedOfficers:
       incident?.officersInvolved.map((v) => ({
         label: `${generateCallsign(v)} ${makeUnitName(v)}`,

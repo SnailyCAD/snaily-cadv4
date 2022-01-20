@@ -4,9 +4,9 @@ import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
-import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { AlertModal } from "components/modal/AlertModal";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
@@ -89,6 +89,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
     postal: call?.postal ?? "",
     creatorId: call?.creatorId ?? "",
     description: call?.description ?? "",
+    descriptionData: dataToSlate(call),
   };
 
   const validate = handleValidate(TOW_SCHEMA);
@@ -101,7 +102,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleSubmit, handleChange, values, isValid, errors }) => (
+        {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.creatorId} label={t("citizen")}>
               <Select
@@ -127,7 +128,10 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
             </FormRow>
 
             <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea name="description" onChange={handleChange} value={values.description} />
+              <Editor
+                value={values.descriptionData}
+                onChange={(v) => setFieldValue("descriptionData", v)}
+              />
             </FormField>
 
             <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>

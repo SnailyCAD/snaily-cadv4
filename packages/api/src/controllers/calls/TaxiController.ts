@@ -56,6 +56,7 @@ export class TowController {
         creatorId: data.creatorId,
         userId: ctx.get("user").id,
         description: data.description,
+        descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
       },
@@ -105,6 +106,7 @@ export class TowController {
       },
       data: {
         description: data.description,
+        descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
