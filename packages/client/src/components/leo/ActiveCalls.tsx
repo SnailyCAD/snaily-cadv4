@@ -22,6 +22,10 @@ import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
+
 const CallEventsModal = dynamic(
   async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
 );
@@ -95,6 +99,11 @@ export function ActiveCalls() {
     openModal(ModalIds.Manage911Call, call);
   }
 
+  function handleViewDescription(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.Description, call);
+  }
+
   function handleCallTow(call: Full911Call) {
     if (!TOW) return;
     setTempCall(call);
@@ -149,7 +158,17 @@ export function ActiveCalls() {
                         <td>{call.name}</td>
                         <td>{call.location}</td>
                         <td className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
-                          {call.description}
+                          {call.description && !call.descriptionData ? (
+                            call.description
+                          ) : (
+                            <Button
+                              disabled={isDispatch ? false : !unit}
+                              small
+                              onClick={() => handleViewDescription(call)}
+                            >
+                              {common("viewDescription")}
+                            </Button>
+                          )}
                         </td>
                         <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
                         <td>{call.postal || common("none")}</td>
@@ -209,6 +228,13 @@ export function ActiveCalls() {
       </div>
 
       <DispatchCallTowModal call={tempCall} />
+      {tempCall?.descriptionData ? (
+        <DescriptionModal
+          isReadonly
+          onClose={() => setTempCall(null)}
+          value={tempCall?.descriptionData}
+        />
+      ) : null}
 
       {isDispatch ? (
         <Manage911CallModal

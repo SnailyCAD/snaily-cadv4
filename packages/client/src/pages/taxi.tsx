@@ -23,6 +23,10 @@ const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
 );
 
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
+
 export type FullTaxiCall = TaxiCall & { assignedUnit: Citizen | null; creator: Citizen };
 
 interface Props {
@@ -58,6 +62,11 @@ export default function Taxi(props: Props) {
   function onCreateClick() {
     setTempCall(null);
     openModal(ModalIds.ManageTowCall);
+  }
+
+  function handleViewDescription(call: FullTaxiCall) {
+    setTempCall(call);
+    openModal(ModalIds.Description, call);
   }
 
   function assignClick(call: FullTaxiCall) {
@@ -114,7 +123,14 @@ export default function Taxi(props: Props) {
           data={calls.map((call) => ({
             location: call.location,
             postal: call.postal || common("none"),
-            description: call.description,
+            description:
+              call.description && !call.descriptionData ? (
+                call.description
+              ) : (
+                <Button small onClick={() => handleViewDescription(call)}>
+                  {common("viewDescription")}
+                </Button>
+              ),
             caller: `${call.creator.name} ${call.creator.surname}`,
             assignedUnit: assignedUnit(call),
             createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
@@ -143,6 +159,9 @@ export default function Taxi(props: Props) {
 
       <AssignToCallModal onSuccess={updateCalls} call={tempCall} />
       <ManageCallModal onDelete={handleCallEnd} onUpdate={updateCalls} call={tempCall} />
+      {tempCall?.descriptionData ? (
+        <DescriptionModal isReadonly value={tempCall?.descriptionData} />
+      ) : null}
     </Layout>
   );
 }

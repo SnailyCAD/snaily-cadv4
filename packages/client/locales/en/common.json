@@ -37,7 +37,8 @@
     "title": "Title",
     "image": "Image",
     "imgur": "Imgur URL",
-    "postal": "Postal"
+    "postal": "Postal",
+    "viewDescription": "View Description"
   },
   "Nav": {
     "citizen": "Citizen",

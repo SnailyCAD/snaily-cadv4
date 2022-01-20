@@ -67,6 +67,7 @@ export class Calls911Controller {
         location: data.location,
         postal: String(data.postal),
         description: data.description,
+        descriptionData: data.descriptionData,
         name: data.name,
         userId: ctx.get("user").id,
       },
@@ -147,6 +148,7 @@ export class Calls911Controller {
         name: data.name,
         userId: ctx.get("user").id,
         positionId: position?.id ?? call.positionId,
+        descriptionData: data.descriptionData,
       },
     });
 

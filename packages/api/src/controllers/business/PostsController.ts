@@ -39,6 +39,7 @@ export class BusinessPostsController {
     const post = await prisma.businessPost.create({
       data: {
         body: data.body,
+        bodyData: data.bodyData,
         title: data.title,
         businessId,
         employeeId: employee.id,
@@ -94,6 +95,7 @@ export class BusinessPostsController {
       },
       data: {
         body: data.body,
+        bodyData: data.bodyData,
         title: data.title,
       },
     });

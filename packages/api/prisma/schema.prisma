@@ -275,7 +275,8 @@ model PenalCode {
   createdAt              DateTime              @default(now())
   updatedAt              DateTime              @default(now()) @updatedAt
   title                  String                @db.VarChar(255)
-  description            String                @db.Text
+  description            String?               @db.Text
+  descriptionData        Json?
   warningApplicable      WarningApplicable?    @relation(fields: [warningApplicableId], references: [id])
   warningApplicableId    String?
   warningNotApplicable   WarningNotApplicable? @relation(fields: [warningNotApplicableId], references: [id])
@@ -414,7 +415,8 @@ model BleeterPost {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   title     String   @db.VarChar(255)
-  body      String   @db.Text
+  body      String?  @db.Text
+  bodyData  Json?
   imageId   String?  @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -433,7 +435,8 @@ model TowCall {
   deliveryAddressId String?
   plate             String?  @db.VarChar(255)
   model             String?  @db.VarChar(255)
-  description       String   @db.Text
+  description       String?  @db.Text
+  descriptionData   Json?
   creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId         String?
   ended             Boolean  @default(false)
@@ -444,18 +447,19 @@ model TowCall {
 
 // taxi
 model TaxiCall {
-  id             String   @id @default(uuid())
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  assignedUnit   Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
-  assignedUnitId String?
-  location       String   @db.VarChar(255)
-  postal         String?  @db.Text
-  description    String   @db.Text
-  creator        Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
-  creatorId      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now()) @updatedAt
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  assignedUnit    Citizen? @relation(fields: [assignedUnitId], references: [id], onDelete: SetNull)
+  assignedUnitId  String?
+  location        String   @db.VarChar(255)
+  postal          String?  @db.Text
+  description     String?  @db.Text
+  descriptionData Json?
+  creator         Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  creatorId       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
 }
 
 // businesses
@@ -505,7 +509,8 @@ model BusinessPost {
   businessId String
 
   title     String   @db.VarChar(255)
-  body      String   @db.Text
+  body      String?  @db.Text
+  bodyData  Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -598,7 +603,8 @@ model ImpoundedVehicle {
 model LeoIncident {
   id                   String    @id @default(uuid())
   caseNumber           Int       @default(autoincrement())
-  description          String    @db.Text
+  description          String?   @db.Text
+  descriptionData      Json?
   creator              Officer   @relation(fields: [creatorId], references: [id])
   creatorId            String
   officersInvolved     Officer[] @relation("involvedOfficers")
@@ -654,21 +660,22 @@ model ActiveDispatchers {
 
 // 911 calls & bolos
 model Call911 {
-  id            String         @id @default(cuid())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now()) @updatedAt
-  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  position      Position?      @relation(fields: [positionId], references: [id])
-  positionId    String?
-  userId        String
-  assignedUnits AssignedUnit[]
-  location      String         @db.Text
-  postal        String?        @db.Text
-  description   String         @db.Text
-  name          String         @db.VarChar(255)
-  ended         Boolean?       @default(false)
-  events        Call911Event[]
-  incidents     LeoIncident[]
+  id              String         @id @default(cuid())
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now()) @updatedAt
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  position        Position?      @relation(fields: [positionId], references: [id])
+  positionId      String?
+  userId          String
+  assignedUnits   AssignedUnit[]
+  location        String         @db.Text
+  postal          String?        @db.Text
+  description     String?        @db.Text
+  descriptionData Json?
+  name            String         @db.VarChar(255)
+  ended           Boolean?       @default(false)
+  events          Call911Event[]
+  incidents       LeoIncident[]
 }
 
 model Position {
@@ -706,7 +713,7 @@ model Bolo {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
   type        BoloType
-  description String   @db.Text
+  description String?  @db.Text
   plate       String?  @db.VarChar(255)
   model       String?  @db.VarChar(255)
   color       String?  @db.VarChar(255)

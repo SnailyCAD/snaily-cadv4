@@ -8,7 +8,6 @@ import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { BleeterPost } from "types/prisma";
 import { useTranslations } from "use-intl";
-import Markdown from "react-markdown";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
@@ -16,6 +15,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -83,7 +83,7 @@ export default function BleetPost({ post }: Props) {
             src={makeImageUrl("bleeter", post.imageId)}
           />
         ) : null}
-        <Markdown>{post.body}</Markdown>
+        <Editor isReadonly value={dataToSlate(post)} />
       </main>
 
       <ManageBleetModal post={post} />

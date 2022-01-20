@@ -17,7 +17,8 @@ export const JOIN_COMPANY_SCHEMA = z.object({
 export const CREATE_COMPANY_POST_SCHEMA = z.object({
   employeeId: z.string().min(2).max(255),
   title: z.string().min(2).max(255),
-  body: z.string().min(2),
+  body: z.string().optional().nullable(),
+  bodyData: z.any().optional().nullable(),
 });
 
 export const DELETE_COMPANY_POST_SCHEMA = z.object({

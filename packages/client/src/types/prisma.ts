@@ -5,6 +5,7 @@
 
 import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
+import { JsonArray } from "type-fest";
 
 export type cad = {
   id: string;
@@ -194,6 +195,7 @@ export type BleeterPost = {
   userId: string;
   title: string;
   body: string;
+  bodyData?: JsonArray;
   imageId: string | null;
 };
 
@@ -209,6 +211,7 @@ export type TowCall = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: JsonArray;
   creatorId: string;
 };
 
@@ -224,6 +227,7 @@ export type TaxiCall = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: JsonArray;
   creatorId: string;
 };
 
@@ -269,6 +273,7 @@ export type BusinessPost = {
   businessId: string;
   title: string;
   body: string;
+  bodyData?: JsonArray;
 };
 
 /**
@@ -344,6 +349,7 @@ export type Call911 = {
   location: string;
   postal: string | null;
   description: string;
+  descriptionData?: JsonArray;
   name: string;
   position: Position | null;
 };
@@ -384,6 +390,7 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string;
+  descriptionData?: JsonArray;
   warningApplicableId: string | null;
   warningApplicable: WarningApplicable | null;
   warningNotApplicableId: string | null;
@@ -629,6 +636,7 @@ export type LeoIncident = {
   id: string;
   caseNumber: number;
   description: string;
+  descriptionData?: JsonArray;
   creatorId: string;
   firearmsInvolved: boolean;
   injuriesOrFatalities: boolean;

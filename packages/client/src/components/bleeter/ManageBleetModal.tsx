@@ -12,10 +12,10 @@ import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { BleeterPost } from "types/prisma";
-import { Textarea } from "components/form/Textarea";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { CropImageModal } from "components/modal/CropImageModal";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   post: BleeterPost | null;
@@ -80,6 +80,7 @@ export function ManageBleetModal({ post }: Props) {
   const INITIAL_VALUES = {
     title: post?.title ?? "",
     body: post?.body ?? "",
+    bodyData: dataToSlate(post),
     image: null as unknown as File,
   };
 
@@ -120,12 +121,7 @@ export function ManageBleetModal({ post }: Props) {
             </FormField>
 
             <FormField errorMessage={errors.body} label={t("bleetBody")}>
-              <Textarea
-                name="body"
-                value={values.body}
-                onChange={handleChange}
-                className="min-h-[20em]"
-              />
+              <Editor value={values.bodyData} onChange={(v) => setFieldValue("bodyData", v)} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

@@ -122,6 +122,7 @@ export class TowController {
         creatorId: data.creatorId,
         userId: user.id,
         description: data.description,
+        descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         deliveryAddressId: data.deliveryAddress || null,
@@ -179,6 +180,7 @@ export class TowController {
       },
       data: {
         description: data.description,
+        descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,

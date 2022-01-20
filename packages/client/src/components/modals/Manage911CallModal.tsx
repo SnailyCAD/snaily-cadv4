@@ -6,7 +6,6 @@ import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
-import { Textarea } from "components/form/Textarea";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
@@ -23,6 +22,7 @@ import type { CombinedLeoUnit } from "types/prisma";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   call: Full911Call | null;
@@ -187,6 +187,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     location: call?.location ?? "",
     postal: call?.postal ?? "",
     description: call?.description ?? "",
+    descriptionData: dataToSlate(call),
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),
@@ -213,7 +214,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     >
       <div className="flex flex-col md:flex-row">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, values, errors }) => (
+          {({ handleChange, setFieldValue, values, errors }) => (
             <Form className="w-full">
               <FormField errorMessage={errors.name} label={common("name")}>
                 <Input name="name" value={values.name} onChange={handleChange} />
@@ -249,11 +250,9 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
               ) : null}
 
               <FormField errorMessage={errors.description} label={common("description")}>
-                <Textarea
-                  name="description"
-                  className="min-h-[5em]"
-                  value={values.description}
-                  onChange={handleChange}
+                <Editor
+                  value={values.descriptionData}
+                  onChange={(v) => setFieldValue("descriptionData", v)}
                 />
               </FormField>
 

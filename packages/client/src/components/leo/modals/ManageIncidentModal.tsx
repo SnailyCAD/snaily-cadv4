@@ -10,7 +10,6 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Textarea } from "components/form/Textarea";
 import { useDispatchState } from "state/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -19,12 +18,14 @@ import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
 import { FullIncident } from "src/pages/officer/incidents";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   incident?: FullIncident | null;
+  onClose?(): void;
 }
 
-export function ManageIncidentModal({ incident }: Props) {
+export function ManageIncidentModal({ onClose, incident }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -34,6 +35,11 @@ export function ManageIncidentModal({ incident }: Props) {
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
+
+  function handleClose() {
+    closeModal(ModalIds.ManageIncident);
+    onClose?.();
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const data = {
@@ -71,6 +77,7 @@ export function ManageIncidentModal({ incident }: Props) {
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
+    descriptionData: dataToSlate(incident),
     involvedOfficers:
       incident?.officersInvolved.map((v) => ({
         label: `${generateCallsign(v)} ${makeUnitName(v)}`,
@@ -84,12 +91,12 @@ export function ManageIncidentModal({ incident }: Props) {
   return (
     <Modal
       title={t("createIncident")}
-      onClose={() => closeModal(ModalIds.ManageIncident)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageIncident)}
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField
               errorMessage={errors.involvedOfficers as string}
@@ -135,15 +142,14 @@ export function ManageIncidentModal({ incident }: Props) {
             </FormRow>
 
             <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea value={values.description} name="description" onChange={handleChange} />
+              <Editor
+                value={values.descriptionData}
+                onChange={(v) => setFieldValue("descriptionData", v)}
+              />
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageIncident)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

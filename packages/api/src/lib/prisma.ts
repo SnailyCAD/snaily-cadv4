@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { divisionToDivisions } from "src/migrations/divisionToDivisions";
+import { divisionToDivisions } from "migrations/divisionToDivisions";
 
 export const prisma = new PrismaClient({ errorFormat: "pretty", log: ["info", "warn", "error"] });
 
