@@ -20,6 +20,11 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
+import dynamic from "next/dynamic";
+
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
 
 interface Props {
   data: (Full911Call & { incidents: LeoIncident[] })[];
@@ -52,6 +57,11 @@ export default function CallHistory({ data: calls, incidents }: Props) {
     if (json) {
       router.replace({ pathname: router.pathname, query: router.query });
     }
+  }
+
+  function handleViewDescription(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.Description, call);
   }
 
   function makeUnit(unit: AssignedUnit) {
@@ -106,11 +116,14 @@ export default function CallHistory({ data: calls, incidents }: Props) {
               caller: call.name,
               location: call.location,
               postal: call.postal,
-              description: (
-                <p className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
-                  {call.description}
-                </p>
-              ),
+              description:
+                call.description && !call.descriptionData ? (
+                  call.description
+                ) : (
+                  <Button small onClick={() => handleViewDescription(call)}>
+                    {common("viewDescription")}
+                  </Button>
+                ),
               assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
               caseNumbers: caseNumbers || common("none"),
               createdAt,
@@ -137,6 +150,10 @@ export default function CallHistory({ data: calls, incidents }: Props) {
       )}
 
       <LinkCallToIncidentModal incidents={incidents} call={tempCall} />
+
+      {tempCall?.descriptionData ? (
+        <DescriptionModal isReadonly value={tempCall?.descriptionData} />
+      ) : null}
     </Layout>
   );
 }

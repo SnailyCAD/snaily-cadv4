@@ -11,20 +11,35 @@ import { FullTowCall } from ".";
 import { Table } from "components/shared/Table";
 import format from "date-fns/format";
 import { Title } from "components/shared/Title";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
+import { Button } from "components/Button";
+import dynamic from "next/dynamic";
+
+const DescriptionModal = dynamic(
+  async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
+);
 
 interface Props {
   calls: FullTowCall[];
 }
 
 export default function TowLogs(props: Props) {
+  const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
   const [calls, setCalls] = React.useState<FullTowCall[]>(props.calls);
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
+  const { openModal } = useModal();
 
   useListener(SocketEvents.EndTowCall, handleCallEnd);
 
   function handleCallEnd(call: FullTowCall) {
     setCalls((p) => [call, ...p]);
+  }
+
+  function handleViewDescription(call: FullTowCall) {
+    setTempCall(call);
+    openModal(ModalIds.Description, call);
   }
 
   function assignedUnit(call: FullTowCall) {
@@ -56,7 +71,14 @@ export default function TowLogs(props: Props) {
           data={calls.map((call) => ({
             location: call.location,
             postal: call.postal || common("none"),
-            description: call.description,
+            description:
+              call.description && !call.descriptionData ? (
+                call.description
+              ) : (
+                <Button small onClick={() => handleViewDescription(call)}>
+                  {common("viewDescription")}
+                </Button>
+              ),
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
             createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
@@ -71,6 +93,10 @@ export default function TowLogs(props: Props) {
           ]}
         />
       )}
+
+      {tempCall?.descriptionData ? (
+        <DescriptionModal isReadonly value={tempCall?.descriptionData} />
+      ) : null}
     </Layout>
   );
 }
