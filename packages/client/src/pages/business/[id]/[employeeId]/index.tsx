@@ -2,7 +2,7 @@ import * as React from "react";
 import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
-import ReactMarkdown from "react-markdown";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
@@ -149,7 +149,7 @@ export default function BusinessId(props: Props) {
                   </header>
 
                   <main className="p-4 pt-0">
-                    <ReactMarkdown>{post.body}</ReactMarkdown>
+                    <Editor isReadonly value={dataToSlate(post)} />
                   </main>
 
                   {publishedBy ? (

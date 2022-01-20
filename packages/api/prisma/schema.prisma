@@ -415,7 +415,8 @@ model BleeterPost {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   title     String   @db.VarChar(255)
-  body      String   @db.Text
+  body      String?  @db.Text
+  bodyData  Json?
   imageId   String?  @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -508,7 +509,8 @@ model BusinessPost {
   businessId String
 
   title     String   @db.VarChar(255)
-  body      String   @db.Text
+  body      String?  @db.Text
+  bodyData  Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -668,7 +670,7 @@ model Call911 {
   assignedUnits   AssignedUnit[]
   location        String         @db.Text
   postal          String?        @db.Text
-  description     String?         @db.Text
+  description     String?        @db.Text
   descriptionData Json?
   name            String         @db.VarChar(255)
   ended           Boolean?       @default(false)
@@ -707,18 +709,17 @@ model Call911Event {
 }
 
 model Bolo {
-  id              String   @id @default(cuid())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now()) @updatedAt
-  type            BoloType
-  description     String?   @db.Text
-  descriptionData Json?
-  plate           String?  @db.VarChar(255)
-  model           String?  @db.VarChar(255)
-  color           String?  @db.VarChar(255)
-  name            String?  @db.VarChar(255)
-  officer         Officer? @relation("bolosToOfficer", fields: [officerId], references: [id])
-  officerId       String?
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+  type        BoloType
+  description String?  @db.Text
+  plate       String?  @db.VarChar(255)
+  model       String?  @db.VarChar(255)
+  color       String?  @db.VarChar(255)
+  name        String?  @db.VarChar(255)
+  officer     Officer? @relation("bolosToOfficer", fields: [officerId], references: [id])
+  officerId   String?
 }
 
 enum BoloType {

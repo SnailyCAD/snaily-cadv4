@@ -114,14 +114,24 @@ function Element({ attributes, children, element }: any) {
 }
 
 export function dataToSlate(
-  data: { description?: string | null; descriptionData?: JsonArray } | null | undefined,
+  data:
+    | {
+        description?: string | null;
+        body?: string | null;
+        descriptionData?: JsonArray;
+        bodyData?: JsonArray;
+      }
+    | null
+    | undefined,
 ) {
-  if (Array.isArray(data?.descriptionData)) {
-    return data?.descriptionData as Descendant[];
+  const descriptionData = data?.descriptionData ?? data?.bodyData;
+  if (Array.isArray(descriptionData)) {
+    return descriptionData as Descendant[];
   }
 
-  if (typeof data?.description === "string") {
-    return [{ type: "paragraph", children: [{ text: data.description }] }] as Descendant[];
+  const description = data?.description ?? data?.body;
+  if (typeof description === "string") {
+    return [{ type: "paragraph", children: [{ text: description }] }] as Descendant[];
   }
 
   return DEFAULT_EDITOR_DATA;

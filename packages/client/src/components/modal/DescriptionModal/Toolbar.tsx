@@ -1,5 +1,4 @@
-import { Button } from "components/Button";
-import { classNames } from "lib/classNames";
+import * as RToolbar from "@radix-ui/react-toolbar";
 import {
   Quote,
   TypeBold,
@@ -11,6 +10,8 @@ import {
 } from "react-bootstrap-icons";
 import { Editor, BaseEditor, Transforms, Element as SlateElement } from "slate";
 import { useSlate, ReactEditor } from "slate-react";
+import { Button } from "components/Button";
+import { classNames } from "lib/classNames";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
@@ -18,15 +19,31 @@ import { useSlate, ReactEditor } from "slate-react";
 
 export function Toolbar() {
   return (
-    <div className="flex gap-1 mb-5">
-      <MarkButton format="bold" icon={<TypeBold aria-label="bold" />} />
-      <MarkButton format="italic" icon={<TypeItalic aria-label="italic" />} />
-      <MarkButton format="underline" icon={<TypeUnderline aria-label="underline" />} />
-      <MarkButton format="strikethrough" icon={<TypeStrikethrough aria-label="strikethrough" />} />
-      <BlockButton format="heading-one" icon={<TypeH1 aria-label="heading-one" />} />
-      <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
-      <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
-    </div>
+    <RToolbar.Root className="flex gap-1 mb-5">
+      <RToolbar.ToolbarToggleGroup
+        className="flex gap-1"
+        type="multiple"
+        aria-label="Text formatting"
+      >
+        <MarkButton format="bold" icon={<TypeBold aria-label="bold" />} />
+        <MarkButton format="italic" icon={<TypeItalic aria-label="italic" />} />
+        <MarkButton format="underline" icon={<TypeUnderline aria-label="underline" />} />
+        <MarkButton
+          format="strikethrough"
+          icon={<TypeStrikethrough aria-label="strikethrough" />}
+        />
+      </RToolbar.ToolbarToggleGroup>
+      <RToolbar.Separator className="w-[1px] bg-neutral-400 dark:bg-gray-3 mx-1" />
+      <RToolbar.ToolbarToggleGroup
+        aria-label="Block formatting"
+        className="flex gap-1"
+        type="single"
+      >
+        <BlockButton format="heading-one" icon={<TypeH1 aria-label="heading-one" />} />
+        <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
+        <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
+      </RToolbar.ToolbarToggleGroup>
+    </RToolbar.Root>
   );
 }
 
@@ -40,16 +57,19 @@ function BlockButton({ format, icon }: ButtonProps) {
   const isActive = isBlockActive(editor, format);
 
   return (
-    <Button
-      type="button"
-      variant={isActive ? null : "default"}
-      className={classNames(isActive && "dark:bg-neutral-700")}
-      onClick={() => {
-        toggleBlock(editor, format);
-      }}
-    >
-      {icon}
-    </Button>
+    <RToolbar.ToolbarToggleItem asChild value={format}>
+      <Button
+        title={format}
+        type="button"
+        variant={isActive ? null : "default"}
+        className={classNames(isActive && "dark:bg-neutral-700")}
+        onClick={() => {
+          toggleBlock(editor, format);
+        }}
+      >
+        {icon}
+      </Button>
+    </RToolbar.ToolbarToggleItem>
   );
 }
 
@@ -58,16 +78,19 @@ const MarkButton = ({ format, icon }: ButtonProps) => {
   const isActive = isBlockActive(editor, format);
 
   return (
-    <Button
-      type="button"
-      variant={isActive ? null : "default"}
-      className={classNames(isActive && "dark:bg-neutral-700")}
-      onClick={() => {
-        toggleMark(editor, format);
-      }}
-    >
-      {icon}
-    </Button>
+    <RToolbar.ToolbarToggleItem asChild value={format}>
+      <Button
+        title={format}
+        type="button"
+        variant={isActive ? null : "default"}
+        className={classNames(isActive && "dark:bg-neutral-700")}
+        onClick={() => {
+          toggleMark(editor, format);
+        }}
+      >
+        {icon}
+      </Button>
+    </RToolbar.ToolbarToggleItem>
   );
 };
 

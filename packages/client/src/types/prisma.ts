@@ -195,6 +195,7 @@ export type BleeterPost = {
   userId: string;
   title: string;
   body: string;
+  bodyData?: JsonArray;
   imageId: string | null;
 };
 
@@ -272,6 +273,7 @@ export type BusinessPost = {
   businessId: string;
   title: string;
   body: string;
+  bodyData?: JsonArray;
 };
 
 /**

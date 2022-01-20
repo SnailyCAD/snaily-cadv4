@@ -1,7 +1,6 @@
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
-import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
@@ -13,6 +12,7 @@ import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import { BusinessPost } from "types/prisma";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
   onCreate: (post: BusinessPost) => void;
@@ -67,6 +67,7 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
   const INITIAL_VALUES = {
     title: post?.title ?? "",
     body: post?.body ?? "",
+    bodyData: dataToSlate(post),
     employeeId: currentEmployee.id,
   };
 
@@ -78,14 +79,14 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.title} label={t("postTitle")}>
               <Input name="title" onChange={handleChange} value={values.title} />
             </FormField>
 
             <FormField errorMessage={errors.body} label={t("postBody")}>
-              <Textarea name="body" onChange={handleChange} value={values.body} />
+              <Editor value={values.bodyData} onChange={(v) => setFieldValue("bodyData", v)} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

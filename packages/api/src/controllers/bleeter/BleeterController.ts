@@ -59,6 +59,7 @@ export class BleeterController {
       data: {
         title: data.title,
         body: data.body,
+        bodyData: data.bodyData,
         userId: ctx.get("user").id,
       },
     });
@@ -91,6 +92,7 @@ export class BleeterController {
       data: {
         title: data.title,
         body: data.body,
+        bodyData: data.bodyData,
       },
     });
 
