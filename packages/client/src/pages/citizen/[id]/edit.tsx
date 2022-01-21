@@ -22,18 +22,28 @@ export default function EditCitizen() {
     return null;
   }
 
-  async function onSubmit({ formData, data }: { formData?: FormData; data: any }) {
+  async function onSubmit({
+    formData,
+    data,
+    helpers,
+  }: {
+    formData?: FormData;
+    data: any;
+    helpers: any;
+  }) {
     if (!citizen) return;
 
     const { json } = await execute(`/citizen/${citizen.id}`, {
       method: "PUT",
       data,
+      helpers,
     });
 
     if (formData) {
       await execute(`/citizen/${citizen.id}`, {
         method: "POST",
         data: formData,
+        helpers,
       });
     }
 

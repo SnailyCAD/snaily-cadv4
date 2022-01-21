@@ -3,11 +3,12 @@ import { Feature } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { Delete, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { generateString } from "utils/generateString";
 
 @Controller("/vehicles")
@@ -35,7 +36,7 @@ export class VehiclesController {
     });
 
     if (existing) {
-      throw new BadRequest("plateAlreadyInUse");
+      throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
     }
 
     const cad = ctx.get("cad") as {
@@ -44,7 +45,7 @@ export class VehiclesController {
     } | null;
     const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
     if (data.plate.length > plateLength) {
-      throw new BadRequest("plateToLong");
+      throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
 
     const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);

@@ -16,9 +16,18 @@ export default function CreateCitizen() {
   const router = useRouter();
   const t = useTranslations("Citizen");
 
-  async function onSubmit({ formData, data }: { formData?: FormData; data: any }) {
+  async function onSubmit({
+    formData,
+    data,
+    helpers,
+  }: {
+    formData?: FormData;
+    data: any;
+    helpers: any;
+  }) {
     const { json } = await execute("/citizen", {
       method: "POST",
+      helpers,
       data: {
         ...data,
         driversLicenseCategory: Array.isArray(data.driversLicenseCategory)
@@ -35,6 +44,7 @@ export default function CreateCitizen() {
         await execute(`/citizen/${json.id}`, {
           method: "POST",
           data: formData,
+          helpers,
         });
       }
 

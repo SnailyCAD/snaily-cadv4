@@ -1,5 +1,5 @@
-import { BadRequest } from "@tsed/exceptions";
 import { IMGUR_REGEX } from "@snailycad/config";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export function validateImgurURL(image: unknown) {
   if (!image) return undefined;
@@ -9,11 +9,11 @@ export function validateImgurURL(image: unknown) {
   }
 
   if (typeof image !== "string") {
-    throw new BadRequest("invalidImageURL");
+    throw new ExtendedBadRequest({ image: "invalidImageURL" });
   }
 
   if (!image.match(IMGUR_REGEX)) {
-    throw new BadRequest("invalidImageURL");
+    throw new ExtendedBadRequest({ image: "invalidImageURL" });
   }
 
   return image;

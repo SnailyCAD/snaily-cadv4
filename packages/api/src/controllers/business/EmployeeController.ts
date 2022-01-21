@@ -4,11 +4,12 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
@@ -63,7 +64,7 @@ export class BusinessEmployeeController {
     });
 
     if (!role || role.as === EmployeeAsEnum.OWNER) {
-      throw new BadRequest("cannotSetRoleToOwner");
+      throw new ExtendedBadRequest({ role: "cannotSetRoleToOwner" });
     }
 
     const updated = await prisma.employee.update({

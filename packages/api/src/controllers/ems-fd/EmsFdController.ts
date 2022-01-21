@@ -13,6 +13,7 @@ import fs from "node:fs";
 import { unitProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -49,7 +50,7 @@ export class EmsFdController {
     });
 
     if (!division) {
-      throw new BadRequest("divisionNotInDepartment");
+      throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
     const citizen = await prisma.citizen.findFirst({
@@ -107,7 +108,7 @@ export class EmsFdController {
     });
 
     if (!division) {
-      throw new BadRequest("divisionNotInDepartment");
+      throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
     const citizen = await prisma.citizen.findFirst({

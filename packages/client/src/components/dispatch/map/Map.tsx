@@ -28,7 +28,7 @@ import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
 import { ActiveMapCalls } from "./ActiveMapCalls";
 import { Full911Call } from "state/dispatchState";
-import toast from "react-hot-toast";
+import { toastError } from "lib/error";
 
 /* most code in this file is from TGRHavoc/live_map-interface, special thanks to him for making this! */
 
@@ -94,14 +94,16 @@ class MapClass extends Component<Props, MapState> {
 
     const live_map_url = this.props.cad?.miscCadSettings?.liveMapURL;
     if (!live_map_url) {
-      toast.error("There was no live_map_url provided from the CAD-Settings.", {
+      toastError({
         duration: Infinity,
+        message: "There was no live_map_url provided from the CAD-Settings.",
       });
       return;
     }
     if (!live_map_url.startsWith("ws")) {
-      toast.error("The live_map_url did not start with ws. Make sure it is a WebSocket protocol", {
+      toastError({
         duration: Infinity,
+        message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
       });
 
       return;
@@ -110,7 +112,7 @@ class MapClass extends Component<Props, MapState> {
     const socket = new WebSocket(live_map_url);
 
     socket.addEventListener("error", (e) => {
-      toast.error("An error occurred when trying to connect to the live_map");
+      toastError({ message: "An error occurred when trying to connect to the live_map" });
       console.error("LIVE_MAP", `${JSON.stringify(e)}`);
     });
 

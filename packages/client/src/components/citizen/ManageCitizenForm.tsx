@@ -21,7 +21,11 @@ interface Props {
   citizen: Citizen | null;
   state: "error" | "loading" | null;
   showLicenseFields?: boolean;
-  onSubmit(arg0: { data: any; formData?: FormData }): void | Promise<void>;
+  onSubmit(arg0: {
+    data: any;
+    formData?: FormData;
+    helpers: FormikHelpers<any>;
+  }): void | Promise<void>;
 }
 
 export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields }: Props) {
@@ -80,7 +84,7 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
       }
     }
 
-    return onSubmit({ data, formData: fd });
+    return onSubmit({ data, formData: fd, helpers });
   }
 
   return (
