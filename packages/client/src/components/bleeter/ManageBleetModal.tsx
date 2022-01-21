@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { useRouter } from "next/router";
 
@@ -33,13 +33,17 @@ export function ManageBleetModal({ post }: Props) {
     closeModal(ModalIds.CropImageModal);
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     let json: any = {};
 
     if (post) {
       const data = await execute(`/bleeter/${post.id}`, {
         method: "PUT",
         data: values,
+        helpers,
       });
 
       json = data.json;
@@ -47,6 +51,7 @@ export function ManageBleetModal({ post }: Props) {
       const data = await execute("/bleeter", {
         method: "POST",
         data: values,
+        helpers,
       });
 
       json = data.json;
@@ -62,6 +67,7 @@ export function ManageBleetModal({ post }: Props) {
         await execute(`/bleeter/${json.id}`, {
           method: "POST",
           data: fd,
+          helpers,
         });
       }
     }

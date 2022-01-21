@@ -1,13 +1,14 @@
 import { Controller, UseBeforeEach, BodyParams } from "@tsed/common";
 import { Delete, Get } from "@tsed/schema";
 import { PathParams } from "@tsed/platform-params";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { leoProperties } from "lib/officer";
 import { ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 const citizenInclude = {
   Record: {
@@ -65,7 +66,7 @@ export class LeoController {
     }
 
     if (!citizen.arrested) {
-      throw new BadRequest("citizenNotArrested");
+      throw new ExtendedBadRequest({ releasedBy: "citizenNotArrested" });
     }
 
     const type = data.type as ReleaseType;

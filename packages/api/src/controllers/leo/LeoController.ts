@@ -22,6 +22,7 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import { DivisionValue, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -233,7 +234,7 @@ export class LeoController {
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new BadRequest("invalidImageType");
+      throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
     // "image/png" -> "png"
@@ -439,6 +440,6 @@ export async function validateMaxDivisionsPerOfficer(
   const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};
 
   if (maxDivisionsPerOfficer && arr.length > maxDivisionsPerOfficer) {
-    throw new BadRequest("maxDivisionsReached");
+    throw new ExtendedBadRequest({ divisions: "maxDivisionsReached" });
   }
 }

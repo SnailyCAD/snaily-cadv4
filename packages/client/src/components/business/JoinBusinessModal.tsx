@@ -13,7 +13,7 @@ import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
 import { FullBusiness, useBusinessState } from "state/businessState";
-import toast from "react-hot-toast";
+import { toastError } from "lib/error";
 
 interface Props {
   onCreate: (business: FullBusiness) => void;
@@ -45,9 +45,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
       if (!json.business.whitelisted) {
         router.push(`/business/${json.businessId}/${json.id}`);
       } else {
-        toast.error(t("businessIsWhitelisted"), {
-          icon: null,
-        });
+        toastError({ icon: null, message: t("businessIsWhitelisted") });
       }
     }
   }

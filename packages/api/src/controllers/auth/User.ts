@@ -7,11 +7,12 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
 import { User } from ".prisma/client";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -32,7 +33,7 @@ export class AccountController {
     });
 
     if (existing && user.username !== username) {
-      throw new BadRequest("userAlreadyExists");
+      throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
     const updated = await prisma.user.update({
@@ -97,13 +98,13 @@ export class AccountController {
 
     const { currentPassword, newPassword, confirmPassword } = data;
     if (confirmPassword !== newPassword) {
-      throw new BadRequest("passwordsDoNotMatch");
+      throw new ExtendedBadRequest({ confirmPassword: "passwordsDoNotMatch" });
     }
 
     const userPassword = u.tempPassword ?? u.password;
     const isCurrentPasswordCorrect = compareSync(currentPassword, userPassword);
     if (!isCurrentPasswordCorrect) {
-      throw new BadRequest("currentPasswordIncorrect");
+      throw new ExtendedBadRequest({ currentPassword: "currentPasswordIncorrect" });
     }
 
     const salt = genSaltSync();

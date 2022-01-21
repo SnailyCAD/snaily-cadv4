@@ -11,9 +11,9 @@ import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import toast from "react-hot-toast";
 import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
+import { toastError } from "lib/error";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -42,7 +42,7 @@ export default function Account() {
 
   React.useEffect(() => {
     if (error && mounted) {
-      toast.error(error);
+      toastError({ message: error });
     }
   }, [error, mounted]);
 

@@ -60,6 +60,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       const { json } = await execute(`/ems-fd/${deputy.id}`, {
         method: "PUT",
         data: values,
+        helpers,
       });
 
       deputyId = deputy.id;
@@ -71,6 +72,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       const { json } = await execute("/ems-fd", {
         method: "POST",
         data: values,
+        helpers,
       });
 
       deputyId = json.id;
@@ -84,6 +86,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       await execute(`/ems-fd/image/${deputyId}`, {
         method: "POST",
         data: fd,
+        helpers,
       });
     }
 

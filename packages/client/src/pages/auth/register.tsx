@@ -46,6 +46,7 @@ export default function Register({ cad }: Props) {
     const { json } = await execute("/auth/register", {
       data: values,
       method: "POST",
+      helpers,
     });
 
     if (process.env.IFRAME_SUPPORT_ENABLED === "true" && json.session) {

@@ -2,7 +2,7 @@ import process from "node:process";
 import { User, WhitelistStatus, Rank } from ".prisma/client";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { setCookie } from "utils/setCookie";
 import { signJWT } from "utils/jwt";
@@ -10,6 +10,8 @@ import { Cookie } from "@snailycad/config";
 import { findOrCreateCAD } from "lib/cad";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -28,7 +30,7 @@ export class AuthController {
     });
 
     if (!user) {
-      throw new NotFound("userNotFound");
+      throw new ExtendedNotFound({ username: "userNotFound" });
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {
@@ -46,7 +48,7 @@ export class AuthController {
     const userPassword = user.tempPassword ?? user.password;
     const isPasswordCorrect = compareSync(data.password, userPassword);
     if (!isPasswordCorrect) {
-      throw new BadRequest("passwordIncorrect");
+      throw new ExtendedBadRequest({ password: "passwordIncorrect" });
     }
 
     const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
@@ -79,14 +81,14 @@ export class AuthController {
     });
 
     if (existing) {
-      throw new BadRequest("userAlreadyExists");
+      throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
     const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
     if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
-        throw new BadRequest("invalidRegistrationCode");
+        throw new ExtendedBadRequest({ registrationCode: "invalidRegistrationCode" });
       }
     }
 

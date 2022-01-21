@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { AppProps } from "next/app";
 import "cropperjs/dist/cropper.css";
 import { SSRProvider } from "@react-aria/ssr";
@@ -10,13 +11,6 @@ import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { findUrl } from "lib/fetch";
-
-const styles: React.CSSProperties = {
-  minWidth: "20em",
-  fontSize: "1.1rem",
-  padding: "0.5em 0.5em",
-  fontWeight: 600,
-};
 
 export default function App({ Component, router, pageProps }: AppProps) {
   const { hostname, protocol, port } = new URL(findUrl());
@@ -41,12 +35,7 @@ export default function App({ Component, router, pageProps }: AppProps) {
               <ValuesProvider initialData={pageProps}>
                 <CitizenProvider initialData={pageProps}>
                   <Component {...pageProps} />
-                  <Toaster
-                    position="top-right"
-                    toastOptions={{
-                      style: styles,
-                    }}
-                  />
+                  <Toaster position="top-right" />
                 </CitizenProvider>
               </ValuesProvider>
             </ModalProvider>

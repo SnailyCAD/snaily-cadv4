@@ -1,4 +1,4 @@
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
@@ -40,13 +40,17 @@ export default function Login() {
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
   const validate = handleValidate(AUTH_SCHEMA);
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const { json } = await execute("/auth/login", {
       data: values,
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
+      helpers,
     });
 
     if (json.hasTempPassword) {

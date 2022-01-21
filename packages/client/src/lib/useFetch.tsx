@@ -2,9 +2,10 @@
 import * as React from "react";
 import { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
-import toast from "react-hot-toast";
 import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
+import { FormikHelpers } from "formik";
+import { toastError } from "./error";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -14,7 +15,11 @@ type NullableAbortController = AbortController | null;
 type State = "loading" | "error";
 export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
-type Options = AxiosRequestConfig & { noToast?: boolean };
+type Options<Helpers extends object = object> = AxiosRequestConfig & {
+  noToast?: boolean;
+  helpers?: FormikHelpers<Helpers>;
+};
+
 type Return<Data> = {
   json: Data;
   error: null | ErrorMessage | (string & {});
@@ -30,7 +35,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
     setState(overwriteState);
   }, [overwriteState]);
 
-  async function execute<Data = any>(path: string, options: Options): Promise<Return<Data>> {
+  async function execute<Data = any, Helpers extends object = object>(
+    path: string,
+    options: Options<Helpers>,
+  ): Promise<Return<Data>> {
     setState("loading");
     abortControllerRef.current = new AbortController();
 
@@ -41,23 +49,40 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       return e;
     });
 
-    const error = response instanceof Error ? parseError(response as AxiosError) : null;
+    const error = isAxiosError(response) ? parseError(response) : null;
 
     if (error) {
-      const hasKey = Object.keys(Common.Errors).some((e) => e === error);
+      const errors = parseErrors(response);
+      const errorTitle = parseErrorTitle(response);
+
+      const hasKey = isErrorKey(error);
       const key = hasKey ? error : "unknown";
       const errorObj = getErrorObj(response);
-      console.error({ DEBUG: JSON.stringify(errorObj, null, 2) });
 
-      if (!options.noToast) {
-        toast.error(t(key));
+      console.error(JSON.stringify({ DEBUG: errorObj }, null, 2));
+
+      let hasAddedError = false;
+      for (const error of errors) {
+        Object.entries(error).map(([key, value]) => {
+          const hasKey = isErrorKey(value);
+
+          if (hasKey && options.helpers) {
+            options.helpers.setFieldError(key, t(value));
+            hasAddedError = true;
+          }
+        });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!options.noToast && !hasAddedError) {
+        toastError({ message: t(key), title: errorTitle });
       }
 
       setState("error");
 
       return {
         json: {} as Data,
-        error: response instanceof Error ? parseError(response as AxiosError) : null,
+        error: isAxiosError(response) ? parseError(response) : null,
       };
     }
 
@@ -82,6 +107,24 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
 function parseError(error: AxiosError): ErrorMessage | "unknown" {
   return error.response?.data?.message ?? "unknown";
+}
+
+function parseErrors(error: AxiosError): Record<string, ErrorMessage>[] {
+  return error.response?.data?.errors ?? [];
+}
+
+function parseErrorTitle(error: AxiosError) {
+  const name = error.response?.data?.name as string | undefined;
+  if (!name) return;
+  return name.toLowerCase().replace(/_/g, " ");
+}
+
+function isAxiosError(error: unknown): error is AxiosError {
+  return error instanceof Error;
+}
+
+function isErrorKey(key: string): key is ErrorMessage {
+  return Object.keys(Common.Errors).some((e) => e === key);
 }
 
 function getErrorObj(error: unknown) {

@@ -57,6 +57,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     let officerId;
     const data = {
       ...values,
+      helpers,
       divisions: values.divisions.map((v) => v.value),
     };
     if (officer) {
@@ -87,6 +88,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       await execute(`/leo/image/${officerId}`, {
         method: "POST",
         data: fd,
+        helpers,
       });
     }
 

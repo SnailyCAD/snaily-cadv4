@@ -14,6 +14,7 @@ import { leoProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 import { Citizen, DriversLicenseCategoryValue } from "@prisma/client";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export const citizenInclude = {
   vehicles: {
@@ -165,7 +166,7 @@ export class CitizenController {
       });
 
       if (existing) {
-        throw new BadRequest("nameAlreadyTaken");
+        throw new ExtendedBadRequest({ name: "nameAlreadyTaken" });
       }
     }
 
@@ -173,7 +174,7 @@ export class CitizenController {
     const now = Date.now();
 
     if (date > now) {
-      throw new BadRequest("dateLargerThanNow");
+      throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
     }
 
     const citizen = await prisma.citizen.create({
@@ -253,7 +254,7 @@ export class CitizenController {
     const now = Date.now();
 
     if (date > now) {
-      throw new BadRequest("dateLargerThanNow");
+      throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
     }
 
     const updated = await prisma.citizen.update({
@@ -303,7 +304,7 @@ export class CitizenController {
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new BadRequest("invalidImageType");
+      throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
     // "image/png" -> "png"

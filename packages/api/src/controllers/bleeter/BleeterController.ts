@@ -13,11 +13,12 @@ import {
   PlatformMulterFile,
   MultipartFile,
 } from "@tsed/common";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { Delete, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -116,7 +117,7 @@ export class BleeterController {
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
-      throw new BadRequest("invalidImageType");
+      throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
     // "image/png" -> "png"
