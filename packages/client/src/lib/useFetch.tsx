@@ -61,7 +61,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
       console.error(JSON.stringify({ DEBUG: errorObj }, null, 2));
 
-      let hasAddedError = false;
+      let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
       for (const error of errors) {
         Object.entries(error).map(([key, value]) => {
           const hasKey = isErrorKey(value);
@@ -73,7 +73,6 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
         });
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!options.noToast && !hasAddedError) {
         toastError({ message: t(key), title: errorTitle });
       }
@@ -105,8 +104,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   return { execute, state };
 }
 
-function parseError(error: AxiosError): ErrorMessage | "unknown" {
-  return error.response?.data?.message ?? "unknown";
+function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {}) {
+  const message = error.response?.data?.message ?? error.message;
+  return message ?? "unknown";
 }
 
 function parseErrors(error: AxiosError): Record<string, ErrorMessage>[] {
@@ -114,8 +114,9 @@ function parseErrors(error: AxiosError): Record<string, ErrorMessage>[] {
 }
 
 function parseErrorTitle(error: AxiosError) {
-  const name = error.response?.data?.name as string | undefined;
+  const name = (error.response?.data?.name ?? error.message) as string | undefined;
   if (!name) return;
+
   return name.toLowerCase().replace(/_/g, " ");
 }
 

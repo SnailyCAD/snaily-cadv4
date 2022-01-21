@@ -102,6 +102,7 @@
     "recordOrWarrantAlreadyLinked": "A record or a warrant has already been requested. PLease remove the already requested record/warrant.",
     "businessIsPending": "This business is still awaiting approval to be used. Try again later",
     "businessCreatedButPending": "The business has been created successfully but is still awaiting approval to be used. It must be approved by an administrator.",
-    "maxDivisionsReached": "This officer reached the maximum limit of divisions per officer."
+    "maxDivisionsReached": "This officer reached the maximum limit of divisions per officer.",
+    "Network Error": "Could not reach the API due to a network error. Make sure that the API is online and that you are connected to the internet."
   }
 }

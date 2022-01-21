@@ -23,8 +23,6 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, 
   />
 ));
 
-Input.displayName = "__Input__";
-
 export function PasswordInput(props: Omit<Props, "type" | "ref">) {
   const [type, setType] = React.useState("password");
   const ref = React.useRef<HTMLInputElement>(null);
@@ -51,3 +49,6 @@ export function PasswordInput(props: Omit<Props, "type" | "ref">) {
     </div>
   );
 }
+
+PasswordInput.displayName = "__Input__";
+Input.displayName = "__Input__";
