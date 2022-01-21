@@ -13,6 +13,7 @@ import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/validateSchema";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -64,7 +65,7 @@ export class ManageUsersController {
     }
 
     if (user.rank === Rank.OWNER && data.rank !== Rank.OWNER) {
-      throw new BadRequest("cannotUpdateOwnerRank");
+      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerRank" });
     }
 
     const updated = await prisma.user.update({
