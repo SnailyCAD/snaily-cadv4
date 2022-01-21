@@ -97,14 +97,28 @@ export class AccountController {
     }
 
     const { currentPassword, newPassword, confirmPassword } = data;
+    const usesDiscordOAuth = u.discordId && !u.password.trim();
+
     if (confirmPassword !== newPassword) {
       throw new ExtendedBadRequest({ confirmPassword: "passwordsDoNotMatch" });
     }
 
-    const userPassword = u.tempPassword ?? u.password;
-    const isCurrentPasswordCorrect = compareSync(currentPassword, userPassword);
-    if (!isCurrentPasswordCorrect) {
-      throw new ExtendedBadRequest({ currentPassword: "currentPasswordIncorrect" });
+    /**
+     * if the user is authenticated via Discord Oauth,
+     * their model is created with an empty password. Therefore the user cannot login
+     * if the user wants to enable password login, they can do so by providing a new-password
+     * without entering the `currentPassword`.
+     */
+    if (!usesDiscordOAuth && currentPassword) {
+      const userPassword = u.tempPassword ?? u.password;
+      const isCurrentPasswordCorrect = compareSync(currentPassword, userPassword);
+      if (!isCurrentPasswordCorrect) {
+        throw new ExtendedBadRequest({ currentPassword: "currentPasswordIncorrect" });
+      }
+    } else {
+      if (!usesDiscordOAuth && !currentPassword) {
+        throw new ExtendedBadRequest({ currentPassword: "Should be at least 8 characters" });
+      }
     }
 
     const salt = genSaltSync();

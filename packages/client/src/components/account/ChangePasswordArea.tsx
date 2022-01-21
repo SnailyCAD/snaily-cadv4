@@ -24,7 +24,7 @@ export function ChangePasswordArea() {
 
     const { json } = await execute("/user/password", {
       method: "POST",
-      data: values,
+      data: { ...values, currentPassword: values.currentPassword || null },
       helpers,
     });
 
@@ -54,7 +54,7 @@ export function ChangePasswordArea() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.currentPassword} label={t("newPassword")}>
+            <FormField errorMessage={errors.newPassword} label={t("newPassword")}>
               <PasswordInput
                 value={values.newPassword}
                 onChange={handleChange}

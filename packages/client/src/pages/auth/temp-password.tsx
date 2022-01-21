@@ -69,7 +69,9 @@ export default function TempPassword() {
                 {t("changePassword")}
               </h1>
 
-              <p className="my-3 text-base italic">{t("savePasswordInfo")}</p>
+              <p className="my-3 text-base text-gray-800 dark:text-white italic">
+                {t("savePasswordInfo")}
+              </p>
 
               <FormField errorMessage={errors.newPassword} label={t("password")}>
                 <PasswordInput name="newPassword" onChange={handleChange} />

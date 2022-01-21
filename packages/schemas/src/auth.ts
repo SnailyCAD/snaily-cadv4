@@ -11,7 +11,9 @@ export const AUTH_SCHEMA = z.object({
 });
 
 export const CHANGE_PASSWORD_SCHEMA = z.object({
-  currentPassword: z.string().min(8).max(255),
+  // when using Discord Oauth, the password is set to an empty string; allow nullable to be sent.
+  // gets double validated in the API.
+  currentPassword: z.string().max(255).nullable(),
   newPassword: z.string().min(8).max(255),
   confirmPassword: z.string().min(8).max(255),
 });

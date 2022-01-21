@@ -64,10 +64,10 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
       for (const error of errors) {
         Object.entries(error).map(([key, value]) => {
-          const hasKey = isErrorKey(value);
+          const message = isErrorKey(value) ? t(value) : value;
 
-          if (hasKey && options.helpers) {
-            options.helpers.setFieldError(key, t(value));
+          if (message && options.helpers) {
+            options.helpers.setFieldError(key, message);
             hasAddedError = true;
           }
         });
