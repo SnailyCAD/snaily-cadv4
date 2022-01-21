@@ -111,7 +111,11 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
           <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
             <Input
               type="date"
-              value={new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)}
+              value={
+                isDate(values.dateOfBirth)
+                  ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
+                  : String(values.dateOfBirth)
+              }
               onChange={(e) =>
                 handleChange({
                   ...e,
@@ -301,4 +305,15 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
       )}
     </Formik>
   );
+}
+
+function isDate(value: string | null | Date) {
+  if (!value) return false;
+
+  try {
+    const date = new Date(value);
+    return !!date;
+  } catch {
+    return false;
+  }
 }
