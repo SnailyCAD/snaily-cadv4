@@ -64,7 +64,6 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       let hasAddedError = false;
       for (const error of errors) {
         Object.entries(error).map(([key, value]) => {
-          // todo: make function to check if hasKey
           const hasKey = isErrorKey(value);
 
           if (hasKey && options.helpers) {
@@ -76,8 +75,6 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!options.noToast && !hasAddedError) {
-        console.log("here");
-
         toastError({ message: t(key), title: errorTitle });
       }
 
