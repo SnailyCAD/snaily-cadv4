@@ -152,7 +152,11 @@ export default function CallHistory({ data: calls, incidents }: Props) {
       <LinkCallToIncidentModal incidents={incidents} call={tempCall} />
 
       {tempCall?.descriptionData ? (
-        <DescriptionModal isReadonly value={tempCall?.descriptionData} />
+        <DescriptionModal
+          onClose={() => setTempCall(null)}
+          isReadonly
+          value={tempCall?.descriptionData}
+        />
       ) : null}
     </Layout>
   );
