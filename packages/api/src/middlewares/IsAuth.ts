@@ -57,6 +57,18 @@ export class IsAuth implements MiddlewareMethods {
       if (isDisabled) {
         throw new BadRequest("routeIsDisabled");
       }
+
+      const fakeUser = {
+        isDispatch: true,
+        isLeo: true,
+        isEmsFd: true,
+        rank: "API_TOKEN",
+        isTow: true,
+        isSupervisor: true,
+        username: "Dispatch",
+        whitelistStatus: "ACCEPTED",
+      };
+      ctx.set("user", fakeUser);
     } else {
       user = await getSessionUser(req, true);
       ctx.set("user", user);
