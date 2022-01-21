@@ -15,8 +15,8 @@ import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import { FullEmployee } from "state/businessState";
-import toast from "react-hot-toast";
 import { FormRow } from "components/form/FormRow";
+import { toastError } from "lib/error";
 
 interface Props {
   onCreate?(business: FullEmployee): void;
@@ -43,7 +43,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
 
     if (json.id) {
       if (json.business.status === "PENDING") {
-        toast.error(error("businessCreatedButPending"));
+        toastError({ icon: null, message: error("businessCreatedButPending") });
       } else {
         router.push(`/business/${json.id}/${json.employee?.id}`);
       }

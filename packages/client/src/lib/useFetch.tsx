@@ -76,6 +76,8 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!options.noToast && !hasAddedError) {
+        console.log("here");
+
         toastError({ message: t(key), title: errorTitle });
       }
 

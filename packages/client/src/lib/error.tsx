@@ -1,19 +1,15 @@
 import { X } from "react-bootstrap-icons";
-import toast, { DefaultToastOptions, ErrorIcon } from "react-hot-toast";
+import toast, { type ToastOptions, ErrorIcon } from "react-hot-toast";
 
-interface MessageOptions {
+interface Options extends ToastOptions {
   message: string;
   title?: string;
 }
 
-export function toastError(
-  message: string | MessageOptions,
-  options?: DefaultToastOptions["error"],
-) {
-  return toast.custom((t) => {
-    const ms = typeof message === "string" ? message : message.message;
-    const title = typeof message === "object" && message.title;
+export function toastError(options: Options) {
+  const { title, message, ...rest } = options;
 
+  return toast.custom((t) => {
     return (
       <div
         className={`${
@@ -25,13 +21,13 @@ export function toastError(
             <div className="flex-shrink-0 pt-0.5">
               <ErrorIcon />
             </div>
-            <div className="ml-3 flex-1">
+            <div className="ml-3 flex-1 -mt-1">
               {title ? (
-                <p className="capitalize text-[1.05em] mb-1 font-medium text-gray-900 dark:text-gray-100">
+                <p className="capitalize text-[1.05em] mb-1 font-semibold text-gray-900 dark:text-gray-100">
                   {title}
                 </p>
               ) : null}
-              <p className="text-lg text-neutral-500 dark:text-gray-300">{ms}</p>
+              <p className="text-lg text-neutral-500 dark:text-gray-300">{message}</p>
             </div>
           </div>
         </div>
@@ -50,5 +46,5 @@ export function toastError(
         </div>
       </div>
     );
-  }, options);
+  }, rest);
 }
