@@ -25,6 +25,7 @@ export function ChangePasswordArea() {
     const { json } = await execute("/user/password", {
       method: "POST",
       data: values,
+      helpers,
     });
 
     if (typeof json === "boolean") {

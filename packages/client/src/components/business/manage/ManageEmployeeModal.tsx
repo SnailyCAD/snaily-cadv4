@@ -3,7 +3,7 @@ import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { FullEmployee, useBusinessState } from "state/businessState";
 import { ModalIds } from "types/ModalIds";
@@ -40,13 +40,17 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
     onClose?.();
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!currentEmployee || !currentBusiness) return;
     if (!employee) return;
 
     const { json } = await execute(`/businesses/employees/${currentBusiness.id}/${employee.id}`, {
       method: "PUT",
       data: { ...values, employeeId: currentEmployee.id },
+      helpers,
     });
 
     if (json.id) {

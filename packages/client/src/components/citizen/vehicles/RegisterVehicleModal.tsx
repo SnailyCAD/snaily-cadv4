@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -56,11 +56,15 @@ export function RegisterVehicleModal({
     onClose?.();
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (vehicle) {
       const { json } = await execute(`/vehicles/${vehicle.id}`, {
         method: "PUT",
         data: values,
+        helpers,
       });
 
       if (json?.id) {
@@ -70,6 +74,7 @@ export function RegisterVehicleModal({
       const { json } = await execute("/vehicles", {
         method: "POST",
         data: values,
+        helpers,
       });
 
       if (json?.id) {

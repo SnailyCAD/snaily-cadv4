@@ -6,7 +6,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useCitizen } from "context/CitizenContext";
@@ -34,12 +34,16 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!citizen) return;
 
     const { json } = await execute(`/leo/jail/${citizen.id}`, {
       method: "DELETE",
       data: { ...values, recordId: citizen.recordId },
+      helpers,
     });
 
     if (typeof json === "boolean") {

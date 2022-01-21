@@ -1,6 +1,6 @@
 import { Tab } from "@headlessui/react";
 import { useTranslations } from "use-intl";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 
 import { useAuth } from "src/context/AuthContext";
 import { FormField } from "components/form/FormField";
@@ -19,10 +19,14 @@ export function AccountSettingsTab() {
     username: user?.username ?? "",
   };
 
-  async function onSubmit(data: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    data: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     await execute("/user", {
       method: "PATCH",
       data,
+      helpers,
     });
   }
 
