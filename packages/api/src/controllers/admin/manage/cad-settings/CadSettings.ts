@@ -107,6 +107,7 @@ export class ManageCitizensController {
         liveMapURL: data.liveMapURL,
         authScreenBgImageId: data.authScreenBgImageId,
         authScreenHeaderImageId: data.authScreenHeaderImageId,
+        maxOfficersPerUser: data.maxOfficersPerUser,
       },
     });
 
