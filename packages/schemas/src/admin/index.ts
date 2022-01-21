@@ -26,6 +26,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   pairedUnitSymbol: z.string().max(255),
   callsignTemplate: z.string(),
   liveMapURL: z.string().nullable(),
+  maxOfficersPerUser: z.number().nullable(),
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
 });

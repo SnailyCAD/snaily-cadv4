@@ -56,7 +56,7 @@ export class LeoController {
   async createOfficer(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
@@ -72,6 +72,17 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions, cad);
+
+    const officerCount = await prisma.officer.count({
+      where: { userId: user.id },
+    });
+
+    if (
+      cad.miscCadSettings.maxOfficersPerUser &&
+      officerCount >= cad.miscCadSettings.maxOfficersPerUser
+    ) {
+      throw new BadRequest("maxLimitOfficersPerUserReached");
+    }
 
     const officer = await prisma.officer.create({
       data: {

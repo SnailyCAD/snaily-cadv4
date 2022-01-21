@@ -41,6 +41,7 @@ model MiscCadSettings {
   heightPrefix            String   @default("cm") @db.VarChar(255)
   weightPrefix            String   @default("kg") @db.VarChar(255)
   maxCitizensPerUser      Int?
+  maxOfficersPerUser      Int?
   maxPlateLength          Int      @default(8)
   maxBusinessesPerCitizen Int?
   maxDivisionsPerOfficer  Int?
