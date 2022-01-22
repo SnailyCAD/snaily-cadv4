@@ -10,6 +10,7 @@ packages/api/public/**/*.svg
 packages/api/public/**/*.jpg
 packages/api/public/**/*.jpeg
 
+.eslintcache
 
 .yarn/*
 !.yarn/patches
