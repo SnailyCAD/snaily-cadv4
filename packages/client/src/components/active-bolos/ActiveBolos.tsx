@@ -1,18 +1,17 @@
-import { useListener } from "@casper124578/use-socket.io";
-import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { useModal } from "context/ModalContext";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useBolos } from "hooks/realtime/useBolos";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { FullBolo, useDispatchState } from "state/dispatchState";
+import { FullBolo } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { Bolo, BoloType, ShouldDoType } from "types/prisma";
+import { BoloType, ShouldDoType } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 
@@ -21,41 +20,9 @@ const BOLO_TYPES = Object.values(BoloType);
 export function ActiveBolos() {
   const { state, execute } = useFetch();
   const { openModal, closeModal } = useModal();
-  const { bolos, setBolos } = useDispatchState();
+  const { bolos, setBolos } = useBolos();
   const [tempBolo, setTempBolo] = React.useState<FullBolo | null>(null);
   const t = useTranslations("Bolos");
-
-  useListener(
-    SocketEvents.CreateBolo,
-    (data) => {
-      setBolos([...[...bolos], data]);
-    },
-    [setBolos, bolos],
-  );
-
-  useListener(
-    SocketEvents.DeleteBolo,
-    (bolo: Pick<Bolo, "id">) => {
-      setBolos(bolos.filter((v) => v.id !== bolo.id));
-    },
-    [setBolos, bolos],
-  );
-
-  useListener(
-    SocketEvents.UpdateBolo,
-    (bolo: FullBolo) => {
-      setBolos(
-        bolos.map((v) => {
-          if (v.id === bolo.id) {
-            return bolo;
-          }
-
-          return v;
-        }),
-      );
-    },
-    [setBolos, bolos],
-  );
 
   async function handleDeleteBolo() {
     if (!tempBolo) return;

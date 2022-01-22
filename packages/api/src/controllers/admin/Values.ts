@@ -442,6 +442,7 @@ export class ValuesController {
         },
         select: {
           departmentId: true,
+          valueId: true,
         },
       });
       if (!current) {
@@ -449,9 +450,15 @@ export class ValuesController {
       }
 
       const departmentId = body.get("departmentId");
-      const department = !current.departmentId
-        ? { connect: { id: departmentId } }
-        : { update: { id: body.get("departmentId") } };
+
+      await prisma.value.update({
+        where: {
+          id: current.valueId,
+        },
+        data: {
+          value: body.get("value"),
+        },
+      });
 
       const updated = await prisma.divisionValue.update({
         where: {
@@ -459,12 +466,7 @@ export class ValuesController {
         },
         data: {
           callsign: body.get("callsign") || null,
-          department,
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
+          departmentId,
         },
         include: {
           value: true,

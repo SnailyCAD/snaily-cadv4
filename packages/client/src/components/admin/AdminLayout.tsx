@@ -18,7 +18,7 @@ export function AdminLayout({ children, className }: Props) {
         <div className="flex">
           <AdminSidebar />
 
-          <div className="w-full ml-4">
+          <div className="w-full ml-6">
             {roleplayStopped ? <Component /> : null}
             {children}
           </div>
