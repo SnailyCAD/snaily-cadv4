@@ -21,6 +21,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   whitelisted: true,
   businessWhitelisted: true,
   disabledFeatures: true,
+  autoSetUserProperties: true,
   liveMapSocketURl: user?.rank === Rank.OWNER,
   registrationCode: user?.rank === Rank.OWNER,
   steamApiKey: user?.rank === Rank.OWNER,

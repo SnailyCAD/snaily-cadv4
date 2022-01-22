@@ -12,27 +12,29 @@ generator client {
 }
 
 model cad {
-  id                  String           @id @default(cuid())
-  name                String           @db.VarChar(255)
-  owner               User             @relation(fields: [ownerId], references: [id])
-  ownerId             String
-  areaOfPlay          String?          @db.VarChar(255)
-  steamApiKey         String?          @db.VarChar(255)
-  discordWebhookURL   String?          @db.VarChar(255)
-  whitelisted         Boolean          @default(false)
-  towWhitelisted      Boolean          @default(false)
-  businessWhitelisted Boolean          @default(false)
-  maxPlateLength      Int              @default(8)
-  liveMapSocketURl    String?          @db.VarChar(255)
-  logoId              String?
-  registrationCode    String?
-  disabledFeatures    Feature[]
-  miscCadSettings     MiscCadSettings? @relation(fields: [miscCadSettingsId], references: [id])
-  miscCadSettingsId   String?
-  apiToken            ApiToken?        @relation(fields: [apiTokenId], references: [id])
-  apiTokenId          String?
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @default(now()) @updatedAt
+  id                      String                 @id @default(cuid())
+  name                    String                 @db.VarChar(255)
+  owner                   User                   @relation(fields: [ownerId], references: [id])
+  ownerId                 String
+  areaOfPlay              String?                @db.VarChar(255)
+  steamApiKey             String?                @db.VarChar(255)
+  discordWebhookURL       String?                @db.VarChar(255)
+  whitelisted             Boolean                @default(false)
+  towWhitelisted          Boolean                @default(false)
+  businessWhitelisted     Boolean                @default(false)
+  maxPlateLength          Int                    @default(8)
+  liveMapSocketURl        String?                @db.VarChar(255)
+  logoId                  String?
+  registrationCode        String?
+  disabledFeatures        Feature[]
+  miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
+  miscCadSettingsId       String?
+  apiToken                ApiToken?              @relation(fields: [apiTokenId], references: [id])
+  apiTokenId              String?
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @default(now()) @updatedAt
+  autoSetUserProperties   AutoSetUserProperties? @relation(fields: [autoSetUserPropertiesId], references: [id])
+  autoSetUserPropertiesId String?
 }
 
 model MiscCadSettings {
@@ -54,6 +56,17 @@ model MiscCadSettings {
   authScreenHeaderImageId String?
 
   cad cad[]
+}
+
+model AutoSetUserProperties {
+  id String @id @default(cuid())
+
+  leo      Boolean? @default(false)
+  dispatch Boolean? @default(false)
+  emsFd    Boolean? @default(false)
+
+  cad cad[]
+  @@map("AutoSetPropertiesUser")
 }
 
 model ApiToken {

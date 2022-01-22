@@ -108,6 +108,7 @@ export class AuthController {
       ownerId: user.id,
     });
 
+    const autoSetUserProperties = cad.autoSetUserProperties;
     const extraUserData: Partial<User> =
       userCount <= 0
         ? {
@@ -123,6 +124,9 @@ export class AuthController {
             isTow: !cad.towWhitelisted,
             rank: Rank.USER,
             whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+            isDispatch: autoSetUserProperties?.dispatch ?? false,
+            isEmsFd: autoSetUserProperties?.emsFd ?? false,
+            isLeo: autoSetUserProperties?.leo ?? false,
           };
 
     await prisma.user.update({

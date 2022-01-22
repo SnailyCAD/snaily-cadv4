@@ -21,7 +21,11 @@ export type cad = {
   towWhitelisted: boolean;
   apiTokenId: string | null;
   disabledFeatures: Feature[];
-} & { miscCadSettings?: MiscCadSettings | null; apiToken: ApiToken | null };
+  apiToken: ApiToken | null;
+  miscCadSettings?: MiscCadSettings | null;
+  autoSetUserPropertiesId: string | null;
+  autoSetUserProperties: AutoSetUserProperties | null;
+};
 
 /**
  * Model MiscCadSettings
@@ -44,6 +48,17 @@ export type MiscCadSettings = {
   roleplayEnabled: boolean | null;
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
+};
+
+/**
+ * Model AutoSetUserProperties
+ *
+ */
+export type AutoSetUserProperties = {
+  id: string;
+  leo: boolean | null;
+  dispatch: boolean | null;
+  emsFd: boolean | null;
 };
 
 /**
