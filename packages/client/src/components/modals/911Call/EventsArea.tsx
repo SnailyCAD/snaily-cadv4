@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Full911Call } from "state/dispatchState";
 import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
-import format from "date-fns/format";
 import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
@@ -16,6 +15,7 @@ import { classNames } from "lib/classNames";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
+import { formatDate } from "lib/utils";
 
 interface Props {
   call: Full911Call;
@@ -101,7 +101,7 @@ export function CallEventsArea({ call }: Props) {
 
 function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) {
   const { openModal, closeModal } = useModal();
-  const formatted = format(new Date(event.createdAt), "yyyy-MM-dd HH:mm:ss");
+  const formatted = formatDate(event.createdAt);
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
   const t = useTranslations("Calls");

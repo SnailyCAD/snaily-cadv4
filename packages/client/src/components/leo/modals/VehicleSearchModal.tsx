@@ -9,10 +9,9 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Business, Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
-import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { yesOrNoText } from "lib/utils";
+import { formatDate, yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
@@ -143,7 +142,7 @@ export function VehicleSearchModal() {
                   </li>
                   <li>
                     <Infofield label={common("createdAt")}>
-                      {format(new Date(results.createdAt), "yyyy-MM-dd HH:mm")}
+                      {formatDate(results.createdAt)}
                     </Infofield>
                   </li>
                   <li>

@@ -5,6 +5,7 @@ import { cad as CAD, Citizen, CombinedLeoUnit, Feature, Officer } from "types/pr
 import { handleRequest } from "./fetch";
 import { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
+import format from "date-fns/format";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const [age] = ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))
@@ -90,4 +91,9 @@ export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
 export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal">) {
   const { address, postal } = citizen;
   return `${address} ${postal ? `(${postal})` : ""}`;
+}
+
+export function formatDate(date: string | Date | number) {
+  const dateObj = new Date(date);
+  return format(dateObj, "yyyy-MM-dd HH:mm:ss");
 }

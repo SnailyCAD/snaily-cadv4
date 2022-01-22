@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import format from "date-fns/format";
 import { Button } from "components/Button";
 import { RegisteredVehicle } from "types/prisma";
 import { RegisterVehicleModal } from "./RegisterVehicleModal";
@@ -9,6 +8,7 @@ import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
+import { formatDate } from "lib/utils";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -64,7 +64,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
               vinNumber: vehicle.vinNumber,
-              createdAt: format(new Date(vehicle.createdAt), "yyyy-MM-dd"),
+              createdAt: formatDate(vehicle.createdAt),
               actions: (
                 <>
                   <Button

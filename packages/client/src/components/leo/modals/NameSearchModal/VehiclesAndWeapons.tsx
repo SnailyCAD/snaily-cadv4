@@ -1,5 +1,5 @@
 import { Table } from "components/shared/Table";
-import format from "date-fns/format";
+import { formatDate } from "lib/utils";
 import { RegisteredVehicle, Weapon } from "types/prisma";
 import { useTranslations } from "use-intl";
 
@@ -27,7 +27,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
               vinNumber: vehicle.vinNumber,
-              createdAt: format(new Date(vehicle.createdAt), "yyyy-MM-dd"),
+              createdAt: formatDate(vehicle.createdAt),
             }))}
             columns={[
               { Header: t("Vehicles.plate"), accessor: "plate" },

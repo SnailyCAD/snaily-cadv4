@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Citizen, RecordType } from "types/prisma";
-import { calculateAge, formatCitizenAddress } from "lib/utils";
+import { calculateAge, formatCitizenAddress, formatDate } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
@@ -251,7 +251,7 @@ export function NameSearchModal() {
                       ) : null}
 
                       <Infofield label={cT("dateOfBirth")}>
-                        {format(new Date(currentResult.dateOfBirth), "yyyy-MM-dd")} ({cT("age")}:{" "}
+                        {formatDate(currentResult.dateOfBirth)} ({cT("age")}:{" "}
                         {calculateAge(currentResult.dateOfBirth)})
                       </Infofield>
 

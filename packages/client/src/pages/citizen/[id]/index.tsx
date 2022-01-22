@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import { PersonFill } from "react-bootstrap-icons";
-import format from "date-fns/format";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
@@ -15,7 +14,7 @@ import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
 import { WeaponsCard } from "components/citizen/weapons/WeaponsCard";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
-import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
+import { calculateAge, formatCitizenAddress, formatDate, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
@@ -102,8 +101,7 @@ export default function CitizenId() {
             ) : null}
 
             <Infofield label={t("dateOfBirth")}>
-              {format(new Date(citizen.dateOfBirth), "yyyy-MM-dd")} ({t("age")}:{" "}
-              {calculateAge(citizen.dateOfBirth)})
+              {formatDate(citizen.dateOfBirth)} ({t("age")}: {calculateAge(citizen.dateOfBirth)})
             </Infofield>
             <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>
             <Infofield label={t("ethnicity")}>{citizen.ethnicity.value}</Infofield>

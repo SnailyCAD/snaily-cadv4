@@ -5,16 +5,13 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { OfficerLog } from "types/prisma";
-import formatDistance from "date-fns/formatDistance";
-import format from "date-fns/format";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Table } from "components/shared/Table";
-import { useImageUrl } from "hooks/useImageUrl";
 import { FullOfficer } from "state/dispatchState";
 import { Title } from "components/shared/Title";
+import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: FullOfficer };
 
@@ -25,7 +22,6 @@ interface Props {
 export default function MyOfficersLogs({ logs: data }: Props) {
   const [logs, setLogs] = React.useState(data);
   const [officerId, setOfficerId] = React.useState<string | null>(null);
-  const { makeImageUrl } = useImageUrl();
 
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
@@ -70,44 +66,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
       {logs.length <= 0 ? (
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
-        <Table
-          data={filtered.map((log) => {
-            const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
-
-            const endedAt = log.endedAt
-              ? format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss")
-              : t("notEndedYet");
-
-            const totalTime =
-              log.endedAt !== null
-                ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
-                : t("notEndedYet");
-
-            return {
-              officer: (
-                <span className="flex items-center">
-                  {log.officer.imageId ? (
-                    <img
-                      className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                      draggable={false}
-                      src={makeImageUrl("units", log.officer.imageId)}
-                    />
-                  ) : null}
-                  {makeUnitName(log.officer)}
-                </span>
-              ),
-              startedAt,
-              endedAt,
-              totalTime,
-            };
-          })}
-          columns={[
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("startedAt"), accessor: "startedAt" },
-            { Header: t("endedAt"), accessor: "endedAt" },
-            { Header: t("totalTime"), accessor: "totalTime" },
-          ]}
-        />
+        <OfficerLogsTable logs={filtered} />
       )}
     </Layout>
   );

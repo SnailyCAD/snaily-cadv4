@@ -6,10 +6,9 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
-import { requestAll } from "lib/utils";
+import { formatDate, requestAll } from "lib/utils";
 import { FullTowCall } from ".";
 import { Table } from "components/shared/Table";
-import format from "date-fns/format";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
@@ -81,7 +80,7 @@ export default function TowLogs(props: Props) {
               ),
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
-            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
+            createdAt: formatDate(call.createdAt),
           }))}
           columns={[
             { Header: t("location"), accessor: "location" },
