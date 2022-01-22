@@ -19,10 +19,7 @@ export function AdminLayout({ children, className }: Props) {
         <div className="flex">
           <AdminSidebar />
 
-          <div
-            style={{ width: "calc(100vw - 330px)" }}
-            className="container mx-auto ml-6 px-4 py-5"
-          >
+          <div style={{ width: "calc(100vw - 330px)" }} className="ml-6 px-4 py-5">
             {roleplayStopped ? <Component /> : null}
             {children}
           </div>
