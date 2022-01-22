@@ -19,6 +19,7 @@ import {
   DLC_ARR,
   DEPARTMENT_ARR,
   CODES_10_ARR,
+  DIVISION_ARR,
 } from "@snailycad/schemas";
 import {
   DepartmentType,
@@ -67,7 +68,8 @@ export class ValuesController {
 }
 
 // todo: use this in `ValuesController`
-const typeHandlers: Partial<
+// todo: remove the `Partial<Record>...` type.
+export const typeHandlers: Partial<
   Record<ValueType | "GENERIC", (body: unknown, valueType?: ValueType) => Promise<any[]>>
 > = {
   VEHICLE: async (body) => {
@@ -76,15 +78,10 @@ const typeHandlers: Partial<
     return Promise.all(
       data.map(async (item) => {
         return prisma.vehicleValue.create({
+          include: { value: true },
           data: {
             hash: item.hash,
-            value: {
-              create: {
-                isDefault: false,
-                type: "VEHICLE",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.VEHICLE),
           },
         });
       }),
@@ -96,15 +93,10 @@ const typeHandlers: Partial<
     return Promise.all(
       data.map(async (item) => {
         return prisma.weaponValue.create({
+          include: { value: true },
           data: {
             hash: item.hash,
-            value: {
-              create: {
-                isDefault: false,
-                type: "WEAPON",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.WEAPON),
           },
         });
       }),
@@ -118,13 +110,7 @@ const typeHandlers: Partial<
         return prisma.employeeValue.create({
           data: {
             as: item.as as EmployeeAsEnum,
-            value: {
-              create: {
-                isDefault: false,
-                type: "BUSINESS_ROLE",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.BUSINESS_ROLE),
           },
           include: { value: true },
         });
@@ -139,13 +125,7 @@ const typeHandlers: Partial<
         return prisma.driversLicenseCategoryValue.create({
           data: {
             type: item.type as DriversLicenseCategoryType,
-            value: {
-              create: {
-                isDefault: false,
-                type: "DRIVERSLICENSE_CATEGORY",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY),
           },
           include: { value: true },
         });
@@ -161,15 +141,25 @@ const typeHandlers: Partial<
           data: {
             type: item.type as DepartmentType,
             callsign: item.callsign,
-            value: {
-              create: {
-                isDefault: false,
-                type: "DEPARTMENT",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.DEPARTMENT),
           },
           include: { value: true },
+        });
+      }),
+    );
+  },
+  DIVISION: async (body) => {
+    const data = validateSchema(DIVISION_ARR, body);
+
+    return Promise.all(
+      data.map(async (item) => {
+        return prisma.divisionValue.create({
+          data: {
+            callsign: item.callsign,
+            department: { connect: { id: item.departmentId } },
+            value: createValueObj(item.value, ValueType.DIVISION),
+          },
+          include: { value: true, department: { include: { value: true } } },
         });
       }),
     );
@@ -184,13 +174,7 @@ const typeHandlers: Partial<
             type: item.type as StatusValueType,
             color: item.color,
             shouldDo: item.shouldDo as ShouldDoType,
-            value: {
-              create: {
-                isDefault: false,
-                type: "CODES_10",
-                value: item.value,
-              },
-            },
+            value: createValueObj(item.value, ValueType.CODES_10),
           },
           include: { value: true },
         });
@@ -213,7 +197,7 @@ const typeHandlers: Partial<
         return prisma.value.create({
           data: {
             isDefault: false,
-            type: type!,
+            type: type as ValueType,
             value: item.value,
           },
         });
@@ -221,3 +205,13 @@ const typeHandlers: Partial<
     );
   },
 };
+
+function createValueObj(value: string, type: ValueType) {
+  return {
+    create: {
+      isDefault: false,
+      type,
+      value,
+    },
+  };
+}

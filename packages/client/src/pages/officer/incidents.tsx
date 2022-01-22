@@ -211,7 +211,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         <DescriptionModal
           onClose={() => setTempIncident(null)}
           isReadonly
-          value={tempIncident?.descriptionData}
+          value={tempIncident.descriptionData}
         />
       ) : null}
     </Layout>

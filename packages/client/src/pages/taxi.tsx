@@ -163,7 +163,7 @@ export default function Taxi(props: Props) {
         <DescriptionModal
           onClose={() => setTempCall(null)}
           isReadonly
-          value={tempCall?.descriptionData}
+          value={tempCall.descriptionData}
         />
       ) : null}
     </Layout>

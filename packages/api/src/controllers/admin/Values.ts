@@ -7,6 +7,7 @@ import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
+import { typeHandlers } from "./values/Import";
 
 export type NameType = Exclude<
   keyof PrismaClient,
@@ -76,12 +77,8 @@ export class ValuesController {
         return {
           type,
           values: await prisma.value.findMany({
-            where: {
-              type,
-            },
-            orderBy: {
-              position: "asc",
-            },
+            where: { type },
+            orderBy: { position: "asc" },
           }),
         };
       }),
@@ -143,6 +140,12 @@ export class ValuesController {
     }
 
     const data = validateSchema(VALUE_SCHEMA, body);
+    const handler = typeHandlers[type];
+
+    if (handler) {
+      const [value] = await handler([body]);
+      return value;
+    }
 
     const value = await prisma.value.create({
       data: {
@@ -151,119 +154,6 @@ export class ValuesController {
         isDefault: false,
       },
     });
-
-    if (type === "DRIVERSLICENSE_CATEGORY") {
-      if (!body.type) {
-        throw new BadRequest("typeIsRequired");
-      }
-
-      const dlCategory = await prisma.driversLicenseCategoryValue.create({
-        data: {
-          type: body.type,
-          valueId: value.id,
-        },
-        include: { value: true },
-      });
-
-      return dlCategory;
-    }
-
-    if (type === "CODES_10") {
-      if (!body.shouldDo) {
-        throw new BadRequest("codes10FieldsRequired");
-      }
-
-      const status = await prisma.statusValue.create({
-        data: {
-          whatPages: body.whatPages ?? [],
-          shouldDo: body.shouldDo,
-          valueId: value.id,
-          color: body.color || null,
-          type: body.type || "STATUS_CODE",
-        },
-        include: {
-          value: true,
-        },
-      });
-
-      return status;
-    }
-
-    if (type === "BUSINESS_ROLE") {
-      if (!body.as) {
-        throw new BadRequest("asRequired");
-      }
-
-      await prisma.employeeValue.create({
-        data: {
-          as: body.as,
-          valueId: value.id,
-        },
-      });
-    }
-
-    if (type === "VEHICLE") {
-      const vehicleValue = await prisma.vehicleValue.create({
-        data: {
-          valueId: value.id,
-          hash: body.hash || null,
-        },
-        include: { value: true },
-      });
-
-      return vehicleValue;
-    }
-
-    if (type === "WEAPON") {
-      const weaponValue = await prisma.weaponValue.create({
-        data: {
-          valueId: value.id,
-          hash: body.hash || null,
-        },
-        include: { value: true },
-      });
-
-      return weaponValue;
-    }
-
-    if (type === "DIVISION") {
-      if (!body.departmentId) {
-        throw new BadRequest("departmentIdRequired");
-      }
-
-      const division = await prisma.divisionValue.create({
-        data: {
-          valueId: value.id,
-          callsign: body.callsign || null,
-          departmentId: body.departmentId,
-        },
-        include: {
-          value: true,
-          department: {
-            include: {
-              value: true,
-            },
-          },
-        },
-      });
-
-      return division;
-    }
-
-    if (type === "DEPARTMENT") {
-      const department = await prisma.departmentValue.create({
-        data: {
-          valueId: value.id,
-          callsign: body.callsign || null,
-          type: body.type,
-        },
-        include: {
-          value: true,
-        },
-      });
-
-      return department;
-    }
 
     return value;
   }
@@ -584,11 +474,11 @@ export class ValuesController {
     );
   }
 
-  private getTypeFromPath(path: string): ValueType {
+  protected getTypeFromPath(path: string): ValueType {
     return path.replace("-", "_").toUpperCase() as ValueType;
   }
 
-  private parsePenalCodeValues(arr: unknown): [number, number] | [] {
+  protected parsePenalCodeValues(arr: unknown): [number, number] | [] {
     if (!Array.isArray(arr)) {
       return [];
     }

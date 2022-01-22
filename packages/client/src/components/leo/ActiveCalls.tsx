@@ -232,7 +232,7 @@ export function ActiveCalls() {
         <DescriptionModal
           isReadonly
           onClose={() => setTempCall(null)}
-          value={tempCall?.descriptionData}
+          value={tempCall.descriptionData}
         />
       ) : null}
 
