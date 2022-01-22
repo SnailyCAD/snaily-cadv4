@@ -31,6 +31,13 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
 });
 
+export const CAD_AUTO_SET_PROPERTIES = z.object({
+  leo: z.boolean().nullable(),
+  dispatch: z.boolean().nullable(),
+  emsFd: z.boolean().nullable(),
+  tow: z.boolean().nullable(),
+});
+
 export const DISABLED_FEATURES_SCHEMA = z.object({
   features: z.array(z.string().regex(FEATURES_REGEX)),
 });

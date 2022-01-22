@@ -1,4 +1,5 @@
 import { cad } from ".prisma/client";
+import { AutoSetUserProperties } from "@prisma/client";
 import { prisma } from "./prisma";
 
 interface Options {
@@ -6,13 +7,22 @@ interface Options {
 }
 
 export async function findOrCreateCAD({ ownerId }: Options) {
-  let cad = await prisma.cad.findFirst();
+  let cad = await prisma.cad.findFirst({
+    include: {
+      miscCadSettings: true,
+      autoSetUserProperties: true,
+    },
+  });
 
   if (!cad) {
     cad = await prisma.cad.create({
       data: {
         name: "Rename",
         ownerId: ownerId!,
+      },
+      include: {
+        miscCadSettings: true,
+        autoSetUserProperties: true,
       },
     });
 
@@ -33,9 +43,10 @@ export async function findOrCreateCAD({ ownerId }: Options) {
       },
       include: {
         miscCadSettings: true,
+        autoSetUserProperties: true,
       },
     });
   }
 
-  return cad as cad;
+  return cad as cad & { autoSetUserProperties: AutoSetUserProperties | null };
 }

@@ -14,16 +14,18 @@ import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { DisabledFeaturesArea } from "components/admin/manage/cad-settings/DisabledFeatures";
 import { TabList } from "components/shared/TabList";
 import { Tab } from "@headlessui/react";
-import { MiscFeatures } from "components/admin/manage/cad-settings/MiscFeatures";
 import { requestAll } from "lib/utils";
-import { ApiTokenTab } from "components/admin/manage/cad-settings/ApiTokenTab";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
+
+import { MiscFeatures } from "components/admin/manage/cad-settings/MiscFeatures";
+import { DisabledFeaturesArea } from "components/admin/manage/cad-settings/DisabledFeatures";
+import { ApiTokenTab } from "components/admin/manage/cad-settings/ApiTokenTab";
+import { AutoSetUserPropertiesTab } from "components/admin/manage/cad-settings/AutoSetUserPropertiesTab";
 
 export default function CadSettings() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -33,7 +35,13 @@ export default function CadSettings() {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
 
-  const SETTINGS_TABS = [t("GENERAL_SETTINGS"), t("FEATURES"), t("MISC_SETTINGS"), "Api Token"];
+  const SETTINGS_TABS = [
+    t("GENERAL_SETTINGS"),
+    t("FEATURES"),
+    t("MISC_SETTINGS"),
+    "Auto set user properties",
+    "Api Token",
+  ];
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -203,6 +211,10 @@ export default function CadSettings() {
 
         <Tab.Panel>
           <MiscFeatures />
+        </Tab.Panel>
+
+        <Tab.Panel>
+          <AutoSetUserPropertiesTab />
         </Tab.Panel>
 
         <ApiTokenTab />

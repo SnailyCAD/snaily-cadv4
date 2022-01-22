@@ -2,6 +2,7 @@ import {
   CAD_MISC_SETTINGS_SCHEMA,
   CAD_SETTINGS_SCHEMA,
   DISABLED_FEATURES_SCHEMA,
+  CAD_AUTO_SET_PROPERTIES,
 } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
@@ -13,7 +14,7 @@ import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import { Feature } from "@prisma/client";
+import { cad, Feature } from "@prisma/client";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -112,6 +113,32 @@ export class ManageCitizensController {
     });
 
     return updated;
+  }
+
+  @UseBefore(IsAuth)
+  @Put("/auto-set-properties")
+  async updateAutoSetProperties(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
+    const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
+
+    const autoSetProperties = await prisma.autoSetUserProperties.upsert({
+      where: {
+        id: ctx.autoSetUserPropertiesId ?? "null",
+      },
+      create: {
+        dispatch: data.dispatch,
+        emsFd: data.emsFd,
+        leo: data.leo,
+        tow: data.tow,
+      },
+      update: {
+        dispatch: data.dispatch,
+        emsFd: data.emsFd,
+        leo: data.leo,
+        tow: data.tow,
+      },
+    });
+
+    return autoSetProperties;
   }
 
   @UseBefore(IsAuth)
