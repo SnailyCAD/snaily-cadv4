@@ -14,11 +14,14 @@ export function AdminLayout({ children, className }: Props) {
     <>
       <Nav />
 
-      <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
+      <main className={className}>
         <div className="flex">
           <AdminSidebar />
 
-          <div className="w-full ml-6">
+          <div
+            style={{ width: "calc(100vw - 330px)" }}
+            className="container mx-auto ml-6 px-4 py-5"
+          >
             {roleplayStopped ? <Component /> : null}
             {children}
           </div>
