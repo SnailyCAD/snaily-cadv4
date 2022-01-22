@@ -89,12 +89,12 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/misc")
-  async updateMiscSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateMiscSettings(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.miscCadSettings.update({
       where: {
-        id: ctx.get("cad")?.miscCadSettings?.id,
+        id: ctx.miscCadSettingsId ?? "null",
       },
       data: {
         heightPrefix: data.heightPrefix,

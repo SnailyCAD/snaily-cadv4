@@ -21,11 +21,26 @@ import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
+import dynamic from "next/dynamic";
 
-import { MiscFeatures } from "components/admin/manage/cad-settings/MiscFeatures";
-import { DisabledFeaturesArea } from "components/admin/manage/cad-settings/DisabledFeatures";
-import { ApiTokenTab } from "components/admin/manage/cad-settings/ApiTokenTab";
-import { AutoSetUserPropertiesTab } from "components/admin/manage/cad-settings/AutoSetUserPropertiesTab";
+const MiscFeatures = dynamic(
+  async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
+);
+
+const DisabledFeaturesArea = dynamic(
+  async () =>
+    (await import("components/admin/manage/cad-settings/DisabledFeatures")).DisabledFeaturesArea,
+);
+
+const ApiTokenTab = dynamic(
+  async () => (await import("components/admin/manage/cad-settings/ApiTokenTab")).ApiTokenTab,
+);
+
+const AutoSetUserPropertiesTab = dynamic(
+  async () =>
+    (await import("components/admin/manage/cad-settings/AutoSetUserPropertiesTab"))
+      .AutoSetUserPropertiesTab,
+);
 
 export default function CadSettings() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
