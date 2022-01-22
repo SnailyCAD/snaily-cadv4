@@ -1,4 +1,12 @@
 import { VALUE_SCHEMA } from "@snailycad/schemas";
+import {
+  DEPARTMENT_SCHEMA,
+  DIVISION_SCHEMA,
+  VEHICLE_SCHEMA,
+  WEAPON_SCHEMA,
+  CODES_10_SCHEMA,
+  BUSINESS_ROLE_SCHEMA,
+} from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -19,7 +27,7 @@ import {
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { TValue } from "src/pages/admin/values/[path]";
+import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import dynamic from "next/dynamic";
 import { Eyedropper } from "react-bootstrap-icons";
 
@@ -71,6 +79,15 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
   value: v,
 }));
 
+const SCHEMAS: Partial<Record<ValueType, any>> = {
+  CODES_10: CODES_10_SCHEMA,
+  DEPARTMENT: DEPARTMENT_SCHEMA,
+  DIVISION: DIVISION_SCHEMA,
+  VEHICLE: VEHICLE_SCHEMA,
+  WEAPON: WEAPON_SCHEMA,
+  BUSINESS_ROLE: BUSINESS_ROLE_SCHEMA,
+};
+
 export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
@@ -106,7 +123,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   }
 
   const INITIAL_VALUES = {
-    value: typeof value?.value === "string" ? value.value : value?.value.value ?? "",
+    value: value ? getValueStrFromValue(value) : "",
     as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
     shouldDo:
       typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
@@ -128,7 +145,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
-    const errors = handleValidate(VALUE_SCHEMA)(values);
+    const schemaToUse = SCHEMAS[type] ?? VALUE_SCHEMA;
+    const errors = handleValidate(schemaToUse)(values);
 
     if (values.color && !hexColor().test(values.color)) {
       return {

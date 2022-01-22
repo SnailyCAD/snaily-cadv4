@@ -322,11 +322,11 @@ export function handleFilter(value: TValue, search: string) {
   return false;
 }
 
-function getValueStrFromValue(value: TValue) {
+export function getValueStrFromValue(value: TValue) {
   return "createdAt" in value ? value.value : value.value.value;
 }
 
-function getCreatedAtFromValue(value: TValue) {
+export function getCreatedAtFromValue(value: TValue) {
   return "createdAt" in value ? value.createdAt : value.value.createdAt;
 }
 

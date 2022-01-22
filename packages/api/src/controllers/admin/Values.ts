@@ -139,21 +139,8 @@ export class ValuesController {
       return code;
     }
 
-    const data = validateSchema(VALUE_SCHEMA, body);
     const handler = typeHandlers[type];
-
-    if (handler) {
-      const [value] = await handler([body]);
-      return value;
-    }
-
-    const value = await prisma.value.create({
-      data: {
-        type,
-        value: data.value,
-        isDefault: false,
-      },
-    });
+    const [value] = await handler([body]);
 
     return value;
   }

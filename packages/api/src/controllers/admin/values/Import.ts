@@ -57,9 +57,9 @@ export class ValuesController {
       throw new BadRequest("couldNotParseBody");
     }
 
-    const handler = typeHandlers[type];
-    const data = await handler?.(body);
-    return data ?? [];
+    const handler = typeHandlers[type as keyof typeof typeHandlers];
+    const data = await handler(body, type);
+    return data;
   }
 
   private getTypeFromPath(path: string): ValueType {
@@ -67,12 +67,8 @@ export class ValuesController {
   }
 }
 
-// todo: use this in `ValuesController`
-// todo: remove the `Partial<Record>...` type.
-export const typeHandlers: Partial<
-  Record<ValueType | "GENERIC", (body: unknown, valueType?: ValueType) => Promise<any[]>>
-> = {
-  VEHICLE: async (body) => {
+export const typeHandlers = {
+  VEHICLE: async (body: unknown) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return Promise.all(
@@ -87,7 +83,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  WEAPON: async (body) => {
+  WEAPON: async (body: unknown) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return Promise.all(
@@ -102,7 +98,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  BUSINESS_ROLE: async (body) => {
+  BUSINESS_ROLE: async (body: unknown) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
     return Promise.all(
@@ -117,7 +113,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  DRIVERSLICENSE_CATEGORY: async (body) => {
+  DRIVERSLICENSE_CATEGORY: async (body: unknown) => {
     const data = validateSchema(DLC_ARR, body);
 
     return Promise.all(
@@ -132,7 +128,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  DEPARTMENT: async (body) => {
+  DEPARTMENT: async (body: unknown) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
     return Promise.all(
@@ -148,7 +144,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  DIVISION: async (body) => {
+  DIVISION: async (body: unknown) => {
     const data = validateSchema(DIVISION_ARR, body);
 
     return Promise.all(
@@ -164,7 +160,7 @@ export const typeHandlers: Partial<
       }),
     );
   },
-  CODES_10: async (body) => {
+  CODES_10: async (body: unknown) => {
     const data = validateSchema(CODES_10_ARR, body);
 
     return Promise.all(
@@ -182,14 +178,14 @@ export const typeHandlers: Partial<
     );
   },
 
-  GENDER: async (body) => typeHandlers.GENERIC!(body, "GENDER"),
-  ETHNICITY: async (body) => typeHandlers.GENERIC!(body, "ETHNICITY"),
-  BLOOD_GROUP: async (body) => typeHandlers.GENERIC!(body, "BLOOD_GROUP"),
-  IMPOUND_LOT: async (body) => typeHandlers.GENERIC!(body, "IMPOUND_LOT"),
-  LICENSE: async (body) => typeHandlers.GENERIC!(body, "LICENSE"),
-  OFFICER_RANK: async (body) => typeHandlers.GENERIC!(body, "OFFICER_RANK"),
+  GENDER: async (body: unknown) => typeHandlers.GENERIC(body, "GENDER"),
+  ETHNICITY: async (body: unknown) => typeHandlers.GENERIC(body, "ETHNICITY"),
+  BLOOD_GROUP: async (body: unknown) => typeHandlers.GENERIC(body, "BLOOD_GROUP"),
+  IMPOUND_LOT: async (body: unknown) => typeHandlers.GENERIC(body, "IMPOUND_LOT"),
+  LICENSE: async (body: unknown) => typeHandlers.GENERIC(body, "LICENSE"),
+  OFFICER_RANK: async (body: unknown) => typeHandlers.GENERIC(body, "OFFICER_RANK"),
 
-  GENERIC: async (body, type) => {
+  GENERIC: async (body: unknown, type: ValueType) => {
     const data = validateSchema(BASE_ARR, body);
 
     return Promise.all(
