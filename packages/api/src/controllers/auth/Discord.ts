@@ -44,9 +44,14 @@ export class DiscordAuth {
 
   @Get("/callback")
   async handleCallbackFromDiscord(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
-    const code = query.code;
-    const data = await getDiscordData(code);
+    const code = query.code as string | undefined;
     const redirectURL = findRedirectURL();
+
+    if (!code) {
+      return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
+    }
+
+    const data = await getDiscordData(code);
     const authUser: User | null = await getSessionUser(req, false);
 
     if (!data) {
