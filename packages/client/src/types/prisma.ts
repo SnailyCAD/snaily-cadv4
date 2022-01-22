@@ -59,7 +59,6 @@ export type AutoSetUserProperties = {
   leo: boolean | null;
   dispatch: boolean | null;
   emsFd: boolean | null;
-  tow: boolean | null;
 };
 
 /**

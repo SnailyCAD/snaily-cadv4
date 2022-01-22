@@ -35,7 +35,6 @@ export function AutoSetUserPropertiesTab() {
     leo: autoSetUserProps.leo ?? false,
     dispatch: autoSetUserProps.dispatch ?? false,
     emsFd: autoSetUserProps.emsFd ?? false,
-    tow: autoSetUserProps.tow ?? false,
   };
 
   return (

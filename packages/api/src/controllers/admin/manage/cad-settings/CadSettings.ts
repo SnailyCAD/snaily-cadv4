@@ -125,16 +125,15 @@ export class ManageCitizensController {
         id: ctx.autoSetUserPropertiesId ?? "null",
       },
       create: {
+        cad: { connect: { id: ctx.id } },
         dispatch: data.dispatch,
         emsFd: data.emsFd,
         leo: data.leo,
-        tow: data.tow,
       },
       update: {
         dispatch: data.dispatch,
         emsFd: data.emsFd,
         leo: data.leo,
-        tow: data.tow,
       },
     });
 

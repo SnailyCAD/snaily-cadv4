@@ -109,6 +109,8 @@ export class AuthController {
     });
 
     const autoSetUserProperties = cad.autoSetUserProperties;
+    console.log({ autoSetUserProperties });
+
     const extraUserData: Partial<User> =
       userCount <= 0
         ? {
