@@ -23,3 +23,5 @@ packages/api/public/**/*.jpeg
 .tsconfig.tsbuildinfo
 
 packages/client/public/favicon.png
+
+.husky/_
