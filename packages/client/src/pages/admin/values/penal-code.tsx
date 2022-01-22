@@ -171,7 +171,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">

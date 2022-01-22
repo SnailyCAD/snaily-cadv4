@@ -115,7 +115,7 @@ export default function CadSettings() {
   };
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>

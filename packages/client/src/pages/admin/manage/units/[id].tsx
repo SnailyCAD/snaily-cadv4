@@ -71,7 +71,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
   };
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>
         {common("manage")} {makeUnitName(unit)}
       </Title>

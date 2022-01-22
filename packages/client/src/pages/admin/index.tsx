@@ -35,7 +35,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
   }
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("adminDashboard")}</Title>
 
       <h1 className="text-3xl font-semibold dark:text-white">Dashboard</h1>

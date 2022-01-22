@@ -109,7 +109,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex flex-col">

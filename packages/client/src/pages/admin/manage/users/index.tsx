@@ -35,7 +35,7 @@ export default function ManageUsers({ users: data }: Props) {
   const tabs = [`${t("allUsers")} (${users.length})`, `${t("pendingUsers")} (${pending.length})`];
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("MANAGE_USERS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>

@@ -78,7 +78,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   }, [data]);
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("MANAGE_BUSINESSES")}</Title>
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>

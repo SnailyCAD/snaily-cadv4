@@ -69,7 +69,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
   }, [data]);
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("MANAGE_CITIZENS")}</Title>
 
       <h1 className="text-3xl font-semibold">{t("MANAGE_CITIZENS")}</h1>

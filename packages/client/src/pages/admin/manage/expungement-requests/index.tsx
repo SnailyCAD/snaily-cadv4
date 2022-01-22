@@ -40,7 +40,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>
