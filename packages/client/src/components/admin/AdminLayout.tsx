@@ -1,5 +1,6 @@
 import { Nav } from "components/nav/Nav";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
+import { classNames } from "lib/classNames";
 import { AdminSidebar } from "./Sidebar";
 
 interface Props {
@@ -14,7 +15,7 @@ export function AdminLayout({ children, className }: Props) {
     <>
       <Nav />
 
-      <main className={className}>
+      <main className={classNames("dark:text-white", className)}>
         <div className="flex">
           <AdminSidebar />
 

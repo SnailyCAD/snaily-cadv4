@@ -160,7 +160,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">

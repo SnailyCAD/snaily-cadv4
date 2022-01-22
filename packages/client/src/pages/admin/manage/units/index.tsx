@@ -66,7 +66,7 @@ export default function SupervisorPanelPage({ units }: Props) {
   };
 
   return (
-    <AdminLayout className="dark:text-white">
+    <AdminLayout>
       <Title>{t("Management.MANAGE_UNITS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>

@@ -32,7 +32,7 @@ export function AdminSidebar() {
     <div className="w-72">
       <aside
         style={{ minHeight: "calc(100vh - 3.5rem)" }}
-        className="sticky w-72 left-4 pt-5 px-2 top-0 bg-gray-200 dark:bg-[#171717]"
+        className="w-72 pt-5 px-2 bg-gray-100 dark:bg-[#171717]"
       >
         <section>
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
@@ -95,7 +95,7 @@ function SidebarItem({ disabled, href, text, isActive }: ItemProps) {
       <Link href={disabled ? "" : href}>
         <a
           className={classNames(
-            "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-300 dark:hover:bg-dark-gray",
+            "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-dark-gray",
             isActive && "bg-gray-300 dark:bg-dark-gray dark:text-white",
             disabled &&
               "cursor-not-allowed opacity-60 hover:bg-transparent dark:hover:bg-transparent",
