@@ -102,7 +102,8 @@ export default function CitizenId() {
             ) : null}
 
             <Infofield label={t("dateOfBirth")}>
-              {formatDate(citizen.dateOfBirth)} ({t("age")}: {calculateAge(citizen.dateOfBirth)})
+              {formatDate(citizen.dateOfBirth, { onlyDate: true })} ({t("age")}:{" "}
+              {calculateAge(citizen.dateOfBirth)})
             </Infofield>
             <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>
             <Infofield label={t("ethnicity")}>{citizen.ethnicity.value}</Infofield>

@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
+import { formatDate } from "lib/utils";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -77,6 +78,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
             filter={search}
             data={citizens.map((citizen) => ({
               name: `${citizen.name} ${citizen.surname}`,
+              dateOfBirth: formatDate(citizen.dateOfBirth, { onlyDate: true }),
               gender: citizen.gender.value,
               ethnicity: citizen.ethnicity.value,
               hairColor: citizen.hairColor,
@@ -91,6 +93,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
             }))}
             columns={[
               { Header: tCitizen("fullName"), accessor: "name" },
+              { Header: tCitizen("dateOfBirth"), accessor: "dateOfBirth" },
               { Header: tCitizen("gender"), accessor: "gender" },
               { Header: tCitizen("ethnicity"), accessor: "ethnicity" },
               { Header: tCitizen("hairColor"), accessor: "hairColor" },

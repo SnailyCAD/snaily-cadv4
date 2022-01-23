@@ -93,7 +93,8 @@ export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal"
   return `${address} ${postal ? `(${postal})` : ""}`;
 }
 
-export function formatDate(date: string | Date | number) {
+export function formatDate(date: string | Date | number, options?: { onlyDate: boolean }) {
   const dateObj = new Date(date);
-  return format(dateObj, "yyyy-MM-dd HH:mm:ss");
+  const hmsString = options?.onlyDate ? "" : "HH:mm:ss";
+  return format(dateObj, `yyyy-MM-dd ${hmsString}`);
 }

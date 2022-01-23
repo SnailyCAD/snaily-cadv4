@@ -251,7 +251,7 @@ export function NameSearchModal() {
                       ) : null}
 
                       <Infofield label={cT("dateOfBirth")}>
-                        {formatDate(currentResult.dateOfBirth)} ({cT("age")}:{" "}
+                        {formatDate(currentResult.dateOfBirth, { onlyDate: true })} ({cT("age")}:{" "}
                         {calculateAge(currentResult.dateOfBirth)})
                       </Infofield>
 
