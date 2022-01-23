@@ -5,10 +5,12 @@ export const enum ModalIds {
   ManageMedicalRecords = "ManageMedicalRecords",
   ManageBleetModal = "ManageBleetModal",
   ManageOccupation = "ManageOccupationModal",
+  CitizenImage = "CitizenImageModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
   ImportValues = "ImportValuesModal",
   ManagePenalCodeGroup = "AddPenalCodeGroupModal",
+  ManageValue = "ManageValueModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -77,4 +79,5 @@ export const enum ModalIds {
   AlertDeleteGroup = "AlertDeleteGroupModal",
   AlertRevokeWarrant = "AlertRevokeWarrantModal",
   AlertPurgeCalls = "AlertPurgeCallsModal",
+  AlertDeleteValue = "AlertDeleteValueModal",
 }

@@ -30,6 +30,7 @@ import hexColor from "hex-color-regex";
 import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import dynamic from "next/dynamic";
 import { Eyedropper } from "react-bootstrap-icons";
+import { ModalIds } from "types/ModalIds";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -106,7 +107,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       });
 
       if (json?.id) {
-        closeModal("manageValue");
+        closeModal(ModalIds.ManageValue);
         onUpdate(value, json);
       }
     } else {
@@ -116,7 +117,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       });
 
       if (json?.id) {
-        closeModal("manageValue");
+        closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
     }
@@ -162,8 +163,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     <Modal
       className="w-[600px]"
       title={title}
-      onClose={() => closeModal("manageValue")}
-      isOpen={isOpen("manageValue")}
+      onClose={() => closeModal(ModalIds.ManageValue)}
+      isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
@@ -279,7 +280,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
+              <Button
+                type="reset"
+                onClick={() => closeModal(ModalIds.ManageValue)}
+                variant="cancel"
+              >
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
