@@ -32,7 +32,7 @@ export function AdminSidebar() {
     <div className="w-72">
       <aside
         style={{ minHeight: "calc(100vh - 3.5rem)" }}
-        className="w-72 pt-5 px-2 bg-gray-100 dark:bg-[#171717]"
+        className="sticky top-0 w-72 pt-5 px-2 bg-gray-100 dark:bg-[#171717]"
       >
         <section>
           <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>

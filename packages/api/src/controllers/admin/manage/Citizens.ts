@@ -123,7 +123,7 @@ export class ManageCitizensController {
       throw new BadRequest("invalidImageType");
     }
 
-    const rawBody = file.buffer.toString("utf8");
+    const rawBody = file.buffer.toString("utf8").trim();
     let body = null;
 
     try {
