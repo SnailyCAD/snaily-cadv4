@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import { PersonFill } from "react-bootstrap-icons";
-import format from "date-fns/format";
 import { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
@@ -15,7 +14,7 @@ import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
 import { WeaponsCard } from "components/citizen/weapons/WeaponsCard";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
-import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
+import { calculateAge, formatCitizenAddress, formatDate, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
@@ -25,6 +24,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
+import { ModalIds } from "types/ModalIds";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -49,7 +49,7 @@ export default function CitizenId() {
     });
 
     if (data.json) {
-      closeModal("deleteCitizen");
+      closeModal(ModalIds.AlertDeleteCitizen);
       router.push("/citizen");
     }
   }
@@ -79,7 +79,7 @@ export default function CitizenId() {
       <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">
           {citizen.imageId ? (
-            <button onClick={() => openModal("citizenImage")} className="cursor-pointer">
+            <button onClick={() => openModal(ModalIds.CitizenImage)} className="cursor-pointer">
               <img
                 className="rounded-full w-[150px] h-[150px] object-cover"
                 draggable={false}
@@ -102,8 +102,7 @@ export default function CitizenId() {
             ) : null}
 
             <Infofield label={t("dateOfBirth")}>
-              {format(new Date(citizen.dateOfBirth), "yyyy-MM-dd")} ({t("age")}:{" "}
-              {calculateAge(citizen.dateOfBirth)})
+              {formatDate(citizen.dateOfBirth)} ({t("age")}: {calculateAge(citizen.dateOfBirth)})
             </Infofield>
             <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>
             <Infofield label={t("ethnicity")}>{citizen.ethnicity.value}</Infofield>
@@ -133,7 +132,7 @@ export default function CitizenId() {
               <a>{t("editCitizen")}</a>
             </Link>
           </Button>
-          <Button onClick={() => openModal("deleteCitizen")} variant="danger">
+          <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
             {t("deleteCitizen")}
           </Button>
         </div>
@@ -161,7 +160,7 @@ export default function CitizenId() {
             return <span className="font-semibold">{children}</span>;
           },
         })}
-        id="deleteCitizen"
+        id={ModalIds.AlertDeleteCitizen}
         state={state}
       />
     </Layout>

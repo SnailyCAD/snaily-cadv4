@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import compareAsc from "date-fns/compareAsc";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
-import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
@@ -23,17 +22,17 @@ import type {
 } from "types/prisma";
 import { valueType } from "types/prisma";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { formatDate, requestAll } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
 import { Table } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
-import format from "date-fns/format";
 import { Title } from "components/shared/Title";
+import { AlertModal } from "components/modal/AlertModal";
+import { ModalIds } from "types/ModalIds";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -113,12 +112,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   function handleDeleteClick(value: TValue) {
     setTempValue(value);
-    openModal("deleteValue");
+    openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: TValue) {
     setTempValue(value);
-    openModal("manageValue");
+    openModal(ModalIds.ManageValue);
   }
 
   async function handleDelete() {
@@ -132,7 +131,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       if (json) {
         setValues((p) => p.filter((v) => v.id !== tempValue.id));
         setTempValue(null);
-        closeModal("deleteValue");
+        closeModal(ModalIds.AlertDeleteValue);
       }
     } catch (err) {
       console.log({ err });
@@ -145,7 +144,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   React.useEffect(() => {
     // reset form values
-    if (!isOpen("manageValue") && !isOpen("deleteValue")) {
+    if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
       setTimeout(() => setTempValue(null), 100);
     }
@@ -172,7 +171,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown values={values} />
         </div>
       </header>
@@ -197,7 +196,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             rowProps: { value },
             value: getValueStrFromValue(value),
             ...extraTableData(value),
-            createdAt: format(new Date(getCreatedAtFromValue(value)), "yyyy-MM-dd HH:mm:ss"),
+            createdAt: formatDate(getCreatedAtFromValue(value)),
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(value)} variant="success">
@@ -218,39 +217,23 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         />
       )}
 
-      <Modal
+      <AlertModal
+        id={ModalIds.AlertDeleteValue}
+        description={t.rich("alert_deleteValue", {
+          value:
+            typeof tempValue?.value === "string" ? tempValue.value : tempValue?.value.value ?? "",
+          span: (children) => {
+            return <span className="font-semibold">{children}</span>;
+          },
+        })}
+        onDeleteClick={handleDelete}
         title={typeT("DELETE")}
-        onClose={() => closeModal("deleteValue")}
-        isOpen={isOpen("deleteValue")}
-      >
-        <p className="my-3">
-          {t.rich("alert_deleteValue", {
-            value:
-              typeof tempValue?.value === "string" ? tempValue.value : tempValue?.value.value ?? "",
-            span: (children) => {
-              return <span className="font-semibold">{children}</span>;
-            },
-          })}
-        </p>
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <Button
-            variant="cancel"
-            disabled={state === "loading"}
-            onClick={() => closeModal("deleteValue")}
-          >
-            {common("cancel")}
-          </Button>
-          <Button
-            disabled={state === "loading"}
-            className="flex items-center"
-            variant="danger"
-            onClick={handleDelete}
-          >
-            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("delete")}
-          </Button>
-        </div>
-      </Modal>
+        state={state}
+        onClose={() => {
+          // wait for animation to play out
+          setTimeout(() => setTempValue(null), 100);
+        }}
+      />
 
       <ManageValueModal
         onCreate={(value) => {
@@ -322,11 +305,11 @@ export function handleFilter(value: TValue, search: string) {
   return false;
 }
 
-function getValueStrFromValue(value: TValue) {
+export function getValueStrFromValue(value: TValue) {
   return "createdAt" in value ? value.value : value.value.value;
 }
 
-function getCreatedAtFromValue(value: TValue) {
+export function getCreatedAtFromValue(value: TValue) {
   return "createdAt" in value ? value.createdAt : value.value.createdAt;
 }
 

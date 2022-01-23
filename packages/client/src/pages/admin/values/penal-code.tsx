@@ -1,14 +1,12 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { Button } from "components/Button";
-import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
 import { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import dynamic from "next/dynamic";
@@ -56,12 +54,12 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 
   function handleDeleteClick(value: PenalCode) {
     setTempValue(value);
-    openModal("deleteValue");
+    openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(value: PenalCode) {
     setTempValue(value);
-    openModal("manageValue");
+    openModal(ModalIds.ManageValue);
   }
 
   function handleEditGroup(group: PenalCodeGroup) {
@@ -151,7 +149,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       if (json) {
         setValues((p) => p.filter((v) => v.id !== tempValue.id));
         setTempValue(null);
-        closeModal("deleteValue");
+        closeModal(ModalIds.AlertDeleteValue);
       }
     } catch (err) {
       console.log({ err });
@@ -164,7 +162,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 
   React.useEffect(() => {
     // reset form values
-    if (!isOpen("manageValue") && !isOpen("deleteValue")) {
+    if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
       setTimeout(() => setTempValue(null), 100);
     }
@@ -178,7 +176,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
 
         <div className="flex gap-2">
-          <Button onClick={() => openModal("manageValue")}>{typeT("ADD")}</Button>
+          <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
@@ -292,38 +290,22 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         />
       )}
 
-      <Modal
+      <AlertModal
+        id={ModalIds.AlertDeleteValue}
+        description={t.rich("alert_deleteValue", {
+          value: tempValue?.title ?? "",
+          span: (children) => {
+            return <span className="font-semibold">{children}</span>;
+          },
+        })}
+        onDeleteClick={handleDelete}
         title={typeT("DELETE")}
-        onClose={() => closeModal("deleteValue")}
-        isOpen={isOpen("deleteValue")}
-      >
-        <p className="my-3">
-          {t.rich("alert_deleteValue", {
-            value: tempValue?.title ?? "",
-            span: (children) => {
-              return <span className="font-semibold">{children}</span>;
-            },
-          })}
-        </p>
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <Button
-            variant="cancel"
-            disabled={state === "loading"}
-            onClick={() => closeModal("deleteValue")}
-          >
-            {common("cancel")}
-          </Button>
-          <Button
-            disabled={state === "loading"}
-            className="flex items-center"
-            variant="danger"
-            onClick={handleDelete}
-          >
-            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("delete")}
-          </Button>
-        </div>
-      </Modal>
+        state={state}
+        onClose={() => {
+          // wait for animation to play out
+          setTimeout(() => setTempValue(null), 100);
+        }}
+      />
 
       <ManagePenalCode
         groups={groups}

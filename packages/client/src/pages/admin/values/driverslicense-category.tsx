@@ -1,14 +1,12 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
 import { Button } from "components/Button";
-import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
 import { DriversLicenseCategoryType, DriversLicenseCategoryValue, ValueType } from "types/prisma";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
@@ -17,6 +15,8 @@ import dynamic from "next/dynamic";
 import { SortableList } from "components/admin/values/SortableList";
 import { handleFilter } from "./[path]";
 import { Title } from "components/shared/Title";
+import { ModalIds } from "types/ModalIds";
+import { AlertModal } from "components/modal/AlertModal";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -70,12 +70,12 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
   function handleDeleteClick(type: DriversLicenseCategoryType, value: DriversLicenseCategoryValue) {
     setTempValue({ value, type });
-    openModal("deleteValue");
+    openModal(ModalIds.AlertDeleteValue);
   }
 
   function handleEditClick(type: DriversLicenseCategoryType, value: DriversLicenseCategoryValue) {
     setTempValue({ value, type });
-    openModal("manageValue");
+    openModal(ModalIds.ManageValue);
   }
 
   async function handleDelete() {
@@ -89,7 +89,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
       if (json) {
         setValues((p) => p.filter((v) => v.id !== tempValue.value?.id));
         setTempValue({ value: null, type: null });
-        closeModal("deleteValue");
+        closeModal(ModalIds.AlertDeleteValue);
       }
     } catch (err) {
       console.log({ err });
@@ -102,7 +102,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
   React.useEffect(() => {
     // reset form values
-    if (!isOpen("manageValue") && !isOpen("deleteValue")) {
+    if (!isOpen(ModalIds.ManageValue) && !isOpen(ModalIds.AlertDeleteValue)) {
       // timeout: wait for modal to close
       setTimeout(() => setTempValue({ value: null, type: null }), 100);
     }
@@ -137,7 +137,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
               <Button
                 onClick={() => {
-                  openModal("manageValue");
+                  openModal(ModalIds.ManageValue);
                   setTempValue((p) => ({ ...p, type }));
                 }}
               >
@@ -160,41 +160,23 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         );
       })}
 
-      <Modal
+      <AlertModal
+        id={ModalIds.AlertDeleteValue}
+        description={t.rich("alert_deleteValue", {
+          value: tempValue.value?.value.value ?? "",
+          span: (children) => {
+            return <span className="font-semibold">{children}</span>;
+          },
+        })}
+        onDeleteClick={handleDelete}
         title={typeT("DELETE")}
-        onClose={() => closeModal("deleteValue")}
-        isOpen={isOpen("deleteValue")}
-      >
-        <p className="my-3">
-          {t.rich("alert_deleteValue", {
-            value:
-              typeof tempValue.value?.value === "string"
-                ? tempValue.value?.value
-                : tempValue.value?.value?.value ?? "",
-            span: (children) => {
-              return <span className="font-semibold">{children}</span>;
-            },
-          })}
-        </p>
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <Button
-            variant="cancel"
-            disabled={state === "loading"}
-            onClick={() => closeModal("deleteValue")}
-          >
-            {common("cancel")}
-          </Button>
-          <Button
-            disabled={state === "loading"}
-            className="flex items-center"
-            variant="danger"
-            onClick={handleDelete}
-          >
-            {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("delete")}
-          </Button>
-        </div>
-      </Modal>
+        state={state}
+        onClose={() => {
+          // wait for animation to play out
+          // todo: remove "as any"
+          setTimeout(() => setTempValue({} as any), 100);
+        }}
+      />
 
       <ManageValueModal
         onCreate={(value: any) => {

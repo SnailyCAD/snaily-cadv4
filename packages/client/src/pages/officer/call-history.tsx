@@ -3,12 +3,11 @@ import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll } from "lib/utils";
+import { formatDate, makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { AssignedUnit, LeoIncident } from "types/prisma";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import format from "date-fns/format";
 import { Full911Call } from "state/dispatchState";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
@@ -108,7 +107,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
           filter={search}
           defaultSort={{ columnId: "createdAt", descending: true }}
           data={calls.map((call) => {
-            const createdAt = format(new Date(call.createdAt), "yyyy-MM-dd");
+            const createdAt = formatDate(call.createdAt);
             const caseNumbers = call.incidents.map((i) => `#${i.caseNumber}`).join(", ");
 
             return {
@@ -155,7 +154,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
         <DescriptionModal
           onClose={() => setTempCall(null)}
           isReadonly
-          value={tempCall?.descriptionData}
+          value={tempCall.descriptionData}
         />
       ) : null}
     </Layout>

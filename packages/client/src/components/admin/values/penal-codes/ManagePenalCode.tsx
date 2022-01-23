@@ -13,6 +13,7 @@ import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { ModalIds } from "types/ModalIds";
 
 interface Props {
   type: ValueType;
@@ -47,7 +48,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       });
 
       if (json?.id) {
-        closeModal("manageValue");
+        closeModal(ModalIds.ManageValue);
         onUpdate(penalCode, json);
       }
     } else {
@@ -57,7 +58,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       });
 
       if (json?.id) {
-        closeModal("manageValue");
+        closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
     }
@@ -93,8 +94,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     <Modal
       className="w-[1000px] min-h-[600px]"
       title={title}
-      onClose={() => closeModal("manageValue")}
-      isOpen={isOpen("manageValue")}
+      onClose={() => closeModal(ModalIds.ManageValue)}
+      isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
@@ -155,7 +156,11 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             </FormRow>
 
             <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={() => closeModal("manageValue")} variant="cancel">
+              <Button
+                type="reset"
+                onClick={() => closeModal(ModalIds.ManageValue)}
+                variant="cancel"
+              >
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

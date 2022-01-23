@@ -3,10 +3,10 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import format from "date-fns/format";
 import compareDesc from "date-fns/compareDesc";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { formatDate } from "lib/utils";
 
 interface Props {
   call: Full911Call | null;
@@ -57,7 +57,7 @@ export function CallEventsModal({ call, onClose }: Props) {
           call?.events
             .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
             .map((event) => {
-              const formatted = format(new Date(event.createdAt), "yyyy-MM-dd HH:mm:ss");
+              const formatted = formatDate(event.createdAt);
 
               return (
                 <li key={event.id}>

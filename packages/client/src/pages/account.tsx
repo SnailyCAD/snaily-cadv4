@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { Tab } from "@headlessui/react";
 import type { GetServerSideProps } from "next";
-import { useTranslations } from "use-intl";
+import { useTranslations } from "next-intl";
 
 import { useAuth } from "src/context/AuthContext";
 import { TabList } from "components/shared/TabList";

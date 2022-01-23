@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll, yesOrNoText } from "lib/utils";
+import { formatDate, makeUnitName, requestAll, yesOrNoText } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -11,7 +11,6 @@ import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { LeoIncident } from "types/prisma";
 import { FullOfficer, useDispatchState } from "state/dispatchState";
-import { format } from "date-fns";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -159,7 +158,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                 )}
               </span>
             ),
-            createdAt: format(new Date(incident.createdAt), "yyyy-MM-dd HH:mm"),
+            createdAt: formatDate(incident.createdAt),
             actions: (
               <>
                 <Button
@@ -211,7 +210,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
         <DescriptionModal
           onClose={() => setTempIncident(null)}
           isReadonly
-          value={tempIncident?.descriptionData}
+          value={tempIncident.descriptionData}
         />
       ) : null}
     </Layout>

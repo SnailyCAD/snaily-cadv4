@@ -2,7 +2,7 @@
   "private": true,
   "name": "snailycad",
   "version": "1.0.0-beta.40",
-  "packageManager": "yarn@3.1.0",
+  "packageManager": "yarn@3.1.1",
   "workspaces": [
     "packages/**"
   ],
@@ -12,7 +12,8 @@
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx",
     "lint:fix": "eslint . --ext .ts,.js,.tsx,.jsx --fix",
     "prepare": "husky install",
-    "bump-version": "node scripts/bump-version.mjs"
+    "bump-version": "node scripts/bump-version.mjs",
+    "postinstall": "husky install"
   },
   "license": "MIT",
   "devDependencies": {

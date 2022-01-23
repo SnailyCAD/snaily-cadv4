@@ -1,6 +1,6 @@
-import axios, { Method, AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { type Method, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import { serialize } from "cookie";
-import { IncomingMessage } from "connect";
+import type { IncomingMessage } from "connect";
 import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { IFRAME_COOKIE_NAME } from "src/pages/api/token";

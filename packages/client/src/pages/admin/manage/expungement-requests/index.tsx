@@ -2,13 +2,12 @@ import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { requestAll } from "lib/utils";
+import { formatDate, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
 import { FullRequest } from "src/pages/courthouse";
 import { getTitles } from "components/courthouse/RequestExpungement";
-import { format } from "date-fns";
 import { ExpungementRequestStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
@@ -63,7 +62,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                 .map((w) => getTitles(w))
                 .join(", ") || common("none"),
             status: request.status.toLowerCase(),
-            createdAt: format(new Date(request.createdAt), "yyyy-MM-dd - HH:mm:ss"),
+            createdAt: formatDate(request.createdAt),
             actions: (
               <>
                 <Button

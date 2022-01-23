@@ -1,6 +1,4 @@
-import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
-import format from "date-fns/format";
 import { useRouter } from "next/router";
 import { Record, RecordType, Violation, Warrant } from "types/prisma";
 import { useTranslations } from "use-intl";
@@ -10,7 +8,7 @@ import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
-import { makeUnitName } from "lib/utils";
+import { formatDate, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullOfficer } from "state/dispatchState";
 import { Table } from "components/shared/Table";
@@ -125,7 +123,7 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
             description: record.notes,
-            createdAt: format(new Date(record.createdAt), "yyyy-MM-dd"),
+            createdAt: formatDate(record.createdAt),
             actions: isCitizen ? null : (
               <Button
                 type="button"
@@ -219,7 +217,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
             return {
               officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
               description: warrant.description,
-              createdAt: format(new Date(warrant.createdAt), "yyyy-MM-dd"),
+              createdAt: formatDate(warrant.createdAt),
               actions: (
                 <div className="flex gap-2">
                   <Select

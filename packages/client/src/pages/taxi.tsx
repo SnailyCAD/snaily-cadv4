@@ -11,9 +11,8 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { requestAll } from "lib/utils";
+import { formatDate, requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
-import format from "date-fns/format";
 import { Title } from "components/shared/Title";
 
 const AssignToCallModal = dynamic(
@@ -133,7 +132,7 @@ export default function Taxi(props: Props) {
               ),
             caller: `${call.creator.name} ${call.creator.surname}`,
             assignedUnit: assignedUnit(call),
-            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
+            createdAt: formatDate(call.createdAt),
             actions: (
               <>
                 <Button onClick={() => editClick(call)} small variant="success">
@@ -163,7 +162,7 @@ export default function Taxi(props: Props) {
         <DescriptionModal
           onClose={() => setTempCall(null)}
           isReadonly
-          value={tempCall?.descriptionData}
+          value={tempCall.descriptionData}
         />
       ) : null}
     </Layout>

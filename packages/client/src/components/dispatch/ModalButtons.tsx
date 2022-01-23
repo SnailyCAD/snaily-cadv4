@@ -11,7 +11,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface MButton {
   nameKey: [string, string];
-  modalId: string;
+  modalId: ModalIds;
   isEnabled?(features: Record<Feature, boolean>): boolean;
 }
 

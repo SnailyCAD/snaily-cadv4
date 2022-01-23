@@ -11,8 +11,7 @@ import { Citizen, TowCall } from "types/prisma";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { requestAll } from "lib/utils";
-import format from "date-fns/format";
+import { formatDate, requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 
@@ -132,7 +131,7 @@ export default function Tow(props: Props) {
               ),
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
-            createdAt: format(new Date(call.createdAt), "yyyy-MM-dd - HH:mm:ss"),
+            createdAt: formatDate(call.createdAt),
             actions: (
               <>
                 <Button onClick={() => editClick(call)} small variant="success">
@@ -162,7 +161,7 @@ export default function Tow(props: Props) {
         <DescriptionModal
           onClose={() => setTempCall(null)}
           isReadonly
-          value={tempCall?.descriptionData}
+          value={tempCall.descriptionData}
         />
       ) : null}
     </Layout>

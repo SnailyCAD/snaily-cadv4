@@ -1,4 +1,3 @@
-import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -17,11 +16,9 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { OfficerLog } from "types/prisma";
-import formatDistance from "date-fns/formatDistance";
-import format from "date-fns/format";
-import { Table } from "components/shared/Table";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
+import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 
 type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
 
@@ -178,31 +175,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
         <div className="mt-3">
           <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
 
-          <Table
-            data={unit.logs.map((log) => {
-              const startedAt = format(new Date(log.startedAt), "yyyy-MM-dd HH:mm:ss");
-
-              const endedAt = log.endedAt
-                ? format(new Date(log.endedAt), "yyyy-MM-dd HH:mm:ss")
-                : t("notEndedYet");
-
-              const totalTime =
-                log.endedAt !== null
-                  ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
-                  : t("notEndedYet");
-
-              return {
-                startedAt,
-                endedAt,
-                totalTime,
-              };
-            })}
-            columns={[
-              { Header: t("startedAt"), accessor: "startedAt" },
-              { Header: t("endedAt"), accessor: "endedAt" },
-              { Header: t("totalTime"), accessor: "totalTime" },
-            ]}
-          />
+          <OfficerLogsTable officer={unit} logs={unit.logs} />
         </div>
       ) : null}
     </AdminLayout>

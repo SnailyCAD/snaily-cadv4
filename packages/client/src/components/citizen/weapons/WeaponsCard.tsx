@@ -8,8 +8,8 @@ import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
-import format from "date-fns/format";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { formatDate } from "lib/utils";
 
 export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { openModal, closeModal } = useModal();
@@ -69,7 +69,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
               model: weapon.model.value.value,
               registrationStatus: weapon.registrationStatus.value,
               serialNumber: weapon.serialNumber,
-              createdAt: format(new Date(weapon.createdAt), "yyyy-MM-dd"),
+              createdAt: formatDate(weapon.createdAt),
               actions: (
                 <>
                   <Button onClick={() => handleEditClick(weapon)} small variant="success">

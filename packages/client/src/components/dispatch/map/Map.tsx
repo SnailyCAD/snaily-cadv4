@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { Component } from "react";
+import * as React from "react";
 
 import L from "leaflet";
 import J from "jquery";
@@ -56,7 +55,7 @@ interface MapState {
   loading: boolean;
 }
 
-class MapClass extends Component<Props, MapState> {
+class MapClass extends React.Component<Props, MapState> {
   CADSocket: Socket | null;
   MAPSocket: WebSocket | null;
 
@@ -165,7 +164,7 @@ class MapClass extends Component<Props, MapState> {
       const blipArr = this.state.blips[id];
 
       blipArr?.forEach((blip) => {
-        const marker = this.state.MarkerStore?.[blip.markerId];
+        const marker = this.state.MarkerStore[blip.markerId];
 
         marker?.addTo(this.state.map!);
       });
@@ -179,7 +178,7 @@ class MapClass extends Component<Props, MapState> {
 
         for (const i in blipArray) {
           const blip = blipArray[i];
-          const fallbackName = `${id} | ${this.state?.MarkerTypes?.[+id]?.name}` || id;
+          const fallbackName = `${id} | ${this.state.MarkerTypes[+id]?.name}` || id;
 
           blip.name = blip?.name || fallbackName;
           blip.description = blip?.description || "N/A";
@@ -242,7 +241,7 @@ class MapClass extends Component<Props, MapState> {
       .addTo(where)
       .bindPopup(infoContent);
 
-    if (payload.icon !== null && payload.icon?.iconUrl) {
+    if (payload.icon?.iconUrl) {
       const img = L.icon(payload.icon);
       marker.setIcon(img);
     }
@@ -275,7 +274,7 @@ class MapClass extends Component<Props, MapState> {
       title: blip.name,
       pos: blip.pos,
       description: blip.description,
-      icon: this.state.MarkerTypes?.[blip.type] ?? null,
+      icon: this.state.MarkerTypes[blip.type] ?? null,
       id: uuid(),
       isBlip: true,
     };
@@ -391,7 +390,7 @@ class MapClass extends Component<Props, MapState> {
 
           for (const i in blipArray) {
             const blip = blipArray[i];
-            const fallbackName = this.state.MarkerTypes?.[+id]?.name || id;
+            const fallbackName = this.state.MarkerTypes[+id]?.name || id;
 
             blip.name = blip?.name || fallbackName;
             blip.description = blip?.description || "N/A";
@@ -404,30 +403,28 @@ class MapClass extends Component<Props, MapState> {
     };
 
     const createBlip = (blip: Blip) => {
-      if (!blip.pos) {
-        if (!blip?.pos) {
-          blip.pos = {
-            x: blip.x,
-            y: blip.y,
-            z: blip.z,
-          };
+      if (!blip?.pos) {
+        blip.pos = {
+          x: blip.x,
+          y: blip.y,
+          z: blip.z,
+        };
 
-          delete blip.x;
-          delete blip.y;
-          delete blip.z;
-        }
+        delete blip.x;
+        delete blip.y;
+        delete blip.z;
       }
 
       const obj: MarkerPayload = {
         title: blip.name,
         pos: blip.pos,
         description: blip.description,
-        icon: this.state.MarkerTypes?.[blip.type] ?? null,
+        icon: this.state.MarkerTypes[blip.type] ?? null,
         id: uuid(),
         isBlip: true,
       };
 
-      if (!this.state.blips?.[blip.type]) {
+      if (!this.state.blips[blip.type]) {
         this.setState((prev) => {
           prev.blips[blip.type] = [];
 
@@ -540,7 +537,7 @@ class MapClass extends Component<Props, MapState> {
           if (!player.identifier) return;
           if (!player.name) return;
 
-          const marker = this.state?.MarkerStore?.find((marker) => {
+          const marker = this.state.MarkerStore.find((marker) => {
             return marker.payload?.player?.identifier === player.identifier;
           });
 
@@ -585,7 +582,7 @@ class MapClass extends Component<Props, MapState> {
             }
           } else {
             const icon =
-              this.state.MarkerTypes?.[Number(player.icon)] ?? (this.state.MarkerTypes[6] as IIcon);
+              this.state.MarkerTypes[Number(player.icon)] ?? (this.state.MarkerTypes[6] as IIcon);
 
             const marker = this.createMarker(
               false,
@@ -664,7 +661,7 @@ class MapClass extends Component<Props, MapState> {
       }
     }
 
-    if (hasChanged && this.props.calls && this.state.map) {
+    if (hasChanged && this.props.calls.length && this.state.map) {
       this.handleCalls();
     }
   }
@@ -703,10 +700,10 @@ class MapClass extends Component<Props, MapState> {
           <Button onClick={() => this.props.openModal(ModalIds.Manage911Call)}>
             {this.props.t("Calls.create911Call")}
           </Button>
-          {["owner", "admin", "moderator"].includes(`${this.props?.user?.rank}`) ? (
+          {["owner", "admin", "moderator"].includes(`${this.props.user?.rank}`) ? (
             <button
               onClick={() => {
-                if (this.state.showAllPlayers === true) {
+                if (this.state.showAllPlayers) {
                   window.location.reload();
                 }
 
