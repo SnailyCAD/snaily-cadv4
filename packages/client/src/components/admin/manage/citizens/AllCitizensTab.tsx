@@ -4,13 +4,13 @@ import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Disclosure, Tab } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
 import { Citizen, User } from "types/prisma";
-import { formatCitizenAddress } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
+import { Table } from "components/shared/Table";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -73,77 +73,25 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
             />
           </FormField>
 
-          {citizens.filter(handleFilter.bind(null, search)).map((citizen, idx) => (
-            <li
-              className="flex flex-col w-full p-2 px-4 my-1 bg-gray-200 rounded-md dark:bg-gray-2"
-              key={citizen.id}
-            >
-              <Disclosure>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-gray-500 select-none">{idx + 1}.</span>
-                    <span className="ml-2">
-                      {citizen.name} {citizen.surname}
-                    </span>
-                  </div>
-
-                  <div>
-                    <Disclosure.Button as={Button}>{t("viewInfo")}</Disclosure.Button>
-                    <Button
-                      onClick={() => handleDeleteClick(citizen)}
-                      variant="danger"
-                      className="ml-2"
-                    >
-                      {common("delete")}
-                    </Button>
-                  </div>
-                </div>
-
-                <Disclosure.Panel className="px-5">
-                  <p>
-                    <span className="font-semibold">{tCitizen("fullName")}: </span>
-                    {citizen.name} {citizen.surname}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("gender")}: </span>
-                    {citizen.gender.value}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("ethnicity")}: </span>
-                    {citizen.ethnicity.value}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("hairColor")}: </span>
-                    {citizen.hairColor}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("eyeColor")}: </span>
-                    {citizen.eyeColor}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("weight")}: </span>
-                    {citizen.weight}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("height")}: </span>
-                    {citizen.height}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("address")}: </span>
-                    {formatCitizenAddress(citizen)}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{tCitizen("phoneNumber")}: </span>
-                    {citizen.phoneNumber ?? common("none")}
-                  </p>
-                  <p>
-                    <span className="font-semibold">{t("user")}: </span>
-                    {citizen.user?.username ?? common("none")}
-                  </p>
-                </Disclosure.Panel>
-              </Disclosure>
-            </li>
-          ))}
+          <Table
+            filter={search}
+            data={citizens.map((citizen) => ({
+              name: `${citizen.name} ${citizen.surname}`,
+              gender: citizen.gender.value,
+              ethnicity: citizen.ethnicity.value,
+              actions: (
+                <Button small variant="danger" onClick={() => handleDeleteClick(citizen)}>
+                  {common("delete")}
+                </Button>
+              ),
+            }))}
+            columns={[
+              { Header: tCitizen("fullName"), accessor: "name" },
+              { Header: tCitizen("gender"), accessor: "gender" },
+              { Header: tCitizen("ethnicity"), accessor: "ethnicity" },
+              { Header: common("actions"), accessor: "actions" },
+            ]}
+          />
         </ul>
       )}
 
@@ -186,22 +134,5 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
         </div>
       </Modal>
     </Tab.Panel>
-  );
-}
-
-function handleFilter(search: string, citizen: Citizen) {
-  if (!search) {
-    return true;
-  }
-
-  const { name, surname } = citizen;
-
-  if (`${name} ${surname}`.toLowerCase() === search.toLowerCase()) {
-    return true;
-  }
-
-  return (
-    name.toLowerCase().includes(search.toLowerCase()) ||
-    surname.toLowerCase().includes(search.toLowerCase())
   );
 }

@@ -1,7 +1,15 @@
 /* eslint-disable react/jsx-key */
 import { classNames } from "lib/classNames";
 import * as React from "react";
-import { ArrowDownShort, ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
+import {
+  ArrowDownShort,
+  ArrowDownUp,
+  ArrowsExpand,
+  ChevronDoubleLeft,
+  ChevronDoubleRight,
+  ChevronLeft,
+  ChevronRight,
+} from "react-bootstrap-icons";
 import {
   useTable,
   useSortBy,
@@ -11,10 +19,13 @@ import {
   Row,
   TableInstance,
   useRowState,
+  usePagination,
 } from "react-table";
 import { ReactSortable } from "react-sortablejs";
+import { Button } from "components/Button";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
+const MAX_ITEMS_PER_PAGE = 50 as const;
 
 type TableData<T extends object, RP extends object> = {
   rowProps?: JSX.IntrinsicElements["tr"] & RP;
@@ -53,9 +64,10 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
 
   const instance = useTable<TableData<T, RowProps>>(
     // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
-    { autoResetSortBy: false, columns, data },
+    { autoResetSortBy: false, columns, data, initialState: { pageSize: MAX_ITEMS_PER_PAGE } },
     useGlobalFilter,
     useSortBy,
+    usePagination,
     useRowState,
     useRowSelect,
     (hooks) => {
@@ -111,7 +123,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
     setGlobalFilter,
     toggleSortBy,
     headerGroups,
-    rows,
+    page,
     selectedFlatRows,
   } = instance;
 
@@ -152,7 +164,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
   const containerProps = {
     ...props.containerProps,
     className: classNames(
-      "block max-w-full mt-3 overflow-x-auto thin-scrollbar",
+      "block max-w-full mt-3 overflow-x-auto thin-scrollbar pb-5",
       props.containerProps?.className,
     ),
   };
@@ -199,19 +211,42 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
           {...getTableBodyProps()}
           animation={200}
           className="mt-5"
-          list={rows}
+          list={page}
           disabled={!props.dragDrop?.enabled}
           tag="tbody"
           setList={handleMove}
           handle={`.${DRAGGABLE_TABLE_HANDLE}`}
         >
-          {rows.map((row) => {
+          {page.map((row) => {
             prepareRow(row);
 
             return <Row row={row} {...row.getRowProps()} />;
           })}
         </ReactSortable>
       </table>
+
+      {data.length > MAX_ITEMS_PER_PAGE ? (
+        <div className="mt-5 flex justify-center items-center gap-3">
+          <Button onClick={() => instance.gotoPage(0)} disabled={!instance.canPreviousPage}>
+            <ChevronDoubleLeft aria-label="Show first page" width={15} height={25} />
+          </Button>
+          <Button onClick={() => instance.previousPage()} disabled={!instance.canPreviousPage}>
+            <ChevronLeft aria-label="Previous page" width={15} height={25} />
+          </Button>
+          <span>
+            {instance.state.pageIndex + 1} of {instance.pageOptions.length}
+          </span>
+          <Button onClick={() => instance.nextPage()} disabled={!instance.canNextPage}>
+            <ChevronRight aria-label="Next page" width={15} height={25} />
+          </Button>
+          <Button
+            onClick={() => instance.gotoPage(instance.pageCount - 1)}
+            disabled={!instance.canNextPage}
+          >
+            <ChevronDoubleRight aria-label="Show last page" width={15} height={25} />
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }
