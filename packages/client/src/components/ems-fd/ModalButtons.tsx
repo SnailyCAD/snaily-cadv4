@@ -9,7 +9,7 @@ import { makeUnitName } from "lib/utils";
 
 interface MButton {
   nameKey: [string, string];
-  modalId: string;
+  modalId: ModalIds;
 }
 
 const buttons: MButton[] = [

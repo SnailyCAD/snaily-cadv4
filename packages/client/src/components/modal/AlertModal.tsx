@@ -1,11 +1,12 @@
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Modal, ModalProps } from "./Modal";
 
 type Props = Pick<ModalProps, "title" | "className"> & {
-  id: string;
+  id: ModalIds;
   description: string | React.ReactFragment;
   state?: any;
   onDeleteClick: () => void;
