@@ -79,6 +79,10 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               name: `${citizen.name} ${citizen.surname}`,
               gender: citizen.gender.value,
               ethnicity: citizen.ethnicity.value,
+              hairColor: citizen.hairColor,
+              eyeColor: citizen.eyeColor,
+              weight: citizen.weight,
+              height: citizen.height,
               actions: (
                 <Button small variant="danger" onClick={() => handleDeleteClick(citizen)}>
                   {common("delete")}
@@ -89,6 +93,10 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               { Header: tCitizen("fullName"), accessor: "name" },
               { Header: tCitizen("gender"), accessor: "gender" },
               { Header: tCitizen("ethnicity"), accessor: "ethnicity" },
+              { Header: tCitizen("hairColor"), accessor: "hairColor" },
+              { Header: tCitizen("eyeColor"), accessor: "eyeColor" },
+              { Header: tCitizen("weight"), accessor: "weight" },
+              { Header: tCitizen("height"), accessor: "height" },
               { Header: common("actions"), accessor: "actions" },
             ]}
           />
