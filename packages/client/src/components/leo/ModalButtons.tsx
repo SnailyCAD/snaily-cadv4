@@ -67,6 +67,7 @@ export function ModalButtons() {
 
     await execute("/leo/panic-button", {
       method: "POST",
+      data: { officerId: activeOfficer.id },
     });
   }
 
