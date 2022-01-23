@@ -46,7 +46,11 @@ export class LicensesController {
       },
     });
 
-    await linkDlCategories(citizen.id, data.driversLicenseCategory, data.pilotLicenseCategory);
+    await linkDlCategories(
+      citizen.id,
+      data.driversLicenseCategory ?? [],
+      data.pilotLicenseCategory ?? [],
+    );
 
     const updated = await prisma.citizen.findUnique({
       where: {
