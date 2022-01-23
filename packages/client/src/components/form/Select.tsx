@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useTranslations } from "use-intl";
 import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
 import { useAuth } from "context/AuthContext";
