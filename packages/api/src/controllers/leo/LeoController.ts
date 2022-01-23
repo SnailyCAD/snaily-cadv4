@@ -271,13 +271,19 @@ export class LeoController {
 
   @Post("/panic-button")
   @UseBefore(ActiveOfficer)
-  async panicButton(@Context("activeOfficer") officer: Officer) {
-    let fullOfficer = await prisma.officer.findUnique({
+  async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
+    let officer = await prisma.officer.findFirst({
       where: {
-        id: officer.id,
+        id: officerId,
+        // @ts-expect-error `API_TOKEN` is a rank that gets appended in `IsAuth`
+        userId: user.rank === "API_TOKEN" ? undefined : user.id,
       },
       include: leoProperties,
     });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
 
     const code = await prisma.statusValue.findFirst({
       where: {
@@ -290,7 +296,7 @@ export class LeoController {
       /**
        * officer is already in panic-mode -> set status back to `ON_DUTY`
        */
-      if (fullOfficer?.statusId === code?.id) {
+      if (officer?.statusId === code?.id) {
         const onDutyCode = await prisma.statusValue.findFirst({
           where: {
             shouldDo: ShouldDoType.SET_ON_DUTY,
@@ -302,7 +308,7 @@ export class LeoController {
         }
 
         type = "OFF";
-        fullOfficer = await prisma.officer.update({
+        officer = await prisma.officer.update({
           where: {
             id: officer.id,
           },
@@ -315,7 +321,7 @@ export class LeoController {
         /**
          * officer is not yet in panic-mode -> set status to panic button status
          */
-        fullOfficer = await prisma.officer.update({
+        officer = await prisma.officer.update({
           where: {
             id: officer.id,
           },
@@ -328,7 +334,7 @@ export class LeoController {
     }
 
     this.socket.emitUpdateOfficerStatus();
-    this.socket.emitPanicButtonLeo(fullOfficer, type);
+    this.socket.emitPanicButtonLeo(officer, type);
   }
 
   @Get("/impounded-vehicles")
