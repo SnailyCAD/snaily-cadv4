@@ -59,6 +59,11 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
 
   return (
     <Tab.Panel className="mt-3">
+      <p className="my-2 dark:text-gray-300">
+        Here you can mass import citizens that can may not be connected to a registered user
+        account.
+      </p>
+
       <form className="mt-5" onSubmit={onSubmit}>
         {Object.entries(citizens).map(([id, value]) => {
           return (
