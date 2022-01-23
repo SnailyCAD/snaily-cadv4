@@ -11,6 +11,9 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import type { Citizen, User } from "types/prisma";
 import { X } from "react-bootstrap-icons";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
+import { ImportCitizensModal } from "./ImportCitizensModal";
 
 interface Props {
   onSuccess(citizens: (Citizen & { user: User | null })[]): void;
@@ -20,6 +23,7 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
   const { gender, ethnicity } = useValues();
   const { state, execute } = useFetch();
+  const { openModal } = useModal();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -59,10 +63,16 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
 
   return (
     <Tab.Panel className="mt-3">
-      <p className="my-2 dark:text-gray-300">
-        Here you can mass import citizens that can may not be connected to a registered user
-        account.
-      </p>
+      <header className="flex items-center justify-between gap-3">
+        <p className="my-2 dark:text-gray-300">
+          Here you can mass import citizens that can may not be connected to a registered user
+          account.
+        </p>
+
+        <div className="min-w-fit w-fit">
+          <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
+        </div>
+      </header>
 
       <form className="mt-5" onSubmit={onSubmit}>
         {Object.entries(citizens).map(([id, value]) => {
@@ -135,6 +145,8 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
           </Button>
         </div>
       </form>
+
+      <ImportCitizensModal onImport={onSuccess} />
     </Tab.Panel>
   );
 }

@@ -61,6 +61,11 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
   gender: z.string().min(1).max(255),
   ethnicity: z.string().min(1).max(255),
   dateOfBirth: z.date().or(z.string().min(2)),
+  address: z.string().max(255).nullable().optional(),
+  eyeColor: z.string().max(255).nullable().optional(),
+  hairColor: z.string().max(255).nullable().optional(),
+  height: z.string().max(255).nullable().optional(),
+  weight: z.string().max(255).nullable().optional(),
 });
 
 export const IMPORT_CITIZENS_ARR = z.array(IMPORT_CITIZENS_SCHEMA).min(1);
