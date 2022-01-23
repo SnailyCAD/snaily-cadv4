@@ -42,8 +42,8 @@ export const LICENSE_SCHEMA = z.object({
   weaponLicense: z.string().max(255),
   pilotLicense: z.string().max(255),
   ccw: z.string().max(255),
-  driversLicenseCategory: z.array(z.any()),
-  pilotLicenseCategory: z.array(z.any()),
+  driversLicenseCategory: z.array(z.any()).nullable().optional(),
+  pilotLicenseCategory: z.array(z.any()).nullable().optional(),
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({
