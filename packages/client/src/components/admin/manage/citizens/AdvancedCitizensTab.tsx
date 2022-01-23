@@ -70,7 +70,7 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
         </p>
 
         <div className="min-w-fit w-fit">
-          <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import from file</Button>
+          <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
         </div>
       </header>
 
