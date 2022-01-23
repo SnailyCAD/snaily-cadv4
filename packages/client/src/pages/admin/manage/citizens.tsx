@@ -22,7 +22,6 @@ interface Props {
 
 export default function ManageCitizens({ citizens: data }: Props) {
   const [citizens, setCitizens] = React.useState<(Citizen & { user: User | null })[]>(data);
-
   const t = useTranslations("Management");
 
   React.useEffect(() => {

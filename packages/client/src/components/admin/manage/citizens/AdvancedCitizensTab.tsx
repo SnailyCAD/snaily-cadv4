@@ -123,12 +123,7 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
           <Button
             type="button"
             onClick={() => {
-              setCitizens((p) => {
-                return {
-                  ...p,
-                  ...createInitialCitizen(),
-                };
-              });
+              setCitizens((p) => ({ ...p, ...createInitialCitizen() }));
             }}
           >
             Add citizen

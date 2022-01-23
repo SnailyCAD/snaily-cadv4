@@ -46,19 +46,15 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
       return reasonRef.current.focus();
     }
 
-    try {
-      const { json } = await execute(`/admin/manage/citizens/${tempValue.id}`, {
-        method: "DELETE",
-        data: { reason },
-      });
+    const { json } = await execute(`/admin/manage/citizens/${tempValue.id}`, {
+      method: "DELETE",
+      data: { reason },
+    });
 
-      if (json) {
-        setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
-        setTempValue(null);
-        closeModal(ModalIds.AlertDeleteCitizen);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setCitizens((p) => p.filter((v) => v.id !== tempValue.id));
+      setTempValue(null);
+      closeModal(ModalIds.AlertDeleteCitizen);
     }
   }
 
