@@ -132,9 +132,9 @@ enum StatusViewMode {
 
 model Citizen {
   id                   String                        @id @default(cuid())
-  user                 User                          @relation(fields: [userId], references: [id], onDelete: Cascade)
   socialSecurityNumber String?
-  userId               String
+  user                 User?                         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String?
   name                 String                        @db.VarChar(255)
   surname              String                        @db.VarChar(255)
   dateOfBirth          DateTime
@@ -237,8 +237,8 @@ model Weapon {
 
 model MedicalRecord {
   id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
   citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String
   createdAt DateTime @default(now())
