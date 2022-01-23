@@ -48,8 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     ["/admin/values/gender?paths=ethnicity", []],
   ]);
 
-  console.log({ values });
-
   return {
     props: {
       citizens,
