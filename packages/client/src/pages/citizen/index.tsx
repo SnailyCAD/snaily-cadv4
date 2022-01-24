@@ -48,7 +48,8 @@ export default function CitizenPage({ citizens }: Props) {
       <Title>{t("citizens")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">
-        Citizens{showAop ? <span> - AOP: {areaOfPlay}</span> : null}
+        {t("citizens")}
+        {showAop ? <span> - AOP: {areaOfPlay}</span> : null}
       </h1>
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
