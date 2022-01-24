@@ -153,8 +153,9 @@ export default function MyDeputies({ deputies: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ deputies, citizens }, values] = await requestAll(req, [
-    ["/ems-fd?createCitizen=true", { deputies: [] }],
+  const [{ deputies }, citizens, values] = await requestAll(req, [
+    ["/ems-fd", { deputies: [] }],
+    ["/citizen", []],
     ["/admin/values/department?paths=division", []],
   ]);
 
