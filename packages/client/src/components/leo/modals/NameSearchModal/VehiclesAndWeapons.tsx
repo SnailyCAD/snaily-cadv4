@@ -1,4 +1,5 @@
 import { Table } from "components/shared/Table";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { formatDate } from "lib/utils";
 import { RegisteredVehicle, Weapon } from "types/prisma";
 import { useTranslations } from "use-intl";
@@ -11,6 +12,7 @@ interface Props {
 export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   return (
     <>
@@ -41,35 +43,37 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
         )}
       </section>
 
-      <section id="weapons" className="mt-5">
-        <h3 className="text-xl font-semibold">{t("Weapons.registeredWeapons")}</h3>
+      {WEAPON_REGISTRATION ? (
+        <section id="weapons" className="mt-5">
+          <h3 className="text-xl font-semibold">{t("Weapons.registeredWeapons")}</h3>
 
-        {weapons.length <= 0 ? (
-          <p className="text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
-        ) : (
-          <Table
-            data={weapons.map((weapon) => ({
-              model: weapon.model.value.value,
-              registrationStatus: weapon.registrationStatus.value,
-              serialNumber: weapon.serialNumber,
-            }))}
-            columns={[
-              {
-                Header: t("Weapons.model"),
-                accessor: "model",
-              },
-              {
-                Header: t("Weapons.registrationStatus"),
-                accessor: "registrationStatus",
-              },
-              {
-                Header: t("Weapons.serialNumber"),
-                accessor: "serialNumber",
-              },
-            ]}
-          />
-        )}
-      </section>
+          {weapons.length <= 0 ? (
+            <p className="text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
+          ) : (
+            <Table
+              data={weapons.map((weapon) => ({
+                model: weapon.model.value.value,
+                registrationStatus: weapon.registrationStatus.value,
+                serialNumber: weapon.serialNumber,
+              }))}
+              columns={[
+                {
+                  Header: t("Weapons.model"),
+                  accessor: "model",
+                },
+                {
+                  Header: t("Weapons.registrationStatus"),
+                  accessor: "registrationStatus",
+                },
+                {
+                  Header: t("Weapons.serialNumber"),
+                  accessor: "serialNumber",
+                },
+              ]}
+            />
+          )}
+        </section>
+      ) : null}
     </>
   );
 }
