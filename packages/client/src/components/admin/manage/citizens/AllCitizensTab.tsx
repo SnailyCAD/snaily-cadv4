@@ -12,6 +12,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
 import { formatDate } from "lib/utils";
+import { Select } from "components/form/Select";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -26,6 +27,9 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
   const [reason, setReason] = React.useState("");
+  const [userFilter, setUserFilter] = React.useState<string | null>(null);
+  const users = React.useMemo(() => makeUsersList(citizens), [citizens]);
+
   const reasonRef = React.useRef<HTMLInputElement>(null);
 
   const { state, execute } = useFetch();
@@ -65,32 +69,49 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
         <p className="mt-5">{t("noCitizens")}</p>
       ) : (
         <ul className="mt-5">
-          <FormField label={common("search")} className="my-2">
-            <Input
-              placeholder="john doe"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-              className=""
-            />
-          </FormField>
+          <div className="flex items-center gap-2">
+            <FormField label={common("search")} className="w-full">
+              <Input
+                placeholder="john doe"
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+                className=""
+              />
+            </FormField>
+
+            <FormField className="w-40" label="Filter">
+              <Select
+                isClearable
+                value={userFilter}
+                onChange={(e) => setUserFilter(e.target.value)}
+                values={users.map((u) => ({
+                  label: u.username,
+                  value: u.id,
+                }))}
+              />
+            </FormField>
+          </div>
 
           <Table
             filter={search}
-            data={citizens.map((citizen) => ({
-              name: `${citizen.name} ${citizen.surname}`,
-              dateOfBirth: formatDate(citizen.dateOfBirth, { onlyDate: true }),
-              gender: citizen.gender.value,
-              ethnicity: citizen.ethnicity.value,
-              hairColor: citizen.hairColor,
-              eyeColor: citizen.eyeColor,
-              weight: citizen.weight,
-              height: citizen.height,
-              actions: (
-                <Button small variant="danger" onClick={() => handleDeleteClick(citizen)}>
-                  {common("delete")}
-                </Button>
-              ),
-            }))}
+            data={citizens
+              .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
+              .map((citizen) => ({
+                name: `${citizen.name} ${citizen.surname}`,
+                dateOfBirth: formatDate(citizen.dateOfBirth, { onlyDate: true }),
+                gender: citizen.gender.value,
+                ethnicity: citizen.ethnicity.value,
+                hairColor: citizen.hairColor,
+                eyeColor: citizen.eyeColor,
+                weight: citizen.weight,
+                height: citizen.height,
+                user: citizen.user?.username ?? "No user",
+                actions: (
+                  <Button small variant="danger" onClick={() => handleDeleteClick(citizen)}>
+                    {common("delete")}
+                  </Button>
+                ),
+              }))}
             columns={[
               { Header: tCitizen("fullName"), accessor: "name" },
               { Header: tCitizen("dateOfBirth"), accessor: "dateOfBirth" },
@@ -100,6 +121,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               { Header: tCitizen("eyeColor"), accessor: "eyeColor" },
               { Header: tCitizen("weight"), accessor: "weight" },
               { Header: tCitizen("height"), accessor: "height" },
+              { Header: "User", accessor: "user" },
               { Header: common("actions"), accessor: "actions" },
             ]}
           />
@@ -146,4 +168,22 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
       </Modal>
     </Tab.Panel>
   );
+}
+
+function makeUsersList(citizens: CitizenWithUser[]) {
+  const list = new Map<string, { id: string; username: string }>();
+  const arr = [];
+
+  for (const citizen of citizens) {
+    const obj = {
+      id: String(citizen.userId),
+      username: citizen.user?.username ?? "No User",
+    };
+
+    if (list.has(String(citizen.userId))) continue;
+    list.set(String(citizen.userId), obj);
+    arr.push(obj);
+  }
+
+  return arr;
 }
