@@ -2,15 +2,16 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, Post } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { leoProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA, IMPORT_CITIZENS_ARR } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -28,6 +29,48 @@ export class ManageCitizensController {
     });
 
     return citizens;
+  }
+
+  @Get("/:id")
+  async getCitizen(@PathParams("id") id: string) {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id },
+      include: citizenInclude,
+    });
+
+    return citizen;
+  }
+
+  @Put("/:id")
+  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: any) {
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+
+    const citizen = await prisma.citizen.update({
+      where: { id },
+      data: {
+        address: data.address,
+        postal: body.postal || null,
+        weight: data.weight,
+        height: data.height,
+        hairColor: data.hairColor,
+        dateOfBirth: data.dateOfBirth,
+        ethnicityId: data.ethnicity,
+        name: data.name,
+        surname: data.surname,
+        genderId: data.gender,
+        eyeColor: data.eyeColor,
+        driversLicenseId: body.driversLicense || undefined,
+        weaponLicenseId: body.weaponLicense || undefined,
+        pilotLicenseId: body.pilotLicense || undefined,
+        ccwId: body.ccw || undefined,
+        phoneNumber: body.phoneNumber || null,
+        socialSecurityNumber: generateString(9, { numbersOnly: true }),
+        occupation: body.occupation || null,
+      },
+      include: citizenInclude,
+    });
+
+    return citizen;
   }
 
   @Get("/records-logs")

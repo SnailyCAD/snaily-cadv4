@@ -21,6 +21,8 @@ interface Props {
   citizen: Citizen | null;
   state: "error" | "loading" | null;
   showLicenseFields?: boolean;
+  allowEditingName?: boolean;
+  cancelURL?: string;
   onSubmit(arg0: {
     data: any;
     formData?: FormData;
@@ -28,7 +30,14 @@ interface Props {
   }): void | Promise<void>;
 }
 
-export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields }: Props) {
+export function ManageCitizenForm({
+  onSubmit,
+  state,
+  citizen,
+  allowEditingName,
+  showLicenseFields,
+  cancelURL = `/citizen/${citizen?.id}`,
+}: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
@@ -36,6 +45,8 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
+
+  const isFieldDisabled = typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
 
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
@@ -95,7 +106,12 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
 
           <FormRow>
             <FormField errorMessage={errors.name} label={t("name")}>
-              <Input value={values.name} onChange={handleChange} name="name" disabled={!!citizen} />
+              <Input
+                value={values.name}
+                onChange={handleChange}
+                name="name"
+                disabled={isFieldDisabled}
+              />
             </FormField>
 
             <FormField errorMessage={errors.surname} label={t("surname")}>
@@ -103,7 +119,7 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
                 value={values.surname}
                 onChange={handleChange}
                 name="surname"
-                disabled={!!citizen}
+                disabled={isFieldDisabled}
               />
             </FormField>
           </FormRow>
@@ -288,7 +304,7 @@ export function ManageCitizenForm({ onSubmit, state, citizen, showLicenseFields 
           ) : null}
 
           <div className="flex items-center justify-end">
-            <Link href={citizen ? `/citizen/${citizen.id}` : "/citizen"}>
+            <Link href={citizen ? cancelURL : "/citizen"}>
               <a className="mr-2 underline">{common("cancel")}</a>
             </Link>
 
