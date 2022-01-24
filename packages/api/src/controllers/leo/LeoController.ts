@@ -373,10 +373,10 @@ export class LeoController {
         id: citizen.id,
       },
       data: {
-        ccwId: data.ccw,
-        driversLicenseId: data.driversLicense,
-        pilotLicenseId: data.pilotLicense,
-        weaponLicenseId: data.weaponLicense,
+        ccwId: data.ccw || undefined,
+        driversLicenseId: data.driversLicense || undefined,
+        pilotLicenseId: data.pilotLicense || undefined,
+        weaponLicenseId: data.weaponLicense || undefined,
       },
       include: citizenInclude,
     });

@@ -6,6 +6,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/nameSearchState";
@@ -18,6 +19,7 @@ export function EditCitizenLicenses() {
   const { currentResult, setCurrentResult } = useNameSearch();
   const { state, execute } = useFetch();
   const t = useTranslations();
+  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
@@ -74,29 +76,33 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
-              <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.pilotLicense}
-                onChange={handleChange}
-                name="pilotLicense"
-              />
-            </FormField>
+            {WEAPON_REGISTRATION ? (
+              <>
+                <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
+                  <Select
+                    values={license.values.map((license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }))}
+                    value={values.pilotLicense}
+                    onChange={handleChange}
+                    name="pilotLicense"
+                  />
+                </FormField>
 
-            <FormField errorMessage={errors.ccw} label={t("Citizen.ccw")}>
-              <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.ccw}
-                onChange={handleChange}
-                name="ccw"
-              />
-            </FormField>
+                <FormField errorMessage={errors.ccw} label={t("Citizen.ccw")}>
+                  <Select
+                    values={license.values.map((license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }))}
+                    value={values.ccw}
+                    onChange={handleChange}
+                    name="ccw"
+                  />
+                </FormField>
+              </>
+            ) : null}
 
             <footer className="flex items-center justify-end gap-2 mt-5">
               <Button
