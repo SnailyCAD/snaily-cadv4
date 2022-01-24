@@ -64,29 +64,29 @@ export function EditCitizenLicenses() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
+            <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
               <Select
                 values={license.values.map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}
-                value={values.weaponLicense}
+                value={values.pilotLicense}
                 onChange={handleChange}
-                name="weaponLicense"
+                name="pilotLicense"
               />
             </FormField>
 
             {WEAPON_REGISTRATION ? (
               <>
-                <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
+                <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
                   <Select
                     values={license.values.map((license) => ({
                       label: license.value,
                       value: license.id,
                     }))}
-                    value={values.pilotLicense}
+                    value={values.weaponLicense}
                     onChange={handleChange}
-                    name="pilotLicense"
+                    name="weaponLicense"
                   />
                 </FormField>
 
