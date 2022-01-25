@@ -103,6 +103,9 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
+    // simple fix. EMS/FD shares the same zod schema
+    // todo: create separate schemas
+    divisions: ["xxx"],
     badgeNumber: deputy?.badgeNumber ?? "",
     image: undefined,
   };
