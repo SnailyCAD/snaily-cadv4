@@ -20,12 +20,28 @@ export default function ManageCitizens({ citizen }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
 
-  async function handleSubmit({ data, helpers }: { data: any; helpers: FormikHelpers<any> }) {
+  async function handleSubmit({
+    data,
+    helpers,
+    formData,
+  }: {
+    data: any;
+    formData?: FormData;
+    helpers: FormikHelpers<any>;
+  }) {
     const { json } = await execute(`/admin/manage/citizens/${citizen.id}`, {
       method: "PUT",
       data,
       helpers,
     });
+
+    if (formData) {
+      await execute(`/citizen/${citizen.id}`, {
+        method: "POST",
+        data: formData,
+        helpers,
+      });
+    }
 
     if (json.id) {
       router.push("/admin/manage/citizens");

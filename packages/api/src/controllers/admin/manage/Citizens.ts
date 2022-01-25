@@ -12,6 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { validateImgurURL } from "utils/image";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -67,6 +68,7 @@ export class ManageCitizensController {
         phoneNumber: body.phoneNumber || null,
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: body.occupation || null,
+        imageId: validateImgurURL(body.image),
       },
       include: citizenInclude,
     });

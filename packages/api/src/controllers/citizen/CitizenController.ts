@@ -13,7 +13,7 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { Citizen, DriversLicenseCategoryValue } from "@prisma/client";
+import { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export const citizenInclude = {
@@ -289,7 +289,7 @@ export class CitizenController {
 
   @Post("/:id")
   async uploadImageToCitizen(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
   ) {
@@ -299,7 +299,7 @@ export class CitizenController {
       },
     });
 
-    if (!citizen || citizen.userId !== ctx.get("user").id) {
+    if (!citizen || (user.rank === "USER" && citizen.userId !== user.id)) {
       throw new NotFound("Not Found");
     }
 
