@@ -9,6 +9,7 @@ import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import useFetch from "lib/useFetch";
 import { FormikHelpers } from "formik";
+import { useRouter } from "next/router";
 
 interface Props {
   citizen: Citizen & { user: User };
@@ -17,6 +18,7 @@ interface Props {
 export default function ManageCitizens({ citizen }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const router = useRouter();
 
   async function handleSubmit({ data, helpers }: { data: any; helpers: FormikHelpers<any> }) {
     const { json } = await execute(`/admin/manage/citizens/${citizen.id}`, {
@@ -25,7 +27,9 @@ export default function ManageCitizens({ citizen }: Props) {
       helpers,
     });
 
-    console.log({ json });
+    if (json.id) {
+      router.push("/admin/manage/citizens");
+    }
   }
 
   return (

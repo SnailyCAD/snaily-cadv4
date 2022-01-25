@@ -43,6 +43,7 @@ export class ManageCitizensController {
 
   @Put("/:id")
   async updateCitizen(@PathParams("id") id: string, @BodyParams() body: any) {
+    // todo: use admin import schema. This schema should be updated in the next PR (issue ref #323)
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.update({
