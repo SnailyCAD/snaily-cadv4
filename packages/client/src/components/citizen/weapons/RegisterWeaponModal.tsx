@@ -11,11 +11,12 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, Weapon } from "types/prisma";
+import { Citizen, ValueLicenseType, Weapon } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { filterLicenseTypes } from "lib/utils";
 
 interface Props {
   weapon: Weapon | null;
@@ -136,7 +137,10 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               label={tVehicle("registrationStatus")}
             >
               <Select
-                values={license.values.map((license) => ({
+                values={filterLicenseTypes(
+                  license.values,
+                  ValueLicenseType.REGISTRATION_STATUS,
+                ).map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}

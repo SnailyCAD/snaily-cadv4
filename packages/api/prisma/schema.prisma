@@ -237,7 +237,7 @@ model Weapon {
 
 model MedicalRecord {
   id        String   @id @default(cuid())
-  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String?
   citizen   Citizen  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId String
@@ -261,6 +261,10 @@ model Value {
   updatedAt DateTime  @default(now()) @updatedAt
   position  Int?
 
+  // LICENSE type specific
+  // this was added here since the migration of eg `LicenseValue` would be to large.
+  licenseType ValueLicenseType?
+
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
   genderToValue                   Citizen[]                     @relation("genderToValue")
@@ -282,6 +286,11 @@ model Value {
   ImpoundedVehicle                ImpoundedVehicle[]
   TowCall                         TowCall[]
   MedicalRecord                   MedicalRecord[]
+}
+
+enum ValueLicenseType {
+  LICENSE
+  REGISTRATION_STATUS
 }
 
 model PenalCode {

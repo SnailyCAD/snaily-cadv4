@@ -14,6 +14,8 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { FormRow } from "components/form/FormRow";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { filterLicenseTypes } from "lib/utils";
+import { ValueLicenseType } from "types/prisma";
 
 export function ManageLicensesModal() {
   const { state, execute } = useFetch();
@@ -77,10 +79,12 @@ export function ManageLicensesModal() {
             <FormRow>
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
-                  values={license.values.map((license) => ({
-                    label: license.value,
-                    value: license.id,
-                  }))}
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                    (license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }),
+                  )}
                   value={values.driversLicense}
                   name="driversLicense"
                   onChange={handleChange}
@@ -109,10 +113,12 @@ export function ManageLicensesModal() {
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
-                  values={license.values.map((license) => ({
-                    label: license.value,
-                    value: license.id,
-                  }))}
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                    (license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }),
+                  )}
                   value={values.pilotLicense}
                   name="pilotLicense"
                   onChange={handleChange}
@@ -142,10 +148,12 @@ export function ManageLicensesModal() {
               <>
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
-                    values={license.values.map((license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (license) => ({
+                        label: license.value,
+                        value: license.id,
+                      }),
+                    )}
                     value={values.weaponLicense}
                     name="weaponLicense"
                     onChange={handleChange}
@@ -154,10 +162,12 @@ export function ManageLicensesModal() {
 
                 <FormField errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
-                    values={license.values.map((license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (license) => ({
+                        label: license.value,
+                        value: license.id,
+                      }),
+                    )}
                     value={values.ccw}
                     name="ccw"
                     onChange={handleChange}

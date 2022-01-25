@@ -8,9 +8,11 @@ import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import useFetch from "lib/useFetch";
+import { filterLicenseTypes } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/nameSearchState";
 import { ModalIds } from "types/ModalIds";
+import { ValueLicenseType } from "types/prisma";
 
 export function EditCitizenLicenses() {
   const common = useTranslations("Common");
@@ -54,10 +56,12 @@ export function EditCitizenLicenses() {
           <Form>
             <FormField errorMessage={errors.driversLicense} label={t("Citizen.driversLicense")}>
               <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
+                values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                  (license) => ({
+                    label: license.value,
+                    value: license.id,
+                  }),
+                )}
                 value={values.driversLicense}
                 onChange={handleChange}
                 name="driversLicense"
@@ -66,10 +70,12 @@ export function EditCitizenLicenses() {
 
             <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
               <Select
-                values={license.values.map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
+                values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                  (license) => ({
+                    label: license.value,
+                    value: license.id,
+                  }),
+                )}
                 value={values.pilotLicense}
                 onChange={handleChange}
                 name="pilotLicense"
@@ -80,10 +86,12 @@ export function EditCitizenLicenses() {
               <>
                 <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
                   <Select
-                    values={license.values.map((license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (license) => ({
+                        label: license.value,
+                        value: license.id,
+                      }),
+                    )}
                     value={values.weaponLicense}
                     onChange={handleChange}
                     name="weaponLicense"
@@ -92,10 +100,12 @@ export function EditCitizenLicenses() {
 
                 <FormField errorMessage={errors.ccw} label={t("Citizen.ccw")}>
                   <Select
-                    values={license.values.map((license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (license) => ({
+                        label: license.value,
+                        value: license.id,
+                      }),
+                    )}
                     value={values.ccw}
                     onChange={handleChange}
                     name="ccw"
