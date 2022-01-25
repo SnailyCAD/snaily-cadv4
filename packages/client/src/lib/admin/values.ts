@@ -1,4 +1,8 @@
-import { DEPARTMENT_LABELS, SHOULD_DO_LABELS } from "components/admin/values/ManageValueModal";
+import {
+  DEPARTMENT_LABELS,
+  LICENSE_LABELS,
+  SHOULD_DO_LABELS,
+} from "components/admin/values/ManageValueModal";
 import { useTranslations } from "next-intl";
 import { TValue } from "src/pages/admin/values/[path]";
 import {
@@ -8,6 +12,7 @@ import {
   DepartmentValue,
   DivisionValue,
   VehicleValue,
+  Value,
 } from "types/prisma";
 
 const TYPE_LABELS = {
@@ -52,6 +57,13 @@ export function useTableDataOfType(type: ValueType) {
           gameHash: v.hash || common("none"),
         };
       }
+      case "LICENSE": {
+        const v = value as Value;
+
+        return {
+          licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
+        };
+      }
       default: {
         return {};
       }
@@ -88,6 +100,9 @@ export function useTableHeadersOfType(type: ValueType) {
     case "VEHICLE":
     case "WEAPON": {
       return [{ Header: t("gameHash"), accessor: "gameHash" }];
+    }
+    case "LICENSE": {
+      return [{ Header: t("licenseType"), accessor: "licenseType" }];
     }
     default: {
       return [];

@@ -1,7 +1,15 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
-import { cad as CAD, Citizen, CombinedLeoUnit, Feature, Officer } from "types/prisma";
+import {
+  cad as CAD,
+  Citizen,
+  CombinedLeoUnit,
+  Feature,
+  Officer,
+  Value,
+  ValueLicenseType,
+} from "types/prisma";
 import { handleRequest } from "./fetch";
 import { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -97,4 +105,11 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
   const dateObj = new Date(date);
   const hmsString = options?.onlyDate ? "" : "HH:mm:ss";
   return format(dateObj, `yyyy-MM-dd ${hmsString}`);
+}
+
+export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLicenseType) {
+  return licenses.filter((item) => {
+    if (item.licenseType === null) return true;
+    return item.licenseType === type;
+  });
 }

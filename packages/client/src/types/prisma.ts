@@ -200,6 +200,7 @@ export type Value<Type extends ValueType = ValueType> = {
   createdAt: Date;
   updatedAt: Date;
   position: number | null;
+  licenseType?: ValueLicenseType | null;
 };
 
 /**
@@ -845,3 +846,10 @@ export const ExpungementRequestStatus = {
 
 export type ExpungementRequestStatus =
   typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];
+
+export const ValueLicenseType = {
+  LICENSE: "LICENSE",
+  REGISTRATION_STATUS: "REGISTRATION_STATUS",
+};
+
+export type ValueLicenseType = typeof ValueLicenseType[keyof typeof ValueLicenseType];

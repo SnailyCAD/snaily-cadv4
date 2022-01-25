@@ -13,6 +13,7 @@
     "addPenalCodeGroup": "Add Group",
     "deleteGroup": "Delete Group",
     "ungrouped": "Ungrouped",
+    "licenseType": "License Type",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!"
   },

@@ -424,6 +424,7 @@ export class ValuesController {
       },
       data: {
         value: body.get("value"),
+        licenseType: type === "LICENSE" ? body.get("licenseType") : undefined,
       },
     });
 

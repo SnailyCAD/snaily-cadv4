@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle } from "types/prisma";
+import { Citizen, RegisteredVehicle, ValueLicenseType } from "types/prisma";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
@@ -19,6 +19,7 @@ import { useAuth } from "context/AuthContext";
 import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/businessState";
+import { filterLicenseTypes } from "lib/utils";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -172,7 +173,10 @@ export function RegisterVehicleModal({
               label={tVehicle("registrationStatus")}
             >
               <Select
-                values={license.values.map((license) => ({
+                values={filterLicenseTypes(
+                  license.values,
+                  ValueLicenseType.REGISTRATION_STATUS,
+                ).map((license) => ({
                   label: license.value,
                   value: license.id,
                 }))}

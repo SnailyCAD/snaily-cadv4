@@ -21,6 +21,7 @@ import {
   DriversLicenseCategoryType,
   EmployeeAsEnum,
   ShouldDoType,
+  ValueLicenseType,
   ValueType,
 } from "types/prisma";
 import { useTranslations } from "use-intl";
@@ -69,13 +70,23 @@ export const DEPARTMENT_LABELS = {
   [DepartmentType.EMS_FD]: "EMS/FD",
 };
 
+export const LICENSE_LABELS = {
+  [ValueLicenseType.LICENSE]: "License",
+  [ValueLicenseType.REGISTRATION_STATUS]: "Registration Status",
+};
+
 const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
   label: SHOULD_DO_LABELS[v],
   value: v,
 }));
 
 const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
-  label: DEPARTMENT_LABELS[v],
+  label: DEPARTMENT_LABELS[v] as string,
+  value: v,
+}));
+
+const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
+  label: LICENSE_LABELS[v] as string,
   value: v,
 }));
 
@@ -141,6 +152,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     type: value?.type ?? "STATUS_CODE",
     // @ts-expect-error shortcut
     hash: value?.hash ?? "",
+    // @ts-expect-error shortcut
+    licenseType: value?.licenseType ?? null,
     showPicker: false,
   };
 
@@ -185,6 +198,36 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             <FormField errorMessage={errors.value} label="Value">
               <Input autoFocus name="value" onChange={handleChange} value={values.value} />
             </FormField>
+
+            {type === "LICENSE" ? (
+              <FormField errorMessage={errors.licenseType as string} label="Type">
+                <Select
+                  isClearable
+                  name="licenseType"
+                  onChange={handleChange}
+                  value={values.licenseType}
+                  values={LICENSE_TYPES}
+                />
+
+                <ul className="mt-5">
+                  <li className="my-1.5 text-base italic">
+                    - <b>None:</b>{" "}
+                    {
+                      /* eslint-disable-next-line quotes */
+                      'Type is both a "License" and "Registration Status". Both can be used anywhere.'
+                    }
+                  </li>
+                  <li className="my-1.5 text-base italic">
+                    - <b>License:</b> can only be used as a license when setting a citizen drivers
+                    license, firearms license, etc
+                  </li>
+                  <li className="my-1.5 text-base italic">
+                    - <b>Registration Status:</b> can only be used when setting a registration
+                    status on a vehicle or weapon.
+                  </li>
+                </ul>
+              </FormField>
+            ) : null}
 
             {["DEPARTMENT", "DIVISION"].includes(type) ? (
               <FormField optional label="Callsign Symbol">

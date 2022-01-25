@@ -27,6 +27,7 @@ import {
   EmployeeAsEnum,
   ShouldDoType,
   StatusValueType,
+  ValueLicenseType,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 
@@ -195,6 +196,7 @@ export const typeHandlers = {
             isDefault: false,
             type: type as ValueType,
             value: item.value,
+            licenseType: type === "LICENSE" ? (item.licenseType as ValueLicenseType) : undefined,
           },
         });
       }),

@@ -12,10 +12,11 @@ import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import { Formik, FormikHelpers } from "formik";
-import { Citizen } from "types/prisma";
+import { Citizen, ValueLicenseType } from "types/prisma";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { filterLicenseTypes } from "lib/utils";
 
 interface Props {
   citizen: Citizen | null;
@@ -215,7 +216,7 @@ export function ManageCitizenForm({
             <FormRow className="mt-5">
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
-                  values={license.values.map((v) => ({
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
@@ -248,10 +249,12 @@ export function ManageCitizenForm({
               {WEAPON_REGISTRATION ? (
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
-                    values={license.values.map((v) => ({
-                      label: v.value,
-                      value: v.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (v) => ({
+                        label: v.value,
+                        value: v.id,
+                      }),
+                    )}
                     value={values.weaponLicense}
                     onChange={handleChange}
                     name="weaponLicense"
@@ -261,7 +264,7 @@ export function ManageCitizenForm({
 
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
-                  values={license.values.map((v) => ({
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
                     value: v.id,
                   }))}
@@ -290,10 +293,12 @@ export function ManageCitizenForm({
               {WEAPON_REGISTRATION ? (
                 <FormField errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
-                    values={license.values.map((v) => ({
-                      label: v.value,
-                      value: v.id,
-                    }))}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (v) => ({
+                        label: v.value,
+                        value: v.id,
+                      }),
+                    )}
                     value={values.ccw}
                     onChange={handleChange}
                     name="ccw"
