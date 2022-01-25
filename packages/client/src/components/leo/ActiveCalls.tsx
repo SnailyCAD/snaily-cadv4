@@ -111,7 +111,14 @@ export function ActiveCalls() {
   }
 
   async function handleAssignToCall(call: Full911Call) {
-    await execute(`/911-calls/assign-to/${call.id}`, {
+    await execute(`/911-calls/assign/${call.id}`, {
+      method: "POST",
+      data: { unit: unit?.id },
+    });
+  }
+
+  async function handleUnassignFromCall(call: Full911Call) {
+    await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
       data: { unit: unit?.id },
     });
@@ -194,7 +201,16 @@ export function ActiveCalls() {
                               >
                                 {t("viewEvents")}
                               </Button>
-                              {isUnitAssigned ? null : (
+                              {isUnitAssigned ? (
+                                <Button
+                                  className="ml-2"
+                                  disabled={!unit}
+                                  small
+                                  onClick={() => handleUnassignFromCall(call)}
+                                >
+                                  {t("unassignFromCall")}
+                                </Button>
+                              ) : (
                                 <Button
                                   className="ml-2"
                                   disabled={!unit}
