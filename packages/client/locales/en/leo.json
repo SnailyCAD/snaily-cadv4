@@ -132,6 +132,8 @@
     "deleteBolo": "Delete Bolo",
     "editBolo": "Edit Bolo",
     "createBolo": "Create Bolo",
+    "typeBolos": "{type} bolos",
+    "noActiveBolosForType": "No active bolos for type: {type}",
     "alert_deleteBolo": "Are you sure you want to delete this bolo? This action cannot be undone"
   }
 }

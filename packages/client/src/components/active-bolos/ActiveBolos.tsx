@@ -65,12 +65,16 @@ export function ActiveBolos() {
               return (
                 <div key={boloType}>
                   <h1 className="my-2 text-xl font-semibold capitalize">
-                    {boloType.toLowerCase()} bolos
+                    {t.rich("typeBolos", { type: boloType.toLowerCase() })}
                   </h1>
 
                   <ul className="py-2 space-y-2 overflow-auto max-h-[30em]">
                     {items.length <= 0 ? (
-                      <p>{`No active bolos for type: ${boloType.toLowerCase()}`}</p>
+                      <p>
+                        {t.rich("noActiveBolosForType", {
+                          type: boloType.toLowerCase(),
+                        })}
+                      </p>
                     ) : (
                       items.map((bolo, idx) => (
                         <BoloItem
