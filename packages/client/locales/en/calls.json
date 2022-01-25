@@ -9,6 +9,7 @@
     "no911Calls": "There are no 911 calls yet.",
     "assignToCall": "Assign to call",
     "assignedUnit": "Assigned Unit",
+    "unassignFromCall": "Unassign from call",
     "location": "Location",
     "caller": "Caller",
     "createTowCall": "Create tow call",

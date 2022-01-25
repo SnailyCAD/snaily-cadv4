@@ -308,8 +308,12 @@ export class Calls911Controller {
     return true;
   }
 
-  @Post("/assign-to/:callId")
-  async assignToCall(@PathParams("callId") callId: string, @BodyParams() body: any) {
+  @Post("/:type/:callId")
+  async assignToCall(
+    @PathParams("type") callType: "assign" | "unassign",
+    @PathParams("callId") callId: string,
+    @BodyParams() body: any,
+  ) {
     const { unit: rawUnit } = body;
 
     if (!rawUnit) {
@@ -317,7 +321,6 @@ export class Calls911Controller {
     }
 
     const { unit, type } = await findUnit(rawUnit, undefined, true);
-
     if (!unit) {
       throw new NotFound("unitNotFound");
     }
@@ -337,16 +340,26 @@ export class Calls911Controller {
       },
     });
 
-    if (existing) {
-      throw new BadRequest("alreadyAssignedToCall");
-    }
+    if (callType === "assign") {
+      if (existing) {
+        throw new BadRequest("alreadyAssignedToCall");
+      }
 
-    await prisma.assignedUnit.create({
-      data: {
-        call911Id: callId,
-        [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
-      },
-    });
+      await prisma.assignedUnit.create({
+        data: {
+          call911Id: callId,
+          [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+        },
+      });
+    } else {
+      if (!existing) {
+        throw new BadRequest("notAssignedToCall");
+      }
+
+      await prisma.assignedUnit.delete({
+        where: { id: existing.id },
+      });
+    }
 
     const updated = await prisma.call911.findUnique({
       where: {
