@@ -13,6 +13,7 @@ import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
 import { formatDate } from "lib/utils";
 import { Select } from "components/form/Select";
+import Link from "next/link";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -107,9 +108,23 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
                 height: citizen.height,
                 user: citizen.user?.username ?? "No user",
                 actions: (
-                  <Button small variant="danger" onClick={() => handleDeleteClick(citizen)}>
-                    {common("delete")}
-                  </Button>
+                  <>
+                    <Link href={`/admin/manage/citizens/${citizen.id}`}>
+                      <a>
+                        <Button variant="success" small>
+                          {common("edit")}
+                        </Button>
+                      </a>
+                    </Link>
+                    <Button
+                      className="ml-2"
+                      small
+                      variant="danger"
+                      onClick={() => handleDeleteClick(citizen)}
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
                 ),
               }))}
             columns={[

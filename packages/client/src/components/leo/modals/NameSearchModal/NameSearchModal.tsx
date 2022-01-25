@@ -137,6 +137,13 @@ export function NameSearchModal() {
                 }}
                 Component={({ suggestion }: { suggestion: Citizen }) => (
                   <div className="flex items-center">
+                    {suggestion.imageId ? (
+                      <img
+                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                        draggable={false}
+                        src={makeImageUrl("citizens", suggestion.imageId)}
+                      />
+                    ) : null}
                     <p>
                       {suggestion.name} {suggestion.surname}{" "}
                       {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
