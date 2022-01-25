@@ -94,14 +94,10 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   }, [setAllOfficers, setActiveOfficer, activeOfficer, officers]);
 
   function involvedOfficers(incident: FullIncident) {
-    return incident.officersInvolved?.length <= 0 ? (
+    return incident.officersInvolved.length <= 0 ? (
       <span>{common("none")}</span>
     ) : (
-      incident.officersInvolved?.map((o) => (
-        <span key={o.id}>
-          {generateCallsign(o)} {makeUnitName(o)}
-        </span>
-      ))
+      incident.officersInvolved.map((o) => `${generateCallsign(o)} ${makeUnitName(o)}`).join(", ")
     );
   }
 
@@ -209,7 +205,6 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
       {tempIncident?.descriptionData ? (
         <DescriptionModal
           onClose={() => setTempIncident(null)}
-          isReadonly
           value={tempIncident.descriptionData}
         />
       ) : null}

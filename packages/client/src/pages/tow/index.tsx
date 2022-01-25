@@ -158,11 +158,7 @@ export default function Tow(props: Props) {
       <AssignToCallModal onSuccess={updateCalls} call={tempCall} />
       <ManageCallModal onDelete={handleCallEnd} onUpdate={updateCalls} call={tempCall} />
       {tempCall?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => setTempCall(null)}
-          isReadonly
-          value={tempCall.descriptionData}
-        />
+        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
     </Layout>
   );

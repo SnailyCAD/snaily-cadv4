@@ -10,9 +10,7 @@ import { JsonArray } from "type-fest";
 
 interface Props {
   value?: Descendant[] | JsonArray;
-  isReadonly?: boolean;
   onClose?(): void;
-  onSave?(data: Descendant[] | JsonArray): Promise<void>;
 }
 
 export function DescriptionModal(props: Props) {
@@ -27,13 +25,6 @@ export function DescriptionModal(props: Props) {
     closeModal(ModalIds.Description);
   }
 
-  function handleSave() {
-    if (props.isReadonly) return;
-
-    handleClose();
-    props.onSave?.(value);
-  }
-
   return (
     <Modal
       className="min-w-[600px]"
@@ -41,14 +32,9 @@ export function DescriptionModal(props: Props) {
       onClose={handleClose}
       isOpen={isOpen(ModalIds.Description)}
     >
-      <Editor isReadonly={props.isReadonly} value={value} onChange={setValue} />
+      <Editor isReadonly value={value} onChange={setValue} />
       <div className="flex items-center justify-end gap-2 mt-2">
-        <Button variant="cancel" onClick={handleClose}>
-          {common("cancel")}
-        </Button>
-        <Button disabled={props.isReadonly} onClick={handleSave}>
-          {common("save")}
-        </Button>
+        <Button onClick={handleClose}>{common("cancel")}</Button>
       </div>
     </Modal>
   );

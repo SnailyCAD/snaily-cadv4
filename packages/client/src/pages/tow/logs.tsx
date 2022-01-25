@@ -94,11 +94,7 @@ export default function TowLogs(props: Props) {
       )}
 
       {tempCall?.descriptionData ? (
-        <DescriptionModal
-          onClose={() => setTempCall(null)}
-          isReadonly
-          value={tempCall.descriptionData}
-        />
+        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
     </Layout>
   );
