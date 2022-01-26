@@ -113,3 +113,17 @@ export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLice
     return item.licenseType === type;
   });
 }
+
+export function getUnitDepartment(unit: FullOfficer | FullDeputy) {
+  const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
+
+  if (whitelistStatus) {
+    if (whitelistStatus.status === "DECLINED") {
+      return unit.department;
+    }
+
+    return whitelistStatus.department;
+  }
+
+  return unit.department;
+}

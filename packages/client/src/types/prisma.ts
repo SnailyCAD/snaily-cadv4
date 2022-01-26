@@ -693,8 +693,8 @@ export type ActiveDispatchers = {
 export type LeoWhitelistStatus = {
   id: string;
   status: WhitelistStatus;
-  departmentId: string | null;
-  department: DepartmentValue | null;
+  departmentId: string;
+  department: DepartmentValue;
 };
 
 /**

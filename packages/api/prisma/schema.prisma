@@ -596,8 +596,8 @@ model LeoWhitelistStatus {
   id           String           @id @default(uuid())
   status       WhitelistStatus
   // the department they're awaiting access for.
-  department   DepartmentValue? @relation(fields: [departmentId], references: [id])
-  departmentId String?
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
   Officers     Officer[]
 }
 
