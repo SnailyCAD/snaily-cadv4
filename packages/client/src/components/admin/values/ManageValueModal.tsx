@@ -11,7 +11,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
@@ -110,11 +110,15 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const footerTitle = !value ? t("ADD") : common("save");
   const { department } = useValues();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (value) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
         method: "PATCH",
         data: { ...values, type: dlType ? dlType : values.type },
+        helpers,
       });
 
       if (json?.id) {
@@ -125,6 +129,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
         data: { ...values, type: dlType ? dlType : values.type },
+        helpers,
       });
 
       if (json?.id) {
@@ -253,7 +258,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
                 {values.type === DepartmentType.LEO ? (
                   <>
-                    <FormField checkbox label="Whitelisted">
+                    <FormField
+                      errorMessage={errors.whitelisted as string}
+                      checkbox
+                      label="Whitelisted"
+                    >
                       <Toggle
                         name="whitelisted"
                         toggled={values.whitelisted}
@@ -265,7 +274,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                     </FormField>
 
                     <div className="flex flex-col">
-                      <FormField checkbox label="Default Department">
+                      <FormField
+                        errorMessage={errors.isDefaultDepartment as string}
+                        checkbox
+                        label="Default Department"
+                      >
                         <Toggle
                           name="isDefaultDepartment"
                           toggled={values.isDefaultDepartment}

@@ -65,6 +65,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       for (const error of errors) {
         Object.entries(error).map(([key, value]) => {
           const message = isErrorKey(value) ? t(value) : value;
+          console.log({ message, helpers: options.helpers });
 
           if (message && options.helpers) {
             options.helpers.setFieldError(key, message);
