@@ -53,6 +53,7 @@ export default function MyOfficers({ officers: data }: Props) {
     if (json) {
       closeModal(ModalIds.AlertDeleteOfficer);
       setOfficers((p) => p.filter((v) => v.id !== tempOfficer.id));
+      setTempOfficer(null);
     }
   }
 
@@ -82,6 +83,7 @@ export default function MyOfficers({ officers: data }: Props) {
         <Table
           data={officers.map((officer) => {
             const department = officer.whitelistStatus?.department ?? officer.department;
+            const departmentStatus = officer.whitelistStatus?.status.toLowerCase() ?? "—";
 
             return {
               officer: (
@@ -99,6 +101,7 @@ export default function MyOfficers({ officers: data }: Props) {
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
               department: department.value.value,
+              departmentStatus: <span className="capitalize">{departmentStatus}</span>,
               division: formatUnitDivisions(officer),
               rank: officer.rank?.value ?? common("none"),
               actions: (
@@ -123,6 +126,7 @@ export default function MyOfficers({ officers: data }: Props) {
             { Header: t("callsign"), accessor: "callsign" },
             { Header: t("badgeNumber"), accessor: "badgeNumber" },
             { Header: t("department"), accessor: "department" },
+            { Header: t("status"), accessor: "departmentStatus" },
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
             { Header: common("actions"), accessor: "actions" },

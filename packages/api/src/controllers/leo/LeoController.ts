@@ -23,7 +23,7 @@ import { validateImgurURL } from "utils/image";
 import { DivisionValue, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -85,31 +85,10 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
-    const department = await prisma.departmentValue.findUnique({
-      where: { id: data.department },
-    });
-
-    if (!department) {
-      throw new ExtendedNotFound({ department: "This department could not be found" });
-    }
-
-    let defaultDepartmentId: string | null = null;
-    let whitelistStatusId: string | null = null;
-    if (department.whitelisted) {
-      const whitelistStatus = await prisma.leoWhitelistStatus.create({
-        data: {
-          status: "PENDING",
-          departmentId: data.department,
-        },
-      });
-
-      const defaultDepartment = await prisma.departmentValue.findFirst({
-        where: { isDefaultDepartment: true },
-      });
-
-      whitelistStatusId = whitelistStatus.id;
-      defaultDepartmentId = defaultDepartment?.id ?? null;
-    }
+    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      null,
+    );
 
     const officer = await prisma.officer.create({
       data: {
@@ -165,6 +144,11 @@ export class LeoController {
 
     await unlinkDivisionsFromOfficer(officer);
 
+    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      officer,
+    );
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -172,10 +156,11 @@ export class LeoController {
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
-        departmentId: data.department,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
+        whitelistStatusId,
       },
       include: leoProperties,
     });

@@ -68,9 +68,10 @@ export function SelectOfficerModal() {
                 values={officers.map((officer) => ({
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
-                  isDisabled:
-                    officer.whitelistStatus?.status !== "ACCEPTED" &&
-                    !officer.department.isDefaultDepartment,
+                  isDisabled: officer.whitelistStatus
+                    ? officer.whitelistStatus.status !== "ACCEPTED" &&
+                      !officer.department.isDefaultDepartment
+                    : false,
                 }))}
               />
             </FormField>
