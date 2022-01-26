@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -8,7 +9,6 @@ import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import dynamic from "next/dynamic";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -24,6 +24,7 @@ interface Props {
 
 export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
+
   const pendingOfficers = units.filter(
     (v) => v.type === "OFFICER" && v.whitelistStatus?.status === "PENDING",
   );

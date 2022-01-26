@@ -14,6 +14,7 @@ import { Input } from "components/form/inputs/Input";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
+import { useRouter } from "next/router";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -22,6 +23,7 @@ interface Props {
 export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
   const [filter, setFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
+  const router = useRouter();
 
   const { openModal } = useModal();
   const t = useTranslations();
@@ -48,16 +50,13 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
   }) {
     const { helpers, officer, ...rest } = data;
 
-    const { json } = await execute(`/admin/manage/units/departments/${officer.id}`, {
+    await execute(`/admin/manage/units/departments/${officer.id}`, {
       data: rest,
       helpers,
       method: "POST",
     });
 
-    if (json) {
-      // todo
-      // onSuccess()
-    }
+    router.replace({ pathname: router.pathname, query: router.query });
   }
 
   return (
@@ -104,7 +103,6 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
                 </Button>
 
                 <Button
-                  // onClick={() => handleAcceptOrDecline({ officer, type: "DECLINE" })}
                   onClick={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
                   disabled={state === "loading"}
                   className="ml-2"

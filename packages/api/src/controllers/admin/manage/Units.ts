@@ -204,21 +204,22 @@ export class ManageUnitsController {
 
     switch (action) {
       case "DELETE_OFFICER": {
-        await prisma.officer.delete({
+        const updated = await prisma.officer.delete({
           where: { id: officer.id },
         });
 
-        return true;
+        return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
-        // await prisma.officer.update({
-        //   where: { id: officer.id },
-        //   data: {
-        //     departmentId: null,
-        //   },
-        // });
+        const updated = await prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            departmentId: null,
+          },
+          include: leoProperties,
+        });
 
-        return "TODO";
+        return updated;
       }
       case "SET_DEPARTMENT_DEFAULT": {
         const defaultDepartment = await prisma.departmentValue.findFirst({

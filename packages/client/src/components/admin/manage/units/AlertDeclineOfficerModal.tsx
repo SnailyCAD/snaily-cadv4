@@ -17,6 +17,7 @@ export function AlertDeclineOfficerModal({
   state: "loading" | "idle" | "error" | null;
 }) {
   const common = useTranslations("Common");
+  const t = useTranslations("Management");
   const { isOpen, closeModal, getPayload } = useModal();
   const officer = getPayload<Unit>(ModalIds.AlertDeclineOfficer);
 
@@ -36,7 +37,7 @@ export function AlertDeclineOfficerModal({
 
   return (
     <Modal
-      title="Decline Officer"
+      title={t("declineOfficer")}
       onClose={() => closeModal(ModalIds.AlertDeclineOfficer)}
       isOpen={isOpen(ModalIds.AlertDeclineOfficer)}
       className="min-w-[600px]"
@@ -47,7 +48,7 @@ export function AlertDeclineOfficerModal({
       >
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.action} label="Action">
+            <FormField errorMessage={errors.action} label={t("action")}>
               <Select
                 value={values.action}
                 name="action"
@@ -66,7 +67,7 @@ export function AlertDeclineOfficerModal({
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("decline")}
+                {t("declineOfficer")}
               </Button>
             </footer>
           </Form>

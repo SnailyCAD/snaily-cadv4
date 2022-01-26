@@ -558,8 +558,8 @@ enum EmployeeAsEnum {
 // leo
 model Officer {
   id                          String              @id @default(cuid())
-  department                  DepartmentValue     @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId                String
+  department                  DepartmentValue?    @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId                String?
   callsign                    String              @db.VarChar(255)
   callsign2                   String              @db.VarChar(255)
   // `division` is deprecated. Use `divisions` instead.
@@ -593,7 +593,7 @@ model Officer {
 }
 
 model LeoWhitelistStatus {
-  id           String           @id @default(uuid())
+  id           String          @id @default(uuid())
   status       WhitelistStatus
   // the department they're awaiting access for.
   department   DepartmentValue @relation(fields: [departmentId], references: [id])

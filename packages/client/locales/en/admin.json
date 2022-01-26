@@ -27,6 +27,8 @@
     "status": "Status",
     "allBusinesses": "All Businesses",
     "whitelisted": "Whitelisted",
+    "declineOfficer": "Decline Officer",
+    "action": "Action",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
   }
