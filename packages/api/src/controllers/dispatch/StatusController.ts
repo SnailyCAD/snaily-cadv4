@@ -86,6 +86,20 @@ export class StatusController {
       throw new NotFound("statusNotFound");
     }
 
+    if (type === "leo") {
+      const officer = await prisma.officer.findUnique({
+        where: { id: unit.id },
+        select: { whitelistStatus: leoProperties.whitelistStatus },
+      });
+
+      if (
+        officer?.whitelistStatus?.status !== "ACCEPTED" &&
+        !officer?.whitelistStatus?.department.isDefaultDepartment
+      ) {
+        throw new BadRequest("cannotUseThisOfficer");
+      }
+    }
+
     // reset all units for user
     if (!isDispatch) {
       if (type === "leo") {
