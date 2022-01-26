@@ -74,30 +74,6 @@ export function ContextMenu({ items, canBeOpened = true, asChild = false, childr
             </Component>
           ) : null;
         })}
-
-        {/* <Menu.Label>hello world</Menu.Label>
-
-            <Menu.Group>
-              <Menu.Item>my text</Menu.Item>
-              <Menu.Item>my text</Menu.Item>
-              <Menu.Item>my text</Menu.Item>
-              <Menu.Item>my text</Menu.Item>
-            </Menu.Group>
-
-            <Menu.CheckboxItem>
-              <Menu.ItemIndicator>test</Menu.ItemIndicator>
-            </Menu.CheckboxItem>
-
-            <Menu.RadioGroup>
-              <Menu.RadioItem value="true">
-                <Menu.ItemIndicator>test</Menu.ItemIndicator>
-              </Menu.RadioItem>
-            </Menu.RadioGroup> */}
-
-        {/* <Menu.Root>
-              <Menu.TriggerItem />
-              <Menu.Content />
-            </Menu.Root> */}
       </Menu.Content>
     </Menu.Root>
   );

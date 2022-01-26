@@ -16,6 +16,8 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { HoverCard } from "components/shared/HoverCard";
+import { Info } from "react-bootstrap-icons";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -101,7 +103,27 @@ export default function MyOfficers({ officers: data }: Props) {
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
               department: department.value.value,
-              departmentStatus: <span className="capitalize">{departmentStatus}</span>,
+              departmentStatus: (
+                <span className="capitalize flex items-center gap-2">
+                  {departmentStatus}
+
+                  {officer.whitelistStatus?.status === "PENDING" ? (
+                    <HoverCard
+                      trigger={
+                        <Button className="px-1 cursor-default">
+                          <Info />
+                        </Button>
+                      }
+                    >
+                      <p className="max-w-[400px]">
+                        {t.rich("pendingAccessDepartment", {
+                          defaultDepartment: officer.department.value.value,
+                        })}
+                      </p>
+                    </HoverCard>
+                  ) : null}
+                </span>
+              ),
               division: formatUnitDivisions(officer),
               rank: officer.rank?.value ?? common("none"),
               actions: (

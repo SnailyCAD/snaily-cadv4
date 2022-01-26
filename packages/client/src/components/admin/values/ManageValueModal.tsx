@@ -31,6 +31,7 @@ import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]
 import dynamic from "next/dynamic";
 import { Eyedropper } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
+import { Toggle } from "components/form/Toggle";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -253,25 +254,25 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 {values.type === DepartmentType.LEO ? (
                   <>
                     <FormField checkbox label="Whitelisted">
-                      <Input
+                      <Toggle
                         name="whitelisted"
-                        checked={values.whitelisted}
-                        onChange={(e) => {
-                          e.target.checked && setFieldValue("isDefaultDepartment", false);
+                        toggled={values.whitelisted}
+                        onClick={(e) => {
+                          e.target.value && setFieldValue("isDefaultDepartment", false);
                           handleChange(e);
                         }}
-                        type="checkbox"
                       />
                     </FormField>
 
                     <div className="flex flex-col">
                       <FormField checkbox label="Default Department">
-                        <Input
+                        <Toggle
                           name="isDefaultDepartment"
-                          checked={values.isDefaultDepartment}
-                          disabled={values.whitelisted}
-                          type="checkbox"
-                          onChange={handleChange}
+                          toggled={values.isDefaultDepartment}
+                          onClick={(e) => {
+                            e.target.value && setFieldValue("whitelisted", false);
+                            handleChange(e);
+                          }}
                         />
                       </FormField>
 

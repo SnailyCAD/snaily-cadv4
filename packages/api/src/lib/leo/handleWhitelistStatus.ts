@@ -2,6 +2,15 @@ import { Officer, LeoWhitelistStatus } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
+/**
+ * this function handles the addition of the `whitelistStatus` to an officer
+ *
+ * 1. Provided department === whitelisted
+ *  -> `whitelistStatus` gets created and linked to provided officer
+ *
+ * 2. Provided department !== whitelisted
+ *  -> `whitelistStatus` gets removed from provided officer
+ */
 export async function handleWhitelistStatus(
   departmentId: string,
   officer: (Officer & { whitelistStatus: LeoWhitelistStatus | null }) | null,
