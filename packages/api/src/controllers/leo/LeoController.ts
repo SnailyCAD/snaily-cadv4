@@ -23,6 +23,7 @@ import { validateImgurURL } from "utils/image";
 import { DivisionValue, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -84,15 +85,42 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
+    const department = await prisma.departmentValue.findUnique({
+      where: { id: data.department },
+    });
+
+    if (!department) {
+      throw new ExtendedNotFound({ department: "This department could not be found" });
+    }
+
+    let defaultDepartmentId: string | null = null;
+    let whitelistStatusId: string | null = null;
+    if (department.whitelisted) {
+      const whitelistStatus = await prisma.leoWhitelistStatus.create({
+        data: {
+          status: "PENDING",
+          departmentId: data.department,
+        },
+      });
+
+      const defaultDepartment = await prisma.departmentValue.findFirst({
+        where: { isDefaultDepartment: true },
+      });
+
+      whitelistStatusId = whitelistStatus.id;
+      defaultDepartmentId = defaultDepartment?.id ?? null;
+    }
+
     const officer = await prisma.officer.create({
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
         userId: user.id,
-        departmentId: data.department,
+        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        whitelistStatusId,
       },
       include: leoProperties,
     });

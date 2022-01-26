@@ -139,6 +139,8 @@ export const typeHandlers = {
             type: item.type as DepartmentType,
             callsign: item.callsign,
             value: createValueObj(item.value, ValueType.DEPARTMENT),
+            isDefaultDepartment: item.isDefaultDepartment ?? false,
+            whitelisted: item.whitelisted ?? false,
           },
           include: { value: true },
         });

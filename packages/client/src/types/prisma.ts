@@ -525,6 +525,8 @@ export type DepartmentValue = {
   value: Value<"DEPARTMENT">;
   callsign: string | null;
   type: DepartmentType;
+  whitelisted: boolean;
+  isDefaultDepartment: boolean;
 };
 
 /**
@@ -682,6 +684,17 @@ export type ActiveDispatchers = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
+};
+
+/**
+ * Model LeoWhitelistStatus
+ *
+ */
+export type LeoWhitelistStatus = {
+  id: string;
+  status: WhitelistStatus;
+  departmentId: string | null;
+  department: DepartmentValue | null;
 };
 
 /**

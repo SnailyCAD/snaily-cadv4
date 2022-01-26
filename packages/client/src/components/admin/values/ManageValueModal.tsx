@@ -154,6 +154,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     hash: value?.hash ?? "",
     // @ts-expect-error shortcut
     licenseType: value?.licenseType ?? null,
+    // @ts-expect-error shortcut
+    whitelisted: value?.whitelisted ?? false,
+    // @ts-expect-error shortcut
+    isDefaultDepartment: value?.isDefaultDepartment ?? false,
     showPicker: false,
   };
 
@@ -236,14 +240,50 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "DEPARTMENT" ? (
-              <FormField label="Type">
-                <Select
-                  values={DEPARTMENT_TYPES}
-                  name="type"
-                  onChange={handleChange}
-                  value={values.type}
-                />
-              </FormField>
+              <>
+                <FormField label="Type">
+                  <Select
+                    values={DEPARTMENT_TYPES}
+                    name="type"
+                    onChange={handleChange}
+                    value={values.type}
+                  />
+                </FormField>
+
+                {values.type === DepartmentType.LEO ? (
+                  <>
+                    <FormField checkbox label="Whitelisted">
+                      <Input
+                        name="whitelisted"
+                        checked={values.whitelisted}
+                        onChange={(e) => {
+                          e.target.checked && setFieldValue("isDefaultDepartment", false);
+                          handleChange(e);
+                        }}
+                        type="checkbox"
+                      />
+                    </FormField>
+
+                    <div className="flex flex-col">
+                      <FormField checkbox label="Default Department">
+                        <Input
+                          name="isDefaultDepartment"
+                          checked={values.isDefaultDepartment}
+                          disabled={values.whitelisted}
+                          type="checkbox"
+                          onChange={handleChange}
+                        />
+                      </FormField>
+
+                      <p className="text-base italic">
+                        When a department is whitelisted, you can set 1 department as default. This
+                        department will be given to the officer when they are awaiting access or
+                        when they were declined.
+                      </p>
+                    </div>
+                  </>
+                ) : null}
+              </>
             ) : null}
 
             {type === "BUSINESS_ROLE" ? (

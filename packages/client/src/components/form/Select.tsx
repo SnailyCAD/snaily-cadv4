@@ -6,8 +6,9 @@ import { MultiValueContainerContextMenu } from "./select/MultiValueContainerCont
 import { MultiValueContainerPenalCode } from "./select/MultiValueContainerPenalCode";
 
 export interface SelectValue<Value = string> {
-  label: string;
-  value: Value;
+  readonly label: string;
+  readonly value: Value;
+  readonly isDisabled?: boolean;
 }
 
 interface Props<Value extends SelectValue = SelectValue<any>>
@@ -84,18 +85,19 @@ export function styles({
         border: "none",
       },
     }),
-    option: (base) => ({
+    option: (base, option) => ({
       ...base,
       padding: "0.5em",
       width: "100%",
       backgroundColor,
       color,
-      cursor: "pointer",
+      cursor: option.isDisabled ? "not-allowed" : "pointer",
       transition: "filter 200ms",
       borderRadius: "0.2rem",
       marginTop: "0.2rem",
+      opacity: option.isDisabled ? 0.8 : 1,
       ":hover": {
-        filter: "brightness(80%)",
+        filter: option.isDisabled ? "none" : "brightness(80%)",
       },
     }),
     menu: (prov) => ({

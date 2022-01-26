@@ -357,14 +357,17 @@ model DivisionValue {
 }
 
 model DepartmentValue {
-  id          String          @id @default(cuid())
-  value       Value           @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  valueId     String
-  callsign    String?
-  type        DepartmentType  @default(LEO)
-  EmsFdDeputy EmsFdDeputy[]   @relation("emsFdDepartmentToDepartment")
-  Officer     Officer[]       @relation("officerDepartmentToDepartment")
-  division    DivisionValue[] @relation("divisionDepartmentToValue")
+  id                  String               @id @default(cuid())
+  value               Value                @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId             String
+  callsign            String?
+  whitelisted         Boolean              @default(false)
+  isDefaultDepartment Boolean              @default(false)
+  type                DepartmentType       @default(LEO)
+  EmsFdDeputy         EmsFdDeputy[]        @relation("emsFdDepartmentToDepartment")
+  Officer             Officer[]            @relation("officerDepartmentToDepartment")
+  division            DivisionValue[]      @relation("divisionDepartmentToValue")
+  LeoWhitelistStatus  LeoWhitelistStatus[]
 }
 
 model DriversLicenseCategoryValue {
@@ -554,37 +557,48 @@ enum EmployeeAsEnum {
 
 // leo
 model Officer {
-  id                          String           @id @default(cuid())
-  department                  DepartmentValue  @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  id                          String              @id @default(cuid())
+  department                  DepartmentValue     @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId                String
-  callsign                    String           @db.VarChar(255)
-  callsign2                   String           @db.VarChar(255)
+  callsign                    String              @db.VarChar(255)
+  callsign2                   String              @db.VarChar(255)
   // `division` is deprecated. Use `divisions` instead.
-  division                    DivisionValue?   @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  division                    DivisionValue?      @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String?
-  divisions                   DivisionValue[]  @relation("officerDivisionsToDivision")
-  rank                        Value?           @relation("officerRankToValue", fields: [rankId], references: [id])
+  divisions                   DivisionValue[]     @relation("officerDivisionsToDivision")
+  rank                        Value?              @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
-  status                      StatusValue?     @relation("officerStatusToValue", fields: [statusId], references: [id])
+  status                      StatusValue?        @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
-  suspended                   Boolean          @default(false)
+  suspended                   Boolean             @default(false)
   badgeNumber                 Int?
-  imageId                     String?          @db.VarChar(255)
-  citizen                     Citizen          @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  imageId                     String?             @db.VarChar(255)
+  citizen                     Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
-  createdAt                   DateTime         @default(now())
-  updatedAt                   DateTime         @default(now()) @updatedAt
-  bolos                       Bolo[]           @relation("bolosToOfficer")
+  createdAt                   DateTime            @default(now())
+  updatedAt                   DateTime            @default(now()) @updatedAt
+  whitelistStatus             LeoWhitelistStatus? @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId           String?
+  bolos                       Bolo[]              @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
   LeoIncident                 LeoIncident[]
-  LeoIncidentInvolvedOfficers LeoIncident[]    @relation("involvedOfficers")
-  combinedLeoUnit             CombinedLeoUnit? @relation(fields: [combinedLeoUnitId], references: [id])
+  LeoIncidentInvolvedOfficers LeoIncident[]       @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit?    @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
+}
+
+model LeoWhitelistStatus {
+  id           String           @id @default(uuid())
+  status       WhitelistStatus
+  // the department they're awaiting access for.
+  department   DepartmentValue? @relation(fields: [departmentId], references: [id])
+  departmentId String?
+  Officers     Officer[]
 }
 
 model StatusValue {

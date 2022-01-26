@@ -8,6 +8,7 @@ import type {
   Call911Event,
   Value,
   ActiveDispatchers,
+  LeoWhitelistStatus,
 } from "types/prisma";
 import create from "zustand";
 
@@ -16,6 +17,7 @@ export type FullBolo = Bolo & { officer: FullOfficer | null };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
+  whitelistStatus: LeoWhitelistStatus | null;
 };
 export type FullDeputy = DeputyWithDept & { rank?: Value<"OFFICER_RANK">; status: StatusValue };
 

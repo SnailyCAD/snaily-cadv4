@@ -297,6 +297,8 @@ export class ValuesController {
               value: body.get("value"),
             },
           },
+          isDefaultDepartment: body.get("whitelisted") ? false : body.get("isDefaultDepartment"),
+          whitelisted: body.get("whitelisted"),
           callsign: body.get("callsign") || null,
           type: body.get("type"),
         },

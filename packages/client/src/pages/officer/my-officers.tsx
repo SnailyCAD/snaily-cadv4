@@ -80,40 +80,44 @@ export default function MyOfficers({ officers: data }: Props) {
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
         <Table
-          data={officers.map((officer) => ({
-            officer: (
-              <span className="flex items-center">
-                {officer.imageId ? (
-                  <img
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                    draggable={false}
-                    src={makeImageUrl("units", officer.imageId)}
-                  />
-                ) : null}
-                {makeUnitName(officer)}
-              </span>
-            ),
-            callsign: generateCallsign(officer),
-            badgeNumber: officer.badgeNumber,
-            department: officer.department.value.value,
-            division: formatUnitDivisions(officer),
-            rank: officer.rank?.value ?? common("none"),
-            actions: (
-              <>
-                <Button small onClick={() => handleEditClick(officer)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button
-                  onClick={() => handleDeleteClick(officer)}
-                  className="ml-2"
-                  variant="danger"
-                  small
-                >
-                  {common("delete")}
-                </Button>
-              </>
-            ),
-          }))}
+          data={officers.map((officer) => {
+            const department = officer.whitelistStatus?.department ?? officer.department;
+
+            return {
+              officer: (
+                <span className="flex items-center">
+                  {officer.imageId ? (
+                    <img
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      draggable={false}
+                      src={makeImageUrl("units", officer.imageId)}
+                    />
+                  ) : null}
+                  {makeUnitName(officer)}
+                </span>
+              ),
+              callsign: generateCallsign(officer),
+              badgeNumber: officer.badgeNumber,
+              department: department.value.value,
+              division: formatUnitDivisions(officer),
+              rank: officer.rank?.value ?? common("none"),
+              actions: (
+                <>
+                  <Button small onClick={() => handleEditClick(officer)} variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteClick(officer)}
+                    className="ml-2"
+                    variant="danger"
+                    small
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            };
+          })}
           columns={[
             { Header: t("officer"), accessor: "officer" },
             { Header: t("callsign"), accessor: "callsign" },

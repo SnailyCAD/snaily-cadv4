@@ -14,6 +14,8 @@
     "deleteGroup": "Delete Group",
     "ungrouped": "Ungrouped",
     "licenseType": "License Type",
+    "whitelisted": "Whitelisted",
+    "isDefaultDepartment": "Default Department",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!"
   },
