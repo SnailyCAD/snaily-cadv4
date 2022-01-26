@@ -26,7 +26,7 @@ export function useGenerateCallsign() {
     }
 
     const replacers = {
-      department: department.callsign,
+      department: department?.callsign,
       callsign1: callsign,
       callsign2,
       division: division?.callsign,

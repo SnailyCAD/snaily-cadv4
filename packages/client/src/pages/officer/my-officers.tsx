@@ -28,7 +28,7 @@ export type OfficerWithDept = Officer & {
   /** @deprecated use `divisions` for `Officer` */
   division: DivisionValue | null;
   divisions: DivisionValue[];
-  department: DepartmentValue;
+  department: DepartmentValue | null;
   rank?: Value<"OFFICER_RANK">;
 };
 
@@ -102,7 +102,7 @@ export default function MyOfficers({ officers: data }: Props) {
               ),
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
-              department: department.value.value,
+              department: department?.value.value ?? common("none"),
               departmentStatus: (
                 <span className="capitalize flex items-center gap-2">
                   {departmentStatus}
@@ -117,7 +117,7 @@ export default function MyOfficers({ officers: data }: Props) {
                     >
                       <p className="max-w-[400px]">
                         {t.rich("pendingAccessDepartment", {
-                          defaultDepartment: officer.department.value.value,
+                          defaultDepartment: officer.department?.value.value,
                         })}
                       </p>
                     </HoverCard>

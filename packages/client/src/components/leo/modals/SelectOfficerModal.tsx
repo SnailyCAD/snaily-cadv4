@@ -70,7 +70,7 @@ export function SelectOfficerModal() {
                   value: officer.id,
                   isDisabled: officer.whitelistStatus
                     ? officer.whitelistStatus.status !== "ACCEPTED" &&
-                      !officer.department.isDefaultDepartment
+                      !officer.department?.isDefaultDepartment
                     : false,
                 }))}
               />

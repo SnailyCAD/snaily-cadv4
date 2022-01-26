@@ -25,7 +25,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
   const [search, setSearch] = React.useState("");
   const router = useRouter();
 
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
   const generateCallsign = useGenerateCallsign();
@@ -37,7 +37,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
 
       return {
         ...ac,
-        [department.id]: department.value.value,
+        [department?.id ?? "null"]: department?.value.value ?? common("none"),
       };
     }, {}),
   );
@@ -56,6 +56,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
       method: "POST",
     });
 
+    closeModal(ModalIds.AlertDeclineOfficer);
     router.replace({ pathname: router.pathname, query: router.query });
   }
 
@@ -81,48 +82,52 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
         </FormRow>
       </div>
 
-      <Table
-        filter={search}
-        data={pendingOfficers
-          .filter((v) => (filter ? getUnitDepartment(v).id === filter : true))
-          .map((officer) => ({
-            name: makeUnitName(officer),
-            callsign: generateCallsign(officer),
-            badgeNumber: officer.badgeNumber,
-            department: getUnitDepartment(officer).value.value,
-            division: formatUnitDivisions(officer),
-            actions: (
-              <>
-                <Button
-                  disabled={state === "loading"}
-                  onClick={() => handleAcceptOrDecline({ officer, type: "ACCEPT" })}
-                  small
-                  variant="success"
-                >
-                  {common("accept")}
-                </Button>
+      {pendingOfficers.length <= 0 ? (
+        <p>{t("Management.noPendingOfficers")}</p>
+      ) : (
+        <Table
+          filter={search}
+          data={pendingOfficers
+            .filter((v) => (filter ? getUnitDepartment(v)?.id === filter : true))
+            .map((officer) => ({
+              name: makeUnitName(officer),
+              callsign: generateCallsign(officer),
+              badgeNumber: officer.badgeNumber,
+              department: getUnitDepartment(officer)?.value.value ?? common("none"),
+              division: formatUnitDivisions(officer),
+              actions: (
+                <>
+                  <Button
+                    disabled={state === "loading"}
+                    onClick={() => handleAcceptOrDecline({ officer, type: "ACCEPT" })}
+                    small
+                    variant="success"
+                  >
+                    {common("accept")}
+                  </Button>
 
-                <Button
-                  onClick={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
-                  disabled={state === "loading"}
-                  className="ml-2"
-                  small
-                  variant="danger"
-                >
-                  {common("decline")}
-                </Button>
-              </>
-            ),
-          }))}
-        columns={[
-          { Header: common("name"), accessor: "name" },
-          { Header: t("Leo.callsign"), accessor: "callsign" },
-          { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
-          { Header: t("Leo.department"), accessor: "department" },
-          { Header: t("Leo.division"), accessor: "division" },
-          { Header: common("actions"), accessor: "actions" },
-        ]}
-      />
+                  <Button
+                    onClick={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
+                    disabled={state === "loading"}
+                    className="ml-2"
+                    small
+                    variant="danger"
+                  >
+                    {common("decline")}
+                  </Button>
+                </>
+              ),
+            }))}
+          columns={[
+            { Header: common("name"), accessor: "name" },
+            { Header: t("Leo.callsign"), accessor: "callsign" },
+            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            { Header: t("Leo.department"), accessor: "department" },
+            { Header: t("Leo.division"), accessor: "division" },
+            { Header: common("actions"), accessor: "actions" },
+          ]}
+        />
+      )}
 
       <AlertDeclineOfficerModal
         onSubmit={(data) => handleAcceptOrDecline({ ...data, type: "DECLINE" })}

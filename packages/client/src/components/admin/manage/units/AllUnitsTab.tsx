@@ -77,7 +77,7 @@ export function AllUnitsTab({ units }: Props) {
             name: makeUnitName(unit),
             callsign: generateCallsign(unit),
             badgeNumber: unit.badgeNumber,
-            department: getUnitDepartment(unit).value.value,
+            department: getUnitDepartment(unit)?.value.value ?? common("none"),
             departmentStatus,
             division: formatUnitDivisions(unit),
             rank: unit.rank?.value ?? common("none"),

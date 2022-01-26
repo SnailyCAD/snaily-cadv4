@@ -35,7 +35,14 @@ export default function SupervisorPanelPage({ units }: Props) {
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
 
-      <TabList tabs={["All Units", "Department Whitelisting"]}>
+      <TabList
+        tabs={[
+          t("Management.allUnits"),
+          t
+            .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
+            .toString(),
+        ]}
+      >
         <AllUnitsTab units={units} />
         <DepartmentWhitelistingTab pendingOfficers={pendingOfficers} />
       </TabList>

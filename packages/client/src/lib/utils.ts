@@ -114,7 +114,9 @@ export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLice
   });
 }
 
-export function getUnitDepartment(unit: FullOfficer | FullDeputy) {
+export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
+  if (!unit) return null;
+
   const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
 
   if (whitelistStatus) {

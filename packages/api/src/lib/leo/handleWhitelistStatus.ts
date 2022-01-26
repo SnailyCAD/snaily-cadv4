@@ -32,7 +32,10 @@ export async function handleWhitelistStatus(
         data: { status: "PENDING", departmentId },
       }));
 
-    if (whitelistStatus.departmentId !== department.id && officer?.whitelistStatusId) {
+    const previousDepartmentId =
+      whitelistStatus.status === "DECLINED" ? officer?.departmentId : whitelistStatus.departmentId;
+
+    if (previousDepartmentId !== department.id && officer?.whitelistStatusId) {
       const updated = await prisma.leoWhitelistStatus.update({
         where: { id: officer.whitelistStatusId },
         data: { status: "PENDING", departmentId },
