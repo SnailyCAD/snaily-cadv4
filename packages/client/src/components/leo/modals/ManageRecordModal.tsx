@@ -25,9 +25,10 @@ interface Props {
   record?: FullRecord | null;
   type: RecordType;
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
+  onUpdate?(data: FullRecord): void;
 }
 
-export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: Props) {
+export function ManageRecordModal({ onUpdate, record, type, id = ModalIds.CreateTicket }: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -62,7 +63,6 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
       ...values,
       type,
       violations: values.violations.map(({ value }: { value: any }) => ({
-        id: value.violationId,
         penalCodeId: value.id,
         bail: value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
@@ -77,6 +77,7 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
       });
 
       if (json.id) {
+        onUpdate?.(json);
         closeModal(data[type].id);
       }
     } else {
@@ -102,8 +103,8 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
       record?.violations.map((v) => ({
         label: v.penalCode.title,
         value: {
+          key: v.penalCodeId,
           ...v.penalCode,
-          violationId: v.id,
           fine: { enabled: !!v.fine, value: v.fine },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
           bail: { enabled: !!v.jailTime, value: v.bail },

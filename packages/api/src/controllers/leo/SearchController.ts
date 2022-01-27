@@ -8,7 +8,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 
-const citizenSearchInclude = {
+export const citizenSearchInclude = {
   ...citizenInclude,
   businesses: true,
   medicalRecords: true,

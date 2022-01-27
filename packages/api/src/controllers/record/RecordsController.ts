@@ -14,6 +14,7 @@ import { IsAuth } from "middlewares/index";
 import type { RecordType, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
+import { leoProperties } from "lib/officer";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -165,11 +166,14 @@ export class RecordsController {
 
     const record = await prisma.record.findUnique({
       where: { id: recordId },
+      include: { violations: true },
     });
 
     if (!record) {
       throw new NotFound("notFound");
     }
+
+    await unlinkViolations(record.violations);
 
     const updated = await prisma.record.update({
       where: { id: recordId },
@@ -177,35 +181,29 @@ export class RecordsController {
         notes: data.notes,
         postal: data.postal,
       },
-      include: {
-        violations: true,
-      },
+      include: { officer: { include: leoProperties } },
     });
 
-    const violations = updated.violations;
+    const violations: Violation[] = [];
 
-    // todo: this doesn't work when new penal-codes are added/deleted *yet*
     await Promise.all(
-      violations.map(async (violation, idx) => {
-        const dataViolation = data.violations.find((v) => v.id === violation.id);
-
-        if (dataViolation) {
-          const updatedViolation = await prisma.violation.update({
-            where: { id: violation.id },
-            data: {
-              fine: dataViolation.fine,
-              bail: dataViolation.bail,
-              jailTime: dataViolation.jailTime,
-              penalCode: {
-                connect: {
-                  id: dataViolation.penalCodeId,
-                },
+      data.violations.map(async (violation) => {
+        const created = await prisma.violation.create({
+          data: {
+            fine: violation.fine,
+            bail: violation.bail,
+            jailTime: violation.jailTime,
+            penalCode: {
+              connect: {
+                id: violation.penalCodeId,
               },
             },
-          });
+            records: { connect: { id: updated.id } },
+          },
+          include: { penalCode: true },
+        });
 
-          violations[idx] = updatedViolation;
-        }
+        violations.push(created);
       }),
     );
 
@@ -245,4 +243,12 @@ export class RecordsController {
 
     return true;
   }
+}
+
+async function unlinkViolations(violations: Pick<Violation, "id">[]) {
+  await Promise.all(
+    violations.map(async ({ id }) => {
+      await prisma.violation.delete({ where: { id } });
+    }),
+  );
 }

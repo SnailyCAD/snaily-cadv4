@@ -102,6 +102,16 @@ export function RecordsArea({ warrants, records }: Props) {
       />
       {tempEditRecord ? (
         <ManageRecordModal
+          onUpdate={(data) => {
+            currentResult &&
+              setCurrentResult({
+                ...currentResult,
+                Record: currentResult.Record.map((v) => {
+                  if (v.id === data.id) return data;
+                  return v;
+                }),
+              });
+          }}
           id={ModalIds.ManageRecord}
           type={tempEditRecord.type}
           record={tempEditRecord}
