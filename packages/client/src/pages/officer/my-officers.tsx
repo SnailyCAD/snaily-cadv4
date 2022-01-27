@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { formatUnitDivisions, getUnitDepartment, makeUnitName, requestAll } from "lib/utils";
+import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
@@ -84,7 +84,6 @@ export default function MyOfficers({ officers: data }: Props) {
       ) : (
         <Table
           data={officers.map((officer) => {
-            const department = getUnitDepartment(officer);
             const departmentStatus = officer.whitelistStatus?.status.toLowerCase() ?? "—";
 
             return {
@@ -102,7 +101,7 @@ export default function MyOfficers({ officers: data }: Props) {
               ),
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
-              department: department?.value.value ?? common("none"),
+              department: formatOfficerDepartment(officer) ?? common("none"),
               departmentStatus: (
                 <span className="capitalize flex items-center gap-2">
                   {departmentStatus}

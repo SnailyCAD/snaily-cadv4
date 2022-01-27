@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
-import { getUnitDepartment, formatUnitDivisions, makeUnitName, yesOrNoText } from "lib/utils";
+import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -77,7 +77,7 @@ export function AllUnitsTab({ units }: Props) {
             name: makeUnitName(unit),
             callsign: generateCallsign(unit),
             badgeNumber: unit.badgeNumber,
-            department: getUnitDepartment(unit)?.value.value ?? common("none"),
+            department: formatOfficerDepartment(unit) ?? common("none"),
             departmentStatus,
             division: formatUnitDivisions(unit),
             rank: unit.rank?.value ?? common("none"),

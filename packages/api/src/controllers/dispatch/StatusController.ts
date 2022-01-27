@@ -89,13 +89,16 @@ export class StatusController {
     if (type === "leo") {
       const officer = await prisma.officer.findUnique({
         where: { id: unit.id },
-        select: { whitelistStatus: leoProperties.whitelistStatus },
+        select: { department: true, whitelistStatus: leoProperties.whitelistStatus },
       });
 
-      if (
-        officer?.whitelistStatus?.status !== "ACCEPTED" &&
-        !officer?.whitelistStatus?.department.isDefaultDepartment
-      ) {
+      console.log({ officer, whitelist: officer?.whitelistStatus });
+
+      const isOfficerDisabled = officer?.whitelistStatus
+        ? officer.whitelistStatus.status !== "ACCEPTED" && !officer.department?.isDefaultDepartment
+        : false;
+
+      if (isOfficerDisabled) {
         throw new BadRequest("cannotUseThisOfficer");
       }
     }

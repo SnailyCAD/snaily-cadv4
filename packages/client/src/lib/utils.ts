@@ -129,3 +129,16 @@ export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
 
   return unit.department;
 }
+
+export function formatOfficerDepartment(unit: FullOfficer | FullDeputy) {
+  if (!("whitelistStatus" in unit)) return getUnitDepartment(unit)?.value.value ?? null;
+
+  const whitelistStatus = unit.whitelistStatus;
+  const department = unit.department;
+
+  if (whitelistStatus && whitelistStatus.status === "PENDING") {
+    return `${department?.value.value} (${whitelistStatus.department.value.value})`;
+  }
+
+  return getUnitDepartment(unit)?.value.value ?? null;
+}

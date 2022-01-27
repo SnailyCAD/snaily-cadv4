@@ -1,7 +1,12 @@
 import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import useFetch from "lib/useFetch";
-import { getUnitDepartment, formatUnitDivisions, makeUnitName } from "lib/utils";
+import {
+  getUnitDepartment,
+  formatUnitDivisions,
+  makeUnitName,
+  formatOfficerDepartment,
+} from "lib/utils";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -93,7 +98,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
               name: makeUnitName(officer),
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
-              department: getUnitDepartment(officer)?.value.value ?? common("none"),
+              department: formatOfficerDepartment(officer) ?? common("none"),
               division: formatUnitDivisions(officer),
               actions: (
                 <>

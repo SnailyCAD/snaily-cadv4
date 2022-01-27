@@ -33,7 +33,6 @@ export function SelectOfficerModal() {
     const { json } = await execute(`/dispatch/status/${values.officer}`, {
       method: "PUT",
       data: {
-        ...values,
         status: onDutyCode.id,
       },
     });
