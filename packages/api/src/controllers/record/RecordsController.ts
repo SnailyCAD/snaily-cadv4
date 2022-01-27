@@ -5,7 +5,7 @@ import {
   UPDATE_WARRANT_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
@@ -13,6 +13,7 @@ import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
 import type { RecordType, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import { validateRecordData } from "lib/records/validateRecordData";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -110,43 +111,16 @@ export class RecordsController {
 
     await Promise.all(
       data.violations.map(
-        async (item: {
+        async (rawItem: {
           penalCodeId: string;
           fine: number | null;
           jailTime: number | null;
           bail: number | null;
         }) => {
-          /** validate the penalCode data */
-          const penalCode = await prisma.penalCode.findUnique({
-            where: { id: item.penalCodeId },
-            include: { warningApplicable: true, warningNotApplicable: true },
+          const item = await validateRecordData({
+            ...rawItem,
+            ticketId: ticket.id,
           });
-
-          if (!penalCode) {
-            return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
-          }
-
-          const minMaxFines =
-            penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
-          const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
-          const minMaxBail = penalCode.warningNotApplicable?.bail ?? [];
-
-          // these if statements could be cleaned up?..
-          if (item.fine && this.exists(minMaxFines) && !this.isCorrect(minMaxFines, item.fine)) {
-            return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
-          }
-
-          if (
-            item.jailTime &&
-            this.exists(minMaxPrisonTerm) &&
-            !this.isCorrect(minMaxPrisonTerm, item.jailTime)
-          ) {
-            return this.handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), ticket.id);
-          }
-
-          if (item.bail && this.exists(minMaxBail) && !this.isCorrect(minMaxBail, item.bail)) {
-            return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
-          }
 
           const violation = await prisma.violation.create({
             data: {

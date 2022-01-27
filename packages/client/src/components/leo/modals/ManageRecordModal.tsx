@@ -58,22 +58,35 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
       : penalCode.values;
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/records", {
-      method: "POST",
-      data: {
-        ...values,
-        type,
-        violations: values.violations.map(({ value }: { value: any }) => ({
-          penalCodeId: value.id,
-          bail: value.jailTime?.enabled ? value.bail?.value : null,
-          jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
-          fine: value.fine?.enabled ? value.fine?.value : null,
-        })),
-      },
-    });
+    const requestData = {
+      ...values,
+      type,
+      violations: values.violations.map(({ value }: { value: any }) => ({
+        penalCodeId: value.id,
+        bail: value.jailTime?.enabled ? value.bail?.value : null,
+        jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
+        fine: value.fine?.enabled ? value.fine?.value : null,
+      })),
+    };
 
-    if (json.id) {
-      closeModal(data[type].id);
+    if (record) {
+      const { json } = await execute(`/records/${record.id}`, {
+        method: "PUT",
+        data: requestData,
+      });
+
+      if (json.id) {
+        closeModal(data[type].id);
+      }
+    } else {
+      const { json } = await execute("/records", {
+        method: "POST",
+        data: requestData,
+      });
+
+      if (json.id) {
+        closeModal(data[type].id);
+      }
     }
   }
 
