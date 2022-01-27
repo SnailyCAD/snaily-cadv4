@@ -217,7 +217,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
   }
 
   async function handleChange(value: string, warrant: Warrant) {
-    const { json } = await execute(`/records/${warrant.id}`, {
+    const { json } = await execute(`/records/warrant/${warrant.id}`, {
       data: { status: value.toUpperCase(), type: "WARRANT" },
       method: "PUT",
     });

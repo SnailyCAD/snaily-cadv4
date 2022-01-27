@@ -62,6 +62,7 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
       ...values,
       type,
       violations: values.violations.map(({ value }: { value: any }) => ({
+        id: value.violationId,
         penalCodeId: value.id,
         bail: value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
@@ -70,7 +71,7 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
     };
 
     if (record) {
-      const { json } = await execute(`/records/${record.id}`, {
+      const { json } = await execute(`/records/record/${record.id}`, {
         method: "PUT",
         data: requestData,
       });
@@ -102,6 +103,7 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
         label: v.penalCode.title,
         value: {
           ...v.penalCode,
+          violationId: v.id,
           fine: { enabled: !!v.fine, value: v.fine },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
           bail: { enabled: !!v.jailTime, value: v.bail },
@@ -127,6 +129,7 @@ export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: 
                   value: values.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
+                  disabled: !!record,
                 }}
                 onSuggestionClick={(suggestion) => {
                   setFieldValue("citizenId", suggestion.id);

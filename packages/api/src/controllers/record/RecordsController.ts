@@ -51,7 +51,7 @@ export class RecordsController {
     return warrant;
   }
 
-  @Put("/:id")
+  @Put("/warrant/:id")
   async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -155,6 +155,63 @@ export class RecordsController {
     return { ...ticket, violations };
   }
 
+  @Put("/record/:id")
+  async updateRecordById(
+    @BodyParams() body: unknown,
+    @PathParams("id") recordId: string,
+    // @Context() ctx: Context,
+  ) {
+    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
+
+    const record = await prisma.record.findUnique({
+      where: { id: recordId },
+    });
+
+    if (!record) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.record.update({
+      where: { id: recordId },
+      data: {
+        notes: data.notes,
+        postal: data.postal,
+      },
+      include: {
+        violations: true,
+      },
+    });
+
+    const violations = updated.violations;
+
+    // todo: this doesn't work when new penal-codes are added/deleted *yet*
+    await Promise.all(
+      violations.map(async (violation, idx) => {
+        const dataViolation = data.violations.find((v) => v.id === violation.id);
+
+        if (dataViolation) {
+          const updatedViolation = await prisma.violation.update({
+            where: { id: violation.id },
+            data: {
+              fine: dataViolation.fine,
+              bail: dataViolation.bail,
+              jailTime: dataViolation.jailTime,
+              penalCode: {
+                connect: {
+                  id: dataViolation.penalCodeId,
+                },
+              },
+            },
+          });
+
+          violations[idx] = updatedViolation;
+        }
+      }),
+    );
+
+    return { ...updated, violations };
+  }
+
   @UseBefore(ActiveOfficer)
   @Delete("/:id")
   async deleteRecord(
@@ -187,33 +244,5 @@ export class RecordsController {
     });
 
     return true;
-  }
-
-  isCorrect(minMax: [number, number], value: number) {
-    const [min, max] = minMax;
-    if (min < 0 || max < 0) {
-      return false;
-    }
-
-    if (min === max) {
-      return value === min;
-    }
-
-    return value >= min && value <= max;
-  }
-
-  exists(values: (number | undefined)[]): values is [number, number] {
-    return values.every((v) => typeof v !== "undefined");
-  }
-
-  /**
-   * remove the created ticket when there's an error with linking the penal codes.
-   */
-  async handleBadRequest(error: Error, recordId: string) {
-    await prisma.record.delete({
-      where: { id: recordId },
-    });
-
-    throw error;
   }
 }
