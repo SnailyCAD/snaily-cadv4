@@ -1,4 +1,4 @@
-import { User } from ".prisma/client";
+import type { User } from ".prisma/client";
 import { Feature } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";

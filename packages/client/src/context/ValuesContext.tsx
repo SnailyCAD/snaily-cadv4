@@ -87,7 +87,6 @@ export function useValues() {
 
 // transform: PENAL_CODES -> penalCodes
 // transform: DEPARTMENT  -> department
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function normalizeValue(value: ValueType | (string & {})) {
   let split = value.toLowerCase().split(/_/);
 

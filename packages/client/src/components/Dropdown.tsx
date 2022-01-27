@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { classNames } from "lib/classNames";
 import { Button, ButtonProps } from "components/Button";

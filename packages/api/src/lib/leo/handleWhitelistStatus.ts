@@ -1,4 +1,4 @@
-import { Officer, LeoWhitelistStatus } from "@prisma/client";
+import { Officer, LeoWhitelistStatus, WhitelistStatus } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
@@ -29,16 +29,18 @@ export async function handleWhitelistStatus(
     const whitelistStatus =
       officer?.whitelistStatus ??
       (await prisma.leoWhitelistStatus.create({
-        data: { status: "PENDING", departmentId },
+        data: { status: WhitelistStatus.PENDING, departmentId },
       }));
 
     const previousDepartmentId =
-      whitelistStatus.status === "DECLINED" ? officer?.departmentId : whitelistStatus.departmentId;
+      whitelistStatus.status === WhitelistStatus.DECLINED
+        ? officer?.departmentId
+        : whitelistStatus.departmentId;
 
     if (previousDepartmentId !== department.id && officer?.whitelistStatusId) {
       const updated = await prisma.leoWhitelistStatus.update({
         where: { id: officer.whitelistStatusId },
-        data: { status: "PENDING", departmentId },
+        data: { status: WhitelistStatus.PENDING, departmentId },
         select: { id: true },
       });
 

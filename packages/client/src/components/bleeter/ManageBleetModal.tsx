@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { useRouter } from "next/router";

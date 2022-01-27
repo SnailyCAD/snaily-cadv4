@@ -236,11 +236,11 @@ export class BusinessController {
       },
     });
 
-    if (!business || business.status === "DECLINED") {
+    if (!business || business.status === WhitelistStatus.DECLINED) {
       throw new NotFound("notFound");
     }
 
-    if (business.status === "PENDING") {
+    if (business.status === WhitelistStatus.PENDING) {
       throw new BadRequest("businessIsPending");
     }
 
@@ -351,7 +351,7 @@ export class BusinessController {
         whitelisted: data.whitelisted,
         postal: data.postal ? String(data.postal) : null,
         userId: ctx.get("user").id,
-        status: businessWhitelisted ? "PENDING" : "ACCEPTED",
+        status: businessWhitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
     });
 

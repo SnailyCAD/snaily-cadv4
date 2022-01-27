@@ -1,11 +1,11 @@
 import process from "node:process";
-import { Req } from "@tsed/common";
+import type { Req } from "@tsed/common";
 import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie } from "@snailycad/config";
 import { verifyJWT } from "utils/jwt";
 import { prisma } from "./prisma";
-import { User } from ".prisma/client";
+import type { User } from ".prisma/client";
 
 export const userProperties = {
   id: true,

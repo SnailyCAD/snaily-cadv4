@@ -11,7 +11,7 @@ import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
-import { RecordType, Violation, WarrantStatus } from "@prisma/client";
+import type { RecordType, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
@@ -185,7 +185,6 @@ export class RecordsController {
   @Delete("/:id")
   async deleteRecord(
     @PathParams("id") id: string,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     @BodyParams("type") type: "WARRANT" | (string & {}),
   ) {
     if (type === "WARRANT") {

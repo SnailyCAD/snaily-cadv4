@@ -8,7 +8,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import fs from "node:fs";
-import { cad } from "@prisma/client";
+import type { cad } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 
 @Controller("/admin/manage/cad-settings/image")

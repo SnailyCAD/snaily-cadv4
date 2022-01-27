@@ -21,7 +21,7 @@ import {
   CODES_10_ARR,
   DIVISION_ARR,
 } from "@snailycad/schemas";
-import {
+import type {
   DepartmentType,
   DriversLicenseCategoryType,
   EmployeeAsEnum,

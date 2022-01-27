@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Response } from "@tsed/common";
+import type { Response } from "@tsed/common";
 import { CookieSerializeOptions, serialize } from "cookie";
 
 interface SetCookieOptions {

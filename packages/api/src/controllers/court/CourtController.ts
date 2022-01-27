@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User, WhitelistStatus } from "@prisma/client";
 import { BodyParams, Context, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -78,7 +78,7 @@ export class CourtController {
     const updatedRecords = await Promise.all(
       [...arrestReports, ...tickets].map(async (id) => {
         const existing = await prisma.expungementRequest.findFirst({
-          where: { records: { some: { id } }, status: "PENDING" },
+          where: { records: { some: { id } }, status: WhitelistStatus.PENDING },
         });
 
         if (existing) {
@@ -97,7 +97,7 @@ export class CourtController {
     const updatedWarrants = await Promise.all(
       warrants.map(async (id) => {
         const existing = await prisma.expungementRequest.findFirst({
-          where: { warrants: { some: { id } }, status: "PENDING" },
+          where: { warrants: { some: { id } }, status: WhitelistStatus.PENDING },
         });
 
         if (existing) {

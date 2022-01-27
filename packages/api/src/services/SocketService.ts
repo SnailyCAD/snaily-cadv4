@@ -1,7 +1,7 @@
 import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
-import { Call911, TowCall, Bolo, Call911Event, TaxiCall } from ".prisma/client";
+import type { Call911, TowCall, Bolo, Call911Event, TaxiCall } from ".prisma/client";
 
 @SocketService("/")
 export class Socket {

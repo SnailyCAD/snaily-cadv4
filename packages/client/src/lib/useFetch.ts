@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import * as React from "react";
 import type { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";

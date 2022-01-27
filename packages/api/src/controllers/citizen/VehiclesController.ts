@@ -1,4 +1,4 @@
-import { MiscCadSettings, User } from ".prisma/client";
+import type { MiscCadSettings, User } from ".prisma/client";
 import { Feature } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";

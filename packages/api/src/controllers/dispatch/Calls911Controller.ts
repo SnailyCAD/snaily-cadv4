@@ -10,7 +10,7 @@ import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 const assignedUnitsInclude = {
   include: {
