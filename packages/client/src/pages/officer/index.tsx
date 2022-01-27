@@ -29,7 +29,7 @@ const SelectOfficerModal = dynamic(async () => {
 });
 
 const CreateTicketModal = dynamic(async () => {
-  return (await import("components/leo/modals/CreateTicketModal")).CreateTicketModal;
+  return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
 });
 
 const WeaponSearchModal = dynamic(async () => {

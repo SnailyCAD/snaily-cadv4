@@ -103,7 +103,7 @@ export function NameSearchModal() {
 
     const modalId = {
       [RecordType.ARREST_REPORT]: ModalIds.CreateArrestReport,
-      [RecordType.TICKET]: ModalIds.CreateTicket,
+      [RecordType.TICKET]: ModalIds.ManageRecord,
       [RecordType.WRITTEN_WARNING]: ModalIds.CreateWrittenWarning,
     };
 

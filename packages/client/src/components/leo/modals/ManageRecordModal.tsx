@@ -13,14 +13,21 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { Citizen, RecordType, PenalCode } from "types/prisma";
+import { type Citizen, RecordType, type PenalCode } from "types/prisma";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
-import { PenalCodesTable } from "./CreateRecord/PenalCodesTable";
-import { SelectPenalCode } from "./CreateRecord/SelectPenalCode";
+import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
+import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
+import type { FullRecord } from "./NameSearchModal/RecordsArea";
 
-export function CreateTicketModal({ type }: { type: RecordType }) {
+interface Props {
+  record?: FullRecord | null;
+  type: RecordType;
+  id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
+}
+
+export function ManageRecordModal({ record, type, id = ModalIds.CreateTicket }: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -28,7 +35,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
   const data = {
     [RecordType.TICKET]: {
       title: "createTicket",
-      id: ModalIds.CreateTicket,
+      id,
     },
     [RecordType.ARREST_REPORT]: {
       title: "createArrestReport",
@@ -72,13 +79,23 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
 
   const payload = getPayload<{ citizenId: string; citizenName: string }>(data[type].id);
   const validate = handleValidate(CREATE_TICKET_SCHEMA);
+
   const INITIAL_VALUES = {
     type,
-    citizenId: payload?.citizenId ?? "",
+    citizenId: record?.citizenId ?? payload?.citizenId ?? "",
     citizenName: payload?.citizenName ?? "",
-    violations: [] as SelectValue<PenalCode>[],
-    postal: "",
-    notes: "",
+    violations:
+      record?.violations.map((v) => ({
+        label: v.penalCode.title,
+        value: {
+          ...v.penalCode,
+          fine: { enabled: !!v.fine, value: v.fine },
+          jailTime: { enabled: !!v.jailTime, value: v.jailTime },
+          bail: { enabled: !!v.jailTime, value: v.bail },
+        },
+      })) ?? ([] as SelectValue<PenalCode>[]),
+    postal: record?.postal ?? "",
+    notes: record?.notes ?? "",
   };
 
   return (
@@ -157,7 +174,7 @@ export function CreateTicketModal({ type }: { type: RecordType }) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("create")}
+                {record ? common("save") : common("create")}
               </Button>
             </footer>
           </Form>

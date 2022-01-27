@@ -20,7 +20,12 @@ const citizenSearchInclude = {
       },
       violations: {
         include: {
-          penalCode: true,
+          penalCode: {
+            include: {
+              warningApplicable: true,
+              warningNotApplicable: true,
+            },
+          },
         },
       },
     },
