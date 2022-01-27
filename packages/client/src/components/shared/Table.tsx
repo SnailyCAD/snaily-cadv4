@@ -277,7 +277,7 @@ function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
   );
 }
 
-const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
+export const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef<HTMLInputElement>(null);
     const resolvedRef = ref ?? defaultRef;

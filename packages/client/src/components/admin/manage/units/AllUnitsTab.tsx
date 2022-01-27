@@ -5,11 +5,9 @@ import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { ThreeDots } from "react-bootstrap-icons";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { Table } from "components/shared/Table";
-import { Dropdown } from "components/Dropdown";
+import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { Tab } from "@headlessui/react";
 
 interface Props {
@@ -18,6 +16,8 @@ interface Props {
 
 export function AllUnitsTab({ units }: Props) {
   const [selectedRows, setSelectedRows] = React.useState<`${Unit["id"]}-${Unit["type"]}`[]>([]);
+  const isChecked = selectedRows.length === units.length;
+  const isIntermediate = !isChecked && selectedRows.length > 0;
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -33,6 +33,16 @@ export function AllUnitsTab({ units }: Props) {
 
       return [...prev, `${unit.id}-${unit.type}`];
     });
+  }
+
+  function handleAllCheckboxes(e: React.ChangeEvent<HTMLInputElement>) {
+    const checked = e.target.checked;
+
+    if (checked) {
+      setSelectedRows(units.map((u) => `${u.id}-${u.type}`) as typeof selectedRows);
+    } else {
+      setSelectedRows([]);
+    }
   }
 
   async function setSelectedUnitsOffDuty() {
@@ -59,6 +69,14 @@ export function AllUnitsTab({ units }: Props) {
 
   return (
     <Tab.Panel>
+      <Button
+        disabled={selectedRows.length <= 0}
+        onClick={setSelectedUnitsOffDuty}
+        className="mt-3"
+      >
+        Set selected units off-duty
+      </Button>
+
       <Table
         disabledColumnId={["dropdown"]}
         data={units.map((unit) => {
@@ -97,9 +115,10 @@ export function AllUnitsTab({ units }: Props) {
         columns={[
           {
             Header: (
-              <UnitsDropdown
-                disabled={selectedRows.length <= 0}
-                onClick={setSelectedUnitsOffDuty}
+              <IndeterminateCheckbox
+                onChange={handleAllCheckboxes}
+                checked={isChecked}
+                indeterminate={isIntermediate}
               />
             ),
             accessor: "dropdown",
@@ -118,21 +137,5 @@ export function AllUnitsTab({ units }: Props) {
         ]}
       />
     </Tab.Panel>
-  );
-}
-
-function UnitsDropdown({ onClick, disabled }: { disabled: boolean; onClick: any }) {
-  return (
-    <Dropdown
-      trigger={
-        <Button variant="transparent">
-          <ThreeDots />
-        </Button>
-      }
-    >
-      <Dropdown.Item disabled={disabled} onClick={onClick}>
-        Set selected units off-duty
-      </Dropdown.Item>
-    </Dropdown>
   );
 }
