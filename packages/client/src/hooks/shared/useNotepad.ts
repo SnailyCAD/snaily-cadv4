@@ -1,7 +1,7 @@
 import { dataToSlate } from "components/modal/DescriptionModal/Editor";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { Descendant } from "slate";
+import type { Descendant } from "slate";
 
 const routeIds: Record<string, string> = {
   "/officer": "snaily-cad-notepad-officer-data",

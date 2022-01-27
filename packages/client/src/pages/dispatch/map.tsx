@@ -7,7 +7,7 @@ import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

@@ -17,7 +17,7 @@ import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
-import { FullIncident } from "src/pages/officer/incidents";
+import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {

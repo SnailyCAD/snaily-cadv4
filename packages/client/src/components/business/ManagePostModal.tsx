@@ -11,7 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { CREATE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
-import { BusinessPost } from "types/prisma";
+import type { BusinessPost } from "types/prisma";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
@@ -11,7 +11,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
-import { BusinessPost, whitelistStatus } from "types/prisma";
+import { BusinessPost, WhitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
@@ -74,7 +74,7 @@ export default function BusinessId(props: Props) {
     return null;
   }
 
-  if (currentEmployee.whitelistStatus === whitelistStatus.PENDING) {
+  if (currentEmployee.whitelistStatus === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>{t("businessIsWhitelisted")}</p>
@@ -82,7 +82,7 @@ export default function BusinessId(props: Props) {
     );
   }
 
-  if (props.business?.status === whitelistStatus.PENDING) {
+  if (props.business?.status === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>
@@ -171,7 +171,7 @@ export default function BusinessId(props: Props) {
 
           <ul className="flex flex-col space-y-2">
             {currentBusiness.employees
-              .filter((v) => v.whitelistStatus !== whitelistStatus.PENDING)
+              .filter((v) => v.whitelistStatus !== WhitelistStatus.PENDING)
               .sort((a, b) => Number(b.employeeOfTheMonth) - Number(a.employeeOfTheMonth))
               .map((employee) => (
                 <li className="flex items-center" key={employee.id}>

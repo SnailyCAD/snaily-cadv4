@@ -1,6 +1,6 @@
 import { handleRequest } from "lib/fetch";
 import type { IncomingMessage } from "http";
-import { User } from "types/prisma";
+import type { User } from "types/prisma";
 
 export async function getSessionUser(req?: IncomingMessage, cookie?: string): Promise<User | null> {
   try {

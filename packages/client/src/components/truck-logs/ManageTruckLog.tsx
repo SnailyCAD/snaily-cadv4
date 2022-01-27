@@ -11,9 +11,9 @@ import { useModal } from "context/ModalContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { FullTruckLog } from "src/pages/truck-logs";
+import type { FullTruckLog } from "src/pages/truck-logs";
 import { ModalIds } from "types/ModalIds";
-import { RegisteredVehicle } from "types/prisma";
+import type { RegisteredVehicle } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 interface Props {

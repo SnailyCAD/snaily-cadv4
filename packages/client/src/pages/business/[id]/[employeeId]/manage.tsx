@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";

@@ -1,6 +1,6 @@
 import { components, MultiValueGenericProps } from "react-select";
 import { HoverCard } from "components/shared/HoverCard";
-import { PenalCode } from "types/prisma";
+import type { PenalCode } from "types/prisma";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 export function MultiValueContainerPenalCode(props: MultiValueGenericProps<any>) {

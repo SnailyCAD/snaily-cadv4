@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { FullBusiness } from "src/pages/admin/manage/businesses";
+import type { FullBusiness } from "src/pages/admin/manage/businesses";
 import { WhitelistStatus } from "types/prisma";
 
 interface Props {
@@ -44,7 +44,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
           actions: (
             <>
               <Button
-                onClick={() => acceptOrDecline(business, "ACCEPTED")}
+                onClick={() => acceptOrDecline(business, WhitelistStatus.ACCEPTED)}
                 disabled={state === "loading"}
                 small
                 variant="success"
@@ -53,7 +53,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
               </Button>
               <Button
                 className="ml-2"
-                onClick={() => acceptOrDecline(business, "DECLINED")}
+                onClick={() => acceptOrDecline(business, WhitelistStatus.DECLINED)}
                 disabled={state === "loading"}
                 small
                 variant="danger"

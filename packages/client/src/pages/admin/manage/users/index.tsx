@@ -3,8 +3,8 @@ import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
-import type { User } from "types/prisma";
+import type { GetServerSideProps } from "next";
+import { User, WhitelistStatus } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { TabList } from "components/shared/TabList";
@@ -26,7 +26,7 @@ export default function ManageUsers({ users: data }: Props) {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const pending = users.filter((v) => v.whitelistStatus === "PENDING");
+  const pending = users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
 
   React.useEffect(() => {
     setUsers(data);

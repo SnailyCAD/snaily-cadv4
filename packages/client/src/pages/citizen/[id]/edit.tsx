@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useTranslations } from "use-intl";
 import { Layout } from "components/Layout";
 import useFetch from "lib/useFetch";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useCitizen } from "context/CitizenContext";

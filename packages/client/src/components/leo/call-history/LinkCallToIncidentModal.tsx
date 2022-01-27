@@ -10,9 +10,9 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
-import { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
-import { LeoIncident } from "types/prisma";
+import type { LeoIncident } from "types/prisma";
 
 interface Props {
   call: Full911Call | null;

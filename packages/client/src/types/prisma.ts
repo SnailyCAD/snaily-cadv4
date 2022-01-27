@@ -3,9 +3,9 @@
  * Model cad
  */
 
-import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
-import { FullDeputy, FullOfficer } from "state/dispatchState";
-import { JsonArray } from "type-fest";
+import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
+import type { FullDeputy, FullOfficer } from "state/dispatchState";
+import type { JsonArray } from "type-fest";
 
 export type cad = {
   id: string;
@@ -719,13 +719,13 @@ export const rank = {
 
 export type Rank = typeof rank[keyof typeof rank];
 
-export const whitelistStatus = {
+export const WhitelistStatus = {
   ACCEPTED: "ACCEPTED",
   PENDING: "PENDING",
   DECLINED: "DECLINED",
 } as const;
 
-export type WhitelistStatus = typeof whitelistStatus[keyof typeof whitelistStatus];
+export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
 
 export const valueType = {
   LICENSE: "LICENSE",

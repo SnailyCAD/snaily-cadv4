@@ -1,7 +1,7 @@
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { formatDate } from "lib/utils";
-import { RegisteredVehicle, Weapon } from "types/prisma";
+import type { RegisteredVehicle, Weapon } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 interface Props {

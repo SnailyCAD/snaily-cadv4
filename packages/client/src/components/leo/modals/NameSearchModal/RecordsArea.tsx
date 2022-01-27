@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
 import { formatDate, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { FullOfficer } from "state/dispatchState";
+import type { FullOfficer } from "state/dispatchState";
 import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
 

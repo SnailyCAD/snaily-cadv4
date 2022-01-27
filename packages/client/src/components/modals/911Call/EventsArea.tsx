@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatchState";
 import { Form, Formik, FormikHelpers, useFormikContext } from "formik";
 import compareDesc from "date-fns/compareDesc";
 import useFetch from "lib/useFetch";
@@ -8,7 +8,7 @@ import { FormField } from "components/form/FormField";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { Textarea } from "components/form/Textarea";
-import { Call911Event } from "types/prisma";
+import type { Call911Event } from "types/prisma";
 import { Pencil, X } from "react-bootstrap-icons";
 import useHoverDirty from "react-use/lib/useHoverDirty";
 import { classNames } from "lib/classNames";

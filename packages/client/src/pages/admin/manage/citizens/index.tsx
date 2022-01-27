@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import * as React from "react";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import type { Citizen, User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";

@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
+import type { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";

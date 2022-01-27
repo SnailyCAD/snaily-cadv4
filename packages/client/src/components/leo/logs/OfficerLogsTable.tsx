@@ -3,8 +3,8 @@ import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
 import { formatDate, makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
-import { Officer, OfficerLog } from "types/prisma";
+import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
+import type { Officer, OfficerLog } from "types/prisma";
 
 type Props =
   | {

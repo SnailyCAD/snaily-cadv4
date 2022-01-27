@@ -5,7 +5,7 @@ import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { useDownload } from "@casper124578/useful";
-import { TValue } from "src/pages/admin/values/[path]";
+import type { TValue } from "src/pages/admin/values/[path]";
 import { Dropdown } from "components/Dropdown";
 
 export function OptionsDropdown({ values }: { values: TValue[] }) {

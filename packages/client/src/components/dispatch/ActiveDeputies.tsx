@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { ActiveDeputy } from "state/emsFdState";
+import type { ActiveDeputy } from "state/emsFdState";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";

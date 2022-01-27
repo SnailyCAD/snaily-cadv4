@@ -1,9 +1,9 @@
 import * as React from "react";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { FullEmployee, useBusinessState } from "state/businessState";
-import { Business } from "types/prisma";
+import type { Business } from "types/prisma";
 import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";

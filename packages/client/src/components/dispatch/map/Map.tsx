@@ -4,7 +4,7 @@ import L from "leaflet";
 import J from "jquery";
 import "leaflet.markercluster";
 import { v4 as uuid } from "uuid";
-import { Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 
 import {
   Player,
@@ -20,13 +20,13 @@ import {
 } from "types/Map";
 import { getMapBounds, convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
 
-import { cad, Call911, User } from "types/prisma";
+import type { cad, Call911, User } from "types/prisma";
 import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
 import { blipTypes } from "lib/map/blips";
 import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
 import { ActiveMapCalls } from "./ActiveMapCalls";
-import { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatchState";
 import { toastError } from "lib/error";
 
 /* most code in this file is from TGRHavoc/live_map-interface, special thanks to him for making this! */

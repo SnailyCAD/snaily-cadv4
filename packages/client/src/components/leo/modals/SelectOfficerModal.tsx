@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { ShouldDoType } from "types/prisma";
+import { ShouldDoType, WhitelistStatus } from "types/prisma";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 
@@ -68,7 +68,7 @@ export function SelectOfficerModal() {
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
                   isDisabled: officer.whitelistStatus
-                    ? officer.whitelistStatus.status !== "ACCEPTED" &&
+                    ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
                       !officer.department?.isDefaultDepartment
                     : false,
                 }))}

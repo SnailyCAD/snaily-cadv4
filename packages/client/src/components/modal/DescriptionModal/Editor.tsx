@@ -3,7 +3,7 @@ import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
-import { JsonArray } from "type-fest";
+import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };

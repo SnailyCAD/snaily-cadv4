@@ -1,5 +1,5 @@
-import { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
-import { OfficerWithDept } from "src/pages/officer/my-officers";
+import type { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
+import type { OfficerWithDept } from "src/pages/officer/my-officers";
 import type {
   Bolo,
   Call911,

@@ -16,7 +16,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { ModalIds } from "types/ModalIds";
-import { TowCall } from "types/prisma";
+import type { TowCall } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 interface Props {

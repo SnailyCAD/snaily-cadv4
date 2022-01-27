@@ -2,7 +2,7 @@ import { Table } from "components/shared/Table";
 import { compareDesc } from "date-fns";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "next-intl";
-import { VehicleSearchResult } from "../VehicleSearchModal";
+import type { VehicleSearchResult } from "../VehicleSearchModal";
 
 interface Props {
   results: VehicleSearchResult;

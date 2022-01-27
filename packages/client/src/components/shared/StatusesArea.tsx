@@ -6,8 +6,8 @@ import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import { ActiveDeputy } from "state/emsFdState";
-import { ActiveOfficer } from "state/leoState";
+import type { ActiveDeputy } from "state/emsFdState";
+import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { ShouldDoType, StatusValue } from "types/prisma";
 

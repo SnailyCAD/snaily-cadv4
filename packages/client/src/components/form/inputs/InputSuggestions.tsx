@@ -1,5 +1,5 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
-import { Method } from "axios";
+import type { Method } from "axios";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import useOnclickOutside from "react-cool-onclickoutside";

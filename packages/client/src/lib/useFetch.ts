@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import * as React from "react";
-import { AxiosRequestConfig, AxiosError } from "axios";
+import type { AxiosRequestConfig, AxiosError } from "axios";
 import { handleRequest } from "./fetch";
 import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
-import { FormikHelpers } from "formik";
+import type { FormikHelpers } from "formik";
 import { toastError } from "./error";
 
 interface UseFetchOptions {

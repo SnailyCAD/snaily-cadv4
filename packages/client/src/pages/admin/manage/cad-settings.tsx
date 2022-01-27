@@ -3,7 +3,7 @@ import { useAuth } from "context/AuthContext";
 import { rank } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";

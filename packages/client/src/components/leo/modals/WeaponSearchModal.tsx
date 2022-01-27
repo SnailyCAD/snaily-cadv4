@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/inputs/Input";
-import { Citizen, Value, Weapon } from "types/prisma";
+import type { Citizen, Value, Weapon } from "types/prisma";
 import { Infofield } from "components/shared/Infofield";
 
 export function WeaponSearchModal() {

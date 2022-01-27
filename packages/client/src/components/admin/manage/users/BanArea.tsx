@@ -6,7 +6,7 @@ import { useAuth } from "context/AuthContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { User } from "types/prisma";
+import type { User } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { BAN_SCHEMA } from "@snailycad/schemas";
 
