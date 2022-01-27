@@ -10,6 +10,7 @@ import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
+import { User } from "@prisma/client";
 
 const assignedUnitsInclude = {
   include: {
@@ -59,7 +60,7 @@ export class Calls911Controller {
   }
 
   @Post("/")
-  async create911Call(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async create911Call(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(CREATE_911_CALL, body);
 
     const call = await prisma.call911.create({
@@ -69,7 +70,7 @@ export class Calls911Controller {
         description: data.description,
         descriptionData: data.descriptionData,
         name: data.name,
-        userId: ctx.get("user").id,
+        userId: user.id || undefined,
       },
       include: callInclude,
     });

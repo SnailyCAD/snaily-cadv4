@@ -4,6 +4,7 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Post, Put } from "@tsed/schema";
+import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -22,14 +23,12 @@ export class MedicalRecordsController {
       },
     });
 
-    if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
     const medicalRecord = await prisma.medicalRecord.create({
       data: {
         citizenId: citizen.id,
-        userId: ctx.get("user").id,
+        userId: ctx.get("user").id || undefined,
         type: data.type,
         description: data.description,
         bloodGroupId: data.bloodGroup || null,
@@ -44,7 +43,7 @@ export class MedicalRecordsController {
 
   @Put("/:id")
   async updateMedicalRecord(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") recordId: string,
     @BodyParams() body: unknown,
   ) {
@@ -56,9 +55,7 @@ export class MedicalRecordsController {
       },
     });
 
-    if (!record || record.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(record?.userId, user, new NotFound("notFound"));
 
     const updated = await prisma.medicalRecord.update({
       where: {
@@ -78,16 +75,14 @@ export class MedicalRecordsController {
   }
 
   @Delete("/:id")
-  async deleteMedicalRecord(@Context() ctx: Context, @PathParams("id") recordId: string) {
+  async deleteMedicalRecord(@Context("user") user: User, @PathParams("id") recordId: string) {
     const medicalRecord = await prisma.medicalRecord.findUnique({
       where: {
         id: recordId,
       },
     });
 
-    if (!medicalRecord || medicalRecord.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(medicalRecord?.userId, user, new NotFound("notFound"));
 
     await prisma.medicalRecord.delete({
       where: {

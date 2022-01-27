@@ -15,6 +15,7 @@ import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 import { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { canManageInvariant } from "lib/auth";
 
 export const citizenInclude = {
   vehicles: {
@@ -179,7 +180,7 @@ export class CitizenController {
 
     const citizen = await prisma.citizen.create({
       data: {
-        userId: ctx.get("user").id,
+        userId: ctx.get("user").id || undefined,
         address,
         postal: postal || null,
         weight,
@@ -232,9 +233,7 @@ export class CitizenController {
       },
     });
 
-    if (!citizen || citizen.userId !== ctx.get("user").id) {
-      throw new NotFound("Not Found");
-    }
+    canManageInvariant(citizen?.userId, ctx.get("user"), new NotFound("notFound"));
 
     const {
       address,

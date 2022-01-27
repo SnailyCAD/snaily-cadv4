@@ -5,6 +5,7 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Post, Delete, Put } from "@tsed/schema";
+import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -25,9 +26,7 @@ export class WeaponController {
       },
     });
 
-    if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
     const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
     let modelId = data.model;
@@ -53,7 +52,7 @@ export class WeaponController {
         citizenId: citizen.id,
         registrationStatusId: data.registrationStatus as string,
         serialNumber: data.serialNumber || generateString(10),
-        userId: user.id,
+        userId: user.id || undefined,
         modelId,
       },
       include: {
@@ -67,7 +66,7 @@ export class WeaponController {
 
   @Put("/:id")
   async updateWeapon(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") weaponId: string,
     @BodyParams() body: unknown,
   ) {
@@ -79,9 +78,7 @@ export class WeaponController {
       },
     });
 
-    if (!weapon || weapon.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
 
     const updated = await prisma.weapon.update({
       where: {
@@ -102,16 +99,14 @@ export class WeaponController {
   }
 
   @Delete("/:id")
-  async deleteWeapon(@Context() ctx: Context, @PathParams("id") weaponId: string) {
+  async deleteWeapon(@Context("user") user: User, @PathParams("id") weaponId: string) {
     const weapon = await prisma.weapon.findUnique({
       where: {
         id: weaponId,
       },
     });
 
-    if (!weapon || weapon.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
 
     await prisma.weapon.delete({
       where: {
