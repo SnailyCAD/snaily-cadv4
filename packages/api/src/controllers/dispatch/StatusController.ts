@@ -24,6 +24,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Citizen, CombinedLeoUnit, DepartmentValue, DivisionValue, Value } from "@prisma/client";
 import { generateCallsign } from "utils/callsign";
 import { validateSchema } from "lib/validateSchema";
+import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -144,63 +145,12 @@ export class StatusController {
     }
 
     if (type === "leo") {
-      /**
-       * find an officer-log that has not ended yet.
-       */
-      const officerLog = await prisma.officerLog.findFirst({
-        where: {
-          officerId: unit.id,
-          endedAt: null,
-        },
+      await handleStartEndOfficerLog({
+        officer: unit as Officer,
+        shouldDo: code.shouldDo,
+        socket: this.socket,
+        userId: user.id,
       });
-
-      if (code.shouldDo === ShouldDoType.SET_ON_DUTY) {
-        /**
-         * if the officer is being set on-duty, it will create the officer-log.
-         */
-        if (!officerLog) {
-          await prisma.officerLog.create({
-            data: {
-              officerId: unit.id,
-              userId: user.id,
-              startedAt: new Date(),
-            },
-          });
-        }
-      } else if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        const calls = await prisma.call911.findMany({
-          where: {
-            assignedUnits: { some: { officerId: unit.id } },
-          },
-          include: callInclude,
-        });
-
-        calls.forEach((call) => {
-          const assignedUnits = call.assignedUnits.filter((v) => v.officerId !== unit.id);
-          this.socket.emitUpdate911Call({ ...call, assignedUnits });
-        });
-
-        // unassign officer from call
-        await prisma.assignedUnit.deleteMany({
-          where: {
-            officerId: unit.id,
-          },
-        });
-
-        /**
-         * end the officer-log.
-         */
-        if (officerLog) {
-          await prisma.officerLog.update({
-            where: {
-              id: officerLog.id,
-            },
-            data: {
-              endedAt: new Date(),
-            },
-          });
-        }
-      }
     } else if (type === "ems-fd") {
       // unassign deputy from call
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {

@@ -13,10 +13,18 @@ import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { Socket } from "services/SocketService";
+import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
+import { ShouldDoType } from "@prisma/client";
 
 @Controller("/user")
 @UseBefore(IsAuth)
 export class AccountController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Post("/")
   async getAuthUser(@Context() ctx: Context) {
     return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
@@ -66,15 +74,37 @@ export class AccountController {
 
     ctx.delete("user");
 
-    await prisma.officer.updateMany({
-      where: { userId },
-      data: { statusId: null },
+    const officer = await prisma.officer.findFirst({
+      where: {
+        userId,
+        status: {
+          NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY },
+        },
+      },
     });
+
+    if (officer) {
+      await prisma.officer.update({
+        where: { id: officer.id },
+        data: { statusId: null },
+      });
+
+      await handleStartEndOfficerLog({
+        officer,
+        shouldDo: "SET_OFF_DUTY",
+        socket: this.socket,
+        userId,
+      });
+
+      this.socket.emitUpdateOfficerStatus();
+    }
 
     await prisma.emsFdDeputy.updateMany({
       where: { userId },
       data: { statusId: null },
     });
+
+    this.socket.emitUpdateDeputyStatus();
 
     setCookie({
       res,
