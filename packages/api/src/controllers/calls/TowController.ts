@@ -6,7 +6,7 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth";
 
 const CITIZEN_SELECTS = {

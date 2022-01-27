@@ -13,7 +13,7 @@ import { generateString } from "utils/generateString";
 import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")

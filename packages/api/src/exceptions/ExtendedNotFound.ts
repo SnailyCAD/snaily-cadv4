@@ -1,4 +1,4 @@
-import { ResponseErrorObject } from "@tsed/common";
+import type { ResponseErrorObject } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 
 export class ExtendedNotFound extends NotFound implements ResponseErrorObject {

@@ -1,14 +1,14 @@
 import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import type { Citizen, User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import useFetch from "lib/useFetch";
-import { FormikHelpers } from "formik";
+import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 
 interface Props {

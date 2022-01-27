@@ -31,7 +31,6 @@ type TableData<T extends object, RP extends object> = {
   rowProps?: JSX.IntrinsicElements["tr"] & RP;
 } & T;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 interface Props<T extends object = {}, RowProps extends object = {}> {
   data: readonly TableData<T, RowProps>[];
   columns: readonly (Column<TableData<T, RowProps>> | null)[];

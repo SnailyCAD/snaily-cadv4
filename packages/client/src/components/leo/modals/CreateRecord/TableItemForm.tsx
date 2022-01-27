@@ -1,9 +1,9 @@
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
-import { SelectValue } from "components/form/Select";
+import type { SelectValue } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
-import { PenalCode } from "types/prisma";
+import type { PenalCode } from "types/prisma";
 
 interface Props {
   penalCode: PenalCode;

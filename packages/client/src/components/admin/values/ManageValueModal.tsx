@@ -1,10 +1,10 @@
-import { VALUE_SCHEMA } from "@snailycad/schemas";
 import {
   DEPARTMENT_SCHEMA,
   DIVISION_SCHEMA,
   HASH_SCHEMA,
   CODES_10_SCHEMA,
   BUSINESS_ROLE_SCHEMA,
+  VALUE_SCHEMA,
 } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";

@@ -6,7 +6,7 @@ import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
-import { Citizen, User } from "types/prisma";
+import type { Citizen, User } from "types/prisma";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";

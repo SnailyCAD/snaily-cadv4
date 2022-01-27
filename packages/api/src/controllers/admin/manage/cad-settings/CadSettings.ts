@@ -14,7 +14,7 @@ import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import { cad, Feature } from "@prisma/client";
+import type { cad, Feature } from "@prisma/client";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {

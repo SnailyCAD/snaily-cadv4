@@ -1,5 +1,5 @@
 import * as Menu from "@radix-ui/react-context-menu";
-import * as React from "react";
+import type * as React from "react";
 import { v4 } from "uuid";
 import { classNames } from "lib/classNames";
 import { useModal } from "context/ModalContext";
@@ -18,7 +18,6 @@ type ButtonProps = React.DetailedHTMLProps<
 
 interface ContextItem extends ButtonProps {
   name: string;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   component?: keyof typeof components | (string & {});
 }
 

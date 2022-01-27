@@ -9,7 +9,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
-import { MiscCadSettings } from "types/prisma";
+import type { MiscCadSettings } from "types/prisma";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 export function MiscFeatures() {

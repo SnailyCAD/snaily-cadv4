@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
-import { cad } from ".prisma/client";
+import type { cad } from ".prisma/client";
 import { Feature, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA } from "@snailycad/schemas";

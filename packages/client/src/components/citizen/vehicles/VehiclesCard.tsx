@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { RegisteredVehicle } from "types/prisma";
+import type { RegisteredVehicle } from "types/prisma";
 import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";

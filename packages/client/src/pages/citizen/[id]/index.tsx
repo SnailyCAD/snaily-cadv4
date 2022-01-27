@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useTranslations } from "use-intl";
 import { PersonFill } from "react-bootstrap-icons";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";

@@ -1,7 +1,7 @@
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { User } from "types/prisma";
+import type { User } from "types/prisma";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";

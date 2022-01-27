@@ -1,5 +1,5 @@
-import { Call911 } from "types/prisma";
-import { MarkerPayload, Player } from "types/Map";
+import type { Call911 } from "types/prisma";
+import type { MarkerPayload, Player } from "types/Map";
 
 export function PlayerInfoHTML(player: Player) {
   return `

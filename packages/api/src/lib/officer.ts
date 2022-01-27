@@ -1,5 +1,5 @@
-import { User } from ".prisma/client";
-import { Req, Context } from "@tsed/common";
+import type { User } from ".prisma/client";
+import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { prisma } from "./prisma";
 

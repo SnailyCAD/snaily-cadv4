@@ -8,9 +8,9 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { TowCall } from "types/prisma";
+import type { TowCall } from "types/prisma";
 import { useCitizen } from "context/CitizenContext";
-import { FullTowCall } from "src/pages/tow";
+import type { FullTowCall } from "src/pages/tow";
 import { useRouter } from "next/router";
 
 interface Props {

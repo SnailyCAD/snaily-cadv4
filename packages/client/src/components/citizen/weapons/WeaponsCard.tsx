@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Weapon } from "types/prisma";
+import type { Weapon } from "types/prisma";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { RegisterWeaponModal } from "./RegisterWeaponModal";

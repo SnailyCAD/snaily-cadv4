@@ -6,21 +6,21 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import type {
-  DepartmentValue,
-  DivisionValue,
-  DriversLicenseCategoryValue,
-  EmployeeValue,
-  PenalCode,
-  PenalCodeGroup,
-  StatusValue,
-  Value,
-  ValueType,
-  VehicleValue,
+import {
+  type DepartmentValue,
+  type DivisionValue,
+  type DriversLicenseCategoryValue,
+  type EmployeeValue,
+  type PenalCode,
+  type PenalCodeGroup,
+  type StatusValue,
+  type Value,
+  type ValueType,
+  type VehicleValue,
+  valueType,
 } from "types/prisma";
-import { valueType } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { formatDate, requestAll } from "lib/utils";

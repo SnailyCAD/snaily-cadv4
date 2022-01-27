@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import * as React from "react";
-import { ModalIds } from "types/ModalIds";
+import type { ModalIds } from "types/ModalIds";
 
 interface Context {
   canBeClosed: boolean;

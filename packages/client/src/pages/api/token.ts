@@ -1,4 +1,4 @@
-import { NextApiResponse, NextApiRequest } from "next";
+import type { NextApiResponse, NextApiRequest } from "next";
 import nookies from "nookies";
 
 export const IFRAME_COOKIE_NAME = "snaily-cad-iframe-cookie" as const;

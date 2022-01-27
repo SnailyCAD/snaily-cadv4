@@ -1,6 +1,6 @@
 import process from "node:process";
 import { Rank, User } from ".prisma/client";
-import { cad } from "@prisma/client";
+import { cad, WhitelistStatus } from "@prisma/client";
 import {
   API_TOKEN_HEADER,
   DISABLED_API_TOKEN_ROUTES,
@@ -67,7 +67,7 @@ export class IsAuth implements MiddlewareMethods {
         isTow: true,
         isSupervisor: true,
         username: "Dispatch",
-        whitelistStatus: "ACCEPTED",
+        whitelistStatus: WhitelistStatus.ACCEPTED,
       };
       ctx.set("user", fakeUser);
     } else {

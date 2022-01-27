@@ -6,7 +6,7 @@ import { Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import type { User } from "types/prisma";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";

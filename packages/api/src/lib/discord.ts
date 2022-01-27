@@ -1,6 +1,6 @@
 import { request } from "undici";
-import { APIWebhook } from "discord-api-types/payloads/v9/webhook";
-import { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
+import type { APIWebhook } from "discord-api-types/payloads/v9/webhook";
+import type { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
 
 export async function getWebhookData(url: string): Promise<APIWebhook | null> {
   try {

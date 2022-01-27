@@ -21,7 +21,6 @@
   "rules": {
     "@next/next/no-img-element": "off",
     "promise/always-return": "off",
-    "no-duplicate-imports": "off",
     "@typescript-eslint/adjacent-overload-signatures": "error",
     "@typescript-eslint/array-type": "error",
     "@typescript-eslint/unified-signatures": "error",
@@ -46,7 +45,8 @@
     "@typescript-eslint/prefer-nullish-coalescing": "error",
     "@typescript-eslint/prefer-optional-chain": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
-    "@typescript-eslint/prefer-ts-expect-error": "error"
+    "@typescript-eslint/prefer-ts-expect-error": "error",
+    "@typescript-eslint/ban-types": "off"
   },
   "overrides": [
     {

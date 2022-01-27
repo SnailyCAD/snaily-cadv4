@@ -14,7 +14,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { Full911Call } from "state/dispatchState";
+import type { Full911Call } from "state/dispatchState";
 import { useEmsFdState } from "state/emsFdState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";

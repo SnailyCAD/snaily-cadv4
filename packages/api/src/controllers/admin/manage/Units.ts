@@ -179,7 +179,7 @@ export class ManageUnitsController {
       throw new NotFound("officerNotFound");
     }
 
-    if (!officer.whitelistStatus || officer.whitelistStatus.status !== "PENDING") {
+    if (!officer.whitelistStatus || officer.whitelistStatus.status !== WhitelistStatus.PENDING) {
       throw new BadRequest("officerIsNotAwaiting");
     }
 
@@ -233,7 +233,7 @@ export class ManageUnitsController {
         if (officer.whitelistStatusId) {
           await prisma.leoWhitelistStatus.update({
             where: { id: officer.whitelistStatusId },
-            data: { status: "DECLINED" },
+            data: { status: WhitelistStatus.DECLINED },
           });
         }
 

@@ -5,9 +5,9 @@ import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import type { Business, Citizen, User } from "types/prisma";
+import { type Business, type Citizen, type User, WhitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -43,7 +43,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const businessWhitelisted = cad?.businessWhitelisted ?? false;
-  const pendingBusinesses = businesses.filter((v) => v.status === "PENDING");
+  const pendingBusinesses = businesses.filter((v) => v.status === WhitelistStatus.PENDING);
 
   function handleDeleteClick(value: FullBusiness) {
     setTempValue(value);

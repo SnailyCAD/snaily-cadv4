@@ -6,11 +6,11 @@ import { Layout } from "components/Layout";
 import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
+import { DepartmentValue, DivisionValue, Officer, Value, WhitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
-import { FullOfficer } from "state/dispatchState";
+import type { FullOfficer } from "state/dispatchState";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -106,7 +106,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 <span className="capitalize flex items-center gap-2">
                   {departmentStatus}
 
-                  {officer.whitelistStatus?.status === "PENDING" ? (
+                  {officer.whitelistStatus?.status === WhitelistStatus.PENDING ? (
                     <HoverCard
                       trigger={
                         <Button className="px-1 cursor-default">

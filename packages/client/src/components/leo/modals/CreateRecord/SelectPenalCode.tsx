@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Select, SelectValue } from "components/form/Select";
-import { PenalCode, PenalCodeGroup } from "types/prisma";
+import type { PenalCode, PenalCodeGroup } from "types/prisma";
 import { useValues } from "context/ValuesContext";
 import { FormRow } from "components/form/FormRow";
 

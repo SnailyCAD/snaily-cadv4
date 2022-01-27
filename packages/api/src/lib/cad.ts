@@ -1,5 +1,5 @@
-import { cad } from ".prisma/client";
-import { AutoSetUserProperties } from "@prisma/client";
+import type { cad } from ".prisma/client";
+import type { AutoSetUserProperties } from "@prisma/client";
 import { prisma } from "./prisma";
 
 interface Options {

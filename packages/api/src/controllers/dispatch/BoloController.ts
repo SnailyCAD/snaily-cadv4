@@ -10,7 +10,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
-import { BoloType } from "@prisma/client";
+import type { BoloType } from "@prisma/client";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)

@@ -2,7 +2,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import * as React from "react";
-import { FullDeputy } from "state/dispatchState";
+import type { FullDeputy } from "state/dispatchState";
 
 export function useActiveDeputies(initDeputies: FullDeputy[] = []) {
   const [deputies, setDeputies] = React.useState(initDeputies);

@@ -1,17 +1,18 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { FullDeputy, FullOfficer } from "state/dispatchState";
+import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import {
-  cad as CAD,
-  Citizen,
-  CombinedLeoUnit,
-  Feature,
-  Officer,
-  Value,
-  ValueLicenseType,
+  type cad as CAD,
+  type Citizen,
+  type CombinedLeoUnit,
+  type Feature,
+  type Officer,
+  type Value,
+  type ValueLicenseType,
+  WhitelistStatus,
 } from "types/prisma";
 import { handleRequest } from "./fetch";
-import { IncomingMessage } from "connect";
+import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
 
@@ -120,7 +121,7 @@ export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
   const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
 
   if (whitelistStatus) {
-    if (whitelistStatus.status === "DECLINED") {
+    if (whitelistStatus.status === WhitelistStatus.DECLINED) {
       return unit.department;
     }
 
@@ -136,7 +137,7 @@ export function formatOfficerDepartment(unit: FullOfficer | FullDeputy) {
   const whitelistStatus = unit.whitelistStatus;
   const department = unit.department;
 
-  if (whitelistStatus && whitelistStatus.status === "PENDING") {
+  if (whitelistStatus && whitelistStatus.status === WhitelistStatus.PENDING) {
     return `${department?.value.value} (${whitelistStatus.department.value.value})`;
   }
 

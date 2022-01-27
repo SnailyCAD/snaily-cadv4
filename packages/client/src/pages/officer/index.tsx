@@ -5,7 +5,7 @@ import { Layout } from "components/Layout";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import { RecordType } from "types/prisma";
 import { ActiveCalls } from "components/leo/ActiveCalls";

@@ -1,5 +1,5 @@
-import { cad } from "@prisma/client";
-import { Context } from "@tsed/common";
+import { cad, WhitelistStatus } from "@prisma/client";
+import type { Context } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 
@@ -16,11 +16,11 @@ export async function validateBusinessAcceptance(ctx: Context, businessId: strin
       },
     });
 
-    if (!business || business.status === "DECLINED") {
+    if (!business || business.status === WhitelistStatus.DECLINED) {
       throw new BadRequest("notFound");
     }
 
-    if (business.status === "PENDING") {
+    if (business.status === WhitelistStatus.PENDING) {
       throw new BadRequest("businessIsPending");
     }
   }

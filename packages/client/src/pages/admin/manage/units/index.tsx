@@ -3,12 +3,13 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
-import { GetServerSideProps } from "next";
-import { FullDeputy, FullOfficer } from "state/dispatchState";
+import type { GetServerSideProps } from "next";
+import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
+import { WhitelistStatus } from "types/prisma";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -26,7 +27,7 @@ export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
 
   const pendingOfficers = units.filter(
-    (v) => v.type === "OFFICER" && v.whitelistStatus?.status === "PENDING",
+    (v) => v.type === "OFFICER" && v.whitelistStatus?.status === WhitelistStatus.PENDING,
   );
 
   return (

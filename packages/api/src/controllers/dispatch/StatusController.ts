@@ -18,10 +18,17 @@ import { callInclude, findUnit } from "./Calls911Controller";
 import { leoProperties, unitProperties } from "lib/officer";
 import { getWebhookData, sendDiscordWebhook } from "lib/discord";
 import { Socket } from "services/SocketService";
-import { APIWebhook } from "discord-api-types";
+import type { APIWebhook } from "discord-api-types";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Citizen, CombinedLeoUnit, DepartmentValue, DivisionValue, Value } from "@prisma/client";
+import {
+  Citizen,
+  CombinedLeoUnit,
+  DepartmentValue,
+  DivisionValue,
+  Value,
+  WhitelistStatus,
+} from "@prisma/client";
 import { generateCallsign } from "utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
@@ -94,7 +101,8 @@ export class StatusController {
       });
 
       const isOfficerDisabled = officer?.whitelistStatus
-        ? officer.whitelistStatus.status !== "ACCEPTED" && !officer.department?.isDefaultDepartment
+        ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
+          !officer.department?.isDefaultDepartment
         : false;
 
       if (isOfficerDisabled) {

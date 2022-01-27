@@ -1,4 +1,4 @@
-import { Call911 } from "./prisma";
+import type { Call911 } from "./prisma";
 
 export interface Player {
   Weapon?: string;

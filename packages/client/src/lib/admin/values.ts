@@ -5,7 +5,7 @@ import {
 } from "components/admin/values/ManageValueModal";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
-import { TValue } from "src/pages/admin/values/[path]";
+import type { TValue } from "src/pages/admin/values/[path]";
 import {
   type StatusValue,
   StatusValueType,

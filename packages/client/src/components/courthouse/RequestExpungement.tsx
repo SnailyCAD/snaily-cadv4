@@ -8,10 +8,10 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, Warrant } from "types/prisma";
+import type { Citizen, Warrant } from "types/prisma";
 import { useCitizen } from "context/CitizenContext";
 import { Select, SelectValue } from "components/form/Select";
-import { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
+import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 
 type Result = Citizen & { Record: FullRecord[]; warrants: Warrant[] };
 

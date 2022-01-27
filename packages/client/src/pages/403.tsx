@@ -2,7 +2,7 @@ import { Layout } from "components/Layout";
 import { Title } from "components/shared/Title";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 
 export default function FourOhFour() {
   return (

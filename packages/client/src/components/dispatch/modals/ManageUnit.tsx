@@ -8,12 +8,12 @@ import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Select } from "components/form/Select";
-import { ActiveOfficer } from "state/leoState";
+import type { ActiveOfficer } from "state/leoState";
 import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
-import { ActiveDeputy } from "state/emsFdState";
+import type { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
-import { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "types/prisma";
 import { classNames } from "lib/classNames";
 
 interface Props {

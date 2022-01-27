@@ -7,7 +7,7 @@ import { useAuth } from "context/AuthContext";
 import format from "date-fns/format";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import { AssignedUnit, Call911 } from "types/prisma";
+import type { AssignedUnit, Call911 } from "types/prisma";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";

@@ -8,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { FullBolo } from "state/dispatchState";
+import type { FullBolo } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { BoloType, ShouldDoType } from "types/prisma";

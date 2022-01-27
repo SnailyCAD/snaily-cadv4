@@ -12,8 +12,9 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
-import { FullBusiness, useBusinessState } from "state/businessState";
+import { type FullBusiness, useBusinessState } from "state/businessState";
 import { toastError } from "lib/error";
+import { WhitelistStatus } from "types/prisma";
 
 interface Props {
   onCreate: (business: FullBusiness) => void;
@@ -81,7 +82,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
             <FormField errorMessage={errors.businessId} label={t("business")}>
               <Select
                 values={joinableBusinesses
-                  .filter((v) => v.status !== "DECLINED")
+                  .filter((v) => v.status !== WhitelistStatus.DECLINED)
                   .map((business) => ({
                     label: business.name,
                     value: business.id,

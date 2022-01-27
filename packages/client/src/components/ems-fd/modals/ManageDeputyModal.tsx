@@ -11,7 +11,7 @@ import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { FullDeputy } from "state/dispatchState";
+import type { FullDeputy } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";

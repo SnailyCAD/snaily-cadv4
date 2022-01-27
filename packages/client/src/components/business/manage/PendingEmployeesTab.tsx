@@ -3,7 +3,7 @@ import { Tab } from "@headlessui/react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FullEmployee, useBusinessState } from "state/businessState";
-import { EmployeeAsEnum, whitelistStatus } from "types/prisma";
+import { EmployeeAsEnum, WhitelistStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 
 export function PendingEmployeesTab() {
@@ -14,7 +14,7 @@ export function PendingEmployeesTab() {
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
 
   const employees =
-    currentBusiness?.employees.filter((v) => v.whitelistStatus === whitelistStatus.PENDING) ?? [];
+    currentBusiness?.employees.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING) ?? [];
 
   async function handleUpdate(employee: FullEmployee, type: "accept" | "decline") {
     if (!currentBusiness || !currentEmployee) return;

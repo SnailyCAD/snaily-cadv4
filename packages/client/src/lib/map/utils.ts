@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { XYZ } from "types/Map";
+import type { XYZ } from "types/Map";
 
 const TILE_SIZE = 1024;
 export const GAME = {

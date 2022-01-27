@@ -3,7 +3,7 @@ import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
-import { User } from "types/prisma";
+import { User, WhitelistStatus } from "types/prisma";
 
 interface Props {
   users: User[];
@@ -25,7 +25,11 @@ export function PendingUsersTab({ setUsers, search, users }: Props) {
       setUsers((users) =>
         users.map((v) =>
           v.id === user.id
-            ? { ...v, whitelistStatus: type === "accept" ? "ACCEPTED" : "DECLINED" }
+            ? {
+                ...v,
+                whitelistStatus:
+                  type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
+              }
             : v,
         ),
       );

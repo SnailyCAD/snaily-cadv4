@@ -13,7 +13,7 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/officer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
+import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant } from "lib/auth";
 

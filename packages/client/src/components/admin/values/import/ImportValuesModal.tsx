@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
-import { ValueType } from "types/prisma";
+import type { ValueType } from "types/prisma";
 
 interface Props {
   type: ValueType;

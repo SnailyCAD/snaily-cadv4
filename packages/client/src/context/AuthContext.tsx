@@ -1,4 +1,3 @@
-/* eslint-disable promise/always-return */
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";

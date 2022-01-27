@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/index";
+import { WhitelistStatus } from ".prisma/client";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
@@ -13,8 +14,8 @@ export class AdminController {
   @Get("/")
   async getData() {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
-      await prisma.user.count({ where: { whitelistStatus: "ACCEPTED" } }),
-      await prisma.user.count({ where: { whitelistStatus: "PENDING" } }),
+      await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
+      await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
       await prisma.user.count({ where: { banned: true } }),
     ]);
 

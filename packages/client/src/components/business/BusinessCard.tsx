@@ -1,8 +1,8 @@
 import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import Link from "next/link";
-import { FullEmployee } from "state/businessState";
-import { Business, whitelistStatus } from "types/prisma";
+import type { FullEmployee } from "state/businessState";
+import { Business, WhitelistStatus } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 interface Props {
@@ -18,10 +18,10 @@ export function BusinessCard({ employee }: Props) {
 
   /** button is disabled due to the business awaiting approval from an admin */
   const isDisabledDueToPending =
-    businessWhitelisted && employee.business.status === whitelistStatus.PENDING;
+    businessWhitelisted && employee.business.status === WhitelistStatus.PENDING;
 
   /** button is disabled due to the employee awaiting approval from the business owner */
-  const isDisabledDueToEmployeePending = employee.whitelistStatus === whitelistStatus.PENDING;
+  const isDisabledDueToEmployeePending = employee.whitelistStatus === WhitelistStatus.PENDING;
 
   const isDisabled = isDisabledDueToPending || isDisabledDueToEmployeePending;
   const disabledMessage = isDisabledDueToEmployeePending
