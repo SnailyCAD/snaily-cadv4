@@ -9,9 +9,6 @@ export const DISABLED_API_TOKEN_ROUTES: DisabledRoute[] = [
   ["/v1/user", "*"],
   ["/v1/admin/manage/cad-settings", "*"],
   ["/v1/admin/manage/", ["POST", "DELETE", "PUT", "PATCH"]],
-  ["/v1/admin/values", ["POST", "DELETE", "PUT", "PATCH"]],
-  ["/v1/citizen", ["POST", "DELETE", "PUT", "PATCH"]],
-  // todo: add other routes
 ];
 
 type _User = {
