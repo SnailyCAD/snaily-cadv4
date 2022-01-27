@@ -31,7 +31,11 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
     /\/v1\/dispatch\/status\/\w+/i,
     (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
   ],
-  [["GET"], /\/v1\/leo\/active-(officers|officer)/, (u) => u.isLeo || u.isDispatch || u.isEmsFd],
+  [
+    ["GET"],
+    /\/v1\/(leo|ems-fd)\/active-(officers|officer|deputies|deputy)/,
+    (u) => u.isLeo || u.isDispatch || u.isEmsFd,
+  ],
   ["*", "/v1/leo", (u) => u.isLeo],
 
   [["POST"], "/v1/incidents", (u) => u.isLeo],
@@ -67,7 +71,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["PUT", "DELETE", "POST"], "/v1/911-calls/events", (u) => u.isDispatch],
   [["POST"], "/v1/911-calls/assign-to/", (u) => u.isLeo || u.isEmsFd],
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],
-  ["*", "/v1/dispatch", (u) => u.isDispatch],
+  ["*", "/v1/dispatch", (u) => u.isDispatch || u.isLeo || u.isEmsFd],
   ["*", "/v1/search/address", (u) => u.isDispatch],
 
   ["*", "/v1/records", (u) => u.isLeo],
