@@ -43,8 +43,11 @@ export class DiscordAuth {
   }
 
   @Get("/callback")
-  async handleCallbackFromDiscord(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
-    const code = query.code as string | undefined;
+  async handleCallbackFromDiscord(
+    @QueryParams("code") code: string,
+    @Res() res: Res,
+    @Req() req: Req,
+  ) {
     const redirectURL = findRedirectURL();
 
     if (!code) {

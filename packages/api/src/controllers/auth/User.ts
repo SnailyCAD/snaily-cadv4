@@ -32,7 +32,7 @@ export class AccountController {
 
   @Patch("/")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { username, isDarkTheme, statusViewMode } = body;
+    const { username, discordId, isDarkTheme, statusViewMode } = body;
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -44,12 +44,28 @@ export class AccountController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
+    if (discordId) {
+      const existingWithDiscordId = await prisma.user.findFirst({
+        where: {
+          discordId,
+          NOT: {
+            id: user.id,
+          },
+        },
+      });
+
+      if (existingWithDiscordId) {
+        throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
+      }
+    }
+
     const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         username,
+        discordId: discordId || undefined,
         isDarkTheme,
         statusViewMode,
       },

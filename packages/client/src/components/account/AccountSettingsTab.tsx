@@ -17,6 +17,7 @@ export function AccountSettingsTab() {
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
+    discordId: user?.discordId ?? "",
   };
 
   async function onSubmit(
@@ -38,6 +39,10 @@ export function AccountSettingsTab() {
           <Form className="mt-2">
             <FormField label="Username" errorMessage={errors.username}>
               <Input value={values.username} onChange={handleChange} name="username" />
+            </FormField>
+
+            <FormField optional label="Discord ID" errorMessage={errors.discordId}>
+              <Input value={values.discordId} onChange={handleChange} name="discordId" />
             </FormField>
 
             <Button type="submit" disabled={state === "loading"}>
