@@ -105,6 +105,7 @@
     "maxDivisionsReached": "This officer reached the maximum limit of divisions per officer.",
     "maxLimitOfficersPerUserReached": "This user reached the maximum limit of officers.",
     "maxCitizensPerUserReached": "This user reached the maximum limit of citizens.",
+    "discordIdInUse": "This discord ID is already connected to a different account.",
 
     "Error": "An unexpected error occurred. Please report this issue to an administrator or try again later.",
     "NOT_FOUND": "The requested item or page was not found. Please try refreshing the page or try again later.",
