@@ -11,11 +11,12 @@ import { useTranslations } from "use-intl";
 import type { Business, Citizen, RegisteredVehicle, TruckLog, Value } from "types/prisma";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { formatDate, yesOrNoText } from "lib/utils";
+import { yesOrNoText } from "lib/utils";
 import { classNames } from "lib/classNames";
 import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { FullDate } from "components/shared/FullDate";
 
 export function VehicleSearchModal() {
   const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
@@ -142,7 +143,7 @@ export function VehicleSearchModal() {
                   </li>
                   <li>
                     <Infofield label={common("createdAt")}>
-                      {formatDate(results.createdAt)}
+                      <FullDate>{results.createdAt}</FullDate>
                     </Infofield>
                   </li>
                   <li>

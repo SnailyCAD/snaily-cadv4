@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Citizen, RecordType } from "types/prisma";
-import { calculateAge, formatCitizenAddress, formatDate } from "lib/utils";
+import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
@@ -25,6 +25,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
+import { FullDate } from "components/shared/FullDate";
 
 const enum Toggled {
   VEHICLES = 0,
@@ -264,7 +265,7 @@ export function NameSearchModal() {
                       ) : null}
 
                       <Infofield label={cT("dateOfBirth")}>
-                        {formatDate(currentResult.dateOfBirth, { onlyDate: true })} ({cT("age")}:{" "}
+                        <FullDate onlyDate>{currentResult.dateOfBirth}</FullDate>({cT("age")}:{" "}
                         {calculateAge(currentResult.dateOfBirth)})
                       </Infofield>
 

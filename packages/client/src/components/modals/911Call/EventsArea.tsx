@@ -15,7 +15,7 @@ import { classNames } from "lib/classNames";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
-import { formatDate } from "lib/utils";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   call: Full911Call;
@@ -101,7 +101,6 @@ export function CallEventsArea({ call }: Props) {
 
 function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) {
   const { openModal, closeModal } = useModal();
-  const formatted = formatDate(event.createdAt);
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
   const t = useTranslations("Calls");
@@ -130,7 +129,7 @@ function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent:
     <li ref={actionsRef} className="flex justify-between">
       <div>
         <span className="select-none text-gray-800 dark:text-gray-400 mr-1 font-semibold w-[90%]">
-          {formatted}:
+          <FullDate>{event.createdAt}</FullDate>:
         </span>
         <span>{event.description}</span>
       </div>

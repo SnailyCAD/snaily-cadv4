@@ -1,7 +1,8 @@
+import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
 import formatDistance from "date-fns/formatDistance";
 import { useImageUrl } from "hooks/useImageUrl";
-import { formatDate, makeUnitName } from "lib/utils";
+import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
 import type { Officer, OfficerLog } from "types/prisma";
@@ -23,8 +24,8 @@ export function OfficerLogsTable({ officer, logs }: Props) {
   return (
     <Table
       data={logs.map((log) => {
-        const startedAt = formatDate(log.startedAt);
-        const endedAt = log.endedAt ? formatDate(log.endedAt) : t("notEndedYet");
+        const startedAt = <FullDate>{log.startedAt}</FullDate>;
+        const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
         const logOfficer = "officer" in log ? log.officer : (officer as Officer);
 
         const totalTime =

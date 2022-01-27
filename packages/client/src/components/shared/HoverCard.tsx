@@ -11,8 +11,8 @@ export function HoverCard({ trigger, children, ...rest }: Props) {
     <RHoverCard.Root closeDelay={10} openDelay={0} {...rest}>
       <RHoverCard.Trigger asChild>{trigger}</RHoverCard.Trigger>
       <RHoverCard.Content
-        className="bg-gray-200 dark:bg-dark-bright shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white pointer-events-none"
-        sideOffset={7}
+        className="bg-gray-200 dark:bg-dark-bright shadow-lg w-full max-w-2xl p-3 rounded-md dark:text-white pointer-events-none dropdown-fade"
+        sideOffset={5}
       >
         {children}
         <RHoverCard.Arrow className="fill-current text-white dark:text-dark-bright" />

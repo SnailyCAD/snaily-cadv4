@@ -7,13 +7,14 @@ import { ExpungementRequest, Warrant, Citizen, WhitelistStatus } from "types/pri
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { getTitles } from "components/courthouse/RequestExpungement";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 const RequestExpungement = dynamic(
   async () => (await import("components/courthouse/RequestExpungement")).RequestExpungement,
@@ -86,7 +87,7 @@ export default function Courthouse(props: Props) {
               arrestReports,
               tickets,
               status: request.status.toLowerCase(),
-              createdAt: formatDate(request.createdAt),
+              createdAt: <FullDate>{request.createdAt}</FullDate>,
               actions: <></>,
             };
           })}

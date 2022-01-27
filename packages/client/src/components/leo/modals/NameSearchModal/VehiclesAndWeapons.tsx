@@ -1,6 +1,6 @@
+import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { formatDate } from "lib/utils";
 import type { RegisteredVehicle, Weapon } from "types/prisma";
 import { useTranslations } from "use-intl";
 
@@ -29,7 +29,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
               vinNumber: vehicle.vinNumber,
-              createdAt: formatDate(vehicle.createdAt),
+              createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
             }))}
             columns={[
               { Header: t("Vehicles.plate"), accessor: "plate" },
