@@ -1,9 +1,10 @@
+import { WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get, Put } from "@tsed/schema";
+import { Get, Post, Put } from "@tsed/schema";
 import {
   linkDivisionsToOfficer,
   unlinkDivisionsFromOfficer,
@@ -14,6 +15,13 @@ import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+
+const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
+type Action = typeof ACTIONS[number];
+
+const TYPES = ["ACCEPT", "DECLINE"] as const;
+type Type = typeof TYPES[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
@@ -146,5 +154,101 @@ export class ManageUnitsController {
     }
 
     return updated;
+  }
+
+  @Post("/departments/:officerId")
+  async acceptOrDeclineUnit(
+    @PathParams("officerId") officerId: string,
+    @BodyParams("action") action: Action | null,
+    @BodyParams("type") type: Type,
+  ) {
+    if (action && !ACTIONS.includes(action)) {
+      throw new ExtendedBadRequest({ action: "Invalid Action" });
+    }
+
+    if (!TYPES.includes(type)) {
+      throw new BadRequest("invalidType");
+    }
+
+    const officer = await prisma.officer.findUnique({
+      where: { id: officerId },
+      include: leoProperties,
+    });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
+    if (!officer.whitelistStatus || officer.whitelistStatus.status !== "PENDING") {
+      throw new BadRequest("officerIsNotAwaiting");
+    }
+
+    if (officer.whitelistStatusId) {
+      await prisma.leoWhitelistStatus.update({
+        where: { id: officer.whitelistStatusId },
+        data: { status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED },
+      });
+    }
+
+    if (type === "ACCEPT") {
+      const updated = await prisma.officer.update({
+        where: { id: officerId },
+        data: {
+          departmentId: officer.whitelistStatus.departmentId,
+        },
+        include: leoProperties,
+      });
+
+      return updated;
+    }
+
+    switch (action) {
+      case "DELETE_OFFICER": {
+        const updated = await prisma.officer.delete({
+          where: { id: officer.id },
+        });
+
+        return { ...updated, deleted: true };
+      }
+      case "SET_DEPARTMENT_NULL": {
+        const updated = await prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            departmentId: null,
+          },
+          include: leoProperties,
+        });
+
+        return updated;
+      }
+      case "SET_DEPARTMENT_DEFAULT": {
+        const defaultDepartment = await prisma.departmentValue.findFirst({
+          where: { isDefaultDepartment: true },
+        });
+
+        if (!defaultDepartment) {
+          throw new ExtendedBadRequest({ action: "No default department found" });
+        }
+
+        if (officer.whitelistStatusId) {
+          await prisma.leoWhitelistStatus.update({
+            where: { id: officer.whitelistStatusId },
+            data: { status: "DECLINED" },
+          });
+        }
+
+        const updated = await prisma.officer.update({
+          where: { id: officer.id },
+          data: {
+            departmentId: defaultDepartment.id,
+          },
+          include: leoProperties,
+        });
+
+        return updated;
+      }
+      default:
+        return null;
+    }
   }
 }

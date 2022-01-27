@@ -167,7 +167,10 @@ export function ActiveOfficers() {
                         </td>
                       </ContextMenu>
                       <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
-                      <td>{!("officers" in officer) && officer.department.value.value}</td>
+                      <td>
+                        {(!("officers" in officer) && officer.department?.value.value) ??
+                          common("none")}
+                      </td>
                       <td>{!("officers" in officer) && formatUnitDivisions(officer)}</td>
                       <td>{(!("officers" in officer) && officer.rank?.value) ?? common("none")}</td>
                       <td className={useDot ? "flex items-center" : undefined}>

@@ -113,3 +113,32 @@ export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLice
     return item.licenseType === type;
   });
 }
+
+export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
+  if (!unit) return null;
+
+  const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
+
+  if (whitelistStatus) {
+    if (whitelistStatus.status === "DECLINED") {
+      return unit.department;
+    }
+
+    return whitelistStatus.department;
+  }
+
+  return unit.department;
+}
+
+export function formatOfficerDepartment(unit: FullOfficer | FullDeputy) {
+  if (!("whitelistStatus" in unit)) return getUnitDepartment(unit)?.value.value ?? null;
+
+  const whitelistStatus = unit.whitelistStatus;
+  const department = unit.department;
+
+  if (whitelistStatus && whitelistStatus.status === "PENDING") {
+    return `${department?.value.value} (${whitelistStatus.department.value.value})`;
+  }
+
+  return getUnitDepartment(unit)?.value.value ?? null;
+}

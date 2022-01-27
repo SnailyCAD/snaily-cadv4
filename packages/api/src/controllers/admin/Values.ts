@@ -8,6 +8,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
 import { typeHandlers } from "./values/Import";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export type NameType = Exclude<
   keyof PrismaClient,
@@ -137,6 +138,20 @@ export class ValuesController {
       });
 
       return code;
+    }
+
+    if (type === "DEPARTMENT") {
+      if (body.isDefaultDepartment) {
+        const existing = await prisma.departmentValue.findFirst({
+          where: { isDefaultDepartment: true },
+        });
+
+        if (existing) {
+          throw new ExtendedBadRequest({
+            isDefaultDepartment: "Only 1 department can be set a default.",
+          });
+        }
+      }
     }
 
     const handler = typeHandlers[type];
@@ -287,6 +302,18 @@ export class ValuesController {
     }
 
     if (type === "DEPARTMENT") {
+      if (body.get("isDefaultDepartment")) {
+        const existing = await prisma.departmentValue.findFirst({
+          where: { isDefaultDepartment: true },
+        });
+
+        if (existing && existing.id !== id) {
+          throw new ExtendedBadRequest({
+            isDefaultDepartment: "Only 1 department can be set a default.",
+          });
+        }
+      }
+
       const updated = await prisma.departmentValue.update({
         where: {
           id,
@@ -297,6 +324,8 @@ export class ValuesController {
               value: body.get("value"),
             },
           },
+          isDefaultDepartment: body.get("whitelisted") ? false : body.get("isDefaultDepartment"),
+          whitelisted: body.get("whitelisted"),
           callsign: body.get("callsign") || null,
           type: body.get("type"),
         },

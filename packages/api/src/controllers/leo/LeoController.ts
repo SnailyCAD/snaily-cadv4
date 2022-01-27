@@ -23,6 +23,7 @@ import { validateImgurURL } from "utils/image";
 import { DivisionValue, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -84,15 +85,21 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
+    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      null,
+    );
+
     const officer = await prisma.officer.create({
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
         userId: user.id,
-        departmentId: data.department,
+        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        whitelistStatusId,
       },
       include: leoProperties,
     });
@@ -137,6 +144,11 @@ export class LeoController {
 
     await unlinkDivisionsFromOfficer(officer);
 
+    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      officer,
+    );
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -144,10 +156,11 @@ export class LeoController {
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
-        departmentId: data.department,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
+        whitelistStatusId,
       },
       include: leoProperties,
     });

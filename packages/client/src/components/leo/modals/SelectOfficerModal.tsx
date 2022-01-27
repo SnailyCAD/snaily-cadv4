@@ -33,7 +33,6 @@ export function SelectOfficerModal() {
     const { json } = await execute(`/dispatch/status/${values.officer}`, {
       method: "PUT",
       data: {
-        ...values,
         status: onDutyCode.id,
       },
     });
@@ -68,6 +67,10 @@ export function SelectOfficerModal() {
                 values={officers.map((officer) => ({
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
+                  isDisabled: officer.whitelistStatus
+                    ? officer.whitelistStatus.status !== "ACCEPTED" &&
+                      !officer.department?.isDefaultDepartment
+                    : false,
                 }))}
               />
             </FormField>

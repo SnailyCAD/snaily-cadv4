@@ -17,6 +17,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import { getUnitDepartment } from "lib/utils";
 
 interface Props {
   officer: FullOfficer | null;
@@ -99,7 +100,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
 
   const validate = handleValidate(CREATE_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
-    department: officer?.departmentId ?? "",
+    department: getUnitDepartment(officer)?.id ?? "",
     rank: officer?.rankId ?? "",
     callsign: officer?.callsign ?? "",
     callsign2: officer?.callsign2 ?? "",

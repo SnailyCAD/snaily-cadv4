@@ -17,6 +17,7 @@ export const leoProperties = {
   divisions: { include: { value: true, department: true } },
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
+  whitelistStatus: { include: { department: { include: { value: true } } } },
   rank: true,
 };
 

@@ -11,11 +11,13 @@ import { ModalIds } from "types/ModalIds";
 import { DepartmentValue, DivisionValue, Officer, Value } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { FullOfficer } from "state/dispatchState";
-import { formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
+import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { HoverCard } from "components/shared/HoverCard";
+import { Info } from "react-bootstrap-icons";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -26,7 +28,7 @@ export type OfficerWithDept = Officer & {
   /** @deprecated use `divisions` for `Officer` */
   division: DivisionValue | null;
   divisions: DivisionValue[];
-  department: DepartmentValue;
+  department: DepartmentValue | null;
   rank?: Value<"OFFICER_RANK">;
 };
 
@@ -53,6 +55,7 @@ export default function MyOfficers({ officers: data }: Props) {
     if (json) {
       closeModal(ModalIds.AlertDeleteOfficer);
       setOfficers((p) => p.filter((v) => v.id !== tempOfficer.id));
+      setTempOfficer(null);
     }
   }
 
@@ -80,45 +83,76 @@ export default function MyOfficers({ officers: data }: Props) {
         <p className="mt-5">{t("noOfficers")}</p>
       ) : (
         <Table
-          data={officers.map((officer) => ({
-            officer: (
-              <span className="flex items-center">
-                {officer.imageId ? (
-                  <img
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                    draggable={false}
-                    src={makeImageUrl("units", officer.imageId)}
-                  />
-                ) : null}
-                {makeUnitName(officer)}
-              </span>
-            ),
-            callsign: generateCallsign(officer),
-            badgeNumber: officer.badgeNumber,
-            department: officer.department.value.value,
-            division: formatUnitDivisions(officer),
-            rank: officer.rank?.value ?? common("none"),
-            actions: (
-              <>
-                <Button small onClick={() => handleEditClick(officer)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button
-                  onClick={() => handleDeleteClick(officer)}
-                  className="ml-2"
-                  variant="danger"
-                  small
-                >
-                  {common("delete")}
-                </Button>
-              </>
-            ),
-          }))}
+          data={officers.map((officer) => {
+            const departmentStatus = officer.whitelistStatus?.status.toLowerCase() ?? "—";
+
+            return {
+              officer: (
+                <span className="flex items-center">
+                  {officer.imageId ? (
+                    <img
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      draggable={false}
+                      src={makeImageUrl("units", officer.imageId)}
+                    />
+                  ) : null}
+                  {makeUnitName(officer)}
+                </span>
+              ),
+              callsign: generateCallsign(officer),
+              badgeNumber: officer.badgeNumber,
+              department: formatOfficerDepartment(officer) ?? common("none"),
+              departmentStatus: (
+                <span className="capitalize flex items-center gap-2">
+                  {departmentStatus}
+
+                  {officer.whitelistStatus?.status === "PENDING" ? (
+                    <HoverCard
+                      trigger={
+                        <Button className="px-1 cursor-default">
+                          <Info />
+                        </Button>
+                      }
+                    >
+                      <p className="max-w-[400px]">
+                        {t.rich(
+                          officer.department?.isDefaultDepartment
+                            ? "pendingAccessDepartment"
+                            : "pendingAccessDepartmentNoDefault",
+                          {
+                            defaultDepartment: officer.department?.value.value,
+                          },
+                        )}
+                      </p>
+                    </HoverCard>
+                  ) : null}
+                </span>
+              ),
+              division: formatUnitDivisions(officer),
+              rank: officer.rank?.value ?? common("none"),
+              actions: (
+                <>
+                  <Button small onClick={() => handleEditClick(officer)} variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteClick(officer)}
+                    className="ml-2"
+                    variant="danger"
+                    small
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            };
+          })}
           columns={[
             { Header: t("officer"), accessor: "officer" },
             { Header: t("callsign"), accessor: "callsign" },
             { Header: t("badgeNumber"), accessor: "badgeNumber" },
             { Header: t("department"), accessor: "department" },
+            { Header: t("status"), accessor: "departmentStatus" },
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
             { Header: common("actions"), accessor: "actions" },

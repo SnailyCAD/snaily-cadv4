@@ -3,6 +3,7 @@ import {
   LICENSE_LABELS,
   SHOULD_DO_LABELS,
 } from "components/admin/values/ManageValueModal";
+import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { TValue } from "src/pages/admin/values/[path]";
 import {
@@ -39,6 +40,8 @@ export function useTableDataOfType(type: ValueType) {
         return {
           callsign: v.callsign || common("none"),
           type: DEPARTMENT_LABELS[v.type],
+          whitelisted: common(yesOrNoText(v.whitelisted)),
+          isDefaultDepartment: common(yesOrNoText(v.isDefaultDepartment)),
         };
       }
       case "DIVISION": {
@@ -89,6 +92,8 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: t("callsign"), accessor: "callsign" },
         { Header: common("type"), accessor: "type" },
+        { Header: t("whitelisted"), accessor: "whitelisted" },
+        { Header: t("isDefaultDepartment"), accessor: "isDefaultDepartment" },
       ];
     }
     case "DIVISION": {

@@ -11,7 +11,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
@@ -31,6 +31,7 @@ import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]
 import dynamic from "next/dynamic";
 import { Eyedropper } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
+import { Toggle } from "components/form/Toggle";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -109,11 +110,15 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const footerTitle = !value ? t("ADD") : common("save");
   const { department } = useValues();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (value) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
         method: "PATCH",
         data: { ...values, type: dlType ? dlType : values.type },
+        helpers,
       });
 
       if (json?.id) {
@@ -124,6 +129,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
         data: { ...values, type: dlType ? dlType : values.type },
+        helpers,
       });
 
       if (json?.id) {
@@ -154,6 +160,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     hash: value?.hash ?? "",
     // @ts-expect-error shortcut
     licenseType: value?.licenseType ?? null,
+    // @ts-expect-error shortcut
+    whitelisted: value?.whitelisted ?? false,
+    // @ts-expect-error shortcut
+    isDefaultDepartment: value?.isDefaultDepartment ?? false,
     showPicker: false,
   };
 
@@ -236,14 +246,58 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "DEPARTMENT" ? (
-              <FormField label="Type">
-                <Select
-                  values={DEPARTMENT_TYPES}
-                  name="type"
-                  onChange={handleChange}
-                  value={values.type}
-                />
-              </FormField>
+              <>
+                <FormField label="Type">
+                  <Select
+                    values={DEPARTMENT_TYPES}
+                    name="type"
+                    onChange={handleChange}
+                    value={values.type}
+                  />
+                </FormField>
+
+                {values.type === DepartmentType.LEO ? (
+                  <>
+                    <FormField
+                      errorMessage={errors.whitelisted as string}
+                      checkbox
+                      label="Whitelisted"
+                    >
+                      <Toggle
+                        name="whitelisted"
+                        toggled={values.whitelisted}
+                        onClick={(e) => {
+                          e.target.value && setFieldValue("isDefaultDepartment", false);
+                          handleChange(e);
+                        }}
+                      />
+                    </FormField>
+
+                    <div className="flex flex-col">
+                      <FormField
+                        errorMessage={errors.isDefaultDepartment as string}
+                        checkbox
+                        label="Default Department"
+                      >
+                        <Toggle
+                          name="isDefaultDepartment"
+                          toggled={values.isDefaultDepartment}
+                          onClick={(e) => {
+                            e.target.value && setFieldValue("whitelisted", false);
+                            handleChange(e);
+                          }}
+                        />
+                      </FormField>
+
+                      <p className="text-base italic">
+                        When a department is whitelisted, you can set 1 department as default. This
+                        department will be given to the officer when they are awaiting access or
+                        when they were declined.
+                      </p>
+                    </div>
+                  </>
+                ) : null}
+              </>
             ) : null}
 
             {type === "BUSINESS_ROLE" ? (

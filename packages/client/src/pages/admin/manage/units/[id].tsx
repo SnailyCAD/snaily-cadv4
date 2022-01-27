@@ -1,7 +1,7 @@
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { makeUnitName, requestAll } from "lib/utils";
+import { getUnitDepartment, makeUnitName, requestAll } from "lib/utils";
 import { GetServerSideProps } from "next";
 import { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
@@ -59,7 +59,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
   const divisions = ("divisions" in unit && unit.divisions) || [];
   const INITIAL_VALUES = {
     status: unit.statusId,
-    department: unit.departmentId,
+    department: getUnitDepartment(unit)?.id ?? "",
     division: unit.divisionId,
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     callsign: unit.callsign,
