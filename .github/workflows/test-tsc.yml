@@ -18,7 +18,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build config
         run: "yarn workspace @snailycad/config build"
@@ -46,7 +46,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build config
         run: "yarn workspace @snailycad/config build"
@@ -71,7 +71,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Run test-tsc
         run: "yarn workspace @snailycad/config tsc --noEmit"
@@ -90,7 +90,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Run test-tsc
         run: "yarn workspace @snailycad/schemas tsc --noEmit"
