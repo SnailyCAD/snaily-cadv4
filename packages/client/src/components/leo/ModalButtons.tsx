@@ -33,7 +33,7 @@ const buttons: MButton[] = [
   },
   {
     nameKey: ["Leo", "createTicket"],
-    modalId: ModalIds.ManageRecord,
+    modalId: ModalIds.CreateTicket,
   },
   {
     nameKey: ["Leo", "createArrestReport"],
