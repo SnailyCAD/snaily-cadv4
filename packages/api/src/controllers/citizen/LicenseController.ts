@@ -4,6 +4,7 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Put } from "@tsed/schema";
+import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -28,9 +29,7 @@ export class LicensesController {
       include: { dlCategory: true },
     });
 
-    if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
     await unlinkDlCategories(citizen);
 

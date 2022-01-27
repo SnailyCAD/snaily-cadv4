@@ -13,6 +13,7 @@ import { generateString } from "utils/generateString";
 import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
+import { User } from "@prisma/client";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -98,7 +99,7 @@ export class ManageCitizensController {
 
   @Delete("/:id")
   async deleteCitizen(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @BodyParams() body: any,
     @PathParams("id") citizenId: string,
   ) {
@@ -115,10 +116,14 @@ export class ManageCitizensController {
     }
 
     if (citizen.userId) {
+      if (citizen.userId !== user.id) {
+        throw new NotFound("notFound");
+      }
+
       await prisma.notification.create({
         data: {
           userId: citizen.userId,
-          executorId: ctx.get("user").id,
+          executorId: user.id,
           description: reason,
           title: "CITIZEN_DELETED",
         },

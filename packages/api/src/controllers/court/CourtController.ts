@@ -62,7 +62,7 @@ export class CourtController {
     const request = await prisma.expungementRequest.create({
       data: {
         citizenId: citizen.id,
-        userId: user.id,
+        userId: user.id || undefined,
       },
       include: expungementRequestInclude,
     });

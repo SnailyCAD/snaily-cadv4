@@ -5,6 +5,7 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Post, Put } from "@tsed/schema";
+import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -18,6 +19,10 @@ export class VehiclesController {
   async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
+    const cad = ctx.get("cad") as {
+      disabledFeatures: Feature[];
+      miscCadSettings?: MiscCadSettings;
+    } | null;
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -25,9 +30,7 @@ export class VehiclesController {
       },
     });
 
-    if (!citizen || citizen.userId !== user.id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
     const existing = await prisma.registeredVehicle.findUnique({
       where: {
@@ -39,10 +42,6 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
     }
 
-    const cad = ctx.get("cad") as {
-      disabledFeatures: Feature[];
-      miscCadSettings?: MiscCadSettings;
-    } | null;
     const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
     if (data.plate.length > plateLength) {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
@@ -77,7 +76,7 @@ export class VehiclesController {
         // todo
         insuranceStatus: "TEST",
         vinNumber: data.vinNumber || generateString(17),
-        userId: user.id,
+        userId: user.id || undefined,
       },
       include: {
         model: { include: { value: true } },
@@ -112,7 +111,7 @@ export class VehiclesController {
 
   @Put("/:id")
   async updateVehicle(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -133,7 +132,7 @@ export class VehiclesController {
         where: {
           id: data.employeeId,
           businessId: data.businessId,
-          userId: ctx.get("user").id,
+          userId: user.id,
         },
         include: {
           role: true,
@@ -144,9 +143,7 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      if (vehicle.userId !== ctx.get("user").id) {
-        throw new NotFound("notFound");
-      }
+      canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
     }
 
     const updated = await prisma.registeredVehicle.update({
@@ -171,7 +168,7 @@ export class VehiclesController {
 
   @Delete("/:id")
   async deleteVehicle(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -192,7 +189,7 @@ export class VehiclesController {
         where: {
           id: data.employeeId,
           businessId: data.businessId,
-          userId: ctx.get("user").id,
+          userId: user.id,
         },
         include: {
           role: true,
@@ -203,9 +200,7 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      if (vehicle.userId !== ctx.get("user").id) {
-        throw new NotFound("notFound");
-      }
+      canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
     }
     await prisma.registeredVehicle.delete({
       where: {

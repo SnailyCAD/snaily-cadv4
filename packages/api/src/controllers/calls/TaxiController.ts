@@ -6,6 +6,8 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
+import { User } from "@prisma/client";
+import { canManageInvariant } from "lib/auth";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -38,7 +40,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Post("/")
-  async createTaxiCall(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -47,14 +49,11 @@ export class TowController {
       },
     });
 
-    if (!citizen || citizen.userId !== ctx.get("user").id) {
-      throw new NotFound("notFound");
-    }
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
     const call = await prisma.taxiCall.create({
       data: {
         creatorId: data.creatorId,
-        userId: ctx.get("user").id,
         description: data.description,
         descriptionData: data.descriptionData,
         location: data.location,

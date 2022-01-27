@@ -1,12 +1,13 @@
-import { Controller, QueryParams, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
+import { Controller, QueryParams, BodyParams, UseBefore, PathParams, Context } from "@tsed/common";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
-import { User } from ".prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import { User } from "@prisma/client";
+import { canManageInvariant } from "lib/auth";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -67,15 +68,12 @@ export class TowController {
 
       citizen = await prisma.citizen.findFirst({
         where: {
-          userId: user.id,
           id: data.creatorId,
           ...extraWhere,
         },
       });
 
-      if (!citizen) {
-        throw new NotFound("notFound");
-      }
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     }
 
     let vehicle;
@@ -120,7 +118,6 @@ export class TowController {
     const call = await prisma.towCall.create({
       data: {
         creatorId: data.creatorId,
-        userId: user.id,
         description: data.description,
         descriptionData: data.descriptionData,
         location: data.location,

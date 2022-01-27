@@ -65,3 +65,21 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
   const { tempPassword, ...rest } = user ?? {};
   return { ...rest, tempPassword: null, hasTempPassword: !!tempPassword } as unknown as User;
 }
+
+export function canManageInvariant<T extends Error>(
+  userId: string | null | undefined,
+  authUser: User,
+  error: T,
+): asserts userId {
+  if (!userId && (authUser.rank as string) !== "API_TOKEN") {
+    throw error;
+  }
+
+  if (!userId) {
+    throw error;
+  }
+
+  if (userId && userId !== authUser.id) {
+    throw error;
+  }
+}
