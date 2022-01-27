@@ -2,7 +2,7 @@ import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
@@ -12,6 +12,7 @@ import { ExpungementRequestStatus } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   requests: FullRequest[];
@@ -62,7 +63,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                 .map((w) => getTitles(w))
                 .join(", ") || common("none"),
             status: request.status.toLowerCase(),
-            createdAt: formatDate(request.createdAt),
+            createdAt: <FullDate>{request.createdAt}</FullDate>,
             actions: (
               <>
                 <Button

@@ -11,9 +11,10 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -132,7 +133,8 @@ export default function Taxi(props: Props) {
               ),
             caller: `${call.creator.name} ${call.creator.surname}`,
             assignedUnit: assignedUnit(call),
-            createdAt: formatDate(call.createdAt),
+            createdAt: <FullDate>{call.createdAt}</FullDate>,
+
             actions: (
               <>
                 <Button onClick={() => editClick(call)} small variant="success">

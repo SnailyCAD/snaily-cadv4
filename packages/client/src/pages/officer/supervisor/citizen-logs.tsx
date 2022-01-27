@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { formatDate, makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { Citizen, RecordLog, RecordType } from "types/prisma";
 import { Table } from "components/shared/Table";
@@ -13,6 +13,7 @@ import { Input } from "components/form/inputs/Input";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 type Log = RecordLog & { citizen: Citizen };
 interface Props {
@@ -76,7 +77,6 @@ export default function CitizenLogs({ logs: data }: Props) {
                   .map((item) => {
                     const type = item.records !== null ? TYPE_LABELS[item.records.type] : "Warrant";
                     const createdAt = item.warrant?.createdAt ?? item.records?.createdAt;
-                    const formatted = createdAt && formatDate(createdAt);
                     const officer = item.warrant?.officer ?? item.records?.officer;
                     const officerName = officer && makeUnitName(officer);
                     const callsign = officer && generateCallsign(officer);
@@ -102,7 +102,7 @@ export default function CitizenLogs({ logs: data }: Props) {
                       citizen: `${item.citizen.name} ${item.citizen.surname}`,
                       officer: `${callsign} ${officerName}`,
                       ...extra,
-                      createdAt: formatted,
+                      createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
                     };
                   })}
                 columns={[

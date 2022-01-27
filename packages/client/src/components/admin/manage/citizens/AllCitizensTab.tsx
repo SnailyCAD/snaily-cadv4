@@ -11,9 +11,9 @@ import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
-import { formatDate } from "lib/utils";
 import { Select } from "components/form/Select";
 import Link from "next/link";
+import { FullDate } from "components/shared/FullDate";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -99,7 +99,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 name: `${citizen.name} ${citizen.surname}`,
-                dateOfBirth: formatDate(citizen.dateOfBirth, { onlyDate: true }),
+                dateOfBirth: <FullDate onlyDate>{citizen.dateOfBirth}</FullDate>,
                 gender: citizen.gender.value,
                 ethnicity: citizen.ethnicity.value,
                 hairColor: citizen.hairColor,

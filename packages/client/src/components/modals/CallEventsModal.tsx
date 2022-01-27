@@ -6,7 +6,7 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import compareDesc from "date-fns/compareDesc";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { formatDate } from "lib/utils";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   call: Full911Call | null;
@@ -57,12 +57,10 @@ export function CallEventsModal({ call, onClose }: Props) {
           call?.events
             .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
             .map((event) => {
-              const formatted = formatDate(event.createdAt);
-
               return (
                 <li key={event.id}>
                   <span className="mr-1 font-semibold text-gray-800 select-none dark:text-gray-400">
-                    {formatted}:
+                    <FullDate>{event.createdAt}</FullDate>:
                   </span>
                   <span>{event.description}</span>
                 </li>

@@ -6,7 +6,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import type { FullTowCall } from "./index";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
@@ -14,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import dynamic from "next/dynamic";
+import { FullDate } from "components/shared/FullDate";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -80,7 +81,7 @@ export default function TowLogs(props: Props) {
               ),
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
-            createdAt: formatDate(call.createdAt),
+            createdAt: <FullDate>{call.createdAt}</FullDate>,
           }))}
           columns={[
             { Header: t("location"), accessor: "location" },

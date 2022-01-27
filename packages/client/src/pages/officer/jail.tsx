@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { formatDate, makeUnitName, requestAll } from "lib/utils";
+import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { Citizen, RecordRelease, ReleaseType } from "types/prisma";
 import { useModal } from "context/ModalContext";
@@ -16,6 +16,7 @@ import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   data: (Citizen & { Record: FullRecord[] })[];
@@ -65,7 +66,6 @@ export default function Jail({ data: citizens }: Props) {
             const released = isReleased(record);
             const type = released && record.release.type;
             const citizen = released ? record.release.releasedBy : null;
-            const createdAt = formatDate(record.createdAt);
 
             const status = !released
               ? t("arrested")
@@ -79,7 +79,7 @@ export default function Jail({ data: citizens }: Props) {
               officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
               jailTime,
               status,
-              createdAt,
+              createdAt: <FullDate>{record.createdAt}</FullDate>,
               actions: (
                 <Button
                   disabled={released}

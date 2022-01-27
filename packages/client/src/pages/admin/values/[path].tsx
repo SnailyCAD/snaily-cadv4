@@ -23,7 +23,7 @@ import {
 } from "types/prisma";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
@@ -33,6 +33,7 @@ import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown"
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
+import { FullDate } from "components/shared/FullDate";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -196,7 +197,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             rowProps: { value },
             value: getValueStrFromValue(value),
             ...extraTableData(value),
-            createdAt: formatDate(getCreatedAtFromValue(value)),
+            createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(value)} variant="success">

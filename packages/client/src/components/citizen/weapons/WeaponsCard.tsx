@@ -9,7 +9,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { formatDate } from "lib/utils";
+import { FullDate } from "components/shared/FullDate";
 
 export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { openModal, closeModal } = useModal();
@@ -69,7 +69,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
               model: weapon.model.value.value,
               registrationStatus: weapon.registrationStatus.value,
               serialNumber: weapon.serialNumber,
-              createdAt: formatDate(weapon.createdAt),
+              createdAt: <FullDate>{weapon.createdAt}</FullDate>,
               actions: (
                 <>
                   <Button onClick={() => handleEditClick(weapon)} small variant="success">

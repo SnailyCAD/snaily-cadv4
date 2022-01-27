@@ -14,7 +14,7 @@ import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
 import { WeaponsCard } from "components/citizen/weapons/WeaponsCard";
 import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
-import { calculateAge, formatCitizenAddress, formatDate, requestAll } from "lib/utils";
+import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
 import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
 import dynamic from "next/dynamic";
@@ -25,6 +25,7 @@ import { ManageOccupationModal } from "components/citizen/modals/ManageOccupatio
 import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
+import { FullDate } from "components/shared/FullDate";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -102,7 +103,7 @@ export default function CitizenId() {
             ) : null}
 
             <Infofield label={t("dateOfBirth")}>
-              {formatDate(citizen.dateOfBirth, { onlyDate: true })} ({t("age")}:{" "}
+              <FullDate onlyDate>{citizen.dateOfBirth}</FullDate> ({t("age")}:{" "}
               {calculateAge(citizen.dateOfBirth)})
             </Infofield>
             <Infofield label={t("gender")}>{citizen.gender.value}</Infofield>

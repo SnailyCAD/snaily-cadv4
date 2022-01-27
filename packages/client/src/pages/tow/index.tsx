@@ -11,9 +11,10 @@ import type { Citizen, TowCall } from "types/prisma";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { formatDate, requestAll } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -131,7 +132,7 @@ export default function Tow(props: Props) {
               ),
             caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
             assignedUnit: assignedUnit(call),
-            createdAt: formatDate(call.createdAt),
+            createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (
               <>
                 <Button onClick={() => editClick(call)} small variant="success">

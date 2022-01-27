@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { formatDate, makeUnitName, requestAll, yesOrNoText } from "lib/utils";
+import { makeUnitName, requestAll, yesOrNoText } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -19,6 +19,7 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { FullDate } from "components/shared/FullDate";
 
 export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
 
@@ -154,7 +155,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
                 )}
               </span>
             ),
-            createdAt: formatDate(incident.createdAt),
+            createdAt: <FullDate>{incident.createdAt}</FullDate>,
             actions: (
               <>
                 <Button

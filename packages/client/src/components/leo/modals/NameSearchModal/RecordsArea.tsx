@@ -8,12 +8,13 @@ import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
-import { formatDate, makeUnitName } from "lib/utils";
+import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { FullOfficer } from "state/dispatchState";
 import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import { ManageRecordModal } from "../ManageRecordModal";
+import { FullDate } from "components/shared/FullDate";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
 interface Props {
@@ -151,7 +152,7 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
             description: record.notes,
-            createdAt: formatDate(record.createdAt),
+            createdAt: <FullDate>{record.createdAt}</FullDate>,
             actions: isCitizen ? null : (
               <>
                 <Button
@@ -257,7 +258,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
             return {
               officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
               description: warrant.description,
-              createdAt: formatDate(warrant.createdAt),
+              createdAt: <FullDate>{warrant.createdAt}</FullDate>,
               actions: (
                 <div className="flex gap-2">
                   <Select
