@@ -157,11 +157,7 @@ export class RecordsController {
   }
 
   @Put("/record/:id")
-  async updateRecordById(
-    @BodyParams() body: unknown,
-    @PathParams("id") recordId: string,
-    // @Context() ctx: Context,
-  ) {
+  async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const record = await prisma.record.findUnique({
