@@ -92,8 +92,6 @@ export class StatusController {
         select: { department: true, whitelistStatus: leoProperties.whitelistStatus },
       });
 
-      console.log({ officer, whitelist: officer?.whitelistStatus });
-
       const isOfficerDisabled = officer?.whitelistStatus
         ? officer.whitelistStatus.status !== "ACCEPTED" && !officer.department?.isDefaultDepartment
         : false;
