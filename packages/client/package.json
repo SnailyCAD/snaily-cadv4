@@ -13,7 +13,7 @@
     "validate": "node ../../scripts/validate.mjs"
   },
   "dependencies": {
-    "@casper124578/use-socket.io": "3.0.0",
+    "@casper124578/use-socket.io": "3.1.0",
     "@casper124578/useful": "^1.4.5",
     "@headlessui/react": "^1.4.3",
     "@radix-ui/react-context-menu": "^0.1.4",
@@ -33,7 +33,7 @@
     "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.5.3",
-    "next": "^12.0.8",
+    "next": "^12.0.9",
     "next-intl": "2.3.5",
     "nookies": "^2.5.2",
     "pretty-bytes": "^5.6.0",
@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.13",
-    "@types/leaflet": "^1.7.8",
+    "@types/leaflet": "^1.7.9",
     "@types/leaflet.markercluster": "^1.4.6",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
@@ -70,7 +70,7 @@
     "postcss": "^8.4.5",
     "rimraf": "^3.0.2",
     "sass": "^1.49.0",
-    "tailwindcss": "^3.0.15",
+    "tailwindcss": "^3.0.17",
     "typescript": "^4.5.5"
   }
 }
