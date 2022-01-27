@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { AppProps } from "next/app";
 import "cropperjs/dist/cropper.css";
 import { SSRProvider } from "@react-aria/ssr";
@@ -18,13 +17,7 @@ export default function App({ Component, router, pageProps }: AppProps) {
 
   return (
     <SSRProvider>
-      <SocketProvider
-        uri={url}
-        options={{
-          reconnectionDelay: 5_000,
-          reconnectionAttempts: 50,
-        }}
-      >
+      <SocketProvider uri={url} options={{ reconnectionDelay: 10_000 }}>
         <AuthProvider initialData={pageProps}>
           <NextIntlProvider
             onError={console.warn}

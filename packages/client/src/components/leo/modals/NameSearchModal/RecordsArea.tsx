@@ -13,6 +13,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { FullOfficer } from "state/dispatchState";
 import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
+import { ManageRecordModal } from "../ManageRecordModal";
 
 export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
 interface Props {
@@ -27,7 +28,9 @@ export function RecordsArea({ warrants, records }: Props) {
   const isCitizen = router.pathname.startsWith("/citizen");
   const { getPayload, closeModal } = useModal();
   const { currentResult, setCurrentResult } = useNameSearch();
+
   const tempItem = getPayload<FullRecord>(ModalIds.AlertDeleteRecord);
+  const tempEditRecord = getPayload<FullRecord>(ModalIds.ManageRecord);
 
   const tickets = records.filter((v) => v.type === RecordType.TICKET);
   const writtenWarnings = records.filter((v) => v.type === RecordType.WRITTEN_WARNING);
@@ -97,6 +100,23 @@ export function RecordsArea({ warrants, records }: Props) {
         title={t("Leo.deleteRecord")}
         state={state}
       />
+      {tempEditRecord ? (
+        <ManageRecordModal
+          onUpdate={(data) => {
+            currentResult &&
+              setCurrentResult({
+                ...currentResult,
+                Record: currentResult.Record.map((v) => {
+                  if (v.id === data.id) return data;
+                  return v;
+                }),
+              });
+          }}
+          id={ModalIds.ManageRecord}
+          type={tempEditRecord.type}
+          record={tempEditRecord}
+        />
+      ) : null}
     </div>
   );
 }
@@ -108,9 +128,17 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
   const router = useRouter();
   const isCitizen = router.pathname.startsWith("/citizen");
   const generateCallsign = useGenerateCallsign();
+  const { currentResult } = useNameSearch();
 
   function handleDeleteClick(record: FullRecord) {
     openModal(ModalIds.AlertDeleteRecord, record);
+  }
+
+  function handleEditClick(record: FullRecord) {
+    openModal(ModalIds.ManageRecord, {
+      ...record,
+      citizenName: `${currentResult?.name} ${currentResult?.surname}`,
+    });
   }
 
   return (
@@ -125,14 +153,26 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
             description: record.notes,
             createdAt: formatDate(record.createdAt),
             actions: isCitizen ? null : (
-              <Button
-                type="button"
-                onClick={() => handleDeleteClick(record)}
-                small
-                variant="danger"
-              >
-                {common("delete")}
-              </Button>
+              <>
+                <Button
+                  type="button"
+                  onClick={() => handleEditClick(record)}
+                  small
+                  variant="success"
+                >
+                  {common("edit")}
+                </Button>
+
+                <Button
+                  className="ml-2"
+                  type="button"
+                  onClick={() => handleDeleteClick(record)}
+                  small
+                  variant="danger"
+                >
+                  {common("delete")}
+                </Button>
+              </>
             ),
           }))}
         columns={[
@@ -187,7 +227,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
   }
 
   async function handleChange(value: string, warrant: Warrant) {
-    const { json } = await execute(`/records/${warrant.id}`, {
+    const { json } = await execute(`/records/warrant/${warrant.id}`, {
       data: { status: value.toUpperCase(), type: "WARRANT" },
       method: "PUT",
     });

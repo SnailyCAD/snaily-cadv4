@@ -20,9 +20,11 @@ export function TableItemForm({ penalCode }: Props) {
 
   const { setFieldValue, values } = useFormikContext<any>();
 
-  const currentValue = (values.violations as SelectValue<any>[]).find(
-    (v) => v.value.id === penalCode.id,
-  )?.value ?? {
+  const current = values.violations.find(
+    (v: SelectValue<PenalCode>) => v.value.id === penalCode.id,
+  );
+
+  const currentValue = current?.value ?? {
     fine: { enabled: false, value: "" },
     jailTime: { enabled: false, value: "" },
     bail: { value: "" },
@@ -76,6 +78,7 @@ export function TableItemForm({ penalCode }: Props) {
           type="number"
           className="max-w-[125px] ml-5 py-0.5"
           disabled={!currentValue.fine?.enabled}
+          value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
         />
       </div>
 
@@ -99,6 +102,7 @@ export function TableItemForm({ penalCode }: Props) {
           type="number"
           className="max-w-[125px] ml-5 py-0.5"
           disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
+          value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
         />
 
         <div className="flex flex-row items-center mb-0 ml-5">
@@ -109,6 +113,7 @@ export function TableItemForm({ penalCode }: Props) {
             name="bail.value"
             className="py-0.5 max-w-[125px] ml-5"
             disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
+            value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
             min={minBail}
             max={maxBail}
           />

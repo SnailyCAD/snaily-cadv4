@@ -5,7 +5,7 @@ import {
   UPDATE_WARRANT_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
@@ -13,6 +13,8 @@ import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
 import type { RecordType, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import { validateRecordData } from "lib/records/validateRecordData";
+import { leoProperties } from "lib/officer";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -50,7 +52,7 @@ export class RecordsController {
     return warrant;
   }
 
-  @Put("/:id")
+  @Put("/warrant/:id")
   async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -110,43 +112,16 @@ export class RecordsController {
 
     await Promise.all(
       data.violations.map(
-        async (item: {
+        async (rawItem: {
           penalCodeId: string;
           fine: number | null;
           jailTime: number | null;
           bail: number | null;
         }) => {
-          /** validate the penalCode data */
-          const penalCode = await prisma.penalCode.findUnique({
-            where: { id: item.penalCodeId },
-            include: { warningApplicable: true, warningNotApplicable: true },
+          const item = await validateRecordData({
+            ...rawItem,
+            ticketId: ticket.id,
           });
-
-          if (!penalCode) {
-            return this.handleBadRequest(new NotFound("penalCodeNotFound"), ticket.id);
-          }
-
-          const minMaxFines =
-            penalCode.warningApplicable?.fines ?? penalCode?.warningNotApplicable?.fines ?? [];
-          const minMaxPrisonTerm = penalCode.warningNotApplicable?.prisonTerm ?? [];
-          const minMaxBail = penalCode.warningNotApplicable?.bail ?? [];
-
-          // these if statements could be cleaned up?..
-          if (item.fine && this.exists(minMaxFines) && !this.isCorrect(minMaxFines, item.fine)) {
-            return this.handleBadRequest(new BadRequest("fine_invalidDataReceived"), ticket.id);
-          }
-
-          if (
-            item.jailTime &&
-            this.exists(minMaxPrisonTerm) &&
-            !this.isCorrect(minMaxPrisonTerm, item.jailTime)
-          ) {
-            return this.handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), ticket.id);
-          }
-
-          if (item.bail && this.exists(minMaxBail) && !this.isCorrect(minMaxBail, item.bail)) {
-            return this.handleBadRequest(new BadRequest("bail_invalidDataReceived"), ticket.id);
-          }
 
           const violation = await prisma.violation.create({
             data: {
@@ -179,6 +154,56 @@ export class RecordsController {
     });
 
     return { ...ticket, violations };
+  }
+
+  @Put("/record/:id")
+  async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
+    const data = validateSchema(CREATE_TICKET_SCHEMA, body);
+
+    const record = await prisma.record.findUnique({
+      where: { id: recordId },
+      include: { violations: true },
+    });
+
+    if (!record) {
+      throw new NotFound("notFound");
+    }
+
+    await unlinkViolations(record.violations);
+
+    const updated = await prisma.record.update({
+      where: { id: recordId },
+      data: {
+        notes: data.notes,
+        postal: data.postal,
+      },
+      include: { officer: { include: leoProperties } },
+    });
+
+    const violations: Violation[] = [];
+
+    await Promise.all(
+      data.violations.map(async (violation) => {
+        const created = await prisma.violation.create({
+          data: {
+            fine: violation.fine,
+            bail: violation.bail,
+            jailTime: violation.jailTime,
+            penalCode: {
+              connect: {
+                id: violation.penalCodeId,
+              },
+            },
+            records: { connect: { id: updated.id } },
+          },
+          include: { penalCode: true },
+        });
+
+        violations.push(created);
+      }),
+    );
+
+    return { ...updated, violations };
   }
 
   @UseBefore(ActiveOfficer)
@@ -214,32 +239,12 @@ export class RecordsController {
 
     return true;
   }
+}
 
-  isCorrect(minMax: [number, number], value: number) {
-    const [min, max] = minMax;
-    if (min < 0 || max < 0) {
-      return false;
-    }
-
-    if (min === max) {
-      return value === min;
-    }
-
-    return value >= min && value <= max;
-  }
-
-  exists(values: (number | undefined)[]): values is [number, number] {
-    return values.every((v) => typeof v !== "undefined");
-  }
-
-  /**
-   * remove the created ticket when there's an error with linking the penal codes.
-   */
-  async handleBadRequest(error: Error, recordId: string) {
-    await prisma.record.delete({
-      where: { id: recordId },
-    });
-
-    throw error;
-  }
+async function unlinkViolations(violations: Pick<Violation, "id">[]) {
+  await Promise.all(
+    violations.map(async ({ id }) => {
+      await prisma.violation.delete({ where: { id } });
+    }),
+  );
 }
