@@ -121,6 +121,7 @@
     "releaseCitizen": "You are about to release this citizen. Please select the reason why they are getting released.",
     "reportedStolen": "Reported Stolen",
     "pendingAccessDepartment": "You are still awaiting access for this department. This CAD has set a default department ({defaultDepartment}) that you are in until you're accepted.",
+    "pendingAccessDepartmentNoDefault": "You are still awaiting access for this department. There is not default department set so this officer will be disabled until you're accepted.",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
     "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?",

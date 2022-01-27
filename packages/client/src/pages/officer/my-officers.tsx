@@ -116,9 +116,14 @@ export default function MyOfficers({ officers: data }: Props) {
                       }
                     >
                       <p className="max-w-[400px]">
-                        {t.rich("pendingAccessDepartment", {
-                          defaultDepartment: officer.department?.value.value,
-                        })}
+                        {t.rich(
+                          officer.department?.isDefaultDepartment
+                            ? "pendingAccessDepartment"
+                            : "pendingAccessDepartmentNoDefault",
+                          {
+                            defaultDepartment: officer.department?.value.value,
+                          },
+                        )}
                       </p>
                     </HoverCard>
                   ) : null}
