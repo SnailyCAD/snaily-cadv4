@@ -1,4 +1,5 @@
 import type { User } from "@prisma/client";
+import process from "node:process";
 import { authenticator } from "otplib";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -11,9 +12,6 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { IsAuth } from "middlewares/IsAuth";
 import { encryptValue } from "lib/auth/crypto";
 import { validateUser2FA } from "lib/auth/2fa";
-
-// todo
-const hashSecret = "3a50b2f71edf526c561ef3be974fac49";
 
 @Controller("/2fa")
 @UseBeforeEach(IsAuth)
@@ -50,6 +48,11 @@ export class User2FA {
     }
 
     const secret = authenticator.generateSecret(20);
+
+    const hashSecret = process.env.ENCRYPTION_TOKEN;
+    if (!hashSecret) {
+      throw new BadRequest("2FA_NOT_ENABLED");
+    }
 
     await prisma.user2FA.create({
       data: {

@@ -1,9 +1,9 @@
+import process from "node:process";
+import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { authenticator } from "otplib";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { decryptValue } from "./crypto";
-
-const hashSecret = "3a50b2f71edf526c561ef3be974fac49";
 
 interface Options {
   userId: string;
@@ -12,6 +12,11 @@ interface Options {
 }
 
 export async function validateUser2FA(options: Options) {
+  const hashSecret = process.env.ENCRYPTION_TOKEN;
+  if (!hashSecret) {
+    throw new BadRequest("2FA_NOT_ENABLED");
+  }
+
   const user2FA = await prisma.user2FA.findFirst({
     where: { userId: options.userId },
   });

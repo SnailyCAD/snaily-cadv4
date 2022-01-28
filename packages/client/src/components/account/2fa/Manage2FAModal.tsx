@@ -38,7 +38,7 @@ export function Manage2FAModal() {
       });
     }
 
-    closeModal(ModalIds.Manage2FA);
+    reset();
   }
 
   async function onSubmit(
@@ -86,9 +86,15 @@ export function Manage2FAModal() {
 
       if (typeof json === "boolean" && json) {
         setUser({ ...user!, twoFactorEnabled: true });
-        closeModal(ModalIds.Manage2FA);
+        reset();
       }
     }
+  }
+
+  function reset() {
+    closeModal(ModalIds.Manage2FA);
+    setCurrentStep(Steps.EnterPassword);
+    setCurrentPassword("");
   }
 
   const INITIAL_VALUES = {
