@@ -16,7 +16,7 @@ interface Props {
 
 export function AllUnitsTab({ units }: Props) {
   const [selectedRows, setSelectedRows] = React.useState<`${Unit["id"]}-${Unit["type"]}`[]>([]);
-  const isChecked = selectedRows.length === units.length;
+  const isChecked = units.length > 0 && selectedRows.length === units.length;
   const isIntermediate = !isChecked && selectedRows.length > 0;
 
   const t = useTranslations();

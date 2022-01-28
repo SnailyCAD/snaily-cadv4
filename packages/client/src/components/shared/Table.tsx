@@ -15,54 +15,27 @@ import {
   useSortBy,
   useGlobalFilter,
   useRowSelect,
-  Column,
-  Row,
-  TableInstance,
   useRowState,
   usePagination,
+  type Row as RowType,
+  type Column,
 } from "react-table";
 import { ReactSortable } from "react-sortablejs";
 import { Button } from "components/Button";
+import type { TableData, TableProps } from "./Table/TableProps";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 const MAX_ITEMS_PER_PAGE = 50 as const;
 
-type TableData<T extends object, RP extends object> = {
-  rowProps?: JSX.IntrinsicElements["tr"] & RP;
-} & T;
-
-interface Props<T extends object = {}, RowProps extends object = {}> {
-  data: readonly TableData<T, RowProps>[];
-  columns: readonly (Column<TableData<T, RowProps>> | null)[];
-  containerProps?: JSX.IntrinsicElements["div"];
-  filter?: string;
-  Toolbar?: ({ instance }: { instance: TableInstance<TableData<T, RowProps>> }) => JSX.Element;
-  disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
-  defaultSort?: {
-    columnId: string;
-    descending?: boolean;
-  };
-  dragDrop?: {
-    handleMove: (list: any[]) => void;
-    enabled?: boolean;
-    disabledIndices?: number[];
-  };
-  selection?: {
-    enabled: boolean;
-    onSelect?(
-      originals: TableData<T, RowProps>[],
-      selectedFlatRows: Row<TableData<T, RowProps>>[],
-    ): void;
-  };
-}
-
-export function Table<T extends object, RowProps extends object>(props: Props<T, RowProps>) {
+export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
   const data = React.useMemo(() => props.data, [props.data]);
 
-  const columns = React.useMemo(() => props.columns.filter((v) => v !== null), [props.columns]);
+  const columns = React.useMemo(
+    () => props.columns.filter((v) => v !== null) as Column<TableData<T, RowProps>>[],
+    [props.columns],
+  );
 
   const instance = useTable<TableData<T, RowProps>>(
-    // @ts-expect-error it's complaining that's it's nullable here, but it'll never be null, check line 19.
     { autoResetSortBy: false, columns, data, initialState: { pageSize: MAX_ITEMS_PER_PAGE } },
     useGlobalFilter,
     useSortBy,
@@ -251,7 +224,7 @@ export function Table<T extends object, RowProps extends object>(props: Props<T,
 }
 
 type RowProps<T extends object, RowProps extends object> = {
-  row: Row<TableData<T, RowProps>>;
+  row: RowType<TableData<T, RowProps>>;
 };
 
 function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
