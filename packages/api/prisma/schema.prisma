@@ -119,6 +119,14 @@ model User {
   TruckLog             TruckLog[]
   ExpungementRequest   ExpungementRequest[]
   ActiveDispatchers    ActiveDispatchers[]
+  User2FA              User2FA[]
+}
+
+model User2FA {
+  id     String @id @default(uuid())
+  secret String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 enum StatusViewMode {
