@@ -20,7 +20,7 @@ type Options<Helpers extends object = object> = AxiosRequestConfig & {
 };
 
 type Return<Data> = {
-  json: Data;
+  json: Data | null;
   error: null | ErrorMessage | (string & {});
 };
 
@@ -81,7 +81,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       setState("error");
 
       return {
-        json: {} as Data,
+        json: null,
         error: isAxiosError(response) ? parseError(response) : null,
       };
     }
@@ -89,7 +89,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
     setState(null);
 
     return {
-      json: response?.data ?? {},
+      json: response?.data ?? null,
       error: null,
     };
   }
