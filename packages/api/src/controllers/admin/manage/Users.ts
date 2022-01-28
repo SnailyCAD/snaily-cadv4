@@ -113,6 +113,16 @@ export class ManageUsersController {
       },
     });
 
+    const user2FA = await prisma.user2FA.findFirst({
+      where: { userId },
+    });
+
+    if (user2FA) {
+      await prisma.user2FA.delete({
+        where: { id: user2FA.id },
+      });
+    }
+
     return password;
   }
 
