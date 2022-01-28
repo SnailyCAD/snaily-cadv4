@@ -1,6 +1,7 @@
 import type { User } from ".prisma/client";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
+import { userProperties } from "./auth";
 import { prisma } from "./prisma";
 
 export const unitProperties = {
@@ -8,6 +9,7 @@ export const unitProperties = {
   division: { include: { value: true, department: true } },
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
+  user: { select: userProperties },
   rank: true,
 };
 
@@ -18,6 +20,7 @@ export const leoProperties = {
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
+  user: { select: userProperties },
   rank: true,
 };
 

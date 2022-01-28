@@ -15,9 +15,10 @@ import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { canManageInvariant } from "lib/auth";
+import { canManageInvariant, userProperties } from "lib/auth";
 
 export const citizenInclude = {
+  user: { select: userProperties },
   vehicles: {
     include: {
       model: { include: { value: true } },
