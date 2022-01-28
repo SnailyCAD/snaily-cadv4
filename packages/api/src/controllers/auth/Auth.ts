@@ -12,6 +12,7 @@ import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { validateUser2FA } from "lib/auth/2fa";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -50,6 +51,12 @@ export class AuthController {
     if (!isPasswordCorrect) {
       throw new ExtendedBadRequest({ password: "passwordIncorrect" });
     }
+
+    await validateUser2FA({
+      totpCode: data.totpCode ?? null,
+      userId: user.id,
+      throwOnNotEnabled: false,
+    });
 
     const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
     setCookie({

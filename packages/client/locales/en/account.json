@@ -13,7 +13,15 @@
     "disconnecting": "Disconnecting...",
     "currentPassword": "Current password",
     "newPassword": "New password",
-    "confirmNewPassword": "Confirm new password"
+    "2fa": "Two Factor Authentication",
+    "confirmNewPassword": "Confirm new password",
+    "scanQRCode": "Scan this QR code to add it to your authenticator app",
+    "verifyCode": " Verify by entering a code from your authenticator app",
+    "disable": "Disable",
+    "enable2FA": "Enable 2FA",
+    "disable2FA": "Disable 2FA",
+    "next": "Next",
+    "verify": "Verify"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

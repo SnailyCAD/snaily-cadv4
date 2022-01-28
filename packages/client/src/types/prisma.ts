@@ -94,6 +94,7 @@ export type User = {
   hasTempPassword: boolean;
   statusViewMode: StatusViewMode;
   discordId: string | null;
+  twoFactorEnabled?: boolean;
 };
 
 /**
