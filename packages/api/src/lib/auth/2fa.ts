@@ -1,4 +1,3 @@
-import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { authenticator } from "otplib";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
@@ -26,7 +25,7 @@ export async function validateUser2FA(options: Options) {
   }
 
   if (!options.totpCode) {
-    throw new BadRequest("totpCodeRequired");
+    throw new ExtendedBadRequest({ totpCode: "totpCodeRequired" }, "totpCodeRequired");
   }
 
   const secret = decryptValue(user2FA.secret, hashSecret);

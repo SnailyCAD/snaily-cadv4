@@ -15,7 +15,7 @@ type State = "loading" | "error";
 export type ErrorMessage = keyof typeof import("../../locales/en/common.json")["Errors"];
 
 type Options<Helpers extends object = object> = AxiosRequestConfig & {
-  noToast?: boolean;
+  noToast?: boolean | ErrorMessage | (string & {});
   helpers?: FormikHelpers<Helpers>;
 };
 
@@ -72,7 +72,11 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
         });
       }
 
-      if (!options.noToast && !hasAddedError) {
+      if (typeof options.noToast === "boolean" && !options.noToast && !hasAddedError) {
+        toastError({ message: t(key), title: errorTitle });
+      }
+
+      if (typeof options.noToast === "string" && options.noToast !== error && !hasAddedError) {
         toastError({ message: t(key), title: errorTitle });
       }
 

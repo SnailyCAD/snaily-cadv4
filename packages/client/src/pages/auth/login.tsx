@@ -28,14 +28,14 @@ export default function Login() {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
-  const error = useTranslations("Errors");
+  const tError = useTranslations("Errors");
   const { DISCORD_AUTH } = useFeatureEnabled();
 
   const authMessages = {
-    banned: error("userBanned"),
-    deleted: error("userDeleted"),
-    discordNameInUse: error("discordNameInUse"),
-    cannotRegisterFirstWithDiscord: error("cannotRegisterFirstWithDiscord"),
+    banned: tError("userBanned"),
+    deleted: tError("userDeleted"),
+    discordNameInUse: tError("discordNameInUse"),
+    cannotRegisterFirstWithDiscord: tError("cannotRegisterFirstWithDiscord"),
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
@@ -49,10 +49,12 @@ export default function Login() {
       data: values,
       method: "POST",
       helpers,
+      noToast: "totpCodeRequired",
     });
 
     if (error === "totpCodeRequired") {
       helpers.setFieldValue("totpCode", "");
+      return;
     }
 
     if (json.hasTempPassword) {
@@ -112,7 +114,7 @@ export default function Login() {
 
               {typeof values.totpCode !== "undefined" ? (
                 <FormField errorMessage={errors.totpCode} label={t("totpCode")}>
-                  <Input name="totpCode" onChange={handleChange} />
+                  <Input name="totpCode" value={values.totpCode} onChange={handleChange} />
                 </FormField>
               ) : null}
 
