@@ -21,6 +21,7 @@ import { AuthScreenImages } from "components/auth/AuthScreenImages";
 const INITIAL_VALUES = {
   username: "",
   password: "",
+  totpCode: undefined as string | undefined,
 };
 
 export default function Login() {
@@ -44,14 +45,15 @@ export default function Login() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/auth/login", {
+    const { json, error } = await execute("/auth/login", {
       data: values,
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
       helpers,
     });
+
+    if (error === "totpCodeRequired") {
+      helpers.setFieldValue("totpCode", "");
+    }
 
     if (json.hasTempPassword) {
       router.push({
@@ -85,7 +87,7 @@ export default function Login() {
         <AuthScreenImages />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleSubmit, handleChange, errors, isValid }) => (
+          {({ handleSubmit, handleChange, errors, values, isValid }) => (
             <form
               className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
               onSubmit={handleSubmit}
@@ -107,6 +109,12 @@ export default function Login() {
               <FormField errorMessage={errors.password} label={t("password")}>
                 <PasswordInput name="password" onChange={handleChange} />
               </FormField>
+
+              {typeof values.totpCode !== "undefined" ? (
+                <FormField errorMessage={errors.totpCode} label={t("totpCode")}>
+                  <Input name="totpCode" onChange={handleChange} />
+                </FormField>
+              ) : null}
 
               <div className="mt-3">
                 <Link href="/auth/register">

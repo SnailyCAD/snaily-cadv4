@@ -9,7 +9,8 @@ import qrcode from "qrcode";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { IsAuth } from "middlewares/IsAuth";
-import { decryptValue, encryptValue } from "lib/auth/crypto";
+import { encryptValue } from "lib/auth/crypto";
+import { validateUser2FA } from "lib/auth/2fa";
 
 // todo
 const hashSecret = "3a50b2f71edf526c561ef3be974fac49";
@@ -19,19 +20,7 @@ const hashSecret = "3a50b2f71edf526c561ef3be974fac49";
 export class User2FA {
   @Post("/verify")
   async verify2FA(@Context("user") user: User, @BodyParams("totpCode") totpCode: string) {
-    const user2FA = await prisma.user2FA.findFirst({
-      where: { userId: user.id },
-    });
-
-    if (!user2FA) {
-      throw new ExtendedBadRequest({ totpCode: "user2FANotEnabled" });
-    }
-
-    const secret = decryptValue(user2FA.secret, hashSecret);
-    const isValidCode = authenticator.check(totpCode, secret);
-    if (!isValidCode) {
-      throw new ExtendedBadRequest({ totpCode: "invalidTotpCode" });
-    }
+    await validateUser2FA({ userId: user.id, totpCode });
 
     return true;
   }
