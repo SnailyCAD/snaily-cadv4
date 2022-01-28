@@ -116,10 +116,6 @@ export class ManageCitizensController {
     }
 
     if (citizen.userId) {
-      if (citizen.userId !== user.id) {
-        throw new NotFound("notFound");
-      }
-
       await prisma.notification.create({
         data: {
           userId: citizen.userId,
