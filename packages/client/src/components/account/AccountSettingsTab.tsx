@@ -55,7 +55,7 @@ export function AccountSettingsTab() {
               type="button"
               onClick={() => openModal(ModalIds.Manage2FA, !!user?.twoFactorEnabled)}
             >
-              {user?.twoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}
+              {user?.twoFactorEnabled ? t("disable2FA") : t("enable2FA")}
             </Button>
             <Button type="submit" disabled={state === "loading"}>
               {common("save")}

@@ -18,6 +18,8 @@
     "scanQRCode": "Scan this QR code to add it to your authenticator app",
     "verifyCode": " Verify by entering a code from your authenticator app",
     "disable": "Disable",
+    "enable2FA": "Enable 2FA",
+    "disable2FA": "Disable 2FA",
     "next": "Next",
     "verify": "Verify"
   },
