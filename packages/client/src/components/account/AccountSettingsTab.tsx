@@ -10,7 +10,7 @@ import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
-import { Enable2FAModal } from "./2fa/Enable2FAModal";
+import { Manage2FAModal } from "./2fa/Manage2FAModal";
 
 export function AccountSettingsTab() {
   const { user } = useAuth();
@@ -49,8 +49,13 @@ export function AccountSettingsTab() {
               <Input value={values.discordId} onChange={handleChange} name="discordId" />
             </FormField>
 
-            <Button className="mr-2" type="button" onClick={() => openModal(ModalIds.Manage2FA)}>
-              Enable 2FA
+            <Button
+              variant={user?.twoFactorEnabled ? "danger" : "default"}
+              className="mr-2"
+              type="button"
+              onClick={() => openModal(ModalIds.Manage2FA, !!user?.twoFactorEnabled)}
+            >
+              {user?.twoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}
             </Button>
             <Button type="submit" disabled={state === "loading"}>
               {common("save")}
@@ -60,7 +65,7 @@ export function AccountSettingsTab() {
       </Formik>
 
       <ChangePasswordArea />
-      <Enable2FAModal />
+      <Manage2FAModal />
     </Tab.Panel>
   );
 }

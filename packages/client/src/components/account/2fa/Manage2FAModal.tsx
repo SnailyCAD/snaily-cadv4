@@ -9,6 +9,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
+import { useAuth } from "context/AuthContext";
 
 enum Steps {
   EnterPassword = 0,
@@ -16,14 +17,16 @@ enum Steps {
   VerifyCode = 2,
 }
 
-export function Enable2FAModal() {
+export function Manage2FAModal() {
+  const { setUser, user } = useAuth();
   const [currentStep, setCurrentStep] = React.useState(Steps.EnterPassword);
   const [dataUri, setDataUri] = React.useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = React.useState("");
 
   const common = useTranslations("Common");
   const t = useTranslations("Account");
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
+  const shouldDisable = getPayload<boolean>(ModalIds.Manage2FA);
 
   const { state, execute } = useFetch();
 
@@ -43,6 +46,21 @@ export function Enable2FAModal() {
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (currentStep === Steps.EnterPassword) {
+      if (shouldDisable) {
+        const { json } = await execute("/2fa", {
+          method: "DELETE",
+          data: { currentPassword },
+          helpers,
+        });
+
+        if (typeof json === "boolean" && json) {
+          setUser({ ...user!, twoFactorEnabled: false });
+          closeModal(ModalIds.Manage2FA);
+        }
+
+        return;
+      }
+
       const { json } = await execute("/2fa/enable", {
         method: "POST",
         data: values,
@@ -66,8 +84,10 @@ export function Enable2FAModal() {
         helpers,
       });
 
-      // todo: closeModal + success messages
-      console.log({ json });
+      if (typeof json === "boolean" && json) {
+        setUser({ ...user!, twoFactorEnabled: true });
+        closeModal(ModalIds.Manage2FA);
+      }
     }
   }
 
@@ -76,12 +96,10 @@ export function Enable2FAModal() {
     totpCode: "",
   };
 
-  // const validate = handleValidate(TOW_SCHEMA);
-
   return (
     <Modal
       onClose={onCancel}
-      title="Enable Two Factor Authentication"
+      title={t("2fa")}
       isOpen={isOpen(ModalIds.Manage2FA)}
       className="w-[500px]"
     >
@@ -93,6 +111,7 @@ export function Enable2FAModal() {
                 <PasswordInput
                   name="currentPassword"
                   value={values.currentPassword}
+                  required
                   onChange={(e) => {
                     handleChange(e);
                     setCurrentPassword(e.currentTarget.value);
@@ -103,9 +122,7 @@ export function Enable2FAModal() {
 
             {currentStep === Steps.ScanQRCode && dataUri ? (
               <div className="flex flex-col items-center">
-                <p className="my-3 mb-5 dark:text-gray-300">
-                  Scan this QR code to add it to your authenticator app
-                </p>
+                <p className="my-3 mb-5 dark:text-gray-300">{t("scanQRCode")}</p>
 
                 <img
                   className="self-center"
@@ -119,12 +136,10 @@ export function Enable2FAModal() {
 
             {currentStep === Steps.VerifyCode ? (
               <>
-                <p className="my-3 mb-5 dark:text-gray-300">
-                  Verify by entering a code from your authenticator app
-                </p>
+                <p className="my-3 mb-5 dark:text-gray-300">{t("verifyCode")}</p>
 
                 <FormField errorMessage={errors.totpCode} label="Code">
-                  <Input name="totpCode" value={values.totpCode} onChange={handleChange} />
+                  <Input required name="totpCode" value={values.totpCode} onChange={handleChange} />
                 </FormField>
               </>
             ) : null}
@@ -137,9 +152,10 @@ export function Enable2FAModal() {
                 className="flex items-center"
                 disabled={!isValid || state === "loading"}
                 type="submit"
+                variant={shouldDisable ? "danger" : "default"}
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {currentStep === Steps.VerifyCode ? "Verify" : "Next"}
+                {shouldDisable ? "Disable" : currentStep === Steps.VerifyCode ? "Verify" : "Next"}
               </Button>
             </footer>
           </Form>
