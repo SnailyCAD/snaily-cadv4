@@ -72,11 +72,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
         });
       }
 
-      if (typeof options.noToast === "boolean" && !options.noToast && !hasAddedError) {
-        toastError({ message: t(key), title: errorTitle });
-      }
-
       if (typeof options.noToast === "string" && options.noToast !== error && !hasAddedError) {
+        toastError({ message: t(key), title: errorTitle });
+      } else if (!options.noToast && !hasAddedError) {
         toastError({ message: t(key), title: errorTitle });
       }
 
