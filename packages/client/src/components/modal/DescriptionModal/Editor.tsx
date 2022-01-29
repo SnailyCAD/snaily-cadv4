@@ -7,6 +7,7 @@ import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
+import { withShortcuts } from "lib/editor/withShortcuts";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
@@ -42,7 +43,7 @@ const HOTKEYS = {
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
-  const editor = React.useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = React.useMemo(() => withShortcuts(withHistory(withReact(createEditor()))), []);
 
   function handleChange(value: Descendant[]) {
     onChange?.(value);
