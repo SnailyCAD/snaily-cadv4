@@ -12,11 +12,6 @@ interface Options {
 }
 
 export async function validateUser2FA(options: Options) {
-  const hashSecret = process.env.ENCRYPTION_TOKEN;
-  if (!hashSecret) {
-    throw new BadRequest("2FA_NOT_ENABLED");
-  }
-
   const user2FA = await prisma.user2FA.findFirst({
     where: { userId: options.userId },
   });
@@ -31,6 +26,11 @@ export async function validateUser2FA(options: Options) {
 
   if (!options.totpCode) {
     throw new ExtendedBadRequest({ totpCode: "totpCodeRequired" }, "totpCodeRequired");
+  }
+
+  const hashSecret = process.env.ENCRYPTION_TOKEN;
+  if (!hashSecret) {
+    throw new BadRequest("2FA_NOT_ENABLED");
   }
 
   const secret = decryptValue(user2FA.secret, hashSecret);
