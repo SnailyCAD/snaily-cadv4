@@ -5,6 +5,8 @@ import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
 import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
+import { toggleMark } from "lib/editor/utils";
+import isHotkey from "is-hotkey";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
@@ -30,6 +32,13 @@ export const DEFAULT_EDITOR_DATA = [
   },
 ] as Descendant[];
 
+const HOTKEYS = {
+  "mod+b": "bold",
+  "mod+i": "italic",
+  "mod+u": "underline",
+  "mod+s": "strikethrough",
+} as const;
+
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
@@ -53,6 +62,15 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
       disabled:cursor-not-allowed disabled:opacity-80`,
           )}
           placeholder="Start typing..."
+          onKeyDown={(event) => {
+            for (const hotkey in HOTKEYS) {
+              if (isHotkey(hotkey)(event)) {
+                event.preventDefault();
+                const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
+                toggleMark(editor, mark);
+              }
+            }
+          }}
         />
       </Slate>
     </div>
@@ -106,7 +124,11 @@ function Element({ attributes, children, element }: any) {
         </h2>
       );
     case "list-item":
-      return <li {...attributes}>{children}</li>;
+      return (
+        <li {...attributes} data-list-item="true">
+          {children}
+        </li>
+      );
     case "numbered-list":
       return <ol {...attributes}>{children}</ol>;
     default:
