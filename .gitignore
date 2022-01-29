@@ -21,7 +21,6 @@ packages/api/public/**/*.jpeg
 
 .vscode/settings.json
 .tsconfig.tsbuildinfo
-tsconfig.tsbuildinfo
 
 packages/client/public/favicon.png
 
