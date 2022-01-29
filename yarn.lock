@@ -1273,6 +1273,7 @@ __metadata:
     date-fns: ^2.28.0
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
+    is-hotkey: ^0.2.0
     jquery: ^3.6.0
     leaflet: ^1.7.1
     leaflet.markercluster: ^1.5.3
@@ -5803,6 +5804,13 @@ __metadata:
   version: 0.1.8
   resolution: "is-hotkey@npm:0.1.8"
   checksum: 793d0cccaf804583d8f4b835e040d4b6a74cb3f8d4094cb8188ed7cc86e6edf8f650fc80fabd4309e6c29938f5b0e9a17b45504b29dbf92735ef8d780d613aa0
+  languageName: node
+  linkType: hard
+
+"is-hotkey@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "is-hotkey@npm:0.2.0"
+  checksum: 97d295cfd8c3eb2c9b218daee5bff0ddaf47210930e3eb1eff36d2e6ad74854028203c640f35ea2d183d0cba94ac4c4bcd291925bc3a343d8a4c7d2c5ab3e2a6
   languageName: node
   linkType: hard
 

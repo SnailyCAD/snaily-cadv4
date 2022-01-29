@@ -26,6 +26,11 @@ li {
   @apply text-lg;
 }
 
+[data-list-item="true"]::before {
+  content: "•";
+  padding: 0 5px ;
+}
+
 table {
   @apply w-full overflow-auto;
 }
