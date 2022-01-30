@@ -137,7 +137,12 @@ function ActiveCallsInner() {
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 
         <div>
-          <Button onClick={() => setShowFilters((o) => !o)} title={t("callFilters")}>
+          <Button
+            variant="cancel"
+            className="px-1.5 hover:bg-dark-bg"
+            onClick={() => setShowFilters((o) => !o)}
+            title={t("callFilters")}
+          >
             <Filter aria-label={t("callFilters")} />
           </Button>
         </div>
