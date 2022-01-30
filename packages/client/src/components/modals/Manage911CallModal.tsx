@@ -43,6 +43,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const generateCallsign = useGenerateCallsign();
   const { department, division } = useValues();
+  const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
 
   const allUnits = [...allOfficers, ...allDeputies] as (FullDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (FullDeputy | CombinedLeoUnit)[];
@@ -139,7 +140,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   }
 
   async function handleDelete() {
-    if (!call) return;
+    if (!call || isDisabled) return;
 
     const { json } = await execute(`/911-calls/${call.id}`, {
       method: "DELETE",
@@ -152,6 +153,8 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    if (isDisabled) return;
+
     const requestData = {
       ...values,
       assignedUnits: values.assignedUnits.map(({ value }) => value),
@@ -229,7 +232,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
             <Form className="w-full">
               <FormField errorMessage={errors.name} label={common("name")}>
                 <Input
-                  disabled={!isDispatch}
+                  disabled={isDisabled}
                   name="name"
                   value={values.name}
                   onChange={handleChange}
@@ -239,7 +242,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
               <FormRow>
                 <FormField errorMessage={errors.location} label={t("location")}>
                   <Input
-                    disabled={!isDispatch}
+                    disabled={isDisabled}
                     name="location"
                     value={values.location}
                     onChange={handleChange}
@@ -248,7 +251,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
 
                 <FormField errorMessage={errors.postal} label={t("postal")}>
                   <Input
-                    disabled={!isDispatch}
+                    disabled={isDisabled}
                     name="postal"
                     value={values.postal}
                     onChange={handleChange}
@@ -256,59 +259,66 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                 </FormField>
               </FormRow>
 
-              <FormField errorMessage={errors.assignedUnits as string} label={t("assignedUnits")}>
-                <Select
-                  extra={{ showContextMenuForUnits: true }}
-                  isMulti
-                  name="assignedUnits"
-                  value={values.assignedUnits.map((value) => ({
-                    label: makeLabel(value.value),
-                    value: value.value,
-                  }))}
-                  values={units.map((unit) => ({
-                    label: makeLabel(unit.id),
-                    value: unit.id,
-                  }))}
-                  onChange={handleChange}
-                  disabled={!isDispatch}
-                />
-              </FormField>
+              {router.pathname.includes("/citizen") ? null : (
+                <>
+                  <FormField
+                    errorMessage={errors.assignedUnits as string}
+                    label={t("assignedUnits")}
+                  >
+                    <Select
+                      extra={{ showContextMenuForUnits: true }}
+                      isMulti
+                      name="assignedUnits"
+                      value={values.assignedUnits.map((value) => ({
+                        label: makeLabel(value.value),
+                        value: value.value,
+                      }))}
+                      values={units.map((unit) => ({
+                        label: makeLabel(unit.id),
+                        value: unit.id,
+                      }))}
+                      onChange={handleChange}
+                      disabled={isDisabled}
+                    />
+                  </FormField>
 
-              <FormRow>
-                <FormField errorMessage={errors.departments as string} label={t("departments")}>
-                  <Select
-                    isMulti
-                    name="departments"
-                    value={values.departments}
-                    values={department.values.map((department) => ({
-                      label: department.value.value,
-                      value: department.id,
-                    }))}
-                    onChange={handleChange}
-                    disabled={!isDispatch}
-                  />
-                </FormField>
+                  <FormRow>
+                    <FormField errorMessage={errors.departments as string} label={t("departments")}>
+                      <Select
+                        isMulti
+                        name="departments"
+                        value={values.departments}
+                        values={department.values.map((department) => ({
+                          label: department.value.value,
+                          value: department.id,
+                        }))}
+                        onChange={handleChange}
+                        disabled={isDisabled}
+                      />
+                    </FormField>
 
-                <FormField errorMessage={errors.divisions as string} label={t("divisions")}>
-                  <Select
-                    isMulti
-                    name="divisions"
-                    value={values.divisions}
-                    values={division.values.map((division) => ({
-                      label: division.value.value,
-                      value: division.id,
-                    }))}
-                    onChange={handleChange}
-                    disabled={!isDispatch}
-                  />
-                </FormField>
-              </FormRow>
+                    <FormField errorMessage={errors.divisions as string} label={t("divisions")}>
+                      <Select
+                        isMulti
+                        name="divisions"
+                        value={values.divisions}
+                        values={division.values.map((division) => ({
+                          label: division.value.value,
+                          value: division.id,
+                        }))}
+                        onChange={handleChange}
+                        disabled={isDisabled}
+                      />
+                    </FormField>
+                  </FormRow>
+                </>
+              )}
 
               <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
                   value={values.descriptionData}
                   onChange={(v) => setFieldValue("descriptionData", v)}
-                  isReadonly={!isDispatch}
+                  isReadonly={isDisabled}
                 />
               </FormField>
 
@@ -318,7 +328,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                     onClick={() => openModal(ModalIds.AlertEnd911Call)}
                     type="button"
                     variant="danger"
-                    disabled={!isDispatch}
+                    disabled={isDisabled}
                   >
                     {t("endCall")}
                   </Button>
@@ -329,7 +339,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                     {common("cancel")}
                   </Button>
                   <Button
-                    disabled={state === "loading"}
+                    disabled={isDisabled || state === "loading"}
                     className="flex items-center ml-2"
                     type="submit"
                   >
@@ -343,7 +353,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
           )}
         </Formik>
 
-        {call ? <CallEventsArea disabled={!isDispatch} call={call} /> : null}
+        {call ? <CallEventsArea disabled={isDisabled} call={call} /> : null}
       </div>
 
       {call ? (
