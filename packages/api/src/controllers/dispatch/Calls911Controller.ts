@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Get, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, CREATE_911_CALL_EVENT, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
+import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -10,16 +10,12 @@ import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
-import type { User } from "@prisma/client";
+import type { DepartmentValue, DivisionValue, User } from "@prisma/client";
 
 const assignedUnitsInclude = {
   include: {
-    officer: {
-      include: leoProperties,
-    },
-    deputy: {
-      include: unitProperties,
-    },
+    officer: { include: leoProperties },
+    deputy: { include: unitProperties },
     combinedUnit: {
       include: {
         status: { include: { value: true } },
@@ -36,6 +32,8 @@ export const callInclude = {
   assignedUnits: assignedUnitsInclude,
   events: true,
   incidents: true,
+  departments: { include: leoProperties.department.include },
+  divisions: { include: leoProperties.division.include },
 };
 
 @Controller("/911-calls")
@@ -77,6 +75,12 @@ export class Calls911Controller {
 
     const units = (data.assignedUnits ?? []) as string[];
     await this.assignUnitsToCall(call.id, units);
+    await this.linkOrUnlinkCallDepartmentsAndDivisions({
+      type: "connect",
+      departments: data.departments as string[],
+      divisions: data.divisions as string[],
+      callId: call.id,
+    });
 
     const updated = await prisma.call911.findUnique({
       where: {
@@ -104,6 +108,8 @@ export class Calls911Controller {
       },
       include: {
         assignedUnits: assignedUnitsInclude,
+        departments: true,
+        divisions: true,
       },
     });
 
@@ -119,6 +125,13 @@ export class Calls911Controller {
         });
       }),
     );
+
+    await this.linkOrUnlinkCallDepartmentsAndDivisions({
+      type: "disconnect",
+      departments: call.departments,
+      divisions: call.divisions,
+      callId: call.id,
+    });
 
     const positionData = data.position ?? null;
 
@@ -155,6 +168,12 @@ export class Calls911Controller {
 
     const units = (data.assignedUnits ?? []) as string[];
     await this.assignUnitsToCall(call.id, units);
+    await this.linkOrUnlinkCallDepartmentsAndDivisions({
+      type: "connect",
+      departments: data.departments as string[],
+      divisions: data.divisions as string[],
+      callId: call.id,
+    });
 
     const updated = await prisma.call911.findUnique({
       where: {
@@ -205,106 +224,6 @@ export class Calls911Controller {
     });
 
     this.socket.emit911CallDelete(call);
-
-    return true;
-  }
-
-  @Post("/events/:callId")
-  async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
-
-    const call = await prisma.call911.findUnique({
-      where: { id: callId },
-    });
-
-    if (!call) {
-      throw new NotFound("callNotFound");
-    }
-
-    const event = await prisma.call911Event.create({
-      data: {
-        call911Id: call.id,
-        description: data.description,
-      },
-    });
-
-    this.socket.emitAddCallEvent(event);
-
-    return event;
-  }
-
-  @Put("/events/:callId/:eventId")
-  async updateCallEvent(
-    @PathParams("callId") callId: string,
-    @PathParams("eventId") eventId: string,
-    @BodyParams() body: unknown,
-  ) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
-
-    const call = await prisma.call911.findUnique({
-      where: { id: callId },
-    });
-
-    if (!call) {
-      throw new NotFound("callNotFound");
-    }
-
-    const event = await prisma.call911Event.findFirst({
-      where: {
-        id: eventId,
-        call911Id: callId,
-      },
-    });
-
-    if (!event) {
-      throw new NotFound("eventNotFound");
-    }
-
-    const updated = await prisma.call911Event.update({
-      where: {
-        id: event.id,
-      },
-      data: {
-        description: data.description,
-      },
-    });
-
-    this.socket.emitUpdateCallEvent(updated);
-
-    return updated;
-  }
-
-  @Delete("/events/:callId/:eventId")
-  async deleteCallEvent(
-    @PathParams("callId") callId: string,
-    @PathParams("eventId") eventId: string,
-  ) {
-    const call = await prisma.call911.findUnique({
-      where: { id: callId },
-    });
-
-    if (!call) {
-      throw new NotFound("callNotFound");
-    }
-
-    const event = await prisma.call911Event.findFirst({
-      where: {
-        id: eventId,
-        call911Id: callId,
-      },
-    });
-
-    if (!event) {
-      throw new NotFound("eventNotFound");
-    }
-
-    await prisma.call911Event.delete({
-      where: {
-        id: event.id,
-      },
-    });
-
-    this.socket.emitDeleteCallEvent(event);
 
     return true;
   }
@@ -403,7 +322,7 @@ export class Calls911Controller {
     return true;
   }
 
-  private officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
+  protected officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
     return {
       ...call,
       assignedUnits: (call.assignedUnits ?? [])?.map((v: any) => ({
@@ -416,7 +335,39 @@ export class Calls911Controller {
     };
   }
 
-  private async assignUnitsToCall(callId: string, units: string[]) {
+  protected async linkOrUnlinkCallDepartmentsAndDivisions({
+    type,
+    callId,
+    departments,
+    divisions,
+  }: {
+    type: "disconnect" | "connect";
+    callId: string;
+    departments: (DepartmentValue["id"] | DepartmentValue)[];
+    divisions: (DivisionValue["id"] | DivisionValue)[];
+  }) {
+    await Promise.all(
+      departments.map(async (dep) => {
+        const id = typeof dep === "string" ? dep : dep.id;
+        await prisma.call911.update({
+          where: { id: callId },
+          data: { departments: { [type]: { id } } },
+        });
+      }),
+    );
+
+    await Promise.all(
+      divisions.map(async (division) => {
+        const id = typeof division === "string" ? division : division.id;
+        await prisma.call911.update({
+          where: { id: callId },
+          data: { divisions: { [type]: { id } } },
+        });
+      }),
+    );
+  }
+
+  protected async assignUnitsToCall(callId: string, units: string[]) {
     await Promise.all(
       units.map(async (id) => {
         const { unit, type } = await findUnit(
