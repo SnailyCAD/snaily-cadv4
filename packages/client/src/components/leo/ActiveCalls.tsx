@@ -21,7 +21,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { CallsFilters, useActiveCallsFilters } from "./calls/CallsFilters";
-import { CallsFiltersProvider, useCallsFilters } from "context/CallsFilters";
+import { CallsFiltersProvider, useCallsFilters } from "context/CallsFiltersContext";
 import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
@@ -137,8 +137,8 @@ function ActiveCallsInner() {
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 
         <div>
-          <Button onClick={() => setShowFilters((o) => !o)} title="Filter calls">
-            <Filter aria-label="Filter" />
+          <Button onClick={() => setShowFilters((o) => !o)} title={t("callFilters")}>
+            <Filter aria-label={t("callFilters")} />
           </Button>
         </div>
       </header>

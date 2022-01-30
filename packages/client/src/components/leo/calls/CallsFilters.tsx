@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";
 import { Input } from "components/form/inputs/Input";
-import { useCallsFilters } from "context/CallsFilters";
+import { useCallsFilters } from "context/CallsFiltersContext";
 import { Select, SelectValue } from "components/form/Select";
 
 interface Props {
@@ -90,7 +90,7 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
     }
   });
 
-  return [...new Set(arr.flat(1))];
+  return arr;
 }
 
 export function useActiveCallsFilters() {
@@ -126,6 +126,5 @@ export function useActiveCallsFilters() {
 }
 
 function includesInArray(arr: { id: string }[], value: string | undefined) {
-  // if (!value) return true;
   return arr.some((v) => v.id === value);
 }
