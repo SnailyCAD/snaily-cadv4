@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import type { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "types/prisma";
+import type { SelectValue } from "components/form/Select";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
@@ -15,6 +16,12 @@ interface Context {
 
   showFilters: boolean;
   setShowFilters: React.Dispatch<React.SetStateAction<boolean>>;
+
+  department: SelectValue | null;
+  setDepartment: React.Dispatch<React.SetStateAction<SelectValue<string> | null>>;
+
+  division: SelectValue | null;
+  setDivision: React.Dispatch<React.SetStateAction<SelectValue<string> | null>>;
 }
 
 const CallsFiltersContext = React.createContext<Context | undefined>(undefined);
@@ -26,8 +33,19 @@ interface ProviderProps {
 export function CallsFiltersProvider({ children }: ProviderProps) {
   const [showFilters, setShowFilters] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState("");
+  const [department, setDepartment] = React.useState<SelectValue | null>(null);
+  const [division, setDivision] = React.useState<SelectValue | null>(null);
 
-  const value = { showFilters, setShowFilters, search, setSearch };
+  const value = {
+    showFilters,
+    setShowFilters,
+    search,
+    setSearch,
+    department,
+    setDepartment,
+    division,
+    setDivision,
+  };
 
   return <CallsFiltersContext.Provider value={value}>{children}</CallsFiltersContext.Provider>;
 }

@@ -4,7 +4,6 @@ import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useAuth } from "context/AuthContext";
-import format from "date-fns/format";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import type { AssignedUnit, Call911 } from "types/prisma";
@@ -21,9 +20,11 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { CallsFilters } from "./calls/CallsFilters";
+import { CallsFilters, useActiveCallsFilters } from "./calls/CallsFilters";
 import { CallsFiltersProvider, useCallsFilters } from "context/CallsFilters";
 import { Filter } from "react-bootstrap-icons";
+import { Table } from "components/shared/Table";
+import { FullDate } from "components/shared/FullDate";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -45,7 +46,8 @@ function ActiveCallsInner() {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
-  const { setShowFilters } = useCallsFilters();
+  const { setShowFilters, search } = useCallsFilters();
+  const handleFilter = useActiveCallsFilters();
 
   const unit =
     router.pathname === "/officer"
@@ -143,104 +145,94 @@ function ActiveCallsInner() {
 
       <div className="px-4">
         <CallsFilters calls={calls} />
+
         {calls.length <= 0 ? (
           <p className="py-2">{t("no911Calls")}</p>
         ) : (
-          <div className="w-full my-3 overflow-x-auto max-h-80">
-            <table className="w-full overflow-hidden whitespace-nowrap">
-              <thead className="sticky top-0">
-                <tr>
-                  <th className="bg-gray-300">{t("caller")}</th>
-                  <th className="bg-gray-300">{t("location")}</th>
-                  <th className="bg-gray-300">{common("description")}</th>
-                  <th className="bg-gray-300">{common("updatedAt")}</th>
-                  <th className="bg-gray-300">{t("postal")}</th>
-                  <th className="bg-gray-300">{t("assignedUnits")}</th>
-                  <th className="bg-gray-300">{common("actions")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {calls
-                  .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
-                  .map((call) => {
-                    const isUnitAssigned = isUnitAssignedToCall(call);
+          <Table
+            filter={search}
+            data={calls
+              .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
+              .filter(handleFilter)
+              .map((call) => {
+                const isUnitAssigned = isUnitAssignedToCall(call);
 
-                    return (
-                      <tr
-                        className={isUnitAssigned ? "bg-gray-200 dark:bg-gray-3" : ""}
-                        key={call.id}
+                return {
+                  rowProps: {
+                    className: isUnitAssigned ? "bg-gray-200 dark:bg-gray-3" : undefined,
+                  },
+                  name: call.name,
+                  location: call.location,
+                  description:
+                    call.description && !call.descriptionData ? (
+                      <span className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
+                        {call.description}
+                      </span>
+                    ) : (
+                      <Button
+                        disabled={isDispatch ? false : !unit}
+                        small
+                        onClick={() => handleViewDescription(call)}
                       >
-                        <td>{call.name}</td>
-                        <td>{call.location}</td>
-                        <td className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
-                          {call.description && !call.descriptionData ? (
-                            call.description
-                          ) : (
-                            <Button
-                              disabled={isDispatch ? false : !unit}
-                              small
-                              onClick={() => handleViewDescription(call)}
-                            >
-                              {common("viewDescription")}
-                            </Button>
-                          )}
-                        </td>
-                        <td>{format(new Date(call.updatedAt), "HH:mm:ss - yyyy-MM-dd")}</td>
-                        <td>{call.postal || common("none")}</td>
-                        <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
-                        <td>
-                          <Button
-                            disabled={isDispatch ? !hasActiveDispatchers : !unit}
-                            small
-                            variant="success"
-                            onClick={() => handleManageClick(call)}
-                          >
-                            {isDispatch ? common("manage") : common("view")}
-                          </Button>
+                        {common("viewDescription")}
+                      </Button>
+                    ),
+                  updatedAt: <FullDate>{call.updatedAt}</FullDate>,
+                  assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
+                  actions: (
+                    <>
+                      <Button
+                        disabled={isDispatch ? !hasActiveDispatchers : !unit}
+                        small
+                        variant="success"
+                        onClick={() => handleManageClick(call)}
+                      >
+                        {isDispatch ? common("manage") : common("view")}
+                      </Button>
 
-                          {isDispatch ? (
-                            <></>
-                          ) : (
-                            <>
-                              {isUnitAssigned ? (
-                                <Button
-                                  className="ml-2"
-                                  disabled={!unit}
-                                  small
-                                  onClick={() => handleUnassignFromCall(call)}
-                                >
-                                  {t("unassignFromCall")}
-                                </Button>
-                              ) : (
-                                <Button
-                                  className="ml-2"
-                                  disabled={!unit}
-                                  small
-                                  onClick={() => handleAssignToCall(call)}
-                                >
-                                  {t("assignToCall")}
-                                </Button>
-                              )}
-                            </>
-                          )}
+                      {isDispatch ? null : isUnitAssigned ? (
+                        <Button
+                          className="ml-2"
+                          disabled={!unit}
+                          small
+                          onClick={() => handleUnassignFromCall(call)}
+                        >
+                          {t("unassignFromCall")}
+                        </Button>
+                      ) : (
+                        <Button
+                          className="ml-2"
+                          disabled={!unit}
+                          small
+                          onClick={() => handleAssignToCall(call)}
+                        >
+                          {t("assignToCall")}
+                        </Button>
+                      )}
 
-                          {TOW ? (
-                            <Button
-                              disabled={!hasActiveDispatchers || (!isDispatch && !unit)}
-                              small
-                              className="ml-2"
-                              onClick={() => handleCallTow(call)}
-                            >
-                              {t("callTow")}
-                            </Button>
-                          ) : null}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
+                      {TOW ? (
+                        <Button
+                          disabled={!hasActiveDispatchers || (!isDispatch && !unit)}
+                          small
+                          className="ml-2"
+                          onClick={() => handleCallTow(call)}
+                        >
+                          {t("callTow")}
+                        </Button>
+                      ) : null}
+                    </>
+                  ),
+                };
+              })}
+            columns={[
+              { Header: t("caller"), accessor: "name" },
+              { Header: t("location"), accessor: "location" },
+              { Header: common("description"), accessor: "description" },
+              { Header: common("updatedAt"), accessor: "updatedAt" },
+              { Header: t("assignedUnits"), accessor: "assignedUnits" },
+              { Header: common("actions"), accessor: "actions" },
+            ]}
+          />
         )}
       </div>
 
