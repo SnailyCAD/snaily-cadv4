@@ -91,7 +91,7 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
     if (Array.isArray(data)) {
       data.forEach((v) => {
         const label = "value" in v ? v.value.value : makeUnitName(v.unit);
-        const value = "value" in v ? v.id : v.unit.id;
+        const value = "value" in v ? v.id : v.id;
 
         const obj = {
           value: {
