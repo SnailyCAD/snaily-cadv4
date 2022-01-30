@@ -21,12 +21,15 @@ import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { CallsFilters } from "./calls/CallsFilters";
+import { CallsFiltersProvider, useCallsFilters } from "context/CallsFilters";
+import { Filter } from "react-bootstrap-icons";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-export function ActiveCalls() {
+function ActiveCallsInner() {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
@@ -42,6 +45,7 @@ export function ActiveCalls() {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
+  const { setShowFilters } = useCallsFilters();
 
   const unit =
     router.pathname === "/officer"
@@ -127,11 +131,18 @@ export function ActiveCalls() {
 
   return (
     <div className="overflow-hidden rounded-md card">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
+
+        <div>
+          <Button onClick={() => setShowFilters((o) => !o)} title="Filter calls">
+            <Filter aria-label="Filter" />
+          </Button>
+        </div>
       </header>
 
       <div className="px-4">
+        <CallsFilters calls={calls} />
         {calls.length <= 0 ? (
           <p className="py-2">{t("no911Calls")}</p>
         ) : (
@@ -240,5 +251,13 @@ export function ActiveCalls() {
 
       <Manage911CallModal setCall={setTempCall} onClose={() => setTempCall(null)} call={tempCall} />
     </div>
+  );
+}
+
+export function ActiveCalls() {
+  return (
+    <CallsFiltersProvider>
+      <ActiveCallsInner />
+    </CallsFiltersProvider>
   );
 }

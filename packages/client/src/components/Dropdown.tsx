@@ -6,18 +6,20 @@ import { useRouter } from "next/router";
 
 interface Props extends DropdownMenu.MenuContentProps {
   trigger: any;
+  triggerType?: "item" | "root";
   children: React.ReactNode;
   extra?: { maxWidth?: number };
 }
 
-export const Dropdown = ({ trigger, children, extra, ...rest }: Props) => {
+export const Dropdown = ({ trigger, triggerType = "root", children, extra, ...rest }: Props) => {
   const maxWidth = extra?.maxWidth ?? 150;
+  const Trigger = triggerType === "root" ? DropdownMenu.Trigger : DropdownMenu.TriggerItem;
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="flex items-center gap-1 px-1.5" asChild>
+      <Trigger className="flex items-center gap-1 px-1.5" asChild>
         {trigger}
-      </DropdownMenu.Trigger>
+      </Trigger>
 
       <DropdownMenu.Content
         sideOffset={7}
