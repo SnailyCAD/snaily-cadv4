@@ -10,6 +10,8 @@ export type CitizenWithVehAndWep = Citizen & {
   Record: FullRecord[];
 };
 
+type _SelectValue = SelectValue<{ id: string; departmentId?: string | null } | null>;
+
 interface Context {
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
@@ -17,11 +19,11 @@ interface Context {
   showFilters: boolean;
   setShowFilters: React.Dispatch<React.SetStateAction<boolean>>;
 
-  department: SelectValue | null;
-  setDepartment: React.Dispatch<React.SetStateAction<SelectValue<string> | null>>;
+  department: _SelectValue | null;
+  setDepartment: React.Dispatch<React.SetStateAction<_SelectValue | null>>;
 
-  division: SelectValue | null;
-  setDivision: React.Dispatch<React.SetStateAction<SelectValue<string> | null>>;
+  division: _SelectValue | null;
+  setDivision: React.Dispatch<React.SetStateAction<_SelectValue | null>>;
 }
 
 const CallsFiltersContext = React.createContext<Context | undefined>(undefined);
@@ -33,8 +35,8 @@ interface ProviderProps {
 export function CallsFiltersProvider({ children }: ProviderProps) {
   const [showFilters, setShowFilters] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState("");
-  const [department, setDepartment] = React.useState<SelectValue | null>(null);
-  const [division, setDivision] = React.useState<SelectValue | null>(null);
+  const [department, setDepartment] = React.useState<_SelectValue | null>(null);
+  const [division, setDivision] = React.useState<_SelectValue | null>(null);
 
   const value = {
     showFilters,

@@ -25,6 +25,7 @@ import { CallsFiltersProvider, useCallsFilters } from "context/CallsFiltersConte
 import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
+import { classNames } from "lib/classNames";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -46,7 +47,7 @@ function ActiveCallsInner() {
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
-  const { setShowFilters, search } = useCallsFilters();
+  const { setShowFilters, showFilters, search } = useCallsFilters();
   const handleFilter = useActiveCallsFilters();
 
   const unit =
@@ -139,7 +140,7 @@ function ActiveCallsInner() {
         <div>
           <Button
             variant="cancel"
-            className="px-1.5 hover:bg-dark-bg"
+            className={classNames("px-1.5 hover:bg-dark-bg", showFilters && "bg-dark-bg")}
             onClick={() => setShowFilters((o) => !o)}
             title={t("callFilters")}
           >

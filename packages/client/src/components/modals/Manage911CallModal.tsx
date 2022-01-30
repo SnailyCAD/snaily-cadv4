@@ -302,10 +302,18 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                         isMulti
                         name="divisions"
                         value={values.divisions}
-                        values={division.values.map((division) => ({
-                          label: division.value.value,
-                          value: division.id,
-                        }))}
+                        values={division.values
+                          .filter((div) => {
+                            const isInDepartment = values.departments.some(
+                              (v) => v.value === div.departmentId,
+                            );
+
+                            return values.departments.length > 0 ? isInDepartment : true;
+                          })
+                          .map((division) => ({
+                            label: division.value.value,
+                            value: division.id,
+                          }))}
                         onChange={handleChange}
                         disabled={isDisabled}
                       />

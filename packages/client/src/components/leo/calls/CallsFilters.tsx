@@ -38,7 +38,7 @@ export function CallsFilters({ calls }: Props) {
       <FormField label={t("departments")}>
         <Select
           isClearable
-          value={department?.value ?? null}
+          value={department?.value?.id ?? null}
           onChange={(e) => setDepartment(e.target)}
           className="w-56"
           values={departments}
@@ -48,10 +48,12 @@ export function CallsFilters({ calls }: Props) {
       <FormField label={t("divisions")}>
         <Select
           isClearable
-          value={division?.value ?? null}
+          value={division?.value?.id ?? null}
           onChange={(e) => setDivision(e.target)}
           className="w-56"
-          values={divisions}
+          values={divisions.filter((v) =>
+            department?.value ? v.value.departmentId === department.value.id : true,
+          )}
         />
       </FormField>
     </div>
@@ -61,7 +63,7 @@ export function CallsFilters({ calls }: Props) {
 export type Call911Filters = "departments" | "divisions" | "assignedUnits";
 
 function makeOptions(calls: Full911Call[], type: Call911Filters) {
-  const arr: SelectValue[] = [];
+  const arr: SelectValue<{ id: string; departmentId?: string | null }>[] = [];
 
   calls.forEach((call) => {
     const data = call[type];
@@ -72,11 +74,14 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
         const value = "value" in v ? v.id : v.unit.id;
 
         const obj = {
-          value,
+          value: {
+            id: value,
+            departmentId: type === "divisions" && "departmentId" in v ? v.departmentId : undefined,
+          },
           label,
         };
 
-        const existing = arr.some((v) => v.value === obj.value);
+        const existing = arr.some((v) => v.value.id === obj.value.id);
         if (!existing) {
           arr.push(obj);
         }
@@ -98,8 +103,8 @@ export function useActiveCallsFilters() {
 
   const handleFilter = React.useCallback(
     (value: Full911Call) => {
-      const isInDepartments = includesInArray(value.departments, department?.value);
-      const isInDivisions = includesInArray(value.divisions, division?.value);
+      const isInDepartments = includesInArray(value.departments, department?.value?.id);
+      const isInDivisions = includesInArray(value.divisions, division?.value?.id);
 
       /**
        * show all calls if there is no filter
