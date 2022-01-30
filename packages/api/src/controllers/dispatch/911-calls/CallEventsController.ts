@@ -7,30 +7,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
-import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
-
-const assignedUnitsInclude = {
-  include: {
-    officer: { include: leoProperties },
-    deputy: { include: unitProperties },
-    combinedUnit: {
-      include: {
-        status: { include: { value: true } },
-        officers: {
-          include: leoProperties,
-        },
-      },
-    },
-  },
-};
-
-export const callInclude = {
-  position: true,
-  assignedUnits: assignedUnitsInclude,
-  events: true,
-  incidents: true,
-};
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
