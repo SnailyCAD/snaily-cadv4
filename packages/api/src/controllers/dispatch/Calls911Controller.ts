@@ -77,8 +77,8 @@ export class Calls911Controller {
     await this.assignUnitsToCall(call.id, units);
     await this.linkOrUnlinkCallDepartmentsAndDivisions({
       type: "connect",
-      departments: data.departments as string[],
-      divisions: data.divisions as string[],
+      departments: (data.departments ?? []) as string[],
+      divisions: (data.divisions ?? []) as string[],
       callId: call.id,
     });
 
@@ -128,8 +128,8 @@ export class Calls911Controller {
 
     await this.linkOrUnlinkCallDepartmentsAndDivisions({
       type: "disconnect",
-      departments: call.departments,
-      divisions: call.divisions,
+      departments: (data.departments ?? []) as string[],
+      divisions: (data.divisions ?? []) as string[],
       callId: call.id,
     });
 
@@ -170,8 +170,8 @@ export class Calls911Controller {
     await this.assignUnitsToCall(call.id, units);
     await this.linkOrUnlinkCallDepartmentsAndDivisions({
       type: "connect",
-      departments: data.departments as string[],
-      divisions: data.divisions as string[],
+      departments: (data.departments ?? []) as string[],
+      divisions: (data.divisions ?? []) as string[],
       callId: call.id,
     });
 
