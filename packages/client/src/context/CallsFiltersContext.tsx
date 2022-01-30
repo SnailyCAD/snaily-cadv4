@@ -24,6 +24,9 @@ interface Context {
 
   division: _SelectValue | null;
   setDivision: React.Dispatch<React.SetStateAction<_SelectValue | null>>;
+
+  assignedUnit: _SelectValue | null;
+  setAssignedUnit: React.Dispatch<React.SetStateAction<_SelectValue | null>>;
 }
 
 const CallsFiltersContext = React.createContext<Context | undefined>(undefined);
@@ -37,6 +40,7 @@ export function CallsFiltersProvider({ children }: ProviderProps) {
   const [search, setSearch] = React.useState("");
   const [department, setDepartment] = React.useState<_SelectValue | null>(null);
   const [division, setDivision] = React.useState<_SelectValue | null>(null);
+  const [assignedUnit, setAssignedUnit] = React.useState<_SelectValue | null>(null);
 
   const value = {
     showFilters,
@@ -47,6 +51,8 @@ export function CallsFiltersProvider({ children }: ProviderProps) {
     setDepartment,
     division,
     setDivision,
+    assignedUnit,
+    setAssignedUnit,
   };
 
   return <CallsFiltersContext.Provider value={value}>{children}</CallsFiltersContext.Provider>;

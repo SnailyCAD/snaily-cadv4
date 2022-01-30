@@ -12,14 +12,24 @@ interface Props {
 }
 
 export function CallsFilters({ calls }: Props) {
-  const { department, setDepartment, setDivision, division, search, setSearch, showFilters } =
-    useCallsFilters();
+  const {
+    department,
+    setDepartment,
+    setDivision,
+    division,
+    search,
+    setSearch,
+    showFilters,
+    setAssignedUnit,
+    assignedUnit,
+  } = useCallsFilters();
 
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
 
   const departments = makeOptions(calls, "departments");
   const divisions = makeOptions(calls, "divisions");
+  const assignedUnits = makeOptions(calls, "assignedUnits");
 
   React.useEffect(() => {
     if (!showFilters) {
@@ -56,6 +66,16 @@ export function CallsFilters({ calls }: Props) {
           )}
         />
       </FormField>
+
+      <FormField label={t("assignedUnits")}>
+        <Select
+          isClearable
+          value={assignedUnit?.value?.id ?? null}
+          onChange={(e) => setAssignedUnit(e.target)}
+          className="w-56"
+          values={assignedUnits}
+        />
+      </FormField>
     </div>
   ) : null;
 }
@@ -71,7 +91,7 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
     if (Array.isArray(data)) {
       data.forEach((v) => {
         const label = "value" in v ? v.value.value : makeUnitName(v.unit);
-        const value = "value" in v ? v.id : v.unit.id;
+        const value = "value" in v ? v.id : v.id;
 
         const obj = {
           value: {
@@ -99,32 +119,34 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
 }
 
 export function useActiveCallsFilters() {
-  const { department, division } = useCallsFilters();
+  const { department, division, assignedUnit } = useCallsFilters();
 
   const handleFilter = React.useCallback(
     (value: Full911Call) => {
       const isInDepartments = includesInArray(value.departments, department?.value?.id);
       const isInDivisions = includesInArray(value.divisions, division?.value?.id);
+      const isInAssignedUnits = includesInArray(value.assignedUnits, assignedUnit?.value?.id);
 
       /**
        * show all calls if there is no filter
        */
-      if (!department?.value && !division?.value) return true;
+      if (!department?.value && !division?.value && !assignedUnit?.value) return true;
 
       /**
        * department and division selected?
        *  -> only show calls with that department and division
        */
-      if (department?.value && division?.value) {
-        return isInDepartments && isInDivisions;
+      if (department?.value && division?.value && assignedUnit?.value) {
+        return isInDepartments && isInDivisions && isInAssignedUnits;
       }
 
+      if (isInAssignedUnits) return true;
       if (isInDepartments) return true;
       if (isInDivisions) return true;
 
       return false;
     },
-    [department?.value, division?.value],
+    [department?.value, division?.value, assignedUnit?.value],
   );
 
   return handleFilter;
