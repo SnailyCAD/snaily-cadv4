@@ -80,6 +80,7 @@ export function ActiveCalls() {
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
+            setTempCall({ ...v, ...call });
             return call;
           }
 

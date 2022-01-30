@@ -364,6 +364,8 @@ export type Call911 = {
   updatedAt: Date;
   userId: string;
   assignedUnits: AssignedUnit[];
+  departments: DepartmentValue[];
+  divisions: DivisionValue[];
   location: string;
   postal: string | null;
   description: string;

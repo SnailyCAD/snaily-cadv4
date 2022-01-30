@@ -152,10 +152,17 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const requestData = {
+      ...values,
+      assignedUnits: values.assignedUnits.map(({ value }) => value),
+      departments: values.departments.map(({ value }) => value),
+      divisions: values.divisions.map(({ value }) => value),
+    };
+
     if (call) {
       const { json } = await execute(`/911-calls/${call.id}`, {
         method: "PUT",
-        data: { ...values, assignedUnits: values.assignedUnits.map(({ value }) => value) },
+        data: requestData,
       });
 
       if (json.id) {
@@ -173,7 +180,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     } else {
       const { json } = await execute("/911-calls", {
         method: "POST",
-        data: { ...values, assignedUnits: values.assignedUnits.map(({ value }) => value) },
+        data: requestData,
       });
 
       if (json.id) {
@@ -190,8 +197,8 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     postal: call?.postal ?? "",
     description: call?.description ?? "",
     descriptionData: dataToSlate(call),
-    departments: [],
-    divisions: [],
+    departments: call?.departments.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
+    divisions: call?.divisions.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),

@@ -125,16 +125,22 @@ export function styles({
       padding: "0.2rem",
       borderRadius: "2px 0 0 2px",
     }),
-    multiValueRemove: (base) => ({
-      ...base,
-      backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
-      color,
-      borderRadius: "0 2px 2px 0",
-      cursor: "pointer",
-      ":hover": {
-        filter: "brightness(90%)",
-      },
-    }),
+    multiValueRemove: (base, props) => {
+      if (props.isDisabled) {
+        return { ...base, display: "none" };
+      }
+
+      return {
+        ...base,
+        backgroundColor: backgroundColor === "white" ? "#cccccc" : "#2f2f2f",
+        color,
+        borderRadius: "0 2px 2px 0",
+        cursor: "pointer",
+        ":hover": {
+          filter: "brightness(90%)",
+        },
+      };
+    },
     indicatorsContainer: (base) => ({
       ...base,
       backgroundColor,
