@@ -19,9 +19,10 @@ import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   call: Full911Call;
+  disabled?: boolean;
 }
 
-export function CallEventsArea({ call }: Props) {
+export function CallEventsArea({ disabled, call }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -55,51 +56,66 @@ export function CallEventsArea({ call }: Props) {
         ) : (
           call?.events
             .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-            .map((event) => <EventItem key={event.id} setTempEvent={setTempEvent} event={event} />)
+            .map((event) => (
+              <EventItem
+                disabled={disabled}
+                key={event.id}
+                setTempEvent={setTempEvent}
+                event={event}
+              />
+            ))
         )}
       </ul>
 
-      <Formik
-        onSubmit={onEventSubmit}
-        initialValues={{ description: tempEvent?.description ?? "" }}
-      >
-        {({ handleChange, values, errors }) => (
-          <Form className="absolute bottom-0 w-full">
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Textarea
-                required
-                name="description"
-                value={values.description}
-                onChange={handleChange}
-              />
-            </FormField>
+      {disabled ? null : (
+        <Formik
+          onSubmit={onEventSubmit}
+          initialValues={{ description: tempEvent?.description ?? "" }}
+        >
+          {({ handleChange, values, errors }) => (
+            <Form className="absolute bottom-0 w-full">
+              <FormField errorMessage={errors.description} label={common("description")}>
+                <Textarea
+                  required
+                  name="description"
+                  value={values.description}
+                  onChange={handleChange}
+                />
+              </FormField>
 
-            <footer className="flex justify-end mt-5">
-              {tempEvent ? (
-                <Button variant="cancel" onClick={() => setTempEvent(null)} type="reset">
-                  {common("cancel")}
+              <footer className="flex justify-end mt-5">
+                {tempEvent ? (
+                  <Button variant="cancel" onClick={() => setTempEvent(null)} type="reset">
+                    {common("cancel")}
+                  </Button>
+                ) : null}
+                <Button
+                  disabled={state === "loading"}
+                  className="flex items-center ml-2"
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+
+                  {tempEvent ? common("save") : t("addEvent")}
                 </Button>
-              ) : null}
-              <Button
-                disabled={state === "loading"}
-                className="flex items-center ml-2"
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+              </footer>
 
-                {tempEvent ? common("save") : t("addEvent")}
-              </Button>
-            </footer>
-
-            <AutoForm event={tempEvent} />
-          </Form>
-        )}
-      </Formik>
+              <AutoForm event={tempEvent} />
+            </Form>
+          )}
+        </Formik>
+      )}
     </div>
   );
 }
 
-function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent: any }) {
+interface EventItemProps {
+  disabled?: boolean;
+  event: Call911Event;
+  setTempEvent: React.Dispatch<React.SetStateAction<Call911Event | null>>;
+}
+
+function EventItem({ disabled, event, setTempEvent }: EventItemProps) {
   const { openModal, closeModal } = useModal();
   const actionsRef = React.useRef<HTMLLIElement>(null);
   const isHovering = useHoverDirty(actionsRef);
@@ -118,10 +134,13 @@ function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent:
   }
 
   async function deleteEvent() {
+    if (disabled) return;
+
     await execute(`/911-calls/events/${event.call911Id}/${event.id}`, {
       method: "DELETE",
     });
 
+    setTempEvent(null);
     handleClose();
   }
 
@@ -134,21 +153,23 @@ function EventItem({ event, setTempEvent }: { event: Call911Event; setTempEvent:
         <span>{event.description}</span>
       </div>
 
-      <div className={classNames(isHovering ? "flex" : "hidden")}>
-        <Button
-          className="p-0 px-1 mr-2"
-          small
-          variant="cancel"
-          onClick={() => setTempEvent(event)}
-        >
-          <Pencil width={15} />
-        </Button>
-        <Button className="p-0 px-1" small variant="cancel" onClick={handleOpen}>
-          <X width={20} height={20} />
-        </Button>
-      </div>
+      {disabled ? null : (
+        <div className={classNames(isHovering ? "flex" : "hidden")}>
+          <Button
+            className="p-0 px-1 mr-2"
+            small
+            variant="cancel"
+            onClick={() => setTempEvent(event)}
+          >
+            <Pencil width={15} />
+          </Button>
+          <Button className="p-0 px-1" small variant="cancel" onClick={handleOpen}>
+            <X width={20} height={20} />
+          </Button>
+        </div>
+      )}
 
-      {open ? (
+      {open && !disabled ? (
         <AlertModal
           description={t("alert_deleteCallEvent")}
           onDeleteClick={deleteEvent}

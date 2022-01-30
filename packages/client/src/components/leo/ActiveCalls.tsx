@@ -26,10 +26,6 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-const CallEventsModal = dynamic(
-  async () => (await import("components/modals/CallEventsModal")).CallEventsModal,
-);
-
 export function ActiveCalls() {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
@@ -181,26 +177,19 @@ export function ActiveCalls() {
                         <td>{call.postal || common("none")}</td>
                         <td>{call.assignedUnits.map(makeUnit).join(", ") || common("none")}</td>
                         <td>
+                          <Button
+                            disabled={isDispatch ? !hasActiveDispatchers : !unit}
+                            small
+                            variant="success"
+                            onClick={() => handleManageClick(call)}
+                          >
+                            {isDispatch ? common("manage") : common("view")}
+                          </Button>
+
                           {isDispatch ? (
-                            <>
-                              <Button
-                                disabled={!hasActiveDispatchers}
-                                small
-                                variant="success"
-                                onClick={() => handleManageClick(call)}
-                              >
-                                {common("manage")}
-                              </Button>
-                            </>
+                            <></>
                           ) : (
                             <>
-                              <Button
-                                disabled={!unit}
-                                small
-                                onClick={() => handleManageClick(call)}
-                              >
-                                {t("viewEvents")}
-                              </Button>
                               {isUnitAssigned ? (
                                 <Button
                                   className="ml-2"
@@ -248,15 +237,7 @@ export function ActiveCalls() {
         <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
 
-      {isDispatch ? (
-        <Manage911CallModal
-          setCall={setTempCall}
-          onClose={() => setTempCall(null)}
-          call={tempCall}
-        />
-      ) : (
-        <CallEventsModal onClose={() => setTempCall(null)} call={tempCall} />
-      )}
+      <Manage911CallModal setCall={setTempCall} onClose={() => setTempCall(null)} call={tempCall} />
     </div>
   );
 }
