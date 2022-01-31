@@ -21,6 +21,7 @@
     "@casper124578/eslint-config-next": "^1.2.1",
     "@casper124578/eslint-config-react": "^2.2.1",
     "colorette": "2.0.16",
+    "concurrently": "^7.0.0",
     "copy": "^0.3.2",
     "eslint": "^8.7.0",
     "eslint-plugin-prettier": "^4.0.0",
