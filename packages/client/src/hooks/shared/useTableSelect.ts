@@ -1,9 +1,12 @@
 import * as React from "react";
 
-type MakeIdFunc<Obj> = (obj: Obj) => string;
+type MakeIdFunc<Obj, Id> = (obj: Obj) => Id;
 
-export function useTableSelect<Obj extends { id: string }>(arr: Obj[], makeId?: MakeIdFunc<Obj>) {
-  const [selectedRows, setSelectedRows] = React.useState<Obj["id"][]>([]);
+export function useTableSelect<Id extends string, Obj extends { id: Id }>(
+  arr: Obj[],
+  makeId?: MakeIdFunc<Obj, Id>,
+) {
+  const [selectedRows, setSelectedRows] = React.useState<Id[]>([]);
 
   const isTopCheckboxChecked = arr.length > 0 && selectedRows.length === arr.length;
   const isIntermediate = !isTopCheckboxChecked && selectedRows.length > 0;
@@ -14,8 +17,6 @@ export function useTableSelect<Obj extends { id: string }>(arr: Obj[], makeId?: 
 
   function handleCheckboxChange(obj: Obj) {
     const id = makeId?.(obj) ?? obj["id"];
-
-    console.log({ TABLE_ID: id });
 
     setSelectedRows((prev) => {
       if (prev.includes(id)) {
