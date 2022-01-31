@@ -1,4 +1,3 @@
-import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment } from "lib/utils";
@@ -9,15 +8,14 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { Tab } from "@headlessui/react";
+import { useTableSelect } from "hooks/shared/useTableSelect";
 
 interface Props {
   units: Unit[];
 }
 
 export function AllUnitsTab({ units }: Props) {
-  const [selectedRows, setSelectedRows] = React.useState<`${Unit["id"]}-${Unit["type"]}`[]>([]);
-  const isChecked = units.length > 0 && selectedRows.length === units.length;
-  const isIntermediate = !isChecked && selectedRows.length > 0;
+  const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -25,36 +23,16 @@ export function AllUnitsTab({ units }: Props) {
   const { execute } = useFetch();
   const router = useRouter();
 
-  function handleCheckboxChange(unit: Unit) {
-    setSelectedRows((prev) => {
-      if (prev.includes(`${unit.id}-${unit.type}`)) {
-        return prev.filter((v) => v !== `${unit.id}-${unit.type}`);
-      }
-
-      return [...prev, `${unit.id}-${unit.type}`];
-    });
-  }
-
-  function handleAllCheckboxes(e: React.ChangeEvent<HTMLInputElement>) {
-    const checked = e.target.checked;
-
-    if (checked) {
-      setSelectedRows(units.map((u) => `${u.id}-${u.type}`) as typeof selectedRows);
-    } else {
-      setSelectedRows([]);
-    }
-  }
-
   async function setSelectedUnitsOffDuty() {
-    if (selectedRows.length <= 0) return;
+    if (tableSelect.selectedRows.length <= 0) return;
 
     const { json } = await execute("/admin/manage/units/off-duty", {
       method: "PUT",
-      data: { ids: selectedRows },
+      data: { ids: tableSelect.selectedRows },
     });
 
     if (Array.isArray(json)) {
-      setSelectedRows([]);
+      tableSelect.resetRows();
       router.replace({
         pathname: router.pathname,
         query: router.query,
@@ -70,7 +48,7 @@ export function AllUnitsTab({ units }: Props) {
   return (
     <Tab.Panel>
       <Button
-        disabled={selectedRows.length <= 0}
+        disabled={tableSelect.selectedRows.length <= 0}
         onClick={setSelectedUnitsOffDuty}
         className="mt-3"
       >
@@ -86,8 +64,8 @@ export function AllUnitsTab({ units }: Props) {
           return {
             dropdown: (
               <input
-                checked={selectedRows.includes(`${unit.id}-${unit.type}`)}
-                onChange={() => handleCheckboxChange(unit)}
+                checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
+                onChange={() => tableSelect.handleCheckboxChange(unit)}
                 type="checkbox"
               />
             ),
@@ -116,9 +94,9 @@ export function AllUnitsTab({ units }: Props) {
           {
             Header: (
               <IndeterminateCheckbox
-                onChange={handleAllCheckboxes}
-                checked={isChecked}
-                indeterminate={isIntermediate}
+                onChange={tableSelect.handleAllCheckboxes}
+                checked={tableSelect.isTopCheckboxChecked}
+                indeterminate={tableSelect.isIntermediate}
               />
             ),
             accessor: "dropdown",
