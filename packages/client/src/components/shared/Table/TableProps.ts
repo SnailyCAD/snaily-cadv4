@@ -1,18 +1,13 @@
-import type { Column, TableInstance } from "react-table";
+import type { Column } from "react-table";
 
 export interface TableProps<T extends object = {}, RowProps extends object = {}> {
   data: readonly TableData<T, RowProps>[];
   columns: readonly (Column<TableData<T, RowProps>> | null)[];
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
-  Toolbar?: ({ instance }: { instance: TableInstance<TableData<T, RowProps>> }) => JSX.Element;
   disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
   defaultSort?: DefaultSort;
   dragDrop?: DragDrop;
-  /**
-   * @deprecated use `useTableSelect` instead
-   */
-  selection?: never;
 }
 
 interface DefaultSort {

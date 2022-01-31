@@ -116,8 +116,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
   return (
     <div {...containerProps}>
-      {props.Toolbar?.({ instance })}
-
       <table {...getTableProps()} className="w-full overflow-hidden whitespace-nowrap max-h-64">
         <thead>
           {headerGroups.map((headerGroup) => (
