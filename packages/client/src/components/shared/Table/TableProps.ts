@@ -1,4 +1,4 @@
-import type { Column, Row, TableInstance } from "react-table";
+import type { Column, TableInstance } from "react-table";
 
 export interface TableProps<T extends object = {}, RowProps extends object = {}> {
   data: readonly TableData<T, RowProps>[];
@@ -9,7 +9,10 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
   defaultSort?: DefaultSort;
   dragDrop?: DragDrop;
-  selection?: Selection<T, RowProps>;
+  /**
+   * @deprecated use `useTableSelect` instead
+   */
+  selection?: never;
 }
 
 interface DefaultSort {
@@ -21,14 +24,6 @@ interface DragDrop {
   handleMove: (list: any[]) => void;
   enabled?: boolean;
   disabledIndices?: number[];
-}
-
-interface Selection<T extends object = {}, RowProps extends object = {}> {
-  enabled: boolean;
-  onSelect?(
-    originals: TableData<T, RowProps>[],
-    selectedFlatRows: Row<TableData<T, RowProps>>[],
-  ): void;
 }
 
 export type TableData<T extends object, RP extends object> = {

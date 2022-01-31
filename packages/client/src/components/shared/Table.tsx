@@ -43,25 +43,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     useRowState,
     useRowSelect,
     (hooks) => {
-      if (props.selection?.enabled) {
-        hooks.visibleColumns.push((columns) => [
-          {
-            id: "selection",
-            Header: ({ getToggleAllRowsSelectedProps }) => (
-              <div>
-                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-              </div>
-            ),
-            Cell: ({ row }: any) => (
-              <div>
-                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-              </div>
-            ),
-          },
-          ...columns,
-        ]);
-      }
-
       if (props.dragDrop?.enabled) {
         hooks.visibleColumns.push((columns) => [
           {
@@ -96,7 +77,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     toggleSortBy,
     headerGroups,
     page,
-    selectedFlatRows,
   } = instance;
 
   function handleMove(tableList: any[]) {
@@ -106,13 +86,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
     props.dragDrop?.handleMove(originals);
   }
-
-  React.useEffect(() => {
-    if (!props.selection?.enabled) return;
-    const originals = selectedFlatRows.map((r) => r.original);
-
-    props.selection.onSelect?.(originals, selectedFlatRows);
-  }, [selectedFlatRows, props.selection]);
 
   React.useEffect(() => {
     setGlobalFilter(props.filter);
