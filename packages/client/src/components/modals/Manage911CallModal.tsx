@@ -200,8 +200,8 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     postal: call?.postal ?? "",
     description: call?.description ?? "",
     descriptionData: dataToSlate(call),
-    departments: call?.departments.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
-    divisions: call?.divisions.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
+    departments: call?.departments?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
+    divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),

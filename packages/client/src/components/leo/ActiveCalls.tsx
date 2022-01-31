@@ -88,7 +88,7 @@ function ActiveCallsInner() {
         calls.map((v) => {
           if (v.id === call.id) {
             setTempCall({ ...v, ...call });
-            return call;
+            return { ...v, ...call };
           }
 
           return v;

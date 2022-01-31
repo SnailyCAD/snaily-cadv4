@@ -152,6 +152,7 @@ export function useActiveCallsFilters() {
   return handleFilter;
 }
 
-function includesInArray(arr: { id: string }[], value: string | undefined) {
-  return arr.some((v) => v.id === value);
+// arr can be undefined since it may not be connected to the call data.
+function includesInArray(arr: { id: string }[] | undefined, value: string | undefined) {
+  return arr?.some((v) => v.id === value);
 }
