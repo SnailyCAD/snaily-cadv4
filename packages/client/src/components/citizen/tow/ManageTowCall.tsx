@@ -63,7 +63,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
       const path = isTow ? `/tow/${call.id}` : `/taxi/${call.id}`;
       const { json } = await execute(path, {
         method: "PUT",
-        data: { ...call, ...values, assignedUnitId: (call as any).assignedUnit?.id ?? "" },
+        data: { ...call, ...values },
       });
 
       if (json.id) {
