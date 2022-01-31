@@ -6,6 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { verifyJWT } from "utils/jwt";
 import { prisma } from "./prisma";
 import type { User } from ".prisma/client";
+import { WhitelistStatus } from "@prisma/client";
 
 export const userProperties = {
   id: true,
@@ -60,6 +61,18 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
 
   if (throwErrors && !user) {
     throw new NotFound("notFound");
+  }
+
+  if (throwErrors && user?.banned) {
+    throw new NotFound("userBanned");
+  }
+
+  if (throwErrors && user?.whitelistStatus === WhitelistStatus.PENDING) {
+    throw new NotFound("whitelistPending");
+  }
+
+  if (throwErrors && user?.whitelistStatus === WhitelistStatus.DECLINED) {
+    throw new NotFound("whitelistDeclined");
   }
 
   const { tempPassword, ...rest } = user ?? {};

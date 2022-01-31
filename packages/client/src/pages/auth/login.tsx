@@ -36,6 +36,9 @@ export default function Login() {
     deleted: tError("userDeleted"),
     discordNameInUse: tError("discordNameInUse"),
     cannotRegisterFirstWithDiscord: tError("cannotRegisterFirstWithDiscord"),
+    userBanned: tError("userBanned"),
+    whitelistPending: t("whitelistPending"),
+    whitelistDeclined: t("whitelistDeclined"),
   } as const;
 
   const errorMessage = authMessages[router.query.error as keyof typeof authMessages];
