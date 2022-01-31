@@ -54,6 +54,8 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
       <Slate editor={editor} value={value as Descendant[]} onChange={handleChange}>
         {isReadonly ? null : <Toolbar />}
         <Editable
+          spellCheck="false"
+          autoComplete="off"
           readOnly={isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}

@@ -68,7 +68,7 @@ function BlockButton({ format, icon }: ButtonProps) {
         title={format}
         type="button"
         variant={isActive ? null : "default"}
-        className={classNames(isActive && "dark:bg-neutral-700")}
+        className={classNames(isActive && "text-white bg-neutral-700")}
         onClick={() => {
           toggleBlock(editor, format);
         }}
@@ -89,7 +89,7 @@ const MarkButton = ({ format, icon }: ButtonProps) => {
         title={format}
         type="button"
         variant={isActive ? null : "default"}
-        className={classNames(isActive && "dark:bg-neutral-700")}
+        className={classNames(isActive && "text-white bg-neutral-700")}
         onClick={() => {
           toggleMark(editor, format);
         }}
