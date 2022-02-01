@@ -1,5 +1,5 @@
 import { Officer, ShouldDoType } from "@prisma/client";
-import { callInclude } from "controllers/dispatch/Calls911Controller";
+import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { prisma } from "lib/prisma";
 import type { Socket } from "services/SocketService";
 
