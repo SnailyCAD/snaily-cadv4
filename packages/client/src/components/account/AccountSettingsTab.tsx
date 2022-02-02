@@ -8,12 +8,16 @@ import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { ChangePasswordArea } from "components/account/ChangePasswordArea";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
+import { Manage2FAModal } from "./2fa/Manage2FAModal";
 
 export function AccountSettingsTab() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
+  const { openModal } = useModal();
 
   const INITIAL_VALUES = {
     username: user?.username ?? "",
@@ -45,6 +49,14 @@ export function AccountSettingsTab() {
               <Input value={values.discordId} onChange={handleChange} name="discordId" />
             </FormField>
 
+            <Button
+              variant={user?.twoFactorEnabled ? "danger" : "default"}
+              className="mr-2"
+              type="button"
+              onClick={() => openModal(ModalIds.Manage2FA, !!user?.twoFactorEnabled)}
+            >
+              {user?.twoFactorEnabled ? t("disable2FA") : t("enable2FA")}
+            </Button>
             <Button type="submit" disabled={state === "loading"}>
               {common("save")}
             </Button>
@@ -53,6 +65,7 @@ export function AccountSettingsTab() {
       </Formik>
 
       <ChangePasswordArea />
+      <Manage2FAModal />
     </Tab.Panel>
   );
 }

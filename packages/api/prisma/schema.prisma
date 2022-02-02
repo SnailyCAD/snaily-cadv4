@@ -119,6 +119,14 @@ model User {
   TruckLog             TruckLog[]
   ExpungementRequest   ExpungementRequest[]
   ActiveDispatchers    ActiveDispatchers[]
+  User2FA              User2FA[]
+}
+
+model User2FA {
+  id     String @id @default(uuid())
+  secret String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 enum StatusViewMode {
@@ -350,6 +358,7 @@ model DivisionValue {
   officers                   Officer[]        @relation("officerDivisionToDivision")
   officerDivisionsToDivision Officer[]        @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
+  Call911                    Call911[]
 }
 
 model DepartmentValue {
@@ -364,6 +373,7 @@ model DepartmentValue {
   Officer             Officer[]            @relation("officerDepartmentToDepartment")
   division            DivisionValue[]      @relation("divisionDepartmentToValue")
   LeoWhitelistStatus  LeoWhitelistStatus[]
+  Call911             Call911[]
 }
 
 model DriversLicenseCategoryValue {
@@ -690,19 +700,21 @@ model ActiveDispatchers {
 
 // 911 calls & bolos
 model Call911 {
-  id              String         @id @default(cuid())
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @default(now()) @updatedAt
-  position        Position?      @relation(fields: [positionId], references: [id])
+  id              String            @id @default(cuid())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @default(now()) @updatedAt
+  position        Position?         @relation(fields: [positionId], references: [id])
   positionId      String?
   userId          String?
   assignedUnits   AssignedUnit[]
-  location        String         @db.Text
-  postal          String?        @db.Text
-  description     String?        @db.Text
+  location        String            @db.Text
+  postal          String?           @db.Text
+  description     String?           @db.Text
   descriptionData Json?
-  name            String         @db.VarChar(255)
-  ended           Boolean?       @default(false)
+  name            String            @db.VarChar(255)
+  ended           Boolean?          @default(false)
+  divisions       DivisionValue[]
+  departments     DepartmentValue[]
   events          Call911Event[]
   incidents       LeoIncident[]
 }

@@ -1,6 +1,7 @@
 import * as RToolbar from "@radix-ui/react-toolbar";
 import {
   ListCheck,
+  ListUl,
   Quote,
   TypeBold,
   TypeH1,
@@ -9,10 +10,10 @@ import {
   TypeStrikethrough,
   TypeUnderline,
 } from "react-bootstrap-icons";
-import { Editor, BaseEditor, Transforms, Element as SlateElement } from "slate";
-import { useSlate, ReactEditor } from "slate-react";
+import { useSlate } from "slate-react";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
+import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
@@ -43,6 +44,7 @@ export function Toolbar() {
         <BlockButton format="heading-one" icon={<TypeH1 aria-label="heading-one" />} />
         <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
         <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
+        <BlockButton format="bulleted-list" icon={<ListUl aria-label="bulleted-list" />} />
         <BlockButton format="checklist" icon={<ListCheck aria-label="checklist" />} />
       </RToolbar.ToolbarToggleGroup>
     </RToolbar.Root>
@@ -66,7 +68,7 @@ function BlockButton({ format, icon }: ButtonProps) {
         title={format}
         type="button"
         variant={isActive ? null : "default"}
-        className={classNames(isActive && "dark:bg-neutral-700")}
+        className={classNames(isActive && "text-white bg-neutral-700")}
         onClick={() => {
           toggleBlock(editor, format);
         }}
@@ -79,7 +81,7 @@ function BlockButton({ format, icon }: ButtonProps) {
 
 const MarkButton = ({ format, icon }: ButtonProps) => {
   const editor = useSlate();
-  const isActive = isBlockActive(editor, format);
+  const isActive = isMarkActive(editor, format);
 
   return (
     <RToolbar.ToolbarToggleItem asChild value={format}>
@@ -87,7 +89,7 @@ const MarkButton = ({ format, icon }: ButtonProps) => {
         title={format}
         type="button"
         variant={isActive ? null : "default"}
-        className={classNames(isActive && "dark:bg-neutral-700")}
+        className={classNames(isActive && "text-white bg-neutral-700")}
         onClick={() => {
           toggleMark(editor, format);
         }}
@@ -96,52 +98,4 @@ const MarkButton = ({ format, icon }: ButtonProps) => {
       </Button>
     </RToolbar.ToolbarToggleItem>
   );
-};
-
-function isMarkActive(editor: BaseEditor & ReactEditor, format: string) {
-  const marks = Editor.marks(editor);
-
-  return marks ? (marks as any)[format] === true : false;
-}
-
-function toggleBlock(editor: BaseEditor & ReactEditor, format: string) {
-  const isActive = isBlockActive(editor, format);
-
-  const newProperties: Partial<SlateElement> = {
-    // @ts-expect-error ignore
-    type: isActive ? "paragraph" : format,
-  };
-  Transforms.setNodes<SlateElement>(editor, newProperties);
-}
-
-const toggleMark = (editor: BaseEditor & ReactEditor, format: string) => {
-  const isActive = isMarkActive(editor, format);
-
-  if (isActive) {
-    Editor.removeMark(editor, format);
-  } else {
-    Editor.addMark(editor, format, true);
-  }
-};
-
-const isBlockActive = (editor: BaseEditor & ReactEditor, format: string) => {
-  const { selection } = editor;
-  if (!selection) return false;
-
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) => {
-        if (Editor.isEditor(n)) return false;
-
-        if ("text" in n) {
-          return (n as any)[format];
-        }
-
-        return n.type === format;
-      },
-    }),
-  );
-
-  return !!match;
 };

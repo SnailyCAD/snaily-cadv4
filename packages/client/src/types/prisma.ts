@@ -94,6 +94,7 @@ export type User = {
   hasTempPassword: boolean;
   statusViewMode: StatusViewMode;
   discordId: string | null;
+  twoFactorEnabled?: boolean;
 };
 
 /**
@@ -362,7 +363,9 @@ export type Call911 = {
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-  assignedUnits: AssignedUnit[];
+  assignedUnits?: AssignedUnit[];
+  departments?: DepartmentValue[];
+  divisions?: DivisionValue[];
   location: string;
   postal: string | null;
   description: string;

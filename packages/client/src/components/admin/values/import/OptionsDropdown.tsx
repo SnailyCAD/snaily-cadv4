@@ -1,4 +1,3 @@
-import * as React from "react";
 import { ThreeDots } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
@@ -28,7 +27,7 @@ export function OptionsDropdown({ values }: { values: TValue[] }) {
       className="dropdown-right"
       trigger={
         <Button className="flex items-center justify-center w-8 h-8">
-          <ThreeDots width={15} height={15} className="text-gray-700 dark:text-gray-300" />
+          <ThreeDots width={15} height={15} className="text-gray-300" />
         </Button>
       }
     >

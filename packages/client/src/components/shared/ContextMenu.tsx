@@ -16,9 +16,9 @@ type ButtonProps = React.DetailedHTMLProps<
   HTMLButtonElement
 >;
 
-interface ContextItem extends ButtonProps {
+export interface ContextItem extends ButtonProps {
   name: string;
-  component?: keyof typeof components | (string & {});
+  component?: keyof typeof components;
 }
 
 export function ContextMenu({ items, canBeOpened = true, asChild = false, children }: Props) {
@@ -58,12 +58,11 @@ export function ContextMenu({ items, canBeOpened = true, asChild = false, childr
       >
         {items.map((item) => {
           const { component = "Item", ...rest } = typeof item === "object" ? item : {};
-          // @ts-expect-error ignore
-          const Component = components[component] ?? components.Item;
+          const Component = components[component];
 
           return typeof item === "boolean" ? (
             <Menu.Separator key={v4()} />
-          ) : Component ? (
+          ) : (
             <Component
               key={v4()}
               onClick={component === "Item" ? handleClick.bind(null, item) : undefined}
@@ -71,7 +70,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild = false, childr
             >
               {item.name}
             </Component>
-          ) : null;
+          );
         })}
       </Menu.Content>
     </Menu.Root>

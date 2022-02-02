@@ -8,7 +8,7 @@ import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth";
-import type { User } from "@prisma/client";
+import { WhitelistStatus, type User } from "@prisma/client";
 import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
@@ -71,13 +71,14 @@ export class DiscordAuth {
     });
 
     /**
-     * a user was found with the discordId, but the user is authenticated.
+     * a user was found with the discordId, but the user is not authenticated.
      *
      * -> log the user in and set the cookie
      */
     if (!authUser && user) {
-      // authenticate user with cookie
+      validateUser(user);
 
+      // authenticate user with cookie
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
       setCookie({
         res,
@@ -133,6 +134,8 @@ export class DiscordAuth {
           },
         });
 
+        validateUser(user);
+
         return res.redirect(`${redirectURL}/account?tab=discord&success`);
       }
 
@@ -149,7 +152,23 @@ export class DiscordAuth {
         },
       });
 
+      validateUser(authUser);
+
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
+    }
+
+    function validateUser(user: User) {
+      if (user.banned) {
+        return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+      }
+
+      if (user.whitelistStatus === WhitelistStatus.PENDING) {
+        return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+      }
+
+      if (user.whitelistStatus === WhitelistStatus.DECLINED) {
+        return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+      }
     }
   }
 

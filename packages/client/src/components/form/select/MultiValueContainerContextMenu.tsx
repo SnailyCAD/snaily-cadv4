@@ -1,5 +1,5 @@
 import { components, MultiValueGenericProps } from "react-select";
-import { ContextMenu } from "components/shared/ContextMenu";
+import { type ContextItem, ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import type { CombinedLeoUnit, StatusValue } from "types/prisma";
@@ -44,7 +44,7 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
     }
   }
 
-  const codesMapped: any[] = codes10.values.map((v) => ({
+  const codesMapped: ContextItem[] = codes10.values.map((v) => ({
     name: v.value.value,
     onClick: () => setCode(v),
     "aria-label":

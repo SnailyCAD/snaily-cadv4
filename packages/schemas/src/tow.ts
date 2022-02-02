@@ -17,5 +17,5 @@ export const UPDATE_TOW_SCHEMA = z.object({
   description: z.string().optional().nullable(),
   descriptionData: z.any().optional().nullable(),
   assignedUnitId: z.string().max(255).nullable(),
-  postal: z.string().max(255).optional(),
+  postal: z.string().max(255).optional().nullable(),
 });

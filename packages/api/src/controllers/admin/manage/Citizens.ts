@@ -21,13 +21,7 @@ export class ManageCitizensController {
   @Get("/")
   async getCitizens() {
     const citizens = await prisma.citizen.findMany({
-      include: {
-        user: {
-          select: userProperties,
-        },
-        gender: true,
-        ethnicity: true,
-      },
+      include: citizenInclude,
     });
 
     return citizens;
@@ -116,10 +110,6 @@ export class ManageCitizensController {
     }
 
     if (citizen.userId) {
-      if (citizen.userId !== user.id) {
-        throw new NotFound("notFound");
-      }
-
       await prisma.notification.create({
         data: {
           userId: citizen.userId,

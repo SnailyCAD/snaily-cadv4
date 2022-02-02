@@ -75,9 +75,16 @@ export class IsAuth implements MiddlewareMethods {
       ctx.set("user", user);
 
       const hasPermission = hasPermissionForReq(req, user);
-
       if (!hasPermission) {
         throw new Forbidden("Invalid Permissions");
+      }
+
+      const user2FA = await prisma.user2FA.findFirst({
+        where: { userId: user.id },
+      });
+
+      if (user2FA) {
+        (user as any).twoFactorEnabled = true;
       }
     }
 

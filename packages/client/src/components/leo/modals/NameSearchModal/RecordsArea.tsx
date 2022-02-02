@@ -116,6 +116,7 @@ export function RecordsArea({ warrants, records }: Props) {
           id={ModalIds.ManageRecord}
           type={tempEditRecord.type}
           record={tempEditRecord}
+          isEdit
         />
       ) : null}
     </div>

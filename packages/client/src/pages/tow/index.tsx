@@ -86,7 +86,7 @@ export default function Tow(props: Props) {
     setTempCall(null);
     setCalls((p) => {
       const idx = p.findIndex((v) => v.id === old.id);
-      p[idx] = newC as FullTowCall;
+      p[idx] = { ...old, ...newC } as FullTowCall;
       return p;
     });
   }

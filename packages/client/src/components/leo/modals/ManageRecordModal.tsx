@@ -25,26 +25,30 @@ interface Props {
   record?: FullRecord | null;
   type: RecordType;
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
+  isEdit?: boolean;
   onUpdate?(data: FullRecord): void;
 }
 
-export function ManageRecordModal({ onUpdate, record, type, id = ModalIds.CreateTicket }: Props) {
+export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
 
   const data = {
     [RecordType.TICKET]: {
-      title: "createTicket",
-      id,
+      isEdit,
+      title: isEdit ? "editTicket" : "createTicket",
+      id: id ?? ModalIds.CreateTicket,
     },
     [RecordType.ARREST_REPORT]: {
-      title: "createArrestReport",
-      id: ModalIds.CreateArrestReport,
+      isEdit,
+      title: isEdit ? "editArrestReport" : "createArrestReport",
+      id: id ?? ModalIds.CreateArrestReport,
     },
     [RecordType.WRITTEN_WARNING]: {
-      title: "createWrittenWarning",
-      id: ModalIds.CreateWrittenWarning,
+      isEdit,
+      title: isEdit ? "editWrittenWarning" : "createWrittenWarning",
+      id: id ?? ModalIds.CreateWrittenWarning,
     },
   };
 

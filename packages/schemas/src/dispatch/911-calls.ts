@@ -9,6 +9,8 @@ export const CREATE_911_CALL = z.object({
   postal: z.string().optional(),
   assignedUnits: z.array(z.string().or(SELECT_VALUE)),
   position: z.any().optional(),
+  departments: z.array(z.string().or(SELECT_VALUE)).optional(),
+  divisions: z.array(z.string().or(SELECT_VALUE)).optional(),
 });
 
 export const LINK_INCIDENT_TO_CALL = z.object({
