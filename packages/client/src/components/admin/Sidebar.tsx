@@ -63,7 +63,7 @@ export function AdminSidebar() {
 
         {user?.rank !== "USER" ? (
           <section className="mt-3">
-            <h1 className="px-3 text-2xl font-semibold dark:text-white">{t("Values.values")}</h1>
+            <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("import")}</h1>
             <ul className="flex flex-col space-y-1.5 mt-3">
               {imports.map((type) =>
                 type === "WEAPONS" && !WEAPON_REGISTRATION ? null : (

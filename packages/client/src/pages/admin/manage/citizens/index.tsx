@@ -9,12 +9,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
 import { TabList } from "components/shared/TabList";
-import dynamic from "next/dynamic";
-
-const AdvancedCitizensTab = dynamic(
-  async () =>
-    (await import("components/admin/manage/citizens/AdvancedCitizensTab")).AdvancedCitizensTab,
-);
+import { Tab } from "@headlessui/react";
 
 interface Props {
   citizens: (Citizen & { user: User })[];
@@ -36,7 +31,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
       <TabList tabs={["All Citizens", "Advanced"]}>
         <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
-        <AdvancedCitizensTab onSuccess={(data) => setCitizens((p) => [...data, ...p])} />
+        <Tab.Panel>TODO: add Moved to /admin/import/citizens</Tab.Panel>
       </TabList>
     </AdminLayout>
   );

@@ -8,6 +8,7 @@
     "MANAGE_UNITS": "Manage Units",
     "MANAGE_EXPUNGEMENT_REQUESTS": "Manage Expungement Requests",
     "MANAGE_CAD_SETTINGS": "CAD Settings",
+    "import": "Import",
     "IMPORT_CITIZENS": "Import Citizens",
     "IMPORT_VEHICLES": "Import Vehicles",
     "IMPORT_WEAPONS": "Import Weapons",
