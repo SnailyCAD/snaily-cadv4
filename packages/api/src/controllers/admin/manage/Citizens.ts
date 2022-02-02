@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, Post, Put } from "@tsed/schema";
@@ -14,6 +14,7 @@ import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import type { User } from "@prisma/client";
+import { parseImportFile } from "utils/file";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -134,7 +135,7 @@ export class ManageCitizensController {
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
   ) {
-    const toValidateBody = file ? this.parseImportFile(file) : body;
+    const toValidateBody = file ? parseImportFile(file) : body;
     const data = validateSchema(IMPORT_CITIZENS_ARR, toValidateBody);
 
     return Promise.all(
@@ -157,26 +158,5 @@ export class ManageCitizensController {
         });
       }),
     );
-  }
-
-  protected parseImportFile(file: PlatformMulterFile) {
-    if (file.mimetype !== "application/json") {
-      throw new BadRequest("invalidImageType");
-    }
-
-    const rawBody = file.buffer.toString("utf8").trim();
-    let body = null;
-
-    try {
-      body = JSON.parse(rawBody);
-    } catch {
-      body = null;
-    }
-
-    if (!body) {
-      throw new BadRequest("couldNotParseBody");
-    }
-
-    return body;
   }
 }

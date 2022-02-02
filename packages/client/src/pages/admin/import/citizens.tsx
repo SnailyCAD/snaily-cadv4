@@ -7,7 +7,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AdvancedCitizensTab } from "components/admin/manage/citizens/AdvancedCitizensTab";
 
-export default function ManageCitizens() {
+export default function ImportCitizensPage() {
   const t = useTranslations("Management");
 
   return (
