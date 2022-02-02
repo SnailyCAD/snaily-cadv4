@@ -11,6 +11,7 @@ import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
+import { Button } from "components/Button";
 
 interface Props {
   vehicles: RegisteredVehicle[];
@@ -26,11 +27,18 @@ export default function ImportVehiclesPage({ vehicles }: Props) {
   return (
     <AdminLayout>
       <Title>{t("IMPORT_VEHICLES")}</Title>
-      <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
-      {/* <AdvancedCitizensTab /> */}
 
-      <FormField label={common("search")} className="my-2">
+      <header className="flex items-center justify-between">
+        <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
+
+        <div>
+          <Button>Import via file</Button>
+        </div>
+      </header>
+
+      <FormField label={common("search")} className="my-2 w-full">
         <Input
+          className="w-full"
           placeholder="filter by plate, model, color, etc."
           onChange={(e) => setSearch(e.target.value)}
           value={search}
