@@ -2,19 +2,17 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { leoProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { CREATE_CITIZEN_SCHEMA, IMPORT_CITIZENS_ARR } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
-import { MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import type { User } from "@prisma/client";
-import { parseImportFile } from "utils/file";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -128,35 +126,5 @@ export class ManageCitizensController {
     });
 
     return true;
-  }
-
-  @Post("/import")
-  async importCitizens(
-    @BodyParams() body: unknown,
-    @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
-    const toValidateBody = file ? parseImportFile(file) : body;
-    const data = validateSchema(IMPORT_CITIZENS_ARR, toValidateBody);
-
-    return Promise.all(
-      data.map(async (data) => {
-        return prisma.citizen.create({
-          data: {
-            name: data.name,
-            surname: data.surname,
-            ethnicityId: data.ethnicity,
-            genderId: data.gender,
-            dateOfBirth: new Date(data.dateOfBirth),
-            address: data.address ?? "",
-            eyeColor: data.eyeColor ?? "",
-            hairColor: data.hairColor ?? "",
-            height: data.height ?? "",
-            weight: data.weight ?? "",
-            socialSecurityNumber: generateString(9, { numbersOnly: true }),
-          },
-          include: { gender: true, ethnicity: true },
-        });
-      }),
-    );
   }
 }

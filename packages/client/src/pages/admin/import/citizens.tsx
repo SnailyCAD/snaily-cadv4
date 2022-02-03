@@ -28,8 +28,7 @@ export default function ImportCitizensPage() {
         </div>
 
         <p className="my-2 mt-5 dark:text-gray-300 max-w-2xl">
-          Here you can mass import citizens that can may not be connected to a registered user
-          account.
+          Here you can mass import citizens that may not be connected to a registered user account.
         </p>
       </header>
 
@@ -43,7 +42,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
 
   return {
     props: {
-      // citizens,
       values,
       session: await getSessionUser(req),
       messages: {

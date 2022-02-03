@@ -10,6 +10,7 @@ import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
 import { TabList } from "components/shared/TabList";
 import { Tab } from "@headlessui/react";
+import Link from "next/link";
 
 interface Props {
   citizens: (Citizen & { user: User })[];
@@ -31,7 +32,11 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
       <TabList tabs={["All Citizens", "Advanced"]}>
         <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
-        <Tab.Panel>TODO: add Moved to /admin/import/citizens</Tab.Panel>
+        <Tab.Panel className="mt-5">
+          <Link href="/admin/import/citizens">
+            <a className="underline">This has been moved to its own page.</a>
+          </Link>
+        </Tab.Panel>
       </TabList>
     </AdminLayout>
   );
