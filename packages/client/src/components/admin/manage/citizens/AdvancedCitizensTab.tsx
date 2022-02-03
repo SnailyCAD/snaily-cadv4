@@ -53,11 +53,6 @@ export function AdvancedCitizensTab() {
 
   return (
     <div className="mt-5">
-      <p className="my-2 dark:text-gray-300">
-        Here you can mass import citizens that can may not be connected to a registered user
-        account.
-      </p>
-
       <form className="mt-10" onSubmit={onSubmit}>
         {Object.entries(citizens).map(([id, value]) => {
           return (

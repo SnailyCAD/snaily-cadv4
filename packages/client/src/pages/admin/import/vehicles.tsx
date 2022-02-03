@@ -12,28 +12,40 @@ import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Button } from "components/Button";
+import { ImportModal } from "components/admin/import/ImportModal";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
 
 interface Props {
   vehicles: RegisteredVehicle[];
 }
 
-export default function ImportVehiclesPage({ vehicles }: Props) {
+export default function ImportVehiclesPage({ vehicles: data }: Props) {
+  const [vehicles, setVehicles] = React.useState(data);
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const veh = useTranslations("Vehicles");
+  const { openModal } = useModal();
 
   return (
     <AdminLayout>
       <Title>{t("IMPORT_VEHICLES")}</Title>
 
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
+      <header>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
 
-        <div>
-          <Button>Import via file</Button>
+          <div>
+            <Button onClick={() => openModal(ModalIds.ImportVehicles)}>Import via file</Button>
+          </div>
         </div>
+
+        <p className="my-2 mt-5 dark:text-gray-300 max-w-2xl">
+          Here you can mass-import vehicles that are registered to a citizen. In the table below you
+          are able to view all registered vehicles.
+        </p>
       </header>
 
       <FormField label={common("search")} className="my-2 w-full">
@@ -64,6 +76,14 @@ export default function ImportVehiclesPage({ vehicles }: Props) {
           { Header: common("createdAt"), accessor: "createdAt" },
           // { Header: common("actions"), accessor: "actions" },
         ]}
+      />
+
+      <ImportModal
+        onImport={(vehicles) => {
+          setVehicles((p) => [...vehicles, ...p]);
+        }}
+        id={ModalIds.ImportVehicles}
+        url="/admin/import/vehicles"
       />
     </AdminLayout>
   );

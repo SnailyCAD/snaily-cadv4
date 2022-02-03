@@ -18,12 +18,19 @@ export default function ImportCitizensPage() {
     <AdminLayout>
       <Title>{t("IMPORT_CITIZENS")}</Title>
 
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("IMPORT_CITIZENS")}</h1>
+      <header>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-semibold">{t("IMPORT_CITIZENS")}</h1>
 
-        <div className="min-w-fit w-fit">
-          <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
+          <div className="min-w-fit w-fit">
+            <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
+          </div>
         </div>
+
+        <p className="my-2 mt-5 dark:text-gray-300 max-w-2xl">
+          Here you can mass import citizens that can may not be connected to a registered user
+          account.
+        </p>
       </header>
 
       <AdvancedCitizensTab />
