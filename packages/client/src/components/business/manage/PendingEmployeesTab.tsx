@@ -3,7 +3,7 @@ import { Tab } from "@headlessui/react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FullEmployee, useBusinessState } from "state/businessState";
-import { EmployeeAsEnum, WhitelistStatus } from "types/prisma";
+import { EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 
 export function PendingEmployeesTab() {

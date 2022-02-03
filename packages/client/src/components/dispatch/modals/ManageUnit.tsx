@@ -13,7 +13,7 @@ import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
 import type { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 import { classNames } from "lib/classNames";
 
 interface Props {

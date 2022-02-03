@@ -1,6 +1,6 @@
 import { useAuth } from "context/AuthContext";
 import type { FullDeputy, FullOfficer } from "state/dispatchState";
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 
 type P = "callsign" | "callsign2" | "department" | "division";
 type FullUnit = Pick<FullOfficer, P | "divisions"> | Pick<FullDeputy, P> | CombinedLeoUnit;

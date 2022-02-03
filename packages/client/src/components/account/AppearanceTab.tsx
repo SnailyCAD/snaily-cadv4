@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -7,7 +6,7 @@ import { useAuth } from "context/AuthContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { StatusViewMode } from "types/prisma";
+import { StatusViewMode } from "@snailycad/types";
 import { Select } from "components/form/Select";
 
 const LABELS = {

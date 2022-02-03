@@ -20,7 +20,7 @@ import {
   type ValueType,
   type VehicleValue,
   valueType,
-} from "types/prisma";
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";

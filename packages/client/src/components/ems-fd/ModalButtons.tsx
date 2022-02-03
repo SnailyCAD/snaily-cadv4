@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType } from "types/prisma";
+import { ShouldDoType } from "@snailycad/types";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";

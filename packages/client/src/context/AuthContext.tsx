@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
-import { cad as CAD, rank, User } from "types/prisma";
+import { cad as CAD, rank, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
 import { useIsFeatureEnabled } from "lib/utils";
 import { useListener } from "@casper124578/use-socket.io";

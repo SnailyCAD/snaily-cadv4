@@ -9,7 +9,7 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { StatusViewMode } from "types/prisma";
+import { StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";

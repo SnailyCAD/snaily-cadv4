@@ -4,7 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { OfficerLog } from "types/prisma";
+import type { OfficerLog } from "@snailycad/types";
 import type { FullOfficer } from "state/dispatchState";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";

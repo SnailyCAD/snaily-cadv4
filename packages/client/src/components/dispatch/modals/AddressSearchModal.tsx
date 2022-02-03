@@ -9,7 +9,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Input } from "components/form/inputs/Input";
-import type { Citizen } from "types/prisma";
+import type { Citizen } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { formatCitizenAddress } from "lib/utils";
 

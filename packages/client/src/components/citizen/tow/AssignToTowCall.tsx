@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { TowCall } from "types/prisma";
+import type { TowCall } from "@snailycad/types";
 import { useCitizen } from "context/CitizenContext";
 import type { FullTowCall } from "src/pages/tow";
 import { useRouter } from "next/router";

@@ -10,7 +10,7 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-} from "types/prisma";
+} from "@snailycad/types";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";

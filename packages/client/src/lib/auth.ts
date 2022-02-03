@@ -1,6 +1,6 @@
 import { handleRequest } from "lib/fetch";
 import type { IncomingMessage } from "http";
-import type { User } from "types/prisma";
+import type { User } from "@snailycad/types";
 
 export async function getSessionUser(req?: IncomingMessage, cookie?: string): Promise<User | null> {
   try {

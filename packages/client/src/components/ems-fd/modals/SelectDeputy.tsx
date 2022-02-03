@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
 import { useValues } from "context/ValuesContext";
-import { ShouldDoType } from "types/prisma";
+import { ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 

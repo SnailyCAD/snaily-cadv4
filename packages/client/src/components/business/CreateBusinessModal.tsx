@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import type { FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
 import { toastError } from "lib/error";
-import { WhitelistStatus } from "types/prisma";
+import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
   onCreate?(business: FullEmployee): void;

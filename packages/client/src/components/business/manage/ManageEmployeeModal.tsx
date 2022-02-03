@@ -14,7 +14,7 @@ import { Toggle } from "components/form/Toggle";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { useValues } from "context/ValuesContext";
-import { EmployeeAsEnum } from "types/prisma";
+import { EmployeeAsEnum } from "@snailycad/types";
 
 interface Props {
   onUpdate: (old: FullEmployee, newPost: FullEmployee) => void;

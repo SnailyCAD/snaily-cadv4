@@ -7,7 +7,7 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
-import type { AutoSetUserProperties } from "types/prisma";
+import type { AutoSetUserProperties } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 
 export function AutoSetUserPropertiesTab() {

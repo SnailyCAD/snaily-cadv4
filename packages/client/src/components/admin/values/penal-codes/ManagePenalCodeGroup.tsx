@@ -8,7 +8,7 @@ import { Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import type { PenalCodeGroup } from "types/prisma";
+import type { PenalCodeGroup } from "@snailycad/types";
 
 interface Props {
   group: PenalCodeGroup | null;

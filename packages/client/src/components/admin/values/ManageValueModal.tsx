@@ -23,7 +23,7 @@ import {
   ShouldDoType,
   ValueLicenseType,
   ValueType,
-} from "types/prisma";
+} from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";

@@ -8,7 +8,7 @@ import { FormField } from "components/form/FormField";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { Textarea } from "components/form/Textarea";
-import type { Call911Event } from "types/prisma";
+import type { Call911Event } from "@snailycad/types";
 import { Pencil, X } from "react-bootstrap-icons";
 import useHoverDirty from "react-use/lib/useHoverDirty";
 import { classNames } from "lib/classNames";

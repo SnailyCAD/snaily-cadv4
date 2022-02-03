@@ -14,7 +14,7 @@ import {
   DivisionValue,
   VehicleValue,
   Value,
-} from "types/prisma";
+} from "@snailycad/types";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import type { Weapon } from "types/prisma";
+import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { RegisterWeaponModal } from "./RegisterWeaponModal";

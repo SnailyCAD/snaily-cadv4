@@ -3,7 +3,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ExpungementRequest, Warrant, Citizen, WhitelistStatus } from "types/prisma";
+import { ExpungementRequest, Warrant, Citizen, WhitelistStatus } from "@snailycad/types";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";

@@ -11,7 +11,7 @@ import {
   valueType,
   ValueType,
   VehicleValue,
-} from "types/prisma";
+} from "@snailycad/types";
 
 type ContextValue<T extends ValueType, Custom = Value<T>> = {
   type: ValueType;

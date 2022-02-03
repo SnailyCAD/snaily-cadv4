@@ -1,4 +1,4 @@
-import { feature, Feature } from "types/prisma";
+import { feature, Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
 export function useFeatureEnabled() {

@@ -9,7 +9,7 @@ import type {
   Value,
   ActiveDispatchers,
   LeoWhitelistStatus,
-} from "types/prisma";
+} from "@snailycad/types";
 import create from "zustand";
 
 export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };

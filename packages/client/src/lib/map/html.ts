@@ -1,4 +1,4 @@
-import type { Call911 } from "types/prisma";
+import type { Call911 } from "@snailycad/types";
 import type { MarkerPayload, Player } from "types/Map";
 
 export function PlayerInfoHTML(player: Player) {

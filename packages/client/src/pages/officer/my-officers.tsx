@@ -8,7 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { DepartmentValue, DivisionValue, Officer, Value, WhitelistStatus } from "types/prisma";
+import { DepartmentValue, DivisionValue, Officer, Value, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import type { FullOfficer } from "state/dispatchState";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";

@@ -26,6 +26,7 @@
     "@react-aria/ssr": "^3.1.0",
     "@snailycad/config": "1.0.0-beta.49",
     "@snailycad/schemas": "1.0.0-beta.49",
+    "@snailycad/types": "1.0.0-beta.49",
     "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",

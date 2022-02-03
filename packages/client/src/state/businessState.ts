@@ -5,7 +5,7 @@ import type {
   Employee,
   EmployeeValue,
   RegisteredVehicle,
-} from "types/prisma";
+} from "@snailycad/types";
 import create from "zustand";
 
 export type FullEmployee = Employee & {

@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import { TabList } from "components/shared/TabList";
-import { EmployeeAsEnum } from "types/prisma";
+import { EmployeeAsEnum } from "@snailycad/types";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";

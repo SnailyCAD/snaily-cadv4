@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, Warrant } from "types/prisma";
+import type { Citizen, Warrant } from "@snailycad/types";
 import { useCitizen } from "context/CitizenContext";
 import { Select, SelectValue } from "components/form/Select";
 import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";

@@ -20,7 +20,7 @@ import {
 } from "types/Map";
 import { getMapBounds, convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
 
-import type { cad, Call911, User } from "types/prisma";
+import type { cad, Call911, User } from "@snailycad/types";
 import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
 import { blipTypes } from "lib/map/blips";
 import { ModalIds } from "types/ModalIds";

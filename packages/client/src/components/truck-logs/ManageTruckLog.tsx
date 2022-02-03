@@ -13,7 +13,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import type { FullTruckLog } from "src/pages/truck-logs";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle } from "types/prisma";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 interface Props {

@@ -850,7 +850,7 @@ export type StatusValueType = typeof StatusValueType[keyof typeof StatusValueTyp
 export const ReleaseType = {
   TIME_OUT: "TIME_OUT",
   BAIL_POSTED: "BAIL_POSTED",
-};
+} as const;
 
 export type ReleaseType = typeof ReleaseType[keyof typeof ReleaseType];
 
@@ -858,7 +858,7 @@ export const ExpungementRequestStatus = {
   ACCEPTED: "ACCEPTED",
   DENIED: "DENIED",
   PENDING: "PENDING",
-};
+} as const;
 
 export type ExpungementRequestStatus =
   typeof ExpungementRequestStatus[keyof typeof ExpungementRequestStatus];
@@ -866,6 +866,6 @@ export type ExpungementRequestStatus =
 export const ValueLicenseType = {
   LICENSE: "LICENSE",
   REGISTRATION_STATUS: "REGISTRATION_STATUS",
-};
+} as const;
 
 export type ValueLicenseType = typeof ValueLicenseType[keyof typeof ValueLicenseType];
