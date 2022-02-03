@@ -7,6 +7,7 @@ import { rank, valueType } from "types/prisma";
 import { useTranslations } from "use-intl";
 
 const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES", "EXPUNGEMENT_REQUESTS"] as const;
+const imports = ["CITIZENS", "VEHICLES", "WEAPONS"] as const;
 const types = Object.values(valueType).map((v) => v.replace("_", "-"));
 
 export function AdminSidebar() {
@@ -18,6 +19,10 @@ export function AdminSidebar() {
 
   function isMActive(path: string) {
     return router.pathname === path;
+  }
+
+  function isImportActive(type: string) {
+    return router.asPath.includes("import") && router.asPath.endsWith(type.toLowerCase());
   }
 
   function isValueActive(type: string) {
@@ -59,6 +64,24 @@ export function AdminSidebar() {
             ) : null}
           </ul>
         </section>
+
+        {user?.rank !== "USER" ? (
+          <section className="mt-3">
+            <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("import")}</h1>
+            <ul className="flex flex-col space-y-1.5 mt-3">
+              {imports.map((type) =>
+                type === "WEAPONS" && !WEAPON_REGISTRATION ? null : (
+                  <SidebarItem
+                    key={type}
+                    isActive={isImportActive(type)}
+                    href={`/admin/import/${type.toLowerCase()}`}
+                    text={man(`IMPORT_${type}`)}
+                  />
+                ),
+              )}
+            </ul>
+          </section>
+        ) : null}
 
         {user?.rank !== "USER" ? (
           <section className="mt-3">

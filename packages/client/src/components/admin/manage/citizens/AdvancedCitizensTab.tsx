@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
@@ -9,32 +8,24 @@ import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import type { Citizen, User } from "types/prisma";
 import { X } from "react-bootstrap-icons";
+import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
-import { ImportCitizensModal } from "./ImportCitizensModal";
 
-interface Props {
-  onSuccess(citizens: (Citizen & { user: User | null })[]): void;
-}
-
-export function AdvancedCitizensTab({ onSuccess }: Props) {
+export function AdvancedCitizensTab() {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
   const { gender, ethnicity } = useValues();
   const { state, execute } = useFetch();
-  const { openModal } = useModal();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const { json } = await execute("/admin/manage/citizens/import", {
+    const { json } = await execute("/admin/import/citizens", {
       data: Object.values(citizens),
       method: "POST",
     });
 
     if (Array.isArray(json)) {
-      onSuccess(json);
       setCitizens(createInitialCitizen());
     }
   }
@@ -62,19 +53,8 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
   }
 
   return (
-    <Tab.Panel className="mt-3">
-      <header className="flex items-center justify-between gap-3">
-        <p className="my-2 dark:text-gray-300">
-          Here you can mass import citizens that can may not be connected to a registered user
-          account.
-        </p>
-
-        <div className="min-w-fit w-fit">
-          <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>
-        </div>
-      </header>
-
-      <form className="mt-5" onSubmit={onSubmit}>
+    <div className="mt-5">
+      <form className="mt-10" onSubmit={onSubmit}>
         {Object.entries(citizens).map(([id, value]) => {
           return (
             <FormRow flexLike key={id}>
@@ -146,8 +126,12 @@ export function AdvancedCitizensTab({ onSuccess }: Props) {
         </div>
       </form>
 
-      <ImportCitizensModal onImport={onSuccess} />
-    </Tab.Panel>
+      <ImportModal
+        id={ModalIds.ImportCitizens}
+        url="/admin/import/citizens"
+        onImport={() => void undefined}
+      />
+    </div>
   );
 }
 

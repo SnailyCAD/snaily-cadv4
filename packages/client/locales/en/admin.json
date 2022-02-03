@@ -8,6 +8,10 @@
     "MANAGE_UNITS": "Manage Units",
     "MANAGE_EXPUNGEMENT_REQUESTS": "Manage Expungement Requests",
     "MANAGE_CAD_SETTINGS": "CAD Settings",
+    "import": "Import",
+    "IMPORT_CITIZENS": "Import Citizens",
+    "IMPORT_VEHICLES": "Import Vehicles",
+    "IMPORT_WEAPONS": "Import Weapons",
     "allUsers": "All Users",
     "pendingUsers": "Pending Users",
     "viewInfo": "View Info",
@@ -32,6 +36,7 @@
     "noPendingOfficers": "There are no officers pending access to a department.",
     "allUnits": "All Units",
     "departmentWhitelisting": "Department Whitelisting ({length})",
+    "importViaFile": "Import via file",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
   }

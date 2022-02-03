@@ -38,7 +38,8 @@
     "image": "Image",
     "imgur": "Imgur URL",
     "postal": "Postal",
-    "viewDescription": "View Description"
+    "viewDescription": "View Description",
+    "citizen": "Citizen"
   },
   "Nav": {
     "citizen": "Citizen",
@@ -107,7 +108,6 @@
     "maxCitizensPerUserReached": "This user reached the maximum limit of citizens.",
     "discordIdInUse": "This discord ID is already connected to a different account.",
     "totpCodeRequired": "Please enter your 2FA code",
-
     "Error": "An unexpected error occurred. Please report this issue to an administrator or try again later.",
     "NOT_FOUND": "The requested item or page was not found. Please try refreshing the page or try again later.",
     "Network Error": "Could not reach the API due to a network error. Make sure that the API is online and that you are connected to the internet."

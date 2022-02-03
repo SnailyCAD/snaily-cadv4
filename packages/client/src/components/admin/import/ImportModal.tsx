@@ -12,14 +12,31 @@ import { ModalIds } from "types/ModalIds";
 
 interface Props {
   onImport: (data: any[]) => void;
+  url: `/admin/import/${"vehicles" | "weapons" | "citizens"}`;
+  id: ModalIds.ImportCitizens | ModalIds.ImportVehicles | ModalIds.ImportWeapons;
 }
 
-export function ImportCitizensModal({ onImport }: Props) {
+export function ImportModal({ onImport, id, url }: Props) {
   const [file, setFile] = React.useState<File | null>(null);
 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Values");
+
+  const data = {
+    [ModalIds.ImportCitizens]: {
+      docsUrl: "https://cad-docs.netlify.app/other/importing-values#citizens",
+      title: "Import Citizen",
+    },
+    [ModalIds.ImportVehicles]: {
+      docsUrl: "https://cad-docs.netlify.app/other/importing-values#vehicles",
+      title: "Import Vehicles",
+    },
+    [ModalIds.ImportWeapons]: {
+      docsUrl: "https://cad-docs.netlify.app/other/importing-values#weapons",
+      title: "Import Weapons",
+    },
+  };
 
   async function onSubmit(_: any, helpers: FormikHelpers<typeof INITIAL_VALUES>) {
     const fd = new FormData();
@@ -33,14 +50,14 @@ export function ImportCitizensModal({ onImport }: Props) {
       fd.set("file", file, file.name);
     }
 
-    const { json } = await execute("/admin/manage/citizens/import", {
+    const { json } = await execute(url, {
       method: "POST",
       data: fd,
     });
 
     if (Array.isArray(json)) {
       onImport(json);
-      closeModal(ModalIds.ImportCitizens);
+      closeModal(id);
     }
   }
 
@@ -51,9 +68,9 @@ export function ImportCitizensModal({ onImport }: Props) {
   return (
     <Modal
       className="w-[600px]"
-      title={"Import Citizens"}
-      onClose={() => closeModal(ModalIds.ImportCitizens)}
-      isOpen={isOpen(ModalIds.ImportCitizens)}
+      title={data[id].title}
+      onClose={() => closeModal(id)}
+      isOpen={isOpen(id)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
@@ -75,22 +92,13 @@ export function ImportCitizensModal({ onImport }: Props) {
             </FormField>
 
             <p>
-              <a
-                className="underline"
-                target="_blank"
-                rel="noreferrer"
-                href="https://cad-docs.netlify.app/other/importing-values#citizens"
-              >
+              <a className="underline" target="_blank" rel="noreferrer" href={data[id].docsUrl}>
                 Documentation
               </a>
             </p>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ImportCitizens)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
