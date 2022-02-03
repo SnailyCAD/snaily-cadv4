@@ -21,6 +21,10 @@ export function AdminSidebar() {
     return router.pathname === path;
   }
 
+  function isImportActive(type: string) {
+    return router.asPath.includes("import") && router.asPath.endsWith(type.toLowerCase());
+  }
+
   function isValueActive(type: string) {
     return router.asPath.endsWith(type.toLowerCase());
   }
@@ -69,7 +73,7 @@ export function AdminSidebar() {
                 type === "WEAPONS" && !WEAPON_REGISTRATION ? null : (
                   <SidebarItem
                     key={type}
-                    isActive={isValueActive(type)}
+                    isActive={isImportActive(type)}
                     href={`/admin/import/${type.toLowerCase()}`}
                     text={man(`IMPORT_${type}`)}
                   />

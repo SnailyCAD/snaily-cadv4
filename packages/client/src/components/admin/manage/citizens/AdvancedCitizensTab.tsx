@@ -9,7 +9,8 @@ import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { X } from "react-bootstrap-icons";
-import { ImportCitizensModal } from "./ImportCitizensModal";
+import { ImportModal } from "components/admin/import/ImportModal";
+import { ModalIds } from "types/ModalIds";
 
 export function AdvancedCitizensTab() {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
@@ -19,7 +20,7 @@ export function AdvancedCitizensTab() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const { json } = await execute("/admin/manage/citizens/import", {
+    const { json } = await execute("/admin/import/citizens", {
       data: Object.values(citizens),
       method: "POST",
     });
@@ -125,7 +126,11 @@ export function AdvancedCitizensTab() {
         </div>
       </form>
 
-      <ImportCitizensModal onImport={() => void undefined} />
+      <ImportModal
+        id={ModalIds.ImportCitizens}
+        url="/admin/import/citizens"
+        onImport={() => void undefined}
+      />
     </div>
   );
 }
