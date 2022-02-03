@@ -1,5 +1,7 @@
 /* eslint-disable capitalized-comments */
-import type { JsonValue } from "type-fest";
+import type { JsonArray } from "type-fest";
+
+type DescriptionData = JsonArray;
 
 /**
  * Model cad
@@ -21,6 +23,7 @@ export type cad = {
   registrationCode: string | null;
   disabledFeatures: Feature[];
   miscCadSettingsId: string | null;
+  miscCadSettings: MiscCadSettings | null;
   apiTokenId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -121,9 +124,9 @@ export type Citizen = {
   surname: string;
   dateOfBirth: Date;
   genderId: string;
-  gender: Value;
+  gender: Value<ValueType.GENDER>;
   ethnicityId: string;
-  ethnicity: Value;
+  ethnicity: Value<ValueType.ETHNICITY>;
   hairColor: string;
   eyeColor: string;
   address: string;
@@ -161,6 +164,7 @@ export type RegisteredVehicle = {
   createdAt: Date;
   updatedAt: Date;
   registrationStatusId: string;
+  registrationStatus: Value<ValueType.LICENSE>;
   insuranceStatus: string;
   reportedStolen: boolean;
   impounded: boolean;
@@ -178,7 +182,9 @@ export type Weapon = {
   updatedAt: Date;
   serialNumber: string;
   registrationStatusId: string;
+  registrationStatus: Value<ValueType.LICENSE>;
   modelId: string;
+  model: Value<ValueType.WEAPON>;
 };
 
 /**
@@ -200,9 +206,9 @@ export type MedicalRecord = {
  * Model Value
  *
  */
-export type Value = {
+export type Value<Type extends ValueType> = {
   id: string;
-  type: ValueType;
+  type: Type;
   value: string;
   isDefault: boolean;
   createdAt: Date;
@@ -221,7 +227,7 @@ export type PenalCode = {
   updatedAt: Date;
   title: string;
   description: string | null;
-  descriptionData: JsonValue | null;
+  descriptionData: DescriptionData | null;
   warningApplicableId: string | null;
   warningNotApplicableId: string | null;
   position: number | null;
@@ -279,7 +285,9 @@ export type Violation = {
 export type DivisionValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.DIVISION>;
   departmentId: string | null;
+  department: DepartmentValue;
   callsign: string | null;
 };
 
@@ -290,6 +298,7 @@ export type DivisionValue = {
 export type DepartmentValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.DEPARTMENT>;
   callsign: string | null;
   whitelisted: boolean;
   isDefaultDepartment: boolean;
@@ -303,6 +312,7 @@ export type DepartmentValue = {
 export type DriversLicenseCategoryValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.DRIVERSLICENSE_CATEGORY>;
   type: DriversLicenseCategoryType;
 };
 
@@ -313,7 +323,7 @@ export type DriversLicenseCategoryValue = {
 export type VehicleValue = {
   id: string;
   valueId: string;
-  value: Value;
+  value: Value<ValueType.VEHICLE>;
   hash: string | null;
 };
 
@@ -324,6 +334,7 @@ export type VehicleValue = {
 export type WeaponValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.WEAPON>;
   hash: string | null;
 };
 
@@ -350,7 +361,7 @@ export type BleeterPost = {
   userId: string;
   title: string;
   body: string | null;
-  bodyData: JsonValue | null;
+  bodyData: DescriptionData | null;
   imageId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -370,7 +381,7 @@ export type TowCall = {
   plate: string | null;
   model: string | null;
   description: string | null;
-  descriptionData: JsonValue | null;
+  descriptionData: DescriptionData | null;
   creatorId: string | null;
   ended: boolean;
   callCountyService: boolean;
@@ -389,7 +400,7 @@ export type TaxiCall = {
   location: string;
   postal: string | null;
   description: string | null;
-  descriptionData: JsonValue | null;
+  descriptionData: DescriptionData | null;
   creatorId: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -440,7 +451,7 @@ export type BusinessPost = {
   businessId: string;
   title: string;
   body: string | null;
-  bodyData: JsonValue | null;
+  bodyData: DescriptionData | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -452,6 +463,7 @@ export type BusinessPost = {
 export type EmployeeValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.BUSINESS_ROLE>;
   as: EmployeeAsEnum;
 };
 
@@ -486,6 +498,7 @@ export type LeoWhitelistStatus = {
   id: string;
   status: WhitelistStatus;
   departmentId: string;
+  department: DepartmentValue;
 };
 
 /**
@@ -495,6 +508,7 @@ export type LeoWhitelistStatus = {
 export type StatusValue = {
   id: string;
   valueId: string;
+  value: Value<ValueType.CODES_10>;
   shouldDo: ShouldDoType;
   whatPages: WhatPages[];
   color: string | null;
@@ -522,7 +536,9 @@ export type OfficerLog = {
 export type ImpoundedVehicle = {
   id: string;
   registeredVehicleId: string;
+  vehicle: RegisteredVehicle;
   valueId: string;
+  location: Value<ValueType.IMPOUND_LOT>;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -535,7 +551,7 @@ export type LeoIncident = {
   id: string;
   caseNumber: number;
   description: string | null;
-  descriptionData: JsonValue | null;
+  descriptionData: DescriptionData | null;
   creatorId: string;
   firearmsInvolved: boolean;
   injuriesOrFatalities: boolean;
@@ -552,6 +568,7 @@ export type CombinedLeoUnit = {
   id: string;
   callsign: string;
   statusId: string | null;
+  status: StatusValue | null;
 };
 
 /**
@@ -578,7 +595,7 @@ export type Call911 = {
   location: string;
   postal: string | null;
   description: string | null;
-  descriptionData: JsonValue | null;
+  descriptionData: DescriptionData | null;
   name: string;
   ended: boolean | null;
 };
@@ -605,6 +622,7 @@ export type AssignedUnit = {
   call911Id: string | null;
   createdAt: Date;
   updatedAt: Date;
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 };
 
 /**
@@ -686,7 +704,9 @@ export type RecordLog = {
   id: string;
   citizenId: string;
   recordId: string | null;
+  records: Record[];
   warrantId: string | null;
+  warrants: Warrant[];
   createdAt: Date;
   updatedAt: Date;
 };

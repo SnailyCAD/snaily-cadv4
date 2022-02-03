@@ -55,15 +55,13 @@ export default function CitizenLogs({ logs: data }: Props) {
             <>
               <div className="flex items-center justify-between mt-5">
                 <h3 className="text-xl font-semibold">
-                  {currentLog ? `${currentLog.citizen.name} ${currentLog.citizen.surname}` : null}
+                  {currentLog.citizen.name} {currentLog.citizen.surname}
                 </h3>
 
-                {currentLog ? (
-                  <Button className="flex items-center gap-2" onClick={() => setCurrentLog(null)}>
-                    <ArrowLeft />
-                    {"View all"}
-                  </Button>
-                ) : null}
+                <Button className="flex items-center gap-2" onClick={() => setCurrentLog(null)}>
+                  <ArrowLeft />
+                  {"View all"}
+                </Button>
               </div>
 
               <Table

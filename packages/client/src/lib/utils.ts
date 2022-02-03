@@ -10,6 +10,7 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
+  ValueType,
 } from "@snailycad/types";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
@@ -108,7 +109,7 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
   return format(dateObj, `yyyy-MM-dd ${hmsString}`);
 }
 
-export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLicenseType) {
+export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: ValueLicenseType) {
   return licenses.filter((item) => {
     if (item.licenseType === null) return true;
     return item.licenseType === type;

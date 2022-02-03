@@ -9,6 +9,7 @@ import type {
   Value,
   ActiveDispatchers,
   LeoWhitelistStatus,
+  ValueType,
 } from "@snailycad/types";
 import create from "zustand";
 
@@ -19,7 +20,10 @@ export type FullOfficer = OfficerWithDept & {
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
   whitelistStatus: LeoWhitelistStatus | null;
 };
-export type FullDeputy = DeputyWithDept & { rank?: Value<"OFFICER_RANK">; status: StatusValue };
+export type FullDeputy = DeputyWithDept & {
+  rank?: Value<ValueType.OFFICER_RANK>;
+  status: StatusValue;
+};
 
 interface DispatchState {
   calls: Full911Call[];

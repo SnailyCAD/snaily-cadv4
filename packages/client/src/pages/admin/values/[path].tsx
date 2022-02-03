@@ -17,9 +17,8 @@ import {
   type PenalCodeGroup,
   type StatusValue,
   type Value,
-  type ValueType,
   type VehicleValue,
-  valueType,
+  ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -151,7 +150,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     }
   }, [isOpen]);
 
-  if (!Object.keys(valueType).includes(path)) {
+  if (!Object.keys(ValueType).includes(path)) {
     return (
       <Layout className="dark:text-white">
         <p>Path not found</p>
