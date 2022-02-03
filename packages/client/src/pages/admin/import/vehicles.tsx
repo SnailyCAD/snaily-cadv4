@@ -38,7 +38,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
 
           <div>
-            <Button onClick={() => openModal(ModalIds.ImportVehicles)}>Import via file</Button>
+            <Button onClick={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>
           </div>
         </div>
 
