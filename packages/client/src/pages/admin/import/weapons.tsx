@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { RegisteredVehicle } from "types/prisma";
+import type { Citizen, Weapon } from "types/prisma";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -17,34 +17,34 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 
 interface Props {
-  vehicles: RegisteredVehicle[];
+  weapons: (Weapon & { citizen: Citizen })[];
 }
 
-export default function ImportVehiclesPage({ vehicles: data }: Props) {
-  const [vehicles, setVehicles] = React.useState(data);
+export default function ImportWeaponsPage({ weapons: data }: Props) {
+  const [weapons, setWeapons] = React.useState(data);
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const veh = useTranslations("Vehicles");
+  const wep = useTranslations("Weapons");
   const { openModal } = useModal();
 
   return (
     <AdminLayout>
-      <Title>{t("IMPORT_VEHICLES")}</Title>
+      <Title>{t("IMPORT_WEAPONS")}</Title>
 
       <header>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
+          <h1 className="text-3xl font-semibold">{t("IMPORT_WEAPONS")}</h1>
 
           <div>
-            <Button onClick={() => openModal(ModalIds.ImportVehicles)}>Import via file</Button>
+            <Button onClick={() => openModal(ModalIds.ImportWeapons)}>Import via file</Button>
           </div>
         </div>
 
         <p className="my-2 mt-5 dark:text-gray-300 max-w-2xl">
-          Here you can mass-import vehicles that are registered to a citizen. In the table below you
-          are able to view all registered vehicles.
+          Here you can mass-import weapons that are registered to a citizen. In the table below you
+          are able to view all registered weapons.
         </p>
       </header>
 
@@ -59,21 +59,17 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
 
       <Table
         filter={search}
-        data={vehicles.map((vehicle) => ({
-          plate: vehicle.plate,
-          model: vehicle.model.value.value,
-          color: vehicle.color,
-          registrationStatus: vehicle.registrationStatus.value,
-          vinNumber: vehicle.vinNumber,
-          citizen: `${vehicle.citizen?.name} ${vehicle.citizen?.surname}`,
-          createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+        data={weapons.map((weapon) => ({
+          model: weapon.model.value.value,
+          registrationStatus: weapon.registrationStatus.value,
+          serialNumber: weapon.serialNumber,
+          citizen: `${weapon.citizen?.name} ${weapon.citizen?.surname}`,
+          createdAt: <FullDate>{weapon.createdAt}</FullDate>,
         }))}
         columns={[
-          { Header: veh("plate"), accessor: "plate" },
-          { Header: veh("model"), accessor: "model" },
-          { Header: veh("color"), accessor: "color" },
-          { Header: veh("registrationStatus"), accessor: "registrationStatus" },
-          { Header: veh("vinNumber"), accessor: "vinNumber" },
+          { Header: wep("model"), accessor: "model" },
+          { Header: wep("registrationStatus"), accessor: "registrationStatus" },
+          { Header: wep("serialNumber"), accessor: "serialNumber" },
           { Header: common("citizen"), accessor: "citizen" },
           { Header: common("createdAt"), accessor: "createdAt" },
         ]}
@@ -81,25 +77,25 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
 
       <ImportModal
         onImport={(vehicles) => {
-          setVehicles((p) => [...vehicles, ...p]);
+          setWeapons((p) => [...vehicles, ...p]);
         }}
-        id={ModalIds.ImportVehicles}
-        url="/admin/import/vehicles"
+        id={ModalIds.ImportWeapons}
+        url="/admin/import/weapons"
       />
     </AdminLayout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [vehicles, values] = await requestAll(req, [
-    ["/admin/import/vehicles", []],
+  const [weapons, values] = await requestAll(req, [
+    ["/admin/import/weapons", []],
     ["/admin/values/gender?paths=ethnicity", []],
   ]);
 
   return {
     props: {
       values,
-      vehicles,
+      weapons,
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
