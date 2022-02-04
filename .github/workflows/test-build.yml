@@ -1,9 +1,9 @@
-name: Test builds
+name: Test Builds in workspaces
 
 on: [push, pull_request]
 
 jobs:
-  test-client-build:
+  test-builds-workspaces:
     runs-on: ubuntu-latest
 
     strategy:
