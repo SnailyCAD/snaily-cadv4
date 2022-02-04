@@ -19,6 +19,11 @@ jobs:
 
       - uses: actions/cache@v2
         with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - uses: actions/cache@v2
+        with:
           path: ${{ github.workspace }}/packages/client/.next/cache
           # Generate a new cache whenever packages or source files change.
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
