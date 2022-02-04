@@ -10,10 +10,11 @@ import type {
   ActiveDispatchers,
   LeoWhitelistStatus,
   ValueType,
+  AssignedUnit,
 } from "@snailycad/types";
 import create from "zustand";
 
-export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };
+export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 export type FullBolo = Bolo & { officer: FullOfficer | null };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;

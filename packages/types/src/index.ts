@@ -25,9 +25,11 @@ export type cad = {
   miscCadSettingsId: string | null;
   miscCadSettings: MiscCadSettings | null;
   apiTokenId: string | null;
+  apiToken?: ApiToken | null;
   createdAt: Date;
   updatedAt: Date;
   autoSetUserPropertiesId: string | null;
+  autoSetUserProperties: AutoSetUserProperties | null;
 };
 
 /**
@@ -100,6 +102,7 @@ export type User = {
   updatedAt: Date;
   discordId: string | null;
   hasTempPassword?: boolean;
+  twoFactorEnabled?: boolean;
 };
 
 /**
@@ -134,9 +137,13 @@ export type Citizen = {
   height: string;
   weight: string;
   driversLicenseId: string | null;
+  driversLicense: Value<ValueType.LICENSE> | null;
   weaponLicenseId: string | null;
+  weaponLicense: Value<ValueType.LICENSE> | null;
   pilotLicenseId: string | null;
+  pilotLicense: Value<ValueType.LICENSE> | null;
   ccwId: string | null;
+  ccw: Value<ValueType.LICENSE> | null;
   imageId: string | null;
   note: string | null;
   dead: boolean | null;
@@ -146,6 +153,7 @@ export type Citizen = {
   occupation: string | null;
   createdAt: Date;
   updatedAt: Date;
+  dlCategory: DriversLicenseCategoryValue[];
 };
 
 /**
@@ -156,6 +164,7 @@ export type RegisteredVehicle = {
   id: string;
   userId: string | null;
   citizenId: string;
+  citizen: Citizen;
   vinNumber: string;
   plate: string;
   modelId: string;
@@ -184,7 +193,7 @@ export type Weapon = {
   registrationStatusId: string;
   registrationStatus: Value<ValueType.LICENSE>;
   modelId: string;
-  model: Value<ValueType.WEAPON>;
+  model: WeaponValue;
 };
 
 /**
@@ -200,6 +209,7 @@ export type MedicalRecord = {
   type: string | null;
   description: string | null;
   bloodGroupId: string | null;
+  bloodGroup: Value<ValueType.BLOOD_GROUP> | null;
 };
 
 /**
@@ -229,7 +239,9 @@ export type PenalCode = {
   description: string | null;
   descriptionData: DescriptionData | null;
   warningApplicableId: string | null;
+  warningApplicable: WarningApplicable | null;
   warningNotApplicableId: string | null;
+  warningNotApplicable: WarningNotApplicable | null;
   position: number | null;
   groupId: string | null;
 };
@@ -276,6 +288,7 @@ export type Violation = {
   jailTime: number | null;
   bail: number | null;
   penalCodeId: string;
+  penalCode: PenalCode;
 };
 
 /**
@@ -286,7 +299,7 @@ export type DivisionValue = {
   id: string;
   valueId: string;
   value: Value<ValueType.DIVISION>;
-  departmentId: string | null;
+  departmentId: string;
   department: DepartmentValue;
   callsign: string | null;
 };
@@ -375,6 +388,7 @@ export type TowCall = {
   id: string;
   userId: string | null;
   assignedUnitId: string | null;
+  assignedUnit: Citizen | null;
   location: string;
   postal: string | null;
   deliveryAddressId: string | null;
@@ -383,6 +397,7 @@ export type TowCall = {
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
+  creator: Citizen | null;
   ended: boolean;
   callCountyService: boolean;
   createdAt: Date;
@@ -397,11 +412,13 @@ export type TaxiCall = {
   id: string;
   userId: string | null;
   assignedUnitId: string | null;
+  assignedUnit: Citizen | null;
   location: string;
   postal: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
+  creator: Citizen | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -474,15 +491,19 @@ export type EmployeeValue = {
 export type Officer = {
   id: string;
   departmentId: string | null;
+  department: DepartmentValue;
   callsign: string;
   callsign2: string;
-  divisionId: string | null;
+  divisions: DivisionValue[];
   rankId: string | null;
+  rank: Value<ValueType.OFFICER_RANK> | null;
   statusId: string | null;
+  status: StatusValue | null;
   suspended: boolean;
   badgeNumber: number | null;
   imageId: string | null;
   citizenId: string;
+  citizen: Citizen;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
@@ -569,6 +590,7 @@ export type CombinedLeoUnit = {
   callsign: string;
   statusId: string | null;
   status: StatusValue | null;
+  officers: Officer[];
 };
 
 /**
@@ -591,6 +613,7 @@ export type Call911 = {
   createdAt: Date;
   updatedAt: Date;
   positionId: string | null;
+  position: Position | null;
   userId: string | null;
   location: string;
   postal: string | null;
@@ -598,6 +621,8 @@ export type Call911 = {
   descriptionData: DescriptionData | null;
   name: string;
   ended: boolean | null;
+  departments?: DepartmentValue[];
+  divisions?: DivisionValue[];
 };
 
 /**
@@ -663,12 +688,14 @@ export type Record = {
   type: RecordType;
   citizenId: string;
   officerId: string;
+  officer: Officer;
   createdAt: Date;
   updatedAt: Date;
   postal: string;
   notes: string | null;
   releaseId: string | null;
   expungementRequestId: string | null;
+  violations: Violation[];
 };
 
 /**
@@ -679,6 +706,7 @@ export type RecordRelease = {
   id: string;
   type: ReleaseType;
   citizenId: string | null;
+  releasedBy: Citizen | null;
 };
 
 /**
@@ -689,6 +717,7 @@ export type Warrant = {
   id: string;
   citizenId: string;
   officerId: string;
+  officer?: Officer;
   description: string;
   status: WarrantStatus;
   createdAt: Date;
@@ -704,9 +733,9 @@ export type RecordLog = {
   id: string;
   citizenId: string;
   recordId: string | null;
-  records: Record[];
+  records: Record | null;
   warrantId: string | null;
-  warrants: Warrant[];
+  warrant: Warrant | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -731,15 +760,20 @@ export type ExpungementRequest = {
 export type EmsFdDeputy = {
   id: string;
   departmentId: string;
+  department: DepartmentValue;
   callsign: string;
   callsign2: string;
   divisionId: string;
+  division: DivisionValue;
   rankId: string | null;
+  rank: Value<ValueType.OFFICER_RANK> | null;
   statusId: string | null;
+  status: StatusValue | null;
   suspended: boolean;
   badgeNumber: number | null;
   imageId: string | null;
   citizenId: string;
+  citizen: Citizen;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

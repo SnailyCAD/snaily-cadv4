@@ -49,7 +49,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           callsign: v.callsign || common("none"),
-          department: v.department?.value?.value ?? common("none"),
+          department: v.department.value.value,
         };
       }
       case "VEHICLE":
@@ -61,7 +61,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case "LICENSE": {
-        const v = value as Value;
+        const v = value as Value<ValueType.LICENSE>;
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),

@@ -60,7 +60,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
-    division: unit.divisionId,
+    division: "divisionId" in unit ? unit.divisionId : "",
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     callsign: unit.callsign,
     rank: unit.rankId,

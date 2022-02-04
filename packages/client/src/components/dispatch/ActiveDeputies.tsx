@@ -51,7 +51,7 @@ export function ActiveDeputies() {
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
             return {
-              rowProps: { style: { background: !useDot ? color : undefined } },
+              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
               deputy: (
                 <span className="flex items-center capitalize">
                   {deputy.imageId ? (

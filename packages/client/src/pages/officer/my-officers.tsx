@@ -32,8 +32,6 @@ const ManageOfficerModal = dynamic(
 );
 
 export type OfficerWithDept = Officer & {
-  /** @deprecated use `divisions` for `Officer` */
-  division: DivisionValue | null;
   divisions: DivisionValue[];
   department: DepartmentValue | null;
   rank?: Value<ValueType.OFFICER_RANK>;

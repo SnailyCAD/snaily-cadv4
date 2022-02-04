@@ -11,6 +11,7 @@ import {
   type ValueLicenseType,
   WhitelistStatus,
   ValueType,
+  EmsFdDeputy,
 } from "@snailycad/types";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
@@ -78,7 +79,7 @@ export async function requestAll(
   );
 }
 
-export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
+export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit) {
   if (!("citizen" in unit)) {
     return "";
   }
@@ -91,7 +92,7 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
 }
 
 export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
-  const division = unit.division?.value.value;
+  const division = "division" in unit && unit.division?.value.value;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 

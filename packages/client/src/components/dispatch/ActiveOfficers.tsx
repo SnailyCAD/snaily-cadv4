@@ -122,7 +122,10 @@ export function ActiveOfficers() {
                     }));
 
                   return (
-                    <tr style={{ background: !useDot ? color : undefined }} key={officer.id}>
+                    <tr
+                      style={{ background: !useDot ? color ?? undefined : undefined }}
+                      key={officer.id}
+                    >
                       <ContextMenu
                         canBeOpened={canBeOpened ?? false}
                         asChild

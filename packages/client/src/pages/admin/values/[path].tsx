@@ -43,7 +43,7 @@ const ImportValuesModal = dynamic(async () => {
 });
 
 export type TValue =
-  | Value
+  | Value<ValueType>
   | EmployeeValue
   | StatusValue
   | DivisionValue

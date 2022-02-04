@@ -45,7 +45,7 @@ interface ProviderProps {
   initialData: {
     values: {
       type: ValueType;
-      values: Value[];
+      values: Value<ValueType>[];
     }[];
   };
 }

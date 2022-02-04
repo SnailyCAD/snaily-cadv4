@@ -23,7 +23,7 @@ const LABELS = {
 
 const TYPES = Object.keys(ReleaseType).map((key) => ({
   value: key,
-  label: LABELS[key]!,
+  label: LABELS[key as ReleaseType],
 }));
 
 export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
