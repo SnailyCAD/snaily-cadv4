@@ -15,13 +15,6 @@
         "^typecheck"
       ],
       "outputs": []
-    },
-    "start": {
-      "dependsOn": [
-        "^start",
-        "^build"
-      ],
-      "outputs": []
     }
   }
 }
