@@ -2,7 +2,7 @@ import { components, MultiValueGenericProps } from "react-select";
 import { type ContextItem, ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import type { CombinedLeoUnit, StatusValue } from "types/prisma";
+import type { CombinedLeoUnit, StatusValue } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
 import { makeUnitName } from "lib/utils";

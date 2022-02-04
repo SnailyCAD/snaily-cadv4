@@ -12,7 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { ShouldDoType, WhitelistStatus } from "types/prisma";
+import { ShouldDoType, WhitelistStatus } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 

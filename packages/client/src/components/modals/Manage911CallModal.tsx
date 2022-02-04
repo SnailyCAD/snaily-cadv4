@@ -18,7 +18,7 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";

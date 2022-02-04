@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, ValueLicenseType, Weapon } from "types/prisma";
+import { Citizen, ValueLicenseType, Weapon } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";

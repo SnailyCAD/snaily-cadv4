@@ -14,7 +14,7 @@ import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
 import { type FullBusiness, useBusinessState } from "state/businessState";
 import { toastError } from "lib/error";
-import { WhitelistStatus } from "types/prisma";
+import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
   onCreate: (business: FullBusiness) => void;

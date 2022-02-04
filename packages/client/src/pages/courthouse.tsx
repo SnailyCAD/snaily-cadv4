@@ -3,7 +3,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ExpungementRequest, Warrant, Citizen, WhitelistStatus } from "types/prisma";
+import { ExpungementRequest, Warrant, Citizen, ExpungementRequestStatus } from "@snailycad/types";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
@@ -57,12 +57,12 @@ export default function Courthouse(props: Props) {
             // accept requests delete the db entity, this results in show "NONE" for the type
             // therefore it shows "ACCEPTED"
             const warrants =
-              request.status === WhitelistStatus.ACCEPTED
+              request.status === ExpungementRequestStatus.ACCEPTED
                 ? "accepted"
                 : request.warrants.map((w) => w.description).join(", ") || common("none");
 
             const arrestReports =
-              request.status === WhitelistStatus.ACCEPTED
+              request.status === ExpungementRequestStatus.ACCEPTED
                 ? "accepted"
                 : request.records
                     .filter((v) => v.type === "ARREST_REPORT")
@@ -70,7 +70,7 @@ export default function Courthouse(props: Props) {
                     .join(", ") || common("none");
 
             const tickets =
-              request.status === WhitelistStatus.ACCEPTED
+              request.status === ExpungementRequestStatus.ACCEPTED
                 ? "accepted"
                 : request.records
                     .filter((v) => v.type === "TICKET")
@@ -80,7 +80,9 @@ export default function Courthouse(props: Props) {
             return {
               rowProps: {
                 className:
-                  request.status !== WhitelistStatus.PENDING ? "opacity-50 cursor-not-allowed" : "",
+                  request.status !== ExpungementRequestStatus.PENDING
+                    ? "opacity-50 cursor-not-allowed"
+                    : "",
               },
               citizen: `${request.citizen.name} ${request.citizen.surname}`,
               warrants,

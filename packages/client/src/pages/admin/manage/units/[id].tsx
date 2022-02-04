@@ -15,7 +15,7 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import type { OfficerLog } from "types/prisma";
+import type { OfficerLog } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
@@ -60,7 +60,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
-    division: unit.divisionId,
+    division: "divisionId" in unit ? unit.divisionId : "",
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     callsign: unit.callsign,
     rank: unit.rankId,

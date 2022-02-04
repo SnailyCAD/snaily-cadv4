@@ -1,4 +1,4 @@
-import type { Call911 } from "./prisma";
+import type { Call911 } from "@snailycad/types";
 
 export interface Player {
   Weapon?: string;

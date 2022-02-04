@@ -9,7 +9,7 @@ import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import { WhitelistStatus } from "types/prisma";
+import { WhitelistStatus } from "@snailycad/types";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>

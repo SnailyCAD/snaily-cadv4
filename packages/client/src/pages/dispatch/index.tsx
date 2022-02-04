@@ -24,7 +24,7 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import type { ActiveDispatchers } from "types/prisma";
+import type { ActiveDispatchers } from "@snailycad/types";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;

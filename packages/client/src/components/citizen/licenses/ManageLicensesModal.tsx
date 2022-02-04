@@ -15,7 +15,7 @@ import { useCitizen } from "context/CitizenContext";
 import { FormRow } from "components/form/FormRow";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
-import { ValueLicenseType } from "types/prisma";
+import { ValueLicenseType } from "@snailycad/types";
 
 export function ManageLicensesModal() {
   const { state, execute } = useFetch();

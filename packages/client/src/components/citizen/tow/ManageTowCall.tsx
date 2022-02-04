@@ -16,14 +16,15 @@ import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { ModalIds } from "types/ModalIds";
-import type { TowCall } from "types/prisma";
+import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
+type CallData = Pick<TowCall, keyof TaxiCall> | TaxiCall;
 interface Props {
-  call: TowCall | null;
+  call: CallData | null;
   isTow?: boolean;
-  onUpdate?: (old: TowCall, newC: TowCall) => void;
-  onDelete?: (call: TowCall) => void;
+  onUpdate?: (old: CallData, newC: CallData) => void;
+  onDelete?: (call: CallData) => void;
 }
 
 export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props) {

@@ -4,7 +4,7 @@ import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import type { FullBusiness } from "src/pages/admin/manage/businesses";
-import { WhitelistStatus } from "types/prisma";
+import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
   businesses: FullBusiness[];

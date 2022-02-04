@@ -8,7 +8,7 @@ import { Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
-import type { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
+import type { PenalCode, PenalCodeGroup, ValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";

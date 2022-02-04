@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Citizen, RecordLog, RecordType } from "types/prisma";
+import { Citizen, RecordLog, RecordType } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -55,15 +55,13 @@ export default function CitizenLogs({ logs: data }: Props) {
             <>
               <div className="flex items-center justify-between mt-5">
                 <h3 className="text-xl font-semibold">
-                  {currentLog ? `${currentLog.citizen.name} ${currentLog.citizen.surname}` : null}
+                  {currentLog.citizen.name} {currentLog.citizen.surname}
                 </h3>
 
-                {currentLog ? (
-                  <Button className="flex items-center gap-2" onClick={() => setCurrentLog(null)}>
-                    <ArrowLeft />
-                    {"View all"}
-                  </Button>
-                ) : null}
+                <Button className="flex items-center gap-2" onClick={() => setCurrentLog(null)}>
+                  <ArrowLeft />
+                  {"View all"}
+                </Button>
               </div>
 
               <Table

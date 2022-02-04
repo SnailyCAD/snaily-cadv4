@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { BoloType, Citizen, RegisteredVehicle } from "types/prisma";
+import { BoloType, Citizen, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { FullBolo, useDispatchState } from "state/dispatchState";
@@ -167,7 +167,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
                       <p>
                         {suggestion.plate.toUpperCase()} (
-                        {suggestion.model?.value?.value?.toUpperCase() ?? null})
+                        {suggestion.model.value.value.toUpperCase()})
                       </p>
                     )}
                   />

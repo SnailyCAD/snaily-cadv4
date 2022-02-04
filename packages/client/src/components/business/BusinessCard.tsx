@@ -2,7 +2,7 @@ import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import Link from "next/link";
 import type { FullEmployee } from "state/businessState";
-import { Business, WhitelistStatus } from "types/prisma";
+import { Business, WhitelistStatus } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 interface Props {

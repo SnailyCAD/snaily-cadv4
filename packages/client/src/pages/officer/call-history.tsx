@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, LeoIncident } from "types/prisma";
+import type { AssignedUnit, LeoIncident } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import type { Full911Call } from "state/dispatchState";

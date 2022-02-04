@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
-import { cad as CAD, rank, User } from "types/prisma";
+import { cad as CAD, Rank, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
 import { useIsFeatureEnabled } from "lib/utils";
 import { useListener } from "@casper124578/use-socket.io";
@@ -27,9 +27,9 @@ const PERMISSIONS: Record<string, (user: User) => boolean> = {
   "/officer/supervisor": (user) => user.isLeo && user.isSupervisor,
   "/officer": (user) => user.isLeo,
   "/ems-fd": (user) => user.isEmsFd,
-  "/admin/manage/cad-settings": (user) => user.rank === "OWNER",
-  "/admin/manage/units": (user) => user.rank !== "USER" || user.isSupervisor,
-  "/admin": (user) => user.rank !== rank.USER,
+  "/admin/manage/cad-settings": (user) => user.rank === Rank.OWNER,
+  "/admin/manage/units": (user) => user.rank !== Rank.USER || user.isSupervisor,
+  "/admin": (user) => user.rank !== Rank.USER,
   "/tow": (user) => user.isTow,
 };
 

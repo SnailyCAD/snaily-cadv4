@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { Citizen, Weapon } from "types/prisma";
+import type { Citizen, Weapon } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -63,7 +63,7 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
           model: weapon.model.value.value,
           registrationStatus: weapon.registrationStatus.value,
           serialNumber: weapon.serialNumber,
-          citizen: `${weapon.citizen?.name} ${weapon.citizen?.surname}`,
+          citizen: `${weapon.citizen.name} ${weapon.citizen.surname}`,
           createdAt: <FullDate>{weapon.createdAt}</FullDate>,
         }))}
         columns={[

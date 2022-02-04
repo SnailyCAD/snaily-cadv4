@@ -1,17 +1,16 @@
 import * as React from "react";
 import {
-  DepartmentValue,
-  DivisionValue,
-  DriversLicenseCategoryValue,
-  EmployeeValue,
-  PenalCode,
-  PenalCodeGroup,
-  StatusValue,
-  Value,
-  valueType,
+  type DepartmentValue,
+  type DivisionValue,
+  type DriversLicenseCategoryValue,
+  type EmployeeValue,
+  type PenalCode,
+  type PenalCodeGroup,
+  type StatusValue,
+  type Value,
   ValueType,
-  VehicleValue,
-} from "types/prisma";
+  type VehicleValue,
+} from "@snailycad/types";
 
 type ContextValue<T extends ValueType, Custom = Value<T>> = {
   type: ValueType;
@@ -19,21 +18,24 @@ type ContextValue<T extends ValueType, Custom = Value<T>> = {
 };
 
 interface Context {
-  license: ContextValue<"LICENSE">;
-  gender: ContextValue<"GENDER">;
-  ethnicity: ContextValue<"ETHNICITY">;
-  weapon: ContextValue<"WEAPON", VehicleValue>;
-  bloodGroup: ContextValue<"BLOOD_GROUP">;
-  officerRank: ContextValue<"OFFICER_RANK">;
-  division: ContextValue<"DIVISION", DivisionValue>;
-  businessRole: ContextValue<"BUSINESS_ROLE", EmployeeValue>;
-  codes10: ContextValue<"CODES_10", StatusValue>;
-  vehicle: ContextValue<"VEHICLE", VehicleValue>;
-  penalCode: ContextValue<"PENAL_CODE", PenalCode>;
+  license: ContextValue<ValueType.LICENSE>;
+  gender: ContextValue<ValueType.GENDER>;
+  ethnicity: ContextValue<ValueType.ETHNICITY>;
+  weapon: ContextValue<ValueType.WEAPON, VehicleValue>;
+  bloodGroup: ContextValue<ValueType.BLOOD_GROUP>;
+  officerRank: ContextValue<ValueType.OFFICER_RANK>;
+  division: ContextValue<ValueType.DIVISION, DivisionValue>;
+  businessRole: ContextValue<ValueType.BUSINESS_ROLE, EmployeeValue>;
+  codes10: ContextValue<ValueType.CODES_10, StatusValue>;
+  vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
+  penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
-  department: ContextValue<"DEPARTMENT", DepartmentValue>;
-  driverslicenseCategory: ContextValue<"DRIVERSLICENSE_CATEGORY", DriversLicenseCategoryValue>;
-  impoundLot: ContextValue<"IMPOUND_LOT">;
+  department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;
+  driverslicenseCategory: ContextValue<
+    ValueType.DRIVERSLICENSE_CATEGORY,
+    DriversLicenseCategoryValue
+  >;
+  impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
@@ -43,7 +45,7 @@ interface ProviderProps {
   initialData: {
     values: {
       type: ValueType;
-      values: Value[];
+      values: Value<ValueType>[];
     }[];
   };
 }
@@ -54,7 +56,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
   );
 
   const data = React.useMemo(() => {
-    return Object.values(valueType).reduce((obj, valueType) => {
+    return Object.values(ValueType).reduce((obj, valueType) => {
       const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
 
       if (v.type === "PENAL_CODE") {

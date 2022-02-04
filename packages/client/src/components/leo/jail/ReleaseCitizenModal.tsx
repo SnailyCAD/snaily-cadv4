@@ -1,7 +1,7 @@
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { Citizen, ReleaseType } from "types/prisma";
+import { Citizen, ReleaseType } from "@snailycad/types";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,7 @@ const LABELS = {
 
 const TYPES = Object.keys(ReleaseType).map((key) => ({
   value: key,
-  label: LABELS[key]!,
+  label: LABELS[key as ReleaseType],
 }));
 
 export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {

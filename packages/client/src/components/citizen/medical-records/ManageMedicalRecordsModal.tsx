@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import type { MedicalRecord } from "types/prisma";
+import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";

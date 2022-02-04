@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { RegisteredVehicle } from "types/prisma";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -65,7 +65,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           color: vehicle.color,
           registrationStatus: vehicle.registrationStatus.value,
           vinNumber: vehicle.vinNumber,
-          citizen: `${vehicle.citizen?.name} ${vehicle.citizen?.surname}`,
+          citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
         }))}
         columns={[

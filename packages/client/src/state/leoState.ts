@@ -1,4 +1,4 @@
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 import create from "zustand";
 import type { FullOfficer } from "./dispatchState";
 

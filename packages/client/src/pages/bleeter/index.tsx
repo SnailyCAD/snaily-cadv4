@@ -5,7 +5,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { BleeterPost, User } from "types/prisma";
+import type { BleeterPost, User } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
@@ -46,7 +46,7 @@ export default function Bleeter({ posts }: Props) {
             >
               <div>
                 <h1 className="text-2xl font-semibold">{post.title}</h1>
-                <h3>{post.user?.username}</h3>
+                <h3>{post.user.username}</h3>
               </div>
 
               <div>

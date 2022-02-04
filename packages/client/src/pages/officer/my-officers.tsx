@@ -8,7 +8,14 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { DepartmentValue, DivisionValue, Officer, Value, WhitelistStatus } from "types/prisma";
+import {
+  type DepartmentValue,
+  type DivisionValue,
+  type Officer,
+  type Value,
+  ValueType,
+  WhitelistStatus,
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import type { FullOfficer } from "state/dispatchState";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
@@ -25,11 +32,9 @@ const ManageOfficerModal = dynamic(
 );
 
 export type OfficerWithDept = Officer & {
-  /** @deprecated use `divisions` for `Officer` */
-  division: DivisionValue | null;
   divisions: DivisionValue[];
   department: DepartmentValue | null;
-  rank?: Value<"OFFICER_RANK">;
+  rank?: Value<ValueType.OFFICER_RANK>;
 };
 
 interface Props {

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
-import type { Citizen } from "types/prisma";
+import type { Citizen } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";

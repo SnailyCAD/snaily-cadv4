@@ -5,7 +5,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
-import type { Officer, OfficerLog } from "types/prisma";
+import type { Officer, OfficerLog } from "@snailycad/types";
 
 type Props =
   | {

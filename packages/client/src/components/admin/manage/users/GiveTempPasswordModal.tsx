@@ -1,7 +1,7 @@
 import * as React from "react";
 import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
-import type { User } from "types/prisma";
+import type { User } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";

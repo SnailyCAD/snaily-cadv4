@@ -2,7 +2,7 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { Feature } from "types/prisma";
+import type { Feature } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";

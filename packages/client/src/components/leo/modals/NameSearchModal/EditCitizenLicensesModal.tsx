@@ -12,7 +12,7 @@ import { filterLicenseTypes } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/nameSearchState";
 import { ModalIds } from "types/ModalIds";
-import { ValueLicenseType } from "types/prisma";
+import { ValueLicenseType } from "@snailycad/types";
 
 export function EditCitizenLicenses() {
   const common = useTranslations("Common");
