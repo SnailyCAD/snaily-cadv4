@@ -1,4 +1,4 @@
-name: Typecheck workspaces
+name: Typecheck & test builds in workspaces/*
 
 on: [push, pull_request]
 
