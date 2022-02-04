@@ -4,13 +4,14 @@
   "scripts": {
     "dev": "rimraf .env && next dev",
     "build": "yarn validate && yarn copy-env && yarn next-build",
-    "next-build": "yarn workspace @snailycad/types build && next build",
+    "next-build": "next build",
     "start": "next start",
     "start:proxy-experimental": "next start --port 80",
     "copy-env": "node ../../scripts/copy-env.mjs --client --api",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "eslint . --ext .ts,.js,.tsx,.jsx,",
-    "validate": "node ../../scripts/validate.mjs"
+    "validate": "node ../../scripts/validate.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@casper124578/use-socket.io": "3.1.1",

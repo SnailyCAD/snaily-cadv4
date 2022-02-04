@@ -6,7 +6,8 @@
     "start": "yarn workspace @snailycad/schemas build && yarn workspace @snailycad/config build && npx prisma migrate deploy && ts-node -r tsconfig-paths/register src/main.ts",
     "start:docker": "yarn add -D esbuild esbuild-linux-64 && yarn workspace @snailycad/schemas build && yarn workspace @snailycad/config build && npx prisma migrate deploy && ts-node -r tsconfig-paths/register src/main.ts",
     "format": "prisma format",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "typecheck": "yarn run generate && tsc --noEmit"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
