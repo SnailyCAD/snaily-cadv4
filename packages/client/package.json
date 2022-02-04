@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "rimraf .env && next dev",
     "build": "yarn validate && yarn copy-env && yarn next-build",
-    "next-build": "next build",
+    "next-build": "yarn workspace @snailycad/types build && next build",
     "start": "next start",
     "start:proxy-experimental": "next start --port 80",
     "copy-env": "node ../../scripts/copy-env.mjs --client --api",
