@@ -1,0 +1,3 @@
+# @snailycad/types
+
+TODO

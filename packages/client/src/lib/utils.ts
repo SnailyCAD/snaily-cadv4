@@ -10,7 +10,9 @@ import {
   type Value,
   type ValueLicenseType,
   WhitelistStatus,
-} from "types/prisma";
+  ValueType,
+  EmsFdDeputy,
+} from "@snailycad/types";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -77,7 +79,7 @@ export async function requestAll(
   );
 }
 
-export function makeUnitName(unit: Officer | FullDeputy | CombinedLeoUnit) {
+export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit) {
   if (!("citizen" in unit)) {
     return "";
   }
@@ -90,7 +92,7 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
 }
 
 export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
-  const division = unit.division?.value.value;
+  const division = "division" in unit && unit.division?.value.value;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 
@@ -108,7 +110,7 @@ export function formatDate(date: string | Date | number, options?: { onlyDate: b
   return format(dateObj, `yyyy-MM-dd ${hmsString}`);
 }
 
-export function filterLicenseTypes(licenses: Value<"LICENSE">[], type: ValueLicenseType) {
+export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: ValueLicenseType) {
   return licenses.filter((item) => {
     if (item.licenseType === null) return true;
     return item.licenseType === type;

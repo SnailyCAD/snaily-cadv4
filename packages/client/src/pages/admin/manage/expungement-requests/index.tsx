@@ -8,7 +8,7 @@ import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
 import type { FullRequest } from "src/pages/courthouse";
 import { getTitles } from "components/courthouse/RequestExpungement";
-import { ExpungementRequestStatus } from "types/prisma";
+import { ExpungementRequestStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";

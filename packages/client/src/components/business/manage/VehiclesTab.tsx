@@ -5,7 +5,7 @@ import { Button } from "components/Button";
 import { useBusinessState } from "state/businessState";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle } from "types/prisma";
+import type { RegisteredVehicle } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
 import { AlertModal } from "components/modal/AlertModal";

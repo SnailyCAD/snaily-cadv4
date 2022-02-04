@@ -20,7 +20,7 @@ import {
 } from "types/Map";
 import { getMapBounds, convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
 
-import type { cad, Call911, User } from "types/prisma";
+import type { cad, Call911, User } from "@snailycad/types";
 import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
 import { blipTypes } from "lib/map/blips";
 import { ModalIds } from "types/ModalIds";
@@ -91,7 +91,7 @@ class MapClass extends React.Component<Props, MapState> {
       loading: false,
     });
 
-    const live_map_url = this.props.cad?.miscCadSettings?.liveMapURL;
+    const live_map_url = this.props.cad.miscCadSettings?.liveMapURL;
     if (!live_map_url) {
       toastError({
         duration: Infinity,
@@ -480,7 +480,7 @@ class MapClass extends React.Component<Props, MapState> {
       const existing = this.state.MarkerStore.find((m) => m.payload?.call?.id === call.id);
 
       if (existing) {
-        existing.setLatLng(call.position);
+        existing.setLatLng(call.position as LatLng);
         return;
       }
 
@@ -490,7 +490,7 @@ class MapClass extends React.Component<Props, MapState> {
           icon: null,
           description: `911 Call from: ${call.name}`,
           id: uuid(),
-          pos: call.position,
+          pos: call.position as LatLng,
           isPlayer: false,
           title: "911 Call",
           call,
@@ -700,7 +700,7 @@ class MapClass extends React.Component<Props, MapState> {
           <Button onClick={() => this.props.openModal(ModalIds.Manage911Call)}>
             {this.props.t("Calls.create911Call")}
           </Button>
-          {["owner", "admin", "moderator"].includes(`${this.props.user?.rank}`) ? (
+          {["owner", "admin", "moderator"].includes(`${this.props.user.rank}`) ? (
             <button
               onClick={() => {
                 if (this.state.showAllPlayers) {

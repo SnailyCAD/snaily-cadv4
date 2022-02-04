@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import type { MedicalRecord } from "types/prisma";
+import type { MedicalRecord } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";

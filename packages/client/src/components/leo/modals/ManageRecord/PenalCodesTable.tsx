@@ -1,7 +1,7 @@
 import { Table } from "components/shared/Table";
 import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
-import type { PenalCode } from "types/prisma";
+import type { PenalCode } from "@snailycad/types";
 import { TableItemForm } from "./TableItemForm";
 
 interface Props {

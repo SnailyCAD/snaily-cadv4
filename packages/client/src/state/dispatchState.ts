@@ -9,17 +9,22 @@ import type {
   Value,
   ActiveDispatchers,
   LeoWhitelistStatus,
-} from "types/prisma";
+  ValueType,
+  AssignedUnit,
+} from "@snailycad/types";
 import create from "zustand";
 
-export type Full911Call = Call911 & { assignedUnits: FullOfficer[]; events: Call911Event[] };
+export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 export type FullBolo = Bolo & { officer: FullOfficer | null };
 export type FullOfficer = OfficerWithDept & {
   status: StatusValue;
   citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
   whitelistStatus: LeoWhitelistStatus | null;
 };
-export type FullDeputy = DeputyWithDept & { rank?: Value<"OFFICER_RANK">; status: StatusValue };
+export type FullDeputy = DeputyWithDept & {
+  rank?: Value<ValueType.OFFICER_RANK>;
+  status: StatusValue;
+};
 
 interface DispatchState {
   calls: Full911Call[];

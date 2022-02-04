@@ -9,7 +9,7 @@ import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { LeoIncident } from "types/prisma";
+import type { LeoIncident } from "@snailycad/types";
 import { FullOfficer, useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";

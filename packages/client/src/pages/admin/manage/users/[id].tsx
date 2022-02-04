@@ -7,7 +7,7 @@ import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { User } from "types/prisma";
+import type { User } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -78,7 +78,7 @@ export default function ManageCitizens(props: Props) {
         {common("manage")} {user.username}
       </Title>
 
-      <h1 className="text-3xl font-semibold">{user?.username}</h1>
+      <h1 className="text-3xl font-semibold">{user.username}</h1>
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

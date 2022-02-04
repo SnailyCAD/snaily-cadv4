@@ -1,7 +1,7 @@
 import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { RegisteredVehicle, Weapon } from "types/prisma";
+import type { RegisteredVehicle, Weapon } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 interface Props {

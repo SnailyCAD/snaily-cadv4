@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType, StatusValue } from "types/prisma";
+import { ShouldDoType, StatusValue } from "@snailycad/types";
 
 interface Props {
   activeUnit: ActiveOfficer | ActiveDeputy | null;

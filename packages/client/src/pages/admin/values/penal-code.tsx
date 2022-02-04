@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import type { PenalCode, PenalCodeGroup, ValueType } from "types/prisma";
+import type { PenalCode, PenalCodeGroup, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";

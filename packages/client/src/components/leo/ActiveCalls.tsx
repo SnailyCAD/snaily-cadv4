@@ -6,7 +6,7 @@ import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useAuth } from "context/AuthContext";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import type { AssignedUnit, Call911 } from "types/prisma";
+import type { AssignedUnit, Call911 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";

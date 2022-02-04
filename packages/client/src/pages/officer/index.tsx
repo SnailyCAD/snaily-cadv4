@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { RecordType } from "types/prisma";
+import { RecordType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";

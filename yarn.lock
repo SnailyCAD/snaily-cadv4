@@ -1260,6 +1260,7 @@ __metadata:
     "@react-aria/ssr": ^3.1.0
     "@snailycad/config": 1.0.0-beta.49
     "@snailycad/schemas": 1.0.0-beta.49
+    "@snailycad/types": 1.0.0-beta.49
     "@types/jquery": ^3.5.13
     "@types/leaflet": ^1.7.9
     "@types/leaflet.markercluster": ^1.4.6
@@ -1323,6 +1324,17 @@ __metadata:
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
     tsup: ^5.11.6
+    typescript: ^4.5.4
+    zod: ^3.11.6
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/types@1.0.0-beta.49, @snailycad/types@workspace:packages/types":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/types@workspace:packages/types"
+  dependencies:
+    tsup: ^5.11.6
+    type-fest: ^2.11.1
     typescript: ^4.5.4
     zod: ^3.11.6
   languageName: unknown

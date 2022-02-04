@@ -2,7 +2,7 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { type FullBolo, useDispatchState } from "state/dispatchState";
-import type { Bolo } from "types/prisma";
+import type { Bolo } from "@snailycad/types";
 
 export function useBolos() {
   const { bolos, setBolos } = useDispatchState();

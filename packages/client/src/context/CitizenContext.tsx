@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
-import type { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "types/prisma";
+import type { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];

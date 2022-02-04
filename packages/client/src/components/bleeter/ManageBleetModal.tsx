@@ -10,7 +10,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import type { BleeterPost } from "types/prisma";
+import type { BleeterPost } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { BLEETER_SCHEMA } from "@snailycad/schemas";
 import { CropImageModal } from "components/modal/CropImageModal";

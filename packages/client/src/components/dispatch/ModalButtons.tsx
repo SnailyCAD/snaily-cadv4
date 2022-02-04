@@ -5,7 +5,7 @@ import { useModal } from "context/ModalContext";
 import useFetch from "lib/useFetch";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { Feature } from "types/prisma";
+import type { Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 

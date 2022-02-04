@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import type { Call911 } from "types/prisma";
+import type { Call911 } from "@snailycad/types";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

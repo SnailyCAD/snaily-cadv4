@@ -12,7 +12,7 @@ import { handleValidate } from "lib/handleValidate";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
-import type { cad } from "types/prisma";
+import type { cad } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";

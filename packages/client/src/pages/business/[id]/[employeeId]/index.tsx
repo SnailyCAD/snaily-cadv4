@@ -11,7 +11,7 @@ import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
-import { BusinessPost, WhitelistStatus } from "types/prisma";
+import { BusinessPost, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";

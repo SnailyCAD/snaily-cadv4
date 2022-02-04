@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { handleRequest } from "lib/fetch";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { BleeterPost } from "types/prisma";
+import type { BleeterPost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";

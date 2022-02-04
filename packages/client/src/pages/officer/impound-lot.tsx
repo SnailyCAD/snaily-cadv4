@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { ImpoundedVehicle } from "types/prisma";
+import type { ImpoundedVehicle } from "@snailycad/types";
 import { useModal } from "context/ModalContext";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";

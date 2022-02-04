@@ -8,10 +8,10 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import { feature, Feature } from "types/prisma";
+import { Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
 
-const FEATURES = Object.keys(feature) as Feature[];
+const FEATURES = Object.keys(Feature) as Feature[];
 
 interface FeatureItem {
   name: string;
@@ -164,9 +164,9 @@ export function DisabledFeaturesArea() {
                   <div key={key}>
                     <FormField checkbox boldLabel label={value.name}>
                       <Toggle
-                        toggled={values[feature[key as Feature]]}
+                        toggled={values[Feature[key as Feature]]}
                         onClick={handleChange}
-                        name={feature[key as Feature]}
+                        name={Feature[key as Feature]}
                       />
                     </FormField>
                     <small className="mt-2 text-base">{value.description}</small>

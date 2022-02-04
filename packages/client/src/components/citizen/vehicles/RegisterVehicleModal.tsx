@@ -10,7 +10,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle, ValueLicenseType } from "types/prisma";
+import { Citizen, RegisteredVehicle, ValueLicenseType } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";

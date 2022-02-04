@@ -10,7 +10,7 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { Citizen } from "types/prisma";
+import type { Citizen } from "@snailycad/types";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 

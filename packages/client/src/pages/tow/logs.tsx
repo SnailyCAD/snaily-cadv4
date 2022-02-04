@@ -7,7 +7,6 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
-import type { FullTowCall } from "./index";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
@@ -15,34 +14,35 @@ import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
+import type { TowCall } from "@snailycad/types";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 interface Props {
-  calls: FullTowCall[];
+  calls: TowCall[];
 }
 
 export default function TowLogs(props: Props) {
-  const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
-  const [calls, setCalls] = React.useState<FullTowCall[]>(props.calls);
+  const [tempCall, setTempCall] = React.useState<TowCall | null>(null);
+  const [calls, setCalls] = React.useState<TowCall[]>(props.calls);
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { openModal } = useModal();
 
   useListener(SocketEvents.EndTowCall, handleCallEnd);
 
-  function handleCallEnd(call: FullTowCall) {
+  function handleCallEnd(call: TowCall) {
     setCalls((p) => [call, ...p]);
   }
 
-  function handleViewDescription(call: FullTowCall) {
+  function handleViewDescription(call: TowCall) {
     setTempCall(call);
     openModal(ModalIds.Description, call);
   }
 
-  function assignedUnit(call: FullTowCall) {
+  function assignedUnit(call: TowCall) {
     return call.assignedUnit ? (
       <span>
         {call.assignedUnit.name} {call.assignedUnit.surname}

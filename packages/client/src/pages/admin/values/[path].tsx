@@ -17,10 +17,9 @@ import {
   type PenalCodeGroup,
   type StatusValue,
   type Value,
-  type ValueType,
   type VehicleValue,
-  valueType,
-} from "types/prisma";
+  ValueType,
+} from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -44,7 +43,7 @@ const ImportValuesModal = dynamic(async () => {
 });
 
 export type TValue =
-  | Value
+  | Value<ValueType>
   | EmployeeValue
   | StatusValue
   | DivisionValue
@@ -151,7 +150,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     }
   }, [isOpen]);
 
-  if (!Object.keys(valueType).includes(path)) {
+  if (!Object.keys(ValueType).includes(path)) {
     return (
       <Layout className="dark:text-white">
         <p>Path not found</p>

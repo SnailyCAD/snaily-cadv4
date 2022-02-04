@@ -7,7 +7,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { Citizen, TowCall } from "types/prisma";
+import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -26,27 +26,25 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-export type FullTowCall = TowCall & { assignedUnit: Citizen | null; creator: Citizen };
-
 interface Props {
-  calls: FullTowCall[];
+  calls: TowCall[];
 }
 
 export default function Tow(props: Props) {
   const { openModal } = useModal();
-  const [calls, setCalls] = React.useState<FullTowCall[]>(props.calls);
+  const [calls, setCalls] = React.useState<TowCall[]>(props.calls);
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
 
-  const [tempCall, setTempCall] = React.useState<FullTowCall | null>(null);
+  const [tempCall, setTempCall] = React.useState<Pick<TowCall, keyof TaxiCall> | null>(null);
 
-  useListener(SocketEvents.CreateTowCall, (data: FullTowCall) => {
+  useListener(SocketEvents.CreateTowCall, (data: TowCall) => {
     setCalls((p) => [...p, data]);
   });
 
   useListener(SocketEvents.EndTowCall, handleCallEnd);
 
-  useListener(SocketEvents.UpdateTowCall, (data: FullTowCall) => {
+  useListener(SocketEvents.UpdateTowCall, (data: TowCall) => {
     const old = calls.find((v) => v.id === data.id);
 
     if (old) {
@@ -63,35 +61,35 @@ export default function Tow(props: Props) {
     openModal(ModalIds.ManageTowCall);
   }
 
-  function assignClick(call: FullTowCall) {
+  function assignClick(call: TowCall) {
     openModal(ModalIds.AssignToTowCall);
     setTempCall(call);
   }
 
-  function editClick(call: FullTowCall) {
+  function editClick(call: TowCall) {
     openModal(ModalIds.ManageTowCall);
     setTempCall(call);
   }
 
-  function handleViewDescription(call: FullTowCall) {
+  function handleViewDescription(call: TowCall) {
     setTempCall(call);
     openModal(ModalIds.Description, call);
   }
 
-  function handleCallEnd(call: TowCall) {
+  function handleCallEnd(call: Pick<TowCall, keyof TaxiCall>) {
     setCalls((p) => p.filter((v) => v.id !== call.id));
   }
 
-  function updateCalls(old: TowCall, newC: TowCall) {
+  function updateCalls(old: Pick<TowCall, keyof TaxiCall>, newC: Pick<TowCall, keyof TaxiCall>) {
     setTempCall(null);
     setCalls((p) => {
       const idx = p.findIndex((v) => v.id === old.id);
-      p[idx] = { ...old, ...newC } as FullTowCall;
+      p[idx] = { ...old, ...newC } as TowCall;
       return p;
     });
   }
 
-  function assignedUnit(call: FullTowCall) {
+  function assignedUnit(call: TowCall) {
     return call.assignedUnit ? (
       <span>
         {call.assignedUnit.name} {call.assignedUnit.surname}

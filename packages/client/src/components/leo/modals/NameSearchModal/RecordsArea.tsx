@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { Record, RecordType, Violation, Warrant } from "types/prisma";
+import { Record, RecordType, Violation, Warrant } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";

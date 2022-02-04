@@ -11,7 +11,7 @@ import * as React from "react";
 import type { FullBolo } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { BoloType, ShouldDoType } from "types/prisma";
+import { BoloType, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 

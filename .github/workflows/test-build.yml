@@ -35,5 +35,8 @@ jobs:
       - name: Build schemas
         run: "yarn workspace @snailycad/schemas build"
 
+      - name: Build types
+        run: "yarn workspace @snailycad/types build"
+
       - name: Run build
         run: "yarn workspace @snailycad/client build"

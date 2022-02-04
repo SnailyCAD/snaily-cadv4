@@ -3,7 +3,7 @@ import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import { FullOfficer, useDispatchState } from "state/dispatchState";
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 
 export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
   const [officers, setOfficers] = React.useState<FullOfficer[] | CombinedLeoUnit[]>(initOfficers);

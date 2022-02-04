@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, RegisteredVehicle, TruckLog } from "types/prisma";
+import type { Citizen, RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
@@ -76,7 +76,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
         <Table
           data={logs.map((log) => ({
             driver: `${log.citizen.name} ${log.citizen.surname}`,
-            vehicle: log.vehicle?.model.value?.value,
+            vehicle: log.vehicle?.model.value.value,
             startedAt: log.startedAt,
             endedAt: log.endedAt,
             actions: (

@@ -144,18 +144,22 @@ export function dataToSlate(
     | {
         description?: string | null;
         body?: string | null;
-        descriptionData?: JsonArray;
-        bodyData?: JsonArray;
+        descriptionData?: JsonArray | null;
+        bodyData?: JsonArray | null;
       }
     | null
     | undefined,
 ) {
-  const descriptionData = data?.descriptionData ?? data?.bodyData;
+  if (!data) {
+    return DEFAULT_EDITOR_DATA;
+  }
+
+  const descriptionData = data.descriptionData ?? data.bodyData;
   if (Array.isArray(descriptionData)) {
     return descriptionData as Descendant[];
   }
 
-  const description = data?.description ?? data?.body;
+  const description = data.description ?? data.body;
   if (typeof description === "string") {
     return [{ type: "paragraph", children: [{ text: description }] }] as Descendant[];
   }

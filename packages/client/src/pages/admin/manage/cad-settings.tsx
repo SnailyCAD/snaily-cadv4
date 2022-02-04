@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useAuth } from "context/AuthContext";
-import { rank } from "types/prisma";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
@@ -92,7 +92,7 @@ export default function CadSettings() {
     }
   }
 
-  if (user?.rank !== rank.OWNER) {
+  if (user?.rank !== Rank.OWNER) {
     return null;
   }
 

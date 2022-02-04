@@ -6,7 +6,7 @@ import { FullEmployee, useBusinessState } from "state/businessState";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { ManageEmployeeModal } from "./ManageEmployeeModal";
-import { EmployeeAsEnum } from "types/prisma";
+import { EmployeeAsEnum } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 

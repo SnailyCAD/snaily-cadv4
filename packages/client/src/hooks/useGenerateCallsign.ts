@@ -1,22 +1,25 @@
 import { useAuth } from "context/AuthContext";
 import type { FullDeputy, FullOfficer } from "state/dispatchState";
-import type { CombinedLeoUnit } from "types/prisma";
+import type { CombinedLeoUnit } from "@snailycad/types";
 
-type P = "callsign" | "callsign2" | "department" | "division";
-type FullUnit = Pick<FullOfficer, P | "divisions"> | Pick<FullDeputy, P> | CombinedLeoUnit;
+type P = "callsign" | "callsign2" | "department";
+type FullUnit =
+  | Pick<FullOfficer, P | "divisions">
+  | Pick<FullDeputy, P | "division">
+  | CombinedLeoUnit;
 
 export function useGenerateCallsign() {
   const { cad } = useAuth();
   const miscCadSettings = cad?.miscCadSettings;
 
   function generateCallsign(unit: FullUnit) {
-    if (!unit) return "NULL";
     if (!("department" in unit)) {
       return "NULL";
     }
 
     const { callsign, callsign2, department } = unit;
-    const unitDivision = unit.division ?? ("divisions" in unit ? unit.divisions : []);
+    const unitDivision =
+      ("division" in unit && unit.division) || ("divisions" in unit ? unit.divisions : []);
 
     const template = miscCadSettings?.callsignTemplate;
     const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
