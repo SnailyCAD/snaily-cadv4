@@ -25,3 +25,4 @@ packages/api/public/**/*.jpeg
 packages/client/public/favicon.png
 
 .husky/_
+.turbo
