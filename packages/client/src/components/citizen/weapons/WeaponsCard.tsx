@@ -21,6 +21,10 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
   const [weapons, setWeapons] = React.useState<Weapon[]>(props.weapons);
   const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
 
+  React.useEffect(() => {
+    setWeapons(props.weapons);
+  }, [props.weapons]);
+
   async function handleDelete() {
     if (!tempWeapon) return;
 

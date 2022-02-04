@@ -19,6 +19,10 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
 
+  React.useEffect(() => {
+    setVehicles(props.vehicles);
+  }, [props.vehicles]);
+
   async function handleDelete() {
     if (!tempVehicle) return;
 
