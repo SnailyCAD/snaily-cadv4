@@ -20,7 +20,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - uses: actions/cache@v2
-      - name: Cache Next.js' build dir
         with:
           path: ${{ github.workspace }}/packages/client/.next/cache
           # Generate a new cache whenever packages or source files change.
