@@ -3,7 +3,8 @@
   "version": "1.0.0-beta.49",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "tsup": "^5.11.6",
