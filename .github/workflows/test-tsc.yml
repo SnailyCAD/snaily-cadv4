@@ -22,5 +22,8 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Run turbo build
+        run: yarn turbo run build
+
       - name: Run turbo typecheck
         run: yarn turbo run typecheck
