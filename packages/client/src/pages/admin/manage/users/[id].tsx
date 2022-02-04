@@ -78,7 +78,7 @@ export default function ManageCitizens(props: Props) {
         {common("manage")} {user.username}
       </Title>
 
-      <h1 className="text-3xl font-semibold">{user?.username}</h1>
+      <h1 className="text-3xl font-semibold">{user.username}</h1>
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

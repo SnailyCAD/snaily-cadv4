@@ -63,7 +63,7 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
           model: weapon.model.value.value,
           registrationStatus: weapon.registrationStatus.value,
           serialNumber: weapon.serialNumber,
-          citizen: `${weapon.citizen?.name} ${weapon.citizen?.surname}`,
+          citizen: `${weapon.citizen.name} ${weapon.citizen.surname}`,
           createdAt: <FullDate>{weapon.createdAt}</FullDate>,
         }))}
         columns={[

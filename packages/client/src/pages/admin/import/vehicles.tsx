@@ -65,7 +65,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           color: vehicle.color,
           registrationStatus: vehicle.registrationStatus.value,
           vinNumber: vehicle.vinNumber,
-          citizen: `${vehicle.citizen?.name} ${vehicle.citizen?.surname}`,
+          citizen: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
           createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
         }))}
         columns={[

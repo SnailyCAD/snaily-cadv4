@@ -167,7 +167,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
                       <p>
                         {suggestion.plate.toUpperCase()} (
-                        {suggestion.model?.value?.value?.toUpperCase() ?? null})
+                        {suggestion.model.value.value.toUpperCase()})
                       </p>
                     )}
                   />

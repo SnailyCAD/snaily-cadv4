@@ -76,7 +76,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
         <Table
           data={logs.map((log) => ({
             driver: `${log.citizen.name} ${log.citizen.surname}`,
-            vehicle: log.vehicle?.model.value?.value,
+            vehicle: log.vehicle?.model.value.value,
             startedAt: log.startedAt,
             endedAt: log.endedAt,
             actions: (

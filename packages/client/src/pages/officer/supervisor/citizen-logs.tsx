@@ -85,7 +85,7 @@ export default function CitizenLogs({ logs: data }: Props) {
                           postal: item.records.postal || common("none"),
                           notes: item.records.notes || common("none"),
                           violations:
-                            item.records.violations.map((v) => v.penalCode?.title).join(", ") ||
+                            item.records.violations.map((v) => v.penalCode.title).join(", ") ||
                             common("none"),
                         }
                       : {

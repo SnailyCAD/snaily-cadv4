@@ -479,7 +479,7 @@ class MapClass extends React.Component<Props, MapState> {
 
       const existing = this.state.MarkerStore.find((m) => m.payload?.call?.id === call.id);
 
-      if (existing && call.position) {
+      if (existing) {
         existing.setLatLng(call.position as LatLng);
         return;
       }
