@@ -1,11 +1,8 @@
 import { Button } from "components/Button";
-import { useRouter } from "next/router";
 
 function ErrorPage({ statusCode }: any) {
-  const router = useRouter();
-
   function handleReload() {
-    router.reload();
+    window.location.reload();
   }
 
   return (
