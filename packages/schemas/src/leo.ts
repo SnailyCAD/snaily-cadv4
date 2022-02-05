@@ -19,6 +19,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
 
 export const UPDATE_UNIT_SCHEMA = z.object({
   callsign: z.string().min(1).max(255),
+  callsign2: z.string().min(1).max(255),
   department: z.string().min(2).max(255),
   division: z.string().min(2).max(255).nullable(),
   rank: z.string().max(255).nullable(),
