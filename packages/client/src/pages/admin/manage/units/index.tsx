@@ -38,10 +38,13 @@ export default function SupervisorPanelPage({ units }: Props) {
 
       <TabList
         tabs={[
-          t("Management.allUnits"),
-          t
-            .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
-            .toString(),
+          { name: t("Management.allUnits"), value: "allUnits" },
+          {
+            name: t
+              .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
+              .toString(),
+            value: "departmentWhitelisting",
+          },
         ]}
       >
         <AllUnitsTab units={units} />

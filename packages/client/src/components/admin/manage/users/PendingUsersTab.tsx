@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
@@ -37,7 +37,7 @@ export function PendingUsersTab({ setUsers, search, users }: Props) {
   }
 
   return (
-    <Tab.Panel>
+    <TabsContent aria-label={t("pendingUsers")} value="pendingUsers">
       <h3 className="my-4 text-xl font-semibold">{t("pendingUsers")}</h3>
 
       {users.length <= 0 ? (
@@ -69,6 +69,6 @@ export function PendingUsersTab({ setUsers, search, users }: Props) {
           ]}
         />
       )}
-    </Tab.Panel>
+    </TabsContent>
   );
 }

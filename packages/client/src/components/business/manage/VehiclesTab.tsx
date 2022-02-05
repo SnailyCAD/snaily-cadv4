@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useBusinessState } from "state/businessState";
@@ -54,7 +54,7 @@ export function VehiclesTab() {
   }
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("Business.businessVehicles")} value="businessVehicles">
       <header className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">{bus("businessVehicles")}</h3>
 
@@ -139,6 +139,6 @@ export function VehiclesTab() {
         citizens={[currentEmployee?.citizen]}
         vehicle={tempVehicle}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

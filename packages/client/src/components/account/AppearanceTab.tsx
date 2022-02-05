@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
@@ -37,7 +37,7 @@ export function AppearanceTab() {
   }
 
   return (
-    <Tab.Panel>
+    <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
       <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -64,6 +64,6 @@ export function AppearanceTab() {
           </Form>
         )}
       </Formik>
-    </Tab.Panel>
+    </TabsContent>
   );
 }

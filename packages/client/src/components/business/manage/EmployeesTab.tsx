@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FullEmployee, useBusinessState } from "state/businessState";
@@ -67,7 +67,7 @@ export function EmployeesTab() {
   }
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("allEmployees")} value="allEmployees">
       <h3 className="text-2xl font-semibold">{t("employees")}</h3>
 
       <ul className="mt-3 space-y-3">
@@ -123,6 +123,6 @@ export function EmployeesTab() {
       />
 
       <ManageEmployeeModal onUpdate={handleUpdate} employee={tempEmployee} />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

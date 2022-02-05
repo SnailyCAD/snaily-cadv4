@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { useBusinessState } from "state/businessState";
 import { useModal } from "context/ModalContext";
@@ -67,7 +66,7 @@ export function ManageBusinessTab() {
   };
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("business")} value="business">
       <h3 className="text-2xl font-semibold">{t("business")}</h3>
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -139,6 +138,6 @@ export function ManageBusinessTab() {
         state={state}
         onDeleteClick={handleDeleteBusiness}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

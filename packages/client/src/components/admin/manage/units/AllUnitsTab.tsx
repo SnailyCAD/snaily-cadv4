@@ -7,7 +7,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 
 interface Props {
@@ -46,7 +46,7 @@ export function AllUnitsTab({ units }: Props) {
   };
 
   return (
-    <Tab.Panel>
+    <TabsContent value="allUnits">
       <Button
         disabled={tableSelect.selectedRows.length <= 0}
         onClick={setSelectedUnitsOffDuty}
@@ -114,6 +114,6 @@ export function AllUnitsTab({ units }: Props) {
           { Header: common("actions"), accessor: "actions" },
         ]}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

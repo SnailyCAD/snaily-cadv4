@@ -14,8 +14,7 @@ import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { TabList } from "components/shared/TabList";
-import { Tab } from "@headlessui/react";
+import { TabList, TabsContent } from "components/shared/TabList";
 import { requestAll } from "lib/utils";
 import { handleValidate } from "lib/handleValidate";
 import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
@@ -51,11 +50,11 @@ export default function CadSettings() {
   const common = useTranslations("Common");
 
   const SETTINGS_TABS = [
-    t("GENERAL_SETTINGS"),
-    t("FEATURES"),
-    t("MISC_SETTINGS"),
-    "Auto set user properties",
-    "Api Token",
+    { name: t("GENERAL_SETTINGS"), value: "GENERAL_SETTINGS" },
+    { name: t("FEATURES"), value: "FEATURES" },
+    { name: t("MISC_SETTINGS"), value: "MISC_SETTINGS" },
+    { name: "Auto set user properties", value: "AUTO_SET_PROPERTIES" },
+    { name: "Api Token", value: "API_TOKEN" },
   ];
 
   async function onSubmit(
@@ -121,7 +120,7 @@ export default function CadSettings() {
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
 
       <TabList tabs={SETTINGS_TABS}>
-        <Tab.Panel className="mt-3">
+        <TabsContent value="GENERAL_SETTINGS">
           <h2 className="text-2xl font-semibold">General Settings</h2>
 
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -218,19 +217,19 @@ export default function CadSettings() {
               </form>
             )}
           </Formik>
-        </Tab.Panel>
+        </TabsContent>
 
-        <Tab.Panel>
+        <TabsContent aria-label={t("FEATURES")} value="FEATURES">
           <DisabledFeaturesArea />
-        </Tab.Panel>
+        </TabsContent>
 
-        <Tab.Panel>
+        <TabsContent aria-label={t("MISC_SETTINGS")} value="MISC_SETTINGS">
           <MiscFeatures />
-        </Tab.Panel>
+        </TabsContent>
 
-        <Tab.Panel>
+        <TabsContent aria-label="Auto set user properties" value="AUTO_SET_PROPERTIES">
           <AutoSetUserPropertiesTab />
-        </Tab.Panel>
+        </TabsContent>
 
         <ApiTokenTab />
       </TabList>

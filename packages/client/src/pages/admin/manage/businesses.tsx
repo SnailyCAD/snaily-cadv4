@@ -1,6 +1,6 @@
 import { useTranslations } from "use-intl";
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent, TabList } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
@@ -15,7 +15,6 @@ import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { requestAll, yesOrNoText } from "lib/utils";
-import { TabList } from "components/shared/TabList";
 import { PendingBusinessesTab } from "components/admin/manage/business/PendingBusinessesTab";
 import { useAuth } from "context/AuthContext";
 import { Table } from "components/shared/Table";
@@ -44,6 +43,17 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   const common = useTranslations("Common");
   const businessWhitelisted = cad?.businessWhitelisted ?? false;
   const pendingBusinesses = businesses.filter((v) => v.status === WhitelistStatus.PENDING);
+
+  const TABS = [
+    {
+      name: t("allBusinesses"),
+      value: "allBusinesses",
+    },
+    {
+      name: `${t("pendingBusinesses")} (${pendingBusinesses.length})`,
+      value: "pendingBusinesses",
+    },
+  ];
 
   function handleDeleteClick(value: FullBusiness) {
     setTempValue(value);
@@ -83,14 +93,8 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 
-      <TabList
-        tabs={
-          businessWhitelisted
-            ? [t("allBusinesses"), `${t("pendingBusinesses")} (${pendingBusinesses.length})`]
-            : [t("allBusinesses")]
-        }
-      >
-        <Tab.Panel className="mt-3">
+      <TabList tabs={businessWhitelisted ? TABS : TABS.splice(0, 1)}>
+        <TabsContent value="allBusinesses">
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
 
           {businesses.length <= 0 ? (
@@ -132,7 +136,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
               ]}
             />
           )}
-        </Tab.Panel>
+        </TabsContent>
         <PendingBusinessesTab setBusinesses={setBusinesses} businesses={pendingBusinesses} />
       </TabList>
 
