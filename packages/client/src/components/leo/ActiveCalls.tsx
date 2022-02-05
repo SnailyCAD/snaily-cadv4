@@ -156,6 +156,7 @@ function ActiveCallsInner() {
           <p className="py-2">{t("no911Calls")}</p>
         ) : (
           <Table
+            isWithinCard
             filter={search}
             data={calls
               .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))

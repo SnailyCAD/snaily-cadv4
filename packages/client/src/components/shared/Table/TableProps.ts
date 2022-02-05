@@ -8,6 +8,7 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
   defaultSort?: DefaultSort;
   dragDrop?: DragDrop;
+  isWithinCard?: boolean;
 }
 
 interface DefaultSort {

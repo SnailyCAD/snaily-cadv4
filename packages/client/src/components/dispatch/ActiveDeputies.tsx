@@ -45,6 +45,7 @@ export function ActiveDeputies() {
         <p className="px-4 py-2">{t("Ems.noActiveDeputies")}</p>
       ) : (
         <Table
+          isWithinCard
           containerProps={{ className: "mb-3 px-4" }}
           data={activeDeputies.map((deputy) => {
             const color = deputy.status?.color;

@@ -62,6 +62,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <p className="text-gray-600 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
           <Table
+            isWithinCard
             data={vehicles.map((vehicle) => ({
               plate: vehicle.plate,
               model: vehicle.model.value.value,

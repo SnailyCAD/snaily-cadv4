@@ -97,7 +97,7 @@ model User {
   isDarkTheme           Boolean               @default(true)
   tempPassword          String?
   statusViewMode        StatusViewMode        @default(DOT_COLOR)
-  tableActionsAlignment TableActionsAlignment @default(LEFT)
+  tableActionsAlignment TableActionsAlignment @default(RIGHT)
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @default(now()) @updatedAt
   discordId             String?

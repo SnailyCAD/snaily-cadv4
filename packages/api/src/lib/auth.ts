@@ -26,6 +26,7 @@ export const userProperties = {
   tempPassword: true,
   statusViewMode: true,
   discordId: true,
+  tableActionsAlignment: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
