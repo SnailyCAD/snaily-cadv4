@@ -3,7 +3,11 @@
   "pipeline": {
     "build": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "$CORS_ORIGIN_URL",
+        "$NEXT_PUBLIC_PROD_ORIGIN",
+        "$NODE_ENV",
+        "$IFRAME_SUPPORT_ENABLED"
       ],
       "outputs": [
         ".next/**",
@@ -16,5 +20,8 @@
       ],
       "outputs": []
     }
-  }
+  },
+  "globalDependencies": [
+    "**/.env"
+  ]
 }
