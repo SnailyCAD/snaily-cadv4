@@ -7,7 +7,7 @@ type DescriptionData = JsonArray;
  * Model cad
  *
  */
-export type cad = {
+export interface cad {
   id: string;
   name: string;
   ownerId: string;
@@ -30,13 +30,13 @@ export type cad = {
   updatedAt: Date;
   autoSetUserPropertiesId: string | null;
   autoSetUserProperties: AutoSetUserProperties | null;
-};
+}
 
 /**
  * Model MiscCadSettings
  *
  */
-export type MiscCadSettings = {
+export interface MiscCadSettings {
   id: string;
   heightPrefix: string;
   weightPrefix: string;
@@ -52,35 +52,35 @@ export type MiscCadSettings = {
   roleplayEnabled: boolean | null;
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
-};
+}
 
 /**
  * Model AutoSetUserProperties
  *
  */
-export type AutoSetUserProperties = {
+export interface AutoSetUserProperties {
   id: string;
   leo: boolean | null;
   dispatch: boolean | null;
   emsFd: boolean | null;
-};
+}
 
 /**
  * Model ApiToken
  *
  */
-export type ApiToken = {
+export interface ApiToken {
   id: string;
   enabled: boolean;
   token: string | null;
   routes: string[];
-};
+}
 
 /**
  * Model User
  *
  */
-export type User = {
+export interface User {
   id: string;
   username: string;
   password: string;
@@ -103,23 +103,23 @@ export type User = {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
-};
+}
 
 /**
  * Model User2FA
  *
  */
-export type User2FA = {
+export interface User2FA {
   id: string;
   secret: string;
   userId: string;
-};
+}
 
 /**
  * Model Citizen
  *
  */
-export type Citizen = {
+export interface Citizen {
   id: string;
   socialSecurityNumber: string | null;
   userId: string | null;
@@ -154,13 +154,13 @@ export type Citizen = {
   createdAt: Date;
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
-};
+}
 
 /**
  * Model RegisteredVehicle
  *
  */
-export type RegisteredVehicle = {
+export interface RegisteredVehicle {
   id: string;
   userId: string | null;
   citizenId: string;
@@ -177,13 +177,13 @@ export type RegisteredVehicle = {
   insuranceStatus: string;
   reportedStolen: boolean;
   impounded: boolean;
-};
+}
 
 /**
  * Model Weapon
  *
  */
-export type Weapon = {
+export interface Weapon {
   id: string;
   userId: string | null;
   citizenId: string;
@@ -194,13 +194,13 @@ export type Weapon = {
   registrationStatus: Value<ValueType.LICENSE>;
   modelId: string;
   model: WeaponValue;
-};
+}
 
 /**
  * Model MedicalRecord
  *
  */
-export type MedicalRecord = {
+export interface MedicalRecord {
   id: string;
   userId: string | null;
   citizenId: string;
@@ -210,13 +210,13 @@ export type MedicalRecord = {
   description: string | null;
   bloodGroupId: string | null;
   bloodGroup: Value<ValueType.BLOOD_GROUP> | null;
-};
+}
 
 /**
  * Model Value
  *
  */
-export type Value<Type extends ValueType> = {
+export interface Value<Type extends ValueType> {
   id: string;
   type: Type;
   value: string;
@@ -225,13 +225,13 @@ export type Value<Type extends ValueType> = {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
-};
+}
 
 /**
  * Model PenalCode
  *
  */
-export type PenalCode = {
+export interface PenalCode {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -244,71 +244,71 @@ export type PenalCode = {
   warningNotApplicable: WarningNotApplicable | null;
   position: number | null;
   groupId: string | null;
-};
+}
 
 /**
  * Model PenalCodeGroup
  *
  */
-export type PenalCodeGroup = {
+export interface PenalCodeGroup {
   id: string;
   position: number | null;
   createdAt: Date;
   updatedAt: Date;
   name: string;
-};
+}
 
 /**
  * Model WarningApplicable
  *
  */
-export type WarningApplicable = {
+export interface WarningApplicable {
   id: string;
   fines: number[];
-};
+}
 
 /**
  * Model WarningNotApplicable
  *
  */
-export type WarningNotApplicable = {
+export interface WarningNotApplicable {
   id: string;
   fines: number[];
   prisonTerm: number[];
   bail: number[];
-};
+}
 
 /**
  * Model Violation
  *
  */
-export type Violation = {
+export interface Violation {
   id: string;
   fine: number | null;
   jailTime: number | null;
   bail: number | null;
   penalCodeId: string;
   penalCode: PenalCode;
-};
+}
 
 /**
  * Model DivisionValue
  *
  */
-export type DivisionValue = {
+export interface DivisionValue {
   id: string;
   valueId: string;
   value: Value<ValueType.DIVISION>;
   departmentId: string;
   department: DepartmentValue;
   callsign: string | null;
-};
+}
 
 /**
  * Model DepartmentValue
  *
  */
-export type DepartmentValue = {
+export interface DepartmentValue {
   id: string;
   valueId: string;
   value: Value<ValueType.DEPARTMENT>;
@@ -316,46 +316,46 @@ export type DepartmentValue = {
   whitelisted: boolean;
   isDefaultDepartment: boolean;
   type: DepartmentType;
-};
+}
 
 /**
  * Model DriversLicenseCategoryValue
  *
  */
-export type DriversLicenseCategoryValue = {
+export interface DriversLicenseCategoryValue {
   id: string;
   valueId: string;
   value: Value<ValueType.DRIVERSLICENSE_CATEGORY>;
   type: DriversLicenseCategoryType;
-};
+}
 
 /**
  * Model VehicleValue
  *
  */
-export type VehicleValue = {
+export interface VehicleValue {
   id: string;
   valueId: string;
   value: Value<ValueType.VEHICLE>;
   hash: string | null;
-};
+}
 
 /**
  * Model WeaponValue
  *
  */
-export type WeaponValue = {
+export interface WeaponValue {
   id: string;
   valueId: string;
   value: Value<ValueType.WEAPON>;
   hash: string | null;
-};
+}
 
 /**
  * Model Notification
  *
  */
-export type Notification = {
+export interface Notification {
   id: string;
   userId: string;
   executorId: string;
@@ -363,13 +363,13 @@ export type Notification = {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model BleeterPost
  *
  */
-export type BleeterPost = {
+export interface BleeterPost {
   id: string;
   userId: string;
   title: string;
@@ -378,13 +378,13 @@ export type BleeterPost = {
   imageId: string | null;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model TowCall
  *
  */
-export type TowCall = {
+export interface TowCall {
   id: string;
   userId: string | null;
   assignedUnitId: string | null;
@@ -402,13 +402,13 @@ export type TowCall = {
   callCountyService: boolean;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model TaxiCall
  *
  */
-export type TaxiCall = {
+export interface TaxiCall {
   id: string;
   userId: string | null;
   assignedUnitId: string | null;
@@ -421,13 +421,13 @@ export type TaxiCall = {
   creator: Citizen | null;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model Business
  *
  */
-export type Business = {
+export interface Business {
   id: string;
   userId: string;
   citizenId: string;
@@ -438,13 +438,13 @@ export type Business = {
   address: string;
   postal: string | null;
   status: WhitelistStatus | null;
-};
+}
 
 /**
  * Model Employee
  *
  */
-export type Employee = {
+export interface Employee {
   id: string;
   userId: string;
   citizenId: string;
@@ -455,13 +455,13 @@ export type Employee = {
   whitelistStatus: WhitelistStatus;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model BusinessPost
  *
  */
-export type BusinessPost = {
+export interface BusinessPost {
   id: string;
   userId: string;
   employeeId: string;
@@ -471,24 +471,24 @@ export type BusinessPost = {
   bodyData: DescriptionData | null;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model EmployeeValue
  *
  */
-export type EmployeeValue = {
+export interface EmployeeValue {
   id: string;
   valueId: string;
   value: Value<ValueType.BUSINESS_ROLE>;
   as: EmployeeAsEnum;
-};
+}
 
 /**
  * Model Officer
  *
  */
-export type Officer = {
+export interface Officer {
   id: string;
   departmentId: string | null;
   department: DepartmentValue;
@@ -509,24 +509,24 @@ export type Officer = {
   updatedAt: Date;
   whitelistStatusId: string | null;
   combinedLeoUnitId: string | null;
-};
+}
 
 /**
  * Model LeoWhitelistStatus
  *
  */
-export type LeoWhitelistStatus = {
+export interface LeoWhitelistStatus {
   id: string;
   status: WhitelistStatus;
   departmentId: string;
   department: DepartmentValue;
-};
+}
 
 /**
  * Model StatusValue
  *
  */
-export type StatusValue = {
+export interface StatusValue {
   id: string;
   valueId: string;
   value: Value<ValueType.CODES_10>;
@@ -534,13 +534,13 @@ export type StatusValue = {
   whatPages: WhatPages[];
   color: string | null;
   type: StatusValueType;
-};
+}
 
 /**
  * Model OfficerLog
  *
  */
-export type OfficerLog = {
+export interface OfficerLog {
   id: string;
   startedAt: Date;
   endedAt: Date | null;
@@ -548,13 +548,13 @@ export type OfficerLog = {
   officerId: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model ImpoundedVehicle
  *
  */
-export type ImpoundedVehicle = {
+export interface ImpoundedVehicle {
   id: string;
   registeredVehicleId: string;
   vehicle: RegisteredVehicle;
@@ -562,13 +562,13 @@ export type ImpoundedVehicle = {
   location: Value<ValueType.IMPOUND_LOT>;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model LeoIncident
  *
  */
-export type LeoIncident = {
+export interface LeoIncident {
   id: string;
   caseNumber: number;
   description: string | null;
@@ -579,36 +579,36 @@ export type LeoIncident = {
   arrestsMade: boolean;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model CombinedLeoUnit
  *
  */
-export type CombinedLeoUnit = {
+export interface CombinedLeoUnit {
   id: string;
   callsign: string;
   statusId: string | null;
   status: StatusValue | null;
   officers: Officer[];
-};
+}
 
 /**
  * Model ActiveDispatchers
  *
  */
-export type ActiveDispatchers = {
+export interface ActiveDispatchers {
   id: string;
   createdAt: Date;
   updatedAt: Date;
   userId: string;
-};
+}
 
 /**
  * Model Call911
  *
  */
-export type Call911 = {
+export interface Call911 {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -623,23 +623,23 @@ export type Call911 = {
   ended: boolean | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
-};
+}
 
 /**
  * Model Position
  *
  */
-export type Position = {
+export interface Position {
   id: string;
   lat: number | null;
   lng: number | null;
-};
+}
 
 /**
  * Model AssignedUnit
  *
  */
-export type AssignedUnit = {
+export interface AssignedUnit {
   id: string;
   officerId: string | null;
   emsFdDeputyId: string | null;
@@ -648,25 +648,25 @@ export type AssignedUnit = {
   createdAt: Date;
   updatedAt: Date;
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
-};
+}
 
 /**
  * Model Call911Event
  *
  */
-export type Call911Event = {
+export interface Call911Event {
   id: string;
   createdAt: Date;
   updatedAt: Date;
   call911Id: string;
   description: string;
-};
+}
 
 /**
  * Model Bolo
  *
  */
-export type Bolo = {
+export interface Bolo {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -677,13 +677,13 @@ export type Bolo = {
   color: string | null;
   name: string | null;
   officerId: string | null;
-};
+}
 
 /**
  * Model Record
  *
  */
-export type Record = {
+export interface Record {
   id: string;
   type: RecordType;
   citizenId: string;
@@ -696,24 +696,24 @@ export type Record = {
   releaseId: string | null;
   expungementRequestId: string | null;
   violations: Violation[];
-};
+}
 
 /**
  * Model RecordRelease
  *
  */
-export type RecordRelease = {
+export interface RecordRelease {
   id: string;
   type: ReleaseType;
   citizenId: string | null;
   releasedBy: Citizen | null;
-};
+}
 
 /**
  * Model Warrant
  *
  */
-export type Warrant = {
+export interface Warrant {
   id: string;
   citizenId: string;
   officerId: string;
@@ -723,13 +723,13 @@ export type Warrant = {
   createdAt: Date;
   updatedAt: Date;
   expungementRequestId: string | null;
-};
+}
 
 /**
  * Model RecordLog
  *
  */
-export type RecordLog = {
+export interface RecordLog {
   id: string;
   citizenId: string;
   recordId: string | null;
@@ -738,26 +738,26 @@ export type RecordLog = {
   warrant: Warrant | null;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model ExpungementRequest
  *
  */
-export type ExpungementRequest = {
+export interface ExpungementRequest {
   id: string;
   citizenId: string;
   userId: string | null;
   status: ExpungementRequestStatus;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model EmsFdDeputy
  *
  */
-export type EmsFdDeputy = {
+export interface EmsFdDeputy {
   id: string;
   departmentId: string;
   department: DepartmentValue;
@@ -777,13 +777,13 @@ export type EmsFdDeputy = {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Model TruckLog
  *
  */
-export type TruckLog = {
+export interface TruckLog {
   id: string;
   citizenId: string | null;
   userId: string;
@@ -792,7 +792,7 @@ export type TruckLog = {
   endedAt: string;
   createdAt: Date;
   updatedAt: Date;
-};
+}
 
 /**
  * Enums
