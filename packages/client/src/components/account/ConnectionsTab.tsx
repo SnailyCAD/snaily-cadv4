@@ -1,5 +1,4 @@
-import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import { useTranslations } from "use-intl";
@@ -27,7 +26,7 @@ export function ConnectionsTab() {
   }
 
   return (
-    <Tab.Panel>
+    <TabsContent aria-label={t("connections")} value="connections">
       <h3 className="text-2xl font-semibold">{t("connections")}</h3>
       <div className="mt-5">
         {user?.discordId ? (
@@ -44,6 +43,6 @@ export function ConnectionsTab() {
           </>
         )}
       </div>
-    </Tab.Panel>
+    </TabsContent>
   );
 }

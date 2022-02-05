@@ -28,7 +28,7 @@ li {
 
 [data-list-item="true"]::before {
   content: "•";
-  padding: 0 5px ;
+  padding: 0 5px;
 }
 
 table {
@@ -82,6 +82,14 @@ th {
 
 .switch-component[data-state="unchecked"] {
   transform: translateX(3px);
+}
+
+.tabs-list[data-state="inactive"] {
+  @apply text-neutral-800 dark:text-gray-300/75 hover:border-gray-300 hover:dark:border-[#303236];
+}
+
+.tabs-list[data-state="active"] {
+  @apply text-black dark:text-white border-b-2 border-neutral-500 dark:border-[#4c4f55];
 }
 
 .thin-scrollbar {

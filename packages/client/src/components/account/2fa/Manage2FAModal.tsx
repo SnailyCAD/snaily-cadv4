@@ -145,7 +145,13 @@ export function Manage2FAModal() {
                 <p className="my-3 mb-5 dark:text-gray-300">{t("verifyCode")}</p>
 
                 <FormField errorMessage={errors.totpCode} label="Code">
-                  <Input required name="totpCode" value={values.totpCode} onChange={handleChange} />
+                  <Input
+                    autoFocus
+                    required
+                    name="totpCode"
+                    value={values.totpCode}
+                    onChange={handleChange}
+                  />
                 </FormField>
               </>
             ) : null}

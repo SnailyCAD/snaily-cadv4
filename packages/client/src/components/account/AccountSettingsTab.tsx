@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 
@@ -36,7 +36,7 @@ export function AccountSettingsTab() {
   }
 
   return (
-    <Tab.Panel>
+    <TabsContent aria-label={t("accountSettings")} value="accountSettings">
       <h3 className="text-2xl font-semibold">{t("accountSettings")}</h3>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -66,6 +66,6 @@ export function AccountSettingsTab() {
 
       <ChangePasswordArea />
       <Manage2FAModal />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

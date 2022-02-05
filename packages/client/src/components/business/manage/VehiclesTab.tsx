@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useBusinessState } from "state/businessState";
@@ -9,6 +9,8 @@ import type { RegisteredVehicle } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
 import { AlertModal } from "components/modal/AlertModal";
+import { FullDate } from "components/shared/FullDate";
+import { Table } from "components/shared/Table";
 
 export function VehiclesTab() {
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
@@ -20,6 +22,7 @@ export function VehiclesTab() {
   const t = useTranslations();
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
+  const vehicles = currentBusiness?.vehicles ?? [];
 
   function handleManageClick(employee: RegisteredVehicle) {
     setTempVehicle(employee);
@@ -54,7 +57,7 @@ export function VehiclesTab() {
   }
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("Business.businessVehicles")} value="businessVehicles">
       <header className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">{bus("businessVehicles")}</h3>
 
@@ -65,45 +68,46 @@ export function VehiclesTab() {
         </div>
       </header>
 
-      <ul className="mt-3 space-y-3">
-        {(currentBusiness?.vehicles ?? []).map((vehicle) => (
-          <li className="flex items-baseline justify-between p-4 card" key={vehicle.id}>
-            <div>
-              <span className="text-xl font-semibold">{vehicle.plate}</span>
-              <p>
-                <span className="font-semibold">{t("Vehicles.model")}: </span>
-                {vehicle.model.value.value}
-              </p>
-              <p>
-                <span className="font-semibold">{t("Vehicles.color")}: </span>
-                {vehicle.color}
-              </p>
-              <p>
-                <span className="font-semibold">{t("Vehicles.owner")}: </span>
-                {vehicle.citizen?.name} {vehicle.citizen?.surname}
-              </p>
-              <p>
-                <span className="font-semibold">{t("Vehicles.registrationStatus")}: </span>
-                {vehicle.registrationStatus.value}
-              </p>
-            </div>
-
-            <div>
-              <Button small onClick={() => handleManageClick(vehicle)} variant="success">
-                {common("manage")}
+      <Table
+        data={vehicles.map((vehicle) => ({
+          plate: vehicle.plate,
+          model: vehicle.model.value.value,
+          color: vehicle.color,
+          registrationStatus: vehicle.registrationStatus.value,
+          vinNumber: vehicle.vinNumber,
+          createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+          actions: (
+            <>
+              <Button
+                disabled={vehicle.impounded}
+                onClick={() => handleManageClick(vehicle)}
+                small
+                variant="success"
+              >
+                {common("edit")}
               </Button>
               <Button
-                small
-                onClick={() => handleDeleteClick(vehicle)}
+                disabled={vehicle.impounded}
                 className="ml-2"
+                onClick={() => handleDeleteClick(vehicle)}
+                small
                 variant="danger"
               >
                 {common("delete")}
               </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </>
+          ),
+        }))}
+        columns={[
+          { Header: t("Vehicles.plate"), accessor: "plate" },
+          { Header: t("Vehicles.model"), accessor: "model" },
+          { Header: t("Vehicles.color"), accessor: "color" },
+          { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
+          { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
+          { Header: common("createdAt"), accessor: "createdAt" },
+          { Header: common("actions"), accessor: "actions" },
+        ]}
+      />
 
       <AlertModal
         className="w-[600px]"
@@ -139,6 +143,6 @@ export function VehiclesTab() {
         citizens={[currentEmployee?.citizen]}
         vehicle={tempVehicle}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

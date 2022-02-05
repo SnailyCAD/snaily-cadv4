@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FullEmployee, useBusinessState } from "state/businessState";
@@ -9,6 +9,8 @@ import { ManageEmployeeModal } from "./ManageEmployeeModal";
 import { EmployeeAsEnum } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { Table } from "components/shared/Table";
+import { yesOrNoText } from "lib/utils";
 
 export function EmployeesTab() {
   const [tempEmployee, setTempEmployee] = React.useState<FullEmployee | null>(null);
@@ -19,6 +21,7 @@ export function EmployeesTab() {
   const t = useTranslations("Business");
 
   const { currentBusiness, currentEmployee, setCurrentBusiness } = useBusinessState();
+  const employees = currentBusiness?.employees ?? [];
 
   function handleUpdate(old: FullEmployee, newE: FullEmployee) {
     if (!currentBusiness) return;
@@ -57,57 +60,61 @@ export function EmployeesTab() {
   }
 
   function handleManageClick(employee: FullEmployee) {
+    if (employee.role.as === EmployeeAsEnum.OWNER) return;
     setTempEmployee(employee);
     openModal(ModalIds.ManageEmployee);
   }
 
   function handleFireClick(employee: FullEmployee) {
+    if (employee.role.as === EmployeeAsEnum.OWNER) return;
     setTempEmployee(employee);
     openModal(ModalIds.AlertFireEmployee);
   }
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("allEmployees")} value="allEmployees">
       <h3 className="text-2xl font-semibold">{t("employees")}</h3>
 
-      <ul className="mt-3 space-y-3">
-        {currentBusiness?.employees.map((employee) => (
-          <li className="flex items-baseline justify-between p-4 card" key={employee.id}>
-            <div>
-              <span className="text-xl font-semibold">
-                {employee.citizen.name} {employee.citizen.surname}
-              </span>
-              <p>
-                <span className="font-semibold">{t("role")}: </span>
-                {employee.role?.value?.value}
-              </p>
-              <p>
-                <span className="font-semibold">{t("canCreatePosts")}: </span>
-                {String(employee.canCreatePosts)}
-              </p>
-              <p>
-                <span className="font-semibold">{t("employeeOfTheMonth")}: </span>
-                {String(employee.employeeOfTheMonth)}
-              </p>
-              <p>
-                <span className="font-semibold">{t("whitelistStatus")}: </span>
-                {String(employee.whitelistStatus)}
-              </p>
-            </div>
-
-            {employee.role.as !== EmployeeAsEnum.OWNER ? (
-              <div>
-                <Button onClick={() => handleManageClick(employee)} variant="success">
-                  {common("manage")}
-                </Button>
-                <Button onClick={() => handleFireClick(employee)} className="ml-2" variant="danger">
-                  {t("fire")}
-                </Button>
-              </div>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+      <Table
+        data={employees.map((employee) => ({
+          name: `${employee.citizen.name} ${employee.citizen.surname}`,
+          role: employee.role.value.value,
+          canCreatePosts: common(yesOrNoText(employee.canCreatePosts)),
+          employeeOfTheMonth: common(yesOrNoText(employee.employeeOfTheMonth)),
+          whitelistStatus: (
+            <span className="capitalize">{employee.whitelistStatus.toLowerCase()}</span>
+          ),
+          actions: (
+            <>
+              <Button
+                small
+                disabled={employee.role.as === EmployeeAsEnum.OWNER}
+                onClick={() => handleManageClick(employee)}
+                variant="success"
+              >
+                {common("manage")}
+              </Button>
+              <Button
+                small
+                disabled={employee.role.as === EmployeeAsEnum.OWNER}
+                onClick={() => handleFireClick(employee)}
+                className="ml-2"
+                variant="danger"
+              >
+                {t("fire")}
+              </Button>
+            </>
+          ),
+        }))}
+        columns={[
+          { Header: common("name"), accessor: "name" },
+          { Header: t("role"), accessor: "role" },
+          { Header: t("canCreatePosts"), accessor: "canCreatePosts" },
+          { Header: t("employeeOfTheMonth"), accessor: "employeeOfTheMonth" },
+          { Header: t("whitelistStatus"), accessor: "whitelistStatus" },
+          { Header: common("actions"), accessor: "actions" },
+        ]}
+      />
 
       <AlertModal
         id={ModalIds.AlertFireEmployee}
@@ -123,6 +130,6 @@ export function EmployeesTab() {
       />
 
       <ManageEmployeeModal onUpdate={handleUpdate} employee={tempEmployee} />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
 import useFetch from "lib/useFetch";
@@ -32,7 +32,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
   }
 
   return (
-    <Tab.Panel className="mt-3">
+    <TabsContent aria-label={t("pendingBusinesses")} value="pendingBusinesses">
       <h2 className="text-2xl font-semibold mb-2">{t("pendingBusinesses")}</h2>
       <p className="text-gray-300">{t("info_pendingBusinesses")}</p>
 
@@ -70,6 +70,6 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
           { Header: common("actions"), accessor: "actions" },
         ]}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }

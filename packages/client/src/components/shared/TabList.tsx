@@ -1,37 +1,42 @@
 import type * as React from "react";
-import { Tab } from "@headlessui/react";
+import * as Tabs from "@radix-ui/react-tabs";
 import { classNames } from "lib/classNames";
 
-interface Props {
-  tabs: string[];
-  defaultIndex?: number;
+interface Tab {
+  value: string;
+  name: string;
+}
+
+interface Props<Tabs extends Tab[]> {
+  tabs: Tabs;
+  defaultValue?: Tabs[number]["value"];
   children: React.ReactNode;
 }
 
-export function TabList({ defaultIndex, children, tabs }: Props) {
+export function TabList<Tabs extends Tab[]>({
+  children,
+  tabs,
+  defaultValue = tabs[0]?.value,
+}: Props<Tabs>) {
   return (
-    <div className="w-full px-2 sm:px-0">
-      <Tab.Group defaultIndex={defaultIndex}>
-        <Tab.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2">
-          {tabs.map((tab) => (
-            <Tab
-              key={tab}
-              className={({ selected }) =>
-                classNames(
-                  "py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-colors",
-                  selected
-                    ? "text-black dark:text-white border-b-2 border-neutral-500 dark:border-[#4c4f55]"
-                    : "text-neutral-800 dark:text-gray-300/75 hover:border-gray-300 hover:dark:border-[#303236]",
-                )
-              }
-            >
-              {tab}
-            </Tab>
-          ))}
-        </Tab.List>
+    <Tabs.Root defaultValue={defaultValue} className="w-full px-2 sm:px-0">
+      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2">
+        {tabs.map((tab) => (
+          <Tabs.Trigger
+            value={tab.value}
+            key={tab.value}
+            className={classNames(
+              "tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border",
+            )}
+          >
+            {tab.name}
+          </Tabs.Trigger>
+        ))}
+      </Tabs.List>
 
-        <Tab.Panels>{children}</Tab.Panels>
-      </Tab.Group>
-    </div>
+      <div className="mt-3">{children}</div>
+    </Tabs.Root>
   );
 }
+
+export const TabsContent = Tabs.Content;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { PasswordInput } from "components/form/inputs/Input";
@@ -50,7 +50,7 @@ export function ApiTokenTab() {
   };
 
   return (
-    <Tab.Panel>
+    <TabsContent aria-label="API Token" value="API_TOKEN">
       <h2 className="mt-2 text-2xl font-semibold">Public API access</h2>
 
       <p className="my-2">
@@ -102,6 +102,6 @@ export function ApiTokenTab() {
           </form>
         )}
       </Formik>
-    </Tab.Panel>
+    </TabsContent>
   );
 }

@@ -1,11 +1,10 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { Tab } from "@headlessui/react";
+import { TabsContent, TabList } from "components/shared/TabList";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "src/context/AuthContext";
-import { TabList } from "components/shared/TabList";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
@@ -47,12 +46,16 @@ export default function Account() {
   }, [error, mounted]);
 
   const tab = router.query.tab;
-  const discordIndex = DISCORD_AUTH ? (tab === "discord" ? 3 : undefined) : undefined;
+  const discordValue = DISCORD_AUTH ? (tab === "discord" ? "connections" : undefined) : undefined;
 
-  const TABS_TITLES = [t("accountInfo"), t("accountSettings"), t("appearanceSettings")];
+  const TABS_TITLES = [
+    { name: t("accountInfo"), value: "accountInfo" },
+    { name: t("accountSettings"), value: "accountSettings" },
+    { name: t("appearanceSettings"), value: "appearanceSettings" },
+  ];
 
   if (DISCORD_AUTH) {
-    TABS_TITLES[3] = t("connections");
+    TABS_TITLES[3] = { name: t("connections"), value: "connections" };
   }
 
   if (!user) {
@@ -65,26 +68,24 @@ export default function Account() {
 
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
-          <TabList defaultIndex={discordIndex} tabs={TABS_TITLES}>
-            <Tab.Panels className="mt-2 dark:text-white">
-              <Tab.Panel>
-                <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
-                <div className="mt-2">
-                  {Object.entries(user)
-                    .filter(([k]) => k !== "cad")
-                    .map(([key, value]) => {
-                      return (
-                        <p key={key}>
-                          <span className="font-semibold capitalize">{key}: </span> {String(value)}
-                        </p>
-                      );
-                    })}
-                </div>
-              </Tab.Panel>
-              <AccountSettingsTab />
-              <AppearanceTab />
-              {DISCORD_AUTH ? <ConnectionsTab /> : null}
-            </Tab.Panels>
+          <TabList defaultValue={discordValue} tabs={TABS_TITLES}>
+            <TabsContent aria-label={t("accountInfo")} value="accountInfo">
+              <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
+              <div className="mt-2">
+                {Object.entries(user)
+                  .filter(([k]) => k !== "cad")
+                  .map(([key, value]) => {
+                    return (
+                      <p key={key}>
+                        <span className="font-semibold capitalize">{key}: </span> {String(value)}
+                      </p>
+                    );
+                  })}
+              </div>
+            </TabsContent>
+            <AccountSettingsTab />
+            <AppearanceTab />
+            {DISCORD_AUTH ? <ConnectionsTab /> : null}
           </TabList>
         </div>
       </div>

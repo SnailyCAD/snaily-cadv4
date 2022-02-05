@@ -8,8 +8,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
-import { TabList } from "components/shared/TabList";
-import { Tab } from "@headlessui/react";
+import { TabList, TabsContent } from "components/shared/TabList";
 import Link from "next/link";
 
 interface Props {
@@ -30,13 +29,18 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
       <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CITIZENS")}</h1>
 
-      <TabList tabs={["All Citizens", "Advanced"]}>
+      <TabList
+        tabs={[
+          { name: "All Citizens", value: "allCitizens" },
+          { name: "Advanced", value: "advanced" },
+        ]}
+      >
         <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
-        <Tab.Panel className="mt-5">
+        <TabsContent value="advanced">
           <Link href="/admin/import/citizens">
             <a className="underline">This has been moved to its own page.</a>
           </Link>
-        </Tab.Panel>
+        </TabsContent>
       </TabList>
     </AdminLayout>
   );

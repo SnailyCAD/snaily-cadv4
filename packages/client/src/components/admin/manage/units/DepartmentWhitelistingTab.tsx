@@ -11,7 +11,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";
-import { Tab } from "@headlessui/react";
+import { TabsContent } from "components/shared/TabList";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
@@ -66,7 +66,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
   }
 
   return (
-    <Tab.Panel>
+    <TabsContent value="departmentWhitelisting">
       <div className="my-5">
         <FormRow flexLike>
           <FormField className="w-full" label={common("search")}>
@@ -138,6 +138,6 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
         onSubmit={(data) => handleAcceptOrDecline({ ...data, type: "DECLINE" })}
         state={state}
       />
-    </Tab.Panel>
+    </TabsContent>
   );
 }
