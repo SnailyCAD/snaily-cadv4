@@ -283,7 +283,6 @@ export class LeoController {
   }
 
   @Post("/panic-button")
-  @UseBefore(ActiveOfficer)
   async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
     let officer = await prisma.officer.findFirst({
       where: {
