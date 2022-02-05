@@ -6,12 +6,18 @@ import { useAuth } from "context/AuthContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { StatusViewMode } from "@snailycad/types";
+import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 
 const LABELS = {
   [StatusViewMode.DOT_COLOR]: "Dot color",
   [StatusViewMode.FULL_ROW_COLOR]: "Full row color",
+};
+
+const TABLE_ALIGNMENT_LABELS = {
+  [TableActionsAlignment.NONE]: "None",
+  [TableActionsAlignment.LEFT]: "Left",
+  [TableActionsAlignment.RIGHT]: "Right",
 };
 
 export function AppearanceTab() {
@@ -20,9 +26,14 @@ export function AppearanceTab() {
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
 
+  if (!user) {
+    return null;
+  }
+
   const INITIAL_VALUES = {
-    isDarkTheme: user?.isDarkTheme ?? true,
-    statusViewMode: user?.statusViewMode ?? StatusViewMode.DOT_COLOR,
+    isDarkTheme: user.isDarkTheme ?? true,
+    statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
+    tableActionsAlignment: user.tableActionsAlignment,
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -55,6 +66,18 @@ export function AppearanceTab() {
                 value={values.statusViewMode}
                 onChange={handleChange}
                 name="statusViewMode"
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.tableActionsAlignment} label="Table Actions Alignment">
+              <Select
+                values={Object.values(TableActionsAlignment).map((v) => ({
+                  value: v,
+                  label: TABLE_ALIGNMENT_LABELS[v],
+                }))}
+                value={values.tableActionsAlignment}
+                onChange={handleChange}
+                name="tableActionsAlignment"
               />
             </FormField>
 
