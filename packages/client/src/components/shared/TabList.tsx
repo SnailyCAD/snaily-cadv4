@@ -27,7 +27,6 @@ export function TabList<Tabs extends Tab[]>({
             key={tab.value}
             className={classNames(
               "tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border",
-              "",
             )}
           >
             {tab.name}
