@@ -47,7 +47,7 @@ export default function ManageUsers({ users: data }: Props) {
       </FormField>
 
       <TabList tabs={tabs}>
-        <TabsContent value="allUsers" className="mt-5">
+        <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
           <Table
             filter={search}
             data={users.map((user) => ({

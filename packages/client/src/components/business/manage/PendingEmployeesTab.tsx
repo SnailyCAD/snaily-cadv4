@@ -41,7 +41,7 @@ export function PendingEmployeesTab() {
   }
 
   return (
-    <TabsContent value="pendingEmployees">
+    <TabsContent aria-label={t("pendingEmployees")} value="pendingEmployees">
       <h3 className="text-2xl font-semibold">{t("pendingEmployees")}</h3>
 
       <ul className="mt-3 space-y-3">

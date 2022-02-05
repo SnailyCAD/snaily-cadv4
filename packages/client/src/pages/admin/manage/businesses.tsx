@@ -94,7 +94,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 
       <TabList tabs={businessWhitelisted ? TABS : TABS.splice(0, 1)}>
-        <TabsContent value="allBusinesses">
+        <TabsContent aria-label={t("allBusinesses")} value="allBusinesses">
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
 
           {businesses.length <= 0 ? (

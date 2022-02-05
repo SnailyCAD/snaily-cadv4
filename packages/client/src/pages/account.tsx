@@ -69,7 +69,7 @@ export default function Account() {
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
           <TabList defaultValue={discordValue} tabs={TABS_TITLES}>
-            <TabsContent value="accountInfo">
+            <TabsContent aria-label={t("accountInfo")} value="accountInfo">
               <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
               <div className="mt-2">
                 {Object.entries(user)
