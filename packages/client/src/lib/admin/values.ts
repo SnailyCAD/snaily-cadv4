@@ -25,6 +25,10 @@ export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
 
   function get(value: TValue) {
+    // state mismatch prevention
+    const valueType = "type" in value ? value.type : value.value.type;
+    if (valueType !== type) return;
+
     switch (type) {
       case "CODES_10": {
         const v = value as StatusValue;
