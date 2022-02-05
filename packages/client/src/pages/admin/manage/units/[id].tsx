@@ -19,6 +19,8 @@ import type { OfficerLog } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
+import { FormRow } from "components/form/FormRow";
+import { Input } from "components/form/inputs/Input";
 
 type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
 
@@ -63,8 +65,10 @@ export default function SupervisorPanelPage({ unit }: Props) {
     division: "divisionId" in unit ? unit.divisionId : "",
     divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     callsign: unit.callsign,
+    callsign2: unit.callsign2,
     rank: unit.rankId,
     suspended: unit.suspended,
+    badgeNumber: unit.badgeNumber ?? "",
   };
 
   return (
@@ -76,7 +80,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
       <h1 className="mb-3 text-2xl font-semibold capitalize">{makeUnitName(unit)}</h1>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values }) => (
+        {({ handleChange, values, errors }) => (
           <Form>
             <FormField label={t("status")}>
               <Select
@@ -148,6 +152,34 @@ export default function SupervisorPanelPage({ unit }: Props) {
                 }))}
               />
             </FormField>
+
+            <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
+              <Input
+                type="number"
+                value={values.badgeNumber}
+                name="badgeNumber"
+                onChange={(e) =>
+                  handleChange({
+                    ...e,
+                    target: {
+                      ...e.target,
+                      id: "badgeNumber",
+                      value: e.target.valueAsNumber,
+                    },
+                  })
+                }
+              />
+            </FormField>
+
+            <FormRow>
+              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+                <Input value={values.callsign} name="callsign" onChange={handleChange} />
+              </FormField>
+
+              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
+              </FormField>
+            </FormRow>
 
             <FormField label={t("suspended")}>
               <Toggle onClick={handleChange} name="suspended" toggled={values.suspended} />
