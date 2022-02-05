@@ -98,6 +98,7 @@ export interface User {
   isDarkTheme: boolean;
   tempPassword: string | null;
   statusViewMode: StatusViewMode;
+  tableActionsAlignment: TableActionsAlignment;
   createdAt: Date;
   updatedAt: Date;
   discordId: string | null;
@@ -833,6 +834,12 @@ export enum WhitelistStatus {
 export enum StatusViewMode {
   FULL_ROW_COLOR = "FULL_ROW_COLOR",
   DOT_COLOR = "DOT_COLOR",
+}
+
+export enum TableActionsAlignment {
+  NONE = "NONE",
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
 }
 
 export enum ValueType {

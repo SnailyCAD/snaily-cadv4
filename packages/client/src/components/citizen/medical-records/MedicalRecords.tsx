@@ -57,6 +57,7 @@ export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
           <p className="text-gray-600 dark:text-gray-400">{t("noMedicalRecords")}</p>
         ) : (
           <Table
+            isWithinCard
             data={medicalRecords.map((record) => ({
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),

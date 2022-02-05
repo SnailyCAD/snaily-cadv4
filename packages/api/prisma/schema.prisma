@@ -80,26 +80,27 @@ model ApiToken {
 }
 
 model User {
-  id              String          @id @default(cuid())
-  username        String          @unique @db.VarChar(255)
-  password        String          @db.Text
-  rank            Rank            @default(USER)
-  isLeo           Boolean         @default(false)
-  isSupervisor    Boolean         @default(false)
-  isEmsFd         Boolean         @default(false)
-  isDispatch      Boolean         @default(false)
-  isTow           Boolean         @default(false)
-  banned          Boolean         @default(false)
-  banReason       String?
-  avatarUrl       String?         @db.Text
-  steamId         String?         @db.VarChar(255)
-  whitelistStatus WhitelistStatus @default(ACCEPTED)
-  isDarkTheme     Boolean         @default(true)
-  tempPassword    String?
-  statusViewMode  StatusViewMode  @default(DOT_COLOR)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @default(now()) @updatedAt
-  discordId       String?
+  id                    String                @id @default(cuid())
+  username              String                @unique @db.VarChar(255)
+  password              String                @db.Text
+  rank                  Rank                  @default(USER)
+  isLeo                 Boolean               @default(false)
+  isSupervisor          Boolean               @default(false)
+  isEmsFd               Boolean               @default(false)
+  isDispatch            Boolean               @default(false)
+  isTow                 Boolean               @default(false)
+  banned                Boolean               @default(false)
+  banReason             String?
+  avatarUrl             String?               @db.Text
+  steamId               String?               @db.VarChar(255)
+  whitelistStatus       WhitelistStatus       @default(ACCEPTED)
+  isDarkTheme           Boolean               @default(true)
+  tempPassword          String?
+  statusViewMode        StatusViewMode        @default(DOT_COLOR)
+  tableActionsAlignment TableActionsAlignment @default(RIGHT)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @default(now()) @updatedAt
+  discordId             String?
 
 
   // relational data
@@ -132,6 +133,12 @@ model User2FA {
 enum StatusViewMode {
   FULL_ROW_COLOR
   DOT_COLOR
+}
+
+enum TableActionsAlignment {
+  NONE
+  LEFT
+  RIGHT
 }
 
 model Citizen {

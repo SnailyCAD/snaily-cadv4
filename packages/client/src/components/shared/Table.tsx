@@ -23,16 +23,45 @@ import {
 import { ReactSortable } from "react-sortablejs";
 import { Button } from "components/Button";
 import type { TableData, TableProps } from "./Table/TableProps";
+import { useAuth } from "context/AuthContext";
+import { TableActionsAlignment } from "@snailycad/types";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 const MAX_ITEMS_PER_PAGE = 50 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
   const data = React.useMemo(() => props.data, [props.data]);
+  const { user } = useAuth();
+  const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
+  const stickyBgColor = props.isWithinCard
+    ? "bg-gray-200/80 dark:bg-gray-2"
+    : "dark:bg-dark-bg bg-white";
 
   const columns = React.useMemo(
-    () => props.columns.filter((v) => v !== null) as Column<TableData<T, RowProps>>[],
-    [props.columns],
+    () =>
+      (props.columns.filter((v) => v !== null) as Column<TableData<T, RowProps>>[]).sort((a) => {
+        const isAActions = a.accessor === "actions";
+
+        const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
+        const isRight = tableActionsAlignment === TableActionsAlignment.RIGHT;
+
+        /**
+         * the actions column will be fixed on the left side of the table
+         */
+        if (isLeft) {
+          return isAActions ? -1 : 1;
+        }
+
+        /**
+         * the actions column will be fixed on the right side of the table
+         */
+        if (isRight) {
+          return isAActions ? 1 : -1;
+        }
+
+        return -1;
+      }),
+    [props.columns, tableActionsAlignment],
   );
 
   const instance = useTable<TableData<T, RowProps>>(
@@ -126,12 +155,16 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
                   // actions don't need a toggle sort
                   column.id === "actions";
 
+                const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
+                const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
+                const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
+
                 return (
                   <th
                     {...column.getHeaderProps(
                       isSortingDisabledForColumn ? undefined : column.getSortByToggleProps(),
                     )}
-                    className="sticky top-0"
+                    className={`top-0 sticky ${column.id === "actions" ? `${dir} z-10` : "sticky"}`}
                   >
                     <div className="flex items-center gap-3">
                       {column.render("Header")}
@@ -163,7 +196,14 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
           {page.map((row) => {
             prepareRow(row);
 
-            return <Row row={row} {...row.getRowProps()} />;
+            return (
+              <Row
+                stickyBgColor={stickyBgColor}
+                tableActionsAlignment={tableActionsAlignment}
+                row={row}
+                {...row.getRowProps()}
+              />
+            );
           })}
         </ReactSortable>
       </table>
@@ -196,9 +236,15 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
 type RowProps<T extends object, RowProps extends object> = {
   row: RowType<TableData<T, RowProps>>;
+  tableActionsAlignment: TableActionsAlignment;
+  stickyBgColor: string;
 };
 
-function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
+function Row<T extends object, RP extends object>({
+  row,
+  stickyBgColor,
+  tableActionsAlignment,
+}: RowProps<T, RP>) {
   const rowProps = row.original.rowProps ?? {};
 
   return (
@@ -207,10 +253,17 @@ function Row<T extends object, RP extends object>({ row }: RowProps<T, RP>) {
         const isActions = cell.column.id === "actions";
         const isMove = ["move", "selection"].includes(cell.column.id);
 
+        const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
+        const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
+        const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
+
         return (
           <td
             {...cell.getCellProps()}
-            className={classNames(isActions && "w-[10rem]", isMove && "w-10")}
+            className={classNames(
+              isActions && `w-[10rem] sticky ${stickyBgColor} ${dir}`,
+              isMove && "w-10",
+            )}
           >
             {cell.render("Cell")}
           </td>

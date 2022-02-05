@@ -69,6 +69,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
           <p className="text-gray-600 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
           <Table
+            isWithinCard
             data={weapons.map((weapon) => ({
               model: weapon.model.value.value,
               registrationStatus: weapon.registrationStatus.value,

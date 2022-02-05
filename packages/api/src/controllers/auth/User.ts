@@ -32,7 +32,7 @@ export class AccountController {
 
   @Patch("/")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { username, discordId, isDarkTheme, statusViewMode } = body;
+    const { username, discordId, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -68,6 +68,7 @@ export class AccountController {
         discordId: discordId || undefined,
         isDarkTheme,
         statusViewMode,
+        tableActionsAlignment,
       },
       select: userProperties,
     });
