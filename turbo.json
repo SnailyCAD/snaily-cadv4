@@ -1,8 +1,32 @@
 {
   "baseBranch": "origin/main",
   "pipeline": {
+    "copy-env": {
+      "dependsOn": [
+        "^copy-env",
+        "$POSTGRES_PASSWORD",
+        "$POSTGRES_USER",
+        "$DB_HOST",
+        "$POSTGRES_DB",
+        "$DATABASE_URL",
+        "$CORS_ORIGIN_URL",
+        "$PORT_API",
+        "$JWT_SECRET",
+        "$NEXT_PUBLIC_PROD_ORIGIN",
+        "$NODE_ENV",
+        "$DISCORD_CLIENT_ID",
+        "$DISCORD_CLIENT_SECRET",
+        "$ENCRYPTION_TOKEN",
+        "$DOMAIN",
+        "$SECURE_COOKIES_FOR_IFRAME"
+      ],
+      "outputs": [
+        ".env"
+      ]
+    },
     "build": {
       "dependsOn": [
+        "copy-env",
         "^build",
         "$CORS_ORIGIN_URL",
         "$NEXT_PUBLIC_PROD_ORIGIN",
