@@ -72,113 +72,99 @@ export const typeHandlers = {
   VEHICLE: async (body: unknown) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.vehicleValue.create({
-          include: { value: true },
-          data: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.VEHICLE),
-          },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.vehicleValue.create({
+        include: { value: true },
+        data: {
+          hash: item.hash,
+          value: createValueObj(item.value, ValueType.VEHICLE),
+        },
+      });
+    });
   },
   WEAPON: async (body: unknown) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.weaponValue.create({
-          include: { value: true },
-          data: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.WEAPON),
-          },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.weaponValue.create({
+        include: { value: true },
+        data: {
+          hash: item.hash,
+          value: createValueObj(item.value, ValueType.WEAPON),
+        },
+      });
+    });
   },
   BUSINESS_ROLE: async (body: unknown) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.employeeValue.create({
-          data: {
-            as: item.as as EmployeeAsEnum,
-            value: createValueObj(item.value, ValueType.BUSINESS_ROLE),
-          },
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.employeeValue.create({
+        data: {
+          as: item.as as EmployeeAsEnum,
+          value: createValueObj(item.value, ValueType.BUSINESS_ROLE),
+        },
+        include: { value: true },
+      });
+    });
   },
   DRIVERSLICENSE_CATEGORY: async (body: unknown) => {
     const data = validateSchema(DLC_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.driversLicenseCategoryValue.create({
-          data: {
-            type: item.type as DriversLicenseCategoryType,
-            value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY),
-          },
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.driversLicenseCategoryValue.create({
+        data: {
+          type: item.type as DriversLicenseCategoryType,
+          value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY),
+        },
+        include: { value: true },
+      });
+    });
   },
   DEPARTMENT: async (body: unknown) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.departmentValue.create({
-          data: {
-            type: item.type as DepartmentType,
-            callsign: item.callsign,
-            value: createValueObj(item.value, ValueType.DEPARTMENT),
-            isDefaultDepartment: item.isDefaultDepartment ?? false,
-            whitelisted: item.whitelisted ?? false,
-          },
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.departmentValue.create({
+        data: {
+          type: item.type as DepartmentType,
+          callsign: item.callsign,
+          value: createValueObj(item.value, ValueType.DEPARTMENT),
+          isDefaultDepartment: item.isDefaultDepartment ?? false,
+          whitelisted: item.whitelisted ?? false,
+        },
+        include: { value: true },
+      });
+    });
   },
   DIVISION: async (body: unknown) => {
     const data = validateSchema(DIVISION_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.divisionValue.create({
-          data: {
-            callsign: item.callsign,
-            department: { connect: { id: item.departmentId } },
-            value: createValueObj(item.value, ValueType.DIVISION),
-          },
-          include: { value: true, department: { include: { value: true } } },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.divisionValue.create({
+        data: {
+          callsign: item.callsign,
+          department: { connect: { id: item.departmentId } },
+          value: createValueObj(item.value, ValueType.DIVISION),
+        },
+        include: { value: true, department: { include: { value: true } } },
+      });
+    });
   },
   CODES_10: async (body: unknown) => {
     const data = validateSchema(CODES_10_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.statusValue.create({
-          data: {
-            type: item.type as StatusValueType,
-            color: item.color,
-            shouldDo: item.shouldDo as ShouldDoType,
-            value: createValueObj(item.value, ValueType.CODES_10),
-          },
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.statusValue.create({
+        data: {
+          type: item.type as StatusValueType,
+          color: item.color,
+          shouldDo: item.shouldDo as ShouldDoType,
+          value: createValueObj(item.value, ValueType.CODES_10),
+        },
+        include: { value: true },
+      });
+    });
   },
 
   GENDER: async (body: unknown) => typeHandlers.GENERIC(body, "GENDER"),
@@ -191,18 +177,16 @@ export const typeHandlers = {
   GENERIC: async (body: unknown, type: ValueType) => {
     const data = validateSchema(BASE_ARR, body);
 
-    return Promise.all(
-      data.map(async (item) => {
-        return prisma.value.create({
-          data: {
-            isDefault: false,
-            type: type as ValueType,
-            value: item.value,
-            licenseType: type === "LICENSE" ? (item.licenseType as ValueLicenseType) : undefined,
-          },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      return prisma.value.create({
+        data: {
+          isDefault: false,
+          type: type as ValueType,
+          value: item.value,
+          licenseType: type === "LICENSE" ? (item.licenseType as ValueLicenseType) : undefined,
+        },
+      });
+    });
   },
 };
 
@@ -214,4 +198,26 @@ function createValueObj(value: string, type: ValueType) {
       value,
     },
   };
+}
+
+async function handlePromiseAll<T, R>(
+  data: T[],
+  handler: (item: T) => Promise<R>,
+): Promise<{ success: R[]; failed: number }> {
+  let failed = 0;
+  const success: R[] = [];
+
+  await Promise.all(
+    data.map(async (item) => {
+      try {
+        const data = await handler(item);
+        success.push(data);
+      } catch (e) {
+        console.error(e);
+        failed += 1;
+      }
+    }),
+  );
+
+  return { success, failed };
 }

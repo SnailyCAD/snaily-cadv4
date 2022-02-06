@@ -155,7 +155,8 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const [value] = await handler([body]);
+    const arr = await handler([body]);
+    const [value] = Array.isArray(arr) ? arr : arr.success;
 
     return value;
   }
