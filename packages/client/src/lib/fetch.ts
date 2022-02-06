@@ -41,6 +41,7 @@ export async function handleRequest<T = any>(
       Session: parsedCookie ?? "",
       "Content-Type": "application/json",
       "is-from-dispatch": String(isDispatchUrl),
+      "discord-access-token": String(options?.headers?.["discord-access-token"]),
     },
   }).catch((e) => {
     return e;

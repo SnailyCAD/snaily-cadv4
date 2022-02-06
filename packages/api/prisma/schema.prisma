@@ -35,6 +35,8 @@ model cad {
   updatedAt               DateTime               @default(now()) @updatedAt
   autoSetUserProperties   AutoSetUserProperties? @relation(fields: [autoSetUserPropertiesId], references: [id])
   autoSetUserPropertiesId String?
+  discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
+  discordRolesId          String?
 }
 
 model MiscCadSettings {
@@ -54,6 +56,7 @@ model MiscCadSettings {
   roleplayEnabled         Boolean? @default(true)
   authScreenBgImageId     String?
   authScreenHeaderImageId String?
+
 
   cad cad[]
 }
@@ -77,6 +80,31 @@ model ApiToken {
   routes  String[]
 
   cad cad[]
+}
+
+model DiscordRoles {
+  id      String @id @default(cuid())
+  guildId String
+
+  leoRole        DiscordRole? @relation("leoRole", fields: [leoRoleId], references: [id])
+  leoRoleId      String?
+  emsFdRole      DiscordRole? @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
+  emsFdRoleId    String?
+  dispatchRole   DiscordRole? @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
+  dispatchRoleId String?
+
+  roles DiscordRole[]
+  cad   cad[]
+}
+
+model DiscordRole {
+  id             String         @id @unique
+  name           String
+  discordRoles   DiscordRoles   @relation(fields: [discordRolesId], references: [id])
+  discordRolesId String
+  leoRoles       DiscordRoles[] @relation("leoRole")
+  emsFdRoles     DiscordRoles[] @relation("emsFdRole")
+  dispatchRoles  DiscordRoles[] @relation("dispatchRole")
 }
 
 model User {
