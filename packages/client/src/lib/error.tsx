@@ -18,9 +18,7 @@ export function toastError(options: Options) {
       >
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
-            <div className="flex-shrink-0 pt-0.5">
-              <ErrorIcon />
-            </div>
+            <div className="flex-shrink-0 pt-0.5">{rest.icon !== null ? <ErrorIcon /> : null}</div>
             <div className="ml-3 flex-1 -mt-1">
               {title ? (
                 <p className="capitalize text-[1.05em] mb-1 font-semibold text-gray-900 dark:text-gray-100">

@@ -10,6 +10,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import type { ValueType } from "@snailycad/types";
+import { toastError } from "lib/error";
 
 interface Props {
   type: ValueType;
@@ -44,11 +45,20 @@ export function ImportValuesModal({ onImport, type }: Props) {
       onImport(json);
     }
 
+    if (typeof json.failed === "number" && Array.isArray(json.success)) {
+      toastError({
+        icon: null,
+        message: `Successfully imported ${json.success.length}. Failed to import ${json.failed}.`,
+      });
+
+      onImport(json.success);
+    }
+
     closeModal(ModalIds.ImportValues);
   }
 
   const INITIAL_VALUES = {
-    file: undefined,
+    file: "",
   };
 
   return (
