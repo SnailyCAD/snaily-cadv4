@@ -86,25 +86,31 @@ model DiscordRoles {
   id      String @id @default(cuid())
   guildId String
 
-  leoRole        DiscordRole? @relation("leoRole", fields: [leoRoleId], references: [id])
-  leoRoleId      String?
-  emsFdRole      DiscordRole? @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
-  emsFdRoleId    String?
-  dispatchRole   DiscordRole? @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
-  dispatchRoleId String?
+  leoRole             DiscordRole? @relation("leoRole", fields: [leoRoleId], references: [id])
+  leoRoleId           String?
+  leoSupervisorRole   DiscordRole? @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
+  leoSupervisorRoleId String?
+  emsFdRole           DiscordRole? @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
+  emsFdRoleId         String?
+  dispatchRole        DiscordRole? @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
+  dispatchRoleId      String?
+  towRole             DiscordRole? @relation("towRole", fields: [towRoleId], references: [id])
+  towRoleId           String?
 
   roles DiscordRole[]
   cad   cad[]
 }
 
 model DiscordRole {
-  id             String         @id @unique
-  name           String
-  discordRoles   DiscordRoles   @relation(fields: [discordRolesId], references: [id])
-  discordRolesId String
-  leoRoles       DiscordRoles[] @relation("leoRole")
-  emsFdRoles     DiscordRoles[] @relation("emsFdRole")
-  dispatchRoles  DiscordRoles[] @relation("dispatchRole")
+  id                 String         @id @unique
+  name               String
+  discordRoles       DiscordRoles   @relation(fields: [discordRolesId], references: [id])
+  discordRolesId     String
+  leoRoles           DiscordRoles[] @relation("leoRole")
+  emsFdRoles         DiscordRoles[] @relation("emsFdRole")
+  dispatchRoles      DiscordRoles[] @relation("dispatchRole")
+  towRoles           DiscordRoles[] @relation("towRole")
+  leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
 }
 
 model User {

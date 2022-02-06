@@ -31,6 +31,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   miscCadSettings: true,
   miscCadSettingsId: true,
   logoId: true,
+  discordRoles: true,
 });
 
 @Middleware()

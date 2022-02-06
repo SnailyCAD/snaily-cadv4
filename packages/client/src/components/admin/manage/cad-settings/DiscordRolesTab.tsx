@@ -7,16 +7,22 @@ import { TabsContent } from "components/shared/TabList";
 import { Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
+import { useAuth } from "context/AuthContext";
+import type { DiscordRoles } from "@snailycad/types";
 
 export function DiscordRolesTab() {
   const [roles, setRoles] = React.useState<any[]>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+  const { cad } = useAuth();
 
+  const discordRoles = cad?.discordRoles ?? ({} as DiscordRoles);
   const INITIAL_VALUES = {
-    leoRoleId: "",
-    emsFdRoleId: "",
-    dispatchRoleId: "",
+    leoRoleId: discordRoles.leoRoleId,
+    emsFdRoleId: discordRoles.emsFdRoleId,
+    dispatchRoleId: discordRoles.dispatchRoleId,
+    leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
+    towRoleId: discordRoles.towRoleId,
   };
 
   async function refreshRoles() {
@@ -51,7 +57,6 @@ export function DiscordRolesTab() {
 
         <p className="my-3 text-neutral-700 dark:text-gray-200">
           Connect to a Discord server and set roles for each type.
-          <br />
         </p>
       </header>
 

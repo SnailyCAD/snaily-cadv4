@@ -30,6 +30,8 @@ export interface cad {
   updatedAt: Date;
   autoSetUserPropertiesId: string | null;
   autoSetUserProperties: AutoSetUserProperties | null;
+  discordRolesId: string | null;
+  discordRoles: DiscordRoles | null;
 }
 
 /**
@@ -75,6 +77,35 @@ export interface ApiToken {
   token: string | null;
   routes: string[];
 }
+
+/**
+ * Model DiscordRoles
+ *
+ */
+export type DiscordRoles = {
+  id: string;
+  guildId: string;
+  leoRoleId: string | null;
+  leoRole: DiscordRole | null;
+  leoSupervisorRoleId: string | null;
+  leoSupervisorRole: DiscordRole | null;
+  emsFdRoleId: string | null;
+  emsFdRole: DiscordRole | null;
+  dispatchRoleId: string | null;
+  dispatchRole: DiscordRole | null;
+  towRoleId: string | null;
+  towRole: DiscordRole | null;
+};
+
+/**
+ * Model DiscordRole
+ *
+ */
+export type DiscordRole = {
+  id: string;
+  name: string;
+  discordRolesId: string;
+};
 
 /**
  * Model User
