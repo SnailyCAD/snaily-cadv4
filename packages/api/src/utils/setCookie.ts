@@ -19,14 +19,20 @@ export function setCookie(options: SetCookieOptions) {
     };
   }
 
+  /**
+   * dotenv parses "" (empty string) weirdly.
+   */
+  // eslint-disable-next-line quotes
+  if (process.env.DOMAIN?.replace('""', "")?.trim()) {
+    extraOptions.domain = process.env.DOMAIN;
+  }
+
   options.res.setHeader(
     "Set-Cookie",
     serialize(options.name, options.value, {
       httpOnly: true,
       expires: new Date(Date.now() + options.expires),
       path: "/",
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      domain: process.env.DOMAIN || undefined,
       ...extraOptions,
     }),
   );
