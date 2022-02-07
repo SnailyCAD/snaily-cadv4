@@ -11,6 +11,7 @@ import { ChangePasswordArea } from "components/account/ChangePasswordArea";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { Manage2FAModal } from "./2fa/Manage2FAModal";
+import { Loader } from "components/Loader";
 
 export function AccountSettingsTab() {
   const { user } = useAuth();
@@ -57,7 +58,12 @@ export function AccountSettingsTab() {
             >
               {user?.twoFactorEnabled ? t("disable2FA") : t("enable2FA")}
             </Button>
-            <Button type="submit" disabled={state === "loading"}>
+            <Button
+              className="flex items-center gap-2"
+              type="submit"
+              disabled={state === "loading"}
+            >
+              {state === "loading" ? <Loader /> : null}
               {common("save")}
             </Button>
           </Form>
