@@ -148,6 +148,7 @@ export class ManageUnitsController {
         suspended: data.suspended ?? false,
         callsign2: data.callsign2,
         callsign: data.callsign,
+        badgeNumber: data.badgeNumber,
       },
     });
 

@@ -26,6 +26,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
+  badgeNumber: z.number().min(1),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
