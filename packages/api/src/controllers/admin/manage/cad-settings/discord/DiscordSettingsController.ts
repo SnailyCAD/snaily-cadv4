@@ -20,10 +20,7 @@ export class DiscordSettingsController {
   @Get("/")
   async getGuildRoles(@Context("cad") cad: cad) {
     if (!guildId || !botToken) {
-      throw new BadRequest(
-        // todo: add link
-        "Must set `DISCORD_BOT_TOKEN` and `DISCORD_SERVER_ID` in .env file. See docs: ",
-      );
+      throw new BadRequest("mustSetBotTokenGuildId");
     }
 
     const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
@@ -78,10 +75,7 @@ export class DiscordSettingsController {
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
 
     if (!guildId || !botToken) {
-      throw new BadRequest(
-        // todo: add link
-        "Must set `DISCORD_BOT_TOKEN` and `DISCORD_SERVER_ID` in .env file. See docs: ",
-      );
+      throw new BadRequest("mustSetBotTokenGuildId");
     }
 
     const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
