@@ -1,15 +1,14 @@
 import process from "node:process";
 import { BodyParams, Context, Controller, UseBeforeEach } from "@tsed/common";
 import { Get, Post } from "@tsed/schema";
-import { request } from "undici";
-import { Routes } from "discord-api-types/v9";
+import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v9";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
 import type { cad } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { DISCORD_API_URL } from "lib/discord";
+import { getRest } from "lib/discord";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 const botToken = process.env.DISCORD_BOT_TOKEN;
@@ -23,12 +22,10 @@ export class DiscordSettingsController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bot ${botToken}`,
-      },
-    });
+    const rest = getRest();
+    const roles = (await rest.get(
+      `${Routes.guildRoles(guildId)}`,
+    )) as RESTGetAPIGuildRolesResult | null;
 
     const discordRoles = await prisma.discordRoles.upsert({
       where: { id: String(cad.discordRolesId) },
@@ -43,12 +40,10 @@ export class DiscordSettingsController {
       data: { discordRolesId: discordRoles.id },
     });
 
-    const body = await roles.body.json();
-    const bodyArr = Array.isArray(body) ? body : [];
-
+    const rolesBody = Array.isArray(roles) ? roles : [];
     const data = [];
 
-    for (const role of bodyArr) {
+    for (const role of rolesBody) {
       if (role.name === "@everyone") continue;
 
       const discordRole = await prisma.discordRole.upsert({
@@ -78,13 +73,12 @@ export class DiscordSettingsController {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bot ${botToken}`,
-      },
-    });
-    const rolesBody = await roles.body.json();
+    const rest = getRest();
+    const roles = (await rest.get(
+      `${Routes.guildRoles(guildId)}`,
+    )) as RESTGetAPIGuildRolesResult | null;
+
+    const rolesBody = Array.isArray(roles) ? roles : [];
 
     Object.values(data).map((roleId) => {
       if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
