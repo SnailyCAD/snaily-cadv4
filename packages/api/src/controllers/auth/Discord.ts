@@ -14,9 +14,8 @@ import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
+import { DISCORD_API_URL } from "lib/discord";
 
-const DISCORD_API_VERSION = "v9";
-const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
@@ -25,7 +24,7 @@ const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 export class DiscordAuth {
   @Get("/")
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
-    const url = new URL(`${discordApiUrl}/oauth2/authorize`);
+    const url = new URL(`${DISCORD_API_URL}/oauth2/authorize`);
 
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       throw new BadRequest(
@@ -190,7 +189,7 @@ export class DiscordAuth {
 
 async function getDiscordData(code: string): Promise<APIUser | null> {
   const data = (await request(
-    `${discordApiUrl}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
+    `${DISCORD_API_URL}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -206,8 +205,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
   ).then((v) => v.body.json())) as RESTPostOAuth2AccessTokenResult;
 
   const accessToken = data.access_token;
-
-  const meData = await request(`${discordApiUrl}/users/@me`, {
+  const meData = await request(`${DISCORD_API_URL}/users/@me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,

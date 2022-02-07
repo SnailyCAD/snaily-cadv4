@@ -33,8 +33,10 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({
   leoRoleId: z.string().nullable().optional(),
+  leoSupervisorRoleId: z.string().nullable().optional(),
   emsFdRoleId: z.string().nullable().optional(),
   dispatchRoleId: z.string().nullable().optional(),
+  towRoleId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({

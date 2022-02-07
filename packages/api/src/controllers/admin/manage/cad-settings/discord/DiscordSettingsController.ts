@@ -9,11 +9,10 @@ import type { cad } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
+import { DISCORD_API_URL } from "lib/discord";
 
-const DISCORD_API_VERSION = "v9";
 const guildId = process.env.DISCORD_SERVER_ID;
 const botToken = process.env.DISCORD_BOT_TOKEN;
-const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
 
 @Controller("/admin/manage/cad-settings/discord")
 @UseBeforeEach(IsAuth)
@@ -27,7 +26,7 @@ export class DiscordSettingsController {
       );
     }
 
-    const roles = await request(`${discordApiUrl}${Routes.guildRoles(guildId)}`, {
+    const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
       method: "GET",
       headers: {
         Authorization: `Bot ${botToken}`,
@@ -79,7 +78,7 @@ export class DiscordSettingsController {
       );
     }
 
-    const roles = await request(`${discordApiUrl}${Routes.guildRoles(guildId)}`, {
+    const roles = await request(`${DISCORD_API_URL}${Routes.guildRoles(guildId)}`, {
       method: "GET",
       headers: {
         Authorization: `Bot ${botToken}`,
