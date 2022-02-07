@@ -8,10 +8,6 @@ export async function updateMemberRoles(
   discordRolesId: string | null,
   allowDelete = true,
 ) {
-  console.log({
-    discordId: user.discordId,
-    discordRolesId,
-  });
   if (!GUILD_ID || !BOT_TOKEN || !discordRolesId || !user.discordId) return;
 
   const discordRoles = await prisma.discordRoles.findUnique({

@@ -15,7 +15,7 @@ import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
 import { DISCORD_API_URL } from "lib/discord";
-import { updateMemberRoles } from "lib/discord/admin";
+import { updateMemberRolesLogin } from "lib/discord/auth";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -80,7 +80,7 @@ export class DiscordAuth {
      */
     if (!authUser && user) {
       validateUser(user);
-      await updateMemberRoles(user, discordRolesId, false);
+      await updateMemberRolesLogin(user, discordRolesId);
 
       // authenticate user with cookie
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
@@ -124,7 +124,7 @@ export class DiscordAuth {
         value: jwtToken,
       });
 
-      await updateMemberRoles(user, discordRolesId, false);
+      await updateMemberRolesLogin(user, discordRolesId);
       return res.redirect(`${redirectURL}/citizen`);
     }
 
@@ -140,7 +140,7 @@ export class DiscordAuth {
         });
 
         validateUser(user);
-        await updateMemberRoles(updated, discordRolesId, false);
+        await updateMemberRolesLogin(updated, discordRolesId);
 
         return res.redirect(`${redirectURL}/account?tab=discord&success`);
       }
@@ -159,7 +159,7 @@ export class DiscordAuth {
       });
 
       validateUser(authUser);
-      await updateMemberRoles(updated, discordRolesId, false);
+      await updateMemberRolesLogin(updated, discordRolesId);
 
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
     }
