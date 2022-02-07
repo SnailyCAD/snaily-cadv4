@@ -17,6 +17,7 @@ import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { Table } from "components/shared/Table";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -77,134 +78,124 @@ export function ActiveOfficers() {
         <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
       </header>
 
-      <div className="px-4">
-        {activeOfficers.length <= 0 ? (
-          <p className="py-2">{t("noActiveOfficers")}</p>
-        ) : (
-          <div className="w-full pb-2 mt-3 overflow-x-auto">
-            <table className="w-full overflow-hidden whitespace-nowrap">
-              <thead>
-                <tr>
-                  <th className="bg-gray-300">{t("officer")}</th>
-                  <th className="bg-gray-300">{t("badgeNumber")}</th>
-                  <th className="bg-gray-300">{t("department")}</th>
-                  <th className="bg-gray-300">{t("division")}</th>
-                  <th className="bg-gray-300">{t("rank")}</th>
-                  <th className="bg-gray-300">{t("status")}</th>
-                  {isDispatch ? <th className="bg-gray-300">{common("actions")}</th> : null}
-                </tr>
-              </thead>
-              <tbody>
-                {activeOfficers.map((officer) => {
-                  const color = officer.status?.color;
-                  const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-                  const shouldShowSplit =
-                    activeOfficer &&
-                    "officers" in activeOfficer &&
-                    "officers" in officer &&
-                    officer.id === activeOfficer.id;
+      {activeOfficers.length <= 0 ? (
+        <p className="px-4 py-2">{t("noActiveOfficers")}</p>
+      ) : (
+        <Table
+          isWithinCard
+          containerProps={{ className: "mb-3 px-4" }}
+          data={activeOfficers.map((officer) => {
+            const color = officer.status?.color;
+            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+            const shouldShowSplit =
+              activeOfficer &&
+              "officers" in activeOfficer &&
+              "officers" in officer &&
+              officer.id === activeOfficer.id;
 
-                  const canBeOpened =
-                    isDispatch ||
-                    shouldShowSplit ||
-                    (activeOfficer &&
-                      activeOfficer.id !== officer.id &&
-                      !("officers" in officer) &&
-                      !("officers" in activeOfficer));
+            const canBeOpened =
+              isDispatch ||
+              shouldShowSplit ||
+              (activeOfficer &&
+                activeOfficer.id !== officer.id &&
+                !("officers" in officer) &&
+                !("officers" in activeOfficer));
 
-                  const codesMapped = codes10.values
-                    .filter((v) => v.type === "STATUS_CODE")
-                    .map((v) => ({
-                      name: v.value.value,
-                      onClick: () => setCode(officer.id, v),
-                      "aria-label": `Set status to ${v.value.value}`,
-                      title: `Set status to ${v.value.value}`,
-                    }));
+            const codesMapped = codes10.values
+              .filter((v) => v.type === "STATUS_CODE")
+              .map((v) => ({
+                name: v.value.value,
+                onClick: () => setCode(officer.id, v),
+                "aria-label": `Set status to ${v.value.value}`,
+                title: `Set status to ${v.value.value}`,
+              }));
 
-                  return (
-                    <tr
-                      style={{ background: !useDot ? color ?? undefined : undefined }}
-                      key={officer.id}
-                    >
-                      <ContextMenu
-                        canBeOpened={canBeOpened ?? false}
-                        asChild
-                        items={
-                          isDispatch
-                            ? codesMapped
-                            : [
-                                {
-                                  name: shouldShowSplit ? t("unmerge") : t("merge"),
-                                  onClick: () => {
-                                    shouldShowSplit
-                                      ? handleunMerge(officer.id)
-                                      : handleMerge(officer.id);
-                                  },
-                                },
-                              ]
-                        }
-                      >
-                        <td className="flex items-center capitalize">
-                          {"imageId" in officer && officer.imageId ? (
-                            <img
-                              className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                              draggable={false}
-                              src={makeImageUrl("units", officer.imageId)}
-                            />
-                          ) : null}
-                          {"officers" in officer ? (
-                            <div className="flex items-center">
-                              {officer.callsign}
-                              <span className="mx-4">
-                                <ArrowRight />
-                              </span>
-                              {officer.officers.map((officer) => (
-                                <React.Fragment key={officer.id}>
-                                  {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                                </React.Fragment>
-                              ))}
-                            </div>
-                          ) : (
-                            `${generateCallsign(officer)} ${makeUnitName(officer)}`
-                          )}
-                        </td>
-                      </ContextMenu>
-                      <td>{!("officers" in officer) && String(officer.badgeNumber)}</td>
-                      <td>
-                        {(!("officers" in officer) && officer.department?.value.value) ??
-                          common("none")}
-                      </td>
-                      <td>{!("officers" in officer) && formatUnitDivisions(officer)}</td>
-                      <td>{(!("officers" in officer) && officer.rank?.value) ?? common("none")}</td>
-                      <td className={useDot ? "flex items-center" : undefined}>
-                        {useDot && officer.status?.color ? (
-                          <span
-                            style={{ background: officer.status?.color }}
-                            className="block w-3 h-3 mr-2 rounded-full"
-                          />
-                        ) : null}
-                        {officer.status?.value?.value}
-                      </td>
-                      {isDispatch ? (
-                        <td className="w-36">
-                          <Button
-                            disabled={!hasActiveDispatchers}
-                            onClick={() => handleEditClick(officer)}
-                            small
-                            variant="success"
-                          >
-                            {common("manage")}
-                          </Button>
-                        </td>
-                      ) : null}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+            return {
+              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+              officer: (
+                <ContextMenu
+                  canBeOpened={canBeOpened ?? false}
+                  asChild
+                  items={
+                    isDispatch
+                      ? codesMapped
+                      : [
+                          {
+                            name: shouldShowSplit ? t("unmerge") : t("merge"),
+                            onClick: () => {
+                              shouldShowSplit ? handleunMerge(officer.id) : handleMerge(officer.id);
+                            },
+                          },
+                        ]
+                  }
+                >
+                  <span className="flex items-center capitalize">
+                    {"imageId" in officer && officer.imageId ? (
+                      <img
+                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                        draggable={false}
+                        src={makeImageUrl("units", officer.imageId)}
+                      />
+                    ) : null}
+                    {"officers" in officer ? (
+                      <div className="flex items-center">
+                        {officer.callsign}
+                        <span className="mx-4">
+                          <ArrowRight />
+                        </span>
+                        {officer.officers.map((officer) => (
+                          <React.Fragment key={officer.id}>
+                            {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    ) : (
+                      `${generateCallsign(officer)} ${makeUnitName(officer)}`
+                    )}
+                  </span>
+                </ContextMenu>
+              ),
+              badgeNumber: !("officers" in officer) && String(officer.badgeNumber),
+              department:
+                (!("officers" in officer) && officer.department?.value.value) ?? common("none"),
+              division: !("officers" in officer) && formatUnitDivisions(officer),
+              rank: (!("officers" in officer) && officer.rank?.value) ?? common("none"),
+              status: (
+                <span className="flex items-center">
+                  {useDot && color ? (
+                    <span
+                      style={{ background: color }}
+                      className="block w-3 h-3 mr-2 rounded-full"
+                    />
+                  ) : null}
+                  {officer.status?.value?.value}
+                </span>
+              ),
+              actions: isDispatch ? (
+                <>
+                  <Button
+                    disabled={!hasActiveDispatchers}
+                    onClick={() => handleEditClick(officer)}
+                    small
+                    variant="success"
+                  >
+                    {common("manage")}
+                  </Button>
+                </>
+              ) : null,
+            };
+          })}
+          columns={[
+            { Header: t("officer"), accessor: "officer" },
+            { Header: t("badgeNumber"), accessor: "badgeNumber" },
+            { Header: t("department"), accessor: "department" },
+            { Header: t("division"), accessor: "division" },
+            { Header: t("rank"), accessor: "rank" },
+            { Header: t("status"), accessor: "status" },
+            isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+          ]}
+        />
+      )}
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
     </div>

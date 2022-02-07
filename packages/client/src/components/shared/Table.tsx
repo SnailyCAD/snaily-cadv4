@@ -32,6 +32,8 @@ const MAX_ITEMS_PER_PAGE = 50 as const;
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
   const data = React.useMemo(() => props.data, [props.data]);
   const { user } = useAuth();
+
+  const hasActionsColumn = props.columns.some((v) => v?.accessor === "actions");
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
   const stickyBgColor = props.isWithinCard
     ? "bg-gray-200/80 dark:bg-gray-2"
@@ -41,6 +43,10 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     () =>
       (props.columns.filter((v) => v !== null) as Column<TableData<T, RowProps>>[]).sort((a) => {
         const isAActions = a.accessor === "actions";
+
+        if (!hasActionsColumn) {
+          return 0;
+        }
 
         const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
         const isRight = tableActionsAlignment === TableActionsAlignment.RIGHT;
@@ -61,7 +67,7 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
         return -1;
       }),
-    [props.columns, tableActionsAlignment],
+    [props.columns, hasActionsColumn, tableActionsAlignment],
   );
 
   const instance = useTable<TableData<T, RowProps>>(
