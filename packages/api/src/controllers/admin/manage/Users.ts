@@ -15,6 +15,7 @@ import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { updateMemberRoles } from "lib/discord/admin";
+import { isDiscordIdInUse } from "utils/discord";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -73,6 +74,10 @@ export class ManageUsersController {
       throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerRank" });
     }
 
+    if (data.discordId && (await isDiscordIdInUse(data.discordId, user.id))) {
+      throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
+    }
+
     const updated = await prisma.user.update({
       where: {
         id: user.id,
@@ -85,6 +90,7 @@ export class ManageUsersController {
         isTow: data.isTow,
         steamId: data.steamId,
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
+        discordId: data.discordId,
       },
       select: userProperties,
     });

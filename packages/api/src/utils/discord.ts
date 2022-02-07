@@ -1,3 +1,5 @@
+import { prisma } from "lib/prisma";
+
 export function encode(obj: { [key: string]: unknown }) {
   let string = "";
 
@@ -7,4 +9,14 @@ export function encode(obj: { [key: string]: unknown }) {
   }
 
   return string.substring(1);
+}
+
+export async function isDiscordIdInUse(discordId: string, userId: string) {
+  const existing = await prisma.user.findFirst({
+    where: {
+      discordId,
+    },
+  });
+
+  return existing && userId !== existing.id;
 }

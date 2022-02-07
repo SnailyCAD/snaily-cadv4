@@ -61,6 +61,7 @@ export const UPDATE_USER_SCHEMA = z.object({
   isTow: z.boolean(),
   isSupervisor: z.boolean(),
   steamId: z.string().max(255),
+  discordId: z.string().max(255),
 });
 
 export const IMPORT_CITIZENS_SCHEMA = z.object({

@@ -16,6 +16,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { ShouldDoType } from "@prisma/client";
+import { isDiscordIdInUse } from "utils/discord";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -44,19 +45,8 @@ export class AccountController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
-    if (discordId) {
-      const existingWithDiscordId = await prisma.user.findFirst({
-        where: {
-          discordId,
-          NOT: {
-            id: user.id,
-          },
-        },
-      });
-
-      if (existingWithDiscordId) {
-        throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
-      }
+    if (discordId && (await isDiscordIdInUse(discordId, user.id))) {
+      throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
     }
 
     const updated = await prisma.user.update({
