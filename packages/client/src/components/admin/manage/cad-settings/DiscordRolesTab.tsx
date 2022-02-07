@@ -17,7 +17,11 @@ export function DiscordRolesTab() {
   const common = useTranslations("Common");
   const { cad } = useAuth();
 
-  const discordRoles = cad?.discordRoles ?? ({} as DiscordRoles);
+  const discordRoles = React.useMemo(
+    () => cad?.discordRoles ?? ({} as DiscordRoles),
+    [cad?.discordRoles],
+  );
+
   const INITIAL_VALUES = {
     leoRoleId: discordRoles.leoRoleId,
     emsFdRoleId: discordRoles.emsFdRoleId,
@@ -44,6 +48,12 @@ export function DiscordRolesTab() {
       setRoles(json);
     }
   }
+
+  React.useEffect(() => {
+    if (discordRoles.roles) {
+      setRoles(discordRoles.roles);
+    }
+  }, [discordRoles]);
 
   return (
     <TabsContent value="DISCORD_ROLES_TAB">

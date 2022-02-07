@@ -41,6 +41,11 @@ export class DiscordSettingsController {
       },
     });
 
+    await prisma.cad.update({
+      where: { id: cad.id },
+      data: { discordRolesId: discordRoles.id },
+    });
+
     const body = await roles.body.json();
     const bodyArr = Array.isArray(body) ? body : [];
 
@@ -58,6 +63,7 @@ export class DiscordSettingsController {
         },
         update: {
           name: role.name,
+          discordRolesId: discordRoles.id,
         },
       });
 
@@ -105,6 +111,11 @@ export class DiscordSettingsController {
       where: { id: String(cad.discordRolesId) },
       update: createUpdateData,
       create: createUpdateData,
+    });
+
+    await prisma.cad.update({
+      where: { id: cad.id },
+      data: { discordRolesId: discordRoles.id },
     });
 
     return discordRoles;
