@@ -56,8 +56,9 @@ export function DiscordRolesTab() {
           </Button>
         </div>
 
-        <p className="my-3 text-neutral-700 dark:text-gray-200">
-          Connect to a Discord server and set roles for each type.
+        <p className="my-3 text-neutral-700 dark:text-gray-200 max-w-2xl">
+          When a user authenticates via Discord, the respective permissions will granted to that
+          user from their roles
         </p>
       </header>
 
