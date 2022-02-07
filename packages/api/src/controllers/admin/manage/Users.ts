@@ -14,6 +14,7 @@ import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { updateMemberRoles } from "lib/discord/admin";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -56,7 +57,11 @@ export class ManageUsersController {
   }
 
   @Put("/:id")
-  async updateUserById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserById(
+    @Context("cad") cad: { discordRolesId: string | null },
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -83,6 +88,11 @@ export class ManageUsersController {
       },
       select: userProperties,
     });
+
+    if (updated.discordId) {
+      // @ts-expect-error TS doesn't seem to understand that this works?
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return updated;
   }
