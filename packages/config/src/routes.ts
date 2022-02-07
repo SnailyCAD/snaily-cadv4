@@ -18,7 +18,9 @@ type _User = {
   isEmsFd: boolean;
   isSupervisor: boolean;
 };
-export type PermissionRoute = [Method[] | "*", string | RegExp, (user: _User) => boolean];
+
+type Route = string | RegExp | { strict: true; route: string | RegExp };
+export type PermissionRoute = [Method[] | "*", Route, (user: _User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["POST"], "/v1/dispatch/status/merge", (u) => u.isLeo],
@@ -65,6 +67,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
     (u) => ["ADMIN", "OWNER"].includes(u.rank),
   ],
   ["*", "/v1/admin", (u) => ["ADMIN", "OWNER"].includes(u.rank)],
+  [["GET", "POST"], { strict: true, route: "/v1/911-calls" }, () => true],
   [["PUT", "DELETE", "POST"], "/v1/911-calls/events", (u) => u.isDispatch],
   [["POST"], "/v1/911-calls/assign-to/", (u) => u.isLeo || u.isEmsFd],
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],

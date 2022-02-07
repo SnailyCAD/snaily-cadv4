@@ -31,6 +31,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   miscCadSettings: true,
   miscCadSettingsId: true,
   logoId: true,
+  discordRoles: true,
 });
 
 @Middleware()
@@ -161,6 +162,13 @@ function hasPermissionForReq(req: Req, user: User) {
   const requestMethod = req.method.toUpperCase() as Method;
 
   const [route] = PERMISSION_ROUTES.filter(([m, r]) => {
+    if (typeof r === "object" && "strict" in r) {
+      const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
+
+      const isTrue = r.route === urlWithBackslash || r.route === url;
+      return isTrue;
+    }
+
     if (typeof r === "string") {
       const isTrue = r.startsWith(url) || url.startsWith(r);
 
