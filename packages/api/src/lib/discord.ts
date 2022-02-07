@@ -1,6 +1,7 @@
 import { request } from "undici";
 import type { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import type { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
+import { Routes } from "discord-api-types";
 
 export const DISCORD_API_VERSION = "v9";
 export const DISCORD_API_URL = `https://discord.com/api/${DISCORD_API_VERSION}`;
@@ -37,14 +38,12 @@ export async function sendDiscordWebhook(
   webhook: APIWebhook | null,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody> | any,
 ): Promise<void> {
-  const DISCORD_API_URL = "https://discord.com/api/v9";
-
   if (!webhook) {
     return void undefined;
   }
 
   try {
-    await request(`${DISCORD_API_URL}/webhooks/${webhook.id}/${webhook.token}`, {
+    await request(`${DISCORD_API_URL}${Routes.webhook(webhook.id, webhook.token)}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
