@@ -6,6 +6,7 @@ import { prisma } from "lib/prisma";
 export async function updateMemberRoles(
   user: Pick<User, "isLeo" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow" | "discordId">,
   discordRolesId: string | null,
+  allowDelete = true,
 ) {
   console.log({
     discordId: user.discordId,
@@ -37,6 +38,7 @@ export async function updateMemberRoles(
 
   await Promise.all(
     data.map(async (d) => {
+      if (d.method === "delete" && !allowDelete) return;
       await addOrRemoveRole(user.discordId!, d.roleId, d.method);
     }),
   );
