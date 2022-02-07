@@ -62,7 +62,7 @@ export async function sendDiscordWebhook(
 let cacheREST;
 export function getRest(): REST {
   if (!BOT_TOKEN) {
-    throw new Error("Must set BOT_TOKEN in .env file");
+    throw new Error("mustSetBotTokenGuildId");
   }
   return (cacheREST ??= new REST({ version: "9" }).setToken(BOT_TOKEN));
 }

@@ -11,14 +11,13 @@ import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord";
 
 const guildId = process.env.DISCORD_SERVER_ID;
-const botToken = process.env.DISCORD_BOT_TOKEN;
 
 @Controller("/admin/manage/cad-settings/discord")
 @UseBeforeEach(IsAuth)
 export class DiscordSettingsController {
   @Get("/")
   async getGuildRoles(@Context("cad") cad: cad) {
-    if (!guildId || !botToken) {
+    if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
@@ -67,11 +66,11 @@ export class DiscordSettingsController {
 
   @Post("/")
   async setRoleTypes(@Context("cad") cad: cad, @BodyParams() body: unknown) {
-    const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
-
-    if (!guildId || !botToken) {
+    if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
+
+    const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
 
     const rest = getRest();
     const roles = (await rest.get(
