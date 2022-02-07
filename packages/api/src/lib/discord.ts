@@ -2,6 +2,9 @@ import { request } from "undici";
 import type { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import type { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
 
+export const DISCORD_API_VERSION = "v9";
+export const DISCORD_API_URL = `https://discord.com/api/${DISCORD_API_VERSION}`;
+
 export async function getWebhookData(url: string): Promise<APIWebhook | null> {
   try {
     const res = await request(url, { method: "GET" });

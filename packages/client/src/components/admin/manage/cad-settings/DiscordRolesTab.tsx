@@ -9,6 +9,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import type { DiscordRoles } from "@snailycad/types";
+import { FormRow } from "components/form/FormRow";
 
 export function DiscordRolesTab() {
   const [roles, setRoles] = React.useState<any[]>([]);
@@ -63,18 +64,33 @@ export function DiscordRolesTab() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, errors, values }) => (
           <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.leoRoleId} label="LEO Role">
-              <Select
-                isClearable
-                values={roles.map((role) => ({
-                  value: role.id,
-                  label: role.name,
-                }))}
-                value={values.leoRoleId}
-                name="leoRoleId"
-                onChange={handleChange}
-              />
-            </FormField>
+            <FormRow>
+              <FormField errorMessage={errors.leoRoleId} label="LEO Role">
+                <Select
+                  isClearable
+                  values={roles.map((role) => ({
+                    value: role.id,
+                    label: role.name,
+                  }))}
+                  value={values.leoRoleId}
+                  name="leoRoleId"
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField errorMessage={errors.leoSupervisorRoleId} label="LEO Supervisor Role">
+                <Select
+                  isClearable
+                  values={roles.map((role) => ({
+                    value: role.id,
+                    label: role.name,
+                  }))}
+                  value={values.leoSupervisorRoleId}
+                  name="leoSupervisorRoleId"
+                  onChange={handleChange}
+                />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.emsFdRoleId} label="EMS/FD Role">
               <Select
@@ -98,6 +114,19 @@ export function DiscordRolesTab() {
                 }))}
                 value={values.dispatchRoleId}
                 name="dispatchRoleId"
+                onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.towRoleId} label="Tow Role">
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.towRoleId}
+                name="towRoleId"
                 onChange={handleChange}
               />
             </FormField>
