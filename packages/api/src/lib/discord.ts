@@ -1,6 +1,14 @@
+import process from "process";
 import { request } from "undici";
 import type { APIWebhook } from "discord-api-types/payloads/v9/webhook";
 import type { RESTPostAPIWebhookWithTokenJSONBody } from "discord-api-types/rest/v9/webhook";
+import { Routes } from "discord-api-types/v9";
+import { REST } from "@discordjs/rest";
+
+export const DISCORD_API_VERSION = "v9";
+export const DISCORD_API_URL = `https://discord.com/api/${DISCORD_API_VERSION}`;
+export const GUILD_ID = process.env.DISCORD_SERVER_ID;
+export const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 export async function getWebhookData(url: string): Promise<APIWebhook | null> {
   try {
@@ -34,14 +42,12 @@ export async function sendDiscordWebhook(
   webhook: APIWebhook | null,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody> | any,
 ): Promise<void> {
-  const DISCORD_API_URL = "https://discord.com/api/v9";
-
   if (!webhook) {
     return void undefined;
   }
 
   try {
-    await request(`${DISCORD_API_URL}/webhooks/${webhook.id}/${webhook.token}`, {
+    await request(`${DISCORD_API_URL}${Routes.webhook(webhook.id, webhook.token)}`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -51,4 +57,12 @@ export async function sendDiscordWebhook(
   } catch (e) {
     console.error({ e });
   }
+}
+
+let cacheREST;
+export function getRest(): REST {
+  if (!BOT_TOKEN) {
+    throw new Error("mustSetBotTokenGuildId");
+  }
+  return (cacheREST ??= new REST({ version: "9" }).setToken(BOT_TOKEN));
 }

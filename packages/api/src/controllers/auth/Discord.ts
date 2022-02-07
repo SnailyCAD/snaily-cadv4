@@ -14,9 +14,9 @@ import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
+import { DISCORD_API_URL } from "lib/discord";
+import { updateMemberRolesLogin } from "lib/discord/auth";
 
-const DISCORD_API_VERSION = "v9";
-const discordApiUrl = `https://discord.com/api/${DISCORD_API_VERSION}`;
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
 const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
@@ -25,7 +25,7 @@ const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 export class DiscordAuth {
   @Get("/")
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
-    const url = new URL(`${discordApiUrl}/oauth2/authorize`);
+    const url = new URL(`${DISCORD_API_URL}/oauth2/authorize`);
 
     if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
       throw new BadRequest(
@@ -70,6 +70,9 @@ export class DiscordAuth {
       where: { discordId: data.id },
     });
 
+    const cad = await prisma.cad.findFirst();
+    const discordRolesId = cad?.discordRolesId ?? null;
+
     /**
      * a user was found with the discordId, but the user is not authenticated.
      *
@@ -77,6 +80,7 @@ export class DiscordAuth {
      */
     if (!authUser && user) {
       validateUser(user);
+      await updateMemberRolesLogin(user, discordRolesId);
 
       // authenticate user with cookie
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
@@ -120,12 +124,13 @@ export class DiscordAuth {
         value: jwtToken,
       });
 
+      await updateMemberRolesLogin(user, discordRolesId);
       return res.redirect(`${redirectURL}/citizen`);
     }
 
     if (authUser && user) {
       if (user.id === authUser.id) {
-        await prisma.user.update({
+        const updated = await prisma.user.update({
           where: {
             id: authUser.id,
           },
@@ -135,6 +140,7 @@ export class DiscordAuth {
         });
 
         validateUser(user);
+        await updateMemberRolesLogin(updated, discordRolesId);
 
         return res.redirect(`${redirectURL}/account?tab=discord&success`);
       }
@@ -143,7 +149,7 @@ export class DiscordAuth {
     }
 
     if (authUser && !user) {
-      await prisma.user.update({
+      const updated = await prisma.user.update({
         where: {
           id: authUser.id,
         },
@@ -153,6 +159,7 @@ export class DiscordAuth {
       });
 
       validateUser(authUser);
+      await updateMemberRolesLogin(updated, discordRolesId);
 
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
     }
@@ -190,7 +197,7 @@ export class DiscordAuth {
 
 async function getDiscordData(code: string): Promise<APIUser | null> {
   const data = (await request(
-    `${discordApiUrl}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
+    `${DISCORD_API_URL}/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${callbackUrl}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -206,8 +213,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
   ).then((v) => v.body.json())) as RESTPostOAuth2AccessTokenResult;
 
   const accessToken = data.access_token;
-
-  const meData = await request(`${discordApiUrl}/users/@me`, {
+  const meData = await request(`${DISCORD_API_URL}/users/@me`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${accessToken}`,

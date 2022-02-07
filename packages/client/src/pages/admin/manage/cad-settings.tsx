@@ -21,6 +21,7 @@ import { CAD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
+import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRolesTab";
 
 const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
@@ -55,6 +56,7 @@ export default function CadSettings() {
     { name: t("MISC_SETTINGS"), value: "MISC_SETTINGS" },
     { name: "Auto set user properties", value: "AUTO_SET_PROPERTIES" },
     { name: "Api Token", value: "API_TOKEN" },
+    { name: "Discord Roles", value: "DISCORD_ROLES_TAB" },
   ];
 
   async function onSubmit(
@@ -232,6 +234,7 @@ export default function CadSettings() {
         </TabsContent>
 
         <ApiTokenTab />
+        <DiscordRolesTab />
       </TabList>
     </AdminLayout>
   );

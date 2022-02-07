@@ -14,6 +14,8 @@ import { genSaltSync, hashSync } from "bcrypt";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { updateMemberRoles } from "lib/discord/admin";
+import { isDiscordIdInUse } from "utils/discord";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -56,7 +58,11 @@ export class ManageUsersController {
   }
 
   @Put("/:id")
-  async updateUserById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserById(
+    @Context("cad") cad: { discordRolesId: string | null },
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -66,6 +72,10 @@ export class ManageUsersController {
 
     if (user.rank === Rank.OWNER && data.rank !== Rank.OWNER) {
       throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerRank" });
+    }
+
+    if (data.discordId && (await isDiscordIdInUse(data.discordId, user.id))) {
+      throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
     }
 
     const updated = await prisma.user.update({
@@ -80,9 +90,14 @@ export class ManageUsersController {
         isTow: data.isTow,
         steamId: data.steamId,
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
+        discordId: data.discordId,
       },
       select: userProperties,
     });
+
+    if (updated.discordId) {
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return updated;
   }

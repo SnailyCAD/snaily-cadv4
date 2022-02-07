@@ -31,6 +31,8 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   miscCadSettings: true,
   miscCadSettingsId: true,
   logoId: true,
+  discordRolesId: true,
+  discordRoles: user?.rank === Rank.OWNER ? { include: { roles: true } } : true,
 });
 
 @Middleware()

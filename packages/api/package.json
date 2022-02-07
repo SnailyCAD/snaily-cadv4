@@ -27,6 +27,7 @@
     "tsconfig-paths": "^3.12.0"
   },
   "dependencies": {
+    "@discordjs/rest": "^0.3.0",
     "@prisma/client": "^3.9.1",
     "@snailycad/config": "1.0.0-beta.51",
     "@snailycad/schemas": "1.0.0-beta.51",

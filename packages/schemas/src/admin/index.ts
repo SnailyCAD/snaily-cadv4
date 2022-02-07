@@ -31,6 +31,14 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
 });
 
+export const DISCORD_SETTINGS_SCHEMA = z.object({
+  leoRoleId: z.string().nullable().optional(),
+  leoSupervisorRoleId: z.string().nullable().optional(),
+  emsFdRoleId: z.string().nullable().optional(),
+  dispatchRoleId: z.string().nullable().optional(),
+  towRoleId: z.string().nullable().optional(),
+});
+
 export const CAD_AUTO_SET_PROPERTIES = z.object({
   leo: z.boolean().nullable(),
   dispatch: z.boolean().nullable(),
@@ -53,6 +61,7 @@ export const UPDATE_USER_SCHEMA = z.object({
   isTow: z.boolean(),
   isSupervisor: z.boolean(),
   steamId: z.string().max(255),
+  discordId: z.string().max(255),
 });
 
 export const IMPORT_CITIZENS_SCHEMA = z.object({
