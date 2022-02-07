@@ -90,7 +90,6 @@ export class ManageUsersController {
     });
 
     if (updated.discordId) {
-      // @ts-expect-error TS doesn't seem to understand that this works?
       await updateMemberRoles(updated, cad.discordRolesId);
     }
 

@@ -15,6 +15,7 @@ import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
 import { DISCORD_API_URL } from "lib/discord";
+import { updateMemberRoles } from "lib/discord/admin";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -69,6 +70,9 @@ export class DiscordAuth {
       where: { discordId: data.id },
     });
 
+    const cad = await prisma.cad.findFirst();
+    const discordRolesId = cad?.discordRolesId ?? null;
+
     /**
      * a user was found with the discordId, but the user is not authenticated.
      *
@@ -76,6 +80,7 @@ export class DiscordAuth {
      */
     if (!authUser && user) {
       validateUser(user);
+      await updateMemberRoles(user, discordRolesId);
 
       // authenticate user with cookie
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
@@ -119,12 +124,13 @@ export class DiscordAuth {
         value: jwtToken,
       });
 
+      await updateMemberRoles(user, discordRolesId);
       return res.redirect(`${redirectURL}/citizen`);
     }
 
     if (authUser && user) {
       if (user.id === authUser.id) {
-        await prisma.user.update({
+        const updated = await prisma.user.update({
           where: {
             id: authUser.id,
           },
@@ -134,6 +140,7 @@ export class DiscordAuth {
         });
 
         validateUser(user);
+        await updateMemberRoles(updated, discordRolesId);
 
         return res.redirect(`${redirectURL}/account?tab=discord&success`);
       }
@@ -142,7 +149,7 @@ export class DiscordAuth {
     }
 
     if (authUser && !user) {
-      await prisma.user.update({
+      const updated = await prisma.user.update({
         where: {
           id: authUser.id,
         },
@@ -152,6 +159,7 @@ export class DiscordAuth {
       });
 
       validateUser(authUser);
+      await updateMemberRoles(updated, discordRolesId);
 
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
     }

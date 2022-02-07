@@ -4,12 +4,14 @@ import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
 
 export async function updateMemberRoles(
-  user: Pick<User, "isLeo" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow"> & {
-    discordId: string;
-  },
+  user: Pick<User, "isLeo" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow" | "discordId">,
   discordRolesId: string | null,
 ) {
-  if (!GUILD_ID || !BOT_TOKEN || !discordRolesId) return;
+  console.log({
+    discordId: user.discordId,
+    discordRolesId,
+  });
+  if (!GUILD_ID || !BOT_TOKEN || !discordRolesId || !user.discordId) return;
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
@@ -25,11 +27,6 @@ export async function updateMemberRoles(
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
-  console.log({
-    leoRoleId: discordRoles.leoRoleId,
-    discordId: user.discordId,
-  });
-
   const data = [
     { roleId: discordRoles.leoRoleId, method: createMethod(user.isLeo) },
     { roleId: discordRoles.leoSupervisorRoleId, method: createMethod(user.isSupervisor) },
@@ -40,7 +37,7 @@ export async function updateMemberRoles(
 
   await Promise.all(
     data.map(async (d) => {
-      await addOrRemoveRole(user.discordId, d.roleId, d.method);
+      await addOrRemoveRole(user.discordId!, d.roleId, d.method);
     }),
   );
 }
