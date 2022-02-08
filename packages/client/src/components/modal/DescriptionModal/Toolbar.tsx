@@ -45,7 +45,7 @@ export function Toolbar() {
         <BlockButton format="heading-two" icon={<TypeH2 aria-label="heading-two" />} />
         <BlockButton format="block-quote" icon={<Quote aria-label="block-quote" />} />
         <BlockButton format="bulleted-list" icon={<ListUl aria-label="bulleted-list" />} />
-        <BlockButton format="checklist" icon={<ListCheck aria-label="checklist" />} />
+        <BlockButton format="check-list-item" icon={<ListCheck aria-label="check-list-item" />} />
       </RToolbar.ToolbarToggleGroup>
     </RToolbar.Root>
   );
@@ -59,12 +59,10 @@ interface ButtonProps {
 function BlockButton({ format, icon }: ButtonProps) {
   const editor = useSlate();
   const isActive = isBlockActive(editor, format);
-  const isDisabled = ["checklist"].includes(format);
 
   return (
     <RToolbar.ToolbarToggleItem asChild value={format}>
       <Button
-        disabled={isDisabled}
         title={format}
         type="button"
         variant={isActive ? null : "default"}

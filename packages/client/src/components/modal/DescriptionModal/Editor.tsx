@@ -8,6 +8,8 @@ import { Toolbar } from "./Toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
 import { withShortcuts } from "lib/editor/withShortcuts";
+import { withChecklists } from "lib/editor/withChecklists";
+import { CheckListItemElement } from "./ChecklistItem";
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
 type CustomText = { text: string };
@@ -43,7 +45,10 @@ const HOTKEYS = {
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
-  const editor = React.useMemo(() => withShortcuts(withHistory(withReact(createEditor()))), []);
+  const editor = React.useMemo(
+    () => withChecklists(withShortcuts(withHistory(withReact(createEditor())))),
+    [],
+  );
 
   function handleChange(value: Descendant[]) {
     onChange?.(value);
@@ -104,7 +109,7 @@ function Leaf({ attributes, children, leaf }: any) {
   return <span {...attributes}>{children}</span>;
 }
 
-function Element({ attributes, children, element }: any) {
+function Element({ attributes, children, element, ...rest }: any) {
   switch (element.type) {
     case "block-quote":
       return (
@@ -132,6 +137,8 @@ function Element({ attributes, children, element }: any) {
           {children}
         </li>
       );
+    case "check-list-item":
+      return <CheckListItemElement {...{ children, attributes, element, ...rest }} />;
     case "numbered-list":
       return <ol {...attributes}>{children}</ol>;
     default:

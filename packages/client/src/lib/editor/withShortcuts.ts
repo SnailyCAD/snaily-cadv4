@@ -11,7 +11,7 @@ const SHORTCUTS = {
   "##": "heading-two",
 };
 
-export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
+export function withShortcuts(editor: BaseEditor & ReactEditor) {
   const { deleteBackward, insertText } = editor;
 
   editor.insertText = (text) => {
@@ -100,4 +100,4 @@ export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
   };
 
   return editor;
-};
+}
