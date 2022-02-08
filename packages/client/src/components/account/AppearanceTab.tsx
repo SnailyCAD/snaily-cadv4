@@ -8,6 +8,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
+import { Loader } from "components/Loader";
 
 const LABELS = {
   [StatusViewMode.DOT_COLOR]: "Dot color",
@@ -81,7 +82,12 @@ export function AppearanceTab() {
               />
             </FormField>
 
-            <Button type="submit" disabled={state === "loading"}>
+            <Button
+              className="flex items-center gap-2"
+              type="submit"
+              disabled={state === "loading"}
+            >
+              {state === "loading" ? <Loader /> : null}
               {common("save")}
             </Button>
           </Form>
