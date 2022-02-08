@@ -3,7 +3,7 @@ import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -26,6 +26,7 @@ export class ManageUsersController {
   }
 
   @Get("/")
+  @Description("Get all the users in the CAD")
   async getUsers() {
     const users = await prisma.user.findMany({
       select: userProperties,
