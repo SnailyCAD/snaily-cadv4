@@ -46,7 +46,13 @@ export async function handleRequest<T = any>(
     return e;
   });
 
-  return res;
+  return {
+    response: res?.response,
+    data: res?.data,
+    status: res?.status,
+    statusText: res?.statusText,
+    config: res?.config,
+  } as unknown as AxiosResponse<T>;
 }
 
 export function findUrl() {
