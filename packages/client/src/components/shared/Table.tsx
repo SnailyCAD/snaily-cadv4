@@ -30,6 +30,8 @@ const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 const MAX_ITEMS_PER_PAGE = 50 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
+  // todo: add table instance state here. try not to re-render the entire table's state after a checkbox changes
+  const [state, setState] = React.useState({});
   const data = React.useMemo(() => props.data, [props.data]);
   const { user } = useAuth();
 
@@ -268,7 +270,7 @@ export const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
 
     return (
       <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
+        <input className="cursor-pointer" type="checkbox" ref={resolvedRef} {...rest} />
       </>
     );
   },
