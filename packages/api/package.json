@@ -40,6 +40,7 @@
     "@tsed/platform-express": "^6.101.0",
     "@tsed/schema": "^6.101.0",
     "@tsed/socketio": "^6.101.0",
+    "@tsed/swagger": "^6.101.0",
     "bcrypt": "^5.0.1",
     "compression": "1.7.4",
     "cookie": "^0.4.2",

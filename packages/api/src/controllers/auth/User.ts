@@ -1,7 +1,7 @@
 import { Context, Res, BodyParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { UseBefore } from "@tsed/platform-middlewares";
-import { Delete, Patch, Post } from "@tsed/schema";
+import { Delete, Description, Patch, Post } from "@tsed/schema";
 import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -27,11 +27,13 @@ export class AccountController {
   }
 
   @Post("/")
+  @Description("Get the authenticated user's information")
   async getAuthUser(@Context() ctx: Context) {
     return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
   }
 
   @Patch("/")
+  @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
     const { username, discordId, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
@@ -67,6 +69,7 @@ export class AccountController {
   }
 
   @Delete("/")
+  @Description("Delete the authenticated user's account")
   async deleteAuthUser(@Context() ctx: Context) {
     await prisma.user.delete({
       where: {
@@ -76,6 +79,7 @@ export class AccountController {
   }
 
   @Post("/logout")
+  @Description("Logout the authenticated user")
   async logoutUser(@Res() res: Res, @Context() ctx: Context) {
     const userId = ctx.get("user").id;
 
@@ -124,6 +128,7 @@ export class AccountController {
   }
 
   @Post("/password")
+  @Description("Update the authenticated user's password")
   async updatePassword(@Context("user") user: User, @BodyParams() body: unknown) {
     const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body);
 

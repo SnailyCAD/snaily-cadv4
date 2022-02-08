@@ -16,6 +16,7 @@ import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
 import { DISCORD_API_URL } from "lib/discord";
 import { updateMemberRolesLogin } from "lib/discord/auth";
+import { Description } from "@tsed/schema";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -24,6 +25,7 @@ const DISCORD_CLIENT_SECRET = process.env["DISCORD_CLIENT_SECRET"];
 @Controller("/auth/discord")
 export class DiscordAuth {
   @Get("/")
+  @Description("Redirect to Discord OAuth2 URL")
   async handleRedirectToDiscordOAuthAPI(@Res() res: Res) {
     const url = new URL(`${DISCORD_API_URL}/oauth2/authorize`);
 
@@ -43,6 +45,7 @@ export class DiscordAuth {
   }
 
   @Get("/callback")
+  @Description("Handle Discord's OAuth2 response. Authenticate user where possible.")
   async handleCallbackFromDiscord(
     @QueryParams("code") code: string,
     @Res() res: Res,
@@ -181,6 +184,7 @@ export class DiscordAuth {
 
   @Delete("/")
   @UseBefore(IsAuth)
+  @Description("Remove Discord OAuth2 from from authenticated user")
   async removeDiscordAuth(@Context("user") user: User) {
     await prisma.user.update({
       where: {
