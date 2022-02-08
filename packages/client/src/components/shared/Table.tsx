@@ -283,20 +283,18 @@ function makeColumns<T extends object>(
 
   const arr = [];
 
-  if (idxOfActions === -1) {
+  if (idxOfActions === -1 || !isLeft) {
     return columns;
   }
 
   // shift everything to the right and make place for actions column
-  if (isLeft) {
-    for (let i = 0; i < columns.length; i++) {
-      if (columns[i]?.accessor === "actions") continue;
-      arr[i + 1] = columns[i]!;
-    }
+  for (let i = 0; i < columns.length; i++) {
+    if (columns[i]?.accessor === "actions") continue;
+    arr[i + 1] = columns[i]!;
+  }
 
-    if (columns[idxOfActions]) {
-      arr[0] = columns[idxOfActions]!;
-    }
+  if (columns[idxOfActions]) {
+    arr[0] = columns[idxOfActions]!;
   }
 
   return arr;

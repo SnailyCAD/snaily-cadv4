@@ -55,11 +55,12 @@ export function ActiveOfficers() {
       method: "POST",
     });
 
+    console.log({ json });
     if (json) {
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+      // router.replace({
+      //   pathname: router.pathname,
+      //   query: router.query,
+      // });
     }
   }
 
