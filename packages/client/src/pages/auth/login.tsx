@@ -17,6 +17,7 @@ import { findUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
+import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 
 const INITIAL_VALUES = {
   username: "",
@@ -94,56 +95,61 @@ export default function Login() {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, values, isValid }) => (
             <form
-              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
+              className="relative w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
               onSubmit={handleSubmit}
             >
-              <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
-                {t("login")}
-              </h1>
-
-              {errorMessage ? (
-                <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
-                  {errorMessage}
-                </p>
-              ) : null}
-
-              <FormField errorMessage={errors.username} label={t("username")}>
-                <Input type="text" name="username" onChange={handleChange} />
-              </FormField>
-
-              <FormField errorMessage={errors.password} label={t("password")}>
-                <PasswordInput name="password" onChange={handleChange} />
-              </FormField>
-
               {typeof values.totpCode !== "undefined" ? (
-                <FormField errorMessage={errors.totpCode} label={t("totpCode")}>
-                  <Input name="totpCode" value={values.totpCode} onChange={handleChange} />
-                </FormField>
-              ) : null}
-
-              <div className="mt-3">
-                <Link href="/auth/register">
-                  <a className="inline-block mb-3 underline dark:text-gray-200">{t("noAccount")}</a>
-                </Link>
-
-                <Button
-                  disabled={!isValid || state === "loading"}
-                  type="submit"
-                  className="flex items-center justify-center w-full gap-3"
-                >
-                  {state === "loading" ? <Loader /> : null} {t("login")}
-                </Button>
-              </div>
-
-              {DISCORD_AUTH ? (
+                <TwoFactorAuthScreen
+                  errorMessage={errors.totpCode}
+                  isLoading={state === "loading"}
+                />
+              ) : (
                 <>
-                  <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+                  <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
+                    {t("login")}
+                  </h1>
 
-                  <Button type="button" onClick={handleDiscordLogin} className="w-full">
-                    Login via Discord
-                  </Button>
+                  {errorMessage ? (
+                    <p className="bg-red-500/80 text-black w-full py-1.5 px-3 my-3 rounded-md">
+                      {errorMessage}
+                    </p>
+                  ) : null}
+
+                  <FormField errorMessage={errors.username} label={t("username")}>
+                    <Input type="text" name="username" onChange={handleChange} />
+                  </FormField>
+
+                  <FormField errorMessage={errors.password} label={t("password")}>
+                    <PasswordInput name="password" onChange={handleChange} />
+                  </FormField>
+
+                  <div className="mt-3">
+                    <Link href="/auth/register">
+                      <a className="inline-block mb-3 underline dark:text-gray-200">
+                        {t("noAccount")}
+                      </a>
+                    </Link>
+
+                    <Button
+                      disabled={!isValid || state === "loading"}
+                      type="submit"
+                      className="flex items-center justify-center w-full gap-3"
+                    >
+                      {state === "loading" ? <Loader /> : null} {t("login")}
+                    </Button>
+                  </div>
+
+                  {DISCORD_AUTH ? (
+                    <>
+                      <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+
+                      <Button type="button" onClick={handleDiscordLogin} className="w-full">
+                        Login via Discord
+                      </Button>
+                    </>
+                  ) : null}
                 </>
-              ) : null}
+              )}
             </form>
           )}
         </Formik>
