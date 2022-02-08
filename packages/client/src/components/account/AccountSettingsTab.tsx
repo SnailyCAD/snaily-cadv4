@@ -16,7 +16,7 @@ import { Loader } from "components/Loader";
 export function AccountSettingsTab() {
   const { user } = useAuth();
   const t = useTranslations("Account");
-  const { execute, state } = useFetch({ overwriteState: "loading" });
+  const { execute, state } = useFetch();
   const common = useTranslations("Common");
   const { openModal } = useModal();
 

@@ -1345,6 +1345,7 @@ __metadata:
     react-colorful: ^5.5.1
     react-cool-onclickoutside: ^1.7.0
     react-cropper: ^2.1.8
+    react-digit-input: ^2.1.0
     react-dom: ^17.0.2
     react-hot-toast: ^2.2.0
     react-select: ^5.2.2
@@ -7917,6 +7918,13 @@ __metadata:
   peerDependencies:
     react: ">=16.0.0"
   checksum: f2961a871f0e641f72dcd6e21b74ad10c6d06f0fa24da790b32b6e47ab601cc1b163750952f405ef14ee983750afe8923c8ffd0f7f8bf661096996b43e52a2b2
+  languageName: node
+  linkType: hard
+
+"react-digit-input@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "react-digit-input@npm:2.1.0"
+  checksum: 393eb06d2ebc22a001ba5b511ed3c220e18606a29ba32774909e789c36ca5358c6e4bcce11fdd6d77518c99ed6f6c3153110c173f3c034237e29ee47d44b6fed
   languageName: node
   linkType: hard
 
