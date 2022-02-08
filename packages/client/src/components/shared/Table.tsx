@@ -33,7 +33,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
   const data = React.useMemo(() => props.data, [props.data]);
   const { user } = useAuth();
 
-  const hasActionsColumn = props.columns.some((v) => v?.accessor === "actions");
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
   const stickyBgColor = props.isWithinCard
     ? "bg-gray-200/80 dark:bg-gray-2"
@@ -41,33 +40,11 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
   const columns = React.useMemo(
     () =>
-      (props.columns.filter((v) => v !== null) as Column<TableData<T, RowProps>>[]).sort((a) => {
-        const isAActions = a.accessor === "actions";
-
-        if (!hasActionsColumn) {
-          return 0;
-        }
-
-        const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
-        const isRight = tableActionsAlignment === TableActionsAlignment.RIGHT;
-
-        /**
-         * the actions column will be fixed on the left side of the table
-         */
-        if (isLeft) {
-          return isAActions ? -1 : 1;
-        }
-
-        /**
-         * the actions column will be fixed on the right side of the table
-         */
-        if (isRight) {
-          return isAActions ? 1 : -1;
-        }
-
-        return -1;
-      }),
-    [props.columns, hasActionsColumn, tableActionsAlignment],
+      makeColumns(
+        tableActionsAlignment,
+        props.columns.filter(Boolean) as Column<TableData<T, RowProps>>[],
+      ),
+    [props.columns, tableActionsAlignment],
   );
 
   const instance = useTable<TableData<T, RowProps>>(
@@ -296,3 +273,31 @@ export const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, any>(
     );
   },
 );
+
+function makeColumns<T extends object>(
+  tableActionsAlignment: TableActionsAlignment,
+  columns: Column<T>[],
+) {
+  const idxOfActions = columns.findIndex((v) => v.accessor === "actions");
+  const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
+
+  const arr = [];
+
+  if (idxOfActions === -1) {
+    return columns;
+  }
+
+  // shift everything to the right and make place for actions column
+  if (isLeft) {
+    for (let i = 0; i < columns.length; i++) {
+      if (columns[i]?.accessor === "actions") continue;
+      arr[i + 1] = columns[i]!;
+    }
+
+    if (columns[idxOfActions]) {
+      arr[0] = columns[idxOfActions]!;
+    }
+  }
+
+  return arr;
+}
