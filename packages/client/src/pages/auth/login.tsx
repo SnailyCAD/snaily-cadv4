@@ -99,7 +99,10 @@ export default function Login() {
               onSubmit={handleSubmit}
             >
               {typeof values.totpCode !== "undefined" ? (
-                <TwoFactorAuthScreen isLoading={state === "loading"} />
+                <TwoFactorAuthScreen
+                  errorMessage={errors.totpCode}
+                  isLoading={state === "loading"}
+                />
               ) : (
                 <>
                   <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">

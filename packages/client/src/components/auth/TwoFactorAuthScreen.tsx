@@ -7,9 +7,13 @@ import { FormField } from "components/form/FormField";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 
-export function TwoFactorAuthScreen({ isLoading }: { isLoading: boolean }) {
-  const { setFieldValue, values, errors, submitForm } =
-    useFormikContext<{ totpCode: string | undefined }>();
+interface Props {
+  errorMessage?: string;
+  isLoading: boolean;
+}
+
+export function TwoFactorAuthScreen({ isLoading, errorMessage }: Props) {
+  const { setFieldValue, submitForm } = useFormikContext();
 
   const [value, onChange] = React.useState("");
   const t = useTranslations("Auth");
@@ -30,15 +34,15 @@ export function TwoFactorAuthScreen({ isLoading }: { isLoading: boolean }) {
   }, [value, setFieldValue]);
 
   React.useEffect(() => {
-    if (values.totpCode?.trim().length === 6) {
+    if (value.trim().length === 6) {
       submitForm();
     }
-  }, [values.totpCode, submitForm]);
+  }, [value, submitForm]);
 
-  const className = "h-14 w-14 !text-xl text-center";
+  const className = "h-[60px] w-full text-xl text-center";
 
   return (
-    <div className="max-w-sm">
+    <>
       <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
         {t("twoFactorCode")}
       </h1>
@@ -47,7 +51,7 @@ export function TwoFactorAuthScreen({ isLoading }: { isLoading: boolean }) {
         Please enter the 6-digit code from your authenticator app
       </p>
 
-      <FormField errorMessage={errors.totpCode} label={t("totpCode")}>
+      <FormField errorMessage={errorMessage} label={t("totpCode")}>
         <input hidden type="hidden" value={value} name="totpCode" />
 
         <div className="flex flex-row space-x-1">
@@ -60,21 +64,16 @@ export function TwoFactorAuthScreen({ isLoading }: { isLoading: boolean }) {
         </div>
       </FormField>
 
-      <div className="flex gap-2 justify-end mt-4">
+      <div className="flex gap-2 justify-end mt-8">
         <Button type="button" onClick={handleCancel}>
           {common("cancel")}
         </Button>
 
-        <Button
-          disabled={isLoading}
-          className="flex items-center gap-2"
-          type="button"
-          onClick={handleCancel}
-        >
+        <Button disabled={isLoading} className="flex items-center gap-2" type="submit">
           {isLoading ? <Loader /> : null}
           {t("login")}
         </Button>
       </div>
-    </div>
+    </>
   );
 }
