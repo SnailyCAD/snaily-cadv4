@@ -16,7 +16,7 @@ import { Loader } from "components/Loader";
 export function AccountSettingsTab() {
   const { user } = useAuth();
   const t = useTranslations("Account");
-  const { execute, state } = useFetch();
+  const { execute, state } = useFetch({ overwriteState: "loading" });
   const common = useTranslations("Common");
   const { openModal } = useModal();
 
@@ -50,22 +50,23 @@ export function AccountSettingsTab() {
               <Input value={values.discordId} onChange={handleChange} name="discordId" />
             </FormField>
 
-            <Button
-              variant={user?.twoFactorEnabled ? "danger" : "default"}
-              className="mr-2"
-              type="button"
-              onClick={() => openModal(ModalIds.Manage2FA, !!user?.twoFactorEnabled)}
-            >
-              {user?.twoFactorEnabled ? t("disable2FA") : t("enable2FA")}
-            </Button>
-            <Button
-              className="flex items-center gap-2"
-              type="submit"
-              disabled={state === "loading"}
-            >
-              {state === "loading" ? <Loader /> : null}
-              {common("save")}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={user?.twoFactorEnabled ? "danger" : "default"}
+                type="button"
+                onClick={() => openModal(ModalIds.Manage2FA, !!user?.twoFactorEnabled)}
+              >
+                {user?.twoFactorEnabled ? t("disable2FA") : t("enable2FA")}
+              </Button>
+              <Button
+                className="flex items-center gap-2"
+                type="submit"
+                disabled={state === "loading"}
+              >
+                {state === "loading" ? <Loader /> : null}
+                {common("save")}
+              </Button>
+            </div>
           </Form>
         )}
       </Formik>
