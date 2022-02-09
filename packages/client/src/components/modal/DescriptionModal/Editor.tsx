@@ -1,7 +1,14 @@
 import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
-import { Editable, ReactEditor, Slate, withReact } from "slate-react";
+import {
+  Editable,
+  ReactEditor,
+  RenderElementProps,
+  RenderLeafProps,
+  Slate,
+  withReact,
+} from "slate-react";
 import { type HistoryEditor, withHistory } from "slate-history";
 import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
@@ -85,13 +92,9 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
   );
 }
 
-function Leaf({ attributes, children, leaf }: any) {
+function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
-  }
-
-  if (leaf.code) {
-    children = <code>{children}</code>;
   }
 
   if (leaf.italic) {
@@ -109,7 +112,7 @@ function Leaf({ attributes, children, leaf }: any) {
   return <span {...attributes}>{children}</span>;
 }
 
-function Element({ attributes, children, element, ...rest }: any) {
+function Element({ attributes, children, element, ...rest }: RenderElementProps) {
   switch (element.type) {
     case "block-quote":
       return (
@@ -139,8 +142,6 @@ function Element({ attributes, children, element, ...rest }: any) {
       );
     case "check-list-item":
       return <CheckListItemElement {...{ children, attributes, element, ...rest }} />;
-    case "numbered-list":
-      return <ol {...attributes}>{children}</ol>;
     default:
       return <p {...attributes}>{children}</p>;
   }

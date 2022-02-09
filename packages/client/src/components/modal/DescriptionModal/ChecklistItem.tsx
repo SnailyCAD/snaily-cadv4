@@ -1,6 +1,7 @@
 import { classNames } from "lib/classNames";
 import { Transforms } from "slate";
 import { ReactEditor, useReadOnly, useSlateStatic } from "slate-react";
+import type { CheckListItemElement } from "./types";
 
 export function CheckListItemElement({ attributes, children, element }: any) {
   const editor = useSlateStatic();

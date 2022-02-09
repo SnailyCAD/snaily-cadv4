@@ -47,15 +47,7 @@ export function isBlockActive(editor: SlateEditor, format: string) {
   const [match] = Array.from(
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
-      match: (n) => {
-        if (Editor.isEditor(n)) return false;
-
-        if ("text" in n) {
-          return (n as any)[format];
-        }
-
-        return n.type === format;
-      },
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format,
     }),
   );
 

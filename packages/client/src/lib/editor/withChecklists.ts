@@ -19,13 +19,14 @@ export function withChecklists(editor: SlateEditor) {
         const start = Editor.start(editor, path);
 
         if (Point.equals(selection.anchor, start)) {
-          const newProperties: Partial<SlateElement> = {
-            type: "paragraph",
-          };
-          Transforms.setNodes(editor, newProperties, {
-            match: (n) =>
-              !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "check-list-item",
-          });
+          Transforms.setNodes(
+            editor,
+            { type: "paragraph" },
+            {
+              match: (n) =>
+                !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "check-list-item",
+            },
+          );
           return;
         }
       }
