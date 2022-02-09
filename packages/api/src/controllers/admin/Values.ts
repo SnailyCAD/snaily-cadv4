@@ -486,8 +486,6 @@ export class ValuesController {
   protected async deleteById(type: ValueType, id: string) {
     const data = GET_VALUES[type];
 
-    console.log({ id });
-
     if (data) {
       // @ts-expect-error ignore
       const deleted = await prisma[data.name].delete({
