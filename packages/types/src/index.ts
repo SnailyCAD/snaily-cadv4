@@ -322,7 +322,20 @@ export interface Violation {
   bail: number | null;
   penalCodeId: string;
   penalCode: PenalCode;
+  seizedItems: SeizedItem[];
 }
+
+/**
+ * Model SeizedItem
+ *
+ */
+export type SeizedItem = {
+  id: string;
+  violationId: string;
+  item: string;
+  quantity: number;
+  illegal: boolean;
+};
 
 /**
  * Model DivisionValue

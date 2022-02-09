@@ -380,13 +380,23 @@ model WarningNotApplicable {
 }
 
 model Violation {
-  id          String    @id @default(uuid())
+  id          String       @id @default(uuid())
   fine        Int?
   jailTime    Int?
   bail        Int?
-  penalCode   PenalCode @relation(fields: [penalCodeId], references: [id])
+  penalCode   PenalCode    @relation(fields: [penalCodeId], references: [id])
   penalCodeId String
   records     Record[]
+  seizedItems SeizedItem[]
+}
+
+model SeizedItem {
+  id          String    @id @default(uuid())
+  violation   Violation @relation(fields: [violationId], references: [id])
+  violationId String
+  item        String
+  quantity    Int       @default(1)
+  illegal     Boolean   @default(false)
 }
 
 model DivisionValue {
