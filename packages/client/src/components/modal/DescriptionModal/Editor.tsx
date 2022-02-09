@@ -1,4 +1,3 @@
-import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import {
@@ -71,11 +70,7 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
           readOnly={isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          className={classNames(
-            `
-      w-full p-1.5 rounded-md bg-transparent
-      disabled:cursor-not-allowed disabled:opacity-80`,
-          )}
+          className="w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
           placeholder="Start typing..."
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {

@@ -1,12 +1,10 @@
-export type SlateElementTypes = "";
-
-export type Text<Extra extends object = {}> = {
+export interface Text {
   text: string;
   bold?: boolean;
   underline?: boolean;
   strikethrough?: boolean;
   italic?: boolean;
-} & Extra;
+}
 
 export interface ParagraphElement {
   type: "paragraph";
@@ -40,7 +38,8 @@ export interface BulletItemElement {
 
 export interface CheckListItemElement {
   type: "check-list-item";
-  children: Text<{ checked?: boolean }>[];
+  checked?: boolean;
+  children: Text[];
 }
 
 export type SlateElements =

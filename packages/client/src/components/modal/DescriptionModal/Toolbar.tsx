@@ -52,12 +52,12 @@ export function Toolbar() {
   );
 }
 
-interface ButtonProps {
+interface BlockButtonProps {
   format: SlateElements["type"];
   icon: React.ReactNode;
 }
 
-function BlockButton({ format, icon }: ButtonProps) {
+function BlockButton({ format, icon }: BlockButtonProps) {
   const editor = useSlate();
   const isActive = isBlockActive(editor, format);
 
@@ -68,9 +68,7 @@ function BlockButton({ format, icon }: ButtonProps) {
         type="button"
         variant={isActive ? null : "default"}
         className={classNames(isActive && "text-white bg-neutral-700")}
-        onClick={() => {
-          toggleBlock(editor, format);
-        }}
+        onClick={() => toggleBlock(editor, format)}
       >
         {icon}
       </Button>
@@ -94,9 +92,7 @@ const MarkButton = ({ format, icon }: MarkButtonProps) => {
         type="button"
         variant={isActive ? null : "default"}
         className={classNames(isActive && "text-white bg-neutral-700")}
-        onClick={() => {
-          toggleMark(editor, format);
-        }}
+        onClick={() => toggleMark(editor, format)}
       >
         {icon}
       </Button>

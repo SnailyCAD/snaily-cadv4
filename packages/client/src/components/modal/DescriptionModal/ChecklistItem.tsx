@@ -1,9 +1,11 @@
 import { classNames } from "lib/classNames";
 import { Transforms } from "slate";
-import { ReactEditor, useReadOnly, useSlateStatic } from "slate-react";
-import type { CheckListItemElement } from "./types";
+import { ReactEditor, useReadOnly, useSlateStatic, type RenderElementProps } from "slate-react";
+import type { CheckListItemElement as ICheckListItemElement } from "./types";
 
-export function CheckListItemElement({ attributes, children, element }: any) {
+type Props = RenderElementProps & { element: ICheckListItemElement };
+
+export function CheckListItemElement({ attributes, children, element }: Props) {
   const editor = useSlateStatic();
   const readOnly = useReadOnly();
 
@@ -15,11 +17,8 @@ export function CheckListItemElement({ attributes, children, element }: any) {
           checked={element.checked}
           onChange={(event) => {
             const path = ReactEditor.findPath(editor, element);
-            const newProperties = {
-              checked: event.target.checked,
-            };
-            // @ts-expect-error ignore
-            Transforms.setNodes(editor, newProperties, { at: path });
+
+            Transforms.setNodes(editor, { checked: event.target.checked }, { at: path });
           }}
         />
       </span>

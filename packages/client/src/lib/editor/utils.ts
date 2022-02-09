@@ -40,7 +40,7 @@ export function toggleMark(editor: SlateEditor, format: keyof Omit<Text, "text">
   }
 }
 
-export function isBlockActive(editor: SlateEditor, format: string) {
+export function isBlockActive(editor: SlateEditor, format: SlateElement["type"]) {
   const { selection } = editor;
   if (!selection) return false;
 
