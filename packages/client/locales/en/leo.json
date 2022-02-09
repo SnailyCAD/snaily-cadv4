@@ -125,6 +125,8 @@
     "editTicket": "Edit Ticket",
     "editArrestReport": "Edit Arrest Report",
     "editWrittenWarning": "Edit Written Warning",
+    "quantity": "Quantity",
+    "illegal": "Illegal",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",
     "alert_allowCheckout": "Are you sure you to checkout this vehicle from the impound lot?",

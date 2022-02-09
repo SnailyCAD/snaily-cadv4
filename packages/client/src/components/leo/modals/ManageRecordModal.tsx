@@ -20,6 +20,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import type { FullRecord } from "./NameSearchModal/RecordsArea";
+import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 
 interface Props {
   record?: FullRecord | null;
@@ -116,6 +117,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       })) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",
     notes: record?.notes ?? "",
+    seizedItems: [],
   };
 
   return (
@@ -180,6 +182,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
             </FormField>
 
             <PenalCodesTable penalCodes={values.violations.map((v) => v.value)} />
+            <SeizedItemsTable />
 
             <FormField optional errorMessage={errors.notes} label={t("notes")}>
               <Textarea value={values.notes} name="notes" onChange={handleChange} />
