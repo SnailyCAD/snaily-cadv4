@@ -161,46 +161,24 @@ export class ValuesController {
     return value;
   }
 
+  @Delete("/bulk-delete")
+  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: any) {
+    const type = this.getTypeFromPath(path);
+    const ids = body as string[];
+
+    const arr = await Promise.all(
+      ids.map(async (id) => {
+        return this.deleteById(type, id);
+      }),
+    );
+
+    return arr.every((v) => v);
+  }
+
   @Delete("/:id")
   async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
-
-    const data = GET_VALUES[type];
-
-    if (data) {
-      // @ts-expect-error ignore
-      const deleted = await prisma[data.name].delete({
-        where: {
-          id,
-        },
-      });
-
-      await prisma.value.delete({
-        where: {
-          id: deleted.valueId,
-        },
-      });
-
-      return true;
-    }
-
-    if (type === "PENAL_CODE") {
-      await prisma.penalCode.delete({
-        where: {
-          id,
-        },
-      });
-
-      return true;
-    }
-
-    await prisma.value.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
+    return this.deleteById(type, id);
   }
 
   @Patch("/:id")
@@ -503,5 +481,46 @@ export class ValuesController {
 
     const [min, max] = arr;
     return [parseInt(min), parseInt(max)].filter(Boolean) as [number, number];
+  }
+
+  protected async deleteById(type: ValueType, id: string) {
+    const data = GET_VALUES[type];
+
+    console.log({ id });
+
+    if (data) {
+      // @ts-expect-error ignore
+      const deleted = await prisma[data.name].delete({
+        where: {
+          id,
+        },
+      });
+
+      await prisma.value.delete({
+        where: {
+          id: deleted.valueId,
+        },
+      });
+
+      return true;
+    }
+
+    if (type === "PENAL_CODE") {
+      await prisma.penalCode.delete({
+        where: {
+          id,
+        },
+      });
+
+      return true;
+    }
+
+    await prisma.value.delete({
+      where: {
+        id,
+      },
+    });
+
+    return true;
   }
 }

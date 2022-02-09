@@ -19,6 +19,7 @@ import {
   usePagination,
   type Row as RowType,
   type Column,
+  TableState,
 } from "react-table";
 import { ReactSortable } from "react-sortablejs";
 import { Button } from "components/Button";
@@ -30,8 +31,11 @@ const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 const MAX_ITEMS_PER_PAGE = 50 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
-  // todo: add table instance state here. try not to re-render the entire table's state after a checkbox changes
-  const [state, setState] = React.useState({});
+  /**
+   * this keeps track of the table state. If the table re-renders, re-add the state to the table so it doesn't get lost
+   * mostly used for pageIndex.
+   */
+  const [state, setState] = React.useState<TableState<TableData<T, RowProps>> | null>(null);
   const data = React.useMemo(() => props.data, [props.data]);
   const { user } = useAuth();
 
@@ -50,7 +54,12 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
   );
 
   const instance = useTable<TableData<T, RowProps>>(
-    { autoResetSortBy: false, columns, data, initialState: { pageSize: MAX_ITEMS_PER_PAGE } },
+    {
+      autoResetSortBy: false,
+      columns,
+      data,
+      initialState: { pageSize: MAX_ITEMS_PER_PAGE, pageIndex: state?.pageIndex },
+    },
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -92,6 +101,10 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     headerGroups,
     page,
   } = instance;
+
+  React.useEffect(() => {
+    setState((p) => ({ ...p, ...instance.state }));
+  }, [instance.state]);
 
   function handleMove(tableList: any[]) {
     const originals = tableList.map((list) => {
