@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import type { ReactEditor } from "slate-react";
-import { Editor, Transforms, Range, Point, Element as SlateElement, type BaseEditor } from "slate";
+import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
+import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
 
+type SHORTCUTS = typeof SHORTCUTS[keyof typeof SHORTCUTS];
 const SHORTCUTS = {
   "*": "list-item",
   "-": "list-item",
@@ -9,9 +9,10 @@ const SHORTCUTS = {
   ">": "block-quote",
   "#": "heading-one",
   "##": "heading-two",
-};
+  "[]": "check-list-item",
+} as const;
 
-export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
+export function withShortcuts(editor: SlateEditor) {
   const { deleteBackward, insertText } = editor;
 
   editor.insertText = (text) => {
@@ -25,8 +26,8 @@ export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
       const path = block ? block[1] : [];
       const start = Editor.start(editor, path);
       const range = { anchor, focus: start };
-      const beforeText = Editor.string(editor, range);
-      const type = SHORTCUTS[beforeText as keyof typeof SHORTCUTS];
+      const beforeText = Editor.string(editor, range) as keyof typeof SHORTCUTS;
+      const type = SHORTCUTS[beforeText] as SHORTCUTS | undefined;
 
       if (type) {
         Transforms.select(editor, range);
@@ -35,20 +36,19 @@ export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
           type,
         };
 
-        Transforms.setNodes<SlateElement>(editor, newProperties as any, {
+        Transforms.setNodes<SlateElement>(editor, newProperties, {
           match: (n) => Editor.isBlock(editor, n),
         });
 
         if (type === "list-item") {
-          const list = {
-            type: "bulleted-list",
-            children: [],
-          };
-
-          Transforms.wrapNodes(editor, list as any, {
-            match: (n) =>
-              !Editor.isEditor(n) && SlateElement.isElement(n) && (n as any).type === "list-item",
-          });
+          Transforms.wrapNodes(
+            editor,
+            { type: "bulleted-list", children: [] },
+            {
+              match: (n) =>
+                !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "list-item",
+            },
+          );
         }
 
         return;
@@ -76,17 +76,12 @@ export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
           block.type !== "paragraph" &&
           Point.equals(selection.anchor, start)
         ) {
-          const newProperties: Partial<SlateElement> = {
-            type: "paragraph",
-          };
-          Transforms.setNodes(editor, newProperties);
+          Transforms.setNodes(editor, { type: "paragraph" });
 
           if (block.type === "list-item") {
             Transforms.unwrapNodes(editor, {
               match: (n) =>
-                !Editor.isEditor(n) &&
-                SlateElement.isElement(n) &&
-                (n as any).type === "bulleted-list",
+                !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "bulleted-list",
               split: true,
             });
           }
@@ -100,4 +95,4 @@ export const withShortcuts = (editor: BaseEditor & ReactEditor) => {
   };
 
   return editor;
-};
+}

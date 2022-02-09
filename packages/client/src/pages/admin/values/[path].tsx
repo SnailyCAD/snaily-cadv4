@@ -26,13 +26,14 @@ import { requestAll } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
-import { Table } from "components/shared/Table";
+import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useTableDataOfType, useTableHeadersOfType } from "lib/admin/values";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { Title } from "components/shared/Title";
 import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
+import { useTableSelect } from "hooks/shared/useTableSelect";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -59,6 +60,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const [values, setValues] = React.useState<TValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
+  const tableSelect = useTableSelect(values, (u) => `${type}-${u.id}`);
 
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<TValue | null>(null);
@@ -74,12 +76,22 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
   const tableHeaders: any = React.useMemo(() => {
     return [
+      {
+        Header: (
+          <IndeterminateCheckbox
+            onChange={tableSelect.handleAllCheckboxes}
+            checked={tableSelect.isTopCheckboxChecked}
+            indeterminate={tableSelect.isIntermediate}
+          />
+        ),
+        accessor: "checkbox",
+      },
       { Header: "Value", accessor: "value" },
       ...extraTableHeaders,
       { Header: common("createdAt"), accessor: "createdAt" },
       { Header: common("actions"), accessor: "actions" },
     ];
-  }, [extraTableHeaders, common]);
+  }, [extraTableHeaders, common, tableSelect]);
 
   async function setList(list: TValue[]) {
     if (!hasTableDataChanged(values, list)) return;
@@ -138,6 +150,21 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     }
   }
 
+  async function handleDeleteSelected() {
+    if (tableSelect.selectedRows.length <= 0) return;
+
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/bulk-delete`, {
+      method: "DELETE",
+      data: tableSelect.selectedRows.map((v) => v.split("-")[1]),
+    });
+
+    if (json && typeof json === "boolean") {
+      setValues((p) => p.filter((v) => !tableSelect.selectedRows.includes(`${type}-${v.id}`)));
+      tableSelect.resetRows();
+      closeModal(ModalIds.AlertDeleteSelectedValues);
+    }
+  }
+
   React.useEffect(() => {
     setValues(data);
   }, [data]);
@@ -183,38 +210,57 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <Table
-          containerProps={{
-            style: { overflowY: "auto", maxHeight: "75vh" },
-          }}
-          dragDrop={{
-            enabled: true,
-            handleMove: setList,
-          }}
-          filter={search}
-          data={values.map((value) => ({
-            rowProps: { value },
-            value: getValueStrFromValue(value),
-            ...extraTableData(value),
-            createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
-            actions: (
-              <>
-                <Button small onClick={() => handleEditClick(value)} variant="success">
-                  {common("edit")}
-                </Button>
-                <Button
-                  small
-                  onClick={() => handleDeleteClick(value)}
-                  variant="danger"
-                  className="ml-2"
-                >
-                  {common("delete")}
-                </Button>
-              </>
-            ),
-          }))}
-          columns={tableHeaders}
-        />
+        <>
+          <Button
+            disabled={tableSelect.selectedRows.length <= 0}
+            onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)}
+            variant="danger"
+          >
+            {t("deleteSelectedValues")}
+          </Button>
+
+          <Table
+            disabledColumnId={["checkbox"]}
+            containerProps={{
+              style: { overflowY: "auto", maxHeight: "75vh" },
+            }}
+            dragDrop={{
+              enabled: true,
+              handleMove: setList,
+            }}
+            filter={search}
+            data={values.map((value) => ({
+              rowProps: { value },
+              checkbox: (
+                <input
+                  className="cursor-pointer"
+                  checked={tableSelect.selectedRows.includes(`${type}-${value.id}`)}
+                  onChange={() => tableSelect.handleCheckboxChange(value)}
+                  type="checkbox"
+                />
+              ),
+              value: getValueStrFromValue(value),
+              ...extraTableData(value),
+              createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
+              actions: (
+                <>
+                  <Button small onClick={() => handleEditClick(value)} variant="success">
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    small
+                    onClick={() => handleDeleteClick(value)}
+                    variant="danger"
+                    className="ml-2"
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
+              ),
+            }))}
+            columns={tableHeaders}
+          />
+        </>
       )}
 
       <AlertModal
@@ -233,6 +279,16 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
           // wait for animation to play out
           setTimeout(() => setTempValue(null), 100);
         }}
+      />
+
+      <AlertModal
+        id={ModalIds.AlertDeleteSelectedValues}
+        description={t.rich("alert_deleteSelectedValues", {
+          length: tableSelect.selectedRows.length,
+        })}
+        onDeleteClick={handleDeleteSelected}
+        title={typeT("DELETE")}
+        state={state}
       />
 
       <ManageValueModal

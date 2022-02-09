@@ -1,22 +1,30 @@
-import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
-import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import { withHistory } from "slate-history";
+import {
+  Editable,
+  ReactEditor,
+  RenderElementProps,
+  RenderLeafProps,
+  Slate,
+  withReact,
+} from "slate-react";
+import { type HistoryEditor, withHistory } from "slate-history";
 import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
 import { withShortcuts } from "lib/editor/withShortcuts";
+import { withChecklists } from "lib/editor/withChecklists";
+import { CheckListItemElement } from "./ChecklistItem";
+import type { SlateElements, Text } from "./types";
 
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-type CustomText = { text: string };
+export type SlateEditor = BaseEditor & ReactEditor & HistoryEditor;
 
 declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: CustomText;
+    Editor: SlateEditor;
+    Element: SlateElements;
+    Text: Text;
   }
 }
 
@@ -43,7 +51,10 @@ const HOTKEYS = {
 export function Editor({ isReadonly, value, onChange }: EditorProps) {
   const renderElement = React.useCallback((props) => <Element {...props} />, []);
   const renderLeaf = React.useCallback((props) => <Leaf {...props} />, []);
-  const editor = React.useMemo(() => withShortcuts(withHistory(withReact(createEditor()))), []);
+  const editor = React.useMemo(
+    () => withChecklists(withShortcuts(withHistory(withReact(createEditor())))),
+    [],
+  );
 
   function handleChange(value: Descendant[]) {
     onChange?.(value);
@@ -59,11 +70,7 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
           readOnly={isReadonly}
           renderLeaf={renderLeaf}
           renderElement={renderElement}
-          className={classNames(
-            `
-      w-full p-1.5 rounded-md bg-transparent
-      disabled:cursor-not-allowed disabled:opacity-80`,
-          )}
+          className="w-full p-1.5 rounded-md bg-transparent disabled:cursor-not-allowed disabled:opacity-80"
           placeholder="Start typing..."
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
@@ -80,13 +87,9 @@ export function Editor({ isReadonly, value, onChange }: EditorProps) {
   );
 }
 
-function Leaf({ attributes, children, leaf }: any) {
+function Leaf({ attributes, children, leaf }: RenderLeafProps) {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
-  }
-
-  if (leaf.code) {
-    children = <code>{children}</code>;
   }
 
   if (leaf.italic) {
@@ -104,7 +107,7 @@ function Leaf({ attributes, children, leaf }: any) {
   return <span {...attributes}>{children}</span>;
 }
 
-function Element({ attributes, children, element }: any) {
+function Element({ attributes, children, element, ...rest }: RenderElementProps) {
   switch (element.type) {
     case "block-quote":
       return (
@@ -132,8 +135,8 @@ function Element({ attributes, children, element }: any) {
           {children}
         </li>
       );
-    case "numbered-list":
-      return <ol {...attributes}>{children}</ol>;
+    case "check-list-item":
+      return <CheckListItemElement {...{ children, attributes, element, ...rest }} />;
     default:
       return <p {...attributes}>{children}</p>;
   }
@@ -156,7 +159,7 @@ export function dataToSlate(
 
   const descriptionData = data.descriptionData ?? data.bodyData;
   if (Array.isArray(descriptionData)) {
-    return descriptionData as Descendant[];
+    return descriptionData as unknown as Descendant[];
   }
 
   const description = data.description ?? data.body;
