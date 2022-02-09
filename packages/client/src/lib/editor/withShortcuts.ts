@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
 import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
 
+type SHORTCUTS = typeof SHORTCUTS[keyof typeof SHORTCUTS];
 const SHORTCUTS = {
   "*": "list-item",
   "-": "list-item",
@@ -27,7 +27,7 @@ export function withShortcuts(editor: SlateEditor) {
       const start = Editor.start(editor, path);
       const range = { anchor, focus: start };
       const beforeText = Editor.string(editor, range) as keyof typeof SHORTCUTS;
-      const type = SHORTCUTS[beforeText];
+      const type = SHORTCUTS[beforeText] as SHORTCUTS | undefined;
 
       if (type) {
         Transforms.select(editor, range);

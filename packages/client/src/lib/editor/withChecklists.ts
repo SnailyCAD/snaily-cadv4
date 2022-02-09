@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
 import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
 
