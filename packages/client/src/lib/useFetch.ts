@@ -128,7 +128,7 @@ function parseErrorTitle(error: AxiosError) {
 }
 
 function isAxiosError(error: any): error is AxiosError {
-  return "response" in error && error.response;
+  return "response" in error && Object.entries(error.response).length !== 0;
 }
 
 function isErrorKey(key: string): key is ErrorMessage {
