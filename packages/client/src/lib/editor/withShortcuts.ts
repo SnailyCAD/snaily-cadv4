@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import type { ReactEditor } from "slate-react";
-import { Editor, Transforms, Range, Point, Element as SlateElement, type BaseEditor } from "slate";
+import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
+import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
 
 const SHORTCUTS = {
   "*": "list-item",
@@ -11,7 +11,7 @@ const SHORTCUTS = {
   "##": "heading-two",
 };
 
-export function withShortcuts(editor: BaseEditor & ReactEditor) {
+export function withShortcuts(editor: SlateEditor) {
   const { deleteBackward, insertText } = editor;
 
   editor.insertText = (text) => {

@@ -1,15 +1,16 @@
-import { Editor, type BaseEditor, Transforms, Element as SlateElement } from "slate";
-import type { ReactEditor } from "slate-react";
+import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
+import type { Text } from "components/modal/DescriptionModal/types";
+import { Editor, Transforms, Element as SlateElement } from "slate";
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
-export function isMarkActive(editor: BaseEditor & ReactEditor, format: string) {
+export function isMarkActive(editor: SlateEditor, format: keyof Omit<Text, "text">) {
   const marks = Editor.marks(editor);
 
-  return marks ? (marks as any)[format] === true : false;
+  return marks ? marks[format] === true : false;
 }
 
-export function toggleBlock(editor: BaseEditor & ReactEditor, format: string) {
+export function toggleBlock(editor: SlateEditor, format: SlateElement["type"]) {
   const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
 
@@ -19,19 +20,17 @@ export function toggleBlock(editor: BaseEditor & ReactEditor, format: string) {
   });
 
   const newProperties: Partial<SlateElement> = {
-    // @ts-expect-error ignore
     type: isActive ? "paragraph" : isList ? "list-item" : format,
   };
   Transforms.setNodes<SlateElement>(editor, newProperties);
 
   if (!isActive && isList) {
     const block = { type: format, children: [] };
-    // @ts-expect-error ignore
     Transforms.wrapNodes(editor, block);
   }
 }
 
-export function toggleMark(editor: BaseEditor & ReactEditor, format: string) {
+export function toggleMark(editor: SlateEditor, format: keyof Omit<Text, "text">) {
   const isActive = isMarkActive(editor, format);
 
   if (isActive) {
@@ -41,7 +40,7 @@ export function toggleMark(editor: BaseEditor & ReactEditor, format: string) {
   }
 }
 
-export function isBlockActive(editor: BaseEditor & ReactEditor, format: string) {
+export function isBlockActive(editor: SlateEditor, format: string) {
   const { selection } = editor;
   if (!selection) return false;
 

@@ -2,7 +2,7 @@ import { classNames } from "lib/classNames";
 import * as React from "react";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import { withHistory } from "slate-history";
+import { type HistoryEditor, withHistory } from "slate-history";
 import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 import { toggleMark } from "lib/editor/utils";
@@ -10,15 +10,15 @@ import isHotkey from "is-hotkey";
 import { withShortcuts } from "lib/editor/withShortcuts";
 import { withChecklists } from "lib/editor/withChecklists";
 import { CheckListItemElement } from "./ChecklistItem";
+import type { SlateElements, Text } from "./types";
 
-type CustomElement = { type: "paragraph"; children: CustomText[] };
-type CustomText = { text: string };
+export type SlateEditor = BaseEditor & ReactEditor & HistoryEditor;
 
 declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: CustomText;
+    Editor: SlateEditor;
+    Element: SlateElements;
+    Text: Text;
   }
 }
 
@@ -163,7 +163,7 @@ export function dataToSlate(
 
   const descriptionData = data.descriptionData ?? data.bodyData;
   if (Array.isArray(descriptionData)) {
-    return descriptionData as Descendant[];
+    return descriptionData as unknown as Descendant[];
   }
 
   const description = data.description ?? data.body;

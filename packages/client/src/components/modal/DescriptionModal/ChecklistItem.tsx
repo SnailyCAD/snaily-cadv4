@@ -6,13 +6,12 @@ export function CheckListItemElement({ attributes, children, element }: any) {
   const editor = useSlateStatic();
   const readOnly = useReadOnly();
 
-  const { checked } = element;
   return (
     <div {...attributes} className="flex flex-row items-center !mt-0">
       <span contentEditable={false} className="mr-3">
         <input
           type="checkbox"
-          checked={checked}
+          checked={element.checked}
           onChange={(event) => {
             const path = ReactEditor.findPath(editor, element);
             const newProperties = {
@@ -28,8 +27,8 @@ export function CheckListItemElement({ attributes, children, element }: any) {
         suppressContentEditableWarning
         className={classNames(
           "flex-1 outline-none",
-          checked ? "line-through" : "none",
-          checked ? "opacity-60" : "opacity-100",
+          element.checked ? "line-through" : "none",
+          element.checked ? "opacity-60" : "opacity-100",
         )}
       >
         {children}

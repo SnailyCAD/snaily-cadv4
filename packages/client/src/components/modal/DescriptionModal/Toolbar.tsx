@@ -14,6 +14,7 @@ import { useSlate } from "slate-react";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
 import { isBlockActive, toggleMark, toggleBlock, isMarkActive } from "lib/editor/utils";
+import type { SlateElements, Text } from "./types";
 
 /**
  * mostly example code from: https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
@@ -52,7 +53,7 @@ export function Toolbar() {
 }
 
 interface ButtonProps {
-  format: string;
+  format: SlateElements["type"];
   icon: React.ReactNode;
 }
 
@@ -77,7 +78,12 @@ function BlockButton({ format, icon }: ButtonProps) {
   );
 }
 
-const MarkButton = ({ format, icon }: ButtonProps) => {
+interface MarkButtonProps {
+  format: keyof Omit<Text, "text">;
+  icon: React.ReactNode;
+}
+
+const MarkButton = ({ format, icon }: MarkButtonProps) => {
   const editor = useSlate();
   const isActive = isMarkActive(editor, format);
 

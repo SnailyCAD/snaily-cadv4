@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import type { ReactEditor } from "slate-react";
-import { Editor, Transforms, Range, Point, Element as SlateElement, type BaseEditor } from "slate";
+import { Editor, Transforms, Range, Point, Element as SlateElement } from "slate";
+import type { SlateEditor } from "components/modal/DescriptionModal/Editor";
 
-export function withChecklists(editor: BaseEditor & ReactEditor) {
+export function withChecklists(editor: SlateEditor) {
   const { deleteBackward } = editor;
 
   editor.deleteBackward = (...args) => {
@@ -11,7 +11,6 @@ export function withChecklists(editor: BaseEditor & ReactEditor) {
     if (selection && Range.isCollapsed(selection)) {
       const [match] = Editor.nodes(editor, {
         match: (n) =>
-          // @ts-expect-error ignore
           !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "check-list-item",
       });
 
@@ -25,7 +24,6 @@ export function withChecklists(editor: BaseEditor & ReactEditor) {
           };
           Transforms.setNodes(editor, newProperties, {
             match: (n) =>
-              // @ts-expect-error ignore
               !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === "check-list-item",
           });
           return;
