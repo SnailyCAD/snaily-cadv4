@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach, BodyParams } from "@tsed/common";
-import { Delete, Get } from "@tsed/schema";
+import { Delete, Description, Get } from "@tsed/schema";
 import { PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -30,6 +30,7 @@ const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class LeoController {
   @Get("/")
+  @Description("Get all the citizens who are jailed")
   async getImprisonedCitizens() {
     const citizens = await prisma.citizen.findMany({
       where: {
@@ -55,6 +56,7 @@ export class LeoController {
   }
 
   @Delete("/:id")
+  @Description("Release a citizen by its id and type (time out / released by)")
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
     const citizen = await prisma.citizen.findUnique({

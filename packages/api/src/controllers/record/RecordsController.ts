@@ -1,4 +1,4 @@
-import { Delete, Post, Put } from "@tsed/schema";
+import { Delete, Description, Post, Put } from "@tsed/schema";
 import {
   CREATE_TICKET_SCHEMA,
   CREATE_WARRANT_SCHEMA,
@@ -7,7 +7,7 @@ import {
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { UseBefore, UseBeforeEach } from "@tsed/platform-middlewares";
+import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
@@ -20,6 +20,7 @@ import { leoProperties } from "lib/officer";
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")
+  @Description("Create a new warrant")
   async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
 
@@ -53,6 +54,7 @@ export class RecordsController {
   }
 
   @Put("/warrant/:id")
+  @Description("Update a warrant by its id")
   async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -75,6 +77,7 @@ export class RecordsController {
   }
 
   @Post("/")
+  @Description("Create a new ticket, written warning or arrest report")
   async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -157,6 +160,7 @@ export class RecordsController {
   }
 
   @Put("/record/:id")
+  @Description("Update a ticket, written warning or arrest report by its id")
   async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -206,8 +210,8 @@ export class RecordsController {
     return { ...updated, violations };
   }
 
-  @UseBefore(ActiveOfficer)
   @Delete("/:id")
+  @Description("Delete a ticket, written warning or arrest report by its id")
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),

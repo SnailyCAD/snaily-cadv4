@@ -1,5 +1,5 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -14,6 +14,7 @@ import { validateSchema } from "lib/validateSchema";
 @UseBeforeEach(IsAuth)
 export class IncidentController {
   @Get("/")
+  @Description("Get all the created incidents")
   async getAllIncidents() {
     const incidents = await prisma.leoIncident.findMany({
       include: {
@@ -125,6 +126,7 @@ export class IncidentController {
   }
 
   @Delete("/:id")
+  @Description("Delete an incident by its id")
   async deleteIncident(@PathParams("id") incidentId: string) {
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },

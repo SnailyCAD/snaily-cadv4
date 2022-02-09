@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Post } from "@tsed/schema";
+import { Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -32,6 +32,7 @@ export const citizenSearchInclude = {
 @UseBeforeEach(IsAuth, ActiveOfficer)
 export class SearchController {
   @Post("/name")
+  @Description("Search citizens by their name, surname or fullname")
   async searchName(@BodyParams("name") fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
@@ -88,6 +89,7 @@ export class SearchController {
   }
 
   @Post("/weapon")
+  @Description("Search weapons by their serialNumber")
   async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
     if (!serialNumber || serialNumber.length < 3) {
       return null;
@@ -114,6 +116,7 @@ export class SearchController {
   }
 
   @Post("/vehicle")
+  @Description("Search vehicles by their plate or vinNumber")
   async searchVehicle(
     @QueryParams("includeMany") includeMany: boolean,
     @BodyParams("plateOrVin") plateOrVin: string,

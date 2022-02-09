@@ -16,7 +16,7 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/taxi")
-export class TowController {
+export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
