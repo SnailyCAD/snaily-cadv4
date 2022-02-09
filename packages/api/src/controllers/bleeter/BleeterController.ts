@@ -14,7 +14,7 @@ import {
   MultipartFile,
 } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Put } from "@tsed/schema";
+import { Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 import { validateSchema } from "lib/validateSchema";
@@ -24,6 +24,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 @Controller("/bleeter")
 export class BleeterController {
   @Get("/")
+  @Description("Get **all** bleeter posts, ordered by `createdAt`")
   async getBleeterPosts() {
     const posts = await prisma.bleeterPost.findMany({
       orderBy: { createdAt: "desc" },
@@ -38,6 +39,7 @@ export class BleeterController {
   }
 
   @Get("/:id")
+  @Description("Get a bleeter post by its id")
   async getPostById(@PathParams("id") postId: string) {
     const post = await prisma.bleeterPost.findUnique({
       where: {
@@ -53,6 +55,7 @@ export class BleeterController {
   }
 
   @Post("/")
+  @Description("Create a bleeter post")
   async createPost(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(BLEETER_SCHEMA, body);
 
@@ -69,6 +72,7 @@ export class BleeterController {
   }
 
   @Put("/:id")
+  @Description("Update a bleeter post by its id")
   async updatePost(
     @PathParams("id") postId: string,
     @BodyParams() body: unknown,
@@ -101,6 +105,7 @@ export class BleeterController {
   }
 
   @Post("/:id")
+  @Description("Upload a header image to an already created bleeter post")
   async uploadImageToPost(
     @Context() ctx: Context,
     @PathParams("id") postId: string,
@@ -142,6 +147,7 @@ export class BleeterController {
   }
 
   @Delete("/:id")
+  @Description("Delete a bleeter post its id")
   async deleteBleetPost(@PathParams("id") postId: string, @Context() ctx: Context) {
     const post = await prisma.bleeterPost.findUnique({
       where: {

@@ -4,7 +4,7 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Get, Post, Put } from "@tsed/schema";
+import { Description, Get, Post, Put } from "@tsed/schema";
 import {
   linkDivisionsToOfficer,
   unlinkDivisionsFromOfficer,
@@ -32,6 +32,7 @@ export class ManageUnitsController {
   }
 
   @Get("/")
+  @Description("Get all the units in the CAD")
   async getUnits() {
     const units = await Promise.all([
       (
@@ -46,6 +47,7 @@ export class ManageUnitsController {
   }
 
   @Get("/:id")
+  @Description("Get a unit by their id")
   async getUnit(@PathParams("id") id: string) {
     let unit: any = await prisma.officer.findUnique({
       where: { id },
@@ -67,6 +69,7 @@ export class ManageUnitsController {
   }
 
   @Put("/off-duty")
+  @Description("Set specified units off-duty")
   async setSelectedOffDuty(@BodyParams("ids") ids: string[]) {
     const updated = await Promise.all(
       ids.map(async (fullId) => {
@@ -106,6 +109,7 @@ export class ManageUnitsController {
   }
 
   @Put("/:id")
+  @Description("Update a unit by its id")
   async updateUnit(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
@@ -160,6 +164,7 @@ export class ManageUnitsController {
   }
 
   @Post("/departments/:officerId")
+  @Description("Accept or decline a unit into a department")
   async acceptOrDeclineUnit(
     @PathParams("officerId") officerId: string,
     @BodyParams("action") action: Action | null,

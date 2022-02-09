@@ -13,6 +13,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
+import { Description, Returns } from "@tsed/schema";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -21,6 +22,10 @@ export const AUTH_TOKEN_EXPIRES_S = AUTH_TOKEN_EXPIRES_MS / 1000;
 @Controller("/auth")
 export class AuthController {
   @Post("/login")
+  @Description("Authenticate a user via username and password")
+  @Returns(200)
+  @Returns(400, ExtendedBadRequest)
+  @Returns(404, ExtendedNotFound)
   async login(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 
@@ -78,6 +83,9 @@ export class AuthController {
   }
 
   @Post("/register")
+  @Description("Create a user via username and password")
+  @Returns(200)
+  @Returns(400, ExtendedBadRequest)
   async register(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 

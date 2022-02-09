@@ -1,6 +1,6 @@
 import process from "node:process";
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -170,6 +170,7 @@ export class EmsFdController {
   }
 
   @Get("/active-deputies")
+  @Description("Get all the active EMS/FD deputies")
   async getActiveDeputies() {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {

@@ -4,7 +4,7 @@ import { authenticator } from "otplib";
 import { BodyParams, Context, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
-import { Delete, Post } from "@tsed/schema";
+import { Delete, Description, Post } from "@tsed/schema";
 import { compareSync } from "bcrypt";
 import qrcode from "qrcode";
 import { prisma } from "lib/prisma";
@@ -17,6 +17,7 @@ import { validateUser2FA } from "lib/auth/2fa";
 @UseBeforeEach(IsAuth)
 export class User2FA {
   @Post("/verify")
+  @Description("Verify a totpCode for the authenticated user's account")
   async verify2FA(@Context("user") user: User, @BodyParams("totpCode") totpCode: string) {
     await validateUser2FA({ userId: user.id, totpCode });
 
@@ -24,6 +25,7 @@ export class User2FA {
   }
 
   @Post("/enable")
+  @Description("Enable two step authentication for the authenticated user")
   async enable2FA(
     @Context("user") user: User,
     @BodyParams("currentPassword") currentPassword: string,
@@ -68,6 +70,7 @@ export class User2FA {
   }
 
   @Delete()
+  @Description("Disable two step authentication for the authenticated user")
   async disable2FA(
     @Context("user") user: User,
     @BodyParams("currentPassword") currentPassword: string,

@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Get, Hidden, Post, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
 import {
   CREATE_COMPANY_SCHEMA,
@@ -31,6 +31,7 @@ const businessInclude = {
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses")
+@Hidden()
 export class BusinessController {
   @Get("/")
   async getBusinessesByUser(@Context() ctx: Context) {

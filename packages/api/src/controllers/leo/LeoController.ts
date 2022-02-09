@@ -6,7 +6,7 @@ import {
   MultipartFile,
   UseBefore,
 } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -217,6 +217,7 @@ export class LeoController {
   }
 
   @Get("/active-officers")
+  @Description("Get all the active officers")
   async getActiveOfficers() {
     const [officers, units] = await Promise.all([
       await prisma.officer.findMany({
@@ -283,6 +284,7 @@ export class LeoController {
   }
 
   @Post("/panic-button")
+  @Description("Set the panic button for an officer by their id")
   async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
     let officer = await prisma.officer.findFirst({
       where: {
@@ -350,6 +352,7 @@ export class LeoController {
   }
 
   @Get("/impounded-vehicles")
+  @Description("Get all the impounded vehicles")
   async getImpoundedVehicles() {
     const vehicles = await prisma.impoundedVehicle.findMany({
       include: {
@@ -364,6 +367,7 @@ export class LeoController {
   }
 
   @Put("/licenses/:citizenId")
+  @Description("Update the licenses for a citizen by their id")
   async updateCitizenLicenses(
     @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
@@ -397,6 +401,7 @@ export class LeoController {
   }
 
   @Delete("/impounded-vehicles/:id")
+  @Description("Remove a vehicle from the impound lot")
   async checkoutImpoundedVehicle(@PathParams("id") id: string) {
     const vehicle = await prisma.impoundedVehicle.findUnique({
       where: { id },

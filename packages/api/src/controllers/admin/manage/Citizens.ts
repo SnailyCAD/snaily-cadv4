@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, Put } from "@tsed/schema";
+import { Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { leoProperties } from "lib/officer";
 import { prisma } from "lib/prisma";
@@ -18,6 +18,7 @@ import type { User } from "@prisma/client";
 @Controller("/admin/manage/citizens")
 export class ManageCitizensController {
   @Get("/")
+  @Description("Get all the citizens within the CAD")
   async getCitizens() {
     const citizens = await prisma.citizen.findMany({
       include: citizenInclude,
@@ -27,6 +28,7 @@ export class ManageCitizensController {
   }
 
   @Get("/:id")
+  @Description("Get a citizen by its id")
   async getCitizen(@PathParams("id") id: string) {
     const citizen = await prisma.citizen.findUnique({
       where: { id },
@@ -37,6 +39,7 @@ export class ManageCitizensController {
   }
 
   @Put("/:id")
+  @Description("Update a citizen by its id")
   async updateCitizen(@PathParams("id") id: string, @BodyParams() body: any) {
     // todo: use admin import schema. This schema should be updated in the next PR (issue ref #323)
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
@@ -91,13 +94,12 @@ export class ManageCitizensController {
   }
 
   @Delete("/:id")
+  @Description("Delete a citizen by its id")
   async deleteCitizen(
     @Context("user") user: User,
-    @BodyParams() body: any,
+    @BodyParams("reason") reason: string,
     @PathParams("id") citizenId: string,
   ) {
-    const reason = body.reason;
-
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,

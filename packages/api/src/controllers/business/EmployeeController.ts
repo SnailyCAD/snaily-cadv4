@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Put } from "@tsed/schema";
+import { Delete, Hidden, Put } from "@tsed/schema";
 import { IsAuth } from "middlewares/index";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -13,6 +13,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/employees")
+@Hidden()
 export class BusinessEmployeeController {
   @Put("/:businessId/:id")
   async updateEmployee(

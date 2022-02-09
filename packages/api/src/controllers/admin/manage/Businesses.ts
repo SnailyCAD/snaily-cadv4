@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Get, Put } from "@tsed/schema";
+import { Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
@@ -24,6 +24,7 @@ const businessInclude = {
 @Controller("/admin/manage/businesses")
 export class ManageBusinessesController {
   @Get("/")
+  @Description("Get all the businesses within the CAD")
   async getBusinesses() {
     const businesses = await prisma.business.findMany({ include: businessInclude });
 
@@ -31,6 +32,7 @@ export class ManageBusinessesController {
   }
 
   @Put("/:id")
+  @Description("Update a business by its id")
   async updateBusiness(@BodyParams() body: any, @PathParams("id") businessId: string) {
     const business = await prisma.business.findUnique({
       where: {
@@ -52,6 +54,7 @@ export class ManageBusinessesController {
   }
 
   @Delete("/:id")
+  @Description("Delete a business by its id")
   async deleteBusiness(
     @Context() ctx: Context,
     @BodyParams() body: any,

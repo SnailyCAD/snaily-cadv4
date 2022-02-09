@@ -4,7 +4,7 @@ import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Post, Put } from "@tsed/schema";
+import { Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -16,6 +16,7 @@ import { generateString } from "utils/generateString";
 @UseBeforeEach(IsAuth)
 export class VehiclesController {
   @Post("/")
+  @Description("Register a new vehicle")
   async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
@@ -110,6 +111,7 @@ export class VehiclesController {
   }
 
   @Put("/:id")
+  @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
     @PathParams("id") vehicleId: string,
@@ -167,6 +169,7 @@ export class VehiclesController {
   }
 
   @Delete("/:id")
+  @Description("Delete a registered vehicle")
   async deleteVehicle(
     @Context("user") user: User,
     @PathParams("id") vehicleId: string,

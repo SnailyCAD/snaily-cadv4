@@ -1,5 +1,5 @@
 import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common";
-import { Delete, Post, Put } from "@tsed/schema";
+import { Delete, Description, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
@@ -10,6 +10,7 @@ import { validateSchema } from "lib/validateSchema";
 @UseBeforeEach(IsAuth)
 export class ValuesController {
   @Post("/")
+  @Description("Create a new penal-code group")
   async createPenalCodeGroup(@BodyParams() body: unknown) {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
@@ -23,6 +24,7 @@ export class ValuesController {
   }
 
   @Put("/:id")
+  @Description("Edit a penal-code group by its id")
   async editPenalCodeGroup(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
@@ -43,6 +45,7 @@ export class ValuesController {
   }
 
   @Delete("/:id")
+  @Description("Delete a penal-code group by its id")
   async deletePenalCodeGroup(@PathParams("id") id: string) {
     const group = await prisma.penalCodeGroup.findUnique({
       where: { id },

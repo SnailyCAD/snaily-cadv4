@@ -3,7 +3,7 @@ import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Put } from "@tsed/schema";
+import { Description, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -14,6 +14,7 @@ import { linkDlCategories, unlinkDlCategories } from "./CitizenController";
 @UseBeforeEach(IsAuth)
 export class LicensesController {
   @Put("/:id")
+  @Description("Update the licenses of a citizen")
   async updateCitizenLicenses(
     @PathParams("id") citizenId: string,
     @Context() ctx: Context,

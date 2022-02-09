@@ -1,8 +1,9 @@
+import "@tsed/swagger";
+import "@tsed/socketio";
 import { join } from "node:path";
 import process from "node:process";
 import { Configuration, Inject, PlatformApplication, Response } from "@tsed/common";
 import { json } from "express";
-import "@tsed/socketio";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -28,6 +29,7 @@ const rootDir = __dirname;
       },
     ],
   },
+  swagger: [{ path: "/api-docs", specVersion: "3.0.1" }],
   socketIO: {
     cors: {
       credentials: true,

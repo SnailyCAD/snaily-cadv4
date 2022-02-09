@@ -12,7 +12,7 @@ import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Post, Put } from "@tsed/schema";
+import { Description, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./911-calls/Calls911Controller";
 import { leoProperties, unitProperties } from "lib/officer";
@@ -42,6 +42,7 @@ export class StatusController {
   }
 
   @Put("/:unitId")
+  @Description("Update the status of a unit by its id.")
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
@@ -213,6 +214,7 @@ export class StatusController {
 
   @UseBefore(ActiveOfficer)
   @Post("/merge")
+  @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
   async mergeOfficers(
     @BodyParams("id") id: string,
     @Context("activeOfficer") activeOfficer: Officer,
@@ -282,6 +284,7 @@ export class StatusController {
   }
 
   @Post("/unmerge/:id")
+  @Description("Unmerge officers by the combinedUnitId")
   async unmergeOfficers(@PathParams("id") unitId: string) {
     const unit = await prisma.combinedLeoUnit.findFirst({
       where: {

@@ -1,7 +1,7 @@
 import { ValueType, PrismaClient } from ".prisma/client";
 import { CREATE_PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
-import { Delete, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
+import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -40,6 +40,7 @@ const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> 
 @UseBeforeEach(IsAuth, IsValidPath)
 export class ValuesController {
   @Get("/")
+  @Description("Get all the values by the specified types")
   async getValueByPath(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
     // allow more paths in one request
     const paths =
@@ -89,6 +90,7 @@ export class ValuesController {
   }
 
   @Post("/")
+  @Description("Create a new value by the specified type")
   async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
 
@@ -162,6 +164,7 @@ export class ValuesController {
   }
 
   @Delete("/bulk-delete")
+  @Description("Bulk-delete values by the specified ids and type")
   async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: any) {
     const type = this.getTypeFromPath(path);
     const ids = body as string[];
@@ -176,12 +179,14 @@ export class ValuesController {
   }
 
   @Delete("/:id")
+  @Description("Delete a value by the specified type and id")
   async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
     return this.deleteById(type, id);
   }
 
   @Patch("/:id")
+  @Description("Update a value by the specified type and id")
   async patchValueByPathAndId(
     @BodyParams() body: JsonRequestBody,
     @PathParams("id") id: string,
@@ -440,6 +445,7 @@ export class ValuesController {
   }
 
   @Put("/positions")
+  @Description("Update the positions of the values by the specified type")
   async updatePositions(@PathParams("path") path: ValueType, @BodyParams() body: JsonRequestBody) {
     const type = this.getTypeFromPath(path);
     const ids = body.get("ids");

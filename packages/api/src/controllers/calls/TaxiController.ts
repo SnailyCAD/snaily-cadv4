@@ -1,5 +1,5 @@
 import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Description, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -16,13 +16,14 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/taxi")
-export class TowController {
+export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
   }
 
   @Get("/")
+  @Description("Get all the taxi calls")
   async getTaxiCalls() {
     const calls = await prisma.taxiCall.findMany({
       include: {
@@ -40,6 +41,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Post("/")
+  @Description("Create a new taxi call")
   async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
@@ -76,6 +78,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Put("/:id")
+  @Description("Update a taxi call by its id")
   async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -127,6 +130,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Delete("/:id")
+  @Description("Delete a taxi call by its id")
   async deleteTowCall(@PathParams("id") callId: string) {
     const call = await prisma.taxiCall.findUnique({
       where: {
