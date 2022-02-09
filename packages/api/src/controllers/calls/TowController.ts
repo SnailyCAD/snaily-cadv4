@@ -1,5 +1,5 @@
 import { Controller, QueryParams, BodyParams, UseBefore, PathParams, Context } from "@tsed/common";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
@@ -23,6 +23,7 @@ export class TowController {
   }
 
   @Get("/")
+  @Description("Get all the tow calls")
   async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded
@@ -47,6 +48,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Post("/")
+  @Description("Create a new tow call")
   async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
@@ -148,6 +150,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Put("/:id")
+  @Description("Update a tow call by its id")
   async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -199,6 +202,7 @@ export class TowController {
 
   @UseBefore(IsAuth)
   @Delete("/:id")
+  @Description("Delete a tow call by its id")
   async deleteTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
       where: {

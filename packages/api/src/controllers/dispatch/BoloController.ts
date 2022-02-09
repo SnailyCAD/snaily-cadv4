@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
@@ -21,6 +21,7 @@ export class BoloController {
   }
 
   @Get("/")
+  @Description("Get all the bolos")
   async getBolos() {
     const bolos = await prisma.bolo.findMany({
       include: {
@@ -35,6 +36,7 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Post("/")
+  @Description("Create a new BOLO")
   async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
@@ -62,6 +64,7 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Put("/:id")
+  @Description("Update a BOLO by its id")
   async updateBolo(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
@@ -98,6 +101,7 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Delete("/:id")
+  @Description("Delete a BOLO by its id")
   async deleteBolo(@PathParams("id") id: string) {
     const bolo = await prisma.bolo.findUnique({
       where: { id },
@@ -120,6 +124,7 @@ export class BoloController {
 
   @Use(ActiveOfficer)
   @Post("/mark-stolen/:id")
+  @Description("Mark a vehicle as stolen by its id")
   async reportVehicleStolen(@BodyParams() body: any) {
     const { id, color, plate } = body;
 

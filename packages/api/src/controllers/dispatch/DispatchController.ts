@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Get, Post } from "@tsed/schema";
+import { Description, Get, Post } from "@tsed/schema";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -56,6 +56,7 @@ export class Calls911Controller {
   }
 
   @Post("/aop")
+  @Description("Update the AOP in the CAD")
   async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
@@ -75,6 +76,7 @@ export class Calls911Controller {
   }
 
   @Post("/signal-100")
+  @Description("Enable or disable signal 100")
   async setSignal100(@Context("cad") cad: cad, @BodyParams("value") value: boolean) {
     if (typeof value !== "boolean") {
       throw new BadRequest("body.valueIsRequired");
@@ -95,6 +97,7 @@ export class Calls911Controller {
   }
 
   @Post("/dispatchers-state")
+  @Description("Set a dispatcher active or inactive")
   async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad") as cad;
     const user = ctx.get("user") as User;

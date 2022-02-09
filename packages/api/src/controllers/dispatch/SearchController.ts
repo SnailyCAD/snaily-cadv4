@@ -1,5 +1,5 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Post } from "@tsed/schema";
+import { Description, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
@@ -9,6 +9,7 @@ import { IsAuth } from "middlewares/index";
 @UseBeforeEach(IsAuth)
 export class SearchController {
   @Post("/address")
+  @Description("Search citizens by their address")
   async searchAddress(@BodyParams("address") address: string) {
     const citizens = await prisma.citizen.findMany({
       where: {

@@ -3,7 +3,7 @@ import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Post, Put } from "@tsed/schema";
+import { Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -13,6 +13,7 @@ import { IsAuth } from "middlewares/IsAuth";
 @UseBeforeEach(IsAuth)
 export class MedicalRecordsController {
   @Post("/")
+  @Description("Create a medical records for a citizen")
   async createMedicalRecord(@Context() ctx: Context, @BodyParams() body: unknown) {
     const user = ctx.get("user") as User;
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
@@ -42,6 +43,7 @@ export class MedicalRecordsController {
   }
 
   @Put("/:id")
+  @Description("Update a medical record by its id")
   async updateMedicalRecord(
     @Context("user") user: User,
     @PathParams("id") recordId: string,
@@ -75,6 +77,7 @@ export class MedicalRecordsController {
   }
 
   @Delete("/:id")
+  @Description("Delete a medical record by its id")
   async deleteMedicalRecord(@Context("user") user: User, @PathParams("id") recordId: string) {
     const medicalRecord = await prisma.medicalRecord.findUnique({
       where: {
