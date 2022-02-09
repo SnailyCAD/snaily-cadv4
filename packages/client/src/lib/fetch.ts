@@ -43,16 +43,14 @@ export async function handleRequest<T = any>(
       "is-from-dispatch": String(isDispatchUrl),
     },
   }).catch((e) => {
-    return e;
+    return { ERROR: e };
   });
 
-  return {
-    response: res?.response,
-    data: res?.data,
-    status: res?.status,
-    statusText: res?.statusText,
-    config: res?.config,
-  } as unknown as AxiosResponse<T>;
+  if ("ERROR" in res) {
+    return makeReturn(res.ERROR) as unknown as AxiosResponse<T>;
+  }
+
+  return makeReturn(res) as unknown as AxiosResponse<T>;
 }
 
 export function findUrl() {
@@ -64,4 +62,14 @@ export function findUrl() {
   }
 
   return envUrl;
+}
+
+function makeReturn(v: any) {
+  return {
+    config: v.config ?? {},
+    data: v.response?.data ?? v.data ?? {},
+    status: v.status ?? null,
+    statusText: v.statusText ?? null,
+    response: v.response ?? {},
+  };
 }

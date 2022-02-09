@@ -127,8 +127,8 @@ function parseErrorTitle(error: AxiosError) {
   return name.toLowerCase().replace(/_/g, " ");
 }
 
-function isAxiosError(error: unknown): error is AxiosError {
-  return error instanceof Error;
+function isAxiosError(error: any): error is AxiosError {
+  return "response" in error && Object.entries(error.response).length !== 0;
 }
 
 function isErrorKey(key: string): key is ErrorMessage {
@@ -138,7 +138,7 @@ function isErrorKey(key: string): key is ErrorMessage {
 function getErrorObj(error: unknown) {
   let errorObj = {};
 
-  if (error instanceof Error) {
+  if (isAxiosError(error)) {
     const err = error as AxiosError;
 
     errorObj = {
