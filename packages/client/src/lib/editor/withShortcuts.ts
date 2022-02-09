@@ -9,6 +9,7 @@ const SHORTCUTS = {
   ">": "block-quote",
   "#": "heading-one",
   "##": "heading-two",
+  "[]": "check-list-item",
 } as const;
 
 export function withShortcuts(editor: SlateEditor) {

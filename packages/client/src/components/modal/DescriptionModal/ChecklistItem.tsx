@@ -13,9 +13,11 @@ export function CheckListItemElement({ attributes, children, element }: Props) {
     <div {...attributes} className="flex flex-row items-center !mt-0">
       <span contentEditable={false} className="mr-3">
         <input
+          disabled={readOnly}
           type="checkbox"
           checked={element.checked}
           onChange={(event) => {
+            if (readOnly) return;
             const path = ReactEditor.findPath(editor, element);
 
             Transforms.setNodes(editor, { checked: event.target.checked }, { at: path });
