@@ -18,6 +18,7 @@ export const citizenSearchInclude = {
       officer: {
         include: leoProperties,
       },
+      seizedItems: true,
       violations: {
         include: {
           penalCode: true,

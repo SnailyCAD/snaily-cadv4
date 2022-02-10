@@ -26,11 +26,13 @@ import { Button } from "components/Button";
 import type { TableData, TableProps } from "./Table/TableProps";
 import { useAuth } from "context/AuthContext";
 import { TableActionsAlignment } from "@snailycad/types";
+import { useMounted } from "@casper124578/useful/hooks/useMounted";
 
 const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
 const MAX_ITEMS_PER_PAGE = 50 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
+  const isMounted = useMounted();
   /**
    * this keeps track of the table state. If the table re-renders, re-add the state to the table so it doesn't get lost
    * mostly used for pageIndex.
@@ -58,7 +60,13 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
       autoResetSortBy: false,
       columns,
       data,
-      initialState: { pageSize: MAX_ITEMS_PER_PAGE, pageIndex: state?.pageIndex },
+      initialState:
+        data.length >= MAX_ITEMS_PER_PAGE
+          ? {
+              pageSize: MAX_ITEMS_PER_PAGE,
+              pageIndex: state?.pageIndex,
+            }
+          : undefined,
     },
     useGlobalFilter,
     useSortBy,
@@ -104,9 +112,13 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
   React.useEffect(() => {
     setState((p) => ({ ...p, ...instance.state }));
+
+    return () => setState(null);
   }, [instance.state]);
 
   function handleMove(tableList: any[]) {
+    if (!isMounted) return;
+
     const originals = tableList.map((list) => {
       return list.original?.rowProps?.value;
     });

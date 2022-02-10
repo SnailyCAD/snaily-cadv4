@@ -11,17 +11,30 @@ import { Toggle } from "components/form/Toggle";
 
 interface Props {
   item?: SeizedItem | null;
+  onClose?: () => void;
 }
 
-export function ManageSeizedItemsModal({ item }: Props) {
+export function ManageSeizedItemsModal({ item, onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { values, setFieldValue } = useFormikContext<{ seizedItems?: any[] }>();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    setFieldValue("seizedItems", [...(values.seizedItems ?? []), data]);
-    closeModal(ModalIds.ManageSeizedItems);
+    if (item) {
+      const seizedItems = values.seizedItems ?? [];
+      const idxOf = seizedItems.indexOf(item);
+
+      if (idxOf !== -1) {
+        seizedItems[idxOf] = { ...item, ...data };
+      }
+
+      setFieldValue("seizedItems", seizedItems);
+      handleClose();
+    } else {
+      setFieldValue("seizedItems", [...(values.seizedItems ?? []), data]);
+      handleClose();
+    }
   }
 
   const INITIAL_VALUES = {
@@ -30,11 +43,16 @@ export function ManageSeizedItemsModal({ item }: Props) {
     quantity: item?.quantity ?? 1,
   };
 
+  function handleClose() {
+    onClose?.();
+    closeModal(ModalIds.ManageSeizedItems);
+  }
+
   return (
     <Modal
       title={t("createWarrant")}
       isOpen={isOpen(ModalIds.ManageSeizedItems)}
-      onClose={() => closeModal(ModalIds.ManageSeizedItems)}
+      onClose={handleClose}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -58,15 +76,11 @@ export function ManageSeizedItemsModal({ item }: Props) {
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageSeizedItems)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={!isValid} type="submit">
-                Add
+                {item ? common("save") : "Add"}
               </Button>
             </footer>
           </Form>

@@ -322,7 +322,6 @@ export interface Violation {
   bail: number | null;
   penalCodeId: string;
   penalCode: PenalCode;
-  seizedItems: SeizedItem[];
 }
 
 /**
@@ -742,6 +741,7 @@ export interface Record {
   releaseId: string | null;
   expungementRequestId: string | null;
   violations: Violation[];
+  seizedItems: SeizedItem[];
 }
 
 /**

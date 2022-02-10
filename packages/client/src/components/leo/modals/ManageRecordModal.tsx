@@ -117,7 +117,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       })) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",
     notes: record?.notes ?? "",
-    seizedItems: [],
+    seizedItems: record?.seizedItems ?? [],
   };
 
   return (

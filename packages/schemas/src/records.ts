@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const SEIZED_ITEM_SCHEMA = z.object({
+  illegal: z.boolean().nullable().optional(),
+  item: z.string().min(1),
+  quantity: z.number().nullable().optional(),
+});
+
 export const CREATE_TICKET_SCHEMA = z.object({
   type: z
     .string()
@@ -9,6 +15,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   citizenName: z.string().min(2).max(255),
   violations: z.array(z.any()).min(1),
+  seizedItems: z.array(SEIZED_ITEM_SCHEMA),
   postal: z.string().min(1).max(255),
   notes: z.string(),
 });

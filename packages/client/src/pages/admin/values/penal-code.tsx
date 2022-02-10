@@ -248,7 +248,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           dragDrop={{
             enabled: true,
             handleMove: (list) => setList("PENAL_CODE_GROUP", list),
-            disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+            // disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
           }}
           data={groups.map((group) => ({
             rowProps: { value: group },
