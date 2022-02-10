@@ -389,6 +389,15 @@ model Violation {
   records     Record[]
 }
 
+model SeizedItem {
+  id       String  @id @default(uuid())
+  record   Record  @relation(fields: [recordId], references: [id])
+  recordId String
+  item     String
+  quantity Int     @default(1)
+  illegal  Boolean @default(false)
+}
+
 model DivisionValue {
   id                         String           @id @default(cuid())
   value                      Value            @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
@@ -828,6 +837,7 @@ model Record {
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
+  seizedItems          SeizedItem[]
 }
 
 model RecordRelease {

@@ -325,6 +325,18 @@ export interface Violation {
 }
 
 /**
+ * Model SeizedItem
+ *
+ */
+export type SeizedItem = {
+  id: string;
+  violationId: string;
+  item: string;
+  quantity: number;
+  illegal: boolean;
+};
+
+/**
  * Model DivisionValue
  *
  */
@@ -729,6 +741,7 @@ export interface Record {
   releaseId: string | null;
   expungementRequestId: string | null;
   violations: Violation[];
+  seizedItems: SeizedItem[];
 }
 
 /**

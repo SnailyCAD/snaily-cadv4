@@ -11,7 +11,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/index";
-import type { RecordType, Violation, WarrantStatus } from "@prisma/client";
+import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
 import { leoProperties } from "lib/officer";
@@ -112,6 +112,7 @@ export class RecordsController {
     }
 
     const violations: Violation[] = [];
+    const seizedItems: SeizedItem[] = [];
 
     await Promise.all(
       data.violations.map(
@@ -149,6 +150,21 @@ export class RecordsController {
       ),
     );
 
+    await Promise.all(
+      (data.seizedItems ?? []).map(async (item) => {
+        const seizedItem = await prisma.seizedItem.create({
+          data: {
+            item: item.item,
+            illegal: item.illegal ?? false,
+            quantity: item.quantity ?? 1,
+            recordId: ticket.id,
+          },
+        });
+
+        seizedItems.push(seizedItem);
+      }),
+    );
+
     await prisma.recordLog.create({
       data: {
         citizenId: citizen.id,
@@ -156,7 +172,7 @@ export class RecordsController {
       },
     });
 
-    return { ...ticket, violations };
+    return { ...ticket, violations, seizedItems };
   }
 
   @Put("/record/:id")
@@ -166,7 +182,7 @@ export class RecordsController {
 
     const record = await prisma.record.findUnique({
       where: { id: recordId },
-      include: { violations: true },
+      include: { violations: true, seizedItems: true },
     });
 
     if (!record) {
@@ -174,6 +190,7 @@ export class RecordsController {
     }
 
     await unlinkViolations(record.violations);
+    await unlinkSeizedItems(record.seizedItems);
 
     const updated = await prisma.record.update({
       where: { id: recordId },
@@ -185,17 +202,23 @@ export class RecordsController {
     });
 
     const violations: Violation[] = [];
+    const seizedItems: SeizedItem[] = [];
 
     await Promise.all(
       data.violations.map(async (violation) => {
+        const item = await validateRecordData({
+          ...violation,
+          ticketId: updated.id,
+        });
+
         const created = await prisma.violation.create({
           data: {
-            fine: violation.fine,
-            bail: violation.bail,
-            jailTime: violation.jailTime,
+            fine: item.fine,
+            bail: item.bail,
+            jailTime: item.jailTime,
             penalCode: {
               connect: {
-                id: violation.penalCodeId,
+                id: item.penalCodeId,
               },
             },
             records: { connect: { id: updated.id } },
@@ -207,7 +230,22 @@ export class RecordsController {
       }),
     );
 
-    return { ...updated, violations };
+    await Promise.all(
+      (data.seizedItems ?? []).map(async (item) => {
+        const seizedItem = await prisma.seizedItem.create({
+          data: {
+            item: item.item,
+            illegal: item.illegal ?? false,
+            quantity: item.quantity ?? 1,
+            recordId: updated.id,
+          },
+        });
+
+        seizedItems.push(seizedItem);
+      }),
+    );
+
+    return { ...updated, violations, seizedItems };
   }
 
   @Delete("/:id")
@@ -249,6 +287,14 @@ async function unlinkViolations(violations: Pick<Violation, "id">[]) {
   await Promise.all(
     violations.map(async ({ id }) => {
       await prisma.violation.delete({ where: { id } });
+    }),
+  );
+}
+
+async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
+  await Promise.all(
+    items.map(async ({ id }) => {
+      await prisma.seizedItem.delete({ where: { id } });
     }),
   );
 }
