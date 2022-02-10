@@ -80,7 +80,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={!isValid} type="submit">
-                {item ? common("save") : "Add"}
+                {item ? common("save") : t("add")}
               </Button>
             </footer>
           </Form>
