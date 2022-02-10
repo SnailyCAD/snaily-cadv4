@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "1.0.0-beta.53",
+  "version": "1.0.0-beta.54",
   "scripts": {
     "dev": "rimraf .env && next dev",
     "build": "yarn validate && yarn next-build",
@@ -26,9 +26,9 @@
     "@react-aria/focus": "^3.5.0",
     "@react-aria/label": "^3.2.1",
     "@react-aria/ssr": "^3.1.0",
-    "@snailycad/config": "1.0.0-beta.53",
-    "@snailycad/schemas": "1.0.0-beta.53",
-    "@snailycad/types": "1.0.0-beta.53",
+    "@snailycad/config": "1.0.0-beta.54",
+    "@snailycad/schemas": "1.0.0-beta.54",
+    "@snailycad/types": "1.0.0-beta.54",
     "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",
