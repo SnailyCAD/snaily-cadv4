@@ -60,7 +60,13 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
       autoResetSortBy: false,
       columns,
       data,
-      initialState: { pageSize: MAX_ITEMS_PER_PAGE, pageIndex: state?.pageIndex },
+      initialState:
+        data.length >= MAX_ITEMS_PER_PAGE
+          ? {
+              pageSize: MAX_ITEMS_PER_PAGE,
+              pageIndex: state?.pageIndex,
+            }
+          : undefined,
     },
     useGlobalFilter,
     useSortBy,
@@ -106,6 +112,8 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
   React.useEffect(() => {
     setState((p) => ({ ...p, ...instance.state }));
+
+    return () => setState(null);
   }, [instance.state]);
 
   function handleMove(tableList: any[]) {
