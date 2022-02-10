@@ -111,8 +111,6 @@ export class RecordsController {
       });
     }
 
-    console.log(data.seizedItems);
-
     const violations: Violation[] = [];
     const seizedItems: SeizedItem[] = [];
 
@@ -153,7 +151,7 @@ export class RecordsController {
     );
 
     await Promise.all(
-      data.seizedItems.map(async (item) => {
+      (data.seizedItems ?? []).map(async (item) => {
         const seizedItem = await prisma.seizedItem.create({
           data: {
             item: item.item,
@@ -184,7 +182,7 @@ export class RecordsController {
 
     const record = await prisma.record.findUnique({
       where: { id: recordId },
-      include: { violations: true },
+      include: { violations: true, seizedItems: true },
     });
 
     if (!record) {
@@ -192,6 +190,7 @@ export class RecordsController {
     }
 
     await unlinkViolations(record.violations);
+    await unlinkSeizedItems(record.seizedItems);
 
     const updated = await prisma.record.update({
       where: { id: recordId },
@@ -203,6 +202,7 @@ export class RecordsController {
     });
 
     const violations: Violation[] = [];
+    const seizedItems: SeizedItem[] = [];
 
     await Promise.all(
       data.violations.map(async (violation) => {
@@ -230,7 +230,22 @@ export class RecordsController {
       }),
     );
 
-    return { ...updated, violations };
+    await Promise.all(
+      (data.seizedItems ?? []).map(async (item) => {
+        const seizedItem = await prisma.seizedItem.create({
+          data: {
+            item: item.item,
+            illegal: item.illegal ?? false,
+            quantity: item.quantity ?? 1,
+            recordId: updated.id,
+          },
+        });
+
+        seizedItems.push(seizedItem);
+      }),
+    );
+
+    return { ...updated, violations, seizedItems };
   }
 
   @Delete("/:id")
@@ -272,6 +287,14 @@ async function unlinkViolations(violations: Pick<Violation, "id">[]) {
   await Promise.all(
     violations.map(async ({ id }) => {
       await prisma.violation.delete({ where: { id } });
+    }),
+  );
+}
+
+async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
+  await Promise.all(
+    items.map(async ({ id }) => {
+      await prisma.seizedItem.delete({ where: { id } });
     }),
   );
 }

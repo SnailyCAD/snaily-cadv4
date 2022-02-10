@@ -8,12 +8,12 @@ import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ManageSeizedItemsModal } from "./ManageSeizedItemsModal";
+import type { SeizedItem } from "@snailycad/types";
 
 export function SeizedItemsTable() {
   const [tempItem, setTempItem] = React.useState(null);
-  const { values, setFieldValue } = useFormikContext<{ seizedItems?: any[] }>();
+  const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
   const { openModal } = useModal();
-  const seizedItems = values.seizedItems ?? [];
 
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -24,7 +24,7 @@ export function SeizedItemsTable() {
   }
 
   function handleDeleteClick(item: any) {
-    const seizedItems = values.seizedItems ?? [];
+    const seizedItems = values.seizedItems;
     const idxOf = seizedItems.indexOf(item);
 
     setFieldValue(
@@ -35,18 +35,18 @@ export function SeizedItemsTable() {
 
   return (
     <>
-      <FormField className="relative" label="Seized Items">
+      <FormField className="relative mt-3 mb-2" label={t("seizedItems")}>
         <Button
           className="absolute right-0 top-0"
           type="button"
           onClick={() => openModal(ModalIds.ManageSeizedItems)}
         >
-          Add
+          {t("add")}
         </Button>
 
-        {seizedItems.length > 0 ? (
+        {values.seizedItems.length > 0 ? (
           <Table
-            data={seizedItems.map((v) => ({
+            data={values.seizedItems.map((v) => ({
               item: v.item,
               quantity: v.quantity,
               illegal: common(yesOrNoText(v.illegal)),
@@ -75,7 +75,7 @@ export function SeizedItemsTable() {
             ]}
           />
         ) : (
-          <p>No items created yet.</p>
+          <p>{t("noSeizedItems")}</p>
         )}
       </FormField>
 

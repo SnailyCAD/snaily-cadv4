@@ -18,11 +18,11 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { values, setFieldValue } = useFormikContext<{ seizedItems?: any[] }>();
+  const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
     if (item) {
-      const seizedItems = values.seizedItems ?? [];
+      const seizedItems = values.seizedItems;
       const idxOf = seizedItems.indexOf(item);
 
       if (idxOf !== -1) {
@@ -32,7 +32,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
       setFieldValue("seizedItems", seizedItems);
       handleClose();
     } else {
-      setFieldValue("seizedItems", [...(values.seizedItems ?? []), data]);
+      setFieldValue("seizedItems", [...values.seizedItems, data]);
       handleClose();
     }
   }
@@ -50,7 +50,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
 
   return (
     <Modal
-      title={t("createWarrant")}
+      title={item ? t("editSeizedItem") : t("addSeizedItem")}
       isOpen={isOpen(ModalIds.ManageSeizedItems)}
       onClose={handleClose}
       className="w-[600px]"
