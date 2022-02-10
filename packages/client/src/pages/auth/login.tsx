@@ -18,6 +18,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
+import { canUseDiscordAuth } from "lib/utils";
 
 const INITIAL_VALUES = {
   username: "",
@@ -139,7 +140,7 @@ export default function Login() {
                     </Button>
                   </div>
 
-                  {DISCORD_AUTH ? (
+                  {DISCORD_AUTH && canUseDiscordAuth() ? (
                     <>
                       <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
 

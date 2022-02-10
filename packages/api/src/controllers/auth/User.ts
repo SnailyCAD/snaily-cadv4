@@ -16,7 +16,6 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { ShouldDoType } from "@prisma/client";
-import { isDiscordIdInUse } from "utils/discord";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -35,7 +34,7 @@ export class AccountController {
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { username, discordId, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
+    const { username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -47,17 +46,12 @@ export class AccountController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
-    if (discordId && (await isDiscordIdInUse(discordId, user.id))) {
-      throw new ExtendedBadRequest({ discordId: "discordIdInUse" });
-    }
-
     const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         username,
-        discordId: discordId || undefined,
         isDarkTheme,
         statusViewMode,
         tableActionsAlignment,

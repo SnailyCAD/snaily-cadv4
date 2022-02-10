@@ -46,8 +46,8 @@ export function AccountSettingsTab() {
               <Input value={values.username} onChange={handleChange} name="username" />
             </FormField>
 
-            <FormField optional label="Discord ID" errorMessage={errors.discordId}>
-              <Input value={values.discordId} onChange={handleChange} name="discordId" />
+            <FormField optional label="Discord ID">
+              <Input readOnly disabled value={values.discordId} />
             </FormField>
 
             <div className="flex items-center gap-2">

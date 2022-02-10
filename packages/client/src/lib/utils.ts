@@ -145,3 +145,7 @@ export function formatOfficerDepartment(unit: FullOfficer | FullDeputy) {
 
   return getUnitDepartment(unit)?.value.value ?? null;
 }
+
+export function canUseDiscordAuth() {
+  return typeof window !== "undefined" && window.location === window.parent.location;
+}

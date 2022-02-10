@@ -13,6 +13,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
 import { toastError } from "lib/error";
+import { canUseDiscordAuth } from "lib/utils";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -54,7 +55,7 @@ export default function Account() {
     { name: t("appearanceSettings"), value: "appearanceSettings" },
   ];
 
-  if (DISCORD_AUTH) {
+  if (DISCORD_AUTH && canUseDiscordAuth()) {
     TABS_TITLES[3] = { name: t("connections"), value: "connections" };
   }
 
