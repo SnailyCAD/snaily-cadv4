@@ -20,50 +20,50 @@ fs.readFile("./packages/client/package.json", "utf8", (err, json) => {
   }
 });
 
-// const [, , ...args] = process.argv;
-// const copyToClient = hasArg("--client");
-// const copyToApi = hasArg("--api");
+const [, , ...args] = process.argv;
+const copyToClient = hasArg("--client");
+const copyToApi = hasArg("--api");
 
-// let ENV_FILE_PATH = join(process.cwd(), ".env");
+let ENV_FILE_PATH = join(process.cwd(), ".env");
 
-// if (
-//   ENV_FILE_PATH.endsWith("/packages/client/.env") ||
-//   ENV_FILE_PATH.endsWith("/packages/api/.env")
-// ) {
-//   ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api)\//, "");
-// }
+if (
+  ENV_FILE_PATH.endsWith("/packages/client/.env") ||
+  ENV_FILE_PATH.endsWith("/packages/api/.env")
+) {
+  ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api)\//, "");
+}
 
-// /**
-//  * @param {string} distDir
-//  */
-// async function copyEnv(distDir) {
-//   try {
-//     one(ENV_FILE_PATH, distDir, (error) => {
-//       if (error) {
-//         console.log({ error });
-//         return;
-//       }
+/**
+ * @param {string} distDir
+ */
+async function copyEnv(distDir) {
+  try {
+    one(ENV_FILE_PATH, distDir, (error) => {
+      if (error) {
+        console.log({ error });
+        return;
+      }
 
-//       const type =
-//         (distDir.endsWith("client") && "client") || (distDir.endsWith("api") && "api") || "Unknown";
+      const type =
+        (distDir.endsWith("client") && "client") || (distDir.endsWith("api") && "api") || "Unknown";
 
-//       console.log(`✅ copied .env — ${type}`);
-//     });
-//   } catch (e) {
-//     console.log({ e });
-//   }
-// }
+      console.log(`✅ copied .env — ${type}`);
+    });
+  } catch (e) {
+    console.log({ e });
+  }
+}
 
-// if (copyToClient) {
-//   const CLIENT_PACKAGE_PATH = join(process.cwd(), "packages", "client");
-//   copyEnv(CLIENT_PACKAGE_PATH);
-// }
+if (copyToClient) {
+  const CLIENT_PACKAGE_PATH = join(process.cwd(), "packages", "client");
+  copyEnv(CLIENT_PACKAGE_PATH);
+}
 
-// if (copyToApi) {
-//   const API_PACKAGE_PATH = join(process.cwd(), "packages", "api");
-//   copyEnv(API_PACKAGE_PATH);
-// }
+if (copyToApi) {
+  const API_PACKAGE_PATH = join(process.cwd(), "packages", "api");
+  copyEnv(API_PACKAGE_PATH);
+}
 
-// function hasArg(arg) {
-//   return args.includes(arg);
-// }
+function hasArg(arg) {
+  return args.includes(arg);
+}
