@@ -17,7 +17,6 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/ManagePenalCodeGroup";
 import { AlertModal } from "components/modal/AlertModal";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { hasTableDataChanged } from "./[path]";
 
@@ -50,7 +49,6 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
-  const router = useRouter();
 
   function handleDeleteClick(value: PenalCode) {
     setTempValue(value);
@@ -85,8 +83,17 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
     });
 
     if (json) {
-      router.replace({ pathname: router.pathname, query: router.query });
+      setValues((p) =>
+        p.map((penalCode) => {
+          if (penalCode.groupId === tempGroup.id) {
+            return { ...penalCode, groupId: "ungrouped" };
+          }
+
+          return penalCode;
+        }),
+      );
       setTempGroup(null);
+      setGroups((p) => p.filter((v) => v.id !== tempGroup.id));
       closeModal(ModalIds.AlertDeleteGroup);
     }
   }
@@ -248,7 +255,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           dragDrop={{
             enabled: true,
             handleMove: (list) => setList("PENAL_CODE_GROUP", list),
-            // disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
+            disabledIndices: [groups.findIndex((v) => v.id === "ungrouped")],
           }}
           data={groups.map((group) => ({
             rowProps: { value: group },
