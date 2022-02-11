@@ -6,9 +6,7 @@ import { readFileSync, writeFileSync } from "fs";
 fs.readFile("./packages/client/package.json", "utf8", (err, json) => {
 
   const port = process.env.PORT_CLIENT;
-  if (!port) {
-    return;
-  } else {
+  if (port) {
     json = JSON.parse(json);
     json.scripts.start = `next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
