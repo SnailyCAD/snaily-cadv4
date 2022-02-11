@@ -1,4 +1,4 @@
-# SnailyCADv4
+# [SnailyCADv4](https://snailycad.caspertheghost.me)
 
 ![license](https://img.shields.io/github/license/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
 ![contributors](https://img.shields.io/github/contributors/SnailyCAD/snaily-cadv4?color=gr&style=flat-square)
@@ -21,9 +21,9 @@ Built with next.js
 
 [View CONTRIBUTING.md](./.github/CONTRIBUTING.md)
 
-## Bugs
+## Bugs/features
 
-You can report any bug [here](https://github.com/SnailyCAD/snaily-cadv4/issues)
+You can report a bug or request a feature [here](https://github.com/SnailyCAD/snaily-cadv4/issues)
 
 ## Supporting SnailyCAD
 

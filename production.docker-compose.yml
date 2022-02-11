@@ -17,7 +17,7 @@ services:
     container_name: "snaily-cad-api"
 
     user: node
-    image: node:16
+    image: node:16-alpine
     command: "yarn workspace @snailycad/api start:docker"
     ports:
       - "8080:8080"
@@ -39,7 +39,7 @@ services:
     container_name: "snaily-cad-client"
 
     user: node
-    image: node:16
+    image: node:16-alpine
     command: "yarn workspace @snailycad/client start"
     ports:
       - "3000:3000"
