@@ -1,22 +1,30 @@
+import "dotenv/config";
 import { one } from "copy";
 import { join } from "node:path";
-import "dotenv/config";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
-readFileSync("./packages/client/package.json", "utf8", (err, json) => {
+function addPortToClientPackageJson() {
+  let dir = join(process.cwd(), "package.json");
 
+  if (!dir.includes("/packages/client")) {
+    dir = join(process.cwd(), "packages/client", "package.json");
+  }
+
+  let json = readFileSync(dir, "utf8");
   const port = process.env.PORT_CLIENT;
+
   if (port) {
     json = JSON.parse(json);
     json.scripts.start = `next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
-    writeFileSync("./packages/client/package.json", json, (err) => {
+
+    writeFileSync(dir, json, (err) => {
       if (err) {
         console.log(err);
       }
     });
   }
-});
+}
 
 const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
@@ -42,8 +50,13 @@ async function copyEnv(distDir) {
         return;
       }
 
-      const type =
-        (distDir.endsWith("client") && "client") || (distDir.endsWith("api") && "api") || "Unknown";
+      const isClient = distDir.endsWith("client");
+      const isApi = distDir.endsWith("api");
+      const type = isClient ? "client" : isApi ? "api" : "Unknown";
+
+      if (isClient) {
+        addPortToClientPackageJson();
+      }
 
       console.log(`✅ copied .env — ${type}`);
     });
