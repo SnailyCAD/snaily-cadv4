@@ -96,6 +96,8 @@ model DiscordRoles {
   dispatchRoleId      String?
   towRole             DiscordRole? @relation("towRole", fields: [towRoleId], references: [id])
   towRoleId           String?
+  adminRole           DiscordRole? @relation("adminRole", fields: [adminRoleId], references: [id])
+  adminRoleId         String?
 
   roles DiscordRole[]
   cad   cad[]
@@ -111,6 +113,7 @@ model DiscordRole {
   dispatchRoles      DiscordRoles[] @relation("dispatchRole")
   towRoles           DiscordRoles[] @relation("towRole")
   leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
+  adminRoles         DiscordRoles[] @relation("adminRole")
 }
 
 model User {

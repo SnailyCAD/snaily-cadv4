@@ -22,9 +22,7 @@ export class DiscordSettingsController {
     }
 
     const rest = getRest();
-    const roles = (await rest.get(
-      `${Routes.guildRoles(guildId)}`,
-    )) as RESTGetAPIGuildRolesResult | null;
+    const roles = (await rest.get(Routes.guildRoles(guildId))) as RESTGetAPIGuildRolesResult | null;
 
     const discordRoles = await prisma.discordRoles.upsert({
       where: { id: String(cad.discordRolesId) },
@@ -73,9 +71,7 @@ export class DiscordSettingsController {
     const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
 
     const rest = getRest();
-    const roles = (await rest.get(
-      `${Routes.guildRoles(guildId)}`,
-    )) as RESTGetAPIGuildRolesResult | null;
+    const roles = (await rest.get(Routes.guildRoles(guildId))) as RESTGetAPIGuildRolesResult | null;
 
     const rolesBody = Array.isArray(roles) ? roles : [];
 
@@ -92,6 +88,7 @@ export class DiscordSettingsController {
       leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
       emsFdRoleId: data.emsFdRoleId ?? null,
       towRoleId: data.towRoleId ?? null,
+      adminRoleId: data.adminRoleId ?? null,
     };
 
     const discordRoles = await prisma.discordRoles.upsert({

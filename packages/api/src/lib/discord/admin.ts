@@ -1,10 +1,13 @@
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v9";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
 
 export async function updateMemberRoles(
-  user: Pick<User, "isLeo" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow" | "discordId">,
+  user: Pick<
+    User,
+    "isLeo" | "rank" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow" | "discordId"
+  >,
   discordRolesId: string | null,
 ) {
   if (!GUILD_ID || !BOT_TOKEN || !discordRolesId || !user.discordId) return;
@@ -29,6 +32,7 @@ export async function updateMemberRoles(
     { roleId: discordRoles.emsFdRoleId, method: createMethod(user.isEmsFd) },
     { roleId: discordRoles.dispatchRoleId, method: createMethod(user.isDispatch) },
     { roleId: discordRoles.towRoleId, method: createMethod(user.isTow) },
+    { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
   ];
 
   await Promise.all(

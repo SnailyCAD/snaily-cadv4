@@ -37,6 +37,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   emsFdRoleId: z.string().nullable().optional(),
   dispatchRoleId: z.string().nullable().optional(),
   towRoleId: z.string().nullable().optional(),
+  adminRoleId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({

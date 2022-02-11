@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v9";
 import { getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
@@ -7,7 +7,7 @@ import { prisma } from "lib/prisma";
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
  */
 export async function updateMemberRolesLogin(
-  user: Pick<User, "id" | "discordId">,
+  user: Pick<User, "id" | "rank" | "discordId">,
   discordRolesId: string | null,
 ) {
   if (!GUILD_ID || !discordRolesId || !user.discordId) return;
@@ -32,6 +32,12 @@ export async function updateMemberRolesLogin(
     isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
     isEmsFd: hasRole(discordRoles.emsFdRoleId, discordMember.roles),
     isTow: hasRole(discordRoles.towRoleId, discordMember.roles),
+    rank:
+      user.rank !== Rank.OWNER
+        ? hasRole(discordRoles.adminRoleId, discordMember.roles)
+          ? Rank.ADMIN
+          : Rank.USER
+        : undefined,
   };
 
   await prisma.user.update({
