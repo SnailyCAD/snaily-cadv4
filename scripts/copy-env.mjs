@@ -1,7 +1,7 @@
 import { one } from "copy";
 import { join } from "node:path";
 import "dotenv/config";
-import * as fs from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 fs.readFile("./packages/client/package.json", "utf8", (err, json) => {
 
