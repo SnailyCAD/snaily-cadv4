@@ -3,7 +3,7 @@ import { join } from "node:path";
 import "dotenv/config";
 import { readFileSync, writeFileSync } from "fs";
 
-fs.readFile("./packages/client/package.json", "utf8", (err, json) => {
+readFileSync("./packages/client/package.json", "utf8", (err, json) => {
 
   const port = process.env.PORT_CLIENT;
   if (port) {
