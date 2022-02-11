@@ -59,10 +59,12 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
           name="violations"
           onChange={handleChange}
           isMulti
-          values={codes.map((value) => ({
-            label: value.title,
-            value,
-          }))}
+          values={codes
+            .filter((v) => !value.some((vio) => vio.value.id === v.id))
+            .map((value) => ({
+              label: value.title,
+              value,
+            }))}
         />
       </FormRow>
     </>

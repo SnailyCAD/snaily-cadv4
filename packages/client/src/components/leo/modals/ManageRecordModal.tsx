@@ -128,7 +128,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       className="w-[800px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenName} label={t("citizen")}>
               <InputSuggestions
@@ -138,9 +138,14 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
                   onChange: handleChange,
                   disabled: !!record,
                 }}
-                onSuggestionClick={(suggestion) => {
-                  setFieldValue("citizenId", suggestion.id);
-                  setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
+                onSuggestionClick={(suggestion: Citizen) => {
+                  const newValues = {
+                    ...values,
+                    citizenId: suggestion.id,
+                    citizenName: `${suggestion.name} ${suggestion.surname}`,
+                  };
+
+                  setValues(newValues, true);
                 }}
                 options={{
                   apiPath: "/search/name",

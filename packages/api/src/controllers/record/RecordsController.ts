@@ -204,13 +204,12 @@ export class RecordsController {
     const violations: Violation[] = [];
     const seizedItems: SeizedItem[] = [];
 
-    await Promise.all(
-      data.violations.map(async (violation) => {
-        const item = await validateRecordData({
-          ...violation,
-          ticketId: updated.id,
-        });
+    const validatedViolations = await Promise.all(
+      data.violations.map(async (v) => validateRecordData(v)),
+    );
 
+    await Promise.all(
+      validatedViolations.map(async (item) => {
         const created = await prisma.violation.create({
           data: {
             fine: item.fine,
