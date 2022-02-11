@@ -12,6 +12,7 @@ interface Options extends Omit<AxiosRequestConfig, "headers"> {
   req?: IncomingMessage & { cookies?: NextApiRequestCookies };
   method?: Method;
   data?: RequestData;
+  isSsr?: boolean;
 }
 
 export async function handleRequest<T = any>(
@@ -47,6 +48,10 @@ export async function handleRequest<T = any>(
   });
 
   if ("ERROR" in res) {
+    if (options?.isSsr) {
+      throw makeReturn(res.ERROR);
+    }
+
     return makeReturn(res.ERROR) as unknown as AxiosResponse<T>;
   }
 

@@ -72,6 +72,7 @@ export async function requestAll(
     config.map(async ([path, defaultValue = {}]) => {
       return handleRequest(path, {
         req,
+        isSsr: true,
       })
         .then((v) => (typeof v.data === "undefined" ? defaultValue : v.data))
         .catch(() => defaultValue);
