@@ -5,7 +5,7 @@ import { readFileSync, writeFileSync } from "fs";
 
 fs.readFile("./packages/client/package.json", "utf8", (err, json) => {
 
-  let port = process.env.PORT_CLIENT;
+  const port = process.env.PORT_CLIENT;
   if (!port) {
     return;
   } else {
