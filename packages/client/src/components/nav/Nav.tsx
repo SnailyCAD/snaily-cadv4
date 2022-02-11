@@ -14,6 +14,7 @@ import { TowDropdown } from "./dropdowns/TowDropdown";
 import { DispatchDropdown } from "./dropdowns/DispatchDropdown";
 import { useTranslations } from "next-intl";
 import { useImageUrl } from "hooks/useImageUrl";
+import Head from "next/head";
 
 export function Nav() {
   const { user, cad } = useAuth();
@@ -36,13 +37,18 @@ export function Nav() {
                 className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
               >
                 {url ? (
-                  <img
-                    alt={cad?.name || "SnailyCAD"}
-                    width={30}
-                    height={30}
-                    className="max-h-[30px] min-w-[30px]"
-                    src={url}
-                  />
+                  <>
+                    <Head>
+                      <link rel="shortcut icon" href={url} />
+                    </Head>
+                    <img
+                      alt={cad?.name || "SnailyCAD"}
+                      width={30}
+                      height={30}
+                      className="max-h-[30px] min-w-[30px]"
+                      src={url}
+                    />
+                  </>
                 ) : null}
                 {cad?.name || "SnailyCAD"}
               </a>

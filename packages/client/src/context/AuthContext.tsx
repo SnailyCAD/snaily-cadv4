@@ -19,7 +19,7 @@ const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: { session?: User | null; cad?: CAD | null };
+  initialData: { session?: (User & { cad: CAD | null }) | null; cad?: CAD | null };
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
@@ -37,7 +37,9 @@ const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
 
 export function AuthProvider({ initialData, children }: ProviderProps) {
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
-  const [cad, setCad] = React.useState<CAD | null>(null);
+  const [cad, setCad] = React.useState<CAD | null>(
+    initialData.session?.cad ?? initialData.cad ?? null,
+  );
   const [isForbidden, setForbidden] = React.useState(false);
   const router = useRouter();
 
@@ -79,10 +81,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       setUser(initialData.session);
     }
 
-    // @ts-expect-error ignore
     if (initialData.session?.cad ?? initialData.cad) {
-      // @ts-expect-error ignore
-      setCad(initialData.session?.cad ?? initialData.cad);
+      setCad(initialData.session?.cad ?? initialData.cad ?? null);
     }
   }, [initialData]);
 
