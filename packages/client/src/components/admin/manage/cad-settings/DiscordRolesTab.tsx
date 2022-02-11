@@ -28,6 +28,7 @@ export function DiscordRolesTab() {
     dispatchRoleId: discordRoles.dispatchRoleId,
     leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
     towRoleId: discordRoles.towRoleId,
+    adminRoleId: discordRoles.adminRoleId,
   };
 
   async function refreshRoles() {
@@ -75,6 +76,19 @@ export function DiscordRolesTab() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, errors, values }) => (
           <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
+            <FormField errorMessage={errors.adminRoleId} label="Admin Role">
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.adminRoleId}
+                name="adminRoleId"
+                onChange={handleChange}
+              />
+            </FormField>
+
             <FormRow>
               <FormField errorMessage={errors.leoRoleId} label="LEO Role">
                 <Select

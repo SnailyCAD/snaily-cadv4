@@ -95,6 +95,8 @@ export type DiscordRoles = {
   dispatchRole: DiscordRole | null;
   towRoleId: string | null;
   towRole: DiscordRole | null;
+  adminRoleId: string | null;
+  adminRole: DiscordRole | null;
   roles?: DiscordRole[];
 };
 
