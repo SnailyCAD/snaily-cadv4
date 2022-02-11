@@ -10,7 +10,7 @@ readFileSync("./packages/client/package.json", "utf8", (err, json) => {
     json = JSON.parse(json);
     json.scripts.start = `next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
-    fs.writeFile("./packages/client/package.json", json, (err) => {
+    writeFileSync("./packages/client/package.json", json, (err) => {
       if (err) {
         console.log(err);
       }
