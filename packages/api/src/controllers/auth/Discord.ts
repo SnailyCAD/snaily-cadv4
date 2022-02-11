@@ -41,7 +41,7 @@ export class DiscordAuth {
     url.searchParams.append("response_type", "code");
     url.searchParams.append("scope", encodeURIComponent("identify"));
 
-    return res.redirect(url.toString(), 301);
+    return res.redirect(301, url.toString());
   }
 
   @Get("/callback")
