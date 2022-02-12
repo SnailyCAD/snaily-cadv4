@@ -92,7 +92,7 @@ export function ImportValuesModal({ onImport, type }: Props) {
                 className="underline"
                 target="_blank"
                 rel="noreferrer"
-                href="https://cad-docs.netlify.app/other/importing-values"
+                href="https://cad-docs.caspertheghost.me/docs/developer/importing-values"
               >
                 Documentation
               </a>

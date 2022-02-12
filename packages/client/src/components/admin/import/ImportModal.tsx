@@ -25,15 +25,15 @@ export function ImportModal({ onImport, id, url }: Props) {
 
   const data = {
     [ModalIds.ImportCitizens]: {
-      docsUrl: "https://cad-docs.netlify.app/other/importing-values#citizens",
+      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#citizens",
       title: "Import Citizen",
     },
     [ModalIds.ImportVehicles]: {
-      docsUrl: "https://cad-docs.netlify.app/other/importing-values#vehicles",
+      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#vehicles",
       title: "Import Vehicles",
     },
     [ModalIds.ImportWeapons]: {
-      docsUrl: "https://cad-docs.netlify.app/other/importing-values#weapons",
+      docsUrl: "https://cad-docs.caspertheghost.me/docs/developer/importing-values#weapons",
       title: "Import Weapons",
     },
   };

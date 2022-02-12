@@ -51,7 +51,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
-        <a href="https://cad-docs.netlify.app/other/discord-authentication">
+        <a href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication">
           Click here for Documentation
         </a>
       </>

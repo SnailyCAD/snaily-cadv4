@@ -15,7 +15,7 @@ Built with next.js
 
 ## Documentation
 
-[Documentation can be found here](https://cad-docs.netlify.app/)
+[Documentation can be found here](https://cad-docs.caspertheghost.me/docs/intro)
 
 ## Contributing
 
