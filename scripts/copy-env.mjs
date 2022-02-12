@@ -6,20 +6,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  let dir = join(process.cwd(), "package.json");
-
-  if (!dir.includes("/packages/client")) {
-    dir = join(process.cwd(), "packages/client", "package.json");
-  }
-
+  let dir = join(process.cwd(), "/packages/client/package.json");
   let json = readFileSync(dir, "utf8");
   const port = process.env.PORT_CLIENT;
-
   if (port) {
     json = JSON.parse(json);
     json.scripts.start = `next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
-
     writeFileSync(dir, json, (err) => {
       if (err) {
         console.log(err);
