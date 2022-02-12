@@ -35,7 +35,17 @@ export function useTableDataOfType(type: ValueType) {
         return {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
-          color: v.color || common("none"),
+          color: v.color ? (
+            <>
+              <span
+                style={{ background: v.color }}
+                className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
+              />
+              {v.color}
+            </>
+          ) : (
+            common("none")
+          ),
         };
       }
       case "DEPARTMENT": {
