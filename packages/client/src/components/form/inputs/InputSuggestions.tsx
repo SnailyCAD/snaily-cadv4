@@ -74,6 +74,10 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     onSearch(e);
   }
 
+  function handleBlur() {
+    setOpen(false);
+  }
+
   return (
     <div ref={ref} className="relative w-full">
       <Input
@@ -85,9 +89,9 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
       />
 
       {isOpen && suggestions.length > 0 ? (
-        <FocusScope>
+        <FocusScope restoreFocus={false}>
           <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">
-            <ul className="flex flex-col gap-y-1">
+            <ul onBlur={handleBlur} className="flex flex-col gap-y-1">
               {suggestions.map((suggestion, idx) => (
                 <Suggestion
                   onSuggestionClick={handleSuggestionClick}
