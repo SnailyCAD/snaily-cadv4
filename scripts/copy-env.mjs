@@ -1,9 +1,11 @@
 import "dotenv/config";
+import process from "node:process";
 import { one } from "copy";
 import { join } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 
 function addPortToClientPackageJson() {
+  if (process.env.NODE_ENV === "development") return;
   let dir = join(process.cwd(), "package.json");
 
   if (!dir.includes("/packages/client")) {

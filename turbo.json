@@ -18,7 +18,8 @@
         "$DISCORD_CLIENT_SECRET",
         "$ENCRYPTION_TOKEN",
         "$DOMAIN",
-        "$SECURE_COOKIES_FOR_IFRAME"
+        "$SECURE_COOKIES_FOR_IFRAME",
+        "$PORT_CLIENT"
       ],
       "outputs": [
         ".env"
