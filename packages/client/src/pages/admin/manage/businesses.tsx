@@ -19,6 +19,7 @@ import { PendingBusinessesTab } from "components/admin/manage/business/PendingBu
 import { useAuth } from "context/AuthContext";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { Status } from "components/shared/Status";
 
 export type FullBusiness = Business & {
   user: User;
@@ -113,7 +114,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 name: business.name,
                 owner: `${business.citizen.name} ${business.citizen.surname}`,
                 user: business.user.username,
-                status: business.status,
+                status: <Status state={business.status}>{business.status?.toLowerCase()}</Status>,
                 whitelisted: common(yesOrNoText(business.whitelisted)),
                 actions: (
                   <Button

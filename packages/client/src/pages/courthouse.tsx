@@ -15,6 +15,7 @@ import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsAr
 import { getTitles } from "components/courthouse/RequestExpungement";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { Status } from "components/shared/Status";
 
 const RequestExpungement = dynamic(
   async () => (await import("components/courthouse/RequestExpungement")).RequestExpungement,
@@ -88,7 +89,7 @@ export default function Courthouse(props: Props) {
               warrants,
               arrestReports,
               tickets,
-              status: request.status.toLowerCase(),
+              status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
               createdAt: <FullDate>{request.createdAt}</FullDate>,
               actions: <></>,
             };

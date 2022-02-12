@@ -25,6 +25,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { HoverCard } from "components/shared/HoverCard";
 import { Info } from "react-bootstrap-icons";
+import { Status } from "components/shared/Status";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -89,7 +90,10 @@ export default function MyOfficers({ officers: data }: Props) {
       ) : (
         <Table
           data={officers.map((officer) => {
-            const departmentStatus = officer.whitelistStatus?.status.toLowerCase() ?? "—";
+            const departmentStatus = officer.whitelistStatus?.status ?? null;
+            const departmentStatusFormatted = departmentStatus
+              ? departmentStatus.toLowerCase() ?? "—"
+              : "—";
 
             return {
               officer: (
@@ -109,7 +113,7 @@ export default function MyOfficers({ officers: data }: Props) {
               department: formatOfficerDepartment(officer) ?? common("none"),
               departmentStatus: (
                 <span className="capitalize flex items-center gap-2">
-                  {departmentStatus}
+                  <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
 
                   {officer.whitelistStatus?.status === WhitelistStatus.PENDING ? (
                     <HoverCard

@@ -26,7 +26,7 @@ export function useTableDataOfType(type: ValueType) {
 
   function get(value: TValue) {
     // state mismatch prevention
-    const valueType = "type" in value ? value.type : value.value.type;
+    const valueType = "createdAt" in value ? value.type : value.value.type;
     if (valueType !== type) return;
 
     switch (type) {

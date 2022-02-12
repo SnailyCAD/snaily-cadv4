@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTableSelect } from "hooks/shared/useTableSelect";
+import { Status } from "components/shared/Status";
 
 interface Props {
   units: Unit[];
@@ -58,8 +59,10 @@ export function AllUnitsTab({ units }: Props) {
       <Table
         disabledColumnId={["dropdown"]}
         data={units.map((unit) => {
-          const departmentStatus =
-            "whitelistStatus" in unit ? unit.whitelistStatus?.status.toLowerCase() ?? "—" : "—";
+          const departmentStatus = "whitelistStatus" in unit ? unit.whitelistStatus?.status : null;
+          const departmentStatusFormatted = departmentStatus
+            ? departmentStatus.toLowerCase() ?? "—"
+            : "—";
 
           return {
             dropdown: (
@@ -74,7 +77,7 @@ export function AllUnitsTab({ units }: Props) {
             callsign: generateCallsign(unit),
             badgeNumber: unit.badgeNumber,
             department: formatOfficerDepartment(unit) ?? common("none"),
-            departmentStatus,
+            departmentStatus: <Status state={departmentStatus}>{departmentStatusFormatted}</Status>,
             division: formatUnitDivisions(unit),
             rank: unit.rank?.value ?? common("none"),
             status: unit.status?.value.value ?? common("none"),

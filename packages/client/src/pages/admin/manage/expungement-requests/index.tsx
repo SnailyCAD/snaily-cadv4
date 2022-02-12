@@ -13,6 +13,7 @@ import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { Status } from "components/shared/Status";
 
 interface Props {
   requests: FullRequest[];
@@ -62,7 +63,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
                 .filter((v) => v.type === "TICKET")
                 .map((w) => getTitles(w))
                 .join(", ") || common("none"),
-            status: request.status.toLowerCase(),
+            status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
             actions: (
               <>
