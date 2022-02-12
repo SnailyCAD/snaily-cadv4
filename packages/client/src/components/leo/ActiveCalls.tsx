@@ -166,7 +166,7 @@ function ActiveCallsInner() {
 
                 return {
                   rowProps: {
-                    className: isUnitAssigned ? "bg-gray-200 dark:bg-gray-3" : undefined,
+                    className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
                   },
                   name: call.name,
                   location: call.location,

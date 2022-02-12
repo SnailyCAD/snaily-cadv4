@@ -255,7 +255,11 @@ function Row<T extends object, RP extends object>({
   stickyBgColor,
   tableActionsAlignment,
 }: RowProps<T, RP>) {
-  const rowProps = row.original.rowProps ?? {};
+  const rowProps = row.original.rowProps ?? ({} as RowProps<T, RP>["row"]["original"]["rowProps"]);
+  const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
+  const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
+  const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
+  const bgColor = rowProps?.className?.includes("bg") ? rowProps.className : stickyBgColor;
 
   return (
     <tr {...rowProps}>
@@ -263,15 +267,11 @@ function Row<T extends object, RP extends object>({
         const isActions = cell.column.id === "actions";
         const isMove = ["move", "selection"].includes(cell.column.id);
 
-        const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
-        const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
-        const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
-
         return (
           <td
             {...cell.getCellProps()}
             className={classNames(
-              isActions && `w-[10rem] sticky ${stickyBgColor} ${dir}`,
+              isActions && `w-[10rem] sticky ${bgColor} ${dir}`,
               isMove && "w-10",
             )}
           >
