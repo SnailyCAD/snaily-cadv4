@@ -189,6 +189,10 @@ export class RecordsController {
       throw new NotFound("notFound");
     }
 
+    const validatedViolations = await Promise.all(
+      data.violations.map(async (v) => validateRecordData(v)),
+    );
+
     await unlinkViolations(record.violations);
     await unlinkSeizedItems(record.seizedItems);
 
@@ -203,10 +207,6 @@ export class RecordsController {
 
     const violations: Violation[] = [];
     const seizedItems: SeizedItem[] = [];
-
-    const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData(v)),
-    );
 
     await Promise.all(
       validatedViolations.map(async (item) => {

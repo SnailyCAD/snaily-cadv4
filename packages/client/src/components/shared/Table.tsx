@@ -43,7 +43,7 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
 
   const tableActionsAlignment = user?.tableActionsAlignment ?? TableActionsAlignment.LEFT;
   const stickyBgColor = props.isWithinCard
-    ? "bg-gray-200/80 dark:bg-gray-2"
+    ? "bg-gray-100 dark:bg-gray-2"
     : "dark:bg-dark-bg bg-white";
 
   const columns = React.useMemo(

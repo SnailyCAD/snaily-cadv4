@@ -394,7 +394,7 @@ model Violation {
 
 model SeizedItem {
   id       String  @id @default(uuid())
-  record   Record  @relation(fields: [recordId], references: [id])
+  record   Record  @relation(fields: [recordId], references: [id], onDelete: Cascade)
   recordId String
   item     String
   quantity Int     @default(1)
