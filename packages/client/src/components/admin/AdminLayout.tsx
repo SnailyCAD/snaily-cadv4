@@ -13,7 +13,7 @@ export function AdminLayout({ children, className }: Props) {
 
   return (
     <>
-      <Nav />
+      <Nav maxWidth="none" />
 
       <main className={classNames("dark:text-white", className)}>
         <div className="flex">

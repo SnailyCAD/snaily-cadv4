@@ -211,13 +211,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
         <>
-          <Button
-            disabled={tableSelect.selectedRows.length <= 0}
-            onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)}
-            variant="danger"
-          >
-            {t("deleteSelectedValues")}
-          </Button>
+          {tableSelect.selectedRows.length <= 0 ? null : (
+            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+              {t("deleteSelectedValues")}
+            </Button>
+          )}
 
           <Table
             disabledColumnId={["checkbox"]}

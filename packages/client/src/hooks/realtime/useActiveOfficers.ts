@@ -28,12 +28,12 @@ export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
         setActiveOfficer(activeOfficer);
       }
     }
-  }, [execute, setActiveOfficers, setActiveOfficer, user?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   React.useEffect(() => {
     getActiveOfficers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getActiveOfficers]);
 
   useListener(SocketEvents.UpdateOfficerStatus, () => {
     getActiveOfficers();

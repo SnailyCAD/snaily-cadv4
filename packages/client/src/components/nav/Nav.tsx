@@ -16,7 +16,11 @@ import { useTranslations } from "next-intl";
 import { useImageUrl } from "hooks/useImageUrl";
 import Head from "next/head";
 
-export function Nav() {
+interface Props {
+  maxWidth?: string;
+}
+
+export function Nav({ maxWidth }: Props) {
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();
   const router = useRouter();
@@ -28,7 +32,7 @@ export function Nav() {
 
   return (
     <nav className="bg-white dark:bg-[#171717] shadow-sm">
-      <div className="max-w-[100rem] mx-auto px-4">
+      <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
             <h1 className="text-2xl">
