@@ -158,11 +158,12 @@ export function dataToSlate(
   }
 
   const descriptionData = data.descriptionData ?? data.bodyData;
-  if (Array.isArray(descriptionData)) {
+  const description = data.description ?? data.body;
+
+  if (Array.isArray(descriptionData) && !description) {
     return descriptionData as unknown as Descendant[];
   }
 
-  const description = data.description ?? data.body;
   if (typeof description === "string") {
     return [{ type: "paragraph", children: [{ text: description }] }] as Descendant[];
   }

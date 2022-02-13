@@ -80,11 +80,12 @@ export const DIVISION_ARR = z.array(DIVISION_SCHEMA).min(1);
 export const PENAL_CODE_SCHEMA = z.object({
   title: z.string().min(2).max(255),
   descriptionData: z.array(z.any()).optional().nullable(),
+  description: z.string().nullable().optional(),
   groupId: z.string().nullable().optional(),
   warningApplicable: z.boolean().optional(),
-  fines: z.array(z.number()).nullable().optional(),
-  bail: z.array(z.number()).nullable().optional(),
-  prisonTerm: z.array(z.number()).nullable().optional(),
+  fines: z.any().nullable().optional(),
+  bail: z.any().nullable().optional(),
+  prisonTerm: z.any().nullable().optional(),
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);

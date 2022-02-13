@@ -6,8 +6,9 @@ import { useModal } from "context/ModalContext";
 import { useDownload } from "@casper124578/useful";
 import type { TValue } from "src/pages/admin/values/[path]";
 import { Dropdown } from "components/Dropdown";
+import type { PenalCode } from "@snailycad/types";
 
-export function OptionsDropdown({ values }: { values: TValue[] }) {
+export function OptionsDropdown({ values }: { values: (TValue | PenalCode)[] }) {
   const t = useTranslations("Values");
   const { openModal } = useModal();
   const download = useDownload();

@@ -175,6 +175,7 @@ export const typeHandlers = {
       return prisma.penalCode.create({
         data: {
           title: item.title,
+          description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
           ...(await createWarningApplicable(item)),

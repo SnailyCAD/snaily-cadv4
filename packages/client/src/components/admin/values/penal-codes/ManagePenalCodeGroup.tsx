@@ -60,7 +60,7 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
 
   return (
     <Modal
-      className="w-[750px]"
+      className="w-[650px]"
       title={title}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManagePenalCodeGroup)}
