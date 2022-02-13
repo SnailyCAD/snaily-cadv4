@@ -2,9 +2,8 @@ import { Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
-
+import { Discord } from "react-bootstrap-icons";
 import useFetch from "lib/useFetch";
-
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
@@ -19,6 +18,7 @@ import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { canUseDiscordAuth } from "lib/utils";
+import { useAuth } from "context/AuthContext";
 
 const INITIAL_VALUES = {
   username: "",
@@ -32,6 +32,7 @@ export default function Login() {
   const t = useTranslations("Auth");
   const tError = useTranslations("Errors");
   const { DISCORD_AUTH } = useFeatureEnabled();
+  const { user } = useAuth();
 
   const authMessages = {
     banned: tError("userBanned"),
@@ -86,6 +87,11 @@ export default function Login() {
     window.location.href = fullUrl;
   }
 
+  function handleContinueAs() {
+    router.push("/citizen");
+  }
+
+  const showHr = (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id;
   return (
     <>
       <Title>{t("login")}</Title>
@@ -140,14 +146,23 @@ export default function Login() {
                     </Button>
                   </div>
 
-                  {DISCORD_AUTH && canUseDiscordAuth() ? (
-                    <>
-                      <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+                  {showHr ? <hr className="my-5 border-[1.5px] rounded-md border-gray-3" /> : null}
 
-                      <Button type="button" onClick={handleDiscordLogin} className="w-full">
-                        Login via Discord
-                      </Button>
-                    </>
+                  {user ? (
+                    <Button type="button" onClick={handleContinueAs} className="w-full mb-2">
+                      {t.rich("continueAs", { username: user.username })}
+                    </Button>
+                  ) : null}
+
+                  {DISCORD_AUTH && canUseDiscordAuth() ? (
+                    <Button
+                      type="button"
+                      onClick={handleDiscordLogin}
+                      className="flex items-center justify-center gap-2 w-full"
+                    >
+                      <Discord />
+                      {t("loginViaDiscord")}
+                    </Button>
                   ) : null}
                 </>
               )}
