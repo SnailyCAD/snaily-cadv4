@@ -34,11 +34,13 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const data = {
-      ...values,
+      descriptionData: values.descriptionData,
+      title: values.title,
+      warningApplicable: values.warningApplicable,
       fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
       prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
       bail: values.warningApplicable ? null : values.bail.values,
-      groupId: values.group === "ungrouped" ? null : values.group,
+      groupId: values.group === "ungrouped" || !values.group ? null : values.group,
     };
 
     if (penalCode) {

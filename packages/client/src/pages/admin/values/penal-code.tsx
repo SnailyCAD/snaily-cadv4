@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import type { PenalCode, PenalCodeGroup, ValueType } from "@snailycad/types";
+import { type PenalCode, type PenalCodeGroup, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -19,6 +19,8 @@ import { ManagePenalCodeGroup } from "components/admin/values/penal-codes/Manage
 import { AlertModal } from "components/modal/AlertModal";
 import { Title } from "components/shared/Title";
 import { hasTableDataChanged } from "./[path]";
+import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
+import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -187,6 +189,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
           <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
+          <OptionsDropdown values={values} />
         </div>
       </header>
 
@@ -354,6 +357,11 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         onDeleteClick={handleDeleteGroup}
         title={t("deleteGroup")}
         state={state}
+      />
+
+      <ImportValuesModal
+        type={ValueType.PENAL_CODE}
+        onImport={(data) => setValues((p) => [...data, ...p])}
       />
     </AdminLayout>
   );

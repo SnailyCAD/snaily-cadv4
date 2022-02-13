@@ -20,6 +20,7 @@ import {
   DEPARTMENT_ARR,
   CODES_10_ARR,
   DIVISION_ARR,
+  PENAL_CODE_ARR,
 } from "@snailycad/schemas";
 import type {
   DepartmentType,
@@ -30,6 +31,7 @@ import type {
   ValueLicenseType,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import { createWarningApplicable } from "lib/records/penal-code";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -163,6 +165,22 @@ export const typeHandlers = {
           value: createValueObj(item.value, ValueType.CODES_10),
         },
         include: { value: true },
+      });
+    });
+  },
+  PENAL_CODE: async (body: unknown) => {
+    const data = validateSchema(PENAL_CODE_ARR, body);
+
+    return handlePromiseAll(data, async (item) => {
+      return prisma.penalCode.create({
+        data: {
+          title: item.title,
+          description: item.description,
+          descriptionData: item.descriptionData ?? [],
+          groupId: item.groupId,
+          ...(await createWarningApplicable(item)),
+        },
+        include: { warningApplicable: true, warningNotApplicable: true },
       });
     });
   },

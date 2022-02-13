@@ -6,7 +6,6 @@ import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
-import { validateSchema } from "lib/validateSchema";
 import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
@@ -94,54 +93,6 @@ export class ValuesController {
   async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
 
-    if (type === "PENAL_CODE") {
-      validateSchema(CREATE_PENAL_CODE_SCHEMA, body);
-
-      let id;
-      if (body.warningApplicable) {
-        const fines = this.parsePenalCodeValues(body.fines);
-
-        const data = await prisma.warningApplicable.create({
-          data: {
-            fines,
-          },
-        });
-
-        id = data.id;
-      } else {
-        const fines = this.parsePenalCodeValues(body.fines);
-        const prisonTerm = this.parsePenalCodeValues(body.prisonTerm);
-        const bail = this.parsePenalCodeValues(body.bail);
-
-        const data = await prisma.warningNotApplicable.create({
-          data: {
-            fines,
-            prisonTerm,
-            bail,
-          },
-        });
-
-        id = data.id;
-      }
-
-      const key = body.warningApplicable ? "warningApplicableId" : "warningNotApplicableId";
-      const code = await prisma.penalCode.create({
-        data: {
-          title: body.title,
-          description: body.description,
-          descriptionData: body.descriptionData,
-          groupId: body.groupId || null,
-          [key]: id,
-        },
-        include: {
-          warningApplicable: true,
-          warningNotApplicable: true,
-        },
-      });
-
-      return code;
-    }
-
     if (type === "DEPARTMENT") {
       if (body.isDefaultDepartment) {
         const existing = await prisma.departmentValue.findFirst({
@@ -158,7 +109,7 @@ export class ValuesController {
 
     const handler = typeHandlers[type];
     const arr = await handler([body]);
-    const [value] = Array.isArray(arr) ? arr : arr.success;
+    const [value] = arr.success;
 
     return value;
   }
