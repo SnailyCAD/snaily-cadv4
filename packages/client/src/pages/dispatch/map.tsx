@@ -11,6 +11,7 @@ import type { GetServerSideProps } from "next";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
+import { Title } from "components/shared/Title";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -59,13 +60,10 @@ export default function MapPage(props: any) {
           integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
           crossOrigin=""
         />
-        <title>Map / Dispatch - SnailyCAD</title>
-        {/* disabled since I can't use css modules for this & I don't want to load unneeded css via _app.tsx */}
-        {/* eslint-disable-next-line @next/next/no-css-tags */}
-        {/* <link rel="stylesheet" href="/css/map.css" /> */}
       </Head>
+      <Title>Dispatch Live Map</Title>
 
-      <Layout className="relative px-1 pb-1 mt-1">
+      <Layout navMaxWidth="none" className="relative px-1 pb-1 mt-1 !max-w-none">
         <Map
           cad={cad}
           update911Call={update911Call}

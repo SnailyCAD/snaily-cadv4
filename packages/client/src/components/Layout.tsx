@@ -5,14 +5,15 @@ interface Props {
   children: React.ReactNode;
   className?: string;
   hideAlerts?: boolean;
+  navMaxWidth?: string;
 }
 
-export function Layout({ hideAlerts, children, className = "" }: Props) {
+export function Layout({ hideAlerts, navMaxWidth, children, className = "" }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
 
   return (
     <>
-      <Nav />
+      <Nav maxWidth={navMaxWidth} />
 
       <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
         {roleplayStopped && !hideAlerts ? <Component /> : null}

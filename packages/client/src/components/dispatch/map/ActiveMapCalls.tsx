@@ -11,6 +11,8 @@ import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
+import { CaretDownFill } from "react-bootstrap-icons";
+import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 
 interface Props {
   hasMarker(callId: string): boolean;
@@ -44,7 +46,8 @@ export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
-            return call;
+            setTempCall({ ...v, ...call });
+            return { ...v, ...call };
           }
 
           return v;
@@ -76,6 +79,10 @@ export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
       )}
 
       <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
+      <DescriptionModal
+        onClose={() => setTempCall(null)}
+        value={tempCall?.descriptionData ?? undefined}
+      />
     </div>
   );
 }
@@ -100,6 +107,11 @@ function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
     setTempCall(call);
   }
 
+  function handleViewDescription(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.Description, call);
+  }
+
   const assignedUnits = React.useMemo(() => {
     return call.assignedUnits.map((c, i) => {
       const comma = i !== call.assignedUnits.length - 1 ? ", " : " ";
@@ -122,16 +134,11 @@ function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
                 {call.location} / {call.name}
               </p>
 
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
+              <CaretDownFill
+                width={16}
+                height={16}
                 className={`${open ? "transform rotate-180" : ""} w-5 h-5 transition-transform`}
-                viewBox="0 0 16 16"
-              >
-                <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-              </svg>
+              />
             </Disclosure.Button>
             <Disclosure.Panel className="pt-2 text-base text-neutral-800 dark:text-white">
               <div className="map-column">
@@ -139,7 +146,14 @@ function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
                   <Span>{common("name")}:</Span> {call.name}
                 </p>
                 <p className="max-h-52 overflow-y-auto" id="description">
-                  <Span>{common("description")}:</Span> {call.description}
+                  <Span>{common("description")}:</Span>
+                  {call.description && !call.descriptionData ? (
+                    call.description
+                  ) : (
+                    <Button className="ml-2" small onClick={() => handleViewDescription(call)}>
+                      {common("viewDescription")}
+                    </Button>
+                  )}
                 </p>
                 <p id="location">
                   <Span>{t("location")}:</Span> {call.location}

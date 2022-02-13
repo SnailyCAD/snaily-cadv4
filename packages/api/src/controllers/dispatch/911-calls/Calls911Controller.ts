@@ -134,6 +134,7 @@ export class Calls911Controller {
     });
 
     const positionData = data.position ?? null;
+    const shouldRemovePosition = data.position === null;
 
     const position = positionData
       ? await prisma.position.upsert({
@@ -161,7 +162,7 @@ export class Calls911Controller {
         description: data.description,
         name: data.name,
         userId: ctx.get("user").id,
-        positionId: position?.id ?? call.positionId,
+        positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
         descriptionData: data.descriptionData,
       },
     });

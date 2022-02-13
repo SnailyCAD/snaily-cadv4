@@ -25,6 +25,10 @@ export function DescriptionModal(props: Props) {
     closeModal(ModalIds.Description);
   }
 
+  React.useEffect(() => {
+    setValue(props.value ?? DEFAULT_EDITOR_DATA);
+  }, [props.value]);
+
   return (
     <Modal
       className="min-w-[600px]"

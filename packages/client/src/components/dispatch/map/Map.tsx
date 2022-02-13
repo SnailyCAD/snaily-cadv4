@@ -637,7 +637,6 @@ class MapClass extends React.Component<Props, MapState> {
 
   componentDidMount() {
     this.handleMapSocket();
-    // this.handleCADSocket();
     this.initMap();
 
     this.handleCalls();
@@ -649,8 +648,15 @@ class MapClass extends React.Component<Props, MapState> {
     });
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState: MapState) {
     let hasChanged = false;
+    const prevMap = prevState.map;
+    const newMap = this.state.map;
+
+    if (prevMap === null && newMap) {
+      this.handleCalls();
+      this.initBlips();
+    }
 
     for (let i = 0; i < prevProps.calls.length; i++) {
       const a = prevProps.calls[i];
