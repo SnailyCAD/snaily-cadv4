@@ -47,6 +47,7 @@ export interface MiscCadSettings {
   maxPlateLength: number;
   maxBusinessesPerCitizen: number | null;
   maxDivisionsPerOfficer: number | null;
+  maxDepartmentsEachPerUser: number | null;
   callsignTemplate: string;
   pairedUnitSymbol: string;
   signal100Enabled: boolean;

@@ -42,20 +42,22 @@ model cad {
 model MiscCadSettings {
   id String @id @default(cuid())
 
-  heightPrefix            String   @default("cm") @db.VarChar(255)
-  weightPrefix            String   @default("kg") @db.VarChar(255)
-  maxCitizensPerUser      Int?
-  maxOfficersPerUser      Int?
-  maxPlateLength          Int      @default(8)
-  maxBusinessesPerCitizen Int?
-  maxDivisionsPerOfficer  Int?
-  callsignTemplate        String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
-  pairedUnitSymbol        String   @default("A") @db.VarChar(255)
-  signal100Enabled        Boolean  @default(false)
-  liveMapURL              String?  @db.Text
-  roleplayEnabled         Boolean? @default(true)
-  authScreenBgImageId     String?
-  authScreenHeaderImageId String?
+  heightPrefix              String   @default("cm") @db.VarChar(255)
+  weightPrefix              String   @default("kg") @db.VarChar(255)
+  maxCitizensPerUser        Int?
+  maxOfficersPerUser        Int?
+  maxPlateLength            Int      @default(8)
+  maxBusinessesPerCitizen   Int?
+  maxDivisionsPerOfficer    Int?
+  // max units a user can create with a department
+  maxDepartmentsEachPerUser Int?
+  callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  pairedUnitSymbol          String   @default("A") @db.VarChar(255)
+  signal100Enabled          Boolean  @default(false)
+  liveMapURL                String?  @db.Text
+  roleplayEnabled           Boolean? @default(true)
+  authScreenBgImageId       String?
+  authScreenHeaderImageId   String?
 
 
   cad cad[]

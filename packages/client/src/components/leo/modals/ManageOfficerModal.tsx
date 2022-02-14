@@ -67,7 +67,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
         data,
       });
 
-      officerId = officer.id;
+      officerId = json?.id;
 
       if (json.id) {
         onUpdate?.(officer, json);

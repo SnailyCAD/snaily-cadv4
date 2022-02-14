@@ -85,6 +85,17 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
+    const departmentCount = await prisma.officer.count({
+      where: { userId: user.id, departmentId: data.department },
+    });
+
+    if (
+      cad.miscCadSettings.maxDepartmentsEachPerUser &&
+      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
+    ) {
+      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
+    }
+
     const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       null,
@@ -130,6 +141,17 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
+
+    const departmentCount = await prisma.officer.count({
+      where: { userId: user.id, departmentId: data.department, NOT: { id: officer.id } },
+    });
+
+    if (
+      cad.miscCadSettings.maxDepartmentsEachPerUser &&
+      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
+    ) {
+      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
+    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {
