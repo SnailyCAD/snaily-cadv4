@@ -91,6 +91,7 @@ export function MiscFeatures() {
     maxCitizensPerUser: miscSettings.maxCitizensPerUser ?? Infinity,
     maxPlateLength: miscSettings.maxPlateLength,
     maxDivisionsPerOfficer: miscSettings.maxDivisionsPerOfficer ?? Infinity,
+    maxDepartmentsEachPerUser: miscSettings.maxDepartmentsEachPerUser ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
     pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
     callsignTemplate: miscSettings.callsignTemplate ?? "",
@@ -152,6 +153,18 @@ export function MiscFeatures() {
             </FormRow>
 
             <FormRow>
+              <FormField
+                errorMessage={errors.maxDepartmentsEachPerUser}
+                label="Max amount of units a user can create with a certain department"
+              >
+                <Input
+                  name="maxDepartmentsEachPerUser"
+                  type="number"
+                  value={values.maxDepartmentsEachPerUser}
+                  onChange={handleChange}
+                />
+              </FormField>
+
               <FormField
                 errorMessage={errors.maxDivisionsPerOfficer}
                 label="Max divisions per officer"

@@ -5,7 +5,7 @@ import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { ShouldDoType, User } from ".prisma/client";
+import { type MiscCadSettings, ShouldDoType, type User } from ".prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
@@ -39,7 +39,11 @@ export class EmsFdController {
   }
 
   @Post("/")
-  async createEmsFdDeputy(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createEmsFdDeputy(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+  ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
     const division = await prisma.divisionValue.findFirst({
@@ -51,6 +55,17 @@ export class EmsFdController {
 
     if (!division) {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+    }
+
+    const departmentCount = await prisma.emsFdDeputy.count({
+      where: { userId: user.id, departmentId: data.department },
+    });
+
+    if (
+      cad.miscCadSettings.maxDepartmentsEachPerUser &&
+      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
+    ) {
+      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
     }
 
     const citizen = await prisma.citizen.findFirst({
@@ -86,6 +101,7 @@ export class EmsFdController {
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
@@ -109,6 +125,17 @@ export class EmsFdController {
 
     if (!division) {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
+    }
+
+    const departmentCount = await prisma.emsFdDeputy.count({
+      where: { userId: user.id, departmentId: data.department, NOT: { id: deputy.id } },
+    });
+
+    if (
+      cad.miscCadSettings.maxDepartmentsEachPerUser &&
+      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
+    ) {
+      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
     }
 
     const citizen = await prisma.citizen.findFirst({
