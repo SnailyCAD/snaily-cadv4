@@ -76,7 +76,8 @@ export default function Login() {
         });
       }
 
-      router.push("/citizen");
+      const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
+      router.push(from);
     }
   }
 

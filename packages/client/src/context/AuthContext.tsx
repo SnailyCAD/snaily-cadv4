@@ -49,7 +49,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
     getSessionUser()
       .then((u) => {
         if (!u && !NO_LOADING_ROUTES.includes(router.pathname)) {
-          router.push("/auth/login");
+          const from = router.asPath;
+          router.push(`/auth/login?from=${from}`);
         }
 
         setUser(u);
