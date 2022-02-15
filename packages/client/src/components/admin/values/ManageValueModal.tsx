@@ -23,6 +23,7 @@ import {
   ShouldDoType,
   ValueLicenseType,
   ValueType,
+  WhatPages,
 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
@@ -32,6 +33,7 @@ import dynamic from "next/dynamic";
 import { Eyedropper } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { Toggle } from "components/form/Toggle";
+import { makeDefaultWhatPages } from "lib/admin/values";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -66,6 +68,12 @@ export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
   [ShouldDoType.PANIC_BUTTON]: "Panic Button",
 };
 
+export const WHAT_PAGES_LABELS: Record<WhatPages, string> = {
+  [WhatPages.LEO]: "LEO",
+  [WhatPages.EMS_FD]: "EMS/FD",
+  [WhatPages.DISPATCH]: "Dispatch",
+};
+
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
   [DepartmentType.EMS_FD]: "EMS/FD",
@@ -78,6 +86,11 @@ export const LICENSE_LABELS = {
 
 const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
   label: SHOULD_DO_LABELS[v],
+  value: v,
+}));
+
+const WHAT_PAGES_VALUES = Object.values(WhatPages).map((v) => ({
+  label: WHAT_PAGES_LABELS[v],
   value: v,
 }));
 
@@ -114,10 +127,16 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    const data = {
+      ...values,
+      type: dlType ? dlType : values.type,
+      whatPages: values.whatPages.map((v: any) => v.value),
+    };
+
     if (value) {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${value.id}`, {
         method: "PATCH",
-        data: { ...values, type: dlType ? dlType : values.type },
+        data,
         helpers,
       });
 
@@ -128,7 +147,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     } else {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}`, {
         method: "POST",
-        data: { ...values, type: dlType ? dlType : values.type },
+        data,
         helpers,
       });
 
@@ -164,6 +183,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     whitelisted: value?.whitelisted ?? false,
     // @ts-expect-error shortcut
     isDefaultDepartment: value?.isDefaultDepartment ?? false,
+    // @ts-expect-error shortcut
+    whatPages: makeDefaultWhatPages(value).map((v) => ({
+      label: WHAT_PAGES_LABELS[v],
+      value: v,
+    })),
     showPicker: false,
   };
 
@@ -325,6 +349,16 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                     name="shouldDo"
                     onChange={handleChange}
                     value={values.shouldDo}
+                  />
+                </FormField>
+
+                <FormField errorMessage={errors.whatPages as string} label="What Pages">
+                  <Select
+                    values={WHAT_PAGES_VALUES}
+                    name="whatPages"
+                    onChange={handleChange}
+                    value={values.whatPages}
+                    isMulti
                   />
                 </FormField>
 

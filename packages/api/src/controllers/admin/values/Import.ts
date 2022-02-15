@@ -1,4 +1,3 @@
-import { ValueType } from ".prisma/client";
 import {
   Controller,
   PathParams,
@@ -22,13 +21,15 @@ import {
   DIVISION_ARR,
   PENAL_CODE_ARR,
 } from "@snailycad/schemas";
-import type {
-  DepartmentType,
-  DriversLicenseCategoryType,
-  EmployeeAsEnum,
-  ShouldDoType,
-  StatusValueType,
-  ValueLicenseType,
+import {
+  type DepartmentType,
+  type DriversLicenseCategoryType,
+  type EmployeeAsEnum,
+  type ShouldDoType,
+  type StatusValueType,
+  type ValueLicenseType,
+  WhatPages,
+  ValueType,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { createWarningApplicable } from "lib/records/penal-code";
@@ -155,13 +156,17 @@ export const typeHandlers = {
   },
   CODES_10: async (body: unknown) => {
     const data = validateSchema(CODES_10_ARR, body);
+    const DEFAULT_WHAT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
     return handlePromiseAll(data, async (item) => {
+      const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
+
       return prisma.statusValue.create({
         data: {
           type: item.type as StatusValueType,
           color: item.color,
           shouldDo: item.shouldDo as ShouldDoType,
+          whatPages: whatPages as WhatPages[],
           value: createValueObj(item.value, ValueType.CODES_10),
         },
         include: { value: true },
