@@ -55,18 +55,16 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     [props.columns, tableActionsAlignment],
   );
 
+  const initialState = data.length >= MAX_ITEMS_PER_PAGE ? { pageIndex: state?.pageIndex } : {};
   const instance = useTable<TableData<T, RowProps>>(
     {
       autoResetSortBy: false,
       columns,
       data,
-      initialState:
-        data.length >= MAX_ITEMS_PER_PAGE
-          ? {
-              pageSize: MAX_ITEMS_PER_PAGE,
-              pageIndex: state?.pageIndex,
-            }
-          : undefined,
+      initialState: {
+        pageSize: MAX_ITEMS_PER_PAGE,
+        ...initialState,
+      },
     },
     useGlobalFilter,
     useSortBy,
