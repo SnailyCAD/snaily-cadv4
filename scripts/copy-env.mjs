@@ -7,8 +7,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
   let dir = join(process.cwd(), "package.json");
-
-  if (!dir.includes("/packages/client")) {
+  const isWin = process.platform === "win32";
+  
+  if (!isWin && !dir.includes("/packages/client")) {
     dir = join(process.cwd(), "packages/client", "package.json");
   }
 
