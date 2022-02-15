@@ -10,12 +10,17 @@ export function validateSchema<Extra extends object, Schema extends z.ZodType<an
 
   try {
     data = schema.parse(values);
-  } catch (e) {
-    const zodError = e instanceof z.ZodError ? e : null;
+  } catch (error) {
+    const zodError = error instanceof z.ZodError ? error : null;
+
     if (zodError) {
-      for (const error of zodError.errors) {
-        const [path] = error.path;
-        errors[path as string] = error.message;
+      const { fieldErrors } = zodError.flatten();
+
+      for (const fieldError in fieldErrors) {
+        const [errorMessage] = fieldErrors[fieldError] ?? [];
+        if (errorMessage) {
+          errors[fieldError] = errorMessage;
+        }
       }
     }
   }

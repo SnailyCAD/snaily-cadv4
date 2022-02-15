@@ -1364,6 +1364,7 @@ __metadata:
     type-fest: ^2.11.2
     typescript: ^4.5.5
     uuid: ^8.3.2
+    zod: ^3.11.6
     zustand: ^3.7.0
   languageName: unknown
   linkType: soft

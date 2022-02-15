@@ -1,18 +1,29 @@
-export const handleValidate =
-  <Values = any>(schema: any) =>
-  (values: Values) => {
+import { z } from "zod";
+
+type ZodSchema = z.ZodType<any, any, any>;
+type Errors<Schema extends ZodSchema> = keyof z.infer<Schema>;
+
+export function handleValidate<Schema extends ZodSchema, Values = any>(schema: Schema) {
+  return function handleValidateInner(values: Values) {
     const errors: Record<string, string> = {};
 
     try {
       schema.parse(values);
-    } catch (e: any) {
-      const errs = e?.issues ?? [];
+    } catch (error) {
+      const zodError = error instanceof z.ZodError ? error : null;
 
-      for (const error of errs) {
-        const [path] = error.path;
-        errors[path as string] = error.message;
+      if (zodError) {
+        const { fieldErrors } = zodError.flatten();
+
+        for (const fieldError in fieldErrors) {
+          const [errorMessage] = fieldErrors[fieldError] ?? [];
+          if (errorMessage) {
+            errors[fieldError] = errorMessage;
+          }
+        }
       }
     }
 
-    return errors;
+    return errors as Record<Errors<Schema>, string | undefined>;
   };
+}

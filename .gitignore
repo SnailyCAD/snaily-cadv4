@@ -20,7 +20,7 @@ packages/api/public/**/*.jpeg
 !.yarn/versions
 
 .vscode/settings.json
-.tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
 
 packages/client/public/favicon.png
 

@@ -91,7 +91,7 @@ const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
   value: v,
 }));
 
-const SCHEMAS: Partial<Record<ValueType, any>> = {
+const EXTRA_SCHEMAS: Partial<Record<ValueType, any>> = {
   CODES_10: CODES_10_SCHEMA,
   DEPARTMENT: DEPARTMENT_SCHEMA,
   DIVISION: DIVISION_SCHEMA,
@@ -168,7 +168,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
-    const schemaToUse = SCHEMAS[type] ?? VALUE_SCHEMA;
+    const schemaToUse = EXTRA_SCHEMAS[type] ?? VALUE_SCHEMA;
     const errors = handleValidate(schemaToUse)(values);
 
     if (values.color && !hexColor().test(values.color)) {
@@ -319,7 +319,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
             {type === "CODES_10" ? (
               <>
-                <FormField label="Should Do">
+                <FormField errorMessage={errors.shouldDo} label="Should Do">
                   <Select
                     values={SHOULD_DO_VALUES}
                     name="shouldDo"

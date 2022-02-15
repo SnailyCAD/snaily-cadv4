@@ -75,6 +75,7 @@ export default function CadSettings() {
     const { json } = await execute("/admin/manage/cad-settings", {
       method: "PUT",
       data: values,
+      helpers,
     });
 
     if (json?.id) {
@@ -84,6 +85,7 @@ export default function CadSettings() {
         } = await execute("/admin/manage/cad-settings/image", {
           method: "POST",
           data: fd,
+          helpers,
         });
 
         json.logoId = logoId;
