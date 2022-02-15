@@ -5,6 +5,7 @@ import J from "jquery";
 import "leaflet.markercluster";
 import { v4 as uuid } from "uuid";
 import type { Socket } from "socket.io-client";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import {
   Player,
@@ -129,6 +130,7 @@ class MapClass extends React.Component<Props, MapState> {
   initMap() {
     if (this.state.ran) return;
     if (typeof window === "undefined") return;
+    return;
 
     this.setState({
       ran: true,
@@ -415,25 +417,25 @@ class MapClass extends React.Component<Props, MapState> {
         delete blip.z;
       }
 
-      const obj: MarkerPayload = {
-        title: blip.name,
-        pos: blip.pos,
-        description: blip.description,
-        icon: this.state.MarkerTypes[blip.type] ?? null,
-        id: uuid(),
-        isBlip: true,
-      };
+      // const obj: MarkerPayload = {
+      //   title: blip.name,
+      //   pos: blip.pos,
+      //   description: blip.description,
+      //   icon: this.state.MarkerTypes[blip.type] ?? null,
+      //   id: uuid(),
+      //   isBlip: true,
+      // };
 
-      if (!this.state.blips[blip.type]) {
-        this.setState((prev) => {
-          prev.blips[blip.type] = [];
+      // if (!this.state.blips[blip.type]) {
+      //   this.setState((prev) => {
+      //     prev.blips[blip.type] = [];
 
-          return prev;
-        });
-      }
+      //     return prev;
+      //   });
+      // }
 
-      const marker = this.createMarker(false, obj, blip.name);
-      if (!marker) return;
+      // const marker = this.createMarker(false, obj, blip.name);
+      // if (!marker) return;
 
       this.setState((prev) => {
         prev.blips[blip.type]?.push(blip);
@@ -636,10 +638,10 @@ class MapClass extends React.Component<Props, MapState> {
   }
 
   componentDidMount() {
-    this.handleMapSocket();
-    this.initMap();
+    // this.handleMapSocket();
+    // this.initMap();
 
-    this.handleCalls();
+    // this.handleCalls();
     this.initBlips();
 
     // ? REMOVE_911_CALL_FROM_MAP
@@ -648,29 +650,29 @@ class MapClass extends React.Component<Props, MapState> {
     });
   }
 
-  componentDidUpdate(prevProps: Props, prevState: MapState) {
-    let hasChanged = false;
-    const prevMap = prevState.map;
-    const newMap = this.state.map;
+  // componentDidUpdate(prevProps: Props, prevState: MapState) {
+  //   let hasChanged = false;
+  //   const prevMap = prevState.map;
+  //   const newMap = this.state.map;
 
-    if (prevMap === null && newMap) {
-      this.handleCalls();
-      this.initBlips();
-    }
+  //   if (prevMap === null && newMap) {
+  //     this.handleCalls();
+  //     this.initBlips();
+  //   }
 
-    for (let i = 0; i < prevProps.calls.length; i++) {
-      const a = prevProps.calls[i];
-      const b = this.props.calls[i];
+  //   for (let i = 0; i < prevProps.calls.length; i++) {
+  //     const a = prevProps.calls[i];
+  //     const b = this.props.calls[i];
 
-      if (a?.updatedAt !== b?.updatedAt) {
-        hasChanged = true;
-      }
-    }
+  //     if (a?.updatedAt !== b?.updatedAt) {
+  //       hasChanged = true;
+  //     }
+  //   }
 
-    if (hasChanged && this.props.calls.length && this.state.map) {
-      this.handleCalls();
-    }
-  }
+  //   if (hasChanged && this.props.calls.length && this.state.map) {
+  //     this.handleCalls();
+  //   }
+  // }
 
   componentWillUnmount() {
     this.state.map?.remove();
@@ -689,10 +691,59 @@ class MapClass extends React.Component<Props, MapState> {
 
   render() {
     if (typeof window === "undefined") return null;
+    const bounds = this.state.map ? getMapBounds(this.state.map) : undefined;
+    const blips = [...this.state.blips].flat(1);
 
     return (
       <>
-        <div id="map" style={{ zIndex: 1, height: "calc(100vh - 4rem)", width: "100%" }} />
+        <MapContainer
+          style={{ zIndex: 1, height: "calc(100vh - 4rem)", width: "100%" }}
+          crs={L.CRS.Simple}
+          center={[0, 0]}
+          scrollWheelZoom
+          zoom={0}
+          maxBounds={bounds?.pad(1)}
+          bounds={bounds}
+          whenCreated={(map) => this.setState({ map })}
+        >
+          <TileLayer
+            minZoom={-2}
+            maxZoom={2}
+            url={TILES_URL}
+            tileSize={1024}
+            maxNativeZoom={0}
+            minNativeZoom={0}
+          />
+
+          {blips.map((blip, idx) => {
+            if (!this.state.map || !blip) return null;
+            const coords = stringCoordToFloat(blip.pos);
+            const converted = convertToMap(coords.x, coords.y, this.state.map);
+
+            if ([2, 0, 10, 300].includes(idx)) {
+              console.log({ idx, icon: blip.icon });
+            }
+
+            return (
+              <Marker
+                // icon={blip.icon?.iconUrl ? L.icon(blip.icon) : undefined}
+                draggable={false}
+                key={`${blip.name}-${idx}`}
+                position={converted}
+              >
+                <Popup>
+                  <div style={{ minWidth: 50 }}>
+                    <div className="flex flex-col">
+                      <p style={{ margin: 0 }} className="text-base">
+                        <strong>Name: </strong> {blip.name}
+                      </p>
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
 
         <div className="absolute z-50 flex gap-2 left-4 bottom-4">
           <Button
