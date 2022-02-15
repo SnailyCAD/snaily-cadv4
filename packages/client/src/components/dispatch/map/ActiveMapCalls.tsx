@@ -58,7 +58,10 @@ export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
   );
 
   return (
-    <div className="absolute z-20 p-3 bg-gray-300 rounded-md shadow top-6 left-4 dark:bg-dark-bg dark:text-white w-80">
+    <div
+      id="map-calls"
+      className="absolute z-[99999] p-3 bg-gray-300 rounded-md shadow top-6 left-4 dark:bg-dark-bg dark:text-white w-80"
+    >
       <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
       {calls.length <= 0 ? (
         <p>{t("no911Calls")}</p>

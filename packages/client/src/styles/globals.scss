@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 html,
-body {
+body,
+#map-calls {
   font-family: "Assistant", sans-serif;
 }
 
@@ -45,10 +46,10 @@ th {
   @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none;
 
   &:first-child {
-    @apply rounded-tl-md ;
+    @apply rounded-tl-md;
   }
   &:last-child {
-    @apply rounded-tr-md ;
+    @apply rounded-tr-md;
   }
 }
 

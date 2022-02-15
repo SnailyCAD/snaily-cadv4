@@ -1,11 +1,22 @@
+import * as React from "react";
 import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup, useMap } from "react-leaflet";
 import { Full911Call, useDispatchState } from "state/dispatchState";
+import { ActiveMapCalls } from "./ActiveMapCalls";
+import { convertToMap } from "lib/map/utils";
+import { Button } from "components/Button";
+import { useTranslations } from "next-intl";
 
 export function RenderActiveCalls() {
-  const { calls, setCalls } = useDispatchState();
+  const map = useMap();
   const { execute } = useFetch();
+  const { calls, setCalls } = useDispatchState();
+  const common = useTranslations("Common");
+
+  const callsWithPosition = React.useMemo(() => {
+    return calls.filter((v) => v.position?.lat && v.position.lng);
+  }, [calls]);
 
   function handleCallUpdate(callId: string, data: Full911Call) {
     const prevIdx = calls.findIndex((v) => v.id === callId);
@@ -32,9 +43,8 @@ export function RenderActiveCalls() {
 
   return (
     <>
-      {calls.map((call) => {
-        if (!call.position) return;
-        if (!call.position.lng || !call.position.lat) return;
+      {callsWithPosition.map((call) => {
+        const position = call.position as { lat: number; lng: number };
 
         return (
           <Marker
@@ -43,19 +53,27 @@ export function RenderActiveCalls() {
             }}
             draggable
             key={call.id}
-            position={{ lat: call.position.lat, lng: call.position.lng }}
+            position={position}
           >
             <Popup>
-              <div style={{ minWidth: 250 }}>
+              <div style={{ minWidth: 300 }}>
                 <div className="d-flex flex-column">
-                  <p style={{ margin: 2, fontSize: 16 }}>
-                    <strong>Location: </strong> ${call.location}
+                  <p style={{ margin: 2, fontSize: 18 }}>
+                    <strong>Location: </strong> {call.location}
                   </p>
-                  <p style={{ margin: 2, fontSize: 16 }}>
-                    <strong>Caller: </strong> ${call.name}
+                  <p style={{ margin: 2, fontSize: 18 }}>
+                    <strong>Caller: </strong> {call.name}
                   </p>
-                  <p style={{ margin: 2, fontSize: 16 }}>
-                    <strong>Description: </strong> ${call.description}
+                  <p style={{ margin: 2, fontSize: 18 }}>
+                    <strong>{common("description")}: </strong>
+                    {call.description && !call.descriptionData ? (
+                      call.description
+                    ) : (
+                      // todo: onClick={() => handleViewDescription(call)}
+                      <Button className="ml-2" small>
+                        {common("viewDescription")}
+                      </Button>
+                    )}
                   </p>
                 </div>
               </div>
@@ -63,6 +81,33 @@ export function RenderActiveCalls() {
           </Marker>
         );
       })}
+
+      {/* <ActiveMapUnits /> */}
+      <ActiveMapCalls
+        hasMarker={(callId: string) => {
+          return callsWithPosition.some((v) => v.id === callId);
+        }}
+        setMarker={(call: Full911Call, type: "remove" | "set") => {
+          // const marker = this.state.MarkerStore.some((m) => m.payload.call?.id === call.id);
+          const marker = callsWithPosition.some((v) => v.id === call.id);
+
+          // if (type === "set") {
+          //   this.handleCalls();
+          // }
+
+          // if (marker && type === "remove") {
+          //   this.remove911Call(call.id);
+          // }
+
+          const coords = convertToMap(0, 0, map);
+
+          // todo
+          // this.props.update911Call({
+          //   ...call,
+          //   position: type === "remove" ? null : { id: "", ...coords },
+          // });
+        }}
+      />
     </>
   );
 }
