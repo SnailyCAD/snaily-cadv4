@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import type { Call911 } from "@snailycad/types";
@@ -13,6 +14,7 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { CaretDownFill } from "react-bootstrap-icons";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
+import { usePortal } from "@casper124578/useful";
 
 interface Props {
   hasMarker(callId: string): boolean;
@@ -23,6 +25,7 @@ export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const t = useTranslations("Calls");
   const { calls, setCalls } = useDispatchState();
+  const portalRef = usePortal("ActiveMapCalls");
 
   useListener(
     SocketEvents.Create911Call,
@@ -58,35 +61,39 @@ export function ActiveMapCalls({ hasMarker, setMarker }: Props) {
   );
 
   return (
-    <div
-      id="map-calls"
-      className="absolute z-[99999] p-3 bg-gray-300 rounded-md shadow top-6 left-4 dark:bg-dark-bg dark:text-white w-80"
-    >
-      <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
-      {calls.length <= 0 ? (
-        <p>{t("no911Calls")}</p>
-      ) : (
-        <>
-          {calls.map((call) => {
-            return (
-              <CallItem
-                setTempCall={setTempCall}
-                hasMarker={hasMarker}
-                setMarker={setMarker}
-                key={call.id}
-                call={call}
-              />
-            );
-          })}
-        </>
-      )}
+    portalRef &&
+    createPortal(
+      <div
+        id="map-calls"
+        className="pointer-events-all absolute z-50 p-3 bg-gray-300 rounded-md shadow top-20 left-4 dark:bg-dark-bg dark:text-white w-80"
+      >
+        <h1 className="text-xl font-semibold">{t("active911Calls")}</h1>
+        {calls.length <= 0 ? (
+          <p>{t("no911Calls")}</p>
+        ) : (
+          <>
+            {calls.map((call) => {
+              return (
+                <CallItem
+                  setTempCall={setTempCall}
+                  hasMarker={hasMarker}
+                  setMarker={setMarker}
+                  key={call.id}
+                  call={call}
+                />
+              );
+            })}
+          </>
+        )}
 
-      <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
-      <DescriptionModal
-        onClose={() => setTempCall(null)}
-        value={tempCall?.descriptionData ?? undefined}
-      />
-    </div>
+        <Manage911CallModal onClose={() => setTempCall(null)} call={tempCall} />
+        <DescriptionModal
+          onClose={() => setTempCall(null)}
+          value={tempCall?.descriptionData ?? undefined}
+        />
+      </div>,
+      portalRef,
+    )
   );
 }
 
