@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType, StatusValue } from "@snailycad/types";
+import { ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 
 interface Props {
   activeUnit: ActiveOfficer | ActiveDeputy | null;
@@ -24,6 +24,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
   const isEmsFd = router.pathname.includes("/ems-fd");
   const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
   const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
+  const whatPagesType = isEmsFd ? WhatPages.EMS_FD : WhatPages.LEO;
 
   async function getActiveUnit() {
     const path = isEmsFd ? "/ems-fd/active-deputy" : "/leo/active-officer";
@@ -67,10 +68,11 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
     activeUnit.status === null ||
     activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
-  const onDutyCode = codes10.values.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
+  const filteredCodes = codes10.values.filter((v) => handleWhatPagesFilter(v, whatPagesType));
+  const onDutyCode = filteredCodes.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
   const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeUnit?.status?.id;
 
-  if (!onDutyCode && codes10.values.length <= 0) {
+  if (!onDutyCode && filteredCodes.length <= 0) {
     return (
       <div className="text-lg mt-2 px-4 py-3 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
         This CAD does not have any 10 codes. Please ask an admin to add some.
@@ -90,7 +92,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
         </Button>
       </li>
 
-      {codes10.values
+      {filteredCodes
         .filter((v) => v.shouldDo !== ShouldDoType.SET_ON_DUTY && v.type === "STATUS_CODE")
         .sort((a, b) => Number(a.value.position) - Number(b.value.position))
         .map((code) => {
@@ -113,4 +115,9 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
         })}
     </ul>
   );
+}
+
+function handleWhatPagesFilter(status: StatusValue, whatPagesType: WhatPages) {
+  if (status.whatPages.length <= 0) return true;
+  return status.whatPages.includes(whatPagesType);
 }

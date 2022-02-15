@@ -2,6 +2,7 @@ import {
   DEPARTMENT_LABELS,
   LICENSE_LABELS,
   SHOULD_DO_LABELS,
+  WHAT_PAGES_LABELS,
 } from "components/admin/values/ManageValueModal";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
@@ -10,16 +11,24 @@ import {
   type StatusValue,
   StatusValueType,
   type ValueType,
-  DepartmentValue,
-  DivisionValue,
-  VehicleValue,
-  Value,
+  type DepartmentValue,
+  type DivisionValue,
+  type VehicleValue,
+  type Value,
+  WhatPages,
 } from "@snailycad/types";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
   [StatusValueType.STATUS_CODE]: "Status Code",
 };
+
+const DEFAULT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
+
+export function makeDefaultWhatPages(status: StatusValue | null) {
+  if (!status) return [];
+  return status.whatPages.length <= 0 ? DEFAULT_PAGES : status.whatPages;
+}
 
 export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
@@ -32,9 +41,12 @@ export function useTableDataOfType(type: ValueType) {
     switch (type) {
       case "CODES_10": {
         const v = value as StatusValue;
+        const whatPages = makeDefaultWhatPages(v);
+
         return {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
+          whatPages: whatPages.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
           color: v.color ? (
             <>
               <span
@@ -99,6 +111,7 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: t("shouldDo"), accessor: "shouldDo" },
         { Header: common("type"), accessor: "type" },
+        { Header: t("whatPages"), accessor: "whatPages" },
         { Header: t("color"), accessor: "color" },
       ];
     }

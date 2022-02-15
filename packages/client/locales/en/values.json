@@ -15,6 +15,7 @@
     "ungrouped": "Ungrouped",
     "licenseType": "License Type",
     "whitelisted": "Whitelisted",
+    "whatPages": "What Pages",
     "isDefaultDepartment": "Default Department",
     "deleteSelectedValues": "Delete Selected Values",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
