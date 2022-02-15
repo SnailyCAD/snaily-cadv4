@@ -3,6 +3,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./RenderMapBlips";
+import { RenderActiveCalls } from "./RenderActiveCalls";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
 
@@ -23,7 +24,6 @@ export function Map() {
       center={[0, 0]}
       scrollWheelZoom
       zoom={0}
-      maxBounds={bounds?.pad(1)}
       bounds={bounds}
       whenCreated={setMap}
       zoomControl={false}
@@ -38,6 +38,7 @@ export function Map() {
       />
 
       <RenderMapBlips />
+      <RenderActiveCalls />
     </MapContainer>
   );
 }
