@@ -4,11 +4,28 @@ import J from "jquery";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap, stringCoordToFloat } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
-import { BLIP_SIZES } from "types/Map";
+import { BLIP_SIZES, LatLng } from "types/Map";
+
+interface Blip {
+  name: string;
+  description: string;
+  pos: LatLng;
+  type: number;
+  icon: L.Icon;
+}
+
+interface MarkerType {
+  name: string;
+  className: string;
+  iconUrl: string;
+  iconSize: PointTuple;
+  iconAnchor: PointTuple;
+  popupAnchor: PointTuple;
+}
 
 export function RenderMapBlips() {
   const map = useMap();
-  const [blips, setBlips] = React.useState<any[]>([]);
+  const [blips, setBlips] = React.useState<Blip[]>([]);
 
   const doBlips = React.useCallback(async () => {
     setBlips(await generateBlips(map));
@@ -32,7 +49,7 @@ export function RenderMapBlips() {
               <div style={{ minWidth: 50 }}>
                 <div className="flex flex-col">
                   <p style={{ margin: 0 }} className="text-base">
-                    <strong>Name: </strong> {blip.name}
+                    <strong>Name: </strong> {blip.type}-{blip.name}
                   </p>
                 </div>
               </div>
@@ -48,7 +65,7 @@ async function generateBlips(map: L.Map) {
   const blipsData = await fetch("/blips.json").then((v) => v.json());
 
   const markerTypes = generateMarkerTypes();
-  const createdBlips = [];
+  const createdBlips: Blip[] = [];
 
   for (const id in blipsData) {
     if (blipsData[id]) {
@@ -92,7 +109,8 @@ async function generateBlips(map: L.Map) {
 }
 
 function generateMarkerTypes() {
-  const markerTypes = [];
+  const markerTypes: Record<number, MarkerType> = {};
+
   let blipCss = `.blip {
     background: url("/map/blips_texturesheet.png");
     background-size: ${1024 / 2}px ${1024 / 2}px;
@@ -135,8 +153,6 @@ function generateMarkerTypes() {
       iconAnchor: [BLIP_SIZES.width / 2, 0] as PointTuple,
       popupAnchor: [0, 0] as PointTuple,
     };
-
-    // nameToId[blipName] = current.id;
 
     const left = current.x * BLIP_SIZES.width + 0;
     const top = current.y * BLIP_SIZES.height + 0;
