@@ -26,6 +26,19 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
   const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
   const whatPagesType = isEmsFd ? WhatPages.EMS_FD : WhatPages.LEO;
 
+  const isUnitOffDuty =
+    !activeUnit ||
+    activeUnit.status === null ||
+    activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
+
+  function handleOnDuty(onDutyCode: StatusValue | undefined) {
+    if (isUnitOffDuty) {
+      openModal(modalId);
+    }
+
+    onDutyCode && handleStatusUpdate(onDutyCode);
+  }
+
   async function getActiveUnit() {
     const path = isEmsFd ? "/ems-fd/active-deputy" : "/leo/active-officer";
     const { json, error } = await execute(path, { noToast: true });
@@ -63,14 +76,9 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
     }
   }
 
-  const isButtonDisabled =
-    !activeUnit ||
-    activeUnit.status === null ||
-    activeUnit.status.shouldDo === ShouldDoType.SET_OFF_DUTY;
-
   const filteredCodes = codes10.values.filter((v) => handleWhatPagesFilter(v, whatPagesType));
   const onDutyCode = filteredCodes.find((v) => v.shouldDo === ShouldDoType.SET_ON_DUTY);
-  const isOnDutyActive = !isButtonDisabled && onDutyCode?.id === activeUnit?.status?.id;
+  const isOnDutyActive = !isUnitOffDuty && onDutyCode?.id === activeUnit?.status?.id;
 
   if (!onDutyCode && filteredCodes.length <= 0) {
     return (
@@ -86,7 +94,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
         <Button
           className={classNames("w-full min-w-[5em]", isOnDutyActive && "font-semibold")}
           variant={isOnDutyActive ? "blue" : "default"}
-          onClick={() => openModal(modalId)}
+          onClick={() => handleOnDuty(onDutyCode)}
         >
           {onDutyCode?.value.value}
         </Button>
@@ -104,7 +112,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
             <li key={code.id}>
               <Button
                 onClick={() => handleStatusUpdate(code)}
-                disabled={isButtonDisabled}
+                disabled={isUnitOffDuty}
                 variant={variant}
                 className={classNames("w-full min-w-[5em]", isActive && "font-semibold")}
               >
