@@ -1,5 +1,4 @@
-import type { Call911 } from "@snailycad/types";
-import type { MarkerPayload, Player } from "types/Map";
+import type { Player } from "types/Map";
 
 export function PlayerInfoHTML(player: Player) {
   return `
@@ -29,34 +28,4 @@ export function PlayerInfoHTML(player: Player) {
         </div>
       </div>
   `;
-}
-
-export function CallInfoHTML(call: Call911) {
-  return `
-      <div style="min-width: 250px;">
-        <div class="d-flex flex-column">
-          <p style="margin: 2px; font-size: 1rem;">
-            <strong>Location: </strong> ${call.location}
-          </p>
-          <p style="margin: 2px; font-size: 1rem;">
-            <strong>Caller: </strong> ${call.name}
-          </p>
-          <p style="margin: 2px; font-size: 1rem;">
-            <strong>Description: </strong> ${call.description}
-          </p>
-        </div>
-      </div>
-    `;
-}
-
-export function BlipInfoHTML(blip: MarkerPayload) {
-  return `
-      <div style="min-width: 50px;">
-        <div class="flex flex-col">
-          <p style="margin: 0;" class="text-base">
-            <strong>Name: </strong> ${blip.title}
-          </p>
-        </div>
-      </div>
-    `;
 }

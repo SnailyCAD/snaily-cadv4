@@ -6,7 +6,7 @@ import { RenderMapBlips } from "./RenderMapBlips";
 import { RenderActiveCalls } from "./RenderActiveCalls";
 import { MapActions } from "./MapActions";
 
-const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
+const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png" as const;
 
 export function Map() {
   const [map, setMap] = React.useState<L.Map | undefined>();
@@ -15,6 +15,8 @@ export function Map() {
   React.useEffect(() => {
     if (bounds) {
       map?.setMaxBounds(bounds);
+      // todo: verify
+      map?.setZoom(6);
     }
   }, [bounds, map]);
 

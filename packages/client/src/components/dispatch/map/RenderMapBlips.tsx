@@ -1,6 +1,5 @@
 import * as React from "react";
 import L, { type PointTuple } from "leaflet";
-import J from "jquery";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap, stringCoordToFloat } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
@@ -147,9 +146,9 @@ function generateMarkerTypes() {
       className: `blip blip-${blipName}`,
       iconUrl:
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAFElEQVR4XgXAAQ0AAABAMP1L30IDCPwC/o5WcS4AAAAASUVORK5CYII=",
-      iconSize: [BLIP_SIZES.width, BLIP_SIZES.height] as PointTuple,
-      iconAnchor: [BLIP_SIZES.width / 2, 0] as PointTuple,
-      popupAnchor: [0, 0] as PointTuple,
+      iconSize: [BLIP_SIZES.width, BLIP_SIZES.height],
+      iconAnchor: [BLIP_SIZES.width / 2, 0],
+      popupAnchor: [0, 0],
     };
 
     const left = current.x * BLIP_SIZES.width + 0;
@@ -158,7 +157,9 @@ function generateMarkerTypes() {
     blipCss += `.blip-${blipName} { background-position: -${left}px -${top}px }`;
   }
 
-  J("head").append(`<style>${blipCss}</style>`);
+  const style = document.createElement("style");
+  style.innerHTML = blipCss;
+  document.head.appendChild(style);
 
   return markerTypes;
 }

@@ -1,11 +1,9 @@
 import * as React from "react";
 
 import L from "leaflet";
-import J from "jquery";
 import "leaflet.markercluster";
 import { v4 as uuid } from "uuid";
 import type { Socket } from "socket.io-client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import {
   Player,
@@ -15,24 +13,20 @@ import {
   LatLng,
   defaultTypes,
   Blip,
-  BLIP_SIZES,
   IIcon,
   IPopup,
 } from "types/Map";
-import { getMapBounds, convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
+import { convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
 
 import type { cad, Call911, User } from "@snailycad/types";
-import { CallInfoHTML, PlayerInfoHTML, BlipInfoHTML } from "lib/map/html";
-import { blipTypes } from "lib/map/blips";
+import { PlayerInfoHTML } from "lib/map/html";
+
 import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
-import { ActiveMapCalls } from "./ActiveMapCalls";
 import type { Full911Call } from "state/dispatchState";
 import { toastError } from "lib/error";
 
 /* most code in this file is from TGRHavoc/live_map-interface, special thanks to him for making this! */
-
-const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
 
 interface Props {
   openModal(id: string): void;
@@ -127,40 +121,6 @@ class MapClass extends React.Component<Props, MapState> {
     });
   }
 
-  initMap() {
-    if (this.state.ran) return;
-    if (typeof window === "undefined") return;
-    return;
-
-    this.setState({
-      ran: true,
-    });
-
-    const TileLayer = L.tileLayer(TILES_URL, {
-      minZoom: -2,
-      maxZoom: 2,
-      tileSize: 1024,
-      maxNativeZoom: 0,
-      minNativeZoom: 0,
-    });
-
-    const map = L.map("map", {
-      crs: L.CRS.Simple,
-      layers: [TileLayer],
-      zoomControl: false,
-    }).setView([0, 0], 0);
-
-    const bounds = getMapBounds(map);
-
-    map.setMaxBounds(bounds.pad(1));
-    map.fitBounds(bounds);
-    map.addLayer(this.state.PlayerMarkers);
-
-    this.setState({
-      map,
-    });
-  }
-
   showBlips() {
     for (const id in this.state.blips) {
       const blipArr = this.state.blips[id];
@@ -170,25 +130,6 @@ class MapClass extends React.Component<Props, MapState> {
 
         marker?.addTo(this.state.map!);
       });
-    }
-  }
-
-  blipSuccess(data: any) {
-    for (const id in data) {
-      if (data?.[id]) {
-        const blipArray = data[id];
-
-        for (const i in blipArray) {
-          const blip = blipArray[i];
-          const fallbackName = `${id} | ${this.state.MarkerTypes[+id]?.name}` || id;
-
-          blip.name = blip?.name || fallbackName;
-          blip.description = blip?.description || "N/A";
-
-          blip.type = id;
-          this.createBlip(blip);
-        }
-      }
     }
   }
 
@@ -229,10 +170,7 @@ class MapClass extends React.Component<Props, MapState> {
     }
 
     const converted = newPos;
-    const infoContent =
-      (payload.player && PlayerInfoHTML(payload.player)) ||
-      (payload.call && CallInfoHTML(payload.call)) ||
-      BlipInfoHTML(payload);
+    const infoContent = payload.player && PlayerInfoHTML(payload.player);
     const where = payload.player ? this.state.PlayerMarkers : this.state.map;
 
     const marker: CustomMarker = (L as any)
@@ -255,262 +193,6 @@ class MapClass extends React.Component<Props, MapState> {
     });
 
     return marker;
-  }
-
-  createBlip(blip: Blip) {
-    if (!blip.pos) {
-      if (!blip?.pos) {
-        blip.pos = {
-          x: blip.x,
-          y: blip.y,
-          z: blip.z,
-        };
-
-        delete blip.x;
-        delete blip.y;
-        delete blip.z;
-      }
-    }
-
-    const obj: MarkerPayload = {
-      title: blip.name,
-      pos: blip.pos,
-      description: blip.description,
-      icon: this.state.MarkerTypes[blip.type] ?? null,
-      id: uuid(),
-      isBlip: true,
-    };
-
-    if (!this.state.blips[blip.type]) {
-      this.setState((prev) => {
-        return {
-          ...prev,
-          blips: (prev.blips[blip.type] = []),
-        };
-      });
-    }
-
-    const marker = this.createMarker(false, obj, blip.name);
-    if (!marker) return;
-
-    const blips = this.state.blips;
-    blips[blip.type]?.push(blip);
-
-    this.setState({
-      blips,
-    });
-  }
-
-  async initBlips() {
-    const nameToId: any = {};
-    let blipCss = "";
-
-    const generateBlips = () => {
-      blipCss = `.blip {
-        background: url("/map/blips_texturesheet.png");
-        background-size: ${1024 / 2}px ${1024 / 2}px;
-        display: inline-block;
-        width: ${BLIP_SIZES.width}px;
-        height: ${BLIP_SIZES.height}px;
-      }`;
-
-      const current = {
-        x: 0,
-        y: 0,
-        id: 0,
-      };
-
-      for (const blipName in blipTypes) {
-        const blip = blipTypes[blipName];
-
-        if (!blip.id) {
-          current.id = current.id + 1;
-        } else {
-          current.id = blip.id;
-        }
-
-        if (!blip.x) {
-          current.x += 1;
-        } else {
-          current.x = blip.x;
-        }
-
-        if (blip.y) {
-          current.y = blip.y;
-        }
-
-        const MarkerTypes = this.state.MarkerTypes;
-        MarkerTypes[current.id] = {
-          name: blipName.replace(/([A-Z0-9])/g, " $1").trim(),
-          className: `blip blip-${blipName}`,
-          iconUrl:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAFElEQVR4XgXAAQ0AAABAMP1L30IDCPwC/o5WcS4AAAAASUVORK5CYII=",
-          iconSize: [BLIP_SIZES.width, BLIP_SIZES.height],
-          iconAnchor: [BLIP_SIZES.width / 2, 0],
-          popupAnchor: [0, 0],
-        };
-
-        this.setState({
-          MarkerTypes,
-        });
-
-        nameToId[blipName] = current.id;
-
-        const left = current.x * BLIP_SIZES.width + 0;
-        const top = current.y * BLIP_SIZES.height + 0;
-
-        blipCss += `.blip-${blipName} { background-position: -${left}px -${top}px }`;
-      }
-
-      J("head").append(`<style>${blipCss}</style>`);
-      setTimeout(generateBlipControls, 50);
-
-      this.showBlips();
-    };
-
-    const generateBlipControls = () => {
-      for (const blipName in blipTypes) {
-        J("#blip-control-container").append(
-          `<a data-blip-number="${nameToId[blipName]}" id="blip_${blipName}_link" class="blip-button-a list-group-item d-inline-block collapsed blip-enabled" href="#"><span class="blip blip-${blipName}"></span></a>`,
-        );
-      }
-
-      J(".blip-button-a").on("click", (e) => {
-        const element = $(e.currentTarget);
-
-        // toggle blip
-        element.addClass("blip-enabled");
-
-        this.showBlips();
-      });
-    };
-
-    const blipSuccess = async (data: any) => {
-      for (const id in data) {
-        if (data?.[id]) {
-          const blipArray = data[id];
-
-          for (const i in blipArray) {
-            const blip = blipArray[i];
-            const fallbackName = this.state.MarkerTypes[+id]?.name || id;
-
-            blip.name = blip?.name || fallbackName;
-            blip.description = blip?.description || "N/A";
-
-            blip.type = id;
-            createBlip(blip);
-          }
-        }
-      }
-    };
-
-    const createBlip = (blip: Blip) => {
-      if (!blip?.pos) {
-        blip.pos = {
-          x: blip.x,
-          y: blip.y,
-          z: blip.z,
-        };
-
-        delete blip.x;
-        delete blip.y;
-        delete blip.z;
-      }
-
-      // const obj: MarkerPayload = {
-      //   title: blip.name,
-      //   pos: blip.pos,
-      //   description: blip.description,
-      //   icon: this.state.MarkerTypes[blip.type] ?? null,
-      //   id: uuid(),
-      //   isBlip: true,
-      // };
-
-      // if (!this.state.blips[blip.type]) {
-      //   this.setState((prev) => {
-      //     prev.blips[blip.type] = [];
-
-      //     return prev;
-      //   });
-      // }
-
-      // const marker = this.createMarker(false, obj, blip.name);
-      // if (!marker) return;
-
-      this.setState((prev) => {
-        prev.blips[blip.type]?.push(blip);
-
-        return prev;
-      });
-    };
-
-    generateBlips();
-
-    J.ajax("/blips.json", {
-      success: blipSuccess,
-      dataType: "json",
-    });
-  }
-
-  remove911Call(id: string) {
-    this.setState((prev) => {
-      const marker = prev.MarkerStore.find((m) => m.payload.call?.id === id);
-      marker?.remove();
-      marker?.removeFrom(this.state.map!);
-
-      return {
-        ...prev,
-        MarkerStore: prev.MarkerStore.filter((marker) => {
-          if (marker.payload.call) {
-            return marker.payload.call.id !== id;
-          }
-          return true;
-        }),
-      };
-    });
-  }
-
-  handleCalls() {
-    if (!this.state.map) return;
-
-    this.props.calls.forEach((call) => {
-      if (!call.position) {
-        this.remove911Call(call.id);
-        return;
-      }
-
-      const existing = this.state.MarkerStore.find((m) => m.payload?.call?.id === call.id);
-
-      if (existing) {
-        existing.setLatLng(call.position as LatLng);
-        return;
-      }
-
-      const marker = this.createMarker(
-        true,
-        {
-          icon: null,
-          description: `911 Call from: ${call.name}`,
-          id: uuid(),
-          pos: call.position as LatLng,
-          isPlayer: false,
-          title: "911 Call",
-          call,
-        },
-        call.location,
-      );
-      if (!marker) return;
-
-      marker.on("moveend", async (e) => {
-        const target = e.target;
-        const latLng: LatLng = (target as any)._latlng;
-
-        this.props.update911Call({
-          ...call,
-          position: { id: "", ...latLng },
-        });
-      });
-    });
   }
 
   async onMessage(e: any) {
@@ -640,14 +322,6 @@ class MapClass extends React.Component<Props, MapState> {
   componentDidMount() {
     // this.handleMapSocket();
     // this.initMap();
-
-    // this.handleCalls();
-    this.initBlips();
-
-    // ? REMOVE_911_CALL_FROM_MAP
-    this.CADSocket?.on("END_911_CALL", (callId: string) => {
-      this.remove911Call(callId);
-    });
   }
 
   // componentDidUpdate(prevProps: Props, prevState: MapState) {
@@ -691,60 +365,9 @@ class MapClass extends React.Component<Props, MapState> {
 
   render() {
     if (typeof window === "undefined") return null;
-    const bounds = this.state.map ? getMapBounds(this.state.map) : undefined;
-    const blips = [...this.state.blips].flat(1);
 
     return (
       <>
-        <MapContainer
-          style={{ zIndex: 1, height: "calc(100vh - 4rem)", width: "100%" }}
-          crs={L.CRS.Simple}
-          center={[0, 0]}
-          scrollWheelZoom
-          zoom={0}
-          maxBounds={bounds?.pad(1)}
-          bounds={bounds}
-          whenCreated={(map) => this.setState({ map })}
-        >
-          <TileLayer
-            minZoom={-2}
-            maxZoom={2}
-            url={TILES_URL}
-            tileSize={1024}
-            maxNativeZoom={0}
-            minNativeZoom={0}
-          />
-
-          {blips.map((blip, idx) => {
-            if (!this.state.map || !blip) return null;
-            const coords = stringCoordToFloat(blip.pos);
-            const converted = convertToMap(coords.x, coords.y, this.state.map);
-
-            if ([2, 0, 10, 300].includes(idx)) {
-              console.log({ idx, icon: blip.icon });
-            }
-
-            return (
-              <Marker
-                // icon={blip.icon?.iconUrl ? L.icon(blip.icon) : undefined}
-                draggable={false}
-                key={`${blip.name}-${idx}`}
-                position={converted}
-              >
-                <Popup>
-                  <div style={{ minWidth: 50 }}>
-                    <div className="flex flex-col">
-                      <p style={{ margin: 0 }} className="text-base">
-                        <strong>Name: </strong> {blip.name}
-                      </p>
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            );
-          })}
-        </MapContainer>
-
         <div className="absolute z-50 flex gap-2 left-4 bottom-4">
           <Button
             onClick={() => {
@@ -773,33 +396,6 @@ class MapClass extends React.Component<Props, MapState> {
               {this.state.showAllPlayers ? "Show only LEO/EMS-FD" : "Show all players"}
             </button>
           ) : null}
-        </div>
-
-        <div className="map-items-container">
-          {/* <ActiveMapUnits /> */}
-          <ActiveMapCalls
-            hasMarker={(callId: string) => {
-              return this.state.MarkerStore.some((m) => m.payload?.call?.id === callId);
-            }}
-            setMarker={(call: Full911Call, type: "remove" | "set") => {
-              const marker = this.state.MarkerStore.some((m) => m.payload.call?.id === call.id);
-
-              if (type === "set") {
-                this.handleCalls();
-              }
-
-              if (marker && type === "remove") {
-                this.remove911Call(call.id);
-              }
-
-              const coords = convertToMap(0, 0, this.state.map!);
-
-              this.props.update911Call({
-                ...call,
-                position: type === "remove" ? null : { id: "", ...coords },
-              });
-            }}
-          />
         </div>
       </>
     );
