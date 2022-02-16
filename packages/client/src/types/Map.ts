@@ -1,5 +1,4 @@
-import type { Call911 } from "@snailycad/types";
-import type { PointTuple } from "leaflet";
+import type { PointTuple, LatLngLiteral } from "leaflet";
 
 export interface Player {
   Weapon?: string;
@@ -10,8 +9,6 @@ export interface Player {
   identifier: string;
   icon: string;
   name: string;
-  leo?: boolean;
-  ems_fd?: boolean;
 }
 
 export interface PlayerDataEvent {
@@ -32,47 +29,15 @@ export interface XYZ {
   z: number | undefined;
 }
 
-export interface LatLng {
-  lat: number;
-  lng: number;
-}
-
-export interface MarkerPayload {
-  pos: XYZ | LatLng;
-  icon: L.IconOptions | null;
-  description: string;
-  title: string;
-  player?: Player;
-  call?: Call911;
-  id: string;
-
-  isPlayer?: boolean;
-  isBlip?: boolean;
-}
-
-export interface CustomMarker extends L.Marker {
-  payload: MarkerPayload;
-}
-
-export interface IIcon extends L.IconOptions {
-  name?: string;
-}
-
-export interface IPopup extends L.Popup {
-  payload: {
-    identifier: string;
-  };
-}
-
 export const BLIP_SIZES = {
-  width: 64 / 2,
-  height: 64 / 2,
-};
+  width: 32,
+  height: 32,
+} as const;
 
 export interface Blip {
   name: string;
   description: string | null;
-  pos: LatLng;
+  pos: LatLngLiteral;
   rawPos?: XYZ;
   type: number;
   icon: L.Icon | undefined;

@@ -74,15 +74,7 @@ async function generateBlips(map: L.Map) {
           pos: converted,
           rawPos: pos,
           type: Number(id),
-          icon: markerData
-            ? L.icon({
-                iconUrl: markerData.iconUrl,
-                iconSize: markerData.iconSize,
-                className: markerData.className,
-                iconAnchor: markerData.iconAnchor,
-                popupAnchor: markerData.popupAnchor,
-              })
-            : undefined,
+          icon: markerData ? L.icon(markerData) : undefined,
         };
 
         createdBlips.push(blip);
