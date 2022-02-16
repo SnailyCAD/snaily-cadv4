@@ -10,7 +10,7 @@ import type { GetServerSideProps } from "next";
 import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
 
-const Map = dynamic(async () => (await import("components/dispatch/map/Map_New")).Map, {
+const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
   loading: () => <p>loading map..</p>,
 });

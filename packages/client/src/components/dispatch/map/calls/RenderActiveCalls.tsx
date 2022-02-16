@@ -112,7 +112,6 @@ export function RenderActiveCalls() {
         );
       })}
 
-      {/* <ActiveMapUnits /> */}
       <ActiveMapCalls
         openItems={openItems}
         setOpenItems={setOpenItems}
