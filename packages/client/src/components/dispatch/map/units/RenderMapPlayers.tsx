@@ -5,6 +5,14 @@ import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
 import type { DataActions, PlayerDataEvent, PlayerLeftEvent } from "types/Map";
+import L from "leaflet";
+
+const PLAYER_ICON = L.icon({
+  iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
+  iconSize: [25, 40],
+  popupAnchor: [0, 0],
+  iconAnchor: [9, 8],
+});
 
 export function RenderMapPlayers() {
   const [players, setPlayers] = React.useState<PlayerDataEvent["payload"]>([]);
@@ -19,8 +27,6 @@ export function RenderMapPlayers() {
   }, []);
 
   const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
-    console.log({ data });
-
     setPlayers((p) => p.filter((v) => v.identifier !== data.payload));
   }, []);
 
@@ -79,7 +85,7 @@ export function RenderMapPlayers() {
         if (!pos) return null;
 
         return (
-          <Marker key={idx} position={pos}>
+          <Marker icon={PLAYER_ICON} key={idx} position={pos}>
             <Popup minWidth={500}>
               <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}

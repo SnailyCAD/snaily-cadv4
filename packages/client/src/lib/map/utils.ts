@@ -20,19 +20,16 @@ export function getMapBounds(map: L.Map) {
 }
 
 export function convertToMap(x: number, y: number, map: L.Map) {
-  const h = 1024 * 3;
-  const w = 1024 * 2;
+  const height = TILE_SIZE * 3;
+  const width = TILE_SIZE * 2;
 
   const latLng1 = map.unproject([0, 0], 0);
-  const latLng2 = map.unproject([w / 2, h - 1024], 0);
+  const latLng2 = map.unproject([width / 2, height - TILE_SIZE], 0);
 
   const rLng = latLng1.lng + ((x - GAME.x_1) * (latLng1.lng - latLng2.lng)) / (GAME.x_1 - GAME.x_2);
   const rLat = latLng1.lat + ((y - GAME.y_1) * (latLng1.lat - latLng2.lat)) / (GAME.y_1 - GAME.y_2);
 
-  return {
-    lat: rLat,
-    lng: rLng,
-  };
+  return { lat: rLat, lng: rLng };
 }
 
 export function stringCoordToFloat(coord: XYZ) {
