@@ -5,7 +5,7 @@ export interface Player {
   Vehicle?: string;
   "License Plate"?: string;
   Location: string;
-  pos: XYZ;
+  pos: XYZ | null;
   identifier: string;
   icon: string;
   name: string;
@@ -74,26 +74,6 @@ export interface IPopup extends L.Popup {
     identifier: string;
   };
 }
-
-export const defaultTypes: Record<number, IIcon> = {
-  0: {
-    iconUrl:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAFElEQVR4XgXAAQ0AAABAMP1L30IDCPwC/o5WcS4AAAAASUVORK5CYII=",
-    iconSize: [0, 0],
-    popupAnchor: [0, 0],
-  },
-  6: {
-    iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
-    iconSize: [25, 40],
-    popupAnchor: [0, 2],
-  },
-  // police car
-  // 5: {},
-  // fire truck
-  // 4: {},
-  // ambulance
-  // 3: {},
-};
 
 export const BLIP_SIZES = {
   width: 64 / 2,

@@ -5,13 +5,12 @@ import "leaflet.markercluster";
 import { v4 as uuid } from "uuid";
 import type { Socket } from "socket.io-client";
 
-import {
+import type {
   Player,
   DataActions,
   MarkerPayload,
   CustomMarker,
   LatLng,
-  defaultTypes,
   Blip,
   IIcon,
   IPopup,
@@ -57,7 +56,6 @@ class MapClass extends React.Component<Props, MapState> {
 
     this.state = {
       MarkerStore: [],
-      MarkerTypes: defaultTypes,
       PopupStore: [],
       blips: [[]],
       PlayerMarkers: createCluster(),
@@ -73,50 +71,6 @@ class MapClass extends React.Component<Props, MapState> {
 
     this.handleMapSocket = this.handleMapSocket.bind(this);
     this.onMessage = this.onMessage.bind(this);
-  }
-
-  async handleMapSocket() {
-    await new Promise((resolve) => {
-      setTimeout(resolve, 500);
-    });
-
-    this.setState({
-      loading: false,
-    });
-
-    const live_map_url = this.props.cad.miscCadSettings?.liveMapURL;
-    if (!live_map_url) {
-      toastError({
-        duration: Infinity,
-        message: "There was no live_map_url provided from the CAD-Settings.",
-      });
-      return;
-    }
-    if (!live_map_url.startsWith("ws")) {
-      toastError({
-        duration: Infinity,
-        message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
-      });
-
-      return;
-    }
-
-    const socket = new WebSocket(live_map_url);
-
-    socket.addEventListener("error", (e) => {
-      toastError({ message: "An error occurred when trying to connect to the live_map" });
-      console.error("LIVE_MAP", `${JSON.stringify(e)}`);
-    });
-
-    socket.addEventListener("message", (e) => {
-      this.onMessage(e);
-    });
-
-    this.MAPSocket = socket;
-
-    this.setState({
-      loading: false,
-    });
   }
 
   createMarker(draggable: boolean, payload: MarkerPayload, title: string) {
@@ -325,7 +279,6 @@ class MapClass extends React.Component<Props, MapState> {
       MarkerStore: [],
       blips: [],
       blipsShown: true,
-      MarkerTypes: defaultTypes,
       PopupStore: [],
       map: null,
       ran: false,

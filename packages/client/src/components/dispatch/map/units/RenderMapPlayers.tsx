@@ -4,7 +4,7 @@ import { toastError } from "lib/error";
 import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
-import type { DataActions, PlayerDataEvent } from "types/Map";
+import type { DataActions, PlayerDataEvent, PlayerLeftEvent } from "types/Map";
 
 export function RenderMapPlayers() {
   const [players, setPlayers] = React.useState<PlayerDataEvent["payload"]>([]);
@@ -18,6 +18,40 @@ export function RenderMapPlayers() {
     setPlayers(data.payload);
   }, []);
 
+  const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
+    console.log({ data });
+
+    setPlayers((p) => p.filter((v) => v.identifier !== data.payload));
+  }, []);
+
+  const onMessage = React.useCallback(
+    (e: MessageEvent) => {
+      const data = JSON.parse(e.data) as DataActions;
+
+      switch (data.type) {
+        case "playerData": {
+          onPlayerData(data);
+          break;
+        }
+        case "playerLeft": {
+          onPlayerLeft(data);
+          break;
+        }
+        default:
+          break;
+      }
+    },
+    [onPlayerData, onPlayerLeft],
+  );
+
+  const onError = React.useCallback(() => {
+    toastError({
+      message: `Unable to make a Websocket connection to ${url}`,
+      title: "Connection Error",
+      duration: 10_000,
+    });
+  }, [url]);
+
   React.useEffect(() => {
     if (!socket && url) {
       setSocket(new WebSocket(url));
@@ -25,53 +59,55 @@ export function RenderMapPlayers() {
   }, [url, socket]);
 
   React.useEffect(() => {
-    if (socket) {
-      socket.addEventListener("message", (e) => {
-        const data = JSON.parse(e.data) as DataActions;
+    const s = socket;
 
-        if (data.type === "playerData") {
-          onPlayerData(data);
-        }
-      });
+    if (s) {
+      socket.addEventListener("message", onMessage);
+      socket.addEventListener("error", onError);
     }
-  }, [socket, onPlayerData]);
+
+    return () => {
+      s?.removeEventListener("message", onMessage);
+      s?.removeEventListener("error", onError);
+    };
+  }, [socket, onError, onMessage]);
 
   return (
     <>
       {players.map((player, idx) => {
-        const pos = player.pos.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
+        const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
         if (!pos) return null;
 
         return (
           <Marker key={idx} position={pos}>
             <Popup minWidth={500}>
-              <p style={{ margin: 5 }}>
+              <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}
               </p>
               <div className="info-body mt-2">
-                <p style={{ margin: 5 }}>
+                {/* <p style={{ margin: 2 }}>
                   <strong>EMS-FD: </strong> {player.ems_fd}
                 </p>
-                <p style={{ margin: 5 }}>
+                <p style={{ margin: 2 }}>
                   <strong>Leo: </strong> {player.leo}
-                </p>
+                </p> */}
                 {player.Weapon ? (
-                  <p style={{ margin: 5 }}>
+                  <p style={{ margin: 2 }}>
                     <strong>Weapon: </strong> {player.Weapon}
                   </p>
                 ) : null}
-                <p style={{ margin: 5 }}>
+                <p style={{ margin: 2 }}>
                   <strong>Location: </strong> {player?.Location}
                 </p>
-                <p style={{ margin: 5 }}>
+                <p style={{ margin: 2 }}>
                   <strong>Vehicle: </strong> {player?.Vehicle || "On foot"}
                 </p>
                 {player["License Plate"] ? (
-                  <p style={{ margin: 5 }}>
+                  <p style={{ margin: 2 }}>
                     <strong>License plate: </strong> {player["License Plate"]}
                   </p>
                 ) : null}
-                <p style={{ margin: 5 }}>
+                <p style={{ margin: 2 }}>
                   <strong>Identifier: </strong> {player?.identifier}
                 </p>
               </div>
