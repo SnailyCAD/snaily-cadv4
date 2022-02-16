@@ -15,21 +15,23 @@ export function Map() {
 
   React.useEffect(() => {
     if (bounds) {
+      console.log({ map });
+
       map?.setMaxBounds(bounds);
       map?.fitBounds(bounds);
       map?.setZoom(-2);
+      map?.getBounds();
     }
   }, [bounds, map]);
 
   return (
     <MapContainer
-      style={{ zIndex: 1, height: "calc(100vh - 4rem)", width: "100%" }}
+      style={{ zIndex: 1, height: "calc(100vh - 3.5rem)", width: "100%" }}
       crs={L.CRS.Simple}
       center={[0, 0]}
       zoom={-2}
       bounds={bounds}
       whenCreated={setMap}
-      zoomControl={false}
     >
       <TileLayer
         url={TILES_URL}

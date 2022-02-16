@@ -53,7 +53,7 @@ export default function MapPage(props: any) {
       </Head>
       <Title>Dispatch Live Map</Title>
 
-      <Layout navMaxWidth="none" className="relative !px-0 !pb-0 mt-1 !max-w-none">
+      <Layout navMaxWidth="none" className="relative !px-0 !pb-0 !mt-0 !max-w-none">
         <Map />
       </Layout>
     </>

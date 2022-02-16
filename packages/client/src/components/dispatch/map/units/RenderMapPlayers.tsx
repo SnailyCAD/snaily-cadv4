@@ -3,7 +3,7 @@ import { useAuth } from "context/AuthContext";
 import { toastError } from "lib/error";
 import { convertToMap } from "lib/map/utils";
 import * as React from "react";
-import { Marker, Popup, useMap } from "react-leaflet";
+import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { DataActions, PlayerDataEvent, PlayerLeftEvent } from "types/Map";
 import L from "leaflet";
 
@@ -86,6 +86,8 @@ export function RenderMapPlayers() {
 
         return (
           <Marker icon={PLAYER_ICON} key={idx} position={pos}>
+            <Tooltip direction="top">{player.name}</Tooltip>
+
             <Popup minWidth={500}>
               <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}
