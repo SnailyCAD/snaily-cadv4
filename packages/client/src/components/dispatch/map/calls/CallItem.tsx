@@ -82,7 +82,7 @@ export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemPr
                   className="col-span-2"
                   onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
                 >
-                  {hasMarker(call.id) ? "Remove marker" : "Set marker"}
+                  {hasMarker(call.id) ? t("removeMarker") : t("setMarker")}
                 </Button>
               </div>
             </div>

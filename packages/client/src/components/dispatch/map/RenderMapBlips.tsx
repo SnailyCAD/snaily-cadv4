@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as L from "leaflet";
 import { Marker, Popup, useMap } from "react-leaflet";
-import { convertToMap, stringCoordToFloat } from "lib/map/utils";
+import { convertToMap } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
 import { BLIP_SIZES, Blip, BlipsData, MarkerType } from "types/Map";
 import { useDispatchMapState } from "state/mapState";
@@ -65,8 +65,7 @@ async function generateBlips(map: L.Map) {
         const pos =
           "pos" in blipData ? blipData.pos : { x: blipData.x, y: blipData.y, z: blipData.z };
 
-        const coords = stringCoordToFloat(pos);
-        const converted = convertToMap(coords.x, coords.y, map);
+        const converted = convertToMap(pos.x, pos.y, map);
 
         const blip: Blip = {
           name: markerData?.name ?? id,

@@ -1369,9 +1369,7 @@ __metadata:
     "@snailycad/config": 1.0.0-beta.57
     "@snailycad/schemas": 1.0.0-beta.57
     "@snailycad/types": 1.0.0-beta.57
-    "@types/jquery": ^3.5.13
     "@types/leaflet": ^1.7.9
-    "@types/leaflet.markercluster": ^1.4.6
     "@types/react": ^17.0.39
     "@types/react-dom": ^17.0.11
     "@types/react-table": ^7.7.9
@@ -1383,9 +1381,7 @@ __metadata:
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
-    jquery: ^3.6.0
     leaflet: ^1.7.1
-    leaflet.markercluster: ^1.5.3
     next: ^12.0.10
     next-intl: 2.4.0
     nookies: ^2.5.2
@@ -1937,15 +1933,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jquery@npm:^3.5.13":
-  version: 3.5.13
-  resolution: "@types/jquery@npm:3.5.13"
-  dependencies:
-    "@types/sizzle": "*"
-  checksum: cb4e6aacaf36905049d5ac93da1fabed17da285fafe38c88feba89d7c9912e108c934ea05c908b87ae199f2830e5e002a72d0cc8aaef4a33539581d0a7a6abe8
-  languageName: node
-  linkType: hard
-
 "@types/js-cookie@npm:^2.2.6":
   version: 2.2.7
   resolution: "@types/js-cookie@npm:2.2.7"
@@ -1989,24 +1976,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: b5f8aa592cc21c16d99e69aec0976f12b893b055e4456d90148a610a6b6088e297b2ba5f38f8c8280cef006cfd8f9ec99e069905020882619dc5fc8aa46f5f27
-  languageName: node
-  linkType: hard
-
-"@types/leaflet.markercluster@npm:^1.4.6":
-  version: 1.4.6
-  resolution: "@types/leaflet.markercluster@npm:1.4.6"
-  dependencies:
-    "@types/leaflet": "*"
-  checksum: 6fc590a3f3ef0938120dcb7992d1e514c81a25ace4a6a1796e1b7cac2a7408e3ad12c82548e57f71b981614a174df9ee9df666b2a2dbc5960f06a624219d7ff8
-  languageName: node
-  linkType: hard
-
-"@types/leaflet@npm:*":
-  version: 1.7.8
-  resolution: "@types/leaflet@npm:1.7.8"
-  dependencies:
-    "@types/geojson": "*"
-  checksum: ad30fbc9d961606c196477ac7e5351904633c72923b4cf6e1859aab0f7edb62f3fc826ccc44683f2342d7bf9a0f0916526cf0f956fed37306a099d16878da078
   languageName: node
   linkType: hard
 
@@ -2163,13 +2132,6 @@ __metadata:
     "@types/mime": ^1
     "@types/node": "*"
   checksum: eaca858739483e3ded254cad7d7a679dc2c8b3f52c8bb0cd845b3b7eb1984bde0371fdcb0a5c83aa12e6daf61b6beb762545021f520f08a1fe882a3fa4ea5554
-  languageName: node
-  linkType: hard
-
-"@types/sizzle@npm:*":
-  version: 2.3.3
-  resolution: "@types/sizzle@npm:2.3.3"
-  checksum: 586a9fb1f6ff3e325e0f2cc1596a460615f0bc8a28f6e276ac9b509401039dd242fa8b34496d3a30c52f5b495873922d09a9e76c50c2ab2bcc70ba3fb9c4e160
   languageName: node
   linkType: hard
 
@@ -6312,13 +6274,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "jquery@npm:3.6.0"
-  checksum: 8fd5fef4aa48fd374ec716dd1c1df1af407814a228e15c1260ca140de3a697c2a77c30c54ff1d238b6a3ab4ddc445ddeef9adce6c6d28e4869d85eb9d3951c0e
-  languageName: node
-  linkType: hard
-
 "js-cookie@npm:^2.2.1":
   version: 2.2.1
   resolution: "js-cookie@npm:2.2.1"
@@ -6534,15 +6489,6 @@ __metadata:
   dependencies:
     set-getter: ^0.1.0
   checksum: f4106a28345b4b3b8e2dd544936ea5742bed650250d666f68e07bc7de55d04f75e750a36e2bf38ecb80e7520da95831e29dcdab608e3c32ca3189e6d8fb50e1f
-  languageName: node
-  linkType: hard
-
-"leaflet.markercluster@npm:^1.5.3":
-  version: 1.5.3
-  resolution: "leaflet.markercluster@npm:1.5.3"
-  peerDependencies:
-    leaflet: ^1.3.1
-  checksum: abf0d0befbc78b7f178a330791554f0e4fd7170dbe2e6d59f387b627d914f4633b0541a9028fe5d11cf842c09c8dbb56ae6bd9d1d08c5ce35e32541c8f1eacd1
   languageName: node
   linkType: hard
 

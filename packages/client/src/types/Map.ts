@@ -23,10 +23,10 @@ export interface PlayerLeftEvent {
 
 export type DataActions = PlayerLeftEvent | PlayerDataEvent;
 
-export interface XYZ {
-  x: number | undefined;
-  y: number | undefined;
-  z: number | undefined;
+export interface XYZ<T extends string | number | undefined = number | undefined> {
+  x: T;
+  y: T;
+  z: T;
 }
 
 export const BLIP_SIZES = {

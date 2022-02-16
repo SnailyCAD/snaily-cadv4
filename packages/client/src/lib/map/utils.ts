@@ -1,13 +1,14 @@
 import L from "leaflet";
 import type { XYZ } from "types/Map";
 
-const TILE_SIZE = 1024;
+const TILE_SIZE = 1024 as const;
+
 export const GAME = {
   x_1: -4000.0 - 230,
   y_1: 8000.0 + 420,
   x_2: 400.0 - 30,
   y_2: -300.0 - 340.0,
-};
+} as const;
 
 export function getMapBounds(map: L.Map) {
   const h = TILE_SIZE * 3;
@@ -19,7 +20,8 @@ export function getMapBounds(map: L.Map) {
   return new L.LatLngBounds(southWest, northEast);
 }
 
-export function convertToMap(x: number, y: number, map: L.Map) {
+export function convertToMap(rawX: XYZ["x"], rawY: XYZ["y"], map: L.Map) {
+  const { x, y } = stringCoordToFloat({ x: rawX, y: rawY, z: 0 });
   const height = TILE_SIZE * 3;
   const width = TILE_SIZE * 2;
 
@@ -32,19 +34,10 @@ export function convertToMap(x: number, y: number, map: L.Map) {
   return { lat: rLat, lng: rLng };
 }
 
-export function stringCoordToFloat(coord: XYZ) {
+function stringCoordToFloat(coord: XYZ<string | number | undefined>) {
   return {
     x: parseFloat(`${coord.x}`),
     y: parseFloat(`${coord.y}`),
     z: parseFloat(`${coord.z}`),
   };
-}
-
-export function createCluster() {
-  return (L as any).markerClusterGroup({
-    maxClusterRadius: 20,
-    spiderfyOnMaxZoom: false,
-    showCoverageOnHover: false,
-    zoomToBoundsOnClick: false,
-  });
 }
