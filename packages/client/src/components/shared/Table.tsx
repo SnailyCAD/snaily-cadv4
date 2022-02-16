@@ -152,8 +152,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     ),
   };
 
-  console.log({ page });
-
   return (
     <div {...containerProps}>
       <table {...getTableProps()} className="w-full overflow-hidden whitespace-nowrap max-h-64">
