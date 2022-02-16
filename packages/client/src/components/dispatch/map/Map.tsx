@@ -21,8 +21,6 @@ import { convertToMap, stringCoordToFloat, createCluster } from "lib/map/utils";
 import type { cad, Call911, User } from "@snailycad/types";
 import { PlayerInfoHTML } from "lib/map/html";
 
-import { ModalIds } from "types/ModalIds";
-import { Button } from "components/Button";
 import type { Full911Call } from "state/dispatchState";
 import { toastError } from "lib/error";
 
@@ -118,35 +116,6 @@ class MapClass extends React.Component<Props, MapState> {
 
     this.setState({
       loading: false,
-    });
-  }
-
-  showBlips() {
-    for (const id in this.state.blips) {
-      const blipArr = this.state.blips[id];
-
-      blipArr?.forEach((blip) => {
-        const marker = this.state.MarkerStore[blip.markerId];
-
-        marker?.addTo(this.state.map!);
-      });
-    }
-  }
-
-  toggleBlips(show: boolean) {
-    this.setState({
-      MarkerStore: this.state.MarkerStore.map((marker) => {
-        if (marker.payload.isBlip) {
-          if (show) {
-            marker.addTo(this.state.map!);
-          } else {
-            marker.remove();
-            marker.removeFrom(this.state.map!);
-          }
-        }
-
-        return marker;
-      }),
     });
   }
 
@@ -364,41 +333,7 @@ class MapClass extends React.Component<Props, MapState> {
   }
 
   render() {
-    if (typeof window === "undefined") return null;
-
-    return (
-      <>
-        <div className="absolute z-50 flex gap-2 left-4 bottom-4">
-          <Button
-            onClick={() => {
-              this.setState((prev) => ({ ...prev, blipsShown: !prev.blipsShown }));
-              this.toggleBlips(!this.state.blipsShown);
-            }}
-          >
-            {this.state.blipsShown ? this.props.t("Leo.hideBlips") : this.props.t("Leo.showBlips")}
-          </Button>
-          <Button onClick={() => this.props.openModal(ModalIds.Manage911Call)}>
-            {this.props.t("Calls.create911Call")}
-          </Button>
-          {["owner", "admin", "moderator"].includes(`${this.props.user.rank}`) ? (
-            <button
-              onClick={() => {
-                if (this.state.showAllPlayers) {
-                  window.location.reload();
-                }
-
-                this.setState({
-                  showAllPlayers: !this.state.showAllPlayers,
-                });
-              }}
-              className="btn btn-primary"
-            >
-              {this.state.showAllPlayers ? "Show only LEO/EMS-FD" : "Show all players"}
-            </button>
-          ) : null}
-        </div>
-      </>
-    );
+    return null;
   }
 }
 

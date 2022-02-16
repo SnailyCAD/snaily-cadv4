@@ -1,8 +1,6 @@
 import { createPortal } from "react-dom";
 import { usePortal } from "@casper124578/useful";
-import { Rank } from "@snailycad/types";
 import { Button } from "components/Button";
-import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -10,7 +8,6 @@ import { useDispatchMapState } from "state/mapState";
 
 export function MapActions() {
   const t = useTranslations();
-  const { user } = useAuth();
   const portalRef = usePortal("MapActions");
   const { openModal } = useModal();
   const mapState = useDispatchMapState();
@@ -25,12 +22,11 @@ export function MapActions() {
         <Button onClick={() => openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>
-        {user?.rank !== Rank.USER ? (
+        {/* {user?.rank !== Rank.USER ? (
           <Button disabled className="btn btn-primary">
-            {/* {false ? "Show only LEO/EMS-FD" : "Show all players"} */}
             TODO
           </Button>
-        ) : null}
+        ) : null} */}
       </div>,
       portalRef,
     )

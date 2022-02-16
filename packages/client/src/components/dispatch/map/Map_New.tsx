@@ -3,7 +3,7 @@ import L from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./RenderMapBlips";
-import { RenderActiveCalls } from "./RenderActiveCalls";
+import { RenderActiveCalls } from "./calls/RenderActiveCalls";
 import { MapActions } from "./MapActions";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png" as const;

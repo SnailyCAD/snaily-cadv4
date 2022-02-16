@@ -3,7 +3,7 @@ import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import { ActiveMapCalls } from "./calls/ActiveMapCalls";
+import { ActiveMapCalls } from "./ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
