@@ -13,15 +13,17 @@ export interface Player {
   ems_fd?: boolean;
 }
 
-export type DataActions =
-  | {
-      type: "playerLeft";
-      payload: string;
-    }
-  | {
-      type: "playerData";
-      payload: Player[];
-    };
+export interface PlayerDataEvent {
+  type: "playerData";
+  payload: Player[];
+}
+
+export interface PlayerLeftEvent {
+  type: "playerLeft";
+  payload: string;
+}
+
+export type DataActions = PlayerLeftEvent | PlayerDataEvent;
 
 export interface XYZ {
   x: number | undefined;

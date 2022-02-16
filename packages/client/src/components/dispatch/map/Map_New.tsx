@@ -5,6 +5,7 @@ import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./RenderMapBlips";
 import { RenderActiveCalls } from "./calls/RenderActiveCalls";
 import { MapActions } from "./MapActions";
+import { RenderMapPlayers } from "./units/RenderMapPlayers";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png" as const;
 
@@ -41,6 +42,7 @@ export function Map() {
 
       <RenderMapBlips />
       <RenderActiveCalls />
+      <RenderMapPlayers />
       <MapActions />
     </MapContainer>
   );
