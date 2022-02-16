@@ -92,7 +92,7 @@ export function RenderMapPlayers() {
               <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}
               </p>
-              <div className="info-body mt-2">
+              <div className="mt-2">
                 {/* <p style={{ margin: 2 }}>
                   <strong>EMS-FD: </strong> {player.ems_fd}
                 </p>

@@ -82,30 +82,26 @@ export function RenderActiveCalls() {
             key={call.id}
             position={position}
           >
-            <Popup>
-              <div style={{ minWidth: 300 }}>
-                <div className="d-flex flex-column">
-                  <p style={{ margin: 2, fontSize: 18 }}>
-                    <strong>{t("location")}: </strong> {call.location}
-                  </p>
-                  <p style={{ margin: 2, fontSize: 18 }}>
-                    <strong>{t("caller")}: </strong> {call.name}
-                  </p>
+            <Popup minWidth={300}>
+              <p style={{ margin: 2, fontSize: 18 }}>
+                <strong>{t("location")}: </strong> {call.location}
+              </p>
+              <p style={{ margin: 2, fontSize: 18 }}>
+                <strong>{t("caller")}: </strong> {call.name}
+              </p>
 
-                  <div className="flex gap-2 mt-2">
-                    <Button small className="!text-base" onClick={() => handleToggle(call.id)}>
-                      {t("toggleCall")}
-                    </Button>
-                    <Button
-                      small
-                      variant="danger"
-                      className="!text-base"
-                      onClick={() => handleMarkerChange(call, "remove")}
-                    >
-                      {t("removeMarker")}
-                    </Button>
-                  </div>
-                </div>
+              <div className="flex gap-2 mt-2">
+                <Button small className="!text-base" onClick={() => handleToggle(call.id)}>
+                  {t("toggleCall")}
+                </Button>
+                <Button
+                  small
+                  variant="danger"
+                  className="!text-base"
+                  onClick={() => handleMarkerChange(call, "remove")}
+                >
+                  {t("removeMarker")}
+                </Button>
               </div>
             </Popup>
           </Marker>
