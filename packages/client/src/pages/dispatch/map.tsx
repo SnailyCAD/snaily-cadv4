@@ -3,14 +3,11 @@ import Head from "next/head";
 import * as React from "react";
 import { Layout } from "components/Layout";
 import { useAuth } from "context/AuthContext";
-import { useModal } from "context/ModalContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Full911Call, useDispatchState } from "state/dispatchState";
-import useFetch from "lib/useFetch";
-import { useTranslations } from "next-intl";
+import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
@@ -19,15 +16,8 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
 });
 
 export default function MapPage(props: any) {
-  const { openModal } = useModal();
   const { cad, user } = useAuth();
   const state = useDispatchState();
-  const { execute } = useFetch();
-  const t = useTranslations();
-
-  async function update911Call(call: Omit<Full911Call, "events" | "assignedUnits">) {
-    await execute(`/911-calls/${call.id}`, { method: "PUT", data: call });
-  }
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -63,15 +53,8 @@ export default function MapPage(props: any) {
       </Head>
       <Title>Dispatch Live Map</Title>
 
-      <Layout navMaxWidth="none" className="relative px-1 pb-1 mt-1 !max-w-none">
-        <Map
-          cad={cad}
-          update911Call={update911Call}
-          calls={state.calls}
-          openModal={openModal}
-          user={user}
-          t={t}
-        />
+      <Layout navMaxWidth="none" className="relative !px-0 !pb-0 !mt-0 !max-w-none">
+        <Map />
       </Layout>
     </>
   );

@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 html,
-body {
+body,
+#map-calls,
+.leaflet-container {
   font-family: "Assistant", sans-serif;
 }
 
@@ -45,10 +47,10 @@ th {
   @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none;
 
   &:first-child {
-    @apply rounded-tl-md ;
+    @apply rounded-tl-md;
   }
   &:last-child {
-    @apply rounded-tr-md ;
+    @apply rounded-tr-md;
   }
 }
 
@@ -90,6 +92,10 @@ th {
 
 .tabs-list[data-state="active"] {
   @apply text-black dark:text-white border-b-2 border-neutral-500 dark:border-[#4c4f55];
+}
+
+.accordion-state[data-state="open"] .accordion-state-transform {
+  transform: rotate(180deg);
 }
 
 .thin-scrollbar {
