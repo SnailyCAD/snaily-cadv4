@@ -1,30 +1,10 @@
 import * as React from "react";
-import L, { type PointTuple } from "leaflet";
+import * as L from "leaflet";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap, stringCoordToFloat } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
-import { BLIP_SIZES, type LatLng, type XYZ } from "types/Map";
+import { BLIP_SIZES, Blip, BlipsData, MarkerType } from "types/Map";
 import { useDispatchMapState } from "state/mapState";
-
-interface Blip {
-  name: string;
-  description: string | null;
-  pos: LatLng;
-  rawPos?: XYZ;
-  type: number;
-  icon: L.Icon | undefined;
-}
-
-interface MarkerType {
-  name: string;
-  className: string;
-  iconUrl: string;
-  iconSize: PointTuple;
-  iconAnchor: PointTuple;
-  popupAnchor: PointTuple;
-}
-
-type BlipsData = Record<string, (XYZ | { pos: XYZ })[]>;
 
 export function RenderMapBlips() {
   const map = useMap();
@@ -57,8 +37,6 @@ export function RenderMapBlips() {
               <p className="text-base !m-0">
                 <strong>Name: </strong> {blip.type}- {blip.name}
               </p>
-
-              <p className="!text-lg mt-5">{JSON.stringify(blip.rawPos, null, 4)}</p>
             </Popup>
           </Marker>
         );

@@ -9,14 +9,11 @@ import { CaretDownFill } from "react-bootstrap-icons";
 import type { Full911Call } from "state/dispatchState";
 import type { MapCallProps } from "./ActiveMapCalls";
 import { useTranslations } from "next-intl";
-
-const Span = ({ children }: { children: React.ReactNode }) => (
-  <span className="font-semibold">{children}</span>
-);
+import { Infofield } from "components/shared/Infofield";
 
 interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "setOpenItems"> {
   call: Full911Call;
-  setTempCall: any;
+  setTempCall: React.Dispatch<React.SetStateAction<Full911Call | null>>;
 }
 
 export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
@@ -66,43 +63,28 @@ export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemPr
         </Accordion.Trigger>
         <Accordion.Content className="pt-2 text-base text-neutral-800 dark:text-white">
           <div className="map-column">
-            <p id="caller">
-              <Span>{common("name")}:</Span> {call.name}
-            </p>
-            <p className="max-h-52 overflow-y-auto" id="description">
-              <Span>{common("description")}:</Span>
-              {call.description && !call.descriptionData ? (
-                call.description
-              ) : (
-                <Button className="ml-2" small onClick={() => handleViewDescription(call)}>
-                  {common("viewDescription")}
+            <Infofield label={common("name")}>{call.name}</Infofield>
+            <Infofield label={t("location")}>{call.location}</Infofield>
+            <Infofield label={t("postal")}>{call.postal || common("none")}</Infofield>
+            <Infofield label={t("assignedUnits")}>
+              {assignedUnits.length <= 0 ? common("none") : assignedUnits}
+            </Infofield>
+
+            <div className="flex flex-col mt-4">
+              <Button onClick={() => handleViewDescription(call)}>
+                {common("viewDescription")}
+              </Button>
+
+              <div className="grid grid-cols-2 grid-flow-col gap-2 mt-2">
+                <Button onClick={() => handleEdit(call)}>{common("manage")}</Button>
+
+                <Button
+                  className="col-span-2"
+                  onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}
+                >
+                  {hasMarker(call.id) ? "Remove marker" : "Set marker"}
                 </Button>
-              )}
-            </p>
-            <p id="location">
-              <Span>{t("location")}:</Span> {call.location}
-            </p>
-            <p id="postal">
-              <Span>{t("postal")}: </Span>
-              {call.postal || common("none")}
-            </p>
-            <p id="assigned_unit">
-              <Span>{t("assignedUnits")}: </Span>
-              {assignedUnits.length <= 0 ? "None" : assignedUnits}
-            </p>
-
-            <div className="flex gap-2 mt-2">
-              <Button
-                data-bs-toggle="modal"
-                className="btn btn-success w-50"
-                onClick={() => handleEdit(call)}
-              >
-                {common("manage")}
-              </Button>
-
-              <Button onClick={() => setMarker(call, hasMarker(call.id) ? "remove" : "set")}>
-                {hasMarker(call.id) ? "Remove marker" : "Set marker"}
-              </Button>
+              </div>
             </div>
           </div>
         </Accordion.Content>
