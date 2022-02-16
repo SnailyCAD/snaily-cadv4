@@ -4,7 +4,8 @@
 
 html,
 body,
-#map-calls {
+#map-calls,
+.leaflet-container {
   font-family: "Assistant", sans-serif;
 }
 
@@ -91,6 +92,10 @@ th {
 
 .tabs-list[data-state="active"] {
   @apply text-black dark:text-white border-b-2 border-neutral-500 dark:border-[#4c4f55];
+}
+
+.accordion-state[data-state="open"] .accordion-state-transform {
+  transform: rotate(180deg);
 }
 
 .thin-scrollbar {

@@ -17,6 +17,7 @@
     "@casper124578/use-socket.io": "3.1.1",
     "@casper124578/useful": "^1.4.6",
     "@headlessui/react": "^1.4.3",
+    "@radix-ui/react-accordion": "^0.1.5",
     "@radix-ui/react-context-menu": "^0.1.4",
     "@radix-ui/react-dropdown-menu": "^0.1.4",
     "@radix-ui/react-hover-card": "^0.1.3",

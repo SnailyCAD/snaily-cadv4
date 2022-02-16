@@ -1,8 +1,9 @@
+import * as React from "react";
 import type { LeafletEvent } from "leaflet";
 import useFetch from "lib/useFetch";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import { ActiveMapCalls } from "./ActiveMapCalls";
+import { ActiveMapCalls } from "./calls/ActiveMapCalls";
 import { convertToMap } from "lib/map/utils";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
@@ -11,7 +12,8 @@ export function RenderActiveCalls() {
   const map = useMap();
   const { execute } = useFetch();
   const { calls, setCalls } = useDispatchState();
-  const common = useTranslations("Common");
+  const t = useTranslations("Calls");
+  const [openItems, setOpenItems] = React.useState<string[]>([]);
 
   const callsWithPosition = calls.filter((v) => v.position?.lat && v.position.lng);
 
@@ -38,6 +40,34 @@ export function RenderActiveCalls() {
     handleCallStateUpdate(call.id, { ...data, ...json });
   }
 
+  async function handleMarkerChange(call: Full911Call, type: "remove" | "set") {
+    const coords = convertToMap(0, 0, map);
+
+    const callData =
+      type === "set"
+        ? { ...call, position: { ...coords, id: "null" } }
+        : { ...call, position: null };
+
+    handleCallStateUpdate(call.id, callData);
+
+    const { json } = await execute(`/911-calls/${call.id}`, {
+      method: "PUT",
+      data: callData,
+    });
+
+    handleCallStateUpdate(call.id, { ...callData, ...json });
+  }
+
+  function handleToggle(callId: string) {
+    setOpenItems((p) => {
+      if (p.includes(callId)) {
+        return p.filter((v) => v !== callId);
+      }
+
+      return [...p, callId];
+    });
+  }
+
   return (
     <>
       {callsWithPosition.map((call) => {
@@ -56,22 +86,25 @@ export function RenderActiveCalls() {
               <div style={{ minWidth: 300 }}>
                 <div className="d-flex flex-column">
                   <p style={{ margin: 2, fontSize: 18 }}>
-                    <strong>Location: </strong> {call.location}
+                    <strong>{t("location")}: </strong> {call.location}
                   </p>
                   <p style={{ margin: 2, fontSize: 18 }}>
-                    <strong>Caller: </strong> {call.name}
+                    <strong>{t("caller")}: </strong> {call.name}
                   </p>
-                  <p style={{ margin: 2, fontSize: 18 }}>
-                    <strong>{common("description")}: </strong>
-                    {call.description && !call.descriptionData ? (
-                      call.description
-                    ) : (
-                      // todo: onClick={() => handleViewDescription(call)}
-                      <Button className="ml-2" small>
-                        {common("viewDescription")}
-                      </Button>
-                    )}
-                  </p>
+
+                  <div className="flex gap-2 mt-2">
+                    <Button small className="!text-base" onClick={() => handleToggle(call.id)}>
+                      {t("toggleCall")}
+                    </Button>
+                    <Button
+                      small
+                      variant="danger"
+                      className="!text-base"
+                      onClick={() => handleMarkerChange(call, "remove")}
+                    >
+                      {t("removeMarker")}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </Popup>
@@ -81,32 +114,12 @@ export function RenderActiveCalls() {
 
       {/* <ActiveMapUnits /> */}
       <ActiveMapCalls
+        openItems={openItems}
+        setOpenItems={setOpenItems}
         hasMarker={(callId: string) => {
           return callsWithPosition.some((v) => v.id === callId);
         }}
-        setMarker={async (call: Full911Call, type: "remove" | "set") => {
-          const coords = convertToMap(0, 0, map);
-
-          const callData =
-            type === "set"
-              ? {
-                  ...call,
-                  position: { ...coords, id: "" },
-                }
-              : {
-                  ...call,
-                  position: null,
-                };
-
-          handleCallStateUpdate(call.id, callData);
-
-          const { json } = await execute(`/911-calls/${call.id}`, {
-            method: "PUT",
-            data: callData,
-          });
-
-          handleCallStateUpdate(call.id, { ...callData, ...json });
-        }}
+        setMarker={handleMarkerChange}
       />
     </>
   );

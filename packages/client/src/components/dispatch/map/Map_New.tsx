@@ -15,8 +15,7 @@ export function Map() {
   React.useEffect(() => {
     if (bounds) {
       map?.setMaxBounds(bounds);
-      // todo: verify
-      map?.setZoom(6);
+      map?.setZoom(-2);
     }
   }, [bounds, map]);
 
@@ -26,7 +25,7 @@ export function Map() {
       crs={L.CRS.Simple}
       center={[0, 0]}
       scrollWheelZoom
-      zoom={0}
+      zoom={-2}
       bounds={bounds}
       whenCreated={setMap}
       zoomControl={false}
