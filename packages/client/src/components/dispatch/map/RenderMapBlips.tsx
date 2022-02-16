@@ -4,11 +4,13 @@ import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap, stringCoordToFloat } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
 import { BLIP_SIZES, type LatLng, type XYZ } from "types/Map";
+import { useDispatchMapState } from "state/mapState";
 
 interface Blip {
   name: string;
   description: string | null;
   pos: LatLng;
+  rawPos?: XYZ;
   type: number;
   icon: L.Icon | undefined;
 }
@@ -27,6 +29,7 @@ type BlipsData = Record<string, (XYZ | { pos: XYZ })[]>;
 export function RenderMapBlips() {
   const map = useMap();
   const [blips, setBlips] = React.useState<Blip[]>([]);
+  const { blipsHidden } = useDispatchMapState();
 
   const doBlips = React.useCallback(async () => {
     setBlips(await generateBlips(map));
@@ -35,6 +38,10 @@ export function RenderMapBlips() {
   React.useEffect(() => {
     doBlips();
   }, [doBlips]);
+
+  if (blipsHidden) {
+    return null;
+  }
 
   return (
     <>
@@ -48,8 +55,10 @@ export function RenderMapBlips() {
           >
             <Popup>
               <p className="text-base !m-0">
-                <strong>Name: </strong> {blip.name}
+                <strong>Name: </strong> {blip.type}- {blip.name}
               </p>
+
+              <p className="!text-lg mt-5">{JSON.stringify(blip.rawPos, null, 4)}</p>
             </Popup>
           </Marker>
         );
@@ -85,6 +94,7 @@ async function generateBlips(map: L.Map) {
           name: markerData?.name ?? id,
           description: null,
           pos: converted,
+          rawPos: pos,
           type: Number(id),
           icon: markerData
             ? L.icon({

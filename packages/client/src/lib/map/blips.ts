@@ -37,7 +37,7 @@ export const blipTypes: any = {
   ComedyClub: { id: 102 },
   Dart: {},
   Fib: { id: 106, x: 9 },
-  Bank: { id: 108, x: 11 }, // these are generally "banks". Original: DollarSign
+  Bank: { id: 108, x: 11 },
   Golf: {},
   AmmuNation: {},
   Exile: { id: 112 },
@@ -169,5 +169,10 @@ export const blipTypes: any = {
   Stopwatch: { id: 430 },
   DollarSignCircled: {},
   Crosshair2: {},
+  DollarSignSquared: { id: 434 },
   FlameIcon: { id: 436, x: 15 },
+
+  DiamondCasino: { id: 679, x: 3, y: 25 },
+  LSCarMeet: { id: 777, x: 4, y: 29 },
+  LSCarMeetGarage: { id: 779, x: 2, y: 29 },
 };
