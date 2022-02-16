@@ -55,7 +55,8 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     [props.columns, tableActionsAlignment],
   );
 
-  const initialState = data.length >= MAX_ITEMS_PER_PAGE ? { pageIndex: state?.pageIndex } : {};
+  const initialState =
+    data.length >= MAX_ITEMS_PER_PAGE ? { pageIndex: state?.pageIndex ?? 0 } : {};
   const instance = useTable<TableData<T, RowProps>>(
     {
       autoResetSortBy: false,
@@ -150,6 +151,8 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
       props.containerProps?.className,
     ),
   };
+
+  console.log({ page });
 
   return (
     <div {...containerProps}>
