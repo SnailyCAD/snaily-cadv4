@@ -4,6 +4,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { getMapBounds } from "lib/map/utils";
 import { RenderMapBlips } from "./RenderMapBlips";
 import { RenderActiveCalls } from "./RenderActiveCalls";
+import { MapActions } from "./MapActions";
 
 const TILES_URL = "/tiles/minimap_sea_{y}_{x}.png";
 
@@ -39,6 +40,7 @@ export function Map() {
 
       <RenderMapBlips />
       <RenderActiveCalls />
+      <MapActions />
     </MapContainer>
   );
 }
