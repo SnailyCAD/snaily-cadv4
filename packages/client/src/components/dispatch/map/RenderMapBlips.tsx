@@ -4,14 +4,14 @@ import J from "jquery";
 import { Marker, Popup, useMap } from "react-leaflet";
 import { convertToMap, stringCoordToFloat } from "lib/map/utils";
 import { blipTypes } from "lib/map/blips";
-import { BLIP_SIZES, LatLng } from "types/Map";
+import { BLIP_SIZES, type LatLng, type XYZ } from "types/Map";
 
 interface Blip {
   name: string;
-  description: string;
+  description: string | null;
   pos: LatLng;
   type: number;
-  icon: L.Icon;
+  icon: L.Icon | undefined;
 }
 
 interface MarkerType {
@@ -22,6 +22,8 @@ interface MarkerType {
   iconAnchor: PointTuple;
   popupAnchor: PointTuple;
 }
+
+type BlipsData = Record<string, (XYZ | { pos: XYZ })[]>;
 
 export function RenderMapBlips() {
   const map = useMap();
@@ -46,13 +48,9 @@ export function RenderMapBlips() {
             position={blip.pos}
           >
             <Popup>
-              <div style={{ minWidth: 50 }}>
-                <div className="flex flex-col">
-                  <p style={{ margin: 0 }} className="text-base">
-                    <strong>Name: </strong> {blip.type}-{blip.name}
-                  </p>
-                </div>
-              </div>
+              <p className="text-base !m-0">
+                <strong>Name: </strong> {blip.name}
+              </p>
             </Popup>
           </Marker>
         );
@@ -62,7 +60,9 @@ export function RenderMapBlips() {
 }
 
 async function generateBlips(map: L.Map) {
-  const blipsData = await fetch("/blips.json").then((v) => v.json());
+  const blipsData: BlipsData = await fetch("/blips.json")
+    .then((v) => v.json())
+    .catch(() => ({}));
 
   const markerTypes = generateMarkerTypes();
   const createdBlips: Blip[] = [];
@@ -72,23 +72,21 @@ async function generateBlips(map: L.Map) {
       const blipArray = blipsData[id];
 
       for (const i in blipArray) {
-        const blipData = blipArray[i];
+        const blipData = blipArray[+i];
         const markerData = markerTypes[+id];
-        const pos = blipData.pos ?? {
-          x: blipData.x,
-          y: blipData.y,
-          z: blipData.z,
-        };
+        if (!blipData) continue;
+
+        const pos =
+          "pos" in blipData ? blipData.pos : { x: blipData.x, y: blipData.y, z: blipData.z };
 
         const coords = stringCoordToFloat(pos);
         const converted = convertToMap(coords.x, coords.y, map);
 
-        const blip = {
-          ...blipData,
-          name: blipData?.name || markerData?.name || id,
-          description: blipData?.description || "N/A",
+        const blip: Blip = {
+          name: markerData?.name ?? id,
+          description: null,
           pos: converted,
-          type: id,
+          type: Number(id),
           icon: markerData
             ? L.icon({
                 iconUrl: markerData.iconUrl,
@@ -97,7 +95,7 @@ async function generateBlips(map: L.Map) {
                 iconAnchor: markerData.iconAnchor,
                 popupAnchor: markerData.popupAnchor,
               })
-            : null,
+            : undefined,
         };
 
         createdBlips.push(blip);
