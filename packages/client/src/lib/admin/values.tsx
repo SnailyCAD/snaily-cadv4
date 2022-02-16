@@ -25,9 +25,13 @@ const TYPE_LABELS = {
 
 const DEFAULT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
-export function makeDefaultWhatPages(status: StatusValue | null) {
+export function makeDefaultWhatPages(
+  status: (Omit<StatusValue, "whatPages"> & { whatPages: WhatPages[] | null }) | null,
+) {
   if (!status) return [];
-  return status.whatPages.length <= 0 ? DEFAULT_PAGES : status.whatPages;
+  const whatPages = status.whatPages ?? [];
+
+  return whatPages.length <= 0 ? DEFAULT_PAGES : status.whatPages;
 }
 
 export function useTableDataOfType(type: ValueType) {
@@ -46,7 +50,7 @@ export function useTableDataOfType(type: ValueType) {
         return {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
-          whatPages: whatPages.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
+          whatPages: whatPages?.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
           color: v.color ? (
             <>
               <span
