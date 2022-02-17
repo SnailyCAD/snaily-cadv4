@@ -34,6 +34,7 @@ export const callInclude = {
   incidents: true,
   departments: { include: leoProperties.department.include },
   divisions: { include: leoProperties.division.include },
+  situationCode: { include: { value: true } },
 };
 
 @Controller("/911-calls")
@@ -69,6 +70,7 @@ export class Calls911Controller {
         descriptionData: data.descriptionData,
         name: data.name,
         userId: user.id || undefined,
+        situationCodeId: data.situationCode ?? null,
       },
       include: callInclude,
     });
@@ -164,6 +166,7 @@ export class Calls911Controller {
         userId: ctx.get("user").id,
         positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
         descriptionData: data.descriptionData,
+        situationCodeId: data.situationCode === null ? null : data.situationCode,
       },
     });
 

@@ -18,7 +18,7 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit } from "@snailycad/types";
+import { StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
@@ -42,7 +42,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const isDispatch = router.pathname.startsWith("/dispatch") && user?.isDispatch;
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const generateCallsign = useGenerateCallsign();
-  const { department, division } = useValues();
+  const { department, division, codes10 } = useValues();
   const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
 
   const allUnits = [...allOfficers, ...allDeputies] as (FullDeputy | CombinedLeoUnit)[];
@@ -202,6 +202,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     descriptionData: dataToSlate(call),
     departments: call?.departments?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
+    situationCode: call?.situationCodeId ?? null,
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),
@@ -319,6 +320,22 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                       />
                     </FormField>
                   </FormRow>
+
+                  <FormField errorMessage={errors.situationCode} label={t("situationCode")}>
+                    <Select
+                      isClearable
+                      name="situationCode"
+                      value={values.situationCode}
+                      values={codes10.values
+                        .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                        .map((division) => ({
+                          label: division.value.value,
+                          value: division.id,
+                        }))}
+                      onChange={handleChange}
+                      disabled={isDisabled}
+                    />
+                  </FormField>
                 </>
               )}
 
