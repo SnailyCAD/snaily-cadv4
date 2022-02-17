@@ -1,10 +1,9 @@
 import { Controller, UseBeforeEach } from "@tsed/common";
-import { Description, Post } from "@tsed/schema";
+import { Description, Header, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { leoProperties } from "lib/officer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 
@@ -30,7 +29,8 @@ export const citizenSearchInclude = {
 };
 
 @Controller("/search")
-@UseBeforeEach(IsAuth, ActiveOfficer)
+@UseBeforeEach(IsAuth)
+@Header("content-type", "application/json")
 export class SearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname")
