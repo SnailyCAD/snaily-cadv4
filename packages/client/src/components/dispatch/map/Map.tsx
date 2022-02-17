@@ -15,8 +15,6 @@ export function Map() {
 
   React.useEffect(() => {
     if (bounds) {
-      console.log({ map });
-
       map?.setMaxBounds(bounds);
       map?.fitBounds(bounds);
       map?.setZoom(-2);
@@ -32,6 +30,7 @@ export function Map() {
       zoom={-2}
       bounds={bounds}
       whenCreated={setMap}
+      zoomControl={false}
     >
       <TileLayer
         url={TILES_URL}
