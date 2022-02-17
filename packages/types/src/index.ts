@@ -669,6 +669,8 @@ export interface Call911 {
   descriptionData: DescriptionData | null;
   name: string;
   ended: boolean | null;
+  situationCodeId: string | null;
+  situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
 }
