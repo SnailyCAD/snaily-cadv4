@@ -23,7 +23,7 @@
     "@types/qrcode": "^1.4.2",
     "esbuild": "^0.14.22",
     "esbuild-register": "^3.3.2",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.5.0",
     "tsconfig-paths": "^3.12.0"
   },
   "dependencies": {
