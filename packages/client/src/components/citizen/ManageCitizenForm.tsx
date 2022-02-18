@@ -42,7 +42,7 @@ export function ManageCitizenForm({
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
@@ -212,7 +212,7 @@ export function ManageCitizenForm({
             <Textarea name="occupation" onChange={handleChange} value={values.occupation} />
           </FormField>
 
-          {showLicenseFields ? (
+          {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
             <FormRow className="mt-5">
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
