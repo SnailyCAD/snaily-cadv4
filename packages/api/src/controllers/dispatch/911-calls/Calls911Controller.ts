@@ -34,6 +34,7 @@ export const callInclude = {
   incidents: true,
   departments: { include: leoProperties.department.include },
   divisions: { include: leoProperties.division.include },
+  situationCode: { include: { value: true } },
 };
 
 @Controller("/911-calls")
@@ -64,11 +65,12 @@ export class Calls911Controller {
     const call = await prisma.call911.create({
       data: {
         location: data.location,
-        postal: String(data.postal),
+        postal: data.postal,
         description: data.description,
         descriptionData: data.descriptionData,
         name: data.name,
         userId: user.id || undefined,
+        situationCodeId: data.situationCode ?? null,
       },
       include: callInclude,
     });
@@ -164,6 +166,7 @@ export class Calls911Controller {
         userId: ctx.get("user").id,
         positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
         descriptionData: data.descriptionData,
+        situationCodeId: data.situationCode === null ? null : data.situationCode,
       },
     });
 

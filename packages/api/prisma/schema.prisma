@@ -672,6 +672,7 @@ model StatusValue {
   officerStatusToValue Officer[]         @relation("officerStatusToValue")
   emsFdStatusToValue   EmsFdDeputy[]     @relation("emsFdStatusToValue")
   CombinedLeoUnit      CombinedLeoUnit[] @relation("combinedUnitStatusToValue")
+  Call911              Call911[]
 }
 
 model OfficerLog {
@@ -768,6 +769,8 @@ model Call911 {
   descriptionData Json?
   name            String            @db.VarChar(255)
   ended           Boolean?          @default(false)
+  situationCode   StatusValue?      @relation(fields: [situationCodeId], references: [id])
+  situationCodeId String?
   divisions       DivisionValue[]
   departments     DepartmentValue[]
   events          Call911Event[]
@@ -972,4 +975,5 @@ enum Feature {
   SOCIAL_SECURITY_NUMBERS
   DISALLOW_TEXTFIELD_SELECTION
   ACTIVE_DISPATCHERS
+  ALLOW_CITIZEN_UPDATE_LICENSE
 }

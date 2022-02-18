@@ -100,6 +100,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, curtain buttons on the LEO and EMS/FD dashboard will become disabled when there is an active dispatcher.",
   },
+  ALLOW_CITIZEN_UPDATE_LICENSE: {
+    name: "Allow citizens to update licenses",
+    description: "When disabled, this will only allow LEO to manage licenses of citizens.",
+  },
 };
 
 export function DisabledFeaturesArea() {

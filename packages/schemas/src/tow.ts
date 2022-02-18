@@ -5,7 +5,7 @@ export const TOW_SCHEMA = z.object({
   description: z.string().optional().nullable(),
   descriptionData: z.any().optional().nullable(),
   creatorId: z.string().min(2).max(255).nullable(),
-  postal: z.string().max(255).optional(),
+  postal: z.string().max(255).optional().nullable(),
   plate: z.string().max(255).optional(),
   call911Id: z.string().max(255).optional(),
   deliveryAddress: z.string().max(255).optional(),

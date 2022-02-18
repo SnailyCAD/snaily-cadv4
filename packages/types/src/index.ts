@@ -669,6 +669,8 @@ export interface Call911 {
   descriptionData: DescriptionData | null;
   name: string;
   ended: boolean | null;
+  situationCodeId: string | null;
+  situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
 }
@@ -865,6 +867,7 @@ export enum Feature {
   SOCIAL_SECURITY_NUMBERS = "SOCIAL_SECURITY_NUMBERS",
   DISALLOW_TEXTFIELD_SELECTION = "DISALLOW_TEXTFIELD_SELECTION",
   ACTIVE_DISPATCHERS = "ACTIVE_DISPATCHERS",
+  ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
 }
 
 export enum Rank {

@@ -184,6 +184,7 @@ function ActiveCallsInner() {
                         {common("viewDescription")}
                       </Button>
                     ),
+                  situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
                   actions: (
@@ -235,6 +236,7 @@ function ActiveCallsInner() {
               { Header: t("caller"), accessor: "name" },
               { Header: t("location"), accessor: "location" },
               { Header: common("description"), accessor: "description" },
+              { Header: t("situationCode"), accessor: "situationCode" },
               { Header: common("updatedAt"), accessor: "updatedAt" },
               { Header: t("assignedUnits"), accessor: "assignedUnits" },
               { Header: common("actions"), accessor: "actions" },
