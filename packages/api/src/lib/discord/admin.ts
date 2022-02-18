@@ -1,5 +1,5 @@
 import { Rank, User } from "@prisma/client";
-import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v9";
+import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
 

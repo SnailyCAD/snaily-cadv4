@@ -4,7 +4,7 @@ import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import { request } from "undici";
-import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types";
+import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types/v10";
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth";

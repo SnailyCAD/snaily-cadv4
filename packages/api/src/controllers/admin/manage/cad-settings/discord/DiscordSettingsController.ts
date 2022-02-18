@@ -1,7 +1,7 @@
 import process from "node:process";
 import { BodyParams, Context, Controller, UseBeforeEach } from "@tsed/common";
 import { Get, Post } from "@tsed/schema";
-import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v9";
+import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
 import type { cad } from "@prisma/client";
