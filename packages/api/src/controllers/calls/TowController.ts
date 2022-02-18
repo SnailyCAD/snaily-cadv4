@@ -123,7 +123,7 @@ export class TowController {
         description: data.description,
         descriptionData: data.descriptionData,
         location: data.location,
-        postal: data.postal ? String(data.postal) : null,
+        postal: data.postal,
         deliveryAddressId: data.deliveryAddress || null,
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
