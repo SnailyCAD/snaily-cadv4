@@ -13,7 +13,7 @@ import { UPDATE_AOP_SCHEMA } from "@snailycad/schemas";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
-export class Calls911Controller {
+export class DispatchController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
