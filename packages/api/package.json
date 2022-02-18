@@ -34,7 +34,7 @@
     "@snailycad/types": "1.0.0-beta.57",
     "@tsed/common": "^6.102.3",
     "@tsed/core": "^6.102.3",
-    "@tsed/di": "^6.102.3",
+    "@tsed/di": "^6.102.5",
     "@tsed/exceptions": "^6.102.3",
     "@tsed/json-mapper": "^6.102.3",
     "@tsed/platform-express": "^6.102.3",
