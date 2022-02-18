@@ -12,25 +12,26 @@ const types = ["driversLicense", "pilotLicense", "weaponLicense", "ccw"] as cons
 export function LicensesCard() {
   const { openModal } = useModal();
   const { citizen } = useCitizen(false);
+  const { ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
 
   return (
-    <>
-      <div className="p-4 card">
-        <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold">Licenses</h1>
+    <div className="p-4 card">
+      <header className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Licenses</h1>
 
+        {ALLOW_CITIZEN_UPDATE_LICENSE ? (
           <Button onClick={() => openModal(ModalIds.ManageLicenses)} small>
             Manage Licenses
           </Button>
-        </header>
+        ) : null}
+      </header>
 
-        <div className="mt-2">
-          <CitizenLicenses citizen={citizen} />
-        </div>
+      <div className="mt-2">
+        <CitizenLicenses citizen={citizen} />
       </div>
 
-      <ManageLicensesModal />
-    </>
+      {ALLOW_CITIZEN_UPDATE_LICENSE ? <ManageLicensesModal /> : null}
+    </div>
   );
 }
 
