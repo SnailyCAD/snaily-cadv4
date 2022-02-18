@@ -8,7 +8,7 @@ import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth";
-import { WhitelistStatus, type User } from "@prisma/client";
+import { cad, Feature, WhitelistStatus, type User } from "@prisma/client";
 import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
@@ -185,7 +185,12 @@ export class DiscordAuth {
   @Delete("/")
   @UseBefore(IsAuth)
   @Description("Remove Discord OAuth2 from from authenticated user")
-  async removeDiscordAuth(@Context("user") user: User) {
+  async removeDiscordAuth(@Context("user") user: User, @Context("cad") cad: cad) {
+    const features = cad.disabledFeatures;
+    if (features.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginDisabled");
+    }
+
     await prisma.user.update({
       where: {
         id: user.id,

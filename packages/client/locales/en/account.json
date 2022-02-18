@@ -9,6 +9,7 @@
     "connectDiscord": "Connect Discord account",
     "disconnectDiscord": "Disconnect Discord account",
     "disconnectText": "This will remove the ability to login via Discord.",
+    "disabledDisconnectText": "You cannot disconnect your Discord connection when 'Disallow regular login' is enabled. To delete your account please contact an administrator",
     "connectText": "This will add the ability to login via Discord.",
     "disconnecting": "Disconnecting...",
     "currentPassword": "Current password",
