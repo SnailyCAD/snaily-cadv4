@@ -18,7 +18,7 @@ import { callInclude, findUnit } from "./911-calls/Calls911Controller";
 import { leoProperties, unitProperties } from "lib/officer";
 import { getWebhookData, sendDiscordWebhook } from "lib/discord";
 import { Socket } from "services/SocketService";
-import type { APIWebhook } from "discord-api-types";
+import type { APIWebhook } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import {
