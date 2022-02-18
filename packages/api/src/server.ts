@@ -29,7 +29,7 @@ const rootDir = __dirname;
       },
     ],
   },
-  swagger: [{ path: "/api-docs", specVersion: "3.0.1" }],
+  swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {
     cors: {
       credentials: true,
