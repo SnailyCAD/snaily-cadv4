@@ -14,6 +14,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
+import { Feature } from "@prisma/client";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -122,6 +123,11 @@ export class AuthController {
     const cad = await findOrCreateCAD({
       ownerId: user.id,
     });
+
+    // only allow Discord auth
+    if (cad.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginIsDisabled");
+    }
 
     const autoSetUserProperties = cad.autoSetUserProperties;
     const extraUserData: Partial<User> =
