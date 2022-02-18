@@ -136,6 +136,10 @@ export class ManageUnitsController {
     }
 
     if (type === "officer") {
+      if (!data.divisions || data.divisions.length <= 0) {
+        throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
+      }
+
       await validateMaxDivisionsPerOfficer(data.divisions, cad);
 
       await unlinkDivisionsFromOfficer(unit);
