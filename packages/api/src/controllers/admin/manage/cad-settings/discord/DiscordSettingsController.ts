@@ -89,6 +89,7 @@ export class DiscordSettingsController {
       emsFdRoleId: data.emsFdRoleId ?? null,
       towRoleId: data.towRoleId ?? null,
       adminRoleId: data.adminRoleId ?? null,
+      whitelistedRoleId: data.whitelistedRoleId ?? null,
     };
 
     const discordRoles = await prisma.discordRoles.upsert({

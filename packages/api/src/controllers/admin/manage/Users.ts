@@ -1,4 +1,4 @@
-import { Rank, WhitelistStatus } from ".prisma/client";
+import { Rank, type cad, WhitelistStatus } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -212,6 +212,7 @@ export class ManageUsersController {
   async acceptOrDeclineUser(
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
+    @Context("cad") cad: cad & { discordRolesId: string | null },
   ) {
     if (!["accept", "decline"].includes(type)) {
       throw new BadRequest("invalidType");
@@ -231,7 +232,7 @@ export class ManageUsersController {
       throw new NotFound("notFound");
     }
 
-    await prisma.user.update({
+    const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
@@ -239,6 +240,10 @@ export class ManageUsersController {
         whitelistStatus: type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
       },
     });
+
+    if (updated.discordId && cad.whitelisted) {
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return true;
   }

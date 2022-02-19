@@ -29,6 +29,7 @@ export function DiscordRolesTab() {
     leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
     towRoleId: discordRoles.towRoleId,
     adminRoleId: discordRoles.adminRoleId,
+    whitelistedRoleId: discordRoles.whitelistedRoleId,
   };
 
   async function refreshRoles() {
@@ -152,6 +153,19 @@ export function DiscordRolesTab() {
                 }))}
                 value={values.towRoleId}
                 name="towRoleId"
+                onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.whitelistedRoleId} label="Whitelisted Role">
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.whitelistedRoleId}
+                name="whitelistedRoleId"
                 onChange={handleChange}
               />
             </FormField>

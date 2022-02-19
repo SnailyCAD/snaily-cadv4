@@ -98,6 +98,8 @@ export type DiscordRoles = {
   towRole: DiscordRole | null;
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
+  whitelistedRoleId: string | null;
+  whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
 };
 
