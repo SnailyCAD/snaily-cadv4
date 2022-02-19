@@ -68,46 +68,50 @@ export function VehiclesTab() {
         </div>
       </header>
 
-      <Table
-        data={vehicles.map((vehicle) => ({
-          plate: vehicle.plate,
-          model: vehicle.model.value.value,
-          color: vehicle.color,
-          registrationStatus: vehicle.registrationStatus.value,
-          vinNumber: vehicle.vinNumber,
-          createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
-          actions: (
-            <>
-              <Button
-                disabled={vehicle.impounded}
-                onClick={() => handleManageClick(vehicle)}
-                small
-                variant="success"
-              >
-                {common("edit")}
-              </Button>
-              <Button
-                disabled={vehicle.impounded}
-                className="ml-2"
-                onClick={() => handleDeleteClick(vehicle)}
-                small
-                variant="danger"
-              >
-                {common("delete")}
-              </Button>
-            </>
-          ),
-        }))}
-        columns={[
-          { Header: t("Vehicles.plate"), accessor: "plate" },
-          { Header: t("Vehicles.model"), accessor: "model" },
-          { Header: t("Vehicles.color"), accessor: "color" },
-          { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
-          { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          { Header: common("actions"), accessor: "actions" },
-        ]}
-      />
+      {vehicles.length <= 0 ? (
+        <p className="mt-2">{t("Business.noVehicles")}</p>
+      ) : (
+        <Table
+          data={vehicles.map((vehicle) => ({
+            plate: vehicle.plate,
+            model: vehicle.model.value.value,
+            color: vehicle.color,
+            registrationStatus: vehicle.registrationStatus.value,
+            vinNumber: vehicle.vinNumber,
+            createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
+            actions: (
+              <>
+                <Button
+                  disabled={vehicle.impounded}
+                  onClick={() => handleManageClick(vehicle)}
+                  small
+                  variant="success"
+                >
+                  {common("edit")}
+                </Button>
+                <Button
+                  disabled={vehicle.impounded}
+                  className="ml-2"
+                  onClick={() => handleDeleteClick(vehicle)}
+                  small
+                  variant="danger"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={[
+            { Header: t("Vehicles.plate"), accessor: "plate" },
+            { Header: t("Vehicles.model"), accessor: "model" },
+            { Header: t("Vehicles.color"), accessor: "color" },
+            { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
+            { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
+            { Header: common("createdAt"), accessor: "createdAt" },
+            { Header: common("actions"), accessor: "actions" },
+          ]}
+        />
+      )}
 
       <AlertModal
         className="w-[600px]"

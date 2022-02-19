@@ -7,13 +7,13 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Form, Formik } from "formik";
 import { CREATE_COMPANY_SCHEMA } from "@snailycad/schemas";
-import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { handleValidate } from "lib/handleValidate";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { useRouter } from "next/router";
+import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormRow } from "components/form/FormRow";
 
 export function ManageBusinessTab() {
@@ -71,34 +71,45 @@ export function ManageBusinessTab() {
 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values, isValid }) => (
-          <Form>
-            <FormField errorMessage={errors.name} label={t("name")}>
+          <Form className="mt-3">
+            <SettingsFormField
+              description={t("nameDescription")}
+              errorMessage={errors.name}
+              label={t("name")}
+            >
               <Input name="name" onChange={handleChange} value={values.name} />
-            </FormField>
+            </SettingsFormField>
 
-            <FormRow flexLike>
-              <FormField className="w-full" errorMessage={errors.address} label={t("address")}>
+            <SettingsFormField
+              description={t("addressDescription")}
+              errorMessage={errors.address}
+              label={t("address")}
+            >
+              <FormRow flexLike>
                 <Input
                   className="w-full"
                   name="address"
                   onChange={handleChange}
                   value={values.address}
                 />
-              </FormField>
-
-              <FormField optional errorMessage={errors.postal} label={common("postal")}>
                 <Input
-                  className="min-w-[200px]"
+                  className="w-[200px]"
                   name="postal"
                   onChange={handleChange}
                   value={values.postal}
+                  placeholder={common("postal")}
                 />
-              </FormField>
-            </FormRow>
+              </FormRow>
+            </SettingsFormField>
 
-            <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
+            <SettingsFormField
+              action="checkbox"
+              description={t("whitelistDescription")}
+              errorMessage={errors.whitelisted}
+              label={t("whitelisted")}
+            >
               <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
-            </FormField>
+            </SettingsFormField>
 
             <footer className="flex justify-between mt-5">
               <Button
@@ -110,9 +121,6 @@ export function ManageBusinessTab() {
               </Button>
 
               <div className="flex">
-                <Button type="reset" variant="cancel">
-                  {common("cancel")}
-                </Button>
                 <Button
                   className="flex items-center"
                   disabled={!isValid || state === "loading"}
