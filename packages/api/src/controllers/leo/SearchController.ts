@@ -119,8 +119,9 @@ export class SearchController {
   @Post("/vehicle")
   @Description("Search vehicles by their plate or vinNumber")
   async searchVehicle(
-    @QueryParams("includeMany") includeMany: boolean,
     @BodyParams("plateOrVin") plateOrVin: string,
+    @QueryParams("includeMany") includeMany: boolean,
+    @QueryParams("includeCitizenInfo") includeCitizenInfo?: boolean,
   ) {
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
@@ -134,11 +135,11 @@ export class SearchController {
         ],
       },
       include: {
-        citizen: true,
         model: { include: { value: true } },
         registrationStatus: true,
         TruckLog: true,
         Business: true,
+        citizen: includeCitizenInfo ? { include: { warrants: true } } : true,
       },
     };
 
