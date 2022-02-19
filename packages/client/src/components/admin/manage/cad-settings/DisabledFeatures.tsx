@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Button } from "components/Button";
@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
+import { SettingsFormField } from "components/form/SettingsFormField";
 
 const FEATURES = Object.keys(Feature) as Feature[];
 
@@ -148,13 +149,13 @@ export function DisabledFeaturesArea() {
   const INITIAL_VALUES = createInitialValues();
   const features = Object.entries(FEATURES_LIST).filter(([, v]) =>
     !search.trim() ? true : v.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  ) as [Feature, FeatureItem][];
 
   return (
     <div className="mt-3">
       <h2 className="text-2xl font-semibold">Enable or disable features</h2>
 
-      <FormField label={common("search")} className="mt-3 mb-10">
+      <FormField label={common("search")} className="mt-3 mb-2.5">
         <Input
           placeholder="Find features.."
           onChange={(e) => setSearch(e.target.value)}
@@ -165,29 +166,26 @@ export function DisabledFeaturesArea() {
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, values }) => (
-          <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {features.map(([key, value]) => {
-                return (
-                  <div key={key}>
-                    <FormField checkbox boldLabel label={value.name}>
-                      <Toggle
-                        toggled={values[Feature[key as Feature]]}
-                        onClick={handleChange}
-                        name={Feature[key as Feature]}
-                      />
-                    </FormField>
-                    <small className="mt-2 text-base">{value.description}</small>
-                  </div>
-                );
-              })}
-            </div>
+          <Form onSubmit={handleSubmit}>
+            {features.map(([key, value]) => {
+              return (
+                <div key={key}>
+                  <SettingsFormField
+                    action="checkbox"
+                    description={value.description}
+                    label={value.name}
+                  >
+                    <Toggle toggled={values[key]} onClick={handleChange} name={key} />
+                  </SettingsFormField>
+                </div>
+              );
+            })}
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>
