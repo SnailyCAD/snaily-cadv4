@@ -82,8 +82,8 @@ export class DiscordAuth {
      * -> log the user in and set the cookie
      */
     if (!authUser && user) {
-      validateUser(user);
-      await updateMemberRolesLogin(user, discordRolesId);
+      const updatedWithRoles = await updateMemberRolesLogin(user, discordRolesId);
+      validateUser(updatedWithRoles ?? user);
 
       // authenticate user with cookie
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
@@ -119,6 +119,9 @@ export class DiscordAuth {
         },
       });
 
+      const updatedWithRoles = await updateMemberRolesLogin(user, discordRolesId);
+      validateUser(updatedWithRoles ?? user);
+
       const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
       setCookie({
         res,
@@ -127,7 +130,6 @@ export class DiscordAuth {
         value: jwtToken,
       });
 
-      await updateMemberRolesLogin(user, discordRolesId);
       return res.redirect(`${redirectURL}/citizen`);
     }
 
@@ -142,8 +144,8 @@ export class DiscordAuth {
           },
         });
 
-        validateUser(user);
-        await updateMemberRolesLogin(updated, discordRolesId);
+        const updatedWithRoles = await updateMemberRolesLogin(updated, discordRolesId);
+        validateUser(updatedWithRoles ?? updated);
 
         return res.redirect(`${redirectURL}/account?tab=discord&success`);
       }
@@ -161,8 +163,8 @@ export class DiscordAuth {
         },
       });
 
-      validateUser(authUser);
-      await updateMemberRolesLogin(updated, discordRolesId);
+      const updatedWithRoles = await updateMemberRolesLogin(updated, discordRolesId);
+      validateUser(updatedWithRoles ?? updated);
 
       return res.redirect(`${redirectURL}/account?tab=discord&success`);
     }
