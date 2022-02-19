@@ -1,13 +1,20 @@
-import { Rank, User } from "@prisma/client";
+import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
 
+type UserProperties =
+  | "isLeo"
+  | "rank"
+  | "isSupervisor"
+  | "isEmsFd"
+  | "isDispatch"
+  | "isTow"
+  | "discordId"
+  | "whitelistStatus";
+
 export async function updateMemberRoles(
-  user: Pick<
-    User,
-    "isLeo" | "rank" | "isSupervisor" | "isEmsFd" | "isDispatch" | "isTow" | "discordId"
-  >,
+  user: Pick<User, UserProperties>,
   discordRolesId: string | null,
 ) {
   if (!GUILD_ID || !BOT_TOKEN || !discordRolesId || !user.discordId) return;
@@ -33,6 +40,10 @@ export async function updateMemberRoles(
     { roleId: discordRoles.dispatchRoleId, method: createMethod(user.isDispatch) },
     { roleId: discordRoles.towRoleId, method: createMethod(user.isTow) },
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
+    {
+      roleId: discordRoles.whitelistedRoleId,
+      method: createMethod(user.whitelistStatus === WhitelistStatus.ACCEPTED),
+    },
   ];
 
   await Promise.all(
