@@ -1320,9 +1320,9 @@ __metadata:
   dependencies:
     "@discordjs/rest": ^0.3.0
     "@prisma/client": ^3.9.2
-    "@snailycad/config": 1.0.0-beta.58
-    "@snailycad/schemas": 1.0.0-beta.58
-    "@snailycad/types": 1.0.0-beta.58
+    "@snailycad/config": 1.0.0-beta.59
+    "@snailycad/schemas": 1.0.0-beta.59
+    "@snailycad/types": 1.0.0-beta.59
     "@tsed/common": ^6.102.5
     "@tsed/core": ^6.102.5
     "@tsed/di": ^6.102.5
@@ -1383,9 +1383,9 @@ __metadata:
     "@react-aria/focus": ^3.5.2
     "@react-aria/label": ^3.2.3
     "@react-aria/ssr": ^3.1.2
-    "@snailycad/config": 1.0.0-beta.58
-    "@snailycad/schemas": 1.0.0-beta.58
-    "@snailycad/types": 1.0.0-beta.58
+    "@snailycad/config": 1.0.0-beta.59
+    "@snailycad/schemas": 1.0.0-beta.59
+    "@snailycad/types": 1.0.0-beta.59
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.39
     "@types/react-dom": ^17.0.11
@@ -1433,7 +1433,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.0.0-beta.58, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.0.0-beta.59, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
@@ -1443,7 +1443,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.0.0-beta.58, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.0.0-beta.59, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
@@ -1453,7 +1453,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.0.0-beta.58, @snailycad/types@workspace:packages/types":
+"@snailycad/types@1.0.0-beta.59, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
