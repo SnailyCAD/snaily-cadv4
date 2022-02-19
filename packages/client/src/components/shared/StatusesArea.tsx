@@ -64,6 +64,8 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
     if (!activeUnit) return;
     if (status.id === activeUnit.statusId) return;
 
+    setActiveUnit({ ...activeUnit, statusId: status.id, status });
+
     const { json } = await execute(`/dispatch/status/${activeUnit.id}`, {
       method: "PUT",
       data: {
