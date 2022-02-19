@@ -11,6 +11,7 @@ interface Props {
   action: "input" | "checkbox";
   children: ReactNode;
   errorMessage?: string | null;
+  optional?: boolean;
 }
 
 export function SettingsFormField({
@@ -19,32 +20,52 @@ export function SettingsFormField({
   children,
   errorMessage,
   action = "input",
+  optional,
 }: Props) {
   const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
 
   const [child] = Array.isArray(children) ? children : [children];
 
+  const isInput =
+    ["__Input__", "__Textarea__"].includes(child?.type?.displayName) ||
+    child?.type?.name === "Select";
+  const inputProps = isInput ? { errorMessage } : {};
+
   const element = React.cloneElement(child, {
     ...fieldProps,
+    ...inputProps,
   });
 
   const borderColor = errorMessage ? "border-red-400" : "dark:border-gray-600";
 
   return (
-    <div className={classNames("w-full card mb-3 border-[1px]", borderColor)}>
-      <div className="flex justify-between p-4 py-0">
-        <header className="py-4">
+    <div className={classNames("w-full card mb-5 border-[1px]", borderColor)}>
+      <div
+        className={classNames(
+          "py-0 gap-2",
+          action === "input" ? "flex flex-col" : "flex justify-between",
+        )}
+      >
+        <header className="py-4 px-4">
           <h3 className="text-xl font-semibold">
-            <label {...labelProps}>{label}</label>
+            <label {...labelProps}>
+              {label}
+
+              {optional ? (
+                <span className="text-sm font-normal italic ml-1">{"(Optional)"}</span>
+              ) : null}
+            </label>
           </h3>
 
-          <p className="mt-2 text-lg dark:text-gray-200">{description}</p>
+          <p className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</p>
         </header>
 
         <div
           className={classNames(
-            "grid place-items-center border-l-[1px] py-4 px-2",
-            action === "input" ? "w-1/3" : "w-40",
+            "py-4",
+            action === "input"
+              ? "border-t-[1px] w-full px-4"
+              : "grid place-items-center border-l-[1px] w-40 min-w-[10rem]",
             borderColor,
           )}
         >
@@ -62,7 +83,7 @@ export function SettingsFormField({
             height={16}
             className="fill-current dark:text-red-400"
           />
-          <span className="dark:text-red-400 font-medium">Oh no! An error occurred.</span>
+          <span className="dark:text-red-400 font-medium">{errorMessage}</span>
         </div>
       ) : null}
     </div>

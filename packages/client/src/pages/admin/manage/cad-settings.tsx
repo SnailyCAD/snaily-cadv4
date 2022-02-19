@@ -9,7 +9,6 @@ import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
-import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
@@ -131,7 +130,7 @@ export default function CadSettings() {
 
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
-              <form className="mt-3" onSubmit={handleSubmit}>
+              <form autoComplete="off" className="mt-3" onSubmit={handleSubmit}>
                 <div>
                   <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
                   <small className="block text-[15px] -mt-2 mb-3">
@@ -155,29 +154,44 @@ export default function CadSettings() {
                   />
                 </FormField>
 
-                <FormField
+                <SettingsFormField
                   optional
                   errorMessage={errors.discordWebhookURL}
-                  label="Discord webhook URL"
+                  action="input"
+                  label="Discord Webhook URL"
+                  description="Events will be sent to this webhook channel. (911 calls, unit status updates)"
                 >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.discordWebhookURL}
                     name="discordWebhookURL"
+                    autoComplete="off"
                   />
-                </FormField>
+                </SettingsFormField>
 
-                <FormField
+                <SettingsFormField
                   optional
                   errorMessage={errors.registrationCode}
+                  action="input"
                   label="Registration Code"
+                  description="Users will need to enter this code when creating an account."
                 >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.registrationCode}
                     name="registrationCode"
+                    autoComplete="off"
                   />
-                </FormField>
+                </SettingsFormField>
+
+                <SettingsFormField
+                  errorMessage={errors.whitelisted}
+                  action="checkbox"
+                  label="CAD Whitelist"
+                  description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
+                >
+                  <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+                </SettingsFormField>
 
                 <SettingsFormField
                   errorMessage={errors.towWhitelisted}
@@ -192,31 +206,31 @@ export default function CadSettings() {
                   />
                 </SettingsFormField>
 
-                <FormRow>
-                  <FormField errorMessage={errors.taxiWhitelisted} label="Taxi Whitelisted">
-                    <Toggle
-                      name="taxiWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.taxiWhitelisted}
-                    />
-                  </FormField>
+                <SettingsFormField
+                  errorMessage={errors.taxiWhitelisted}
+                  action="checkbox"
+                  label="Taxi Whitelist"
+                  description="Taxi will be whitelisted, the permission can be given to any user."
+                >
+                  <Toggle
+                    name="taxiWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.taxiWhitelisted}
+                  />
+                </SettingsFormField>
 
-                  <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
-                    <Toggle
-                      name="whitelisted"
-                      onClick={handleChange}
-                      toggled={values.whitelisted}
-                    />
-                  </FormField>
-
-                  <FormField errorMessage={errors.businessWhitelisted} label="Business Whitelisted">
-                    <Toggle
-                      name="businessWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.businessWhitelisted}
-                    />
-                  </FormField>
-                </FormRow>
+                <SettingsFormField
+                  errorMessage={errors.businessWhitelisted}
+                  action="checkbox"
+                  label="Business Whitelist"
+                  description="Businesses will be whitelisted, they will need to be reviewed, they can be accepted or denied before they can be used."
+                >
+                  <Toggle
+                    name="businessWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.businessWhitelisted}
+                  />
+                </SettingsFormField>
 
                 <FormField errorMessage={errors.roleplayEnabled} label="Roleplay enabled">
                   <Toggle
