@@ -78,7 +78,7 @@ export function ApiTokenTab() {
                     target="_blank"
                     rel="noreferrer noopener"
                     className="text-blue-600 underline"
-                    href="https://cad-docs.netlify.com/other/public-api"
+                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
                   >
                     Public API Access here
                   </a>
