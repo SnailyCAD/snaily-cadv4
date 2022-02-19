@@ -31,7 +31,7 @@ export default function Login() {
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
   const tError = useTranslations("Errors");
-  const { DISCORD_AUTH } = useFeatureEnabled();
+  const { DISCORD_AUTH, ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
   const { user } = useAuth();
 
   const authMessages = {
@@ -92,7 +92,8 @@ export default function Login() {
     router.push("/citizen");
   }
 
-  const showHr = (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id;
+  const showHr = ALLOW_REGULAR_LOGIN ? (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id : false;
+
   return (
     <>
       <Title>{t("login")}</Title>
@@ -123,29 +124,33 @@ export default function Login() {
                     </p>
                   ) : null}
 
-                  <FormField errorMessage={errors.username} label={t("username")}>
-                    <Input type="text" name="username" onChange={handleChange} />
-                  </FormField>
+                  {ALLOW_REGULAR_LOGIN ? (
+                    <>
+                      <FormField errorMessage={errors.username} label={t("username")}>
+                        <Input type="text" name="username" onChange={handleChange} />
+                      </FormField>
 
-                  <FormField errorMessage={errors.password} label={t("password")}>
-                    <PasswordInput name="password" onChange={handleChange} />
-                  </FormField>
+                      <FormField errorMessage={errors.password} label={t("password")}>
+                        <PasswordInput name="password" onChange={handleChange} />
+                      </FormField>
 
-                  <div className="mt-3">
-                    <Link href="/auth/register">
-                      <a className="inline-block mb-3 underline dark:text-gray-200">
-                        {t("noAccount")}
-                      </a>
-                    </Link>
+                      <div className="mt-3">
+                        <Link href="/auth/register">
+                          <a className="inline-block mb-3 underline dark:text-gray-200">
+                            {t("noAccount")}
+                          </a>
+                        </Link>
 
-                    <Button
-                      disabled={!isValid || state === "loading"}
-                      type="submit"
-                      className="flex items-center justify-center w-full gap-3"
-                    >
-                      {state === "loading" ? <Loader /> : null} {t("login")}
-                    </Button>
-                  </div>
+                        <Button
+                          disabled={!isValid || state === "loading"}
+                          type="submit"
+                          className="flex items-center justify-center w-full gap-3"
+                        >
+                          {state === "loading" ? <Loader /> : null} {t("login")}
+                        </Button>
+                      </div>
+                    </>
+                  ) : null}
 
                   {showHr ? <hr className="my-5 border-[1.5px] rounded-md border-gray-3" /> : null}
 

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -16,6 +17,7 @@ import type { cad } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const INITIAL_VALUES = {
   username: "",
@@ -32,8 +34,14 @@ export default function Register({ cad }: Props) {
   const router = useRouter();
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
-
+  const { ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
   const validate = handleValidate(AUTH_SCHEMA);
+
+  React.useEffect(() => {
+    if (!ALLOW_REGULAR_LOGIN) {
+      router.push("/auth/login");
+    }
+  }, [ALLOW_REGULAR_LOGIN, router]);
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -61,6 +69,18 @@ export default function Register({ cad }: Props) {
     } else if (json.userId) {
       router.push("/citizen");
     }
+  }
+
+  if (!ALLOW_REGULAR_LOGIN) {
+    return (
+      <div className="fixed inset-0 grid bg-transparent place-items-center">
+        <Title>{t("login")}</Title>
+
+        <span aria-label="loading...">
+          <Loader className="w-14 h-14 border-[3px]" />
+        </span>
+      </div>
+    );
   }
 
   return (

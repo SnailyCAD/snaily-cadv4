@@ -104,6 +104,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Allow citizens to update licenses",
     description: "When disabled, this will only allow LEO to manage licenses of citizens.",
   },
+  ALLOW_REGULAR_LOGIN: {
+    name: "Allow username/password login",
+    description: "When disabled, this will only allow users to register/login via Discord.",
+  },
 };
 
 export function DisabledFeaturesArea() {

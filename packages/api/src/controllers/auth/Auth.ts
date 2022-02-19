@@ -14,6 +14,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
+import { Feature } from "@prisma/client";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -49,6 +50,12 @@ export class AuthController {
 
     if (user.banned) {
       throw new BadRequest("userBanned");
+    }
+
+    // only allow Discord auth (if enabled)
+    const cad = await prisma.cad.findFirst();
+    if (cad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
     const userPassword = user.tempPassword ?? user.password;
@@ -99,12 +106,19 @@ export class AuthController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
-    const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
+    const preCad = await prisma.cad.findFirst({
+      select: { disabledFeatures: true, registrationCode: true },
+    });
     if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
         throw new ExtendedBadRequest({ registrationCode: "invalidRegistrationCode" });
       }
+    }
+
+    // only allow Discord auth
+    if (preCad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
     const userCount = await prisma.user.count();
