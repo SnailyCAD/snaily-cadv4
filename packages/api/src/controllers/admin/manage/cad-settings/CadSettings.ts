@@ -52,6 +52,7 @@ export class ManageCitizensController {
         areaOfPlay: data.areaOfPlay,
         steamApiKey: data.steamApiKey,
         towWhitelisted: data.towWhitelisted,
+        taxiWhitelisted: data.taxiWhitelisted,
         whitelisted: data.whitelisted,
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,

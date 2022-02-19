@@ -17,6 +17,7 @@ export const userProperties = {
   isEmsFd: true,
   isDispatch: true,
   isTow: true,
+  isTaxi: true,
   banned: true,
   banReason: true,
   avatarUrl: true,

@@ -21,6 +21,7 @@ model cad {
   discordWebhookURL       String?                @db.VarChar(255)
   whitelisted             Boolean                @default(false)
   towWhitelisted          Boolean                @default(false)
+  taxiWhitelisted         Boolean                @default(false)
   businessWhitelisted     Boolean                @default(false)
   maxPlateLength          Int                    @default(8)
   liveMapSocketURl        String?                @db.VarChar(255)
@@ -98,6 +99,8 @@ model DiscordRoles {
   dispatchRoleId      String?
   towRole             DiscordRole? @relation("towRole", fields: [towRoleId], references: [id])
   towRoleId           String?
+  taxiRole            DiscordRole? @relation("taxiRole", fields: [taxiRoleId], references: [id])
+  taxiRoleId          String?
   adminRole           DiscordRole? @relation("adminRole", fields: [adminRoleId], references: [id])
   adminRoleId         String?
   whitelistedRoleId   String?
@@ -116,6 +119,7 @@ model DiscordRole {
   emsFdRoles         DiscordRoles[] @relation("emsFdRole")
   dispatchRoles      DiscordRoles[] @relation("dispatchRole")
   towRoles           DiscordRoles[] @relation("towRole")
+  taxiRoles          DiscordRoles[] @relation("taxiRole")
   leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
   adminRoles         DiscordRoles[] @relation("adminRole")
   whitelistedRoles   DiscordRoles[] @relation("whitelistedRole")
@@ -131,6 +135,7 @@ model User {
   isEmsFd               Boolean               @default(false)
   isDispatch            Boolean               @default(false)
   isTow                 Boolean               @default(false)
+  isTaxi                Boolean               @default(true)
   banned                Boolean               @default(false)
   banReason             String?
   avatarUrl             String?               @db.Text

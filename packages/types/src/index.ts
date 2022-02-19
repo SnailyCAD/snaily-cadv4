@@ -16,6 +16,7 @@ export interface cad {
   discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
+  taxiWhitelisted: boolean;
   businessWhitelisted: boolean;
   maxPlateLength: number;
   liveMapSocketURl: string | null;
@@ -96,6 +97,8 @@ export type DiscordRoles = {
   dispatchRole: DiscordRole | null;
   towRoleId: string | null;
   towRole: DiscordRole | null;
+  taxiRoleId: string | null;
+  taxiRole: DiscordRole | null;
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;
@@ -127,6 +130,7 @@ export interface User {
   isEmsFd: boolean;
   isDispatch: boolean;
   isTow: boolean;
+  isTaxi: boolean;
   banned: boolean;
   banReason: string | null;
   avatarUrl: string | null;
