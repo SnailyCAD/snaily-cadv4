@@ -22,6 +22,7 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRolesTab";
+import { SettingsFormField } from "components/form/SettingsFormField";
 
 const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
@@ -177,15 +178,20 @@ export default function CadSettings() {
                   />
                 </FormField>
 
-                <FormRow>
-                  <FormField errorMessage={errors.towWhitelisted} label="Tow Whitelisted">
-                    <Toggle
-                      name="towWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.towWhitelisted}
-                    />
-                  </FormField>
+                <SettingsFormField
+                  errorMessage={errors.towWhitelisted}
+                  action="checkbox"
+                  label="Tow Whitelist"
+                  description="Tow will be whitelisted, the permission can be given to any user."
+                >
+                  <Toggle
+                    name="towWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.towWhitelisted}
+                  />
+                </SettingsFormField>
 
+                <FormRow>
                   <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
                     <Toggle
                       name="whitelisted"
