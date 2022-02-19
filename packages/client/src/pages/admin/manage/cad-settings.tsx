@@ -111,6 +111,7 @@ export default function CadSettings() {
     steamApiKey: cad.steamApiKey ?? "",
     discordWebhookURL: cad.discordWebhookURL ?? "",
     towWhitelisted: cad.towWhitelisted ?? false,
+    taxiWhitelisted: cad.taxiWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
     businessWhitelisted: cad.businessWhitelisted ?? false,
     registrationCode: cad.registrationCode ?? "",
@@ -192,6 +193,14 @@ export default function CadSettings() {
                 </SettingsFormField>
 
                 <FormRow>
+                  <FormField errorMessage={errors.taxiWhitelisted} label="Taxi Whitelisted">
+                    <Toggle
+                      name="taxiWhitelisted"
+                      onClick={handleChange}
+                      toggled={values.taxiWhitelisted}
+                    />
+                  </FormField>
+
                   <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
                     <Toggle
                       name="whitelisted"

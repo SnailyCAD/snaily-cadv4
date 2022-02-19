@@ -89,6 +89,7 @@ export class ManageUsersController {
         isDispatch: data.isDispatch,
         isEmsFd: data.isEmsFd,
         isTow: data.isTow,
+        isTaxi: data.isTaxi,
         steamId: data.steamId,
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
         discordId: data.discordId,

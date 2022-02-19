@@ -65,6 +65,7 @@ export default function ManageCitizens(props: Props) {
     isSupervisor: user.isSupervisor,
     isEmsFd: user.isEmsFd,
     isTow: user.isTow,
+    isTaxi: user.isTaxi,
     steamId: user.steamId ?? "",
     discordId: user.discordId ?? "",
   };
@@ -124,6 +125,10 @@ export default function ManageCitizens(props: Props) {
 
                 <FormField errorMessage={errors.isTow} label="Tow Access">
                   <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
+                </FormField>
+
+                <FormField errorMessage={errors.isTaxi} label="Taxi Access">
+                  <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
                 </FormField>
               </FormRow>
 
