@@ -60,7 +60,7 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
           onChange={handleChange}
           isMulti
           values={codes
-            .filter((v) => !value.some((vio) => vio.value.id === v.id))
+            .filter((v) => !value.some((vio) => vio.value?.id === v.id))
             .map((value) => ({
               label: value.title,
               value,

@@ -101,7 +101,7 @@ function makeOptions(calls: Full911Call[], type: Call911Filters) {
           label,
         };
 
-        const existing = arr.some((v) => v.value.id === obj.value.id);
+        const existing = arr.some((v) => v.value?.id === obj.value.id);
         if (!existing) {
           arr.push(obj);
         }

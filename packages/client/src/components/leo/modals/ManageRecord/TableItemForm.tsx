@@ -21,7 +21,7 @@ export function TableItemForm({ penalCode }: Props) {
   const { setFieldValue, values } = useFormikContext<any>();
 
   const current = values.violations.find(
-    (v: SelectValue<PenalCode>) => v.value.id === penalCode.id,
+    (v: SelectValue<PenalCode>) => v.value?.id === penalCode.id,
   );
 
   const currentValue = current?.value ?? {
@@ -36,7 +36,7 @@ export function TableItemForm({ penalCode }: Props) {
     e?: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const idx = (values.violations as SelectValue<PenalCode>[]).findIndex(
-      (v) => v.value.id === penalCode.id,
+      (v) => v.value?.id === penalCode.id,
     );
 
     const updatedArr = [...values.violations] as SelectValue<PenalCode>[];

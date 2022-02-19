@@ -58,7 +58,7 @@ function ActiveCallsInner() {
       : null;
 
   const isUnitAssignedToCall = (call: Full911Call) =>
-    call.assignedUnits.some((v) => v.unit.id === unit?.id);
+    call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
   const makeUnit = (unit: AssignedUnit) =>
     "officers" in unit.unit

@@ -329,13 +329,15 @@ export class Calls911Controller {
   protected officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
     return {
       ...call,
-      assignedUnits: (call.assignedUnits ?? [])?.map((v: any) => ({
-        ...v,
-        officer: undefined,
-        deputy: undefined,
+      assignedUnits: (call.assignedUnits ?? [])
+        ?.map((v: any) => ({
+          ...v,
+          officer: undefined,
+          deputy: undefined,
 
-        unit: v.officer ?? v.deputy ?? v.combinedUnit,
-      })),
+          unit: v.officer ?? v.deputy ?? v.combinedUnit,
+        }))
+        .filter((v: any) => v.unit?.id),
     };
   }
 
