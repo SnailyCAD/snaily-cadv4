@@ -52,6 +52,12 @@ export class AuthController {
       throw new BadRequest("userBanned");
     }
 
+    // only allow Discord auth (if enabled)
+    const cad = await prisma.cad.findFirst();
+    if (cad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginIsDisabled");
+    }
+
     const userPassword = user.tempPassword ?? user.password;
     const isPasswordCorrect = compareSync(data.password, userPassword);
     if (!isPasswordCorrect) {
@@ -100,12 +106,19 @@ export class AuthController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
-    const preCad = await prisma.cad.findFirst({ select: { registrationCode: true } });
+    const preCad = await prisma.cad.findFirst({
+      select: { disabledFeatures: true, registrationCode: true },
+    });
     if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
         throw new ExtendedBadRequest({ registrationCode: "invalidRegistrationCode" });
       }
+    }
+
+    // only allow Discord auth
+    if (preCad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+      throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
     const userCount = await prisma.user.count();
@@ -123,11 +136,6 @@ export class AuthController {
     const cad = await findOrCreateCAD({
       ownerId: user.id,
     });
-
-    // only allow Discord auth
-    if (cad.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
-      throw new BadRequest("allowRegularLoginIsDisabled");
-    }
 
     const autoSetUserProperties = cad.autoSetUserProperties;
     const extraUserData: Partial<User> =

@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "Feature" ADD VALUE 'ALLOW_REGULAR_LOGIN';
