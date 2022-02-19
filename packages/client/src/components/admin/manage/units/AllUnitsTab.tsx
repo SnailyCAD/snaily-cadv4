@@ -109,11 +109,11 @@ export function AllUnitsTab({ units }: Props) {
           { Header: t("Leo.callsign"), accessor: "callsign" },
           { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
           { Header: t("Leo.department"), accessor: "department" },
-          { Header: t("Leo.status"), accessor: "departmentStatus" },
           { Header: t("Leo.division"), accessor: "division" },
           { Header: t("Leo.rank"), accessor: "rank" },
           { Header: t("Leo.status"), accessor: "status" },
           { Header: t("Leo.suspended"), accessor: "suspended" },
+          { Header: t("Leo.status"), accessor: "departmentStatus" },
           { Header: common("actions"), accessor: "actions" },
         ]}
       />

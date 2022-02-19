@@ -161,9 +161,9 @@ export default function MyOfficers({ officers: data }: Props) {
             { Header: t("callsign"), accessor: "callsign" },
             { Header: t("badgeNumber"), accessor: "badgeNumber" },
             { Header: t("department"), accessor: "department" },
-            { Header: t("status"), accessor: "departmentStatus" },
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
+            { Header: t("status"), accessor: "departmentStatus" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />
