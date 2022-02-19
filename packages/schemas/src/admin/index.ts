@@ -39,6 +39,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   emsFdRoleId: z.string().nullable().optional(),
   dispatchRoleId: z.string().nullable().optional(),
   towRoleId: z.string().nullable().optional(),
+  taxiRoleId: z.string().nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
 });

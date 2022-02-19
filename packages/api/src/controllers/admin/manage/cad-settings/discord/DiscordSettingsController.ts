@@ -88,6 +88,7 @@ export class DiscordSettingsController {
       leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
       emsFdRoleId: data.emsFdRoleId ?? null,
       towRoleId: data.towRoleId ?? null,
+      taxiRoleId: data.taxiRoleId ?? null,
       adminRoleId: data.adminRoleId ?? null,
       whitelistedRoleId: data.whitelistedRoleId ?? null,
     };
