@@ -33,7 +33,7 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
 
   function handleOnDuty(onDutyCode: StatusValue | undefined) {
     if (isUnitOffDuty) {
-      openModal(modalId);
+      return openModal(modalId);
     }
 
     onDutyCode && handleStatusUpdate(onDutyCode);
