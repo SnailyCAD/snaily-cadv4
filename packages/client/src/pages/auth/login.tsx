@@ -89,7 +89,8 @@ export default function Login() {
   }
 
   function handleContinueAs() {
-    router.push("/citizen");
+    const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
+    router.push(from);
   }
 
   const showHr = ALLOW_REGULAR_LOGIN ? (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id : false;
