@@ -5,10 +5,16 @@ import { ExclamationSquareFill } from "react-bootstrap-icons";
 
 type ReactNode = React.ReactChild | React.ReactFragment | React.ReactPortal;
 
+const rightAreaStyles = {
+  input: "border-t-[1px] w-full px-4",
+  "short-input": "grid place-items-center border-l-[1px] w-60 min-w-[16rem] px-2.5",
+  checkbox: "grid place-items-center border-l-[1px] w-40 min-w-[10rem]",
+};
+
 interface Props {
   label: ReactNode;
   description: React.ReactNode;
-  action?: "input" | "checkbox";
+  action?: "input" | "checkbox" | "short-input";
   children: ReactNode;
   errorMessage?: string | null;
   optional?: boolean;
@@ -43,7 +49,7 @@ export function SettingsFormField({
       <div
         className={classNames(
           "py-0 gap-2",
-          action === "input" ? "flex flex-col" : "flex justify-between",
+          ["checkbox", "short-input"].includes(action) ? "flex justify-between" : "flex flex-col",
         )}
       >
         <header className="py-4 px-4">
@@ -62,17 +68,7 @@ export function SettingsFormField({
           ) : null}
         </header>
 
-        <div
-          className={classNames(
-            "py-4",
-            action === "input"
-              ? "border-t-[1px] w-full px-4"
-              : "grid place-items-center border-l-[1px] w-40 min-w-[10rem]",
-            borderColor,
-          )}
-        >
-          {element}
-        </div>
+        <div className={classNames("py-4", rightAreaStyles[action], borderColor)}>{element}</div>
       </div>
 
       {errorMessage ? (

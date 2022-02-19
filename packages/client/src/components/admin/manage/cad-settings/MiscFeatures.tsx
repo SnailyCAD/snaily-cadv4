@@ -3,14 +3,13 @@ import { Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/inputs/Input";
-import { FormRow } from "components/form/FormRow";
 import type { MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import { SettingsFormField } from "components/form/SettingsFormField";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -119,102 +118,11 @@ export function MiscFeatures() {
               valueKey="authScreenBgImageId"
             />
 
-            <FormRow>
-              <FormField errorMessage={errors.weightPrefix} label="Weight Prefix">
-                <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
-              </FormField>
-
-              <FormField errorMessage={errors.heightPrefix} label="Height Prefix">
-                <Input name="heightPrefix" value={values.heightPrefix} onChange={handleChange} />
-              </FormField>
-            </FormRow>
-
-            <FormRow>
-              <FormField
-                errorMessage={errors.maxBusinessesPerCitizen}
-                label="Max businesses per citizen"
-              >
-                <Input
-                  name="maxBusinessesPerCitizen"
-                  type="number"
-                  value={values.maxBusinessesPerCitizen}
-                  onChange={handleChange}
-                />
-              </FormField>
-
-              <FormField errorMessage={errors.maxCitizensPerUser} label="Max citizens per user">
-                <Input
-                  name="maxCitizensPerUser"
-                  type="number"
-                  value={values.maxCitizensPerUser}
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
-
-            <FormRow>
-              <FormField
-                errorMessage={errors.maxDepartmentsEachPerUser}
-                label="Max amount of units a user can create with a certain department"
-              >
-                <Input
-                  name="maxDepartmentsEachPerUser"
-                  type="number"
-                  value={values.maxDepartmentsEachPerUser}
-                  onChange={handleChange}
-                />
-              </FormField>
-
-              <FormField
-                errorMessage={errors.maxDivisionsPerOfficer}
-                label="Max divisions per officer"
-              >
-                <Input
-                  name="maxDivisionsPerOfficer"
-                  type="number"
-                  value={values.maxDivisionsPerOfficer}
-                  onChange={handleChange}
-                />
-              </FormField>
-
-              <FormField errorMessage={errors.maxOfficersPerUser} label="Max officers per user">
-                <Input
-                  name="maxOfficersPerUser"
-                  type="number"
-                  value={values.maxOfficersPerUser}
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
-
-            <FormField errorMessage={errors.maxPlateLength} label="Max plate length">
-              <Input
-                name="maxPlateLength"
-                type="number"
-                value={values.maxPlateLength}
-                onChange={handleChange}
-              />
-            </FormField>
-
-            <FormRow>
-              <FormField errorMessage={errors.pairedUnitSymbol} label="Paired unit symbol">
-                <Input
-                  name="pairedUnitSymbol"
-                  value={values.pairedUnitSymbol}
-                  onChange={handleChange}
-                />
-              </FormField>
-
-              <FormField errorMessage={errors.callsignTemplate} label="Callsign Template">
-                <Input
-                  name="callsignTemplate"
-                  value={values.callsignTemplate}
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
-
-            <FormField errorMessage={errors.liveMapURL} label="Live Map URL">
+            <SettingsFormField
+              description="This URL will communicate to the live_map resource in your FiveM server"
+              errorMessage={errors.liveMapURL}
+              label="Live Map URL"
+            >
               <Input
                 type="url"
                 name="liveMapURL"
@@ -222,7 +130,140 @@ export function MiscFeatures() {
                 onChange={handleChange}
                 placeholder="ws://my-host:my-port"
               />
-            </FormField>
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The prefix for weights (e.g.: kg, lbs)"
+              errorMessage={errors.weightPrefix}
+              label="Weight Prefix"
+            >
+              <Input name="weightPrefix" value={values.weightPrefix} onChange={handleChange} />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The prefix for heights (e.g.: cm, inch)"
+              errorMessage={errors.heightPrefix}
+              label="Height Prefix"
+            >
+              <Input name="heightPrefix" value={values.heightPrefix} onChange={handleChange} />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The maximum amount of businesses a citizen can create. (Default: Infinity)"
+              errorMessage={errors.maxBusinessesPerCitizen}
+              label="Max businesses per citizen"
+            >
+              <Input
+                name="maxBusinessesPerCitizen"
+                type="number"
+                value={values.maxBusinessesPerCitizen}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The maximum amount of citizens a user can create. (Default: Infinity)"
+              errorMessage={errors.maxCitizensPerUser}
+              label="Max citizens per user"
+            >
+              <Input
+                name="maxCitizensPerUser"
+                type="number"
+                value={values.maxCitizensPerUser}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The maximum amount of units a user can create with a certain department. (Default: Infinity)"
+              errorMessage={errors.maxDepartmentsEachPerUser}
+              label="Max departments per unit per user"
+            >
+              <Input
+                name="maxDepartmentsEachPerUser"
+                type="number"
+                value={values.maxDepartmentsEachPerUser}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max divisions per officer"
+              action="short-input"
+              description="The maximum amount of divisions per officer. (Default: Infinity)"
+              errorMessage={errors.maxDivisionsPerOfficer}
+            >
+              <Input
+                name="maxDivisionsPerOfficer"
+                type="number"
+                value={values.maxDivisionsPerOfficer}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max officers per user"
+              action="short-input"
+              description="The maximum amount of officers per user. (Default: Infinity)"
+              errorMessage={errors.maxOfficersPerUser}
+            >
+              <Input
+                name="maxOfficersPerUser"
+                type="number"
+                value={values.maxOfficersPerUser}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The maximum allowed plate length. (Default: 8)"
+              errorMessage={errors.maxPlateLength}
+              label="Max plate length"
+            >
+              <Input
+                name="maxPlateLength"
+                type="number"
+                value={values.maxPlateLength}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="short-input"
+              description="The unit symbol that will be given to a paired unit"
+              errorMessage={errors.pairedUnitSymbol}
+              label="Paired unit symbol"
+            >
+              <Input
+                name="pairedUnitSymbol"
+                value={values.pairedUnitSymbol}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description={null}
+              errorMessage={errors.callsignTemplate}
+              label="Callsign Template"
+            >
+              <Input
+                name="callsignTemplate"
+                value={values.callsignTemplate}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
