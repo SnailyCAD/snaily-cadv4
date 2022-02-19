@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
@@ -9,7 +8,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import type { DiscordRoles } from "@snailycad/types";
-import { FormRow } from "components/form/FormRow";
+import { SettingsFormField } from "components/form/SettingsFormField";
 
 export function DiscordRolesTab() {
   const [roles, setRoles] = React.useState<any[]>([]);
@@ -71,14 +70,20 @@ export function DiscordRolesTab() {
 
         <p className="my-3 text-neutral-700 dark:text-gray-200 max-w-2xl">
           When a user authenticates via Discord, the respective permissions will granted to that
-          user from their roles
+          user from their Discord roles
         </p>
       </header>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, handleSubmit, errors, values }) => (
           <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.adminRoleId} label="Admin Role">
+            <SettingsFormField
+              action="input"
+              // eslint-disable-next-line quotes
+              description={'The Discord role that represents the "ADMIN" rank'}
+              errorMessage={errors.adminRoleId}
+              label="Admin Role"
+            >
               <Select
                 isClearable
                 values={roles.map((role) => ({
@@ -89,37 +94,47 @@ export function DiscordRolesTab() {
                 name="adminRoleId"
                 onChange={handleChange}
               />
-            </FormField>
+            </SettingsFormField>
 
-            <FormRow>
-              <FormField errorMessage={errors.leoRoleId} label="LEO Role">
-                <Select
-                  isClearable
-                  values={roles.map((role) => ({
-                    value: role.id,
-                    label: role.name,
-                  }))}
-                  value={values.leoRoleId}
-                  name="leoRoleId"
-                  onChange={handleChange}
-                />
-              </FormField>
+            <SettingsFormField
+              description="The Discord role that represents the LEO permission"
+              errorMessage={errors.leoRoleId}
+              label="LEO Role"
+            >
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.leoRoleId}
+                name="leoRoleId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
-              <FormField errorMessage={errors.leoSupervisorRoleId} label="LEO Supervisor Role">
-                <Select
-                  isClearable
-                  values={roles.map((role) => ({
-                    value: role.id,
-                    label: role.name,
-                  }))}
-                  value={values.leoSupervisorRoleId}
-                  name="leoSupervisorRoleId"
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
+            <SettingsFormField
+              description="The Discord role that represents the LEO Supervisor permission"
+              errorMessage={errors.leoSupervisorRoleId}
+              label="LEO Supervisor Role"
+            >
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.leoSupervisorRoleId}
+                name="leoSupervisorRoleId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
-            <FormField errorMessage={errors.emsFdRoleId} label="EMS/FD Role">
+            <SettingsFormField
+              description="The Discord role that represents the EMS/FD permission"
+              errorMessage={errors.emsFdRoleId}
+              label="EMS/FD Role"
+            >
               <Select
                 isClearable
                 values={roles.map((role) => ({
@@ -130,9 +145,13 @@ export function DiscordRolesTab() {
                 name="emsFdRoleId"
                 onChange={handleChange}
               />
-            </FormField>
+            </SettingsFormField>
 
-            <FormField errorMessage={errors.dispatchRoleId} label="Dispatch Role">
+            <SettingsFormField
+              description="The Discord role that represents the Dispatch permission"
+              errorMessage={errors.dispatchRoleId}
+              label="Dispatch Role"
+            >
               <Select
                 isClearable
                 values={roles.map((role) => ({
@@ -143,37 +162,47 @@ export function DiscordRolesTab() {
                 name="dispatchRoleId"
                 onChange={handleChange}
               />
-            </FormField>
+            </SettingsFormField>
 
-            <FormRow>
-              <FormField errorMessage={errors.towRoleId} label="Tow Role">
-                <Select
-                  isClearable
-                  values={roles.map((role) => ({
-                    value: role.id,
-                    label: role.name,
-                  }))}
-                  value={values.towRoleId}
-                  name="towRoleId"
-                  onChange={handleChange}
-                />
-              </FormField>
+            <SettingsFormField
+              description="The Discord role that represents the Tow permission"
+              errorMessage={errors.towRoleId}
+              label="Tow Role"
+            >
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.towRoleId}
+                name="towRoleId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
-              <FormField errorMessage={errors.taxiRoleId} label="Taxi Role">
-                <Select
-                  isClearable
-                  values={roles.map((role) => ({
-                    value: role.id,
-                    label: role.name,
-                  }))}
-                  value={values.taxiRoleId}
-                  name="taxiRoleId"
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
+            <SettingsFormField
+              description="The Discord role that represents the Taxi permission"
+              errorMessage={errors.taxiRoleId}
+              label="Taxi Role"
+            >
+              <Select
+                isClearable
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.taxiRoleId}
+                name="taxiRoleId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
-            <FormField errorMessage={errors.whitelistedRoleId} label="Whitelisted Role">
+            <SettingsFormField
+              description="The Discord role that represents whitelisted access"
+              errorMessage={errors.whitelistedRoleId}
+              label="Whitelisted Role"
+            >
               <Select
                 isClearable
                 values={roles.map((role) => ({
@@ -184,7 +213,7 @@ export function DiscordRolesTab() {
                 name="whitelistedRoleId"
                 onChange={handleChange}
               />
-            </FormField>
+            </SettingsFormField>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}

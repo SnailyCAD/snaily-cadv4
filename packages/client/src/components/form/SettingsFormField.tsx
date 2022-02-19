@@ -7,8 +7,8 @@ type ReactNode = React.ReactChild | React.ReactFragment | React.ReactPortal;
 
 interface Props {
   label: ReactNode;
-  description: ReactNode;
-  action: "input" | "checkbox";
+  description: React.ReactNode;
+  action?: "input" | "checkbox";
   children: ReactNode;
   errorMessage?: string | null;
   optional?: boolean;
@@ -47,7 +47,7 @@ export function SettingsFormField({
         )}
       >
         <header className="py-4 px-4">
-          <h3 className="text-xl font-semibold">
+          <h3 className="text-[1.275rem] font-semibold">
             <label {...labelProps}>
               {label}
 
@@ -57,7 +57,9 @@ export function SettingsFormField({
             </label>
           </h3>
 
-          <p className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</p>
+          {description ? (
+            <p className="mt-2 text-lg dark:text-gray-200 max-w-2/3">{description}</p>
+          ) : null}
         </header>
 
         <div

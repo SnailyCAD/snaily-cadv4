@@ -7,7 +7,6 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";
-import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
@@ -22,6 +21,7 @@ import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRolesTab";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
@@ -46,6 +46,7 @@ export default function CadSettings() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
+  const { AOP } = useFeatureEnabled();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -138,21 +139,26 @@ export default function CadSettings() {
                   </small>
                 </div>
 
-                <FormField errorMessage={errors.name} label="CAD Name">
+                <SettingsFormField
+                  errorMessage={errors.name}
+                  action="input"
+                  label="CAD Name"
+                  description="The name to the CAD. This can be the name of your community, etc."
+                >
                   <Input onChange={handleChange} value={values.name} name="name" />
-                </FormField>
+                </SettingsFormField>
 
-                <FormField errorMessage={errors.areaOfPlay} label="Area of Play">
-                  <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
-                </FormField>
-
-                <FormField optional errorMessage={errors.steamApiKey} label="Steam API Key">
-                  <PasswordInput
-                    onChange={handleChange}
-                    value={values.steamApiKey}
-                    name="steamApiKey"
-                  />
-                </FormField>
+                {AOP ? (
+                  <SettingsFormField
+                    optional
+                    errorMessage={errors.steamApiKey}
+                    action="input"
+                    label="Area of Play"
+                    description="The area where roleplay is currently active"
+                  >
+                    <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
+                  </SettingsFormField>
+                ) : null}
 
                 <SettingsFormField
                   optional
@@ -232,16 +238,18 @@ export default function CadSettings() {
                   />
                 </SettingsFormField>
 
-                <FormField errorMessage={errors.roleplayEnabled} label="Roleplay enabled">
+                <SettingsFormField
+                  errorMessage={errors.roleplayEnabled}
+                  action="checkbox"
+                  label="Roleplay Enabled"
+                  description="When disabled, this will display a banner that says that roleplay must be stopped."
+                >
                   <Toggle
                     name="roleplayEnabled"
                     onClick={handleChange}
                     toggled={values.roleplayEnabled}
                   />
-                  <small className="mt-1 text-sm">
-                    When disabled, this will add a banner that says that roleplay must be stopped.
-                  </small>
-                </FormField>
+                </SettingsFormField>
 
                 <Button disabled={state === "loading"} className="flex items-center" type="submit">
                   {state === "loading" ? <Loader className="mr-3" /> : null}
