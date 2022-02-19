@@ -145,7 +145,7 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Put("/api-token")
   async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad");
+    const cad = ctx.get("cad") as cad;
 
     const existing =
       cad.apiTokenId &&
@@ -155,7 +155,7 @@ export class ManageCitizensController {
         },
       }));
 
-    if (existing) {
+    if (existing && body.enabled === true) {
       const updated = await prisma.apiToken.update({
         where: {
           id: existing.id,
@@ -168,9 +168,21 @@ export class ManageCitizensController {
       return updated;
     }
 
+    if (body.enabled === false) {
+      cad.apiTokenId &&
+        (await prisma.apiToken.delete({
+          where: {
+            id: cad.apiTokenId,
+          },
+        }));
+
+      return { enabled: false, token: "" };
+    }
+
     const apiToken = await prisma.apiToken.create({
       data: {
         cad: { connect: { id: cad.id } },
+        enabled: true,
         token: nanoid(56),
       },
     });

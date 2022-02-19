@@ -7,9 +7,7 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { Formik, FormikHelpers } from "formik";
-import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
-import { FormRow } from "components/form/FormRow";
 import { Toggle } from "components/form/Toggle";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
@@ -22,6 +20,9 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRolesTab";
+import { SettingsFormField } from "components/form/SettingsFormField";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { X } from "react-bootstrap-icons";
 
 const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
@@ -43,12 +44,23 @@ const AutoSetUserPropertiesTab = dynamic(
 );
 
 export default function CadSettings() {
+  const [banner, setBanner] = React.useState(true);
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
+  const { AOP } = useFeatureEnabled();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+
+  function handleHideBanner() {
+    localStorage.setItem("new-settings-banner", "false");
+    setBanner(false);
+  }
+
+  React.useEffect(() => {
+    setBanner((localStorage.getItem("new-settings-banner") ?? "true") === "true");
+  }, []);
 
   const SETTINGS_TABS = [
     { name: t("GENERAL_SETTINGS"), value: "GENERAL_SETTINGS" },
@@ -124,13 +136,40 @@ export default function CadSettings() {
 
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
 
+      {/* this banner will be removed on 2022-02-26 */}
+      {banner ? (
+        <div
+          className="p-3 rounded-md bg-slate-700 my-4 font-semibold shadow-md flex items-center justify-between"
+          role="alert"
+          id="new-settings-banner"
+        >
+          <p>
+            You will see new UI for settings here and there. If you have feedback, please provide it
+            in
+            <a
+              className="underline"
+              href="https://discord.gg/nqTaCT3nR4"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {"SnailyCAD's Support Server"}
+            </a>
+            .
+          </p>
+
+          <Button className="!px-1.5" onClick={handleHideBanner}>
+            <X width={25} height={25} />
+          </Button>
+        </div>
+      ) : null}
+
       <TabList tabs={SETTINGS_TABS}>
         <TabsContent value="GENERAL_SETTINGS">
           <h2 className="text-2xl font-semibold">General Settings</h2>
 
           <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ handleSubmit, handleChange, values, errors }) => (
-              <form className="mt-3" onSubmit={handleSubmit}>
+              <form autoComplete="off" className="mt-3" onSubmit={handleSubmit}>
                 <div>
                   <ImageSelectInput label="CAD Logo" image={logo} setImage={setLogo} />
                   <small className="block text-[15px] -mt-2 mb-3">
@@ -138,90 +177,117 @@ export default function CadSettings() {
                   </small>
                 </div>
 
-                <FormField errorMessage={errors.name} label="CAD Name">
+                <SettingsFormField
+                  errorMessage={errors.name}
+                  action="input"
+                  label="CAD Name"
+                  description="The name to the CAD. This can be the name of your community, etc."
+                >
                   <Input onChange={handleChange} value={values.name} name="name" />
-                </FormField>
+                </SettingsFormField>
 
-                <FormField errorMessage={errors.areaOfPlay} label="Area of Play">
-                  <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
-                </FormField>
+                {AOP ? (
+                  <SettingsFormField
+                    optional
+                    errorMessage={errors.steamApiKey}
+                    action="input"
+                    label="Area of Play"
+                    description="The area where roleplay is currently active"
+                  >
+                    <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
+                  </SettingsFormField>
+                ) : null}
 
-                <FormField optional errorMessage={errors.steamApiKey} label="Steam API Key">
-                  <PasswordInput
-                    onChange={handleChange}
-                    value={values.steamApiKey}
-                    name="steamApiKey"
-                  />
-                </FormField>
-
-                <FormField
+                <SettingsFormField
                   optional
                   errorMessage={errors.discordWebhookURL}
-                  label="Discord webhook URL"
+                  action="input"
+                  label="Discord Webhook URL"
+                  description="Events will be sent to this webhook channel. (911 calls, unit status updates)"
                 >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.discordWebhookURL}
                     name="discordWebhookURL"
+                    autoComplete="off"
                   />
-                </FormField>
+                </SettingsFormField>
 
-                <FormField
+                <SettingsFormField
                   optional
                   errorMessage={errors.registrationCode}
+                  action="input"
                   label="Registration Code"
+                  description="Users will need to enter this code when creating an account."
                 >
                   <PasswordInput
                     onChange={handleChange}
                     value={values.registrationCode}
                     name="registrationCode"
+                    autoComplete="off"
                   />
-                </FormField>
+                </SettingsFormField>
 
-                <FormRow>
-                  <FormField errorMessage={errors.towWhitelisted} label="Tow Whitelisted">
-                    <Toggle
-                      name="towWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.towWhitelisted}
-                    />
-                  </FormField>
+                <SettingsFormField
+                  errorMessage={errors.whitelisted}
+                  action="checkbox"
+                  label="CAD Whitelist"
+                  description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
+                >
+                  <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+                </SettingsFormField>
 
-                  <FormField errorMessage={errors.taxiWhitelisted} label="Taxi Whitelisted">
-                    <Toggle
-                      name="taxiWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.taxiWhitelisted}
-                    />
-                  </FormField>
+                <SettingsFormField
+                  errorMessage={errors.towWhitelisted}
+                  action="checkbox"
+                  label="Tow Whitelist"
+                  description="Tow will be whitelisted, the permission can be given to any user."
+                >
+                  <Toggle
+                    name="towWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.towWhitelisted}
+                  />
+                </SettingsFormField>
 
-                  <FormField errorMessage={errors.whitelisted} label="CAD Whitelisted">
-                    <Toggle
-                      name="whitelisted"
-                      onClick={handleChange}
-                      toggled={values.whitelisted}
-                    />
-                  </FormField>
+                <SettingsFormField
+                  errorMessage={errors.taxiWhitelisted}
+                  action="checkbox"
+                  label="Taxi Whitelist"
+                  description="Taxi will be whitelisted, the permission can be given to any user."
+                >
+                  <Toggle
+                    name="taxiWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.taxiWhitelisted}
+                  />
+                </SettingsFormField>
 
-                  <FormField errorMessage={errors.businessWhitelisted} label="Business Whitelisted">
-                    <Toggle
-                      name="businessWhitelisted"
-                      onClick={handleChange}
-                      toggled={values.businessWhitelisted}
-                    />
-                  </FormField>
-                </FormRow>
+                <SettingsFormField
+                  errorMessage={errors.businessWhitelisted}
+                  action="checkbox"
+                  label="Business Whitelist"
+                  description="Businesses will be whitelisted, they will need to be reviewed, they can be accepted or denied before they can be used."
+                >
+                  <Toggle
+                    name="businessWhitelisted"
+                    onClick={handleChange}
+                    toggled={values.businessWhitelisted}
+                  />
+                </SettingsFormField>
 
-                <FormField errorMessage={errors.roleplayEnabled} label="Roleplay enabled">
+                <SettingsFormField
+                  errorMessage={errors.roleplayEnabled}
+                  action="checkbox"
+                  label="Roleplay Enabled"
+                  description="When disabled, this will display a banner that says that roleplay must be stopped."
+                >
                   <Toggle
                     name="roleplayEnabled"
                     onClick={handleChange}
                     toggled={values.roleplayEnabled}
                   />
-                  <small className="mt-1 text-sm">
-                    When disabled, this will add a banner that says that roleplay must be stopped.
-                  </small>
-                </FormField>
+                </SettingsFormField>
 
                 <Button disabled={state === "loading"} className="flex items-center" type="submit">
                   {state === "loading" ? <Loader className="mr-3" /> : null}

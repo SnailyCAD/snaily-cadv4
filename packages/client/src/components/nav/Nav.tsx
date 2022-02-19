@@ -31,7 +31,7 @@ export function Nav({ maxWidth }: Props) {
   const url = cad && makeImageUrl("cad", cad.logoId);
 
   return (
-    <nav className="bg-white dark:bg-[#171717] shadow-sm">
+    <nav className="bg-white dark:bg-[#171717] shadow-sm sticky top-0 z-30">
       <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex space-x-7">
