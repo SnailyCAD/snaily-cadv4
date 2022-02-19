@@ -14,6 +14,8 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { Status } from "components/shared/Status";
+import { useAuth } from "context/AuthContext";
 
 interface Props {
   users: User[];
@@ -22,6 +24,7 @@ interface Props {
 export default function ManageUsers({ users: data }: Props) {
   const [users, setUsers] = React.useState<User[]>(data);
   const [search, setSearch] = React.useState("");
+  const { cad } = useAuth();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -57,6 +60,9 @@ export default function ManageUsers({ users: data }: Props) {
               isSupervisor: common(yesOrNoText(user.isSupervisor)),
               isEmsFd: common(yesOrNoText(user.isEmsFd)),
               isDispatch: common(yesOrNoText(user.isDispatch)),
+              whitelistStatus: (
+                <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
+              ),
               actions: (
                 <Link href={`/admin/manage/users/${user.id}`}>
                   <a>
@@ -72,6 +78,7 @@ export default function ManageUsers({ users: data }: Props) {
               { Header: "LEO Supervisor", accessor: "isSupervisor" },
               { Header: "EMS/FD Access", accessor: "isEmsFd" },
               { Header: "Dispatch Access", accessor: "isDispatch" },
+              cad?.whitelisted ? { Header: "Whitelist Status", accessor: "whitelistStatus" } : null,
               { Header: common("actions"), accessor: "actions" },
             ]}
           />

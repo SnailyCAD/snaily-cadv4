@@ -61,7 +61,13 @@ function hasRole(roleId: string | null, roleIds: string[]) {
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {
+  console.log({ cadWhitelisted, hasRole });
+
   if (!cadWhitelisted) {
+    return undefined;
+  }
+
+  if (typeof hasRole === "undefined") {
     return undefined;
   }
 
