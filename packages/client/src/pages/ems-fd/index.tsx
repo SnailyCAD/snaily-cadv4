@@ -43,7 +43,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const { signal100Enabled, Component } = useSignal100();
 
   const state = useEmsFdState();
-  const { setCalls } = useDispatchState();
+  const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
@@ -65,7 +65,12 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
           <ModalButtons />
         </div>
 
-        <StatusesArea setActiveUnit={state.setActiveDeputy} activeUnit={state.activeDeputy} />
+        <StatusesArea
+          setUnits={setActiveDeputies}
+          units={activeDeputies}
+          setActiveUnit={state.setActiveDeputy}
+          activeUnit={state.activeDeputy}
+        />
       </UtilityPanel>
 
       <div className="flex flex-col mt-3 md:flex-row md:space-x-3">

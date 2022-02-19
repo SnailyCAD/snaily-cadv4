@@ -57,7 +57,7 @@ interface Props {
 
 export default function OfficerDashboard({ officers, bolos, calls, activeOfficer }: Props) {
   const state = useLeoState();
-  const { setCalls, setBolos } = useDispatchState();
+  const { setCalls, setBolos, setActiveOfficers, activeOfficers } = useDispatchState();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
@@ -91,7 +91,12 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
           <ModalButtons />
         </div>
 
-        <StatusesArea activeUnit={state.activeOfficer} setActiveUnit={state.setActiveOfficer} />
+        <StatusesArea
+          setUnits={setActiveOfficers}
+          units={activeOfficers}
+          activeUnit={state.activeOfficer}
+          setActiveUnit={state.setActiveOfficer}
+        />
       </UtilityPanel>
 
       <ActiveCalls />

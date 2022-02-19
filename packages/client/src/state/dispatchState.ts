@@ -11,6 +11,7 @@ import type {
   LeoWhitelistStatus,
   ValueType,
   AssignedUnit,
+  CombinedLeoUnit,
 } from "@snailycad/types";
 import create from "zustand";
 
@@ -33,8 +34,8 @@ interface DispatchState {
   bolos: FullBolo[];
   setBolos: (bolos: FullBolo[]) => void;
 
-  activeOfficers: FullOfficer[];
-  setActiveOfficers: (officers: FullOfficer[]) => void;
+  activeOfficers: (FullOfficer | CombinedLeoUnit)[];
+  setActiveOfficers: (officers: (FullOfficer | CombinedLeoUnit)[]) => void;
 
   activeDeputies: FullDeputy[];
   setActiveDeputies: (deputies: FullDeputy[]) => void;

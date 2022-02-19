@@ -1,17 +1,15 @@
+import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
-import * as React from "react";
-import { FullOfficer, useDispatchState } from "state/dispatchState";
-import type { CombinedLeoUnit } from "@snailycad/types";
+import { useDispatchState } from "state/dispatchState";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
 
-export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
+export function useActiveOfficers() {
   const { user } = useAuth();
-  const [officers, setOfficers] = React.useState<FullOfficer[] | CombinedLeoUnit[]>(initOfficers);
+  const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { state, execute } = useFetch();
-  const { setActiveOfficers } = useDispatchState();
   const { setActiveOfficer } = useLeoState();
 
   const getActiveOfficers = React.useCallback(async () => {
@@ -20,7 +18,6 @@ export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
     });
 
     if (json && Array.isArray(json)) {
-      setOfficers(json);
       setActiveOfficers(json);
 
       const activeOfficer = json.find((v) => v.userId === user?.id);
@@ -39,5 +36,5 @@ export function useActiveOfficers(initOfficers: FullOfficer[] = []) {
     getActiveOfficers();
   });
 
-  return { activeOfficers: officers, state };
+  return { activeOfficers, state };
 }

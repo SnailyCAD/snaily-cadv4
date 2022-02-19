@@ -11,12 +11,19 @@ import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 
-interface Props {
-  activeUnit: ActiveOfficer | ActiveDeputy | null;
-  setActiveUnit(unit: ActiveOfficer | ActiveDeputy | null): void;
+interface Props<T extends ActiveOfficer | ActiveDeputy> {
+  activeUnit: T | null;
+  units: T[];
+  setActiveUnit(unit: T | null): void;
+  setUnits(units: T[]): void;
 }
 
-export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
+export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
+  activeUnit,
+  units,
+  setActiveUnit,
+  setUnits,
+}: Props<T>) {
   const { codes10 } = useValues();
   const { openModal } = useModal();
   const { execute } = useFetch();
@@ -65,6 +72,19 @@ export function StatusesArea({ activeUnit, setActiveUnit }: Props) {
     if (status.id === activeUnit.statusId) return;
 
     setActiveUnit({ ...activeUnit, statusId: status.id, status });
+
+    if (status.shouldDo === ShouldDoType.SET_OFF_DUTY) {
+      setUnits(units.filter((v) => v.id !== activeUnit.id));
+    } else {
+      setUnits(
+        units.map((unit) => {
+          if (unit.id === activeUnit.id) {
+            return { ...unit, statusId: status.id, status };
+          }
+          return unit;
+        }),
+      );
+    }
 
     const { json } = await execute(`/dispatch/status/${activeUnit.id}`, {
       method: "PUT",

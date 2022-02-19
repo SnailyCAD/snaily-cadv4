@@ -1,4 +1,4 @@
-import { dataToSlate, DEFAULT_EDITOR_DATA } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate } from "components/modal/DescriptionModal/Editor";
 import { useRouter } from "next/router";
 import * as React from "react";
 import type { Descendant } from "slate";
@@ -15,16 +15,14 @@ export function useNotepad() {
   const router = useRouter();
   const routeId = routeIds[router.pathname];
 
-  const [value, setValue] = React.useState<Descendant[]>(DEFAULT_EDITOR_DATA);
+  const [value, setValue] = React.useState<Descendant[]>([]);
 
   React.useEffect(() => {
     if (!routeId) return;
 
-    const localStr = window.localStorage.getItem(routeId);
-
     const local = dataToSlate({
-      description: localStr,
-      descriptionData: localStr ? JSON.parse(localStr) : DEFAULT_EDITOR_DATA,
+      description: window.localStorage.getItem(routeId),
+      descriptionData: JSON.parse(window.localStorage.getItem(routeId) ?? "[]"),
     });
     setValue(local);
   }, [routeId]);
