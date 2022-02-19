@@ -28,6 +28,7 @@ export function DiscordRolesTab() {
     dispatchRoleId: discordRoles.dispatchRoleId,
     leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
     towRoleId: discordRoles.towRoleId,
+    taxiRoleId: discordRoles.taxiRoleId,
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
   };
@@ -144,18 +145,33 @@ export function DiscordRolesTab() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.towRoleId} label="Tow Role">
-              <Select
-                isClearable
-                values={roles.map((role) => ({
-                  value: role.id,
-                  label: role.name,
-                }))}
-                value={values.towRoleId}
-                name="towRoleId"
-                onChange={handleChange}
-              />
-            </FormField>
+            <FormRow>
+              <FormField errorMessage={errors.towRoleId} label="Tow Role">
+                <Select
+                  isClearable
+                  values={roles.map((role) => ({
+                    value: role.id,
+                    label: role.name,
+                  }))}
+                  value={values.towRoleId}
+                  name="towRoleId"
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField errorMessage={errors.taxiRoleId} label="Taxi Role">
+                <Select
+                  isClearable
+                  values={roles.map((role) => ({
+                    value: role.id,
+                    label: role.name,
+                  }))}
+                  value={values.taxiRoleId}
+                  name="taxiRoleId"
+                  onChange={handleChange}
+                />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.whitelistedRoleId} label="Whitelisted Role">
               <Select

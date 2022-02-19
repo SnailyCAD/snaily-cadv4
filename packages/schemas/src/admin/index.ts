@@ -9,6 +9,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   areaOfPlay: z.string().max(255),
   steamApiKey: z.string().max(255),
   towWhitelisted: z.boolean(),
+  taxiWhitelisted: z.boolean(),
   whitelisted: z.boolean(),
   roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
@@ -38,6 +39,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   emsFdRoleId: z.string().nullable().optional(),
   dispatchRoleId: z.string().nullable().optional(),
   towRoleId: z.string().nullable().optional(),
+  taxiRoleId: z.string().nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
 });
@@ -62,6 +64,7 @@ export const UPDATE_USER_SCHEMA = z.object({
   isEmsFd: z.boolean(),
   isDispatch: z.boolean(),
   isTow: z.boolean(),
+  isTaxi: z.boolean(),
   isSupervisor: z.boolean(),
   steamId: z.string().max(255),
   discordId: z.string().max(255),

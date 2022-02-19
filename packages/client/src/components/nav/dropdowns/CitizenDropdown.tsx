@@ -1,26 +1,31 @@
-import * as React from "react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { Feature } from "@snailycad/types";
+import type { Feature, User } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
+import { useAuth } from "context/AuthContext";
 
 export function CitizenDropdown() {
   const enabled = useFeatureEnabled();
   const router = useRouter();
   const isActive = (route: string) => router.pathname.startsWith(route);
   const t = useTranslations("Nav");
+  const { user } = useAuth();
 
   const items = [
     { name: t("citizens"), href: "/citizens" },
-    { name: t("taxi"), href: "/taxi" },
+    { name: t("taxi"), href: "/taxi", show: (u: User) => u.isTaxi },
     { name: t("bleeter"), href: "/bleeter" },
     { name: t("truckLogs"), href: "/truck-logs" },
     { name: t("business"), href: "/business" },
   ];
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Dropdown
@@ -40,8 +45,9 @@ export function CitizenDropdown() {
 
       {items.map((item) => {
         const upperCase = item.href.replace("-", "_").replace("/", "").toUpperCase() as Feature;
+        const show = "show" in item ? item.show?.(user) : true;
 
-        if (!enabled[upperCase]) {
+        if (!enabled[upperCase] || !show) {
           return null;
         }
 

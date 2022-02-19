@@ -34,6 +34,7 @@ export async function updateMemberRolesLogin(
     isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
     isEmsFd: hasRole(discordRoles.emsFdRoleId, discordMember.roles),
     isTow: hasRole(discordRoles.towRoleId, discordMember.roles),
+    isTaxi: hasRole(discordRoles.taxiRoleId, discordMember.roles),
     rank:
       user.rank !== Rank.OWNER
         ? hasRole(discordRoles.adminRoleId, discordMember.roles)

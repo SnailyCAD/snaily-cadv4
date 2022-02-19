@@ -147,10 +147,12 @@ export class AuthController {
             isEmsFd: true,
             isSupervisor: true,
             isTow: true,
+            isTaxi: true,
             whitelistStatus: WhitelistStatus.ACCEPTED,
           }
         : {
             isTow: !cad.towWhitelisted,
+            isTaxi: !cad.taxiWhitelisted,
             rank: Rank.USER,
             whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
             isDispatch: autoSetUserProperties?.dispatch ?? false,

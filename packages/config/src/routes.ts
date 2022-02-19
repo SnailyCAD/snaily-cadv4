@@ -17,6 +17,8 @@ type _User = {
   isDispatch: boolean;
   isEmsFd: boolean;
   isSupervisor: boolean;
+  isTow: boolean;
+  isTaxi: boolean;
 };
 
 type Route = string | RegExp | { strict: true; route: string | RegExp };
@@ -73,6 +75,9 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],
   ["*", "/v1/dispatch", (u) => u.isDispatch || u.isLeo || u.isEmsFd],
   ["*", "/v1/search/address", (u) => u.isDispatch],
+
+  [["POST", "DELETE", "PUT", "PATCH"], "/v1/tow", (u) => u.isTow],
+  [["POST", "DELETE", "PUT", "PATCH"], "/v1/taxi", (u) => u.isTaxi],
 
   ["*", "/v1/records", (u) => u.isLeo],
 ];

@@ -10,6 +10,7 @@ type UserProperties =
   | "isEmsFd"
   | "isDispatch"
   | "isTow"
+  | "isTaxi"
   | "discordId"
   | "whitelistStatus";
 
@@ -39,6 +40,7 @@ export async function updateMemberRoles(
     { roleId: discordRoles.emsFdRoleId, method: createMethod(user.isEmsFd) },
     { roleId: discordRoles.dispatchRoleId, method: createMethod(user.isDispatch) },
     { roleId: discordRoles.towRoleId, method: createMethod(user.isTow) },
+    { roleId: discordRoles.taxiRoleId, method: createMethod(user.isTaxi) },
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
     {
       roleId: discordRoles.whitelistedRoleId,
