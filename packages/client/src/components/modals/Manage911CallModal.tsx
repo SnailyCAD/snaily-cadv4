@@ -224,7 +224,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     <Modal
       isOpen={isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
-      title={call ? "Manage 911 Call" : t("create911Call")}
+      title={call ? t("manage911Call") : t("create911Call")}
       className={call ? "w-[1200px]" : "w-[650px]"}
     >
       <div className="flex flex-col md:flex-row">

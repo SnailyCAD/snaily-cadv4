@@ -15,6 +15,7 @@
     "createTowCall": "Create tow call",
     "createTaxiCall": "Create taxi call",
     "create911Call": "Create 911 call",
+    "manage911Call": "Manage 911 call",
     "editTowCall": "Edit tow call",
     "editTaxiCall": "Edit taxi call",
     "assignedUnits": "Assigned Units",
