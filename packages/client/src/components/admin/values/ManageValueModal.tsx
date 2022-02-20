@@ -34,6 +34,7 @@ import { Eyedropper } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
 import { Toggle } from "components/form/Toggle";
 import { makeDefaultWhatPages } from "lib/admin/values";
+import { SelectDiscordRole } from "./divisions/SelectDiscordRole";
 
 const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
 
@@ -189,6 +190,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       value: v,
     })),
     showPicker: false,
+    // @ts-expect-error shortcut
+    discordRoleId: value?.discordRoleId ?? null,
   };
 
   function validate(values: typeof INITIAL_VALUES) {
@@ -216,17 +219,21 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
           <form onSubmit={handleSubmit}>
             {type === "DIVISION" ? (
-              <FormField label="Department">
-                <Select
-                  values={department.values.map((v) => ({
-                    value: v.id,
-                    label: v.value.value,
-                  }))}
-                  name="departmentId"
-                  onChange={handleChange}
-                  value={values.departmentId}
-                />
-              </FormField>
+              <>
+                <FormField label="Department">
+                  <Select
+                    values={department.values.map((v) => ({
+                      value: v.id,
+                      label: v.value.value,
+                    }))}
+                    name="departmentId"
+                    onChange={handleChange}
+                    value={values.departmentId}
+                  />
+                </FormField>
+
+                <SelectDiscordRole />
+              </>
             ) : null}
 
             <FormField errorMessage={errors.value} label="Value">

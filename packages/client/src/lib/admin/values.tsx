@@ -80,6 +80,7 @@ export function useTableDataOfType(type: ValueType) {
         return {
           callsign: v.callsign || common("none"),
           department: v.department.value.value,
+          discordRole: v.discordRole?.name ?? common("none"),
         };
       }
       case "VEHICLE":
@@ -131,6 +132,7 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: t("callsign"), accessor: "callsign" },
         { Header: t("department"), accessor: "department" },
+        { Header: t("discordRole"), accessor: "discordRole" },
       ];
     }
     case "VEHICLE":

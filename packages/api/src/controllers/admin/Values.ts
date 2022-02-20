@@ -31,7 +31,7 @@ const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> 
   DEPARTMENT: { name: "departmentValue" },
   DIVISION: {
     name: "divisionValue",
-    include: { department: { include: { value: true } } },
+    include: { discordRole: true, department: { include: { value: true } } },
   },
 };
 
@@ -308,6 +308,7 @@ export class ValuesController {
         data: {
           callsign: body.get("callsign") || null,
           departmentId,
+          discordRoleId: body.get("discordRoleId") || null,
         },
         include: {
           value: true,

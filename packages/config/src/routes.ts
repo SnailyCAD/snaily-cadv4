@@ -55,6 +55,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["GET"], "/v1/bolos", (u) => u.isLeo || u.isDispatch || u.isEmsFd],
   [["POST", "PUT", "DELETE"], "/v1/bolos", (u) => u.isLeo || u.isDispatch],
 
+  [["GET"], "/v1/admin/manage/cad-settings/discord", (u) => u.rank !== "USER"],
   ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
   [["GET"], "/v1/admin/values", () => true],
   [

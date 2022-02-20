@@ -148,6 +148,7 @@ export const typeHandlers = {
         data: {
           callsign: item.callsign,
           department: { connect: { id: item.departmentId } },
+          discordRole: item.discordRoleId ? { connect: { id: item.discordRoleId } } : undefined,
           value: createValueObj(item.value, ValueType.DIVISION),
         },
         include: { value: true, department: { include: { value: true } } },

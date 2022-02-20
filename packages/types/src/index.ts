@@ -355,6 +355,8 @@ export interface DivisionValue {
   value: Value<ValueType.DIVISION>;
   departmentId: string;
   department: DepartmentValue;
+  discordRoleId: string | null;
+  discordRole: DiscordRole | null;
   callsign: string | null;
 }
 

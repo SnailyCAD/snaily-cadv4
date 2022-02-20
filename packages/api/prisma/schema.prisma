@@ -111,18 +111,19 @@ model DiscordRoles {
 }
 
 model DiscordRole {
-  id                 String         @id @unique
+  id                 String          @id @unique
   name               String
-  discordRoles       DiscordRoles   @relation(fields: [discordRolesId], references: [id])
+  discordRoles       DiscordRoles    @relation(fields: [discordRolesId], references: [id])
   discordRolesId     String
-  leoRoles           DiscordRoles[] @relation("leoRole")
-  emsFdRoles         DiscordRoles[] @relation("emsFdRole")
-  dispatchRoles      DiscordRoles[] @relation("dispatchRole")
-  towRoles           DiscordRoles[] @relation("towRole")
-  taxiRoles          DiscordRoles[] @relation("taxiRole")
-  leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
-  adminRoles         DiscordRoles[] @relation("adminRole")
-  whitelistedRoles   DiscordRoles[] @relation("whitelistedRole")
+  leoRoles           DiscordRoles[]  @relation("leoRole")
+  emsFdRoles         DiscordRoles[]  @relation("emsFdRole")
+  dispatchRoles      DiscordRoles[]  @relation("dispatchRole")
+  towRoles           DiscordRoles[]  @relation("towRole")
+  taxiRoles          DiscordRoles[]  @relation("taxiRole")
+  leoSupervisorRoles DiscordRoles[]  @relation("leoSupervisorRole")
+  adminRoles         DiscordRoles[]  @relation("adminRole")
+  whitelistedRoles   DiscordRoles[]  @relation("whitelistedRole")
+  DivisionValue      DivisionValue[] @relation("divisionsToDiscordRole")
 }
 
 model User {
@@ -419,6 +420,8 @@ model DivisionValue {
   department                 DepartmentValue? @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId               String?
   callsign                   String?
+  discordRole                DiscordRole?     @relation("divisionsToDiscordRole", fields: [discordRoleId], references: [id])
+  discordRoleId              String?
   officers                   Officer[]        @relation("officerDivisionToDivision")
   officerDivisionsToDivision Officer[]        @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
