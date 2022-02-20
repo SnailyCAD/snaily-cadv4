@@ -50,6 +50,8 @@ export interface MiscCadSettings {
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
   callsignTemplate: string;
+  pairedUnitTemplate: string | null;
+  /** @deprecated Use `pairedUnitTemplate` instead */
   pairedUnitSymbol: string;
   signal100Enabled: boolean;
   liveMapURL: string | null;

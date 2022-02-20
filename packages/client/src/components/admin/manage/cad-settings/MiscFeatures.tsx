@@ -22,7 +22,7 @@ export function MiscFeatures() {
   // infinity -> null, "" -> null
   function cleanValues(values: typeof INITIAL_VALUES) {
     const newValues: Record<string, any> = {};
-    const excluded = ["heightPrefix", "weightPrefix", "pairedUnitSymbol", "callsignTemplate"];
+    const excluded = ["heightPrefix", "weightPrefix", "callsignTemplate"];
 
     for (const key in values) {
       const value = values[key as keyof typeof INITIAL_VALUES];
@@ -92,8 +92,8 @@ export function MiscFeatures() {
     maxDivisionsPerOfficer: miscSettings.maxDivisionsPerOfficer ?? Infinity,
     maxDepartmentsEachPerUser: miscSettings.maxDepartmentsEachPerUser ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
-    pairedUnitSymbol: miscSettings.pairedUnitSymbol ?? "",
     callsignTemplate: miscSettings.callsignTemplate ?? "",
+    pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
   };
 
@@ -241,19 +241,7 @@ export function MiscFeatures() {
             </SettingsFormField>
 
             <SettingsFormField
-              action="short-input"
-              description="The unit symbol that will be given to a paired unit"
-              errorMessage={errors.pairedUnitSymbol}
-              label="Paired unit symbol"
-            >
-              <Input
-                name="pairedUnitSymbol"
-                value={values.pairedUnitSymbol}
-                onChange={handleChange}
-              />
-            </SettingsFormField>
-
-            <SettingsFormField
+              // todo: add template information for allowed properties
               description={null}
               errorMessage={errors.callsignTemplate}
               label="Callsign Template"
@@ -261,6 +249,18 @@ export function MiscFeatures() {
               <Input
                 name="callsignTemplate"
                 value={values.callsignTemplate}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="This template will be used to generate a callsign for paired/merged officers."
+              errorMessage={errors.pairedUnitTemplate}
+              label="Paired Unit Template"
+            >
+              <Input
+                name="pairedUnitTemplate"
+                value={values.pairedUnitTemplate}
                 onChange={handleChange}
               />
             </SettingsFormField>

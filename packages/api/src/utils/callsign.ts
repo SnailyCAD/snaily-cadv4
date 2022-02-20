@@ -1,10 +1,4 @@
-import type {
-  DepartmentValue,
-  DivisionValue,
-  EmsFdDeputy,
-  MiscCadSettings,
-  Officer,
-} from "@prisma/client";
+import type { DepartmentValue, DivisionValue, EmsFdDeputy, Officer } from "@prisma/client";
 
 type FullUnit = (Officer | EmsFdDeputy) & {
   department: DepartmentValue;
@@ -12,7 +6,7 @@ type FullUnit = (Officer | EmsFdDeputy) & {
   divisions?: DivisionValue[];
 };
 
-export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSettings | null) {
+export function generateCallsign(unit: FullUnit, template: string | null) {
   if (!("department" in unit)) {
     return "NULL";
   }
@@ -20,7 +14,6 @@ export function generateCallsign(unit: FullUnit, miscCadSettings: MiscCadSetting
   const { callsign, callsign2, department } = unit;
   const unitDivision = unit.division ?? ("divisions" in unit ? unit.divisions : []);
 
-  const template = miscCadSettings?.callsignTemplate;
   const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
   if (!template) {

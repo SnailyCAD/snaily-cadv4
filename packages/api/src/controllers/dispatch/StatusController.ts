@@ -252,11 +252,13 @@ export class StatusController {
       select: { id: true },
     });
 
-    const symbol = cad.miscCadSettings.pairedUnitSymbol || "A";
+    // todo: fix type
+    const callsign = generateCallsign(activeOfficer as any, cad.miscCadSettings.pairedUnitTemplate);
+
     const unit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,
-        callsign: `1${symbol}-${activeOfficer.callsign2}`,
+        callsign,
       },
     });
 
@@ -337,7 +339,9 @@ function createWebhookData(webhook: APIWebhook, miscCadSettings: MiscCadSettings
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  const callsign = isNotCombined ? generateCallsign(unit, miscCadSettings) : unit.callsign;
+  const callsign = isNotCombined
+    ? generateCallsign(unit, miscCadSettings.callsignTemplate)
+    : unit.callsign;
   const officerName = isNotCombined
     ? `${unit.badgeNumber} - ${callsign} ${unitName}`
     : `${callsign}`;
