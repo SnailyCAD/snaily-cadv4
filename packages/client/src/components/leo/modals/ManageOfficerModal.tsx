@@ -18,6 +18,7 @@ import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { getUnitDepartment } from "lib/utils";
+import { CallSignPreview } from "../CallsignPreview";
 
 interface Props {
   officer: FullOfficer | null;
@@ -191,6 +192,13 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
                   }))}
               />
             </FormField>
+
+            <CallSignPreview
+              divisions={division.values.filter((v) =>
+                values.divisions.some((d) => d.value === v.id),
+              )}
+              department={department.values.find((v) => v.id === values.department) ?? null}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
