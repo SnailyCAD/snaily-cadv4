@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
