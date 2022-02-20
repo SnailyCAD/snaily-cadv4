@@ -10,7 +10,7 @@ import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
-import type { DepartmentValue, DivisionValue, User } from "@prisma/client";
+import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/client";
 
 const assignedUnitsInclude = {
   include: {
@@ -443,7 +443,7 @@ export async function findUnit(
   extraFind?: any,
   searchCombined?: true,
 ): Promise<{
-  unit: Officer | EmsFdDeputy | CombinedLeoUnit | null;
+  unit: Officer | EmsFdDeputy | (CombinedLeoUnit & { status: StatusValue }) | null;
   type: "leo" | "ems-fd" | "combined";
 }>;
 export async function findUnit(id: string, extraFind?: any, searchCombined?: boolean) {
@@ -464,6 +464,7 @@ export async function findUnit(id: string, extraFind?: any, searchCombined?: boo
       },
       include: {
         officers: { include: leoProperties },
+        status: true,
       },
     });
 

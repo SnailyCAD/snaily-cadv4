@@ -23,12 +23,16 @@ export function usePanicButton() {
 function Component({ unit }: { unit: FullOfficer | FullDeputy }) {
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
+  const callsign = generateCallsign(
+    unit,
+    "officers" in unit ? "pairedUnitTemplate" : "callsignTemplate",
+  );
 
   return (
     <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
       <p>
         {t.rich("panicButtonLeo", {
-          officer: `${generateCallsign(unit)} ${makeUnitName(unit)}`,
+          officer: `${callsign} ${makeUnitName(unit)}`,
         })}
       </p>
     </div>

@@ -98,8 +98,24 @@ export class StatusController {
     if (type === "leo") {
       const officer = await prisma.officer.findUnique({
         where: { id: unit.id },
-        select: { department: true, whitelistStatus: leoProperties.whitelistStatus },
+        include: {
+          status: { select: { shouldDo: true } },
+          department: true,
+          whitelistStatus: leoProperties.whitelistStatus,
+        },
       });
+
+      if (
+        officer?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo !== ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(officer, "OFF");
+      } else if (
+        officer?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo === ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(officer, "ON");
+      }
 
       const isOfficerDisabled = officer?.whitelistStatus
         ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
@@ -108,6 +124,20 @@ export class StatusController {
 
       if (isOfficerDisabled) {
         throw new BadRequest("cannotUseThisOfficer");
+      }
+    }
+
+    if (type === "combined") {
+      if (
+        (unit as any)?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo !== ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(unit, "OFF");
+      } else if (
+        (unit as any)?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo === ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(unit, "ON");
       }
     }
 
