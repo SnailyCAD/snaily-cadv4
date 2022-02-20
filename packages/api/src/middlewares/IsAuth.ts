@@ -9,8 +9,9 @@ import {
 } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { getSessionUser } from "lib/auth";
+import { getSessionUser, userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
+import { updateMemberRolesLogin } from "lib/discord/auth";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
@@ -118,6 +119,25 @@ export class IsAuth implements MiddlewareMethods {
         },
         select: CAD_SELECT(user),
       });
+    }
+
+    const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
+    const hasThreeMinTimeoutEnded =
+      !user?.lastDiscordSyncTimestamp ||
+      THREE_MIN_TIMEOUT_MS - (Date.now() - user.lastDiscordSyncTimestamp.getTime()) < 0;
+
+    if (user?.discordId && hasThreeMinTimeoutEnded) {
+      const updated = await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastDiscordSyncTimestamp: new Date(),
+        },
+        select: userProperties,
+      });
+
+      if (cad?.discordRolesId && updated.discordId) {
+        await updateMemberRolesLogin(updated, cad?.discordRolesId);
+      }
     }
 
     ctx.set("cad", setDiscordAUth(cad));

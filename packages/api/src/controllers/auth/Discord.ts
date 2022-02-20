@@ -7,7 +7,7 @@ import { request } from "undici";
 import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types/v10";
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
-import { getSessionUser } from "lib/auth";
+import { getSessionUser } from "lib/auth/user";
 import { cad, Feature, WhitelistStatus, type User } from "@prisma/client";
 import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
 import { signJWT } from "utils/jwt";

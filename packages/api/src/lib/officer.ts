@@ -1,7 +1,7 @@
 import type { User } from ".prisma/client";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { userProperties } from "./auth";
+import { userProperties } from "./auth/user";
 import { prisma } from "./prisma";
 
 export const unitProperties = {

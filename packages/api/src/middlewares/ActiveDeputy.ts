@@ -1,5 +1,5 @@
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
-import { getSessionUser } from "lib/auth";
+import { getSessionUser } from "lib/auth/user";
 import { getActiveDeputy } from "lib/ems-fd";
 
 @Middleware()
