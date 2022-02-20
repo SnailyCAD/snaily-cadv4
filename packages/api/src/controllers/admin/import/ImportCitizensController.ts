@@ -5,7 +5,9 @@ import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
-import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas";
+import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
+import { importVehiclesHandler } from "./ImportVehiclesController";
+import { importWeaponsHandler } from "./ImportWeaponsController";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -19,6 +21,14 @@ export class ImportCitizensController {
 
     return Promise.all(
       data.map(async (data) => {
+        if (data.vehicles) {
+          await importVehiclesHandler(data.vehicles);
+        }
+
+        if (data.weapons) {
+          await importWeaponsHandler(data.weapons);
+        }
+
         return prisma.citizen.create({
           data: {
             name: data.name,
