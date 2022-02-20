@@ -2,8 +2,6 @@ import { DepartmentType } from "@prisma/client";
 import { prisma } from "lib/prisma";
 
 export async function appendDivisionsToUserUnits(userId: string, memberRoles: string[]) {
-  console.log({ memberRoles });
-
   await Promise.all(
     memberRoles.map(async (roleId) => {
       const division = await prisma.divisionValue.findFirst({
@@ -19,7 +17,12 @@ export async function appendDivisionsToUserUnits(userId: string, memberRoles: st
         userId;
         // todo: update LEO
       } else {
-        // todo: update EMS/FD
+        await prisma.emsFdDeputy.updateMany({
+          where: { userId },
+          data: {
+            divisionId: division.id,
+          },
+        });
       }
     }),
   );
