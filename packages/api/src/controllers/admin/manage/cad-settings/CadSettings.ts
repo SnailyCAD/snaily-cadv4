@@ -104,7 +104,7 @@ export class ManageCitizensController {
         maxCitizensPerUser: data.maxCitizensPerUser,
         maxPlateLength: data.maxPlateLength,
         maxDivisionsPerOfficer: data.maxDivisionsPerOfficer,
-        pairedUnitSymbol: data.pairedUnitSymbol,
+        pairedUnitTemplate: data.pairedUnitTemplate,
         callsignTemplate: data.callsignTemplate,
         liveMapURL: data.liveMapURL,
         authScreenBgImageId: data.authScreenBgImageId,

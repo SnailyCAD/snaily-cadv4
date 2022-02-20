@@ -24,6 +24,7 @@ import type { DivisionValue, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
+import type { CombinedLeoUnit } from "@snailycad/types";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -308,7 +309,13 @@ export class LeoController {
   @Post("/panic-button")
   @Description("Set the panic button for an officer by their id")
   async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
-    let officer = await prisma.officer.findFirst({
+    let type: "officer" | "combinedLeoUnit" = "officer";
+    const combinedIncludes = {
+      officers: { include: leoProperties },
+      status: { include: { value: true } },
+    };
+
+    let officer: CombinedLeoUnit | Officer | null = await prisma.officer.findFirst({
       where: {
         id: officerId,
         // @ts-expect-error `API_TOKEN` is a rank that gets appended in `IsAuth`
@@ -316,6 +323,16 @@ export class LeoController {
       },
       include: leoProperties,
     });
+
+    if (!officer) {
+      officer = (await prisma.combinedLeoUnit.findFirst({
+        where: { id: officerId },
+        include: combinedIncludes,
+      })) as CombinedLeoUnit | null;
+      if (officer) {
+        type = "combinedLeoUnit";
+      }
+    }
 
     if (!officer) {
       throw new NotFound("officerNotFound");
@@ -327,12 +344,12 @@ export class LeoController {
       },
     });
 
-    let type: "ON" | "OFF" = "ON";
+    let panicType: "ON" | "OFF" = "ON";
     if (code) {
       /**
        * officer is already in panic-mode -> set status back to `ON_DUTY`
        */
-      if (officer?.statusId === code?.id) {
+      if (officer.statusId === code?.id) {
         const onDutyCode = await prisma.statusValue.findFirst({
           where: {
             shouldDo: ShouldDoType.SET_ON_DUTY,
@@ -343,34 +360,36 @@ export class LeoController {
           throw new BadRequest("mustHaveOnDutyCode");
         }
 
-        type = "OFF";
-        officer = await prisma.officer.update({
+        panicType = "OFF";
+        // @ts-expect-error the properties used are the same.
+        officer = await prisma[type].update({
           where: {
             id: officer.id,
           },
           data: {
             statusId: onDutyCode?.id,
           },
-          include: leoProperties,
+          include: type === "officer" ? leoProperties : combinedIncludes,
         });
       } else {
         /**
          * officer is not yet in panic-mode -> set status to panic button status
          */
-        officer = await prisma.officer.update({
+        // @ts-expect-error the properties used are the same.
+        officer = await prisma[type].update({
           where: {
             id: officer.id,
           },
           data: {
             statusId: code.id,
           },
-          include: leoProperties,
+          include: type === "officer" ? leoProperties : combinedIncludes,
         });
       }
     }
 
     this.socket.emitUpdateOfficerStatus();
-    this.socket.emitPanicButtonLeo(officer, type);
+    this.socket.emitPanicButtonLeo(officer, panicType);
   }
 
   @Get("/impounded-vehicles")

@@ -68,6 +68,8 @@ function ActiveCallsInner() {
   useListener(
     SocketEvents.Create911Call,
     (data) => {
+      if (calls.some((v) => v.id === data.id)) return;
+
       setCalls([data, ...calls]);
     },
     [calls, setCalls],

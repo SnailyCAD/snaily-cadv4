@@ -1,5 +1,5 @@
 {
-  "name": "@snailycad/schemas",
+  "name": "@snailycad/utils",
   "version": "1.0.0-beta.60",
   "main": "./dist/index.js",
   "scripts": {
@@ -7,11 +7,9 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@snailycad/types": "1.0.0-beta.60",
     "tsup": "^5.11.13",
     "typescript": "^4.5.5"
-  },
-  "dependencies": {
-    "zod": "^3.11.6"
   },
   "tsup": {
     "entry": [

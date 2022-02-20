@@ -25,7 +25,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxDivisionsPerOfficer: z.number().nullable(),
   maxDepartmentsEachPerUser: z.number().nullable(),
   maxPlateLength: z.number().min(1),
-  pairedUnitSymbol: z.string().max(255),
+  pairedUnitTemplate: z.string().max(255).nullable(),
   callsignTemplate: z.string(),
   liveMapURL: z.string().nullable(),
   maxOfficersPerUser: z.number().nullable(),

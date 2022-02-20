@@ -29,7 +29,7 @@ import {
   Value,
   WhitelistStatus,
 } from "@prisma/client";
-import { generateCallsign } from "utils/callsign";
+import { generateCallsign } from "@snailycad/utils";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 
@@ -98,8 +98,24 @@ export class StatusController {
     if (type === "leo") {
       const officer = await prisma.officer.findUnique({
         where: { id: unit.id },
-        select: { department: true, whitelistStatus: leoProperties.whitelistStatus },
+        include: {
+          status: { select: { shouldDo: true } },
+          department: true,
+          whitelistStatus: leoProperties.whitelistStatus,
+        },
       });
+
+      if (
+        officer?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo !== ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(officer, "OFF");
+      } else if (
+        officer?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo === ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(officer, "ON");
+      }
 
       const isOfficerDisabled = officer?.whitelistStatus
         ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
@@ -108,6 +124,20 @@ export class StatusController {
 
       if (isOfficerDisabled) {
         throw new BadRequest("cannotUseThisOfficer");
+      }
+    }
+
+    if (type === "combined") {
+      if (
+        (unit as any)?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo !== ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(unit, "OFF");
+      } else if (
+        (unit as any)?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
+        code.shouldDo === ShouldDoType.PANIC_BUTTON
+      ) {
+        this.socket.emitPanicButtonLeo(unit, "ON");
       }
     }
 
@@ -218,7 +248,6 @@ export class StatusController {
   async mergeOfficers(
     @BodyParams("id") id: string,
     @Context("activeOfficer") activeOfficer: Officer,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
     if (id === activeOfficer.id) {
       throw new BadRequest("officerAlreadyMerged");
@@ -252,11 +281,10 @@ export class StatusController {
       select: { id: true },
     });
 
-    const symbol = cad.miscCadSettings.pairedUnitSymbol || "A";
     const unit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,
-        callsign: `1${symbol}-${activeOfficer.callsign2}`,
+        callsign: activeOfficer.callsign,
       },
     });
 
@@ -337,7 +365,8 @@ function createWebhookData(webhook: APIWebhook, miscCadSettings: MiscCadSettings
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  const callsign = isNotCombined ? generateCallsign(unit, miscCadSettings) : unit.callsign;
+  // todo: fix type
+  const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
   const officerName = isNotCombined
     ? `${unit.badgeNumber} - ${callsign} ${unitName}`
     : `${callsign}`;

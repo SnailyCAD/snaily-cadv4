@@ -17,6 +17,7 @@ import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import { CallSignPreview } from "components/leo/CallsignPreview";
 
 interface Props {
   deputy: FullDeputy | null;
@@ -192,6 +193,11 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
                   }))}
               />
             </FormField>
+
+            <CallSignPreview
+              divisions={division.values.filter((v) => values.division === v.id)}
+              department={department.values.find((v) => v.id === values.department) ?? null}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">

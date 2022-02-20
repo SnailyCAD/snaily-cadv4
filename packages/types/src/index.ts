@@ -50,7 +50,7 @@ export interface MiscCadSettings {
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
   callsignTemplate: string;
-  pairedUnitSymbol: string;
+  pairedUnitTemplate: string | null;
   signal100Enabled: boolean;
   liveMapURL: string | null;
   roleplayEnabled: boolean | null;

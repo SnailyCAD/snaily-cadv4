@@ -127,24 +127,30 @@ export function RenderMapPlayers() {
   );
 }
 
+let warned = false;
 function getCADURL(cad: cad | null) {
   if (!cad) return null;
 
   const liveMapURL = cad.miscCadSettings?.liveMapURL;
 
   if (!liveMapURL) {
-    toastError({
-      duration: Infinity,
-      message: "There was no live_map_url provided from the CAD-Settings.",
-    });
+    !warned &&
+      toastError({
+        duration: Infinity,
+        message: "There was no live_map_url provided from the CAD-Settings.",
+      });
+    warned = true;
     return null;
   }
 
   if (!liveMapURL.startsWith("ws")) {
-    toastError({
-      duration: Infinity,
-      message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
-    });
+    !warned &&
+      toastError({
+        duration: Infinity,
+        message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
+      });
+    warned = true;
+
     return null;
   }
 
