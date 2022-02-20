@@ -20,13 +20,13 @@ export function TabList<Tabs extends Tab[]>({
 }: Props<Tabs>) {
   return (
     <Tabs.Root defaultValue={defaultValue} className="w-full px-2 sm:px-0">
-      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2">
+      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto">
         {tabs.map((tab) => (
           <Tabs.Trigger
             value={tab.value}
             key={tab.value}
             className={classNames(
-              "tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border",
+              "tabs-list py-1.5 pb-2 border-b-2 border-transparent text-gray-800 dark:text-gray-200 transition-border min-w-fit",
             )}
           >
             {tab.name}
