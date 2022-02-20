@@ -7,7 +7,7 @@ import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
-import { canManageInvariant } from "lib/auth";
+import { canManageInvariant } from "lib/auth/user";
 
 const CITIZEN_SELECTS = {
   name: true,

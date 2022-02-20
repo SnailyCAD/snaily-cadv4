@@ -4,9 +4,8 @@ import { NotFound, Unauthorized } from "@tsed/exceptions";
 import { parse } from "cookie";
 import { Cookie } from "@snailycad/config";
 import { verifyJWT } from "utils/jwt";
-import { prisma } from "./prisma";
-import type { User } from ".prisma/client";
-import { WhitelistStatus } from "@prisma/client";
+import { prisma } from "lib/prisma";
+import { WhitelistStatus, type User } from "@prisma/client";
 
 export const userProperties = {
   id: true,
@@ -28,6 +27,7 @@ export const userProperties = {
   statusViewMode: true,
   discordId: true,
   tableActionsAlignment: true,
+  lastDiscordSyncTimestamp: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {

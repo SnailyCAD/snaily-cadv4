@@ -4,7 +4,7 @@ import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Post, Put } from "@tsed/schema";
-import { canManageInvariant } from "lib/auth";
+import { canManageInvariant } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";

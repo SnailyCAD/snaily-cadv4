@@ -10,7 +10,7 @@ import type { User } from ".prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
-import { userProperties } from "lib/auth";
+import { userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
