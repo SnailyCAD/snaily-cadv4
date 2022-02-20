@@ -24,23 +24,27 @@ export class ImportVehiclesController {
     @MultipartFile("file") file?: PlatformMulterFile,
   ) {
     const toValidateBody = file ? parseImportFile(file) : body;
-    const data = validateSchema(VEHICLE_SCHEMA_ARR, toValidateBody);
-
-    return Promise.all(
-      data.map(async (data) => {
-        return prisma.registeredVehicle.create({
-          data: {
-            citizenId: data.ownerId,
-            plate: data.plate,
-            insuranceStatus: "null",
-            color: data.color,
-            registrationStatusId: data.registrationStatusId,
-            modelId: data.modelId,
-            vinNumber: generateString(17),
-          },
-          include: vehiclesInclude,
-        });
-      }),
-    );
+    return importVehiclesHandler(toValidateBody);
   }
+}
+
+export async function importVehiclesHandler(body: unknown[]) {
+  const data = validateSchema(VEHICLE_SCHEMA_ARR, body);
+
+  return Promise.all(
+    data.map(async (data) => {
+      return prisma.registeredVehicle.create({
+        data: {
+          citizenId: data.ownerId,
+          plate: data.plate,
+          insuranceStatus: "null",
+          color: data.color,
+          registrationStatusId: data.registrationStatusId,
+          modelId: data.modelId,
+          vinNumber: generateString(17),
+        },
+        include: vehiclesInclude,
+      });
+    }),
+  );
 }
