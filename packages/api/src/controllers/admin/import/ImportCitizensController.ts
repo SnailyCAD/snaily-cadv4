@@ -21,15 +21,7 @@ export class ImportCitizensController {
 
     return Promise.all(
       data.map(async (data) => {
-        if (data.vehicles) {
-          await importVehiclesHandler(data.vehicles);
-        }
-
-        if (data.weapons) {
-          await importWeaponsHandler(data.weapons);
-        }
-
-        return prisma.citizen.create({
+        const citizen = await prisma.citizen.create({
           data: {
             name: data.name,
             surname: data.surname,
@@ -45,6 +37,16 @@ export class ImportCitizensController {
           },
           include: { gender: true, ethnicity: true },
         });
+
+        if (data.vehicles) {
+          await importVehiclesHandler(data.vehicles.map((v) => ({ ...v, ownerId: citizen.id })));
+        }
+
+        if (data.weapons) {
+          await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
+        }
+
+        return citizen;
       }),
     );
   }
