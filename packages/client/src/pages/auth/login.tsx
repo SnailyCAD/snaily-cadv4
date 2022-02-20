@@ -93,7 +93,7 @@ export default function Login() {
     router.push(from);
   }
 
-  const showHr = ALLOW_REGULAR_LOGIN ? (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id : false;
+  const showHr = !ALLOW_REGULAR_LOGIN || (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id;
 
   return (
     <>
