@@ -2,6 +2,7 @@ import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
 import { getRest, GUILD_ID } from "lib/discord";
 import { prisma } from "lib/prisma";
+import { appendDivisionsToUserUnits } from "./divisions";
 
 /**
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
@@ -51,6 +52,8 @@ export async function updateMemberRolesLogin(
     where: { id: user.id },
     data: updateData,
   });
+
+  await appendDivisionsToUserUnits(user.id, discordMember.roles);
 
   return updatedUser;
 }
