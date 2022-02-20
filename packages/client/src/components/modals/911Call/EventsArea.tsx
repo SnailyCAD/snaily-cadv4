@@ -50,7 +50,7 @@ export function CallEventsArea({ disabled, call }: Props) {
     <div className="w-[45rem] ml-3 relative">
       <h4 className="text-xl font-semibold">{common("events")}</h4>
 
-      <ul className="overflow-auto h-[210px]">
+      <ul className="overflow-auto h-[65%]">
         {(call?.events.length ?? 0) <= 0 ? (
           <p className="mt-2">{t("noEvents")}</p>
         ) : (
