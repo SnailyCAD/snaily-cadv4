@@ -5,7 +5,7 @@ import type { Socket } from "services/SocketService";
 
 interface Options {
   shouldDo: ShouldDoType;
-  officer: Officer;
+  officer: Omit<Officer, "divisionId">;
   socket: Socket;
   userId: string;
 }

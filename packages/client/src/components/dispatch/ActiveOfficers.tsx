@@ -139,7 +139,7 @@ export function ActiveOfficers() {
                     ) : null}
                     {"officers" in officer ? (
                       <div className="flex items-center">
-                        {officer.callsign}
+                        {generateCallsign(officer, "pairedUnitTemplate")}
                         <span className="mx-4">
                           <ArrowRight />
                         </span>
