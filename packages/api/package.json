@@ -32,6 +32,7 @@
     "@snailycad/config": "1.0.0-beta.59",
     "@snailycad/schemas": "1.0.0-beta.59",
     "@snailycad/types": "1.0.0-beta.59",
+    "@snailycad/utils": "1.0.0-beta.59",
     "@tsed/common": "^6.102.5",
     "@tsed/core": "^6.102.5",
     "@tsed/di": "^6.102.5",

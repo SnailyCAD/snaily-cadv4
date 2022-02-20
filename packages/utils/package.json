@@ -1,0 +1,24 @@
+{
+  "name": "@snailycad/utils",
+  "version": "1.0.0-beta.59",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@snailycad/types": "1.0.0-beta.59",
+    "tsup": "^5.11.13",
+    "typescript": "^4.5.5"
+  },
+  "tsup": {
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "dts": true,
+    "bundle": false,
+    "platform": "node",
+    "target": "node16",
+    "silent": true
+  }
+}

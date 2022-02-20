@@ -1323,6 +1323,7 @@ __metadata:
     "@snailycad/config": 1.0.0-beta.59
     "@snailycad/schemas": 1.0.0-beta.59
     "@snailycad/types": 1.0.0-beta.59
+    "@snailycad/utils": 1.0.0-beta.59
     "@tsed/common": ^6.102.5
     "@tsed/core": ^6.102.5
     "@tsed/di": ^6.102.5
@@ -1386,6 +1387,7 @@ __metadata:
     "@snailycad/config": 1.0.0-beta.59
     "@snailycad/schemas": 1.0.0-beta.59
     "@snailycad/types": 1.0.0-beta.59
+    "@snailycad/utils": 1.0.0-beta.59
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.39
     "@types/react-dom": ^17.0.11
@@ -1461,6 +1463,16 @@ __metadata:
     type-fest: ^2.11.2
     typescript: ^4.5.5
     zod: ^3.11.6
+  languageName: unknown
+  linkType: soft
+
+"@snailycad/utils@1.0.0-beta.59, @snailycad/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/utils@workspace:packages/utils"
+  dependencies:
+    "@snailycad/types": 1.0.0-beta.59
+    tsup: ^5.11.13
+    typescript: ^4.5.5
   languageName: unknown
   linkType: soft
 

@@ -53,7 +53,7 @@ model MiscCadSettings {
   // max units a user can create with a department
   maxDepartmentsEachPerUser Int?
   callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
-  pairedUnitTemplate        String?  @default("1A-{callsign2}") @db.Text
+  pairedUnitTemplate        String?  @default("1A-{callsign1}") @db.Text
   pairedUnitSymbol          String?  @default("A") @db.VarChar(255)
   signal100Enabled          Boolean  @default(false)
   liveMapURL                String?  @db.Text

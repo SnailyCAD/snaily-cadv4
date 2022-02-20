@@ -18,9 +18,16 @@ for (const pkg of packages) {
   const packageJsonContentJSON = getJson(packageJsonPath);
   packageJsonContentJSON.version = version;
 
-  if (["api", "client"].includes(pkg)) {
+  if (["api", "client", "utils"].includes(pkg)) {
     for (const utilPkg of utilPackages) {
-      packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = version;
+      const isInDep = packageJsonContentJSON.dependencies?.[`@snailycad/${utilPkg}`];
+      const isInDevDep = packageJsonContentJSON.devDependencies?.[`@snailycad/${utilPkg}`];
+
+      if (isInDep) {
+        packageJsonContentJSON.dependencies[`@snailycad/${utilPkg}`] = version;
+      } else if (isInDevDep) {
+        packageJsonContentJSON.devDependencies[`@snailycad/${utilPkg}`] = version;
+      }
     }
   }
 
