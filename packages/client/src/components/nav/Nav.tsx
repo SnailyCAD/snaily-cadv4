@@ -22,7 +22,7 @@ interface Props {
 }
 
 export function Nav({ maxWidth }: Props) {
-  const [menuOpen, setMenuOpen] = React.useState(true);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();

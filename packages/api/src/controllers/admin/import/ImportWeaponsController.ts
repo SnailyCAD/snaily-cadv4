@@ -24,20 +24,24 @@ export class ImportWeaponsController {
     @MultipartFile("file") file?: PlatformMulterFile,
   ) {
     const toValidateBody = file ? parseImportFile(file) : body;
-    const data = validateSchema(WEAPON_SCHEMA_ARR, toValidateBody);
-
-    return Promise.all(
-      data.map(async (data) => {
-        return prisma.weapon.create({
-          data: {
-            citizenId: data.ownerId,
-            registrationStatusId: data.registrationStatusId,
-            modelId: data.modelId,
-            serialNumber: generateString(10),
-          },
-          include: weaponsInclude,
-        });
-      }),
-    );
+    return importWeaponsHandler(toValidateBody);
   }
+}
+
+export async function importWeaponsHandler(body: unknown[]) {
+  const data = validateSchema(WEAPON_SCHEMA_ARR, body);
+
+  return Promise.all(
+    data.map(async (data) => {
+      return prisma.weapon.create({
+        data: {
+          citizenId: data.ownerId,
+          registrationStatusId: data.registrationStatusId,
+          modelId: data.modelId,
+          serialNumber: generateString(10),
+        },
+        include: weaponsInclude,
+      });
+    }),
+  );
 }

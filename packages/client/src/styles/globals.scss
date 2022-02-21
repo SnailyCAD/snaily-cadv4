@@ -126,3 +126,13 @@ th {
     transform: scale(100%);
   }
 }
+
+.admin-dashboard-responsive {
+  width: calc(100vw - 50px);
+}
+
+@media (min-width: 900px) {
+  .admin-dashboard-responsive {
+    width: calc(100vw - 330px);
+  }
+}

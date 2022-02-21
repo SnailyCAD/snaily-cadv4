@@ -129,7 +129,7 @@ export function ActiveOfficers() {
                         ]
                   }
                 >
-                  <span className="flex items-center capitalize">
+                  <span className="flex items-center capitalize cursor-default">
                     {"imageId" in officer && officer.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"

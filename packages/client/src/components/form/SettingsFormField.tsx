@@ -7,8 +7,10 @@ type ReactNode = React.ReactChild | React.ReactFragment | React.ReactPortal;
 
 const rightAreaStyles = {
   input: "border-t-[1px] w-full px-4",
-  "short-input": "grid place-items-center border-l-[1px] w-60 min-w-[16rem] px-2.5",
-  checkbox: "grid place-items-center border-l-[1px] w-40 min-w-[10rem]",
+  "short-input":
+    "grid place-items-center border-t-[1px] md:border-l-[1px] md:w-60 md:min-w-[16rem] px-2.5",
+  checkbox:
+    "grid px-5 md:px-0 md:place-items-center border-t-[1px] md:border-l-[1px] md:w-40 md:min-w-[10rem] ",
 };
 
 interface Props {
@@ -49,7 +51,9 @@ export function SettingsFormField({
       <div
         className={classNames(
           "py-0 gap-2",
-          ["checkbox", "short-input"].includes(action) ? "flex justify-between" : "flex flex-col",
+          ["checkbox", "short-input"].includes(action)
+            ? "flex flex-col md:flex-row justify-between"
+            : "flex flex-col",
         )}
       >
         <header className="py-4 px-4">
