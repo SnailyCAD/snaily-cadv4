@@ -45,4 +45,5 @@ export const LEO_INCIDENT_SCHEMA = z.object({
   injuriesOrFatalities: z.boolean(),
   arrestsMade: z.boolean(),
   involvedOfficers: z.array(z.any()).min(0).optional(),
+  isActive: z.boolean().nullable().optional(),
 });

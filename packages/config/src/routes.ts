@@ -39,7 +39,7 @@ export const PERMISSION_ROUTES: PermissionRoute[] = [
   ],
   ["*", "/v1/leo", (u) => u.isLeo],
 
-  [["POST"], "/v1/incidents", (u) => u.isLeo],
+  [["POST", "PUT"], "/v1/incidents", (u) => u.isLeo || u.isDispatch],
   [["DELETE"], "/v1/incidents", (u) => u.isSupervisor],
   ["*", "/v1/incidents", (u) => u.isLeo || u.rank !== "USER"],
 

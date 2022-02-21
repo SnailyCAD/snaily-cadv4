@@ -627,12 +627,14 @@ export interface LeoIncident {
   caseNumber: number;
   description: string | null;
   descriptionData: DescriptionData | null;
-  creatorId: string;
+  creator?: Officer | null;
+  creatorId: string | null;
   firearmsInvolved: boolean;
   injuriesOrFatalities: boolean;
   arrestsMade: boolean;
   createdAt: Date;
   updatedAt: Date;
+  isActive: boolean | null;
 }
 
 /**
@@ -875,6 +877,7 @@ export enum Feature {
   ACTIVE_DISPATCHERS = "ACTIVE_DISPATCHERS",
   ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
   ALLOW_REGULAR_LOGIN = "ALLOW_REGULAR_LOGIN",
+  ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
 }
 
 export enum Rank {

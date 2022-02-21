@@ -25,6 +25,8 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import type { ActiveDispatchers } from "@snailycad/types";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { FullIncident } from "../officer/incidents";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -46,6 +48,10 @@ const NameSearchModal = dynamic(async () => {
   return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
 });
 
+const ActiveIncidents = dynamic(async () => {
+  return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
+});
+
 interface Props {
   calls: Full911Call[];
   bolos: FullBolo[];
@@ -54,6 +60,7 @@ interface Props {
   activeDeputies: FullDeputy[];
   activeOfficers: FullOfficer[];
   activeDispatchers: ActiveDispatchers[];
+  activeIncidents: FullIncident[];
 }
 
 export default function OfficerDashboard(props: Props) {
@@ -63,6 +70,7 @@ export default function OfficerDashboard(props: Props) {
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
+  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -72,17 +80,9 @@ export default function OfficerDashboard(props: Props) {
     state.setActiveOfficers(props.activeOfficers);
     state.setAllDeputies(props.deputies);
     state.setActiveDispatchers(props.activeDispatchers);
+    state.setActiveIncidents(props.activeIncidents);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    state.setCalls,
-    state.setBolos,
-    state.setAllOfficers,
-    state.setActiveDeputies,
-    state.setActiveOfficers,
-    state.setAllDeputies,
-    state.setActiveDispatchers,
-    props,
-  ]);
+  }, [props]);
 
   return (
     <Layout className="dark:text-white">
@@ -116,6 +116,7 @@ export default function OfficerDashboard(props: Props) {
       <div className="mt-3">
         <ActiveCalls />
         <ActiveBolos />
+        {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
       </div>
 
       <NotepadModal />
@@ -132,7 +133,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     values,
     calls,
     bolos,
-    { officers, deputies, activeDispatchers },
+    { officers, deputies, activeDispatchers, activeIncidents },
     activeDeputies,
     activeOfficers,
   ] = await requestAll(req, [
@@ -155,6 +156,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeDeputies,
       activeOfficers,
       activeDispatchers,
+      activeIncidents,
       messages: {
         ...(await getTranslations(
           ["citizen", "truck-logs", "ems-fd", "leo", "calls", "common"],
