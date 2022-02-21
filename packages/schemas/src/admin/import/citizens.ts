@@ -13,6 +13,12 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
   hairColor: z.string().max(255).nullable().optional(),
   height: z.string().max(255).nullable().optional(),
   weight: z.string().max(255).nullable().optional(),
+  driversLicenseId: z.string().max(255).nullable().optional(),
+  weaponLicenseId: z.string().max(255).nullable().optional(),
+  pilotLicenseId: z.string().max(255).nullable().optional(),
+  ccwId: z.string().max(255).nullable().optional(),
+  driversLicenseCategoryIds: z.array(z.string()).nullable().optional(),
+  pilotLicenseCategoryIds: z.array(z.string()).nullable().optional(),
   vehicles: z
     .array(VEHICLE_SCHEMA.omit({ ownerId: true }))
     .optional()
