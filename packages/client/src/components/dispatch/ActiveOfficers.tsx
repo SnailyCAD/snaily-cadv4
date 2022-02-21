@@ -19,6 +19,8 @@ import { ArrowRight } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { FullIncident } from "src/pages/officer/incidents";
+import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -38,10 +40,16 @@ export function ActiveOfficers() {
   const isDispatch = router.pathname === "/dispatch";
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
+  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.ManageUnit);
+  }
+
+  function handleIncidentOpen(incident: FullIncident) {
+    setTempIncident(incident);
+    openModal(ModalIds.ManageIncident);
   }
 
   async function handleMerge(id: string) {
@@ -88,6 +96,8 @@ export function ActiveOfficers() {
           containerProps={{ className: "mb-3 px-4" }}
           data={activeOfficers.map((officer) => {
             const color = officer.status?.color;
+            const activeIncident =
+              "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const shouldShowSplit =
               activeOfficer &&
@@ -173,10 +183,20 @@ export function ActiveOfficers() {
                   {officer.status?.value?.value}
                 </span>
               ),
-              incident:
-                !("officers" in officer) && officer.activeIncident
-                  ? `#${officer.activeIncident.caseNumber}`
-                  : common("none"),
+              incident: activeIncident ? (
+                <Button
+                  onClick={() =>
+                    handleIncidentOpen({
+                      ...activeIncident,
+                      isActive: true,
+                    } as FullIncident)
+                  }
+                >
+                  #{activeIncident.caseNumber}
+                </Button>
+              ) : (
+                common("none")
+              ),
               actions: isDispatch ? (
                 <>
                   <Button
@@ -205,6 +225,9 @@ export function ActiveOfficers() {
       )}
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
+      {tempIncident ? (
+        <ManageIncidentModal incident={tempIncident} onClose={() => setTempIncident(null)} />
+      ) : null}
     </div>
   );
 }

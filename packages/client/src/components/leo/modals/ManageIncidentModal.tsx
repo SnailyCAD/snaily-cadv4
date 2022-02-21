@@ -95,7 +95,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
-    isActive: isDispatch,
+    isActive: isDispatch ? true : incident?.isActive ?? false,
   };
 
   return (
