@@ -47,13 +47,9 @@ export function AdminSidebar() {
   return (
     <div className="w-7 nav:w-72">
       <aside
-        style={{
-          transition: "width 100ms",
-          overflowX: "hidden",
-          minHeight: "calc(100vh - 3.5rem)",
-        }}
+        style={{ minHeight: "calc(100vh - 3.5rem)" }}
         className={classNames(
-          "top-14 pt-5 px-2 bg-gray-100 dark:bg-[#171717] flex flex-col",
+          "top-14 pt-5 px-2 bg-gray-100 dark:bg-[#171717] flex flex-col overflow-x-hidden transition-[width] duration-100",
           menuOpen
             ? "fixed z-40 w-72 justify-start items-start"
             : "sticky w-14 nav:w-72 justify-end nav:justify-start items-center nav:items-start",
