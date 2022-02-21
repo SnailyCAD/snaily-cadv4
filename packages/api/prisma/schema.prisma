@@ -655,6 +655,8 @@ model Officer {
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
+  activeIncident              LeoIncident?        @relation("activeIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId            String?
   LeoIncident                 LeoIncident[]
   LeoIncidentInvolvedOfficers LeoIncident[]       @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?    @relation(fields: [combinedLeoUnitId], references: [id])
@@ -722,6 +724,7 @@ model LeoIncident {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
   calls                Call911[]
+  Officer              Officer[] @relation("activeIncident")
 }
 
 model CombinedLeoUnit {

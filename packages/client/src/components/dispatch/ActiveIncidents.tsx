@@ -2,26 +2,24 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useRouter } from "next/router";
+import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { makeUnitName, yesOrNoText } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { useImageUrl } from "hooks/useImageUrl";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import compareDesc from "date-fns/compareDesc";
 
 export function ActiveIncidents() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const generateCallsign = useGenerateCallsign();
-  const { makeImageUrl } = useImageUrl();
   const { openModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
 
@@ -73,18 +71,6 @@ export function ActiveIncidents() {
             .map((incident) => {
               return {
                 caseNumber: `#${incident.caseNumber}`,
-                officer: (
-                  <span className="flex items-center">
-                    {incident.creator?.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", incident.creator.imageId)}
-                      />
-                    ) : null}
-                    {incident.creator ? makeUnitName(incident.creator) : t("dispatch")}
-                  </span>
-                ),
                 involvedOfficers: involvedOfficers(incident),
                 firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
@@ -117,7 +103,6 @@ export function ActiveIncidents() {
             })}
           columns={[
             { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: t("officer"), accessor: "officer" },
             { Header: t("involvedOfficers"), accessor: "involvedOfficers" },
             { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
             { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
