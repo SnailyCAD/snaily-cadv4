@@ -22,7 +22,7 @@ export function usePanicButton() {
 
 function Component({ unit }: { unit: FullOfficer | FullDeputy }) {
   const t = useTranslations("Leo");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const callsign = generateCallsign(
     unit,
     "officers" in unit ? "pairedUnitTemplate" : "callsignTemplate",

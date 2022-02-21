@@ -42,7 +42,7 @@ function ActiveCallsInner() {
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
   const { openModal } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();

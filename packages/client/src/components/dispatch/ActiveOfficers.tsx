@@ -28,7 +28,7 @@ export function ActiveOfficers() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();

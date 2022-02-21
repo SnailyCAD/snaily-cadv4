@@ -31,7 +31,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { activeOfficer } = useLeoState();
   const router = useRouter();
   const isDispatch = router.pathname.includes("/dispatch");

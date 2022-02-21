@@ -49,7 +49,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const { openModal, closeModal } = useModal();
   const { setAllOfficers } = useDispatchState();
   const { setActiveOfficer } = useLeoState();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { user } = useAuth();
   const { state, execute } = useFetch();

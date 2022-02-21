@@ -22,7 +22,7 @@ export function ActiveIncidents() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { openModal, closeModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();

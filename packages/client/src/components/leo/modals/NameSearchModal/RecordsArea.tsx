@@ -131,7 +131,7 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
   const t = useTranslations();
   const router = useRouter();
   const isCitizen = router.pathname.startsWith("/citizen");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
 
   function handleDeleteClick(record: FullRecord) {
@@ -220,7 +220,7 @@ function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] 
   const common = useTranslations("Common");
   const { openModal, closeModal, getPayload } = useModal();
   const t = useTranslations();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult } = useNameSearch();
 

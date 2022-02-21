@@ -31,7 +31,7 @@ export default function CitizenLogs({ logs: data }: Props) {
   const [search, setSearch] = React.useState("");
   const [currentLog, setCurrentLog] = React.useState<Log | null>(null);
 
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
 

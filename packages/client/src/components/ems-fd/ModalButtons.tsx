@@ -31,7 +31,7 @@ export function ModalButtons() {
   const { activeDeputy } = useEmsFdState();
   const { openModal } = useModal();
   const t = useTranslations();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
 
   const isButtonDisabled =
     !activeDeputy ||

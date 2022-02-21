@@ -19,7 +19,7 @@ interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "
 export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemProps) {
   const t = useTranslations("Calls");
   const common = useTranslations("Common");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { openModal } = useModal();
 
   function handleEdit(call: Full911Call) {

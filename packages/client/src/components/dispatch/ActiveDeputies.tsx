@@ -23,7 +23,7 @@ export function ActiveDeputies() {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { openModal } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
   const { hasActiveDispatchers } = useActiveDispatchers();

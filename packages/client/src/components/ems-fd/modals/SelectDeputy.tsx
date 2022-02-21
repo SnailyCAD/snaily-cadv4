@@ -21,7 +21,7 @@ export function SelectDeputyModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Ems");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
 
   const { state, execute } = useFetch();
 

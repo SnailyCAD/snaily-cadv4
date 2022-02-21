@@ -129,7 +129,7 @@ function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
     ? !hasActiveDispatchers
     : !activeOfficer || activeOfficer.status?.shouldDo === ShouldDoType.SET_OFF_DUTY;
 
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
 
   return (
     <li key={bolo.id} className="flex justify-between">

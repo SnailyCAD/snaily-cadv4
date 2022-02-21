@@ -20,7 +20,7 @@ export function AllUnitsTab({ units }: Props) {
 
   const t = useTranslations();
   const common = useTranslations("Common");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const router = useRouter();
 

@@ -24,7 +24,7 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   const [officerId, setOfficerId] = React.useState<string | null>(null);
 
   const t = useTranslations("Leo");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
 
   const filtered = logs.filter((v) => (officerId ? v.officerId === officerId : true));
   const officers = logs.reduce(
