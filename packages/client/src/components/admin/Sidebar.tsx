@@ -45,7 +45,7 @@ export function AdminSidebar() {
   }, [viewport]);
 
   return (
-    <div className={"w-7 nav:w-72"}>
+    <div className="w-7 nav:w-72">
       <aside
         style={{
           transition: "width 100ms",
