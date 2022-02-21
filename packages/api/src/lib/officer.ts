@@ -10,7 +10,6 @@ export const unitProperties = {
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
   user: { select: userProperties },
-  activeIncident: true,
   rank: true,
 };
 
@@ -22,6 +21,7 @@ export const leoProperties = {
   citizen: { select: { name: true, surname: true, id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
   user: { select: userProperties },
+  activeIncident: true,
   rank: true,
 };
 

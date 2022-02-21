@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { useRouter } from "next/router";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
@@ -16,16 +15,14 @@ import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 export function ActiveIncidents() {
+  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const generateCallsign = useGenerateCallsign();
   const { openModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
-
-  const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch";
-  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
 
   function handleViewDescription(incident: FullIncident) {
     setTempIncident(incident);
@@ -34,6 +31,11 @@ export function ActiveIncidents() {
 
   function onEditClick(incident: FullIncident) {
     openModal(ModalIds.ManageIncident);
+    setTempIncident(incident);
+  }
+
+  function onEndClick(incident: FullIncident) {
+    openModal(ModalIds.AlertDeleteIncident);
     setTempIncident(incident);
   }
 
@@ -87,7 +89,7 @@ export function ActiveIncidents() {
                   </span>
                 ),
                 createdAt: <FullDate>{incident.createdAt}</FullDate>,
-                actions: isDispatch ? (
+                actions: (
                   <>
                     <Button
                       onClick={() => onEditClick(incident)}
@@ -97,8 +99,18 @@ export function ActiveIncidents() {
                     >
                       {common("manage")}
                     </Button>
+
+                    <Button
+                      onClick={() => onEndClick(incident)}
+                      disabled={!hasActiveDispatchers}
+                      small
+                      variant="danger"
+                      className="ml-2"
+                    >
+                      {common("dismiss")}
+                    </Button>
                   </>
-                ) : null,
+                ),
               };
             })}
           columns={[

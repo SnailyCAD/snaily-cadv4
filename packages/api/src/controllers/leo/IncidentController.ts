@@ -59,7 +59,14 @@ export class IncidentController {
 
     await Promise.all(
       (data.involvedOfficers ?? []).map(async (id: string) => {
-        await prisma.leoIncident.update({
+        if (data.isActive) {
+          await prisma.officer.update({
+            where: { id },
+            data: { activeIncidentId: incident.id },
+          });
+        }
+
+        return prisma.leoIncident.update({
           where: {
             id: incident.id,
           },
@@ -82,6 +89,7 @@ export class IncidentController {
 
     if (updated.isActive) {
       this.socket.emitCreateActiveIncident(updated);
+      this.socket.emitUpdateOfficerStatus();
     }
 
     return updated;
@@ -89,11 +97,11 @@ export class IncidentController {
 
   @UseBefore(ActiveOfficer)
   @Put("/:id")
-  async updateIncident(@BodyParams() body: unknown, @PathParams("id") id: string) {
+  async updateIncident(@BodyParams() body: unknown, @PathParams("id") incidentId: string) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
-      where: { id },
+      where: { id: incidentId },
       include: { officersInvolved: true },
     });
 
@@ -103,8 +111,13 @@ export class IncidentController {
 
     await Promise.all(
       incident.officersInvolved.map(async (officer) => {
+        await prisma.officer.update({
+          where: { id: officer.id },
+          data: { activeIncidentId: null },
+        });
+
         await prisma.leoIncident.update({
-          where: { id },
+          where: { id: incidentId },
           data: {
             officersInvolved: { disconnect: { id: officer.id } },
           },
@@ -113,7 +126,7 @@ export class IncidentController {
     );
 
     await prisma.leoIncident.update({
-      where: { id },
+      where: { id: incidentId },
       data: {
         description: data.description,
         arrestsMade: data.arrestsMade,
@@ -126,17 +139,18 @@ export class IncidentController {
 
     await Promise.all(
       (data.involvedOfficers ?? []).map(async (id: string) => {
+        if (data.isActive) {
+          await prisma.officer.update({
+            where: { id },
+            data: { activeIncidentId: incident.id },
+          });
+        }
+
         return prisma.leoIncident.update({
           where: {
             id: incident.id,
           },
-          data: {
-            officersInvolved: {
-              connect: {
-                id,
-              },
-            },
-          },
+          data: { officersInvolved: { connect: { id } } },
         });
       }),
     );
@@ -154,6 +168,7 @@ export class IncidentController {
     }
 
     this.socket.emitUpdateActiveIncident(updated);
+    this.socket.emitUpdateOfficerStatus();
 
     return updated;
   }

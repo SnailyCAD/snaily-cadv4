@@ -39,7 +39,8 @@
     "imgur": "Imgur URL",
     "postal": "Postal",
     "viewDescription": "View description",
-    "citizen": "Citizen"
+    "citizen": "Citizen",
+    "dismiss": "Dismiss"
   },
   "Nav": {
     "citizen": "Citizen",

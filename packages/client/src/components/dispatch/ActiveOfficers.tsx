@@ -18,6 +18,7 @@ import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -31,6 +32,7 @@ export function ActiveOfficers() {
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -171,6 +173,10 @@ export function ActiveOfficers() {
                   {officer.status?.value?.value}
                 </span>
               ),
+              incident:
+                !("officers" in officer) && officer.activeIncident
+                  ? `#${officer.activeIncident.caseNumber}`
+                  : common("none"),
               actions: isDispatch ? (
                 <>
                   <Button
@@ -192,6 +198,7 @@ export function ActiveOfficers() {
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
             { Header: t("status"), accessor: "status" },
+            ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />

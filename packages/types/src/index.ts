@@ -563,6 +563,8 @@ export interface Officer {
   updatedAt: Date;
   whitelistStatusId: string | null;
   combinedLeoUnitId: string | null;
+  activeIncident: LeoIncident | null;
+  activeIncidentId: string | null;
 }
 
 /**

@@ -34,7 +34,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
   const generateCallsign = useGenerateCallsign();
   const { activeOfficer } = useLeoState();
   const router = useRouter();
-  const isActive = router.pathname.includes("/dispatch");
+  const isDispatch = router.pathname.includes("/dispatch");
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
@@ -73,7 +73,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
     if (id) {
       closeModal(ModalIds.ManageIncident);
 
-      if (!isActive) {
+      if (!isDispatch) {
         router.replace({
           pathname: router.pathname,
           query: router.query,
@@ -94,7 +94,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
-    isActive,
+    isActive: isDispatch,
   };
 
   return (
@@ -117,7 +117,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
                 name="involvedOfficers"
                 onChange={handleChange}
                 values={allOfficers
-                  .filter((v) => v.id !== activeOfficer?.id)
+                  .filter((v) => (isDispatch ? true : v.id !== activeOfficer?.id))
                   .map((v) => ({
                     label: `${generateCallsign(v)} ${makeUnitName(v)}`,
                     value: v.id,
