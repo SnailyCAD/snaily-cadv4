@@ -114,9 +114,9 @@ const Item = ({
 
       <div className="flex flex-col items-end">
         {percentage ? (
-          <span className="text-lg text-gray-500 dark:text-gray-300">{percentage}%</span>
+          <span className="text-lg text-gray-500 dark:text-gray-300">{percentage.toFixed()}%</span>
         ) : null}
-        <span className="ml-3 text-xl">{name}</span>
+        <span className="ml-3 text-xl capitalize">{name}</span>
       </div>
     </div>
   );
