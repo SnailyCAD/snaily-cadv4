@@ -34,7 +34,7 @@ export function AdminSidebar() {
   }
 
   return (
-    <div className="w-72">
+    <div className="w-72 hidden nav:block">
       <aside
         style={{ minHeight: "calc(100vh - 3.5rem)" }}
         className="sticky top-14 w-72 pt-5 px-2 bg-gray-100 dark:bg-[#171717]"
