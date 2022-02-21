@@ -9,14 +9,18 @@ export function useActiveIncidents() {
   useListener(
     { eventName: SocketEvents.UpdateActiveIncident, checkHasListeners: true },
     (incident: FullIncident) => {
-      setActiveIncidents(
-        activeIncidents.map((inc) => {
-          if (inc.id === incident.id && incident.isActive) {
-            return { ...inc, ...incident };
-          }
-          return inc;
-        }),
-      );
+      if (incident.isActive) {
+        setActiveIncidents(
+          activeIncidents.map((inc) => {
+            if (inc.id === incident.id && incident.isActive) {
+              return { ...inc, ...incident };
+            }
+            return inc;
+          }),
+        );
+      } else {
+        setActiveIncidents(activeIncidents.filter((v) => v.id !== incident.id));
+      }
     },
     [activeIncidents, setActiveIncidents],
   );

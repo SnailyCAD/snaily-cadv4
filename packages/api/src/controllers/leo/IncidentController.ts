@@ -153,9 +153,7 @@ export class IncidentController {
       throw new InternalServerError("Unable to find created incident");
     }
 
-    if (updated.isActive) {
-      this.socket.emitUpdateActiveIncident(updated);
-    }
+    this.socket.emitUpdateActiveIncident(updated);
 
     return updated;
   }
