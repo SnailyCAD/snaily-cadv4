@@ -109,6 +109,12 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Allow username/password login",
     description: "When disabled, this will only allow users to register/login via Discord.",
   },
+  ACTIVE_INCIDENTS: {
+    name: "Active Incidents",
+    description:
+      // eslint-disable-next-line quotes
+      'When enabled, dispatch will be able to create "active" incidents that can be viewed on the dispatch page.',
+  },
 };
 
 export function DisabledFeaturesArea() {

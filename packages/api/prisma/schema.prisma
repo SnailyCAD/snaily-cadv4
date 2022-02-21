@@ -655,6 +655,8 @@ model Officer {
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
+  activeIncident              LeoIncident?        @relation("activeIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId            String?
   LeoIncident                 LeoIncident[]
   LeoIncidentInvolvedOfficers LeoIncident[]       @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?    @relation(fields: [combinedLeoUnitId], references: [id])
@@ -711,15 +713,18 @@ model LeoIncident {
   caseNumber           Int       @default(autoincrement())
   description          String?   @db.Text
   descriptionData      Json?
-  creator              Officer   @relation(fields: [creatorId], references: [id])
-  creatorId            String
+  // when null, it is the dispatcher
+  creator              Officer?  @relation(fields: [creatorId], references: [id])
+  creatorId            String?
   officersInvolved     Officer[] @relation("involvedOfficers")
   firearmsInvolved     Boolean   @default(false)
   injuriesOrFatalities Boolean   @default(false)
   arrestsMade          Boolean   @default(false)
+  isActive             Boolean   @default(false)
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
   calls                Call911[]
+  Officer              Officer[] @relation("activeIncident")
 }
 
 model CombinedLeoUnit {
@@ -985,6 +990,7 @@ enum Feature {
   SOCIAL_SECURITY_NUMBERS
   DISALLOW_TEXTFIELD_SELECTION
   ACTIVE_DISPATCHERS
+  ACTIVE_INCIDENTS
   ALLOW_CITIZEN_UPDATE_LICENSE
   ALLOW_REGULAR_LOGIN
 }

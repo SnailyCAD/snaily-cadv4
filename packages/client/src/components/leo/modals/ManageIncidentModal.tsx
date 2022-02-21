@@ -23,15 +23,19 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 interface Props {
   incident?: FullIncident | null;
   onClose?(): void;
+  onCreate?(incident: FullIncident): void;
+  onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
 }
 
-export function ManageIncidentModal({ onClose, incident }: Props) {
+export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const generateCallsign = useGenerateCallsign();
   const { activeOfficer } = useLeoState();
   const router = useRouter();
+  const isDispatch = router.pathname.includes("/dispatch");
+  const creator = isDispatch || !incident?.creator ? null : incident.creator;
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
@@ -56,6 +60,7 @@ export function ManageIncidentModal({ onClose, incident }: Props) {
       });
 
       id = json.id;
+      onUpdate?.(incident, json);
     } else {
       const { json } = await execute("/incidents", {
         method: "POST",
@@ -63,14 +68,18 @@ export function ManageIncidentModal({ onClose, incident }: Props) {
       });
 
       id = json.id;
+      onCreate?.(json);
     }
 
     if (id) {
       closeModal(ModalIds.ManageIncident);
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
+
+      if (!isDispatch) {
+        router.replace({
+          pathname: router.pathname,
+          query: router.query,
+        });
+      }
     }
   }
 
@@ -86,6 +95,7 @@ export function ManageIncidentModal({ onClose, incident }: Props) {
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
+    isActive: isDispatch ? true : incident?.isActive ?? false,
   };
 
   return (
@@ -108,7 +118,7 @@ export function ManageIncidentModal({ onClose, incident }: Props) {
                 name="involvedOfficers"
                 onChange={handleChange}
                 values={allOfficers
-                  .filter((v) => v.id !== activeOfficer?.id)
+                  .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
                   .map((v) => ({
                     label: `${generateCallsign(v)} ${makeUnitName(v)}`,
                     value: v.id,

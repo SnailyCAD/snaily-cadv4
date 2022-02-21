@@ -33,5 +33,8 @@ export enum SocketEvents {
   PANIC_BUTTON_ON = "PANIC_BUTTON_ON",
   PANIC_BUTTON_OFF = "PANIC_BUTTON_OFF",
 
+  CreateActiveIncident = "CREATE_ACTIVE_INCIDENT",
+  UpdateActiveIncident = "UPDATE_ACTIVE_INCIDENT",
+
   RoleplayStopped = "ROLEPLAY_STOPPED",
 }
