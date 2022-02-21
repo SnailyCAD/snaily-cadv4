@@ -23,6 +23,7 @@ export class IncidentController {
   @Description("Get all the created incidents")
   async getAllIncidents() {
     const incidents = await prisma.leoIncident.findMany({
+      where: { NOT: { isActive: true } },
       include: {
         creator: { include: leoProperties },
         officersInvolved: { include: leoProperties },

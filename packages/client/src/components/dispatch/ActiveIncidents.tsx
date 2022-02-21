@@ -13,6 +13,8 @@ import { useModal } from "context/ModalContext";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 export function ActiveIncidents() {
   const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
@@ -21,8 +23,28 @@ export function ActiveIncidents() {
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
   const generateCallsign = useGenerateCallsign();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
+  const { state, execute } = useFetch();
+
+  async function handleDismissIncident() {
+    if (!tempIncident) return;
+
+    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+      method: "PUT",
+      data: {
+        ...tempIncident,
+        involvedOfficers: tempIncident.officersInvolved.map((v) => v.id),
+        isActive: false,
+      },
+    });
+
+    if (json.id) {
+      setActiveIncidents(activeIncidents.filter((v) => v.id !== tempIncident.id));
+      closeModal(ModalIds.AlertDeleteIncident);
+      setTempIncident(null);
+    }
+  }
 
   function handleViewDescription(incident: FullIncident) {
     setTempIncident(incident);
@@ -107,7 +129,7 @@ export function ActiveIncidents() {
                       variant="danger"
                       className="ml-2"
                     >
-                      {common("dismiss")}
+                      {t("end")}
                     </Button>
                   </>
                 ),
@@ -153,6 +175,15 @@ export function ActiveIncidents() {
         }}
         onClose={() => setTempIncident(null)}
         incident={tempIncident}
+      />
+
+      <AlertModal
+        state={state}
+        title={t("endIncident")}
+        description={t("alert_endIncident")}
+        onDeleteClick={handleDismissIncident}
+        id={ModalIds.AlertDeleteIncident}
+        deleteText={t("endIncident")}
       />
     </div>
   );
