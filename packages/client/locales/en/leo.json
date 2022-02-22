@@ -138,6 +138,7 @@
     "incident": "Incident",
     "endIncident": "End Incident",
     "end": "End",
+    "manageIncident": "Manage Incident",
     "alert_endIncident": "Are you sure you want to end this incident. It can still be viewed by officers.",
     "alert_deleteRecord": "Are you sure you want to delete this record? This action cannot be undone.",
     "alert_deleteOfficer": "Are you sure you want to delete <span>{officer}</span>? This action cannot be undone.",

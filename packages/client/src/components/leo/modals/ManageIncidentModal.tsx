@@ -100,7 +100,7 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
 
   return (
     <Modal
-      title={t("createIncident")}
+      title={incident ? t("manageIncident") : t("createIncident")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageIncident)}
       className="w-[600px]"
