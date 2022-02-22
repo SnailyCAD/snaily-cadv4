@@ -122,12 +122,14 @@ export class DiscordWebhooksController {
   ) {
     const rest = getRest();
 
+    // delete previous webhook if exists.
     if ((prevId && !channelId) || (prevId && channelId !== prevId)) {
       await rest.delete(Routes.webhook(prevId)).catch(() => null);
     }
 
     if (!channelId) return null;
 
+    // use pre-existing webhook if the channelId is the same.
     if (prevId && channelId === prevId) {
       const prevWebhookData = (await rest
         .get(Routes.webhook(prevId))
@@ -139,14 +141,12 @@ export class DiscordWebhooksController {
       }
     }
 
-    const x = (await rest.post(Routes.channelWebhooks(channelId), {
+    const createdWebhook = (await rest.post(Routes.channelWebhooks(channelId), {
       body: {
         name,
       },
     })) as RESTGetAPIWebhookResult;
 
-    console.log({ x });
-
-    return x.id;
+    return createdWebhook.id;
   }
 }

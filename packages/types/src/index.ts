@@ -13,6 +13,7 @@ export interface cad {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
+  /** @deprecated */
   discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;

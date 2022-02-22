@@ -122,7 +122,6 @@ export default function CadSettings() {
     name: cad.name ?? "",
     areaOfPlay: cad.areaOfPlay ?? "",
     steamApiKey: cad.steamApiKey ?? "",
-    discordWebhookURL: cad.discordWebhookURL ?? "",
     towWhitelisted: cad.towWhitelisted ?? false,
     taxiWhitelisted: cad.taxiWhitelisted ?? false,
     whitelisted: cad.whitelisted ?? false,
@@ -199,21 +198,6 @@ export default function CadSettings() {
                     <Input onChange={handleChange} value={values.areaOfPlay} name="areaOfPlay" />
                   </SettingsFormField>
                 ) : null}
-
-                <SettingsFormField
-                  optional
-                  errorMessage={errors.discordWebhookURL}
-                  action="input"
-                  label="Discord Webhook URL"
-                  description="Events will be sent to this webhook channel. (911 calls, unit status updates)"
-                >
-                  <PasswordInput
-                    onChange={handleChange}
-                    value={values.discordWebhookURL}
-                    name="discordWebhookURL"
-                    autoComplete="off"
-                  />
-                </SettingsFormField>
 
                 <SettingsFormField
                   optional
