@@ -1,0 +1,20 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Создать медицинскую запись",
+    "searchMedicalRecord": "Найти медицинскую запись",
+    "activeDeputies": "Активные сотрудники",
+    "selectDeputy": "Выбрать сотрудника",
+    "deputy": "Сотрудник",
+    "myDeputies": "Сотрудники",
+    "createDeputy": "Создать",
+    "editDeputy": "Редактировать",
+    "deputyName": "Имя",
+    "deleteDeputy": "Удалить",
+    "noDeputies": "У вас нет ни одного сотрудника",
+    "noActiveDeputies": "Нет активных сотрудников",
+    "citizenNoMedicalRecords": "У гражданина нет медицинских записей.",
+    "activeDeputy": "Активный сотрудник",
+    "alert_deleteDeputy": "Вы уверены, что хотите удалить <span>{deputy}</span>? Это действие необратимо."
+  }
+}
