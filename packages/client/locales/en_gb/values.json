@@ -1,0 +1,109 @@
+{
+  "Values": {
+    "totalItems": "Total Items",
+    "values": "Values",
+    "shouldDo": "Should Do",
+    "color": "Color",
+    "callsign": "Callsign",
+    "department": "Force",
+    "gameHash": "Game Hash",
+    "file": "file",
+    "importValues": "Import via file",
+    "exportValues": "Export Values",
+    "addPenalCodeGroup": "Add Group",
+    "deleteGroup": "Delete Group",
+    "ungrouped": "Ungrouped",
+    "licenseType": "License Type",
+    "whitelisted": "Whitelisted",
+    "whatPages": "What Pages",
+    "isDefaultDepartment": "Default Department",
+    "deleteSelectedValues": "Delete Selected Values",
+    "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
+    "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
+    "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
+  },
+  "GENDER": {
+    "MANAGE": "Manage Genders",
+    "ADD": "Add Gender",
+    "DELETE": "Delete Gender",
+    "EDIT": "Edit Gender"
+  },
+  "WEAPON": {
+    "MANAGE": "Manage Weapons",
+    "ADD": "Add Weapon",
+    "DELETE": "Delete Weapon",
+    "EDIT": "Edit Weapon"
+  },
+  "VEHICLE": {
+    "MANAGE": "Manage Vehicles",
+    "ADD": "Add Vehicle",
+    "DELETE": "Delete Vehicle",
+    "EDIT": "Edit Vehicle"
+  },
+  "ETHNICITY": {
+    "MANAGE": "Manage Ethnicities",
+    "ADD": "Add Ethnicity",
+    "DELETE": "Delete Ethnicity",
+    "EDIT": "Edit Ethnicity"
+  },
+  "BLOOD_GROUP": {
+    "MANAGE": "Manage Blood Groups",
+    "ADD": "Add Blood Group",
+    "DELETE": "Delete Blood Group",
+    "EDIT": "Edit Blood Group"
+  },
+  "LICENSE": {
+    "MANAGE": "Manage Licenses",
+    "ADD": "Add License",
+    "DELETE": "Delete License",
+    "EDIT": "Edit License"
+  },
+  "BUSINESS_ROLE": {
+    "MANAGE": "Manage Business Roles",
+    "ADD": "Add Business Role",
+    "DELETE": "Delete Business Role",
+    "EDIT": "Edit Business Role"
+  },
+  "DEPARTMENT": {
+    "MANAGE": "Manage Forces",
+    "ADD": "Add Force",
+    "DELETE": "Delete Force",
+    "EDIT": "Edit Force"
+  },
+  "CODES_10": {
+    "MANAGE": "Manage State Codes",
+    "ADD": "Add State Code",
+    "DELETE": "Delete State Code",
+    "EDIT": "Edit State Code"
+  },
+  "OFFICER_RANK": {
+    "MANAGE": "Manage Officer Ranks",
+    "ADD": "Add Officer Rank",
+    "DELETE": "Delete Officer Rank",
+    "EDIT": "Edit Officer Rank"
+  },
+  "PENAL_CODE": {
+    "MANAGE": "Manage Charges",
+    "ADD": "Add Charges",
+    "DELETE": "Delete Charges",
+    "EDIT": "Edit Charges"
+  },
+  "DIVISION": {
+    "MANAGE": "Manage Divisions",
+    "ADD": "Add Division",
+    "DELETE": "Delete Division",
+    "EDIT": "Edit Division"
+  },
+  "DRIVERSLICENSE_CATEGORY": {
+    "MANAGE": "Manage DVLA Categories",
+    "ADD": "Add Category",
+    "DELETE": "Delete Category",
+    "EDIT": "Edit Category"
+  },
+  "IMPOUND_LOT": {
+    "MANAGE": "Manage Vehicle Pounds",
+    "ADD": "Add Pound",
+    "DELETE": "Delete Pound",
+    "EDIT": "Edit Pound"
+  }
+}

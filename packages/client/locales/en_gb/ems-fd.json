@@ -1,0 +1,20 @@
+{
+  "Ems": {
+    "emsFd": "Emergency Services",
+    "createMedicalRecord": "Create Medical Record",
+    "searchMedicalRecord": "Search Medical Record",
+    "activeDeputies": "Active Services",
+    "selectDeputy": "Select Service Member",
+    "deputy": "Service Member",
+    "myDeputies": "My Services",
+    "createDeputy": "Create Service Member",
+    "editDeputy": "Edit Service Member",
+    "deputyName": "Service Member Name",
+    "deleteDeputy": "Delete Service Member",
+    "noDeputies": "You do not have any service members",
+    "noActiveDeputies": "There are no active service members",
+    "citizenNoMedicalRecords": "This civilian doesn't have any medical records.",
+    "activeDeputy": "Active Service Member",
+    "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
+  }
+}
