@@ -7,11 +7,11 @@ import {
 import { getRest } from "lib/discord";
 
 export async function sendDiscordWebhook(
-  miscCadSettings: MiscCadSettings,
+  miscCadSettings: MiscCadSettings | null,
   type: keyof Pick<MiscCadSettings, "call911WebhookId" | "statusesWebhookId">,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
 ) {
-  const id = miscCadSettings[type];
+  const id = miscCadSettings?.[type];
   const rest = getRest();
 
   if (!id) return;

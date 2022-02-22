@@ -69,7 +69,7 @@ export function DiscordWebhooksTab() {
             <SettingsFormField
               action="input"
               // eslint-disable-next-line quotes
-              description={'The Discord role that represents the "ADMIN" rank'}
+              description="The Discord channel where 911 calls will be sent to."
               errorMessage={errors.call911WebhookId}
               label="911 calls channel"
             >
@@ -86,7 +86,7 @@ export function DiscordWebhooksTab() {
             </SettingsFormField>
 
             <SettingsFormField
-              description="The Discord role that represents the LEO permission"
+              description="The Discord channel where unit status updates will be sent to."
               errorMessage={errors.statusesWebhookId}
               label="Status updates channel"
             >
