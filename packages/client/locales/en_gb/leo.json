@@ -1,6 +1,6 @@
 {
   "Leo": {
-    "dispatch": "Metropolitan Control",
+    "dispatch": "Control",
     "myOfficers": "My Officers",
     "myOfficerLogs": "My Officer Logs",
     "createOfficer": "Create Officer",
@@ -62,9 +62,9 @@
     "hasWarrants": "WARNING: This civilian has active warrants!",
     "rank": "Rank",
     "officerLogs": "Officer Logs",
-    "disableSignal100": "Disable Met Control",
-    "enableSignal100": "Enable Met Control",
-    "signal100enabled": "Metropolitan Control is currently in effect. Please report your status to control.",
+    "disableSignal100": "Disable Control",
+    "enableSignal100": "Enable Control",
+    "signal100enabled": "Control is currently in effect. Please report your status to control.",
     "records": "Records",
     "suspendLicense": "Suspend License",
     "deleteRecord": "Delete Record",
