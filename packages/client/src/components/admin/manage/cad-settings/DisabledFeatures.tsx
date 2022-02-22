@@ -115,6 +115,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
       // eslint-disable-next-line quotes
       'When enabled, dispatch will be able to create "active" incidents that can be viewed on the dispatch page.',
   },
+  RADIO_CHANNEL_MANAGEMENT: {
+    name: "Radio Channel Management",
+    description:
+      "When enabled, dispatch will be able to manage the radio channel a unit is in. This can then be used to enhance the experience via the CAD's Public API.",
+  },
 };
 
 export function DisabledFeaturesArea() {

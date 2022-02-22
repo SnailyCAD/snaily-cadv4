@@ -17,6 +17,7 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
@@ -29,6 +30,7 @@ export function ActiveDeputies() {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { codes10 } = useValues();
   const { execute } = useFetch();
+  const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -105,6 +107,7 @@ export function ActiveDeputies() {
                   {deputy.status?.value?.value}
                 </span>
               ),
+              radioChannel: "radioChannelId" in deputy ? deputy.radioChannelId : null,
               actions: isDispatch ? (
                 <>
                   <Button
@@ -126,6 +129,9 @@ export function ActiveDeputies() {
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },
             { Header: t("Leo.status"), accessor: "status" },
+            RADIO_CHANNEL_MANAGEMENT
+              ? { Header: t("radioChannel"), accessor: "radioChannel" }
+              : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />

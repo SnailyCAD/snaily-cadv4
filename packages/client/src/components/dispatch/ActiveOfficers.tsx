@@ -34,7 +34,7 @@ export function ActiveOfficers() {
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -197,6 +197,8 @@ export function ActiveOfficers() {
               ) : (
                 common("none")
               ),
+              // todo: add component for this row with button & modal to change radioChannelId
+              radioChannel: "radioChannelId" in officer ? officer.radioChannelId : null,
               actions: isDispatch ? (
                 <>
                   <Button
@@ -219,6 +221,9 @@ export function ActiveOfficers() {
             { Header: t("rank"), accessor: "rank" },
             { Header: t("status"), accessor: "status" },
             ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
+            RADIO_CHANNEL_MANAGEMENT
+              ? { Header: t("radioChannel"), accessor: "radioChannel" }
+              : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
