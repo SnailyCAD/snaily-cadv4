@@ -44,6 +44,11 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   whitelistedRoleId: z.string().nullable().optional(),
 });
 
+export const DISCORD_WEBHOOKS_SCHEMA = z.object({
+  call911WebhookId: z.string().nullable().optional(),
+  statusesWebhookId: z.string().nullable().optional(),
+});
+
 export const CAD_AUTO_SET_PROPERTIES = z.object({
   leo: z.boolean().nullable(),
   dispatch: z.boolean().nullable(),

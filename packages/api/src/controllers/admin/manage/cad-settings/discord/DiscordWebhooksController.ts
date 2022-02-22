@@ -5,14 +5,13 @@ import {
   APITextChannel,
   ChannelType,
   RESTGetAPIGuildChannelsResult,
-  RESTGetAPIGuildRolesResult,
   Routes,
 } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
 import type { cad } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
-import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
+import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord";
 
@@ -60,50 +59,64 @@ export class DiscordWebhooksController {
 
   @Post("/")
   async setRoleTypes(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+    const name = cad.name || "SnailyCAD";
+
     if (!guildId) {
       throw new BadRequest("mustSetBotTokenGuildId");
     }
 
-    const data = validateSchema(DISCORD_SETTINGS_SCHEMA, body);
+    const data = validateSchema(DISCORD_WEBHOOKS_SCHEMA, body);
 
     const rest = getRest();
-    const roles = (await rest.get(Routes.guildRoles(guildId))) as RESTGetAPIGuildRolesResult | null;
+    const channels = (await rest.get(
+      Routes.guildChannels(guildId),
+    )) as RESTGetAPIGuildChannelsResult | null;
 
-    const rolesBody = Array.isArray(roles) ? roles : [];
+    const channelsBody = Array.isArray(channels) ? channels : [];
 
-    Object.values(data).map((roleId) => {
-      if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
-        throw new BadRequest("invalidRoleId");
+    Object.values(data).map((channelId) => {
+      if (channelId && !this.doesChannelExist(channelsBody, channelId)) {
+        throw new BadRequest("invalidChannelId");
       }
     });
 
     const createUpdateData = {
-      guildId,
-      dispatchRoleId: data.dispatchRoleId ?? null,
-      leoRoleId: data.leoRoleId ?? null,
-      leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
-      emsFdRoleId: data.emsFdRoleId ?? null,
-      towRoleId: data.towRoleId ?? null,
-      taxiRoleId: data.taxiRoleId ?? null,
-      adminRoleId: data.adminRoleId ?? null,
-      whitelistedRoleId: data.whitelistedRoleId ?? null,
+      statusesWebhookId: data.call911WebhookId ?? null,
+      call911WebhookId: data.statusesWebhookId ?? null,
     };
 
-    const discordRoles = await prisma.discordRoles.upsert({
-      where: { id: String(cad.discordRolesId) },
+    await this.makeWebhookForChannel(createUpdateData.statusesWebhookId, name);
+    await this.makeWebhookForChannel(createUpdateData.call911WebhookId, name);
+
+    const miscCadSettings = await prisma.miscCadSettings.upsert({
+      where: { id: String(cad.miscCadSettingsId) },
       update: createUpdateData,
       create: createUpdateData,
     });
 
     await prisma.cad.update({
       where: { id: cad.id },
-      data: { discordRolesId: discordRoles.id },
+      data: { miscCadSettingsId: miscCadSettings.id },
     });
 
-    return discordRoles;
+    return miscCadSettings;
   }
 
-  protected doesRoleExist(roles: { id: string }[], roleId: string) {
-    return roles.some((v) => v.id === roleId);
+  protected doesChannelExist(arr: { id: string }[], id: string) {
+    return arr.some((v) => v.id === id);
+  }
+
+  protected async makeWebhookForChannel(channelId: string | null, name: string) {
+    if (!channelId) return;
+
+    const rest = getRest();
+
+    const x = await rest.post(Routes.channelWebhooks(channelId), {
+      body: {
+        name,
+      },
+    });
+
+    console.log({ x });
   }
 }

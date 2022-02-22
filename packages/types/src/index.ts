@@ -56,6 +56,8 @@ export interface MiscCadSettings {
   roleplayEnabled: boolean | null;
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
+  statusesWebhookId: string | null;
+  call911WebhookId: string | null;
 }
 
 /**

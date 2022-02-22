@@ -7,7 +7,6 @@ import { Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
-import type { DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
 
 export function DiscordWebhooksTab() {
@@ -16,15 +15,15 @@ export function DiscordWebhooksTab() {
   const common = useTranslations("Common");
   const { cad } = useAuth();
 
-  const discordRoles = React.useMemo(
-    () => cad?.discordRoles ?? ({} as DiscordRoles),
-    [cad?.discordRoles],
-  );
-
   const INITIAL_VALUES = {
-    call911WebhookId: "",
-    statusesWebhookId: "",
+    call911WebhookId: cad?.miscCadSettings?.call911WebhookId ?? null,
+    statusesWebhookId: cad?.miscCadSettings?.statusesWebhookId ?? null,
   };
+
+  React.useEffect(() => {
+    refreshChannels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function refreshChannels() {
     const { json } = await execute("/admin/manage/cad-settings/discord/webhooks", {
@@ -46,12 +45,6 @@ export function DiscordWebhooksTab() {
       setChannels(json);
     }
   }
-
-  React.useEffect(() => {
-    if (discordRoles.roles) {
-      setChannels(discordRoles.roles);
-    }
-  }, [discordRoles]);
 
   return (
     <TabsContent value="DISCORD_WEBHOOKS_TAB">
