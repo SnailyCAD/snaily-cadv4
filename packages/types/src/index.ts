@@ -13,6 +13,7 @@ export interface cad {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
+  /** @deprecated */
   discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
@@ -56,6 +57,8 @@ export interface MiscCadSettings {
   roleplayEnabled: boolean | null;
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
+  statusesWebhookId: string | null;
+  call911WebhookId: string | null;
 }
 
 /**

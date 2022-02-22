@@ -60,7 +60,8 @@ model MiscCadSettings {
   roleplayEnabled           Boolean? @default(true)
   authScreenBgImageId       String?
   authScreenHeaderImageId   String?
-
+  call911WebhookId          String?
+  statusesWebhookId         String?
 
   cad cad[]
 }

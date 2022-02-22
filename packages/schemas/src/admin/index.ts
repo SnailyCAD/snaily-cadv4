@@ -14,7 +14,6 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
   businessWhitelisted: z.boolean(),
-  discordWebhookURL: z.string().optional(),
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
@@ -42,6 +41,11 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   taxiRoleId: z.string().nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
+});
+
+export const DISCORD_WEBHOOKS_SCHEMA = z.object({
+  call911WebhookId: z.string().nullable().optional(),
+  statusesWebhookId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({

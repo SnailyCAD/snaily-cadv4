@@ -11,6 +11,9 @@ import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/cli
 import { unitProperties, leoProperties } from "lib/officer";
 import { validateSchema } from "lib/validateSchema";
 import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/client";
+import { sendDiscordWebhook } from "lib/discord/webhooks";
+import type { cad, Call911 } from "@snailycad/types";
+import type { APIEmbed } from "discord-api-types/v10";
 
 const assignedUnitsInclude = {
   include: {
@@ -59,7 +62,11 @@ export class Calls911Controller {
   }
 
   @Post("/")
-  async create911Call(@BodyParams() body: unknown, @Context("user") user: User) {
+  async create911Call(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
+  ) {
     const data = validateSchema(CREATE_911_CALL, body);
 
     const call = await prisma.call911.create({
@@ -91,9 +98,17 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    this.socket.emit911Call(this.officerOrDeputyToUnit(updated));
+    const returnData = this.officerOrDeputyToUnit(updated);
 
-    return this.officerOrDeputyToUnit(updated);
+    try {
+      const data = this.createWebhookData(returnData);
+      await sendDiscordWebhook(cad.miscCadSettings, "call911WebhookId", data);
+    } catch (error) {
+      console.log("Could not send Discord webhook.", error);
+    }
+
+    this.socket.emit911Call(returnData);
+    return returnData;
   }
 
   @Put("/:id")
@@ -430,6 +445,40 @@ export class Calls911Controller {
         });
       }),
     );
+  }
+
+  // creates the webhook structure that will get sent to Discord.
+  private createWebhookData(call: Call911): { embeds: APIEmbed[] } {
+    const caller = call.name;
+    const location = `${call.location} ${call.postal ? call.postal : ""}`;
+    const description = call.description || "Could not render description via Discord";
+
+    return {
+      embeds: [
+        {
+          title: "911 Call Created",
+          description,
+          footer: { text: "View more information on the CAD" },
+          fields: [
+            {
+              name: "Location",
+              value: location,
+              inline: true,
+            },
+            {
+              name: "Caller",
+              value: caller,
+              inline: true,
+            },
+            {
+              name: "Location",
+              value: location,
+              inline: true,
+            },
+          ],
+        },
+      ],
+    };
   }
 }
 
