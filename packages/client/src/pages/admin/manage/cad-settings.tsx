@@ -23,6 +23,7 @@ import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRol
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { X } from "react-bootstrap-icons";
+import { DiscordWebhooksTab } from "components/admin/manage/cad-settings/DiscordWebhooksTab";
 
 const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
@@ -69,6 +70,7 @@ export default function CadSettings() {
     { name: "Auto set user properties", value: "AUTO_SET_PROPERTIES" },
     { name: "Api Token", value: "API_TOKEN" },
     { name: "Discord Roles", value: "DISCORD_ROLES_TAB" },
+    { name: "Discord Webhooks", value: "DISCORD_WEBHOOKS_TAB" },
   ];
 
   async function onSubmit(
@@ -312,6 +314,7 @@ export default function CadSettings() {
 
         <ApiTokenTab />
         <DiscordRolesTab />
+        <DiscordWebhooksTab />
       </TabList>
     </AdminLayout>
   );
