@@ -16,9 +16,8 @@ import { Description, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./911-calls/Calls911Controller";
 import { leoProperties, unitProperties } from "lib/officer";
-import { getWebhookData, sendDiscordWebhook } from "lib/discord";
+import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
-import type { APIWebhook } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import {
@@ -221,16 +220,11 @@ export class StatusController {
       }
     }
 
-    if (cad.discordWebhookURL) {
-      try {
-        const webhook = await getWebhookData(cad.discordWebhookURL);
-        if (!webhook) return;
-        const data = createWebhookData(webhook, cad.miscCadSettings, updatedUnit);
-
-        await sendDiscordWebhook(webhook, data);
-      } catch (error) {
-        console.log("Could not send Discord webhook.", error);
-      }
+    try {
+      const data = createWebhookData(cad.miscCadSettings, updatedUnit);
+      await sendDiscordWebhook(cad.miscCadSettings, "statusesWebhookId", data);
+    } catch (error) {
+      console.log("Could not send Discord webhook.", error);
     }
 
     if (["leo", "combined"].includes(type)) {
@@ -360,7 +354,7 @@ export type Unit = { status: V<StatusValue> | null } & (
   | CombinedLeoUnit
 );
 
-function createWebhookData(webhook: APIWebhook, miscCadSettings: MiscCadSettings, unit: Unit) {
+function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
   const isNotCombined = "citizenId" in unit;
 
   const status = unit.status?.value.value ?? "Off-duty";
@@ -372,11 +366,9 @@ function createWebhookData(webhook: APIWebhook, miscCadSettings: MiscCadSettings
     : `${callsign}`;
 
   return {
-    avatar_url: webhook.avatar,
     embeds: [
       {
         title: "Status Change",
-        type: "rich",
         description: `Unit **${officerName}** has changed their status to ${status}`,
         fields: [
           {

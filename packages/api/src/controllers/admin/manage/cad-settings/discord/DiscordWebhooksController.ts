@@ -5,11 +5,12 @@ import {
   APITextChannel,
   ChannelType,
   RESTGetAPIGuildChannelsResult,
+  RESTGetAPIWebhookResult,
   Routes,
 } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
-import type { cad } from "@prisma/client";
+import type { cad, MiscCadSettings } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
@@ -58,7 +59,10 @@ export class DiscordWebhooksController {
   }
 
   @Post("/")
-  async setRoleTypes(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  async setRoleTypes(
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
+    @BodyParams() body: unknown,
+  ) {
     const name = cad.name || "SnailyCAD";
 
     if (!guildId) {
@@ -81,12 +85,17 @@ export class DiscordWebhooksController {
     });
 
     const createUpdateData = {
-      statusesWebhookId: data.call911WebhookId ?? null,
-      call911WebhookId: data.statusesWebhookId ?? null,
+      statusesWebhookId: await this.makeWebhookForChannel(
+        data.statusesWebhookId,
+        cad.miscCadSettings.statusesWebhookId,
+        name,
+      ),
+      call911WebhookId: await this.makeWebhookForChannel(
+        data.call911WebhookId,
+        cad.miscCadSettings.call911WebhookId,
+        name,
+      ),
     };
-
-    await this.makeWebhookForChannel(createUpdateData.statusesWebhookId, name);
-    await this.makeWebhookForChannel(createUpdateData.call911WebhookId, name);
 
     const miscCadSettings = await prisma.miscCadSettings.upsert({
       where: { id: String(cad.miscCadSettingsId) },
@@ -106,17 +115,37 @@ export class DiscordWebhooksController {
     return arr.some((v) => v.id === id);
   }
 
-  protected async makeWebhookForChannel(channelId: string | null, name: string) {
-    if (!channelId) return;
+  protected async makeWebhookForChannel(
+    channelId: string | null | undefined,
+    prevId: string | null,
+    name: string,
+  ) {
+    if (!channelId) return null;
 
     const rest = getRest();
 
-    const x = await rest.post(Routes.channelWebhooks(channelId), {
+    let prevWebhook = null;
+    if (prevId) {
+      const prevWebhookData = (await rest
+        .get(Routes.webhook(prevId))
+        .catch(() => null)) as RESTGetAPIWebhookResult | null;
+
+      if (prevWebhookData?.id) {
+        // todo: update Discord webhook?
+        prevWebhook = prevWebhookData;
+      }
+    }
+
+    if (prevWebhook) {
+      return prevWebhook.id;
+    }
+
+    const x = (await rest.post(Routes.channelWebhooks(channelId), {
       body: {
         name,
       },
-    });
+    })) as RESTGetAPIWebhookResult;
 
-    console.log({ x });
+    return x.id;
   }
 }

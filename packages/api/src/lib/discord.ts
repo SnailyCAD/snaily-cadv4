@@ -64,5 +64,5 @@ export function getRest(): REST {
   if (!BOT_TOKEN) {
     throw new Error("mustSetBotTokenGuildId");
   }
-  return (cacheREST ??= new REST({ version: "9" }).setToken(BOT_TOKEN));
+  return (cacheREST ??= new REST({ version: "10" }).setToken(BOT_TOKEN));
 }

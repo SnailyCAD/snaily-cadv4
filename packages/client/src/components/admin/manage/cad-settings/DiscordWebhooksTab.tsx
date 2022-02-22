@@ -97,7 +97,7 @@ export function DiscordWebhooksTab() {
                   label: role.name,
                 }))}
                 value={values.statusesWebhookId}
-                name=".statusesWebhookId"
+                name="statusesWebhookId"
                 onChange={handleChange}
               />
             </SettingsFormField>
