@@ -21,7 +21,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 
-export type FullIncident = LeoIncident & { creator: FullOfficer; officersInvolved: FullOfficer[] };
+export type FullIncident = LeoIncident & { officersInvolved: FullOfficer[] };
 
 interface Props {
   incidents: FullIncident[];
@@ -49,7 +49,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const { openModal, closeModal } = useModal();
   const { setAllOfficers } = useDispatchState();
   const { setActiveOfficer } = useLeoState();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
   const { user } = useAuth();
   const { state, execute } = useFetch();
@@ -130,14 +130,14 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
             caseNumber: `#${incident.caseNumber}`,
             officer: (
               <span className="flex items-center">
-                {incident.creator.imageId ? (
+                {incident.creator?.imageId ? (
                   <img
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                     draggable={false}
                     src={makeImageUrl("units", incident.creator.imageId)}
                   />
                 ) : null}
-                {makeUnitName(incident.creator)}
+                {incident.creator ? makeUnitName(incident.creator) : t("dispatch")}
               </span>
             ),
             involvedOfficers: involvedOfficers(incident),
@@ -215,7 +215,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const [{ incidents, officers }, activeOfficer] = await requestAll(req, [
-    ["/incidents", [{ officers: [], incidents: [] }]],
+    ["/incidents", { officers: [], incidents: [] }],
     ["/leo/active-officer", null],
   ]);
 

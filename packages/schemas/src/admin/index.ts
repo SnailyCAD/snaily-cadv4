@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const RANK_REGEX = /OWNER|ADMIN|USER/;
 const FEATURES_REGEX =
-  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH|WEAPON_REGISTRATION|CALLS_911|SOCIAL_SECURITY_NUMBERS|DISALLOW_TEXTFIELD_SELECTION|ACTIVE_DISPATCHERS|ALLOW_CITIZEN_UPDATE_LICENSE|ALLOW_REGULAR_LOGIN/;
+  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH|WEAPON_REGISTRATION|CALLS_911|SOCIAL_SECURITY_NUMBERS|DISALLOW_TEXTFIELD_SELECTION|ACTIVE_DISPATCHERS|ALLOW_CITIZEN_UPDATE_LICENSE|ALLOW_REGULAR_LOGIN|ACTIVE_INCIDENTS/;
 
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
@@ -69,18 +69,3 @@ export const UPDATE_USER_SCHEMA = z.object({
   steamId: z.string().max(255),
   discordId: z.string().max(255),
 });
-
-export const IMPORT_CITIZENS_SCHEMA = z.object({
-  name: z.string().min(1).max(255),
-  surname: z.string().min(1).max(255),
-  gender: z.string().min(1).max(255),
-  ethnicity: z.string().min(1).max(255),
-  dateOfBirth: z.date().or(z.string().min(2)),
-  address: z.string().max(255).nullable().optional(),
-  eyeColor: z.string().max(255).nullable().optional(),
-  hairColor: z.string().max(255).nullable().optional(),
-  height: z.string().max(255).nullable().optional(),
-  weight: z.string().max(255).nullable().optional(),
-});
-
-export const IMPORT_CITIZENS_ARR = z.array(IMPORT_CITIZENS_SCHEMA).min(1);

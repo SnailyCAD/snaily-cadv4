@@ -13,7 +13,7 @@ export const unitProperties = {
   rank: true,
 };
 
-export const leoProperties = {
+export const _leoProperties = {
   department: { include: { value: true } },
   division: { include: { value: true, department: true } },
   divisions: { include: { value: true, department: true } },
@@ -22,6 +22,11 @@ export const leoProperties = {
   whitelistStatus: { include: { department: { include: { value: true } } } },
   user: { select: userProperties },
   rank: true,
+};
+
+export const leoProperties = {
+  ..._leoProperties,
+  activeIncident: { include: { officersInvolved: { include: _leoProperties } } },
 };
 
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {

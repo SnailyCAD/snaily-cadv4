@@ -10,6 +10,7 @@ import type { cad } from ".prisma/client";
 import { Feature, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA } from "@snailycad/schemas";
+import { leoProperties } from "lib/officer";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -52,7 +53,15 @@ export class DispatchController {
       },
     });
 
-    return { deputies, officers, activeDispatchers };
+    const activeIncidents = await prisma.leoIncident.findMany({
+      where: { isActive: true },
+      include: {
+        creator: { include: leoProperties },
+        officersInvolved: { include: leoProperties },
+      },
+    });
+
+    return { deputies, officers, activeIncidents, activeDispatchers };
   }
 
   @Post("/aop")

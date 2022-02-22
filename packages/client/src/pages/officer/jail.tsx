@@ -26,7 +26,7 @@ export default function Jail({ data: citizens }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const router = useRouter();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(

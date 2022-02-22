@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function CallSignPreview({ divisions, department }: Props) {
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const t = useTranslations("Leo");
   const { values } = useFormikContext<{ citizenId: string; callsign: string; callsign2: string }>();
 

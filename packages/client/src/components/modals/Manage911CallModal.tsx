@@ -41,7 +41,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { user } = useAuth();
   const isDispatch = router.pathname.startsWith("/dispatch") && user?.isDispatch;
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { department, division, codes10 } = useValues();
   const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
 

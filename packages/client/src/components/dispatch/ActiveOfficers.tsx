@@ -18,6 +18,9 @@ import useFetch from "lib/useFetch";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { FullIncident } from "src/pages/officer/incidents";
+import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -25,21 +28,28 @@ export function ActiveOfficers() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
   const { makeImageUrl } = useImageUrl();
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
+  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
+  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.ManageUnit);
+  }
+
+  function handleIncidentOpen(incident: FullIncident) {
+    setTempIncident(incident);
+    openModal(ModalIds.ManageIncident);
   }
 
   async function handleMerge(id: string) {
@@ -86,6 +96,8 @@ export function ActiveOfficers() {
           containerProps={{ className: "mb-3 px-4" }}
           data={activeOfficers.map((officer) => {
             const color = officer.status?.color;
+            const activeIncident =
+              "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
             const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
             const shouldShowSplit =
               activeOfficer &&
@@ -129,7 +141,7 @@ export function ActiveOfficers() {
                         ]
                   }
                 >
-                  <span className="flex items-center capitalize">
+                  <span className="flex items-center capitalize cursor-default">
                     {"imageId" in officer && officer.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -171,6 +183,20 @@ export function ActiveOfficers() {
                   {officer.status?.value?.value}
                 </span>
               ),
+              incident: activeIncident ? (
+                <Button
+                  onClick={() =>
+                    handleIncidentOpen({
+                      ...activeIncident,
+                      isActive: true,
+                    } as FullIncident)
+                  }
+                >
+                  #{activeIncident.caseNumber}
+                </Button>
+              ) : (
+                common("none")
+              ),
               actions: isDispatch ? (
                 <>
                   <Button
@@ -192,12 +218,16 @@ export function ActiveOfficers() {
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
             { Header: t("status"), accessor: "status" },
+            ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
+      {tempIncident ? (
+        <ManageIncidentModal incident={tempIncident} onClose={() => setTempIncident(null)} />
+      ) : null}
     </div>
   );
 }

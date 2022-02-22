@@ -14,6 +14,7 @@ import { TowDropdown } from "./dropdowns/TowDropdown";
 import { DispatchDropdown } from "./dropdowns/DispatchDropdown";
 import { useTranslations } from "next-intl";
 import { useImageUrl } from "hooks/useImageUrl";
+import { useViewport } from "@casper124578/useful/hooks/useViewport";
 import Head from "next/head";
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
 }
 
 export function Nav({ maxWidth }: Props) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();
   const router = useRouter();
@@ -29,13 +32,30 @@ export function Nav({ maxWidth }: Props) {
 
   const { makeImageUrl } = useImageUrl();
   const url = cad && makeImageUrl("cad", cad.logoId);
+  const viewport = useViewport();
+
+  React.useEffect(() => {
+    setMenuOpen(false);
+  }, [router.asPath]);
+
+  React.useEffect(() => {
+    if (viewport > 900) {
+      setMenuOpen(false);
+    }
+  }, [viewport]);
 
   return (
     <nav className="bg-white dark:bg-[#171717] shadow-sm sticky top-0 z-30">
       <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <div className="flex space-x-7">
-            <h1 className="text-2xl">
+        <div className="flex items-center justify-between h-14">
+          <button onClick={() => setMenuOpen((o) => !o)} className="flex flex-col nav:hidden w-7">
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
+          </button>
+
+          <div className="relative flex items-center nav:space-x-7">
+            <h1 className="text-2xl hidden nav:block">
               <a
                 href="/citizen"
                 className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
@@ -58,7 +78,14 @@ export function Nav({ maxWidth }: Props) {
               </a>
             </h1>
 
-            <ul className="items-center hidden space-x-1 md:flex">
+            <ul
+              className={classNames(
+                "nav:flex",
+                menuOpen
+                  ? "grid place-content-center fixed top-[3.6rem] left-0 bg-white dark:bg-[#171717] w-screen space-y-2 py-3 animate-enter"
+                  : "hidden nav:flex-row space-x-1 items-center",
+              )}
+            >
               <CitizenDropdown />
 
               {user?.isTow && TOW ? <TowDropdown /> : null}
@@ -73,7 +100,7 @@ export function Nav({ maxWidth }: Props) {
                 <Link href="/courthouse">
                   <a
                     className={classNames(
-                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                      "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
                       isActive("/courthouse") && "font-semibold",
                     )}
                   >
@@ -86,7 +113,7 @@ export function Nav({ maxWidth }: Props) {
                 <Link href="/admin">
                   <a
                     className={classNames(
-                      "py-3 px-2 text-gray-700 dark:text-gray-200 transition duration-300",
+                      "p-1 nav:px-2 text-gray-700 dark:text-gray-200 transition duration-300",
                       isActive("/admin") && "font-semibold",
                     )}
                   >

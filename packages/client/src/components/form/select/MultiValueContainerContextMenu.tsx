@@ -13,7 +13,7 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { getPayload } = useModal();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const call = getPayload<Full911Call>(ModalIds.Manage911Call);
   const { activeDeputies, activeOfficers } = useDispatchState();
 

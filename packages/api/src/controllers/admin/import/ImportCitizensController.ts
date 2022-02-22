@@ -5,7 +5,10 @@ import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
-import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas";
+import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
+import { importVehiclesHandler } from "./ImportVehiclesController";
+import { importWeaponsHandler } from "./ImportWeaponsController";
+import { linkDlCategories } from "../../citizen/CitizenController";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -19,7 +22,7 @@ export class ImportCitizensController {
 
     return Promise.all(
       data.map(async (data) => {
-        return prisma.citizen.create({
+        const citizen = await prisma.citizen.create({
           data: {
             name: data.name,
             surname: data.surname,
@@ -32,9 +35,29 @@ export class ImportCitizensController {
             height: data.height ?? "",
             weight: data.weight ?? "",
             socialSecurityNumber: generateString(9, { numbersOnly: true }),
+            weaponLicenseId: data.weaponLicenseId ?? null,
+            driversLicenseId: data.driversLicenseId ?? null,
+            pilotLicenseId: data.pilotLicenseId ?? null,
+            ccwId: data.ccwId ?? null,
           },
           include: { gender: true, ethnicity: true },
         });
+
+        if (data.vehicles) {
+          await importVehiclesHandler(data.vehicles.map((v) => ({ ...v, ownerId: citizen.id })));
+        }
+
+        if (data.weapons) {
+          await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
+        }
+
+        await linkDlCategories(
+          citizen.id,
+          data.driversLicenseCategoryIds ?? [],
+          data.pilotLicenseCategoryIds ?? [],
+        );
+
+        return citizen;
       }),
     );
   }

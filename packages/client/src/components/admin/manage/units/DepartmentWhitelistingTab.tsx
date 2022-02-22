@@ -33,7 +33,7 @@ export function DepartmentWhitelistingTab({ pendingOfficers }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { state, execute } = useFetch();
 
   const departmentFilters: [string, string][] = Object.entries(

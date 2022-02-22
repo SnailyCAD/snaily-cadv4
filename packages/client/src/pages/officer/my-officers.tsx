@@ -47,7 +47,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const t = useTranslations("Leo");
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
 
   const [officers, setOfficers] = React.useState(data);

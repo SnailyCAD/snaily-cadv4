@@ -36,7 +36,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const t = useTranslations();
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
 
   const [deputies, setDeputies] = React.useState(data);

@@ -10,6 +10,9 @@ export function useGenerateCallsign() {
   const { cad } = useAuth();
   const miscCadSettings = cad?.miscCadSettings;
 
-  return (unit: Unit, templateId: TemplateId = "callsignTemplate") =>
-    generateCallsign(unit, miscCadSettings?.[templateId] ?? null);
+  function _generateCallsign(unit: Unit, templateId: TemplateId = "callsignTemplate") {
+    return generateCallsign(unit, miscCadSettings?.[templateId] ?? null);
+  }
+
+  return { generateCallsign: _generateCallsign };
 }

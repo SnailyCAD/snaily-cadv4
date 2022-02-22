@@ -45,7 +45,7 @@ export default function CallHistory({ data: calls, incidents }: Props) {
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
 
   function handleLinkClick(call: Full911Call) {
     setTempCall(call);

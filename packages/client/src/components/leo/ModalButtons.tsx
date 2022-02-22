@@ -57,7 +57,7 @@ export function ModalButtons() {
   const { activeOfficer } = useLeoState();
   const { openModal } = useModal();
   const t = useTranslations();
-  const generateCallsign = useGenerateCallsign();
+  const { generateCallsign } = useGenerateCallsign();
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   const { execute } = useFetch();
