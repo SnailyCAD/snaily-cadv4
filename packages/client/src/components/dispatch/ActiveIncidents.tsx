@@ -11,7 +11,7 @@ import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
-import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
+import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";

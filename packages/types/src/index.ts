@@ -641,6 +641,19 @@ export interface LeoIncident {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean | null;
+  events?: IncidentEvent[];
+}
+
+/**
+ * Model IncidentEvent
+ *
+ */
+export interface IncidentEvent {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  incidentId: string;
+  description: string;
 }
 
 /**

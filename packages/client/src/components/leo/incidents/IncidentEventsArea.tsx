@@ -1,34 +1,31 @@
 import * as React from "react";
-import type { Full911Call } from "state/dispatchState";
-import type { FormikHelpers } from "formik";
-import compareDesc from "date-fns/compareDesc";
+import type { IncidentEvent, LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import { useTranslations } from "use-intl";
-import type { Call911Event } from "@snailycad/types";
-import { EventItem } from "../events/EventItem";
-import { UpdateEventForm } from "../events/UpdateEventForm";
+import { useTranslations } from "next-intl";
+import compareDesc from "date-fns/compareDesc";
+import { EventItem } from "components/modals/events/EventItem";
+import { UpdateEventForm } from "components/modals/events/UpdateEventForm";
+import type { FormikHelpers } from "formik";
 
 interface Props {
-  call: Full911Call;
+  incident: LeoIncident;
   disabled?: boolean;
 }
 
-export function CallEventsArea({ disabled, call }: Props) {
+export function IncidentEventsArea({ disabled, incident }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
-  const t = useTranslations("Calls");
-  const [tempEvent, setTempEvent] = React.useState<Call911Event | null>(null);
+  const t = useTranslations("Leo");
+  const [tempEvent, setTempEvent] = React.useState<IncidentEvent | null>(null);
 
   async function onEventSubmit(values: { description: string }, helpers: FormikHelpers<any>) {
-    if (!call) return;
-
     if (tempEvent) {
-      await execute(`/911-calls/events/${call.id}/${tempEvent.id}`, {
+      await execute(`/incidents/events/${incident.id}/${tempEvent.id}`, {
         method: "PUT",
         data: values,
       });
     } else {
-      await execute(`/911-calls/events/${call.id}`, {
+      await execute(`/incidents/events/${incident.id}`, {
         method: "POST",
         data: values,
       });
@@ -41,12 +38,12 @@ export function CallEventsArea({ disabled, call }: Props) {
     <div className="w-[45rem] ml-3 relative">
       <h4 className="text-xl font-semibold">{common("events")}</h4>
 
-      <ul className="overflow-auto h-[65%]">
-        {(call?.events.length ?? 0) <= 0 ? (
-          <p className="mt-2">{t("noEvents")}</p>
+      <ul className="overflow-auto h-[58%]">
+        {(incident.events?.length ?? 0) <= 0 ? (
+          <p className="mt-2">{t("noIncidentEvents")}</p>
         ) : (
-          call?.events
-            .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
+          incident.events
+            ?.sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
             .map((event) => (
               <EventItem
                 disabled={disabled}

@@ -2,6 +2,9 @@ import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
 import type { LeoIncident, Call911, TowCall, Bolo, Call911Event, TaxiCall } from "@prisma/client";
+import type { IncidentEvent } from "@snailycad/types";
+
+type FullIncident = LeoIncident & { events?: IncidentEvent[] };
 
 @SocketService("/")
 export class Socket {
@@ -16,11 +19,11 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Create911Call, call);
   }
 
-  emitUpdateActiveIncident(incident: LeoIncident) {
+  emitUpdateActiveIncident(incident: FullIncident) {
     this.io.sockets.emit(SocketEvents.UpdateActiveIncident, incident);
   }
 
-  emitCreateActiveIncident(incident: LeoIncident) {
+  emitCreateActiveIncident(incident: FullIncident) {
     this.io.sockets.emit(SocketEvents.CreateActiveIncident, incident);
   }
 

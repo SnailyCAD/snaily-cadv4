@@ -26,7 +26,7 @@ export const _leoProperties = {
 
 export const leoProperties = {
   ..._leoProperties,
-  activeIncident: { include: { officersInvolved: { include: _leoProperties } } },
+  activeIncident: { include: { officersInvolved: { include: _leoProperties }, events: true } },
 };
 
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
