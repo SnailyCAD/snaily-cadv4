@@ -7,6 +7,7 @@
     "MANAGE_USERS": "Manage Users",
     "MANAGE_UNITS": "Manage Units",
     "MANAGE_EXPUNGEMENT_REQUESTS": "Manage Expungement Requests",
+    "MANAGE_NAME_CHANGE_REQUESTS": "Manage Name Change Requests",
     "MANAGE_CAD_SETTINGS": "CAD Settings",
     "import": "Import",
     "IMPORT_CITIZENS": "Import Citizens",

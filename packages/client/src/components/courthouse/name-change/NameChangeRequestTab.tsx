@@ -39,7 +39,7 @@ export function NameChangeRequestTab(props: Props) {
           data={requests.map((request) => ({
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
-            status: <Status state={request.status}>{request.status}</Status>,
+            status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
             createdAt: <FullDate>{request.createdAt}</FullDate>,
           }))}
           columns={[

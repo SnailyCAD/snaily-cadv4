@@ -16,6 +16,7 @@ export class NameChangeRequestController {
   async getUserRequests(@Context("user") user: User) {
     const requests = await prisma.nameChangeRequest.findMany({
       where: { userId: user.id },
+      include: { citizen: true },
     });
 
     return requests;

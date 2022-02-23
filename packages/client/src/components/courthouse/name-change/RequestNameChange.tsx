@@ -1,4 +1,5 @@
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
+import type { NameChangeRequest } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
@@ -8,17 +9,21 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 
-export function RequestNameChangeModal() {
+interface Props {
+  onCreate?(request: NameChangeRequest): void;
+}
+
+export function RequestNameChangeModal({ onCreate }: Props) {
   const { closeModal, isOpen } = useModal();
   const { citizens } = useCitizen();
   const common = useTranslations("Common");
-  const { state } = useFetch();
+  const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
 
   const validate = handleValidate(NAME_CHANGE_REQUEST_SCHEMA);
@@ -28,14 +33,29 @@ export function RequestNameChangeModal() {
     newSurname: "",
   };
 
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const { json } = await execute("/name-change", {
+      method: "POST",
+      data: values,
+      helpers,
+    });
+
+    if (json.id) {
+      onCreate?.(json);
+    }
+  }
+
   return (
     <Modal
       onClose={() => closeModal(ModalIds.RequestNameChange)}
       isOpen={isOpen(ModalIds.RequestNameChange)}
       title={t("requestNameChange")}
-      className="w-[500px]"
+      className="w-[600px]"
     >
-      <Formik validate={validate} onSubmit={() => void 0} initialValues={INITIAL_VALUES}>
+      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, errors, isValid, handleChange }) => (
           <Form>
             <FormField label={common("citizen")} errorMessage={errors.citizenId}>

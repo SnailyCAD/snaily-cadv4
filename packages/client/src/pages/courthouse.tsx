@@ -9,7 +9,7 @@ import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsAr
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { ExpungementRequestsTab } from "components/courthouse/expungement-requests/ExpungementRequestsTab";
-import { NameChangeRequestTab } from "components/courthouse/NameChangeRequestTab";
+import { NameChangeRequestTab } from "components/courthouse/name-change/NameChangeRequestTab";
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
