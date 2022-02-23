@@ -651,6 +651,7 @@ model Officer {
   updatedAt                   DateTime            @default(now()) @updatedAt
   whitelistStatus             LeoWhitelistStatus? @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId           String?
+  radioChannelId              String?
   bolos                       Bolo[]              @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
@@ -937,27 +938,28 @@ enum ExpungementRequestStatus {
 
 // ems-fd
 model EmsFdDeputy {
-  id           String          @id @default(cuid())
-  department   DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId String
-  callsign     String          @db.VarChar(255)
-  callsign2    String          @db.VarChar(255)
-  division     DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId   String
-  rank         Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId       String?
-  status       StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId     String?
-  suspended    Boolean         @default(false)
-  badgeNumber  Int?
-  imageId      String?         @db.VarChar(255)
-  citizen      Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId    String
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @default(now()) @updatedAt
-  AssignedUnit AssignedUnit[]
+  id             String          @id @default(cuid())
+  department     DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId   String
+  callsign       String          @db.VarChar(255)
+  callsign2      String          @db.VarChar(255)
+  division       DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId     String
+  rank           Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId         String?
+  status         StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId       String?
+  suspended      Boolean         @default(false)
+  badgeNumber    Int?
+  imageId        String?         @db.VarChar(255)
+  citizen        Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId      String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  radioChannelId String?
+  AssignedUnit   AssignedUnit[]
 }
 
 // truck logs
@@ -994,4 +996,5 @@ enum Feature {
   ACTIVE_INCIDENTS
   ALLOW_CITIZEN_UPDATE_LICENSE
   ALLOW_REGULAR_LOGIN
+  RADIO_CHANNEL_MANAGEMENT
 }

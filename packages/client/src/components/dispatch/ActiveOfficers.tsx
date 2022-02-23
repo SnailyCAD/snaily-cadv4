@@ -21,6 +21,7 @@ import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
+import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -34,7 +35,7 @@ export function ActiveOfficers() {
   const { codes10 } = useValues();
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -197,6 +198,8 @@ export function ActiveOfficers() {
               ) : (
                 common("none")
               ),
+              radioChannel:
+                "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
               actions: isDispatch ? (
                 <>
                   <Button
@@ -219,6 +222,9 @@ export function ActiveOfficers() {
             { Header: t("rank"), accessor: "rank" },
             { Header: t("status"), accessor: "status" },
             ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
+            RADIO_CHANNEL_MANAGEMENT
+              ? { Header: t("radioChannel"), accessor: "radioChannel" }
+              : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
