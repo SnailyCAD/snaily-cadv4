@@ -228,7 +228,7 @@ export function ManageCitizenForm({
                 <FormField
                   errorMessage={errors.driversLicenseCategory}
                   className="mt-2"
-                  label="Type"
+                  label={common("type")}
                 >
                   <Select
                     values={driverslicenseCategory.values
@@ -273,7 +273,11 @@ export function ManageCitizenForm({
                   name="pilotLicense"
                 />
 
-                <FormField errorMessage={errors.pilotLicenseCategory} className="mt-2" label="Type">
+                <FormField
+                  errorMessage={errors.pilotLicenseCategory}
+                  className="mt-2"
+                  label={common("type")}
+                >
                   <Select
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === "AVIATION")
