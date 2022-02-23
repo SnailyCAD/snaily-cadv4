@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function UnitRadioChannelModal({ unit, onClose }: Props) {
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -42,12 +42,15 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
 
   return (
     <>
-      <Button>{unit.radioChannelId}</Button>
+      <Button onClick={() => openModal(ModalIds.ManageUnitRadioChannel)}>
+        {unit.radioChannelId ? unit.radioChannelId : common("none")}
+      </Button>
 
       <Modal
         onClose={handleClose}
         isOpen={isOpen(ModalIds.ManageUnitRadioChannel)}
         title={t("manageRadioChannel")}
+        className="min-w-[500px]"
       >
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ values, errors, handleChange }) => (

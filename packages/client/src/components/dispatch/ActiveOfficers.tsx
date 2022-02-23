@@ -21,6 +21,7 @@ import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
+import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -198,7 +199,8 @@ export function ActiveOfficers() {
                 common("none")
               ),
               // todo: add component for this row with button & modal to change radioChannelId
-              radioChannel: "radioChannelId" in officer ? officer.radioChannelId : null,
+              radioChannel:
+                "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
               actions: isDispatch ? (
                 <>
                   <Button
