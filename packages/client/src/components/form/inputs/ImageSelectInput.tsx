@@ -77,7 +77,7 @@ export function ImageSelectInput({ label, valueKey = "image", image, setImage }:
               openModal(ModalIds.CropImageModal);
             }}
           >
-            Crop
+            {common("crop")}
           </Button>
           <Button className="mr-2 min-w-fit" type="button" onClick={() => handleSetURL(true)}>
             {common("imgur")}
