@@ -1,3 +1,4 @@
+import * as React from "react";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -36,7 +37,7 @@ export function ManageIncidentModal({
   onUpdate,
   incident: providedIncident,
 }: Props) {
-  const { activeIncidents } = useActiveIncidents();
+  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const foundIncident = activeIncidents.find((v) => v.id === providedIncident?.id);
   const incident = foundIncident ?? providedIncident ?? null;
 
@@ -51,6 +52,17 @@ export function ManageIncidentModal({
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
+
+  // manage state for real-time updates. Yes, this may look like some janky solution,
+  // but meh. Works for now ;).
+  React.useEffect(() => {
+    const existing = activeIncidents.some((v) => v.id === incident?.id);
+
+    if (!existing && incident) {
+      setActiveIncidents([...activeIncidents, incident]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIncidents, incident]);
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);

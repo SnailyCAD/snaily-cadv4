@@ -122,16 +122,4 @@ export class Socket {
   emitActiveDispatchers() {
     this.io.sockets.emit(SocketEvents.UpdateDispatchersState);
   }
-
-  emitAddIncidentEvent(event: IncidentEvent) {
-    this.io.sockets.emit(SocketEvents.AddIncidentEvent, event);
-  }
-
-  emitUpdateIncidentEvent(event: IncidentEvent) {
-    this.io.sockets.emit(SocketEvents.UpdateIncidentEvent, event);
-  }
-
-  emitDeleteIncidentEvent(event: IncidentEvent) {
-    this.io.sockets.emit(SocketEvents.DeleteIncidentEvent, event);
-  }
 }
