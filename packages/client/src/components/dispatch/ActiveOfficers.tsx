@@ -198,7 +198,6 @@ export function ActiveOfficers() {
               ) : (
                 common("none")
               ),
-              // todo: add component for this row with button & modal to change radioChannelId
               radioChannel:
                 "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
               actions: isDispatch ? (
