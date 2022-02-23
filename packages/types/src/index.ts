@@ -832,6 +832,22 @@ export interface ExpungementRequest {
 }
 
 /**
+ * Model NameChangeRequest
+ *
+ */
+export interface NameChangeRequest {
+  id: string;
+  citizenId: string;
+  citizen: Citizen;
+  userId: string | null;
+  newName: string;
+  newSurname: string;
+  status: WhitelistStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
  * Model EmsFdDeputy
  *
  */
