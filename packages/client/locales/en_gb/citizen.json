@@ -35,6 +35,8 @@
     "socialSecurityNumber": "National Insurance Number",
     "occupation": "Occupation",
     "manageOccupation": "Manage Occupation",
+    "manageLicenses": "Manage Licenses",
+    "licenses": "Licenses",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {
@@ -43,7 +45,7 @@
     "insuranceStatus": "Insurance Status",
     "owner": "Owner",
     "color": "Color",
-    "plate": "Plate",
+    "plate": "Registration",
     "vinNumber": "VIN Number",
     "business": "Business",
     "yourVehicles": "Your Vehicles",
