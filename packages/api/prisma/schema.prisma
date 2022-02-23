@@ -60,7 +60,8 @@ model MiscCadSettings {
   roleplayEnabled           Boolean? @default(true)
   authScreenBgImageId       String?
   authScreenHeaderImageId   String?
-
+  call911WebhookId          String?
+  statusesWebhookId         String?
 
   cad cad[]
 }
@@ -653,6 +654,7 @@ model Officer {
   updatedAt                   DateTime            @default(now()) @updatedAt
   whitelistStatus             LeoWhitelistStatus? @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId           String?
+  radioChannelId              String?
   bolos                       Bolo[]              @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
@@ -712,22 +714,32 @@ model ImpoundedVehicle {
 }
 
 model LeoIncident {
-  id                   String    @id @default(uuid())
-  caseNumber           Int       @default(autoincrement())
-  description          String?   @db.Text
+  id                   String          @id @default(uuid())
+  caseNumber           Int             @default(autoincrement())
+  description          String?         @db.Text
   descriptionData      Json?
   // when null, it is the dispatcher
-  creator              Officer?  @relation(fields: [creatorId], references: [id])
+  creator              Officer?        @relation(fields: [creatorId], references: [id])
   creatorId            String?
-  officersInvolved     Officer[] @relation("involvedOfficers")
-  firearmsInvolved     Boolean   @default(false)
-  injuriesOrFatalities Boolean   @default(false)
-  arrestsMade          Boolean   @default(false)
-  isActive             Boolean   @default(false)
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @default(now()) @updatedAt
+  officersInvolved     Officer[]       @relation("involvedOfficers")
+  firearmsInvolved     Boolean         @default(false)
+  injuriesOrFatalities Boolean         @default(false)
+  arrestsMade          Boolean         @default(false)
+  isActive             Boolean         @default(false)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @default(now()) @updatedAt
+  events               IncidentEvent[]
   calls                Call911[]
-  Officer              Officer[] @relation("activeIncident")
+  Officer              Officer[]       @relation("activeIncident")
+}
+
+model IncidentEvent {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now()) @updatedAt
+  incident    LeoIncident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId  String
+  description String      @db.Text
 }
 
 model CombinedLeoUnit {
@@ -939,27 +951,28 @@ enum ExpungementRequestStatus {
 
 // ems-fd
 model EmsFdDeputy {
-  id           String          @id @default(cuid())
-  department   DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId String
-  callsign     String          @db.VarChar(255)
-  callsign2    String          @db.VarChar(255)
-  division     DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId   String
-  rank         Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId       String?
-  status       StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId     String?
-  suspended    Boolean         @default(false)
-  badgeNumber  Int?
-  imageId      String?         @db.VarChar(255)
-  citizen      Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId    String
-  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @default(now()) @updatedAt
-  AssignedUnit AssignedUnit[]
+  id             String          @id @default(cuid())
+  department     DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId   String
+  callsign       String          @db.VarChar(255)
+  callsign2      String          @db.VarChar(255)
+  division       DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId     String
+  rank           Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId         String?
+  status         StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId       String?
+  suspended      Boolean         @default(false)
+  badgeNumber    Int?
+  imageId        String?         @db.VarChar(255)
+  citizen        Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId      String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  radioChannelId String?
+  AssignedUnit   AssignedUnit[]
 }
 
 // truck logs
@@ -996,4 +1009,5 @@ enum Feature {
   ACTIVE_INCIDENTS
   ALLOW_CITIZEN_UPDATE_LICENSE
   ALLOW_REGULAR_LOGIN
+  RADIO_CHANNEL_MANAGEMENT
 }

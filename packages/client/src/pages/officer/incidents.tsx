@@ -30,7 +30,7 @@ interface Props {
 }
 
 const ManageIncidentModal = dynamic(async () => {
-  return (await import("components/leo/modals/ManageIncidentModal")).ManageIncidentModal;
+  return (await import("components/leo/incidents/ManageIncidentModal")).ManageIncidentModal;
 });
 
 const AlertModal = dynamic(async () => {
@@ -226,7 +226,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeOfficer,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], locale)),
       },
     },
   };

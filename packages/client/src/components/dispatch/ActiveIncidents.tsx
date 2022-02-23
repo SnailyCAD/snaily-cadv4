@@ -11,13 +11,18 @@ import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
-import { ManageIncidentModal } from "components/leo/modals/ManageIncidentModal";
+import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
 export function ActiveIncidents() {
-  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+  /**
+   * undefined = hide modal. It will otherwise open 2 modals, 1 with the incorrect data.
+   */
+  const [tempIncident, setTempIncident] = React.useState<FullIncident | null | undefined>(
+    undefined,
+  );
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -42,7 +47,7 @@ export function ActiveIncidents() {
     if (json.id) {
       setActiveIncidents(activeIncidents.filter((v) => v.id !== tempIncident.id));
       closeModal(ModalIds.AlertDeleteIncident);
-      setTempIncident(null);
+      setTempIncident(undefined);
     }
   }
 
@@ -59,6 +64,11 @@ export function ActiveIncidents() {
   function onEndClick(incident: FullIncident) {
     openModal(ModalIds.AlertDeleteIncident);
     setTempIncident(incident);
+  }
+
+  function handleCreateIncident() {
+    openModal(ModalIds.ManageIncident);
+    setTempIncident(null);
   }
 
   function involvedOfficers(incident: FullIncident) {
@@ -78,7 +88,7 @@ export function ActiveIncidents() {
           <Button
             variant={null}
             className="bg-gray-2 hover:bg-dark-bg"
-            onClick={() => openModal(ModalIds.ManageIncident)}
+            onClick={handleCreateIncident}
           >
             {t("createIncident")}
           </Button>
@@ -150,32 +160,34 @@ export function ActiveIncidents() {
 
       {tempIncident?.descriptionData ? (
         <DescriptionModal
-          onClose={() => setTempIncident(null)}
+          onClose={() => setTempIncident(undefined)}
           value={tempIncident.descriptionData}
         />
       ) : null}
 
-      <ManageIncidentModal
-        onCreate={(incident) => {
-          setActiveIncidents([incident, ...activeIncidents]);
-        }}
-        onUpdate={(old, incident) => {
-          if (incident.isActive) {
-            setActiveIncidents(
-              activeIncidents.map((v) => {
-                if (v.id === old.id) {
-                  return { ...v, ...incident };
-                }
-                return v;
-              }),
-            );
-          } else {
-            setActiveIncidents(activeIncidents.filter((v) => v.id !== incident.id));
-          }
-        }}
-        onClose={() => setTempIncident(null)}
-        incident={tempIncident}
-      />
+      {typeof tempIncident === "undefined" ? null : (
+        <ManageIncidentModal
+          onCreate={(incident) => {
+            setActiveIncidents([incident, ...activeIncidents]);
+          }}
+          onUpdate={(old, incident) => {
+            if (incident.isActive) {
+              setActiveIncidents(
+                activeIncidents.map((v) => {
+                  if (v.id === old.id) {
+                    return { ...v, ...incident };
+                  }
+                  return v;
+                }),
+              );
+            } else {
+              setActiveIncidents(activeIncidents.filter((v) => v.id !== incident.id));
+            }
+          }}
+          onClose={() => setTempIncident(undefined)}
+          incident={tempIncident}
+        />
+      )}
 
       <AlertModal
         state={state}
@@ -184,6 +196,7 @@ export function ActiveIncidents() {
         onDeleteClick={handleDismissIncident}
         id={ModalIds.AlertDeleteIncident}
         deleteText={t("endIncident")}
+        onClose={() => setTempIncident(undefined)}
       />
     </div>
   );

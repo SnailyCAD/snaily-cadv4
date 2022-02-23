@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
-import { Description, Get, Post } from "@tsed/schema";
-import { BodyParams, Context } from "@tsed/platform-params";
+import { Description, Get, Post, Put } from "@tsed/schema";
+import { BodyParams, PathParams, Context } from "@tsed/platform-params";
 import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
@@ -9,8 +9,10 @@ import { IsAuth } from "middlewares/index";
 import type { cad } from ".prisma/client";
 import { Feature, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { UPDATE_AOP_SCHEMA } from "@snailycad/schemas";
-import { leoProperties } from "lib/officer";
+import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
+import { leoProperties, unitProperties } from "lib/officer";
+import { findUnit } from "./911-calls/Calls911Controller";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -58,6 +60,7 @@ export class DispatchController {
       include: {
         creator: { include: leoProperties },
         officersInvolved: { include: leoProperties },
+        events: true,
       },
     });
 
@@ -139,5 +142,35 @@ export class DispatchController {
     this.socket.emitActiveDispatchers();
 
     return { dispatcher };
+  }
+
+  @Put("/radio-channel/:unitId")
+  async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
+    const { unit, type } = await findUnit(unitId);
+
+    if (!unit) {
+      throw new ExtendedNotFound({ radioChannel: "Unit not found" });
+    }
+
+    const name = type === "leo" ? "officer" : "emsFdDeputy";
+    const include = type === "leo" ? leoProperties : unitProperties;
+
+    // @ts-expect-error the provided properties are the same for both models.
+    const updated = await prisma[name].update({
+      where: { id: unitId },
+      data: {
+        radioChannelId: data.radioChannel,
+      },
+      include,
+    });
+
+    if (type === "leo") {
+      this.socket.emitUpdateOfficerStatus();
+    } else {
+      this.socket.emitUpdateDeputyStatus();
+    }
+
+    return updated;
   }
 }

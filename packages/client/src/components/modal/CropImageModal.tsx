@@ -46,7 +46,7 @@ export function CropImageModal({ onSuccess, image, isOpen = false, onClose, opti
   }
 
   return (
-    <Modal modalStyles={{ width }} title="Crop image" isOpen={isOpen} onClose={onClose}>
+    <Modal modalStyles={{ width }} title={common("cropImage")} isOpen={isOpen} onClose={onClose}>
       {src ? (
         <Cropper
           style={{ height, width: "100%" }}

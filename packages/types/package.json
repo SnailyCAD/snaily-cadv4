@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.0.0-beta.60",
+  "version": "1.0.0-beta.61",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
@@ -11,7 +11,7 @@
     "typescript": "^4.5.5"
   },
   "dependencies": {
-    "type-fest": "^2.11.2",
+    "type-fest": "^2.12.0",
     "zod": "^3.11.6"
   },
   "tsup": {

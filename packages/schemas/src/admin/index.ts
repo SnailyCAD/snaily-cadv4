@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const RANK_REGEX = /OWNER|ADMIN|USER/;
 const FEATURES_REGEX =
-  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH|WEAPON_REGISTRATION|CALLS_911|SOCIAL_SECURITY_NUMBERS|DISALLOW_TEXTFIELD_SELECTION|ACTIVE_DISPATCHERS|ALLOW_CITIZEN_UPDATE_LICENSE|ALLOW_REGULAR_LOGIN|ACTIVE_INCIDENTS/;
+  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH|WEAPON_REGISTRATION|CALLS_911|SOCIAL_SECURITY_NUMBERS|DISALLOW_TEXTFIELD_SELECTION|ACTIVE_DISPATCHERS|ALLOW_CITIZEN_UPDATE_LICENSE|ALLOW_REGULAR_LOGIN|ACTIVE_INCIDENTS|RADIO_CHANNEL_MANAGEMENT/;
 
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
@@ -14,7 +14,6 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
   businessWhitelisted: z.boolean(),
-  discordWebhookURL: z.string().optional(),
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
@@ -42,6 +41,11 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   taxiRoleId: z.string().nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
+});
+
+export const DISCORD_WEBHOOKS_SCHEMA = z.object({
+  call911WebhookId: z.string().nullable().optional(),
+  statusesWebhookId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({

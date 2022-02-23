@@ -56,7 +56,6 @@ export class ManageCitizensController {
         whitelisted: data.whitelisted,
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
-        discordWebhookURL: data.discordWebhookURL,
         miscCadSettings: {
           update: {
             roleplayEnabled: data.roleplayEnabled,
