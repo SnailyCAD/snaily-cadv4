@@ -226,7 +226,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       activeOfficer,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], locale)),
       },
     },
   };

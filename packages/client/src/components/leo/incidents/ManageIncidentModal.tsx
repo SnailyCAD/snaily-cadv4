@@ -48,7 +48,10 @@ export function ManageIncidentModal({
   const { activeOfficer } = useLeoState();
   const router = useRouter();
   const isDispatch = router.pathname.includes("/dispatch");
+  const isLeo = router.pathname === "/officer";
+  const isLeoIncidents = router.pathname === "/officer/incidents";
   const creator = isDispatch || !incident?.creator ? null : incident.creator;
+  const areEventsReadonly = !isDispatch || isLeoIncidents;
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
@@ -58,11 +61,11 @@ export function ManageIncidentModal({
   React.useEffect(() => {
     const existing = activeIncidents.some((v) => v.id === incident?.id);
 
-    if (!existing && incident) {
+    if (!existing && incident && isLeo) {
       setActiveIncidents([...activeIncidents, incident]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIncidents, incident]);
+  }, [activeIncidents, incident, isLeo]);
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);
@@ -200,7 +203,7 @@ export function ManageIncidentModal({
           )}
         </Formik>
 
-        {incident ? <IncidentEventsArea disabled={false} incident={incident} /> : null}
+        {incident ? <IncidentEventsArea disabled={areEventsReadonly} incident={incident} /> : null}
       </div>
     </Modal>
   );
