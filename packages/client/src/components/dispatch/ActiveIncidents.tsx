@@ -68,7 +68,7 @@ export function ActiveIncidents() {
 
   function handleCreateIncident() {
     openModal(ModalIds.ManageIncident);
-    setTempIncident(undefined);
+    setTempIncident(null);
   }
 
   function involvedOfficers(incident: FullIncident) {
