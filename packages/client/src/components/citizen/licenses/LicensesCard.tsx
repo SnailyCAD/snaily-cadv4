@@ -13,15 +13,16 @@ export function LicensesCard() {
   const { openModal } = useModal();
   const { citizen } = useCitizen(false);
   const { ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const t = useTranslations("Citizen");
 
   return (
     <div className="p-4 card">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Licenses</h1>
+        <h1 className="text-2xl font-semibold">{t("licenses")}</h1>
 
         {ALLOW_CITIZEN_UPDATE_LICENSE ? (
           <Button onClick={() => openModal(ModalIds.ManageLicenses)} small>
-            Manage Licenses
+            {t("manageLicenses")}
           </Button>
         ) : null}
       </header>
