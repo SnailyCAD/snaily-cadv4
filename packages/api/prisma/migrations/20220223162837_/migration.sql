@@ -1,13 +1,13 @@
--- AlterEnum
-ALTER TYPE "Feature" ADD VALUE 'ALLOW_CITIZEN_NAME_CHANGES_VIA_COURT';
-
 -- CreateTable
 CREATE TABLE "NameChangeRequest" (
     "id" TEXT NOT NULL,
     "citizenId" TEXT NOT NULL,
     "userId" TEXT,
     "newName" TEXT NOT NULL,
-    "newSurame" TEXT NOT NULL,
+    "newSurname" TEXT NOT NULL,
+    "status" "WhitelistStatus" NOT NULL DEFAULT E'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "NameChangeRequest_pkey" PRIMARY KEY ("id")
 );
