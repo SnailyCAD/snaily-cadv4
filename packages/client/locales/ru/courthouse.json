@@ -1,0 +1,9 @@
+{
+  "Courthouse": {
+    "courthouse": "Суд San Andreas",
+    "requestExpungement": "Запросить удаление",
+    "noExpungementRequests": "У вас нет запросов на удаление",
+    "request": "Запросить",
+    "noPendingRequests": "Нет ожидающих запросов на удаление"
+  }
+}

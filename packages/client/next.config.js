@@ -1,6 +1,6 @@
 module.exports = {
   i18n: {
-    locales: ["en", "en_gb"],
+    locales: ["en", "en_gb", "ru"],
     defaultLocale: "en",
   },
   cleanDistDir: true,
