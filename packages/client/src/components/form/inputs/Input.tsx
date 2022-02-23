@@ -1,4 +1,5 @@
 import { Button } from "components/Button";
+import { useTranslations } from "next-intl";
 import * as React from "react";
 
 type Props = Omit<JSX.IntrinsicElements["input"], "id"> & {
@@ -23,9 +24,11 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(({ errorMessage, 
   />
 ));
 
+// todo: move to separate file.
 export function PasswordInput(props: Omit<Props, "type" | "ref">) {
   const [type, setType] = React.useState("password");
   const ref = React.useRef<HTMLInputElement>(null);
+  const common = useTranslations("Common");
 
   function handleClick() {
     setType((p) => (p === "password" ? "text" : "password"));
@@ -44,7 +47,7 @@ export function PasswordInput(props: Omit<Props, "type" | "ref">) {
         small
         className="absolute -translate-y-1/2 bg-gray-300 top-1/2 right-2 dark:bg-gray-3"
       >
-        {type === "password" ? "show" : "hide"}
+        {type === "password" ? common("show") : common("hide")}
       </Button>
     </div>
   );

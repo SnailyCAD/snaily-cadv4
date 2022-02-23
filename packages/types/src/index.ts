@@ -568,6 +568,7 @@ export interface Officer {
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
+  radioChannelId: string | null;
 }
 
 /**
@@ -640,6 +641,19 @@ export interface LeoIncident {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean | null;
+  events?: IncidentEvent[];
+}
+
+/**
+ * Model IncidentEvent
+ *
+ */
+export interface IncidentEvent {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  incidentId: string;
+  description: string;
 }
 
 /**
@@ -841,6 +855,7 @@ export interface EmsFdDeputy {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  radioChannelId: string | null;
 }
 
 /**
@@ -883,6 +898,7 @@ export enum Feature {
   ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
   ALLOW_REGULAR_LOGIN = "ALLOW_REGULAR_LOGIN",
   ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
+  RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
 }
 
 export enum Rank {

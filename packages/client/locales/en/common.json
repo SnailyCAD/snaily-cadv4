@@ -39,7 +39,11 @@
     "imgur": "Imgur URL",
     "postal": "Postal",
     "viewDescription": "View description",
-    "citizen": "Citizen"
+    "citizen": "Citizen",
+    "cropImage": "Crop Image",
+    "crop": "Crop",
+    "hide": "Hide",
+    "show": "Show"
   },
   "Nav": {
     "citizen": "Citizen",

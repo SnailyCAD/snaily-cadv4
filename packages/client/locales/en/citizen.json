@@ -35,6 +35,8 @@
     "socialSecurityNumber": "Social Security Number",
     "occupation": "Occupation",
     "manageOccupation": "Manage Occupation",
+    "manageLicenses": "Manage Licenses",
+    "licenses": "Licenses",
     "alert_deleteCitizen": "Are you sure you want to delete <span>{citizen}</span>? This action cannot be undone."
   },
   "Vehicles": {

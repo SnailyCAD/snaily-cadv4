@@ -39,7 +39,11 @@
     "imgur": "Imgur URL",
     "postal": "Postal",
     "viewDescription": "View description",
-    "citizen": "Civilian"
+    "citizen": "Civilian",
+    "cropImage": "Crop Image",
+    "crop": "Crop",
+    "hide": "Hide",
+    "show": "Show"
   },
   "Nav": {
     "citizen": "Civilian",
@@ -100,7 +104,7 @@
     "cannotRegisterFirstWithDiscord": "The first account must be registered without Discord. You can link Discord once the account is created.",
     "invalidRegistrationCode": "The registration code you provided is invalid.",
     "unitSuspended": "This unit is suspended. Please contact your supervisor.",
-    "recordOrWarrantAlreadyLinked": "A record or a warrant has already been requested. PLease remove the already requested record/warrant.",
+    "recordOrWarrantAlreadyLinked": "A record or a warrant has already been requested. Please remove the already requested record/warrant.",
     "businessIsPending": "This business is still awaiting approval to be used. Try again later",
     "businessCreatedButPending": "The business has been created successfully but is still awaiting approval to be used. It must be approved by an administrator.",
     "maxDivisionsReached": "This officer reached the maximum limit of divisions per officer.",
