@@ -19,6 +19,9 @@ import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { IncidentEventsArea } from "./IncidentEventsArea";
+import { classNames } from "lib/classNames";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 interface Props {
   incident?: FullIncident | null;
@@ -27,7 +30,16 @@ interface Props {
   onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
 }
 
-export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: Props) {
+export function ManageIncidentModal({
+  onClose,
+  onCreate,
+  onUpdate,
+  incident: providedIncident,
+}: Props) {
+  const { activeIncidents } = useActiveIncidents();
+  const foundIncident = activeIncidents.find((v) => v.id === providedIncident?.id);
+  const incident = foundIncident ?? providedIncident ?? null;
+
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -103,77 +115,81 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
       title={incident ? t("manageIncident") : t("createIncident")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageIncident)}
-      className="w-[600px]"
+      className={incident ? "w-[1000px] " : "w-[600px]"}
     >
-      <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setFieldValue, errors, values, isValid }) => (
-          <Form>
-            <FormField
-              errorMessage={errors.involvedOfficers as string}
-              label={t("involvedOfficers")}
-            >
-              <Select
-                isMulti
-                value={values.involvedOfficers}
-                name="involvedOfficers"
-                onChange={handleChange}
-                values={allOfficers
-                  .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
-                  .map((v) => ({
-                    label: `${generateCallsign(v)} ${makeUnitName(v)}`,
-                    value: v.id,
-                  }))}
-              />
-            </FormField>
-
-            <FormRow>
-              <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
-                <Toggle
-                  toggled={values.firearmsInvolved}
-                  name="firearmsInvolved"
-                  onClick={handleChange}
-                />
-              </FormField>
-
+      <div className={classNames(incident && "flex flex-col md:flex-row min-h-[450px] gap-3")}>
+        <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
+          {({ handleChange, setFieldValue, errors, values, isValid }) => (
+            <Form className="w-full">
               <FormField
-                errorMessage={errors.injuriesOrFatalities}
-                label={t("injuriesOrFatalities")}
+                errorMessage={errors.involvedOfficers as string}
+                label={t("involvedOfficers")}
               >
-                <Toggle
-                  toggled={values.injuriesOrFatalities}
-                  name="injuriesOrFatalities"
-                  onClick={handleChange}
+                <Select
+                  isMulti
+                  value={values.involvedOfficers}
+                  name="involvedOfficers"
+                  onChange={handleChange}
+                  values={allOfficers
+                    .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
+                    .map((v) => ({
+                      label: `${generateCallsign(v)} ${makeUnitName(v)}`,
+                      value: v.id,
+                    }))}
                 />
               </FormField>
 
-              <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
-                <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
+              <FormRow>
+                <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
+                  <Toggle
+                    toggled={values.firearmsInvolved}
+                    name="firearmsInvolved"
+                    onClick={handleChange}
+                  />
+                </FormField>
+
+                <FormField
+                  errorMessage={errors.injuriesOrFatalities}
+                  label={t("injuriesOrFatalities")}
+                >
+                  <Toggle
+                    toggled={values.injuriesOrFatalities}
+                    name="injuriesOrFatalities"
+                    onClick={handleChange}
+                  />
+                </FormField>
+
+                <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
+                  <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
+                </FormField>
+              </FormRow>
+
+              <FormField errorMessage={errors.description} label={common("description")}>
+                <Editor
+                  value={values.descriptionData}
+                  onChange={(v) => setFieldValue("descriptionData", v)}
+                />
               </FormField>
-            </FormRow>
 
-            <FormField errorMessage={errors.description} label={common("description")}>
-              <Editor
-                value={values.descriptionData}
-                onChange={(v) => setFieldValue("descriptionData", v)}
-              />
-            </FormField>
+              <footer className="flex justify-end mt-5">
+                <Button type="reset" onClick={handleClose} variant="cancel">
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {incident ? common("save") : common("create")}
+                </Button>
+              </footer>
+            </Form>
+          )}
+        </Formik>
 
-            <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {incident ? common("save") : common("create")}
-              </Button>
-            </footer>
-          </Form>
-        )}
-      </Formik>
+        {incident ? <IncidentEventsArea disabled={false} incident={incident} /> : null}
+      </div>
     </Modal>
   );
 }

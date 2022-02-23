@@ -27,6 +27,7 @@ export class IncidentController {
       include: {
         creator: { include: leoProperties },
         officersInvolved: { include: leoProperties },
+        events: true,
       },
     });
 

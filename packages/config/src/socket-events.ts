@@ -28,6 +28,10 @@ export enum SocketEvents {
   UpdateCallEvent = "UPDATE_CALL_EVENT",
   DeleteCallEvent = "DELETE_CALL_EVENT",
 
+  AddIncidentEvent = "ADD_INCIDENT_EVENT",
+  UpdateIncidentEvent = "UPDATE_INCIDENT_EVENT",
+  DeleteIncidentEvent = "DELETE_INCIDENT_EVENT",
+
   Signal100 = "SIGNAL_100",
 
   PANIC_BUTTON_ON = "PANIC_BUTTON_ON",
