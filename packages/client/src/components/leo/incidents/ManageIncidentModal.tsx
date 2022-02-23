@@ -1,4 +1,3 @@
-import * as React from "react";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -22,7 +21,6 @@ import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
-import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 interface Props {
   incident?: FullIncident | null;
@@ -31,16 +29,7 @@ interface Props {
   onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
 }
 
-export function ManageIncidentModal({
-  onClose,
-  onCreate,
-  onUpdate,
-  incident: providedIncident,
-}: Props) {
-  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
-  const foundIncident = activeIncidents.find((v) => v.id === providedIncident?.id);
-  const incident = foundIncident ?? providedIncident ?? null;
-
+export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -48,24 +37,12 @@ export function ManageIncidentModal({
   const { activeOfficer } = useLeoState();
   const router = useRouter();
   const isDispatch = router.pathname.includes("/dispatch");
-  const isLeo = router.pathname === "/officer";
   const isLeoIncidents = router.pathname === "/officer/incidents";
   const creator = isDispatch || !incident?.creator ? null : incident.creator;
   const areEventsReadonly = !isDispatch || isLeoIncidents;
 
   const { state, execute } = useFetch();
   const { allOfficers } = useDispatchState();
-
-  // manage state for real-time updates. Yes, this may look like some janky solution,
-  // but meh. Works for now ;).
-  React.useEffect(() => {
-    const existing = activeIncidents.some((v) => v.id === incident?.id);
-
-    if (!existing && incident && isLeo) {
-      setActiveIncidents([...activeIncidents, incident]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIncidents, incident, isLeo]);
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);

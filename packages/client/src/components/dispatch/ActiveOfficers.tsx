@@ -22,6 +22,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -42,6 +43,20 @@ export function ActiveOfficers() {
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
   const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+
+  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
+  const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
+
+  // manage state for real-time updates. Yes, this may look like some janky solution,
+  // but meh. Works for now ;).
+  React.useEffect(() => {
+    const existing = activeIncidents.some((v) => v.id === foundIncident?.id);
+
+    if (!existing && foundIncident) {
+      setActiveIncidents([...activeIncidents, foundIncident]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIncidents, foundIncident]);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
