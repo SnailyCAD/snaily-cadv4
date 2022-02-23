@@ -15,6 +15,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   CALLS_911: "/v1/911-calls",
   COURTHOUSE: "/v1/expungement-requests",
   ALLOW_CITIZEN_UPDATE_LICENSE: "/v1/licenses",
+  RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
 };
 
 @Middleware()

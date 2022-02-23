@@ -18,6 +18,7 @@ import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 
 export function ActiveDeputies() {
   const { activeDeputies } = useActiveDeputies();
@@ -107,7 +108,7 @@ export function ActiveDeputies() {
                   {deputy.status?.value?.value}
                 </span>
               ),
-              radioChannel: "radioChannelId" in deputy ? deputy.radioChannelId : null,
+              radioChannel: <UnitRadioChannelModal unit={deputy} />,
               actions: isDispatch ? (
                 <>
                   <Button
@@ -130,7 +131,7 @@ export function ActiveDeputies() {
             { Header: t("Leo.rank"), accessor: "rank" },
             { Header: t("Leo.status"), accessor: "status" },
             RADIO_CHANNEL_MANAGEMENT
-              ? { Header: t("radioChannel"), accessor: "radioChannel" }
+              ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
               : null,
             isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
