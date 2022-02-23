@@ -45,6 +45,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
 
     if (json.id) {
       onCreate?.(json);
+      closeModal(ModalIds.RequestNameChange);
     }
   }
 
@@ -71,17 +72,21 @@ export function RequestNameChangeModal({ onCreate }: Props) {
             </FormField>
 
             <FormRow>
-              <FormField label="Name" errorMessage={errors.newName}>
+              <FormField label={t("newName")} errorMessage={errors.newName}>
                 <Input name="newName" value={values.newName} onChange={handleChange} />
               </FormField>
 
-              <FormField label="Surname" errorMessage={errors.newSurname}>
+              <FormField label={t("newSurname")} errorMessage={errors.newSurname}>
                 <Input name="newSurname" value={values.newSurname} onChange={handleChange} />
               </FormField>
             </FormRow>
 
             <footer className="flex justify-end mt-5">
-              <Button variant="cancel" type="reset">
+              <Button
+                onClick={() => closeModal(ModalIds.RequestNameChange)}
+                variant="cancel"
+                type="reset"
+              >
                 {common("cancel")}
               </Button>
               <Button

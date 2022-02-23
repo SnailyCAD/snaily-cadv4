@@ -53,6 +53,7 @@ export class NameChangeRequestController {
         citizenId: data.citizenId,
         userId: user.id,
       },
+      include: { citizen: true },
     });
 
     return request;

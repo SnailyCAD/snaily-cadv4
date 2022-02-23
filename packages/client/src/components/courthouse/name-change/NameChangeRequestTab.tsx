@@ -5,7 +5,7 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
-import type { NameChangeRequest } from "@snailycad/types";
+import { NameChangeRequest, WhitelistStatus } from "@snailycad/types";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { RequestNameChangeModal } from "./RequestNameChange";
@@ -19,8 +19,6 @@ export function NameChangeRequestTab(props: Props) {
   const t = useTranslations("Courthouse");
   const { openModal } = useModal();
   const common = useTranslations("Common");
-
-  setRequests;
 
   return (
     <TabsContent value="nameChangeRequestsTab">
@@ -36,7 +34,11 @@ export function NameChangeRequestTab(props: Props) {
         <p className="mt-5">{t("noNameChangeRequests")}</p>
       ) : (
         <Table
+          defaultSort={{ columnId: "createdAt", descending: true }}
           data={requests.map((request) => ({
+            rowProps: {
+              className: request.status !== WhitelistStatus.PENDING ? "opacity-50" : "",
+            },
             citizen: `${request.citizen.name} ${request.citizen.surname}`,
             newName: `${request.newName} ${request.newSurname}`,
             status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
@@ -51,7 +53,7 @@ export function NameChangeRequestTab(props: Props) {
         />
       )}
 
-      <RequestNameChangeModal />
+      <RequestNameChangeModal onCreate={(request) => setRequests((p) => [request, ...p])} />
     </TabsContent>
   );
 }

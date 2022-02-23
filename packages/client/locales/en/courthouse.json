@@ -8,6 +8,9 @@
     "expungementRequests": "Expungement requests",
     "nameChangeRequests": "Name change requests",
     "requestNameChange": "Request name change",
-    "noNameChangeRequests": "There are no name change requests."
+    "noNameChangeRequests": "There are no name change requests.",
+    "newName": "New Name",
+    "newSurname": "New surname",
+    "status": "Status"
   }
 }

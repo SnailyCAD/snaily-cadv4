@@ -22,7 +22,6 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
 
   const t = useTranslations();
   const common = useTranslations("Common");
-  const leo = useTranslations("Leo");
   const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
 
   const { state, execute } = useFetch();
@@ -76,9 +75,9 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: leo("citizen"), accessor: "citizen" },
-            { Header: "New name", accessor: "newName" },
-            { Header: leo("status"), accessor: "status" },
+            { Header: common("citizen"), accessor: "citizen" },
+            { Header: t("Courthouse.newName"), accessor: "newName" },
+            { Header: t("Courthouse.status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
             { Header: common("actions"), accessor: "actions" },
           ]}
@@ -96,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       requests,
       session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["admin", "leo", "courthouse", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "courthouse", "values", "common"], locale)),
       },
     },
   };
