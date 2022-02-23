@@ -130,7 +130,8 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
   }, [props.filter, setGlobalFilter]);
 
   React.useEffect(() => {
-    props.defaultSort && toggleSortBy(props.defaultSort.columnId, props.defaultSort.descending);
+    props.defaultSort &&
+      toggleSortBy(props.defaultSort.columnId as string, props.defaultSort.descending);
   }, [props.defaultSort, toggleSortBy]);
 
   React.useEffect(() => {

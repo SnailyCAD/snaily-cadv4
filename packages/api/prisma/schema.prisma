@@ -171,6 +171,7 @@ model User {
   ExpungementRequest   ExpungementRequest[]
   ActiveDispatchers    ActiveDispatchers[]
   User2FA              User2FA[]
+  NameChangeRequest    NameChangeRequest[]
 }
 
 model User2FA {
@@ -244,6 +245,7 @@ model Citizen {
   RecordRelease        RecordRelease[]
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
+  NameChangeRequest    NameChangeRequest[]
 }
 
 enum Rank {
@@ -944,6 +946,19 @@ enum ExpungementRequestStatus {
   ACCEPTED
   DENIED
   PENDING
+}
+
+model NameChangeRequest {
+  id         String          @id @default(uuid())
+  citizen    Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId  String
+  user       User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String?
+  newName    String
+  newSurname String
+  status     WhitelistStatus @default(PENDING)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @default(now()) @updatedAt
 }
 
 // ems-fd

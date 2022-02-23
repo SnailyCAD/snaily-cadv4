@@ -6,13 +6,13 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   containerProps?: JSX.IntrinsicElements["div"];
   filter?: string;
   disabledColumnId?: Column<TableData<T, RowProps>>["accessor"][];
-  defaultSort?: DefaultSort;
+  defaultSort?: DefaultSort<T, RowProps>;
   dragDrop?: DragDrop;
   isWithinCard?: boolean;
 }
 
-interface DefaultSort {
-  columnId: string;
+interface DefaultSort<T extends object, RowProps extends object> {
+  columnId: Column<TableData<T, RowProps>>["accessor"];
   descending?: boolean;
 }
 
@@ -22,6 +22,6 @@ interface DragDrop {
   disabledIndices?: number[];
 }
 
-export type TableData<T extends object, RP extends object> = {
-  rowProps?: JSX.IntrinsicElements["tr"] & RP;
+export type TableData<T extends object, RowProps extends object> = {
+  rowProps?: JSX.IntrinsicElements["tr"] & RowProps;
 } & T;

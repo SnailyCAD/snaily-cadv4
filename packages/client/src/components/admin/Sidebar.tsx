@@ -8,7 +8,14 @@ import { Rank, ValueType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
 
-const management = ["USERS", "CITIZENS", "UNITS", "BUSINESSES", "EXPUNGEMENT_REQUESTS"] as const;
+const management = [
+  "USERS",
+  "CITIZENS",
+  "UNITS",
+  "BUSINESSES",
+  "EXPUNGEMENT_REQUESTS",
+  "NAME_CHANGE_REQUESTS",
+] as const;
 const imports = ["CITIZENS", "VEHICLES", "WEAPONS"] as const;
 const types = Object.values(ValueType).map((v) => v.replace("_", "-"));
 
@@ -35,7 +42,7 @@ export function AdminSidebar() {
   }
 
   function makeType(t: string) {
-    return t.replace("_", "-").toLowerCase();
+    return t.replace(/_/g, "-").toLowerCase();
   }
 
   React.useEffect(() => {
