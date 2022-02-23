@@ -6,6 +6,7 @@ import compareDesc from "date-fns/compareDesc";
 import { EventItem } from "components/modals/events/EventItem";
 import { UpdateEventForm } from "components/modals/events/UpdateEventForm";
 import type { FormikHelpers } from "formik";
+import { classNames } from "lib/classNames";
 
 interface Props {
   incident: LeoIncident;
@@ -36,9 +37,9 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
 
   return (
     <div className="w-[45rem] ml-3 relative">
-      <h4 className="text-xl font-semibold">{common("events")}</h4>
+      <h4 className="text-xl font-semibold mb-2">{common("events")}</h4>
 
-      <ul className="overflow-auto h-[58%]">
+      <ul className={classNames("overflow-auto max-h-[500px]", disabled ? "h-[90%]" : "h-[55%]")}>
         {(incident.events?.length ?? 0) <= 0 ? (
           <p className="mt-2">{t("noIncidentEvents")}</p>
         ) : (

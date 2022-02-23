@@ -19,6 +19,7 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
+import type { FullIncident } from "./incidents";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -53,11 +54,19 @@ interface Props {
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: FullBolo[];
+  activeIncidents: FullIncident[];
 }
 
-export default function OfficerDashboard({ officers, bolos, calls, activeOfficer }: Props) {
+export default function OfficerDashboard({
+  officers,
+  bolos,
+  calls,
+  activeOfficer,
+  activeIncidents,
+}: Props) {
   const state = useLeoState();
-  const { setCalls, setBolos, setActiveOfficers, activeOfficers } = useDispatchState();
+  const { setCalls, setBolos, setActiveOfficers, activeOfficers, setActiveIncidents } =
+    useDispatchState();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
@@ -65,19 +74,12 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
     state.setOfficers(officers);
+    setActiveIncidents(activeIncidents);
+
     setCalls(calls);
     setBolos(bolos);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    state.setActiveOfficer,
-    state.setOfficers,
-    setBolos,
-    setCalls,
-    bolos,
-    calls,
-    officers,
-    activeOfficer,
-  ]);
+  }, [bolos, calls, officers, activeOfficer]);
 
   return (
     <Layout className="dark:text-white">
@@ -124,13 +126,15 @@ export default function OfficerDashboard({ officers, bolos, calls, activeOfficer
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ officers, citizens }, activeOfficer, values, calls, bolos] = await requestAll(req, [
-    ["/leo", { officers: [], citizens: [] }],
-    ["/leo/active-officer", null],
-    ["/admin/values/codes_10?paths=penal_code,impound_lot,license", []],
-    ["/911-calls", []],
-    ["/bolos", []],
-  ]);
+  const [{ officers, citizens }, activeOfficer, values, calls, bolos, { activeIncidents }] =
+    await requestAll(req, [
+      ["/leo", { officers: [], citizens: [] }],
+      ["/leo/active-officer", null],
+      ["/admin/values/codes_10?paths=penal_code,impound_lot,license", []],
+      ["/911-calls", []],
+      ["/bolos", []],
+      ["/dispatch", { activeIncidents: [] }],
+    ]);
 
   return {
     props: {
@@ -141,6 +145,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       bolos,
       values,
       citizens,
+      activeIncidents,
       messages: {
         ...(await getTranslations(
           ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
