@@ -56,6 +56,7 @@ export class ValuesController {
             // @ts-expect-error ignore
             values: await prisma[data.name].findMany({
               include: { ...(data.include ?? {}), value: true },
+              orderBy: { value: { position: "asc" } },
             }),
           };
         }
