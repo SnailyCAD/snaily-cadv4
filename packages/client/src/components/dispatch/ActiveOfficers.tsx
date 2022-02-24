@@ -123,6 +123,8 @@ export function ActiveOfficers() {
                 title: `Set status to ${v.value.value}`,
               }));
 
+            const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+
             return {
               rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
               officer: (
@@ -142,7 +144,11 @@ export function ActiveOfficers() {
                         ]
                   }
                 >
-                  <span className="flex items-center capitalize cursor-default">
+                  <span
+                    className="flex items-center capitalize cursor-default"
+                    // * 9 to fix overlapping issues with next table column
+                    style={{ minWidth: nameAndCallsign.length * 9 }}
+                  >
                     {"imageId" in officer && officer.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -163,7 +169,7 @@ export function ActiveOfficers() {
                         ))}
                       </div>
                     ) : (
-                      `${generateCallsign(officer)} ${makeUnitName(officer)}`
+                      nameAndCallsign
                     )}
                   </span>
                 </ContextMenu>
