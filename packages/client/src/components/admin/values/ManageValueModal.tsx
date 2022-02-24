@@ -17,25 +17,23 @@ import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import {
-  DepartmentType,
   DriversLicenseCategoryType,
   EmployeeAsEnum,
-  ShouldDoType,
   ValueLicenseType,
   ValueType,
-  WhatPages,
 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
 import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
-import dynamic from "next/dynamic";
-import { Eyedropper } from "react-bootstrap-icons";
 import { ModalIds } from "types/ModalIds";
-import { Toggle } from "components/form/Toggle";
 import { makeDefaultWhatPages } from "lib/admin/values";
-
-const HexColorPicker = dynamic(async () => (await import("react-colorful")).HexColorPicker);
+import { DepartmentFields } from "./manage-modal/DepartmentFields";
+import {
+  StatusValueFields,
+  useDefaultDepartments,
+  WHAT_PAGES_LABELS,
+} from "./manage-modal/StatusValueFields";
 
 interface Props {
   type: ValueType;
@@ -60,44 +58,10 @@ const BUSINESS_VALUES = [
   },
 ];
 
-export const SHOULD_DO_LABELS: Record<ShouldDoType, string> = {
-  [ShouldDoType.SET_STATUS]: "Set Status",
-  [ShouldDoType.SET_OFF_DUTY]: "Set Off duty",
-  [ShouldDoType.SET_ON_DUTY]: "Set On duty",
-  [ShouldDoType.SET_ASSIGNED]: "Set Assigned",
-  [ShouldDoType.PANIC_BUTTON]: "Panic Button",
-};
-
-export const WHAT_PAGES_LABELS: Record<WhatPages, string> = {
-  [WhatPages.LEO]: "LEO",
-  [WhatPages.EMS_FD]: "EMS/FD",
-  [WhatPages.DISPATCH]: "Dispatch",
-};
-
-export const DEPARTMENT_LABELS = {
-  [DepartmentType.LEO]: "LEO",
-  [DepartmentType.EMS_FD]: "EMS/FD",
-};
-
 export const LICENSE_LABELS = {
   [ValueLicenseType.LICENSE]: "License",
   [ValueLicenseType.REGISTRATION_STATUS]: "Registration Status",
 };
-
-const SHOULD_DO_VALUES = Object.values(ShouldDoType).map((v) => ({
-  label: SHOULD_DO_LABELS[v],
-  value: v,
-}));
-
-const WHAT_PAGES_VALUES = Object.values(WhatPages).map((v) => ({
-  label: WHAT_PAGES_LABELS[v],
-  value: v,
-}));
-
-const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
-  label: DEPARTMENT_LABELS[v] as string,
-  value: v,
-}));
 
 const LICENSE_TYPES = Object.values(ValueLicenseType).map((v) => ({
   label: LICENSE_LABELS[v] as string,
@@ -118,6 +82,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
+  const defaultDepartments = useDefaultDepartments();
 
   const title = !value ? t("ADD") : t("EDIT");
   const footerTitle = !value ? t("ADD") : common("save");
@@ -189,6 +154,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       value: v,
     })),
     showPicker: false,
+    // @ts-expect-error shortcut
+    departments: defaultDepartments(value),
   };
 
   function validate(values: typeof INITIAL_VALUES) {
@@ -213,7 +180,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
+        {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
             {type === "DIVISION" ? (
               <FormField label="Department">
@@ -263,66 +230,13 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            {["DEPARTMENT", "DIVISION"].includes(type) ? (
+            {["DIVISION"].includes(type) ? (
               <FormField optional label="Callsign Symbol">
                 <Input name="callsign" onChange={handleChange} value={values.callsign} />
               </FormField>
             ) : null}
 
-            {type === "DEPARTMENT" ? (
-              <>
-                <FormField label="Type">
-                  <Select
-                    values={DEPARTMENT_TYPES}
-                    name="type"
-                    onChange={handleChange}
-                    value={values.type}
-                  />
-                </FormField>
-
-                {values.type === DepartmentType.LEO ? (
-                  <>
-                    <FormField
-                      errorMessage={errors.whitelisted as string}
-                      checkbox
-                      label="Whitelisted"
-                    >
-                      <Toggle
-                        name="whitelisted"
-                        toggled={values.whitelisted}
-                        onClick={(e) => {
-                          e.target.value && setFieldValue("isDefaultDepartment", false);
-                          handleChange(e);
-                        }}
-                      />
-                    </FormField>
-
-                    <div className="flex flex-col">
-                      <FormField
-                        errorMessage={errors.isDefaultDepartment as string}
-                        checkbox
-                        label="Default Department"
-                      >
-                        <Toggle
-                          name="isDefaultDepartment"
-                          toggled={values.isDefaultDepartment}
-                          onClick={(e) => {
-                            e.target.value && setFieldValue("whitelisted", false);
-                            handleChange(e);
-                          }}
-                        />
-                      </FormField>
-
-                      <p className="text-base italic">
-                        When a department is whitelisted, you can set 1 department as default. This
-                        department will be given to the officer when they are awaiting access or
-                        when they were declined.
-                      </p>
-                    </div>
-                  </>
-                ) : null}
-              </>
-            ) : null}
+            {type === "DEPARTMENT" ? <DepartmentFields /> : null}
 
             {type === "BUSINESS_ROLE" ? (
               <FormField label="As (this is so the database knows what to use.)">
@@ -341,73 +255,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            {type === "CODES_10" ? (
-              <>
-                <FormField errorMessage={errors.shouldDo} label="Should Do">
-                  <Select
-                    values={SHOULD_DO_VALUES}
-                    name="shouldDo"
-                    onChange={handleChange}
-                    value={values.shouldDo}
-                  />
-                </FormField>
-
-                <FormField errorMessage={errors.whatPages as string} label="What Pages">
-                  <Select
-                    values={WHAT_PAGES_VALUES}
-                    name="whatPages"
-                    onChange={handleChange}
-                    value={values.whatPages}
-                    isMulti
-                  />
-                </FormField>
-
-                <FormField errorMessage={errors.color as string} label="Color (#HEX)">
-                  <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
-                    {values.showPicker ? (
-                      <HexColorPicker
-                        color={values.color}
-                        onChange={(color) => setFieldValue("color", color)}
-                        style={{ width: "100%", height: "150px" }}
-                      />
-                    ) : (
-                      <Input name="color" onChange={handleChange} value={values.color} />
-                    )}
-
-                    <Button
-                      variant="cancel"
-                      className="p-0 px-1 ml-2"
-                      type="button"
-                      onClick={() => setFieldValue("showPicker", !values.showPicker)}
-                      aria-label="Color Picker"
-                      title="Color Picker"
-                    >
-                      <Eyedropper />
-                    </Button>
-                  </div>
-                </FormField>
-
-                <FormField className="mb-0" checkbox label="Status Code">
-                  <Input
-                    className="w-[max-content] mr-3"
-                    type="radio"
-                    name="type"
-                    onChange={() => setFieldValue("type", "STATUS_CODE")}
-                    checked={values.type === "STATUS_CODE"}
-                  />
-                </FormField>
-
-                <FormField checkbox label="Situation Code">
-                  <Input
-                    className="w-[max-content] mr-3"
-                    type="radio"
-                    name="type"
-                    onChange={() => setFieldValue("type", "SITUATION_CODE")}
-                    checked={values.type === "SITUATION_CODE"}
-                  />
-                </FormField>
-              </>
-            ) : null}
+            {type === "CODES_10" ? <StatusValueFields /> : null}
 
             <footer className="flex justify-end mt-5">
               <Button

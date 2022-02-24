@@ -1,9 +1,4 @@
-import {
-  DEPARTMENT_LABELS,
-  LICENSE_LABELS,
-  SHOULD_DO_LABELS,
-  WHAT_PAGES_LABELS,
-} from "components/admin/values/ManageValueModal";
+import { LICENSE_LABELS } from "components/admin/values/ManageValueModal";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
 import type { TValue } from "src/pages/admin/values/[path]";
@@ -17,6 +12,11 @@ import {
   type Value,
   WhatPages,
 } from "@snailycad/types";
+import {
+  SHOULD_DO_LABELS,
+  WHAT_PAGES_LABELS,
+} from "components/admin/values/manage-modal/StatusValueFields";
+import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",

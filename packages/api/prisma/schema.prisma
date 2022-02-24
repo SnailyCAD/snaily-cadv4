@@ -442,6 +442,8 @@ model DepartmentValue {
   division            DivisionValue[]      @relation("divisionDepartmentToValue")
   LeoWhitelistStatus  LeoWhitelistStatus[]
   Call911             Call911[]
+  StatusValue         StatusValue?         @relation(fields: [statusValueId], references: [id])
+  statusValueId       String?
 }
 
 model DriversLicenseCategoryValue {
@@ -677,13 +679,14 @@ model LeoWhitelistStatus {
 }
 
 model StatusValue {
-  id        String          @id @default(uuid())
-  value     Value           @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  valueId   String
-  shouldDo  ShouldDoType    @default(SET_STATUS)
-  whatPages WhatPages[]
-  color     String?
-  type      StatusValueType @default(STATUS_CODE)
+  id          String            @id @default(uuid())
+  value       Value             @relation("StatusValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId     String
+  shouldDo    ShouldDoType      @default(SET_STATUS)
+  whatPages   WhatPages[]
+  color       String?
+  type        StatusValueType   @default(STATUS_CODE)
+  departments DepartmentValue[]
 
   officerStatusToValue Officer[]         @relation("officerStatusToValue")
   emsFdStatusToValue   EmsFdDeputy[]     @relation("emsFdStatusToValue")

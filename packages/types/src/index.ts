@@ -594,6 +594,7 @@ export interface StatusValue {
   whatPages: WhatPages[];
   color: string | null;
   type: StatusValueType;
+  departments?: DepartmentValue[];
 }
 
 /**
