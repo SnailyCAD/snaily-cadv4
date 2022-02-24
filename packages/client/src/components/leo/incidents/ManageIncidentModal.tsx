@@ -22,6 +22,7 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { ShouldDoType } from "@snailycad/types";
 
 interface Props {
   incident?: FullIncident | null;
@@ -133,7 +134,16 @@ export function ManageIncidentModal({
                   name="involvedOfficers"
                   onChange={handleChange}
                   values={allOfficers
-                    .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
+                    .filter((v) =>
+                      creator
+                        ? v.id !== activeOfficer?.id
+                        : isDispatch
+                        ? v.status
+                          ? v.status.shouldDo !== ShouldDoType.SET_OFF_DUTY
+                          : false
+                        : true,
+                    )
+
                     .map((v) => ({
                       label: `${generateCallsign(v)} ${makeUnitName(v)}`,
                       value: v.id,
