@@ -47,7 +47,12 @@ export function useDefaultDepartments() {
     if (!status) return [];
     const departments = status.departments ?? [];
 
-    return departments.length <= 0 ? DEFAULT_DEPARTMENTS : status.whatPages;
+    return departments.length <= 0
+      ? DEFAULT_DEPARTMENTS
+      : departments.map((v) => ({
+          label: v.value.value,
+          value: v.id,
+        }));
   }
 
   return makeDefaultDepartments;

@@ -30,6 +30,7 @@ import {
   type ValueLicenseType,
   WhatPages,
   ValueType,
+  StatusValue,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { createWarningApplicable } from "lib/records/penal-code";
@@ -161,7 +162,7 @@ export const typeHandlers = {
     return handlePromiseAll(data, async (item) => {
       const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
 
-      return prisma.statusValue.create({
+      const value = await prisma.statusValue.create({
         data: {
           type: item.type as StatusValueType,
           color: item.color,
@@ -169,8 +170,28 @@ export const typeHandlers = {
           whatPages: whatPages as WhatPages[],
           value: createValueObj(item.value, ValueType.CODES_10),
         },
-        include: { value: true },
       });
+
+      let last: StatusValue | null = null;
+      await Promise.all(
+        (item.departments ?? []).map(async (departmentId, idx) => {
+          const isLast = idx + 1 === item.departments?.length;
+          const statusValue = await prisma.statusValue.update({
+            where: { id: value.id },
+            data: { departments: { connect: { id: departmentId } } },
+            include: isLast
+              ? { value: true, departments: { include: { value: true } } }
+              : undefined,
+          });
+
+          if (isLast) {
+            last = statusValue;
+          }
+        }),
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      return { ...value, ...(last ?? {}) };
     });
   },
   PENAL_CODE: async (body: unknown) => {

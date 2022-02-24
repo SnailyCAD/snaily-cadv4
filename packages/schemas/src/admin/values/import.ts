@@ -25,6 +25,7 @@ export const CODES_10_SCHEMA = BASE_VALUE_SCHEMA.extend({
   color: z.string().max(255).optional(),
   type: z.string().regex(TYPE_REGEX).max(255),
   whatPages: z.array(z.string().regex(WHAT_PAGES_REGEX)).max(3).nullable().optional(),
+  departments: z.array(z.any()).nullable().optional(),
 });
 
 export const CODES_10_ARR = z.array(CODES_10_SCHEMA).min(1);
