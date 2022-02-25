@@ -6,6 +6,7 @@ export const VEHICLE_SCHEMA = z.object({
   ownerId: z.string().min(2).max(255),
   registrationStatusId: z.string().min(2).max(255),
   color: z.string().min(2).max(255),
+  reportedStolen: z.boolean().nullable().optional(),
 });
 
 export const VEHICLE_SCHEMA_ARR = z.array(VEHICLE_SCHEMA).min(1);

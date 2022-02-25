@@ -42,7 +42,9 @@ export async function importVehiclesHandler(body: unknown[]) {
           registrationStatusId: data.registrationStatusId,
           modelId: data.modelId,
           vinNumber: generateString(17),
+          reportedStolen: data.reportedStolen ?? false,
         },
+
         include: vehiclesInclude,
       });
     }),
