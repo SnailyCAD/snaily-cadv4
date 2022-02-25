@@ -77,11 +77,15 @@ export function ActiveDeputies() {
                 title: `Set status to ${v.value.value}`,
               }));
 
+            const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
+
             return {
               rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
               deputy: (
                 <ContextMenu asChild items={codesMapped}>
-                  <span className="flex items-center capitalize cursor-default">
+                  <span // * 9 to fix overlapping issues with next table column
+                    style={{ minWidth: nameAndCallsign.length * 9 }}
+                  >
                     {deputy.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -89,7 +93,7 @@ export function ActiveDeputies() {
                         src={makeImageUrl("units", deputy.imageId)}
                       />
                     ) : null}
-                    {generateCallsign(deputy)} {makeUnitName(deputy)}
+                    {nameAndCallsign}
                   </span>
                 </ContextMenu>
               ),

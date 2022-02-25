@@ -118,6 +118,7 @@
     "mustSetBotTokenGuildId": "This feature cannot be used because there was no `BOT_TOKEN` or `GUILD_ID` present. Please read how to enable Discord Roles: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles",
     "maxDepartmentsReachedPerUser": "You've reached the max set of units with this department. Please choose a different department or try again later.",
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
-    "Invalid Permissions": "You don't have permissions to access this API Route."
+    "Invalid Permissions": "You don't have permissions to access this API Route.",
+    "alreadyPendingNameChange": "This citizen already has a pending name change request."
   }
 }

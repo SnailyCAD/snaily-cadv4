@@ -3,6 +3,7 @@ import { VEHICLE_SCHEMA } from "./vehicles";
 import { WEAPON_SCHEMA } from "./weapons";
 
 export const IMPORT_CITIZENS_SCHEMA = z.object({
+  userId: z.string().max(255).nullable().optional(),
   name: z.string().min(1).max(255),
   surname: z.string().min(1).max(255),
   gender: z.string().min(1).max(255),

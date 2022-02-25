@@ -21,6 +21,8 @@ import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { ShouldDoType } from "@snailycad/types";
 
 interface Props {
   incident?: FullIncident | null;
@@ -29,7 +31,16 @@ interface Props {
   onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
 }
 
-export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: Props) {
+export function ManageIncidentModal({
+  onClose,
+  onCreate,
+  onUpdate,
+  incident: tempIncident,
+}: Props) {
+  const { activeIncidents } = useActiveIncidents();
+  const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
+  const incident = foundIncident ?? tempIncident ?? null;
+
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -123,7 +134,16 @@ export function ManageIncidentModal({ onClose, onCreate, onUpdate, incident }: P
                   name="involvedOfficers"
                   onChange={handleChange}
                   values={allOfficers
-                    .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
+                    .filter((v) =>
+                      creator
+                        ? v.id !== activeOfficer?.id
+                        : isDispatch
+                        ? v.status
+                          ? v.status.shouldDo !== ShouldDoType.SET_OFF_DUTY
+                          : false
+                        : true,
+                    )
+
                     .map((v) => ({
                       label: `${generateCallsign(v)} ${makeUnitName(v)}`,
                       value: v.id,

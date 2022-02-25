@@ -22,7 +22,6 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
-import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -43,20 +42,6 @@ export function ActiveOfficers() {
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
   const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
-
-  const { activeIncidents, setActiveIncidents } = useActiveIncidents();
-  const foundIncident = activeIncidents.find((v) => v.id === tempIncident?.id);
-
-  // manage state for real-time updates. Yes, this may look like some janky solution,
-  // but meh. Works for now ;).
-  React.useEffect(() => {
-    const existing = activeIncidents.some((v) => v.id === foundIncident?.id);
-
-    if (!existing && foundIncident) {
-      setActiveIncidents([...activeIncidents, foundIncident]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIncidents, foundIncident]);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
@@ -138,6 +123,8 @@ export function ActiveOfficers() {
                 title: `Set status to ${v.value.value}`,
               }));
 
+            const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+
             return {
               rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
               officer: (
@@ -157,7 +144,11 @@ export function ActiveOfficers() {
                         ]
                   }
                 >
-                  <span className="flex items-center capitalize cursor-default">
+                  <span
+                    className="flex items-center capitalize cursor-default"
+                    // * 9 to fix overlapping issues with next table column
+                    style={{ minWidth: nameAndCallsign.length * 9 }}
+                  >
                     {"imageId" in officer && officer.imageId ? (
                       <img
                         className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -178,7 +169,7 @@ export function ActiveOfficers() {
                         ))}
                       </div>
                     ) : (
-                      `${generateCallsign(officer)} ${makeUnitName(officer)}`
+                      nameAndCallsign
                     )}
                   </span>
                 </ContextMenu>

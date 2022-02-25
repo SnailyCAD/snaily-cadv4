@@ -130,7 +130,7 @@ export class Calls911Controller {
       },
     });
 
-    if (!call) {
+    if (!call || call.ended) {
       throw new NotFound("callNotFound");
     }
 
@@ -229,7 +229,7 @@ export class Calls911Controller {
       where: { id },
     });
 
-    if (!call) {
+    if (!call || call.ended) {
       throw new NotFound("callNotFound");
     }
 

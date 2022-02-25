@@ -594,6 +594,7 @@ export interface StatusValue {
   whatPages: WhatPages[];
   color: string | null;
   type: StatusValueType;
+  departments?: DepartmentValue[];
 }
 
 /**
@@ -827,6 +828,22 @@ export interface ExpungementRequest {
   citizenId: string;
   userId: string | null;
   status: ExpungementRequestStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
+ * Model NameChangeRequest
+ *
+ */
+export interface NameChangeRequest {
+  id: string;
+  citizenId: string;
+  citizen: Citizen;
+  userId: string | null;
+  newName: string;
+  newSurname: string;
+  status: WhitelistStatus;
   createdAt: Date;
   updatedAt: Date;
 }

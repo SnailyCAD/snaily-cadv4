@@ -24,6 +24,7 @@ export class ImportCitizensController {
       data.map(async (data) => {
         const citizen = await prisma.citizen.create({
           data: {
+            userId: data.userId ?? undefined,
             name: data.name,
             surname: data.surname,
             ethnicityId: data.ethnicity,

@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import type { AssignedUnit, LeoIncident } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { Full911Call } from "state/dispatchState";
+import { Full911Call, FullDeputy, FullOfficer, useDispatchState } from "state/dispatchState";
 import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -23,6 +23,7 @@ import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
+import { Manage911CallModal } from "components/modals/Manage911CallModal";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -31,11 +32,14 @@ const DescriptionModal = dynamic(
 interface Props {
   data: (Full911Call & { incidents: LeoIncident[] })[];
   incidents: LeoIncident[];
+  officers: FullOfficer[];
+  deputies: FullDeputy[];
 }
 
-export default function CallHistory({ data: calls, incidents }: Props) {
+export default function CallHistory({ data: calls, incidents, officers, deputies }: Props) {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
+  const dispatchState = useDispatchState();
 
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -50,6 +54,11 @@ export default function CallHistory({ data: calls, incidents }: Props) {
   function handleLinkClick(call: Full911Call) {
     setTempCall(call);
     openModal(ModalIds.LinkCallToIncident);
+  }
+
+  function handleViewClick(call: Full911Call) {
+    setTempCall(call);
+    openModal(ModalIds.Manage911Call);
   }
 
   async function handlePurge() {
@@ -75,6 +84,12 @@ export default function CallHistory({ data: calls, incidents }: Props) {
       ? unit.unit.callsign
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
+
+  React.useEffect(() => {
+    dispatchState.setAllOfficers(officers);
+    dispatchState.setAllDeputies(deputies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [officers, deputies]);
 
   return (
     <Layout className="dark:text-white">
@@ -136,6 +151,9 @@ export default function CallHistory({ data: calls, incidents }: Props) {
                     <Button onClick={() => handleLinkClick(call)} small>
                       {leo("linkToIncident")}
                     </Button>
+                    <Button className="ml-2" onClick={() => handleViewClick(call)} small>
+                      {leo("viewCall")}
+                    </Button>
                   </>
                 ),
               };
@@ -178,14 +196,17 @@ export default function CallHistory({ data: calls, incidents }: Props) {
       {tempCall?.descriptionData ? (
         <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
+
+      <Manage911CallModal call={tempCall} />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [calls, { incidents }] = await requestAll(req, [
+  const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
     ["/911-calls?includeEnded=true", []],
-    ["/incidents", [{ incidents: [] }]],
+    ["/incidents", { incidents: [] }],
+    ["/dispatch", { deputies: [], officers: [] }],
   ]);
 
   return {
@@ -193,6 +214,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req),
       data: calls,
       incidents,
+      deputies,
+      officers,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], locale)),
       },

@@ -110,6 +110,8 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     );
   }
 
+  const departmentId = !isUnitOffDuty && "departmentId" in activeUnit && activeUnit.departmentId;
+
   return (
     <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
       <li>
@@ -129,6 +131,11 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
           const isActive = code.id === activeUnit?.statusId;
           const variant =
             code.shouldDo === ShouldDoType.SET_OFF_DUTY ? "danger" : isActive ? "blue" : "default";
+
+          const checkDepartments = departmentId && (code.departments ?? []).length > 0;
+          if (checkDepartments && !code.departments?.some((v) => v.id === departmentId)) {
+            return null;
+          }
 
           return (
             <li key={code.id}>

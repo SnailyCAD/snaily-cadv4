@@ -4,6 +4,13 @@
     "requestExpungement": "Request Expungement",
     "noExpungementRequests": "You do not have any expungement requests",
     "request": "Request",
-    "noPendingRequests": "There are no pending expungement requests"
+    "noPendingRequests": "There are no pending expungement requests",
+    "expungementRequests": "Expungement requests",
+    "nameChangeRequests": "Name change requests",
+    "requestNameChange": "Request name change",
+    "noNameChangeRequests": "There are no name change requests.",
+    "newName": "New Name",
+    "newSurname": "New surname",
+    "status": "Status"
   }
 }
