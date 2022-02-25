@@ -4,8 +4,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { OfficerLog } from "@snailycad/types";
-import type { FullOfficer } from "state/dispatchState";
+import type { Officer, OfficerLog } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
@@ -13,7 +12,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 
-export type OfficerLogWithOfficer = OfficerLog & { officer: FullOfficer };
+export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
 interface Props {
   logs: OfficerLogWithOfficer[];

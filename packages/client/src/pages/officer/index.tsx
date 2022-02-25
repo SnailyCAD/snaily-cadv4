@@ -7,9 +7,9 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { RecordType } from "@snailycad/types";
+import { Bolo, Officer, RecordType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, FullBolo, FullOfficer, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { requestAll } from "lib/utils";
@@ -50,10 +50,10 @@ const CreateWarrantModal = dynamic(async () => {
 });
 
 interface Props {
-  officers: FullOfficer[];
+  officers: Officer[];
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
-  bolos: FullBolo[];
+  bolos: Bolo[];
   activeIncidents: FullIncident[];
 }
 

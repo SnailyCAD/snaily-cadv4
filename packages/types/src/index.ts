@@ -565,6 +565,7 @@ export interface Officer {
   createdAt: Date;
   updatedAt: Date;
   whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
@@ -755,6 +756,7 @@ export interface Bolo {
   color: string | null;
   name: string | null;
   officerId: string | null;
+  officer: Officer | null;
 }
 
 /**

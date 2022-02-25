@@ -11,18 +11,18 @@ import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { FullDeputy } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
+import type { EmsFdDeputy } from "@snailycad/types";
 
 interface Props {
-  deputy: FullDeputy | null;
-  onCreate?: (officer: FullDeputy) => void;
-  onUpdate?: (old: FullDeputy, newO: FullDeputy) => void;
+  deputy: EmsFdDeputy | null;
+  onCreate?: (officer: EmsFdDeputy) => void;
+  onUpdate?: (old: EmsFdDeputy, newO: EmsFdDeputy) => void;
   onClose?(): void;
 }
 

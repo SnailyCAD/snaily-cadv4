@@ -2,14 +2,14 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
 export function usePanicButton() {
-  const [unit, setUnit] = React.useState<FullDeputy | FullOfficer | null>(null);
+  const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
 
-  useListener(SocketEvents.PANIC_BUTTON_ON, (officer: FullOfficer) => {
+  useListener(SocketEvents.PANIC_BUTTON_ON, (officer: Officer) => {
     setUnit(officer);
   });
 
@@ -20,7 +20,7 @@ export function usePanicButton() {
   return { unit, PanicButton: Component };
 }
 
-function Component({ unit }: { unit: FullOfficer | FullDeputy }) {
+function Component({ unit }: { unit: Officer | EmsFdDeputy | CombinedLeoUnit }) {
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
   const callsign = generateCallsign(

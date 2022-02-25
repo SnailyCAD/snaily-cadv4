@@ -8,16 +8,8 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import {
-  type DepartmentValue,
-  type DivisionValue,
-  type Officer,
-  type Value,
-  ValueType,
-  WhitelistStatus,
-} from "@snailycad/types";
+import { Officer, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import type { FullOfficer } from "state/dispatchState";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -32,14 +24,8 @@ const ManageOfficerModal = dynamic(
   async () => (await import("components/leo/modals/ManageOfficerModal")).ManageOfficerModal,
 );
 
-export type OfficerWithDept = Officer & {
-  divisions: DivisionValue[];
-  department: DepartmentValue | null;
-  rank?: Value<ValueType.OFFICER_RANK>;
-};
-
 interface Props {
-  officers: FullOfficer[];
+  officers: Officer[];
 }
 
 export default function MyOfficers({ officers: data }: Props) {
@@ -51,7 +37,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { makeImageUrl } = useImageUrl();
 
   const [officers, setOfficers] = React.useState(data);
-  const [tempOfficer, setTempOfficer] = React.useState<FullOfficer | null>(null);
+  const [tempOfficer, setTempOfficer] = React.useState<Officer | null>(null);
 
   async function handleDeleteOfficer() {
     if (!tempOfficer) return;
@@ -65,12 +51,12 @@ export default function MyOfficers({ officers: data }: Props) {
     }
   }
 
-  function handleEditClick(officer: FullOfficer) {
+  function handleEditClick(officer: Officer) {
     setTempOfficer(officer);
     openModal(ModalIds.ManageOfficer);
   }
 
-  function handleDeleteClick(officer: FullOfficer) {
+  function handleDeleteClick(officer: Officer) {
     setTempOfficer(officer);
     openModal(ModalIds.AlertDeleteOfficer);
   }
@@ -125,11 +111,11 @@ export default function MyOfficers({ officers: data }: Props) {
                     >
                       <p className="max-w-[400px]">
                         {t.rich(
-                          officer.department?.isDefaultDepartment
+                          officer.department.isDefaultDepartment
                             ? "pendingAccessDepartment"
                             : "pendingAccessDepartmentNoDefault",
                           {
-                            defaultDepartment: officer.department?.value.value,
+                            defaultDepartment: officer.department.value.value,
                           },
                         )}
                       </p>

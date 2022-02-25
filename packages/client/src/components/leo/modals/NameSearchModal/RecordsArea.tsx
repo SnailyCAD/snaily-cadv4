@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { Record, RecordType, Violation, Warrant } from "@snailycad/types";
+import { Officer, Record, RecordType, Violation, Warrant } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -10,7 +10,6 @@ import useFetch from "lib/useFetch";
 import { useNameSearch } from "state/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { FullOfficer } from "state/dispatchState";
 import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import { ManageRecordModal } from "../ManageRecordModal";
@@ -18,10 +17,10 @@ import { FullDate } from "components/shared/FullDate";
 import { HoverCard } from "components/shared/HoverCard";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
-export type FullRecord = Record & { officer: FullOfficer; violations: Violation[] };
+export type FullRecord = Record & { officer: Officer; violations: Violation[] };
 interface Props {
   records: FullRecord[];
-  warrants?: (Warrant & { officer: FullOfficer })[];
+  warrants?: (Warrant & { officer: Officer })[];
 }
 
 export function RecordsArea({ warrants, records }: Props) {
@@ -216,7 +215,7 @@ const values = [
   { label: "Active", value: "active" },
 ];
 
-function WarrantsTable({ data }: { data: (Warrant & { officer: FullOfficer })[] }) {
+function WarrantsTable({ data }: { data: (Warrant & { officer: Officer })[] }) {
   const common = useTranslations("Common");
   const { openModal, closeModal, getPayload } = useModal();
   const t = useTranslations();
