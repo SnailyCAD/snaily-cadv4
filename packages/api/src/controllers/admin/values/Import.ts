@@ -170,6 +170,7 @@ export const typeHandlers = {
           whatPages: whatPages as WhatPages[],
           value: createValueObj(item.value, ValueType.CODES_10),
         },
+        include: { value: true },
       });
 
       let last: StatusValue | null = null;
