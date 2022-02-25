@@ -84,19 +84,21 @@ export function StatusValueFields() {
         />
       </FormField>
 
-      <FormField errorMessage={errors.departments as string} label="Departments">
-        <Select
-          closeMenuOnSelect={false}
-          name="departments"
-          onChange={handleChange}
-          value={values.departments}
-          isMulti
-          values={department.values.map((v) => ({
-            value: v.id,
-            label: v.value.value,
-          }))}
-        />
-      </FormField>
+      {values.shouldDo === ShouldDoType.SET_ON_DUTY ? null : (
+        <FormField errorMessage={errors.departments as string} label="Departments">
+          <Select
+            closeMenuOnSelect={false}
+            name="departments"
+            onChange={handleChange}
+            value={values.departments}
+            isMulti
+            values={department.values.map((v) => ({
+              value: v.id,
+              label: v.value.value,
+            }))}
+          />
+        </FormField>
+      )}
 
       <FormField errorMessage={errors.color as string} label="Color (#HEX)">
         <div className={`flex ${values.showPicker ? "items-start" : ""}`}>
