@@ -26,7 +26,7 @@ const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> 
   VEHICLE: { name: "vehicleValue" },
   WEAPON: { name: "weaponValue" },
   BUSINESS_ROLE: { name: "employeeValue" },
-  CODES_10: { name: "statusValue" },
+  CODES_10: { name: "statusValue", include: { departments: { include: { value: true } } } },
   DRIVERSLICENSE_CATEGORY: { name: "driversLicenseCategoryValue" },
   DEPARTMENT: { name: "departmentValue" },
   DIVISION: {
@@ -214,24 +214,45 @@ export class ValuesController {
     }
 
     if (type === "CODES_10") {
-      const updated = await prisma.statusValue.update({
+      const statusValue = await prisma.statusValue.findUnique({
+        where: { id },
+        include: { departments: true },
+      });
+
+      await Promise.all(
+        (statusValue?.departments ?? []).map(async (v) => {
+          await prisma.statusValue.update({
+            where: { id },
+            data: { departments: { disconnect: { id: v.id } } },
+          });
+        }),
+      );
+
+      await prisma.statusValue.update({
         where: {
           id,
         },
         data: {
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
+          value: { update: { value: body.get("value") } },
           whatPages: body.get("whatPages") ?? [],
           shouldDo: body.get("shouldDo"),
           color: body.get("color") || null,
           type: body.get("type") || "STATUS_CODE",
         },
-        include: {
-          value: true,
-        },
+      });
+
+      await Promise.all(
+        (body.get("departments") ?? []).map(async (departmentId: string) => {
+          await prisma.statusValue.update({
+            where: { id },
+            data: { departments: { connect: { id: departmentId } } },
+          });
+        }),
+      );
+
+      const updated = await prisma.statusValue.findUnique({
+        where: { id },
+        include: { value: true, departments: { include: { value: true } } },
       });
 
       return updated;
@@ -312,11 +333,7 @@ export class ValuesController {
         },
         include: {
           value: true,
-          department: {
-            include: {
-              value: true,
-            },
-          },
+          department: { include: { value: true } },
         },
       });
 
