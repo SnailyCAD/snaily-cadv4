@@ -35,6 +35,8 @@
     "socialSecurityNumber": "Номер социального страхования",
     "occupation": "Род занятий",
     "manageOccupation": "Редактировать род занятий",
+    "manageLicenses": "Управление лицензиями",
+    "licenses": "Лицензии",
     "alert_deleteCitizen": "Вы уверены, что хотите удалить <span>{citizen}</span>? Это действие необратимо."
   },
   "Vehicles": {

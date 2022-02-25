@@ -85,7 +85,7 @@
     "userAlreadyExists": "A user with that username already exists.",
     "notFound": "The requested item was not found.",
     "plateAlreadyInUse": "That plate is already being used on a vehicle.",
-    "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/jpg are supported",
+    "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/gif are supported",
     "userBanned": "This account is banned from this CAD.",
     "userDeleted": "This account has been deleted from this CAD.",
     "alreadyInThisBusiness": "You are already an employee at this business.",
