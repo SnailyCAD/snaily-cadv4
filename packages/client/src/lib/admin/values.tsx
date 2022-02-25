@@ -14,6 +14,7 @@ import {
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
+  useDefaultDepartments,
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
@@ -36,6 +37,7 @@ export function makeDefaultWhatPages(
 
 export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
+  const defaultDepartments = useDefaultDepartments();
 
   function get(value: TValue) {
     // state mismatch prevention
@@ -46,11 +48,13 @@ export function useTableDataOfType(type: ValueType) {
       case "CODES_10": {
         const v = value as StatusValue;
         const whatPages = makeDefaultWhatPages(v);
+        const departments = defaultDepartments(v);
 
         return {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
           whatPages: whatPages?.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
+          departments: departments.map((v) => v.label).join(", "),
           color: v.color ? (
             <>
               <span
@@ -115,8 +119,9 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: t("shouldDo"), accessor: "shouldDo" },
         { Header: common("type"), accessor: "type" },
-        { Header: t("whatPages"), accessor: "whatPages" },
         { Header: t("color"), accessor: "color" },
+        { Header: t("whatPages"), accessor: "whatPages" },
+        { Header: t("departments"), accessor: "departments" },
       ];
     }
     case "DEPARTMENT": {

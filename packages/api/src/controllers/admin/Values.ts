@@ -252,7 +252,7 @@ export class ValuesController {
 
       const updated = await prisma.statusValue.findUnique({
         where: { id },
-        include: { value: true },
+        include: { value: true, departments: { include: { value: true } } },
       });
 
       return updated;
@@ -333,11 +333,7 @@ export class ValuesController {
         },
         include: {
           value: true,
-          department: {
-            include: {
-              value: true,
-            },
-          },
+          department: { include: { value: true } },
         },
       });
 

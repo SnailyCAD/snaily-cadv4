@@ -80,11 +80,13 @@ export function StatusValueFields() {
           onChange={handleChange}
           value={values.whatPages}
           isMulti
+          closeMenuOnSelect={false}
         />
       </FormField>
 
       <FormField errorMessage={errors.departments as string} label="Departments">
         <Select
+          closeMenuOnSelect={false}
           name="departments"
           onChange={handleChange}
           value={values.departments}
