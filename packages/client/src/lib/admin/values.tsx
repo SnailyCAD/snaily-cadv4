@@ -11,6 +11,7 @@ import {
   type VehicleValue,
   type Value,
   WhatPages,
+  ShouldDoType,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -54,7 +55,10 @@ export function useTableDataOfType(type: ValueType) {
           shouldDo: SHOULD_DO_LABELS[v.shouldDo],
           type: TYPE_LABELS[v.type],
           whatPages: whatPages?.map((v) => WHAT_PAGES_LABELS[v]).join(", "),
-          departments: departments.map((v) => v.label).join(", "),
+          departments:
+            v.shouldDo === ShouldDoType.SET_ON_DUTY
+              ? "—"
+              : departments.map((v) => v.label).join(", "),
           color: v.color ? (
             <>
               <span

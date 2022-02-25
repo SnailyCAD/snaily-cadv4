@@ -13,7 +13,7 @@ import { useValues } from "context/ValuesContext";
 import { useDispatchState } from "state/dispatchState";
 import type { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
-import type { CombinedLeoUnit } from "@snailycad/types";
+import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types";
 import { classNames } from "lib/classNames";
 
 interface Props {
@@ -98,10 +98,12 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               <Select
                 name="status"
                 value={values.status}
-                values={codes10.values.map((v) => ({
-                  label: v.value.value,
-                  value: v.id,
-                }))}
+                values={codes10.values
+                  .filter((v) => handleFilter(v, "departmentId" in unit ? unit.departmentId : null))
+                  .map((v) => ({
+                    label: v.value.value,
+                    value: v.id,
+                  }))}
                 onChange={handleChange}
               />
             </FormField>
@@ -134,4 +136,18 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
       </Formik>
     </Modal>
   );
+}
+
+function handleFilter(status: StatusValue, departmentId: string | null) {
+  if (!departmentId) return true;
+  if (status.type !== StatusValueType.STATUS_CODE) {
+    return false;
+  }
+
+  const checkDepartments = departmentId && (status.departments ?? []).length > 0;
+  if (checkDepartments && !status.departments?.some((v) => v.id === departmentId)) {
+    return false;
+  }
+
+  return true;
 }
