@@ -1,3 +1,4 @@
+import type { User as _User } from "@snailycad/types";
 export type Method = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
 /**
@@ -11,18 +12,11 @@ export const DISABLED_API_TOKEN_ROUTES: DisabledRoute[] = [
   ["/v1/admin/manage/users", ["POST", "DELETE", "PUT", "PATCH"]],
 ];
 
-type _User = {
-  rank: "OWNER" | "USER" | "ADMIN";
-  isLeo: boolean;
-  isDispatch: boolean;
-  isEmsFd: boolean;
-  isSupervisor: boolean;
-  isTow: boolean;
-  isTaxi: boolean;
-};
+type UserPicks = "rank" | "isLeo" | "isDispatch" | "isEmsFd" | "isSupervisor" | "isTaxi" | "isTow";
+type User = Pick<_User, UserPicks>;
 
 type Route = string | RegExp | { strict: true; route: string | RegExp };
-export type PermissionRoute = [Method[] | "*", Route, (user: _User) => boolean];
+export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
   [["POST"], "/v1/dispatch/status/merge", (u) => u.isLeo],

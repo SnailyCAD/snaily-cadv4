@@ -1,5 +1,5 @@
 import { ValueType, PrismaClient } from ".prisma/client";
-import { CREATE_PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
+import { PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
 import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -8,6 +8,8 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { validateSchema } from "lib/validateSchema";
+import { upsertWarningApplicable } from "lib/records/penal-code";
 
 export type NameType = Exclude<
   keyof PrismaClient,
@@ -152,10 +154,7 @@ export class ValuesController {
     }
 
     if (type === "PENAL_CODE") {
-      const error = validate(CREATE_PENAL_CODE_SCHEMA, body.toJSON(), true);
-      if (error) {
-        throw new BadRequest(error);
-      }
+      const data = validateSchema(PENAL_CODE_SCHEMA, body.toJSON());
 
       const penalCode = await prisma.penalCode.findUnique({
         where: { id },
@@ -165,36 +164,6 @@ export class ValuesController {
         throw new NotFound("penalCodeNotFound");
       }
 
-      let warningId;
-      if (body.get("warningApplicable")) {
-        const fines = this.parsePenalCodeValues(body.get("fines"));
-
-        const data = await prisma.warningApplicable.upsert({
-          where: {
-            id: penalCode.warningApplicableId ?? "null",
-          },
-          create: { fines },
-          update: { fines },
-        });
-
-        warningId = data.id;
-      } else {
-        const fines = this.parsePenalCodeValues(body.get("fines"));
-        const prisonTerm = this.parsePenalCodeValues(body.get("prisonTerm"));
-        const bail = this.parsePenalCodeValues(body.get("prisonTerm"));
-
-        const data = await prisma.warningNotApplicable.upsert({
-          where: {
-            id: penalCode.warningNotApplicableId ?? "null",
-          },
-          create: { fines, prisonTerm, bail },
-          update: { fines, prisonTerm, bail },
-        });
-
-        warningId = data.id;
-      }
-
-      const key = body.get("warningApplicable") ? "warningApplicableId" : "warningNotApplicableId";
       const updated = await prisma.penalCode.update({
         where: { id },
         data: {
@@ -202,7 +171,7 @@ export class ValuesController {
           description: body.get("description"),
           descriptionData: body.descriptionData,
           groupId: body.get("groupId") || null,
-          [key]: warningId,
+          ...(await upsertWarningApplicable(data, penalCode)),
         },
         include: {
           warningApplicable: true,

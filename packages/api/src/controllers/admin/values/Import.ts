@@ -33,7 +33,7 @@ import {
   StatusValue,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { createWarningApplicable } from "lib/records/penal-code";
+import { upsertWarningApplicable } from "lib/records/penal-code";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -205,7 +205,7 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await createWarningApplicable(item)),
+          ...(await upsertWarningApplicable(item)),
         },
         include: { warningApplicable: true, warningNotApplicable: true },
       });
