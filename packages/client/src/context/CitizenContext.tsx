@@ -1,12 +1,11 @@
 import * as React from "react";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
-import type { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
+import type { Citizen, MedicalRecord, Record, RegisteredVehicle, Weapon } from "@snailycad/types";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
   vehicles: RegisteredVehicle[];
   medicalRecords: MedicalRecord[];
-  Record: FullRecord[];
+  Record: Record[];
 };
 
 interface Context<CitizenNull extends boolean = true> {

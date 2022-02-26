@@ -9,17 +9,18 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
-import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
+import type { EmsFdDeputy } from "@snailycad/types";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
-  deputies: FullDeputy[];
+  deputies: EmsFdDeputy[];
   calls: Full911Call[];
 }
 

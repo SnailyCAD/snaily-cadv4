@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import { type FullBolo, useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatchState";
 import type { Bolo } from "@snailycad/types";
 
 export function useBolos() {
@@ -27,7 +27,7 @@ export function useBolos() {
 
   useListener(
     { eventName: SocketEvents.UpdateBolo, checkHasListeners: true },
-    (bolo: FullBolo) => {
+    (bolo: Bolo) => {
       setBolos(
         bolos.map((v) => {
           if (v.id === bolo.id) {

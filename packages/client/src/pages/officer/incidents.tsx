@@ -9,8 +9,8 @@ import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { LeoIncident } from "@snailycad/types";
-import { FullOfficer, useDispatchState } from "state/dispatchState";
+import type { LeoIncident, Officer } from "@snailycad/types";
+import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -21,12 +21,12 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 
-export type FullIncident = LeoIncident & { officersInvolved: FullOfficer[] };
+export type FullIncident = LeoIncident & { officersInvolved: Officer[] };
 
 interface Props {
   incidents: FullIncident[];
-  officers: FullOfficer[];
-  activeOfficer: FullOfficer | null;
+  officers: Officer[];
+  activeOfficer: Officer | null;
 }
 
 const ManageIncidentModal = dynamic(async () => {
@@ -55,7 +55,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents }: Pro
   const { state, execute } = useFetch();
   const router = useRouter();
 
-  const isActive = activeOfficer && activeOfficer?.status?.shouldDo !== "SET_OFF_DUTY";
+  const isActive = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
 
   function handleViewDescription(incident: FullIncident) {
     setTempIncident(incident);

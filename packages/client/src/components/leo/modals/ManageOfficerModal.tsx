@@ -12,18 +12,18 @@ import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
+import type { Officer } from "@snailycad/types";
 
 interface Props {
-  officer: FullOfficer | null;
-  onCreate?: (officer: FullOfficer) => void;
-  onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
+  officer: Officer | null;
+  onCreate?: (officer: Officer) => void;
+  onUpdate?: (old: Officer, newO: Officer) => void;
   onClose?(): void;
 }
 
@@ -164,7 +164,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               </FormField>
             </FormRow>
 
-            <FormField errorMessage={errors.department} label={t("department")}>
+            <FormField errorMessage={errors.department as string} label={t("department")}>
               <Select
                 value={values.department}
                 name="department"

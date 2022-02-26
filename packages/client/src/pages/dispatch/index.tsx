@@ -6,13 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import {
-  Full911Call,
-  FullBolo,
-  FullDeputy,
-  FullOfficer,
-  useDispatchState,
-} from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -24,7 +18,7 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import type { ActiveDispatchers } from "@snailycad/types";
+import type { ActiveDispatchers, Bolo, EmsFdDeputy, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "../officer/incidents";
 
@@ -54,11 +48,11 @@ const ActiveIncidents = dynamic(async () => {
 
 interface Props {
   calls: Full911Call[];
-  bolos: FullBolo[];
-  officers: FullOfficer[];
-  deputies: FullDeputy[];
-  activeDeputies: FullDeputy[];
-  activeOfficers: FullOfficer[];
+  bolos: Bolo[];
+  officers: Officer[];
+  deputies: EmsFdDeputy[];
+  activeDeputies: EmsFdDeputy[];
+  activeOfficers: Officer[];
   activeDispatchers: ActiveDispatchers[];
   activeIncidents: FullIncident[];
 }

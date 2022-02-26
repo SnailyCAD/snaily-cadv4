@@ -2,9 +2,9 @@ import { components, MultiValueGenericProps } from "react-select";
 import { type ContextItem, ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import type { CombinedLeoUnit, StatusValue } from "@snailycad/types";
+import type { CombinedLeoUnit, EmsFdDeputy, StatusValue } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -19,8 +19,9 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
 
   const unitId = props.data.value;
   const unit = [...activeDeputies, ...activeOfficers].find((v) => v.id === unitId) as
-    | FullDeputy
-    | CombinedLeoUnit;
+    | EmsFdDeputy
+    | CombinedLeoUnit
+    | undefined;
 
   async function setCode(status: StatusValue) {
     if (!unit) return;

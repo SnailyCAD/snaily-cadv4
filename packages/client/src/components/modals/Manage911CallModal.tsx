@@ -8,7 +8,7 @@ import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { Select, SelectValue } from "components/form/Select";
@@ -18,7 +18,7 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
@@ -45,8 +45,8 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { department, division, codes10 } = useValues();
   const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
 
-  const allUnits = [...allOfficers, ...allDeputies] as (FullDeputy | CombinedLeoUnit)[];
-  const units = [...activeOfficers, ...activeDeputies] as (FullDeputy | CombinedLeoUnit)[];
+  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
+  const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
   useListener(
     SocketEvents.AddCallEvent,

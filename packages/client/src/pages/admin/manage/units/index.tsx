@@ -4,12 +4,11 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import { WhitelistStatus } from "@snailycad/types";
+import { EmsFdDeputy, Officer, WhitelistStatus } from "@snailycad/types";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -17,7 +16,7 @@ const DepartmentWhitelistingTab = dynamic(
       .DepartmentWhitelistingTab,
 );
 
-export type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });
+export type Unit = (Officer & { type: "OFFICER" }) | (EmsFdDeputy & { type: "DEPUTY" });
 
 interface Props {
   units: Unit[];

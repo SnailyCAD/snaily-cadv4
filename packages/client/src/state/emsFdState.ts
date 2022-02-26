@@ -1,14 +1,14 @@
+import type { EmsFdDeputy } from "@snailycad/types";
 import create from "zustand";
-import type { FullDeputy } from "./dispatchState";
 
-export type ActiveDeputy = FullDeputy;
+export type ActiveDeputy = EmsFdDeputy;
 
 interface EmsFdState {
   activeDeputy: ActiveDeputy | null;
   setActiveDeputy: (deputy: ActiveDeputy | null) => void;
 
-  deputies: FullDeputy[];
-  setDeputies: (deputies: FullDeputy[]) => void;
+  deputies: EmsFdDeputy[];
+  setDeputies: (deputies: EmsFdDeputy[]) => void;
 }
 
 export const useEmsFdState = create<EmsFdState>((set) => ({

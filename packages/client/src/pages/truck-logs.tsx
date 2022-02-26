@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, RegisteredVehicle, TruckLog } from "@snailycad/types";
+import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
@@ -19,20 +19,15 @@ const ManageTruckLogModal = dynamic(
   async () => (await import("components/truck-logs/ManageTruckLog")).ManageTruckLogModal,
 );
 
-export type FullTruckLog = TruckLog & {
-  citizen: Citizen;
-  vehicle: RegisteredVehicle | null;
-};
-
 interface Props {
-  truckLogs: FullTruckLog[];
+  truckLogs: TruckLog[];
   registeredVehicles: RegisteredVehicle[];
 }
 
 export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
   const { openModal, closeModal } = useModal();
   const [logs, setLogs] = React.useState(truckLogs);
-  const [tempLog, setTempLog] = React.useState<FullTruckLog | null>(null);
+  const [tempLog, setTempLog] = React.useState<TruckLog | null>(null);
 
   const t = useTranslations("TruckLogs");
   const common = useTranslations("Common");
@@ -50,12 +45,12 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
     }
   }
 
-  function handleEditClick(log: FullTruckLog) {
+  function handleEditClick(log: TruckLog) {
     setTempLog(log);
     openModal(ModalIds.ManageTruckLog);
   }
 
-  function handleDeleteClick(log: FullTruckLog) {
+  function handleDeleteClick(log: TruckLog) {
     setTempLog(log);
     openModal(ModalIds.AlertDeleteTruckLog);
   }

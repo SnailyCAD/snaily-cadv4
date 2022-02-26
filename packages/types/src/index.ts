@@ -548,7 +548,7 @@ export interface EmployeeValue {
 export interface Officer {
   id: string;
   departmentId: string | null;
-  department: DepartmentValue;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
   divisions: DivisionValue[];
@@ -565,6 +565,7 @@ export interface Officer {
   createdAt: Date;
   updatedAt: Date;
   whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
@@ -755,6 +756,7 @@ export interface Bolo {
   color: string | null;
   name: string | null;
   officerId: string | null;
+  officer: Officer | null;
 }
 
 /**
@@ -882,8 +884,10 @@ export interface EmsFdDeputy {
 export interface TruckLog {
   id: string;
   citizenId: string | null;
+  citizen: Citizen;
   userId: string;
   vehicleId: string | null;
+  vehicle: RegisteredVehicle | null;
   startedAt: string;
   endedAt: string;
   createdAt: Date;

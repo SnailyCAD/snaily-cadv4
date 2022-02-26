@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React from "react";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import {
   type cad as CAD,
   type Citizen,
@@ -92,8 +91,8 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
   return t ? "yes" : "no";
 }
 
-export function formatUnitDivisions(unit: FullOfficer | FullDeputy) {
-  const division = "division" in unit && unit.division?.value.value;
+export function formatUnitDivisions(unit: Officer | EmsFdDeputy) {
+  const division = "division" in unit ? unit.division.value.value : null;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 
@@ -118,7 +117,7 @@ export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: V
   });
 }
 
-export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
+export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {
   if (!unit) return null;
 
   const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
@@ -134,7 +133,7 @@ export function getUnitDepartment(unit: FullOfficer | FullDeputy | null) {
   return unit.department;
 }
 
-export function formatOfficerDepartment(unit: FullOfficer | FullDeputy) {
+export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   if (!("whitelistStatus" in unit)) return getUnitDepartment(unit)?.value.value ?? null;
 
   const whitelistStatus = unit.whitelistStatus;
