@@ -10,7 +10,7 @@ import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";

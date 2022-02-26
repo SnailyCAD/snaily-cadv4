@@ -1,8 +1,8 @@
 import type { User } from ".prisma/client";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { userProperties } from "./auth/user";
-import { prisma } from "./prisma";
+import { userProperties } from "lib/auth/user";
+import { prisma } from "lib/prisma";
 
 export const unitProperties = {
   department: { include: { value: true } },
@@ -44,6 +44,10 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     }
   }
 
+  if (isDispatch) {
+    return null;
+  }
+
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
       NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
@@ -73,15 +77,12 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     include: unitProperties,
   });
 
-  const off = combinedUnit ?? officer;
+  const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
 
-  if (!off) {
+  if (!activeOfficerOrCombinedUnit) {
     ctx.delete("activeOfficer");
-  }
-
-  if (!off && !isDispatch) {
     throw new BadRequest("noActiveOfficer");
   }
 
-  return isDispatch ? null : off;
+  return activeOfficerOrCombinedUnit;
 }

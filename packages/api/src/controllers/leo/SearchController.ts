@@ -4,7 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 
 export const citizenSearchInclude = {

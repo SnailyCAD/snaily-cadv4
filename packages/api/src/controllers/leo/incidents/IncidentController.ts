@@ -4,7 +4,7 @@ import { NotFound, InternalServerError } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import type { Officer } from ".prisma/client";
