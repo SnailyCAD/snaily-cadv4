@@ -14,7 +14,7 @@ import { IsAuth } from "middlewares/index";
 import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
