@@ -12,8 +12,9 @@ export const DISABLED_API_TOKEN_ROUTES: DisabledRoute[] = [
   ["/v1/admin/manage/users", ["POST", "DELETE", "PUT", "PATCH"]],
 ];
 
-type UserPicks = "rank" | "isLeo" | "isDispatch" | "isEmsFd" | "isSupervisor" | "isTaxi" | "isTow";
-type User = Pick<_User, UserPicks>;
+type Rank = "ADMIN" | "OWNER" | "USER";
+type UserPicks = "isLeo" | "isDispatch" | "isEmsFd" | "isSupervisor" | "isTaxi" | "isTow";
+type User = Pick<_User, UserPicks> & { rank: Rank };
 
 type Route = string | RegExp | { strict: true; route: string | RegExp };
 export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
