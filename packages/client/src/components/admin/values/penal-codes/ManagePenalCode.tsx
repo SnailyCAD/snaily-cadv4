@@ -1,4 +1,4 @@
-import { CREATE_PENAL_CODE_SCHEMA } from "@snailycad/schemas";
+import { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -90,7 +90,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     },
   };
 
-  const validate = handleValidate(CREATE_PENAL_CODE_SCHEMA);
+  const validate = handleValidate(PENAL_CODE_SCHEMA);
 
   return (
     <Modal

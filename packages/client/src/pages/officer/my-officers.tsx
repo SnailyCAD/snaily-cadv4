@@ -78,7 +78,7 @@ export default function MyOfficers({ officers: data }: Props) {
           data={officers.map((officer) => {
             const departmentStatus = officer.whitelistStatus?.status ?? null;
             const departmentStatusFormatted = departmentStatus
-              ? departmentStatus.toLowerCase() ?? "—"
+              ? departmentStatus.toLowerCase()
               : "—";
 
             return {
@@ -111,11 +111,11 @@ export default function MyOfficers({ officers: data }: Props) {
                     >
                       <p className="max-w-[400px]">
                         {t.rich(
-                          officer.department.isDefaultDepartment
+                          officer.department?.isDefaultDepartment
                             ? "pendingAccessDepartment"
                             : "pendingAccessDepartmentNoDefault",
                           {
-                            defaultDepartment: officer.department.value.value,
+                            defaultDepartment: officer.department?.value.value,
                           },
                         )}
                       </p>

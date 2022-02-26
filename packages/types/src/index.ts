@@ -548,7 +548,7 @@ export interface EmployeeValue {
 export interface Officer {
   id: string;
   departmentId: string | null;
-  department: DepartmentValue;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
   divisions: DivisionValue[];

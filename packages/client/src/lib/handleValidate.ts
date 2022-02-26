@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 
 type ZodSchema = z.ZodType<any, any, any>;
 type Errors<Schema extends ZodSchema> = keyof z.infer<Schema>;
@@ -9,8 +9,8 @@ export function handleValidate<Schema extends ZodSchema, Values = any>(schema: S
 
     try {
       schema.parse(values);
-    } catch (error) {
-      const zodError = error instanceof z.ZodError ? error : null;
+    } catch (error: any) {
+      const zodError: z.ZodError | null = "flatten" in error ? error : null;
 
       if (zodError) {
         const { fieldErrors } = zodError.flatten();
