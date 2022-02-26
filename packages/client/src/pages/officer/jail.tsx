@@ -6,12 +6,11 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
+import { Record, Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
 import { useRouter } from "next/router";
@@ -19,7 +18,7 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 
 interface Props {
-  data: (Citizen & { Record: FullRecord[] })[];
+  data: (Citizen & { Record: Record[] })[];
 }
 
 export default function Jail({ data: citizens }: Props) {
@@ -125,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   };
 };
 
-function isReleased<T extends FullRecord = FullRecord>(
+function isReleased<T extends Record = Record>(
   record: T,
 ): record is T & { release: RecordRelease } {
   return record.releaseId !== null;

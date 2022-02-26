@@ -1,6 +1,6 @@
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { Officer, Record, RecordType, Violation, Warrant } from "@snailycad/types";
+import { Officer, Record, RecordType, Warrant } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -17,9 +17,8 @@ import { FullDate } from "components/shared/FullDate";
 import { HoverCard } from "components/shared/HoverCard";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
-export type FullRecord = Record & { officer: Officer; violations: Violation[] };
 interface Props {
-  records: FullRecord[];
+  records: Record[];
   warrants?: (Warrant & { officer: Officer })[];
 }
 
@@ -31,14 +30,14 @@ export function RecordsArea({ warrants, records }: Props) {
   const { getPayload, closeModal } = useModal();
   const { currentResult, setCurrentResult } = useNameSearch();
 
-  const tempItem = getPayload<FullRecord>(ModalIds.AlertDeleteRecord);
-  const tempEditRecord = getPayload<FullRecord>(ModalIds.ManageRecord);
+  const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
+  const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
 
   const tickets = records.filter((v) => v.type === RecordType.TICKET);
   const writtenWarnings = records.filter((v) => v.type === RecordType.WRITTEN_WARNING);
   const arrestReports = records.filter((v) => v.type === RecordType.ARREST_REPORT);
 
-  const data: [string, string, FullRecord[]][] = [
+  const data: [string, string, Record[]][] = [
     [t("Leo.tickets"), t("Leo.noTicketsCitizen"), tickets],
     [t("Leo.writtenWarnings"), t("Leo.noWrittenWarnings"), writtenWarnings],
     [t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
@@ -124,7 +123,7 @@ export function RecordsArea({ warrants, records }: Props) {
   );
 }
 
-function RecordsTable({ data }: { data: FullRecord[] }) {
+function RecordsTable({ data }: { data: Record[] }) {
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const t = useTranslations();
@@ -133,11 +132,11 @@ function RecordsTable({ data }: { data: FullRecord[] }) {
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
 
-  function handleDeleteClick(record: FullRecord) {
+  function handleDeleteClick(record: Record) {
     openModal(ModalIds.AlertDeleteRecord, record);
   }
 
-  function handleEditClick(record: FullRecord) {
+  function handleEditClick(record: Record) {
     openModal(ModalIds.ManageRecord, {
       ...record,
       citizenName: `${currentResult?.name} ${currentResult?.surname}`,

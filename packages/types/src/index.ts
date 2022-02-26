@@ -884,8 +884,10 @@ export interface EmsFdDeputy {
 export interface TruckLog {
   id: string;
   citizenId: string | null;
+  citizen: Citizen;
   userId: string;
   vehicleId: string | null;
+  vehicle: RegisteredVehicle | null;
   startedAt: string;
   endedAt: string;
   createdAt: Date;

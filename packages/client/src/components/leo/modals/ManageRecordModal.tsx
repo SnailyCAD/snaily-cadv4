@@ -13,21 +13,20 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, Record } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
-import type { FullRecord } from "./NameSearchModal/RecordsArea";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 
 interface Props {
-  record?: FullRecord | null;
+  record?: Record | null;
   type: RecordType;
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
   isEdit?: boolean;
-  onUpdate?(data: FullRecord): void;
+  onUpdate?(data: Record): void;
 }
 
 export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props) {

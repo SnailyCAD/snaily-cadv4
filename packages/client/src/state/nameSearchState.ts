@@ -1,11 +1,17 @@
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
-import type { Citizen, RegisteredVehicle, Warrant, Weapon, Officer } from "@snailycad/types";
+import type {
+  Citizen,
+  RegisteredVehicle,
+  Warrant,
+  Weapon,
+  Officer,
+  Record,
+} from "@snailycad/types";
 import create from "zustand";
 
 export interface NameSearchResult extends Citizen {
   vehicles: RegisteredVehicle[];
   weapons: Weapon[];
-  Record: FullRecord[];
+  Record: Record[];
   warrants: (Warrant & { officer: Officer })[];
 }
 
