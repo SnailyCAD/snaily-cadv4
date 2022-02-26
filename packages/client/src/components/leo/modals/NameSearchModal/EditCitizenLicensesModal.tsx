@@ -38,10 +38,10 @@ export function EditCitizenLicenses() {
   }
 
   const INITIAL_VALUES = {
-    driversLicense: currentResult?.driversLicenseId ?? "",
-    pilotLicense: currentResult?.pilotLicenseId ?? "",
-    weaponLicense: currentResult?.weaponLicenseId ?? "",
-    ccw: currentResult?.ccwId ?? "",
+    driversLicense: currentResult?.driversLicenseId ?? null,
+    pilotLicense: currentResult?.pilotLicenseId ?? null,
+    weaponLicense: currentResult?.weaponLicenseId ?? null,
+    ccw: currentResult?.ccwId ?? null,
   };
 
   return (
@@ -56,6 +56,7 @@ export function EditCitizenLicenses() {
           <Form>
             <FormField errorMessage={errors.driversLicense} label={t("Citizen.driversLicense")}>
               <Select
+                isClearable
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                   (license) => ({
                     label: license.value,
@@ -70,6 +71,7 @@ export function EditCitizenLicenses() {
 
             <FormField errorMessage={errors.pilotLicense} label={t("Citizen.pilotLicense")}>
               <Select
+                isClearable
                 values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                   (license) => ({
                     label: license.value,
@@ -86,6 +88,7 @@ export function EditCitizenLicenses() {
               <>
                 <FormField errorMessage={errors.weaponLicense} label={t("Citizen.weaponLicense")}>
                   <Select
+                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,
@@ -100,6 +103,7 @@ export function EditCitizenLicenses() {
 
                 <FormField errorMessage={errors.ccw} label={t("Citizen.ccw")}>
                   <Select
+                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,

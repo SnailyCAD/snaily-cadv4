@@ -48,10 +48,10 @@ export function ManageLicensesModal() {
 
   const validate = handleValidate(LICENSE_SCHEMA);
   const INITIAL_VALUES = {
-    driversLicense: citizen.driversLicenseId ?? "",
-    pilotLicense: citizen.pilotLicenseId ?? "",
-    weaponLicense: citizen.weaponLicenseId ?? "",
-    ccw: citizen.ccwId ?? "",
+    driversLicense: citizen.driversLicenseId ?? null,
+    pilotLicense: citizen.pilotLicenseId ?? null,
+    weaponLicense: citizen.weaponLicenseId ?? null,
+    ccw: citizen.ccwId ?? null,
     driversLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === "AUTOMOTIVE")
       .map((v) => ({
@@ -68,7 +68,7 @@ export function ManageLicensesModal() {
 
   return (
     <Modal
-      title="Manage Licenses"
+      title={t("manageLicenses")}
       isOpen={isOpen(ModalIds.ManageLicenses)}
       onClose={() => closeModal(ModalIds.ManageLicenses)}
       className="w-[750px]"
@@ -79,6 +79,7 @@ export function ManageLicensesModal() {
             <FormRow>
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
+                  isClearable
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -113,6 +114,7 @@ export function ManageLicensesModal() {
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
+                  isClearable
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -148,6 +150,7 @@ export function ManageLicensesModal() {
               <>
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
+                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,
@@ -162,6 +165,7 @@ export function ManageLicensesModal() {
 
                 <FormField errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
+                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,
