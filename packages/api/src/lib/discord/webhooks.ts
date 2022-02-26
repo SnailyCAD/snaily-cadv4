@@ -12,9 +12,9 @@ export async function sendDiscordWebhook(
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
 ) {
   const id = miscCadSettings?.[type];
-  const rest = getRest();
-
   if (!id) return;
+
+  const rest = getRest();
 
   const webhookData = (await rest
     .get(Routes.webhook(id))
