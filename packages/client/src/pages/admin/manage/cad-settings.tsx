@@ -22,7 +22,6 @@ import dynamic from "next/dynamic";
 import { DiscordRolesTab } from "components/admin/manage/cad-settings/DiscordRolesTab";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { X } from "react-bootstrap-icons";
 import { DiscordWebhooksTab } from "components/admin/manage/cad-settings/DiscordWebhooksTab";
 
 const MiscFeatures = dynamic(
@@ -45,7 +44,6 @@ const AutoSetUserPropertiesTab = dynamic(
 );
 
 export default function CadSettings() {
-  const [banner, setBanner] = React.useState(true);
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
   const { state, execute } = useFetch();
   const { user, cad, setCad } = useAuth();
@@ -53,15 +51,6 @@ export default function CadSettings() {
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-
-  function handleHideBanner() {
-    localStorage.setItem("new-settings-banner", "false");
-    setBanner(false);
-  }
-
-  React.useEffect(() => {
-    setBanner((localStorage.getItem("new-settings-banner") ?? "true") === "true");
-  }, []);
 
   const SETTINGS_TABS = [
     { name: t("GENERAL_SETTINGS"), value: "GENERAL_SETTINGS" },
@@ -136,33 +125,6 @@ export default function CadSettings() {
       <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
-
-      {/* this banner will be removed on 2022-02-26 */}
-      {banner ? (
-        <div
-          className="p-3 rounded-md bg-slate-700 my-4 font-semibold shadow-md flex items-center justify-between"
-          role="alert"
-          id="new-settings-banner"
-        >
-          <p>
-            You will see new UI for settings here and there. If you have feedback, please provide it
-            in
-            <a
-              className="underline"
-              href="https://discord.gg/nqTaCT3nR4"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {"SnailyCAD's Support Server"}
-            </a>
-            .
-          </p>
-
-          <Button className="!px-1.5" onClick={handleHideBanner}>
-            <X width={25} height={25} />
-          </Button>
-        </div>
-      ) : null}
 
       <TabList tabs={SETTINGS_TABS}>
         <TabsContent value="GENERAL_SETTINGS">
