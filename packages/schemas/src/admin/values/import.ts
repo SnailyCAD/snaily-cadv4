@@ -18,13 +18,12 @@ export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);
  */
 const SHOULD_DO_REGEX = /SET_OFF_DUTY|SET_ON_DUTY|SET_ASSIGNED|SET_STATUS|PANIC_BUTTON/;
 const TYPE_REGEX = /STATUS_CODE|SITUATION_CODE/;
-const WHAT_PAGES_REGEX = /LEO|EMS_FD|DISPATCH/;
 
 export const CODES_10_SCHEMA = BASE_VALUE_SCHEMA.extend({
   shouldDo: z.string().regex(SHOULD_DO_REGEX),
   color: z.string().max(255).optional(),
   type: z.string().regex(TYPE_REGEX).max(255),
-  whatPages: z.array(z.string().regex(WHAT_PAGES_REGEX)).max(3).nullable().optional(),
+  whatPages: z.array(z.any()).max(3).nullable().optional(),
   departments: z.array(z.any()).nullable().optional(),
 });
 
