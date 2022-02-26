@@ -44,6 +44,10 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     }
   }
 
+  if (isDispatch) {
+    return null;
+  }
+
   const combinedUnit = await prisma.combinedLeoUnit.findFirst({
     where: {
       NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
@@ -77,11 +81,8 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
 
   if (!off) {
     ctx.delete("activeOfficer");
-  }
-
-  if (!off && !isDispatch) {
     throw new BadRequest("noActiveOfficer");
   }
 
-  return isDispatch ? null : off;
+  return off;
 }

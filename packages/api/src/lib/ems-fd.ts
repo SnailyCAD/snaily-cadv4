@@ -19,6 +19,10 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
     }
   }
 
+  if (isDispatch) {
+    return null;
+  }
+
   const deputy = await prisma.emsFdDeputy.findFirst({
     where: {
       userId: user.id,
@@ -33,11 +37,8 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
 
   if (!deputy) {
     ctx.delete("activeDeputy");
-  }
-
-  if (!isDispatch && !deputy) {
     throw new BadRequest("noActiveDeputy");
   }
 
-  return isDispatch ? null : deputy;
+  return deputy;
 }

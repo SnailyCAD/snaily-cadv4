@@ -14,7 +14,7 @@ import type { cad, MiscCadSettings } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { getRest } from "lib/discord";
+import { getRest } from "lib/discord/config";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 

@@ -1,6 +1,6 @@
 import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
-import { getRest, GUILD_ID } from "lib/discord";
+import { getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
 
 /**
