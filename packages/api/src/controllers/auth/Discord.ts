@@ -14,7 +14,7 @@ import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
-import { DISCORD_API_URL } from "lib/discord";
+import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { Description } from "@tsed/schema";
 

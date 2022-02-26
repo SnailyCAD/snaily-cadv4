@@ -1,6 +1,6 @@
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { getSessionUser } from "lib/auth/user";
-import { getActiveOfficer } from "lib/officer";
+import { getActiveOfficer } from "lib/leo/activeOfficer";
 
 @Middleware()
 export class ActiveOfficer implements MiddlewareMethods {

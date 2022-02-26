@@ -4,7 +4,7 @@ import {
   type RESTPostAPIWebhookWithTokenJSONBody,
   Routes,
 } from "discord-api-types/v10";
-import { getRest } from "lib/discord";
+import { getRest } from "lib/discord/config";
 
 export async function sendDiscordWebhook(
   miscCadSettings: MiscCadSettings | null,

@@ -10,7 +10,7 @@ import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/index";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs";
-import { unitProperties } from "lib/officer";
+import { unitProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";

@@ -8,7 +8,7 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
-import { unitProperties, leoProperties } from "lib/officer";
+import { unitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
