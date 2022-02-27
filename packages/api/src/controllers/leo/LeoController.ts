@@ -17,7 +17,7 @@ import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
-import { leoProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import type { DivisionValue, MiscCadSettings } from "@prisma/client";
@@ -254,10 +254,7 @@ export class LeoController {
         include: leoProperties,
       }),
       await prisma.combinedLeoUnit.findMany({
-        include: {
-          status: { include: { value: true } },
-          officers: { include: leoProperties },
-        },
+        include: combinedUnitProperties,
       }),
     ]);
 
@@ -310,10 +307,6 @@ export class LeoController {
   @Description("Set the panic button for an officer by their id")
   async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
     let type: "officer" | "combinedLeoUnit" = "officer";
-    const combinedIncludes = {
-      officers: { include: leoProperties },
-      status: { include: { value: true } },
-    };
 
     let officer: CombinedLeoUnit | Officer | null = await prisma.officer.findFirst({
       where: {
@@ -327,7 +320,7 @@ export class LeoController {
     if (!officer) {
       officer = (await prisma.combinedLeoUnit.findFirst({
         where: { id: officerId },
-        include: combinedIncludes,
+        include: combinedUnitProperties,
       })) as CombinedLeoUnit | null;
       if (officer) {
         type = "combinedLeoUnit";
@@ -369,7 +362,7 @@ export class LeoController {
           data: {
             statusId: onDutyCode?.id,
           },
-          include: type === "officer" ? leoProperties : combinedIncludes,
+          include: type === "officer" ? leoProperties : combinedUnitProperties,
         });
       } else {
         /**
@@ -383,7 +376,7 @@ export class LeoController {
           data: {
             statusId: code.id,
           },
-          include: type === "officer" ? leoProperties : combinedIncludes,
+          include: type === "officer" ? leoProperties : combinedUnitProperties,
         });
       }
     }

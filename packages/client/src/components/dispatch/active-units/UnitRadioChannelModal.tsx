@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { EmsFdDeputy, Officer } from "@snailycad/types";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -11,9 +11,11 @@ import { useTranslations } from "next-intl";
 import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import { useDispatchState } from "state/dispatchState";
+import { handleValidate } from "lib/handleValidate";
+import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 
 interface Props {
-  unit: Officer | EmsFdDeputy;
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit;
   onClose?(): void;
 }
 
@@ -32,7 +34,31 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
     setIsOpen(false);
   }
 
+  function handleStateChange(json: any) {
+    if (isOfficer(unit)) {
+      dispatchState.setActiveOfficers(
+        dispatchState.activeOfficers.map((off) => {
+          if (off.id === unit.id) {
+            return { ...unit, ...json };
+          }
+          return off;
+        }),
+      );
+    } else {
+      dispatchState.setActiveDeputies(
+        dispatchState.activeDeputies.map((dep) => {
+          if (dep.id === unit.id) {
+            return { ...unit, ...json };
+          }
+          return dep;
+        }),
+      );
+    }
+  }
+
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    handleStateChange({ radioChannelId: values.radioChannel });
+
     const { json } = await execute(`/dispatch/radio-channel/${unit.id}`, {
       method: "PUT",
       data: {
@@ -41,30 +67,12 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
     });
 
     if (json.id) {
-      if (isOfficer(unit)) {
-        dispatchState.setActiveOfficers(
-          dispatchState.activeOfficers.map((off) => {
-            if (off.id === unit.id) {
-              return { ...unit, ...json };
-            }
-            return off;
-          }),
-        );
-      } else {
-        dispatchState.setActiveDeputies(
-          dispatchState.activeDeputies.map((dep) => {
-            if (dep.id === unit.id) {
-              return { ...unit, ...json };
-            }
-            return dep;
-          }),
-        );
-      }
-
+      handleStateChange(json);
       handleClose();
     }
   }
 
+  const validate = handleValidate(UPDATE_RADIO_CHANNEL_SCHEMA);
   const INITIAL_VALUES = {
     radioChannel: unit.radioChannelId ?? "",
   };
@@ -88,7 +96,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
           title={t("manageRadioChannel")}
           className="min-w-[500px]"
         >
-          <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+          <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
             {({ values, errors, handleChange }) => (
               <Form>
                 <FormField errorMessage={errors.radioChannel} label={t("radioChannel")}>
@@ -99,7 +107,11 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
                   <Button onClick={handleClose} type="button" variant="cancel">
                     {common("cancel")}
                   </Button>
-                  <Button className="flex items-center ml-2" type="submit">
+                  <Button
+                    disabled={state === "loading"}
+                    className="flex items-center ml-2"
+                    type="submit"
+                  >
                     {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                     {common("save")}
@@ -114,6 +126,8 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   );
 }
 
-function isOfficer(unit: Officer | EmsFdDeputy): unit is Officer {
-  return "divisions" in unit;
+function isOfficer(
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit,
+): unit is Officer | CombinedLeoUnit {
+  return "divisions" in unit || "officers" in unit;
 }

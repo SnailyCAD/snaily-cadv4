@@ -36,5 +36,5 @@ export function useActiveOfficers() {
     getActiveOfficers();
   });
 
-  return { activeOfficers, state };
+  return { activeOfficers, setActiveOfficers, state };
 }

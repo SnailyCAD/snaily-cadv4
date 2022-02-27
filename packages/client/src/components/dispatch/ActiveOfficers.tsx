@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { CombinedLeoUnit, StatusValue, StatusViewMode } from "@snailycad/types";
+import { CombinedLeoUnit, StatusViewMode } from "@snailycad/types";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
@@ -22,9 +22,11 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
+import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 
 export function ActiveOfficers() {
-  const { activeOfficers } = useActiveOfficers();
+  const { activeOfficers, setActiveOfficers } = useActiveOfficers();
+  const { setStatus } = useUnitStatusChange({ units: activeOfficers, setUnits: setActiveOfficers });
   const { activeOfficer } = useLeoState();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -74,15 +76,6 @@ export function ActiveOfficers() {
     }
   }
 
-  async function setCode(id: string, status: StatusValue) {
-    if (status.type === "STATUS_CODE") {
-      await execute(`/dispatch/status/${id}`, {
-        method: "PUT",
-        data: { status: status.id },
-      });
-    }
-  }
-
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
@@ -118,7 +111,7 @@ export function ActiveOfficers() {
               .filter((v) => v.type === "STATUS_CODE")
               .map((v) => ({
                 name: v.value.value,
-                onClick: () => setCode(officer.id, v),
+                onClick: () => setStatus(officer.id, v),
                 "aria-label": `Set status to ${v.value.value}`,
                 title: `Set status to ${v.value.value}`,
               }));

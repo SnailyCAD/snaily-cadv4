@@ -36,5 +36,5 @@ export function useActiveDeputies() {
     getActiveDeputies();
   });
 
-  return { activeDeputies, state };
+  return { activeDeputies, setActiveDeputies, state };
 }

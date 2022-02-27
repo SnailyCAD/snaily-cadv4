@@ -9,19 +9,20 @@ import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { StatusValue, StatusViewMode } from "@snailycad/types";
+import { StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
-import useFetch from "lib/useFetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
+import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 
 export function ActiveDeputies() {
-  const { activeDeputies } = useActiveDeputies();
+  const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { setStatus } = useUnitStatusChange({ setUnits: setActiveDeputies, units: activeDeputies });
   const t = useTranslations();
   const common = useTranslations("Common");
   const { openModal } = useModal();
@@ -30,7 +31,6 @@ export function ActiveDeputies() {
   const { makeImageUrl } = useImageUrl();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { codes10 } = useValues();
-  const { execute } = useFetch();
   const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
 
   const router = useRouter();
@@ -41,15 +41,6 @@ export function ActiveDeputies() {
   function handleEditClick(officer: ActiveDeputy) {
     setTempUnit(officer);
     openModal(ModalIds.ManageUnit);
-  }
-
-  async function setCode(id: string, status: StatusValue) {
-    if (status.type === "STATUS_CODE") {
-      await execute(`/dispatch/status/${id}`, {
-        method: "PUT",
-        data: { status: status.id },
-      });
-    }
   }
 
   return (
@@ -72,7 +63,7 @@ export function ActiveDeputies() {
               .filter((v) => v.type === "STATUS_CODE")
               .map((v) => ({
                 name: v.value.value,
-                onClick: () => setCode(deputy.id, v),
+                onClick: () => setStatus(deputy.id, v),
                 "aria-label": `Set status to ${v.value.value}`,
                 title: `Set status to ${v.value.value}`,
               }));

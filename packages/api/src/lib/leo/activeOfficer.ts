@@ -29,6 +29,11 @@ export const leoProperties = {
   activeIncident: { include: { officersInvolved: { include: _leoProperties }, events: true } },
 };
 
+export const combinedUnitProperties = {
+  status: { include: { value: true } },
+  officers: { include: _leoProperties },
+};
+
 export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
   // dispatch is allowed to use officer routes
   let isDispatch = false;
@@ -53,7 +58,7 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
       NOT: { status: { shouldDo: "SET_OFF_DUTY" } },
       officers: { some: { userId: user.id } },
     },
-    include: { status: { include: { value: true } }, officers: { include: unitProperties } },
+    include: combinedUnitProperties,
   });
 
   const officer = await prisma.officer.findFirst({

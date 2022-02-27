@@ -667,6 +667,7 @@ export interface CombinedLeoUnit {
   callsign: string;
   statusId: string | null;
   status: StatusValue | null;
+  radioChannelId: string | null;
   officers: Officer[];
 }
 

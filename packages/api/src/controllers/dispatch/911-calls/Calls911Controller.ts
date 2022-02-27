@@ -8,7 +8,7 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/index";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
-import { unitProperties, leoProperties } from "lib/leo/activeOfficer";
+import { unitProperties, leoProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -511,10 +511,7 @@ export async function findUnit(id: string, extraFind?: any, searchCombined?: boo
       where: {
         id,
       },
-      include: {
-        officers: { include: leoProperties },
-        status: true,
-      },
+      include: combinedUnitProperties,
     });
 
     return { type: "combined", unit: unit ?? null };

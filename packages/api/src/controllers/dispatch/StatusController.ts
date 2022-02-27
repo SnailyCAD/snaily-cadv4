@@ -20,14 +20,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import {
-  Citizen,
-  CombinedLeoUnit,
-  DepartmentValue,
-  DivisionValue,
-  Value,
-  WhitelistStatus,
-} from "@prisma/client";
+import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client";
 import { generateCallsign } from "@snailycad/utils";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
@@ -346,10 +339,7 @@ type V<T> = T & { value: Value };
 
 export type Unit = { status: V<StatusValue> | null } & (
   | ((Officer | EmsFdDeputy) & {
-      department: V<DepartmentValue>;
-      division: V<DivisionValue>;
       citizen: Pick<Citizen, "name" | "surname">;
-      status: V<StatusValue> | null;
     })
   | CombinedLeoUnit
 );
