@@ -4,11 +4,9 @@ import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
-import { useDispatchState } from "state/dispatchState";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
 export function usePanicButton() {
-  const { activeOfficers } = useDispatchState();
   const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
 
   useListener(SocketEvents.PANIC_BUTTON_ON, (officer: Officer) => {
@@ -18,13 +16,6 @@ export function usePanicButton() {
   useListener(SocketEvents.PANIC_BUTTON_OFF, () => {
     setUnit(null);
   });
-
-  React.useEffect(() => {
-    const officer = activeOfficers.find((v) => v.status?.shouldDo === ShouldDoType.PANIC_BUTTON);
-    if (officer) {
-      setUnit(officer);
-    }
-  }, [activeOfficers, unit?.id]);
 
   return { unit, PanicButton: Component };
 }
