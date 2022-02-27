@@ -77,8 +77,8 @@ export function ManageCitizenForm({
     driversLicense: "",
     pilotLicense: "",
     weaponLicense: "",
-    driversLicenseCategory: "",
-    pilotLicenseCategory: "",
+    driversLicenseCategory: null,
+    pilotLicenseCategory: null,
     ccw: "",
   };
 
@@ -228,7 +228,7 @@ export function ManageCitizenForm({
                 <FormField
                   errorMessage={errors.driversLicenseCategory}
                   className="mt-2"
-                  label={common("type")}
+                  label={t("driversLicenseCategory")}
                 >
                   <Select
                     values={driverslicenseCategory.values
@@ -276,7 +276,7 @@ export function ManageCitizenForm({
                 <FormField
                   errorMessage={errors.pilotLicenseCategory}
                   className="mt-2"
-                  label={common("type")}
+                  label={t("pilotLicenseCategory")}
                 >
                   <Select
                     values={driverslicenseCategory.values
