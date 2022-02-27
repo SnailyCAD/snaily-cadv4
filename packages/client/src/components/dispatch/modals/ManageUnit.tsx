@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
@@ -15,6 +16,8 @@ import type { ActiveDeputy } from "state/emsFdState";
 import { makeUnitName } from "lib/utils";
 import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types";
 import { classNames } from "lib/classNames";
+import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
+import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 
 interface Props {
   type?: "ems-fd" | "leo";
@@ -28,7 +31,13 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   const { state, execute } = useFetch();
   const { codes10 } = useValues();
   const { activeOfficers, setActiveOfficers } = useDispatchState();
+  const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+
   const t = useTranslations("Leo");
+  const setUnits = type === "leo" ? setActiveOfficers : setActiveDeputies;
+  const units = type === "leo" ? activeOfficers : activeDeputies;
+
+  const { state: statusState, setStatus } = useUnitStatusChange({ setUnits, units });
 
   function handleClose() {
     onClose?.();
@@ -50,23 +59,10 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!unit) return;
 
-    const { json } = await execute(`/dispatch/status/${unit.id}`, {
-      method: "PUT",
-      data: { ...values },
-    });
+    const status = codes10.values.find((s) => s.id === values.status);
+    const { json } = await setStatus(unit.id, status!);
 
-    if (type === "leo" && json.id) {
-      setActiveOfficers(
-        activeOfficers.map((officer) => {
-          if (officer.id === json.id) {
-            return { ...officer, ...json };
-          }
-
-          return officer;
-        }),
-      );
-      handleClose();
-    } else if (json.id) {
+    if (json.id) {
       handleClose();
     }
   }
@@ -115,7 +111,15 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
               )}
             >
               {"officers" in unit ? (
-                <Button onClick={handleUnmerge} type="button" variant="danger">
+                <Button
+                  disabled={state === "loading"}
+                  onClick={handleUnmerge}
+                  type="button"
+                  variant="danger"
+                  className="flex items-center ml-2"
+                >
+                  {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+
                   {t("unmerge")}
                 </Button>
               ) : null}
@@ -125,7 +129,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
                   {common("cancel")}
                 </Button>
                 <Button className="flex items-center ml-2" type="submit">
-                  {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
+                  {statusState === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                   {common("save")}
                 </Button>
