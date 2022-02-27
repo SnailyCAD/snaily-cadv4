@@ -10,7 +10,7 @@ import type { cad } from ".prisma/client";
 import { Feature, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "./911-calls/Calls911Controller";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
@@ -156,7 +156,7 @@ export class DispatchController {
     const includesData = {
       leo: { name: "officer", include: leoProperties },
       "ems-fd": { name: "emsFdDeputy", include: unitProperties },
-      combined: { name: "combinedLeoUnit", include: null },
+      combined: { name: "combinedLeoUnit", include: combinedUnitProperties },
     };
 
     const name = includesData[type].name;
