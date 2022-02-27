@@ -406,15 +406,6 @@ export class ValuesController {
     return path.replace("-", "_").toUpperCase() as ValueType;
   }
 
-  protected parsePenalCodeValues(arr: unknown): [number, number] | [] {
-    if (!Array.isArray(arr)) {
-      return [];
-    }
-
-    const [min, max] = arr;
-    return [parseInt(min), parseInt(max)].filter(Boolean) as [number, number];
-  }
-
   protected async deleteById(type: ValueType, id: string) {
     const data = GET_VALUES[type];
 
