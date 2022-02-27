@@ -107,7 +107,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
 function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {}) {
   const message = error.response?.data?.message ?? error.message;
-  const name = error.response?.data?.name as string | undefined;
+  const name = error.name;
 
   if (name && ["NOT_FOUND", "Error"].includes(name)) {
     return name;
@@ -128,7 +128,7 @@ function parseErrorTitle(error: AxiosError) {
 }
 
 function isAxiosError(error: any): error is AxiosError {
-  return "response" in error && Object.entries(error.response).length !== 0;
+  return error instanceof Error || "response" in error;
 }
 
 function isErrorKey(key: string): key is ErrorMessage {

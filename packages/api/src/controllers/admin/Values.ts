@@ -100,7 +100,7 @@ export class ValuesController {
 
     const handler = typeHandlers[type];
     const arr = await handler([body]);
-    const [value] = arr.success;
+    const [value] = "success" in arr ? arr.success : arr;
 
     return value;
   }
