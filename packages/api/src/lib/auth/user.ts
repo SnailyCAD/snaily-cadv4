@@ -30,7 +30,9 @@ export const userProperties = {
   lastDiscordSyncTimestamp: true,
 };
 
-export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
+export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
+export async function getSessionUser(req: Req, throwErrors?: false): Promise<User | null>;
+export async function getSessionUser(req: Req, throwErrors = false): Promise<User | null> {
   let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)[Cookie.Session];
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
@@ -86,11 +88,11 @@ export function canManageInvariant<T extends Error>(
   authUser: User,
   error: T,
 ): asserts userId {
-  if (!userId && (authUser.rank as string) !== "API_TOKEN") {
+  if (!userId) {
     throw error;
   }
 
-  if (!userId) {
+  if (!userId && (authUser.rank as string) !== "API_TOKEN") {
     throw error;
   }
 

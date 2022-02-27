@@ -17,6 +17,7 @@ export async function findOrCreateCAD({ ownerId }: Options) {
     cad = await prisma.cad.create({
       data: {
         name: "Rename",
+        areaOfPlay: "Los Santos",
         ownerId: ownerId!,
       },
       include: {
@@ -25,8 +26,10 @@ export async function findOrCreateCAD({ ownerId }: Options) {
       },
     });
 
-    const miscSettings = await prisma.miscCadSettings.create({
-      data: {},
+    const miscSettings = await prisma.miscCadSettings.upsert({
+      where: { id: String(cad.miscCadSettingsId) },
+      create: {},
+      update: {},
     });
 
     cad = await prisma.cad.update({
@@ -34,11 +37,7 @@ export async function findOrCreateCAD({ ownerId }: Options) {
         id: cad.id,
       },
       data: {
-        miscCadSettings: {
-          connect: {
-            id: miscSettings.id,
-          },
-        },
+        miscCadSettings: { connect: { id: miscSettings.id } },
       },
       include: {
         miscCadSettings: true,

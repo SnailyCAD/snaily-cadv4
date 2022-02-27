@@ -1,6 +1,5 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
-// todo: Pick<T, P>
 type P = "callsign" | "callsign2" | "department" | "citizenId";
 type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;
 

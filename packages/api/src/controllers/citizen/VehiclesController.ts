@@ -74,10 +74,9 @@ export class VehiclesController {
         citizenId: citizen.id,
         modelId,
         registrationStatusId: data.registrationStatus as string,
-        // todo
-        insuranceStatus: "TEST",
         vinNumber: data.vinNumber || generateString(17),
         userId: user.id || undefined,
+        insuranceStatus: "",
       },
       include: {
         model: { include: { value: true } },

@@ -1,4 +1,4 @@
-import { ValueType, PrismaClient } from ".prisma/client";
+import { ValueType } from ".prisma/client";
 import { PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
 import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
@@ -10,21 +10,9 @@ import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
+import type { ValuesSelect } from "lib/values/types";
 
-export type NameType = Exclude<
-  keyof PrismaClient,
-  | "$use"
-  | "$on"
-  | "$connect"
-  | "$disconnect"
-  | "$executeRaw"
-  | "$executeRawUnsafe"
-  | "$queryRaw"
-  | "$queryRawUnsafe"
-  | "$transaction"
->;
-
-const GET_VALUES: Partial<Record<ValueType, { name: NameType; include?: any }>> = {
+const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   VEHICLE: { name: "vehicleValue" },
   WEAPON: { name: "weaponValue" },
   BUSINESS_ROLE: { name: "employeeValue" },
