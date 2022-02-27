@@ -1,5 +1,6 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
 import type { Method } from "axios";
+import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
@@ -16,7 +17,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
 
   const ref = useOnclickOutside(() => setOpen(false));
   const firstItemRef = React.useRef<HTMLButtonElement>(null);
@@ -87,6 +88,12 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
         onFocus={handleFocus}
         onChange={handleChange}
       />
+
+      {state === "loading" ? (
+        <span className="absolute top-1/2 right-3 -translate-y-1/2">
+          <Loader />
+        </span>
+      ) : null}
 
       {isOpen && suggestions.length > 0 ? (
         <FocusScope restoreFocus={false}>

@@ -99,7 +99,11 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
                   <Button onClick={handleClose} type="button" variant="cancel">
                     {common("cancel")}
                   </Button>
-                  <Button className="flex items-center ml-2" type="submit">
+                  <Button
+                    disabled={state === "loading"}
+                    className="flex items-center ml-2"
+                    type="submit"
+                  >
                     {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
 
                     {common("save")}

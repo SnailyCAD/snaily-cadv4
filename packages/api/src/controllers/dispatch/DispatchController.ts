@@ -147,14 +147,20 @@ export class DispatchController {
   @Put("/radio-channel/:unitId")
   async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
-    const { unit, type } = await findUnit(unitId);
+    const { unit, type } = await findUnit(unitId, undefined, true);
 
     if (!unit) {
       throw new ExtendedNotFound({ radioChannel: "Unit not found" });
     }
 
-    const name = type === "leo" ? "officer" : "emsFdDeputy";
-    const include = type === "leo" ? leoProperties : unitProperties;
+    const includesData = {
+      leo: { name: "officer", include: leoProperties },
+      "ems-fd": { name: "emsFdDeputy", include: unitProperties },
+      combined: { name: "combinedLeoUnit", include: null },
+    };
+
+    const name = includesData[type].name;
+    const include = includesData[type].include;
 
     // @ts-expect-error the provided properties are the same for both models.
     const updated = await prisma[name].update({
@@ -165,7 +171,7 @@ export class DispatchController {
       include,
     });
 
-    if (type === "leo") {
+    if (["leo", "combined"].includes(type)) {
       this.socket.emitUpdateOfficerStatus();
     } else {
       this.socket.emitUpdateDeputyStatus();

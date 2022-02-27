@@ -745,12 +745,13 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id           String         @id @default(uuid())
-  officers     Officer[]
-  callsign     String
-  status       StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId     String?
-  AssignedUnit AssignedUnit[]
+  id             String         @id @default(uuid())
+  officers       Officer[]
+  callsign       String
+  radioChannelId String?
+  status         StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId       String?
+  AssignedUnit   AssignedUnit[]
 }
 
 enum StatusValueType {
