@@ -15,7 +15,7 @@ import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 
 interface Props {
-  unit: Officer | EmsFdDeputy;
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit;
   onClose?(): void;
 }
 
