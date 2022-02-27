@@ -1,11 +1,10 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
-// todo: Pick<T, P>
 type P = "callsign" | "callsign2" | "department" | "citizenId";
 type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;
 
 export function generateCallsign(unit: Unit, template: string | null) {
-  const isCombined = !("citizenId" in unit);
+  const isCombined = !("citizenId" in unit) || "officers" in unit;
 
   const callsign = isCombined ? unit.officers[0]?.callsign : unit.callsign;
   const callsign2 = isCombined ? null : unit.callsign2;

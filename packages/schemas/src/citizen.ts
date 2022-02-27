@@ -11,6 +11,16 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   hairColor: z.string().min(2).max(255),
   eyeColor: z.string().min(2).max(255),
   address: z.string().min(2).max(255),
+  postal: z.string().max(255).nullable().optional(),
+  driversLicense: z.string().max(255).nullable().optional(),
+  weaponLicense: z.string().max(255).nullable().optional(),
+  pilotLicense: z.string().max(255).nullable().optional(),
+  ccw: z.string().max(255).nullable().optional(),
+  phoneNumber: z.string().max(255).nullable().optional(),
+  occupation: z.string().nullable().optional(),
+  driversLicenseCategory: z.array(z.any()).nullable().optional(),
+  pilotLicenseCategory: z.array(z.any()).nullable().optional(),
+  image: z.any().nullable().optional(),
 });
 
 export const VEHICLE_SCHEMA = z.object({

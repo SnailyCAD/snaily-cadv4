@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { Get, Put } from "@tsed/schema";
+import { Description, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
 
@@ -11,6 +11,7 @@ import { IsAuth } from "middlewares/index";
 @Controller("/admin/manage/name-change-requests")
 export class AdminNameChangeController {
   @Get("/")
+  @Description("Get all the name change requests")
   async getRequests() {
     const requests = await prisma.nameChangeRequest.findMany({
       include: { citizen: true },
@@ -20,7 +21,7 @@ export class AdminNameChangeController {
   }
 
   @Put("/:id")
-  async updateExpungementRequest(
+  async acceptOrDeclineNameChangeRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
   ) {

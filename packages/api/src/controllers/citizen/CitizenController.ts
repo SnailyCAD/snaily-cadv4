@@ -1,12 +1,12 @@
 import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, NotFound } from "@tsed/exceptions";
-import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { Feature, cad, MiscCadSettings } from ".prisma/client";
@@ -16,6 +16,7 @@ import { generateString } from "utils/generateString";
 import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
+import { validateSchema } from "lib/validateSchema";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -111,19 +112,19 @@ export class CitizenController {
   }
 
   @Post("/")
-  async createCitizen(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_CITIZEN_SCHEMA, body.toJSON(), true);
+  async createCitizen(
+    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
+  ) {
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
-    if (error) {
-      return new BadRequest(error);
-    }
-
-    const disabledFeatures = (ctx.get("cad") as cad).disabledFeatures;
-    const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings | null;
+    const disabledFeatures = cad.disabledFeatures;
+    const miscSettings = cad.miscCadSettings;
     if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
         where: {
-          userId: ctx.get("user").id,
+          userId: user.id,
         },
       });
 
@@ -132,38 +133,15 @@ export class CitizenController {
       }
     }
 
-    const {
-      address,
-      weight,
-      height,
-      hairColor,
-      eyeColor,
-      dateOfBirth,
-      ethnicity,
-      name,
-      surname,
-      gender,
-      driversLicense,
-      weaponLicense,
-      pilotLicense,
-      driversLicenseCategory,
-      pilotLicenseCategory,
-      ccw,
-      phoneNumber,
-      postal,
-      occupation,
-    } = body.toJSON() as {
-      [key: string]: any;
-      driversLicenseCategory: string[];
-      pilotLicenseCategory: string[];
-    };
+    const doNotAllowDuplicateCitizenNames = disabledFeatures.includes(
+      Feature.ALLOW_DUPLICATE_CITIZEN_NAMES,
+    );
 
-    const isEnabled = disabledFeatures.includes(Feature.ALLOW_DUPLICATE_CITIZEN_NAMES);
-    if (isEnabled) {
+    if (doNotAllowDuplicateCitizenNames) {
       const existing = await prisma.citizen.findFirst({
         where: {
-          name,
-          surname,
+          name: data.name,
+          surname: data.surname,
         },
       });
 
@@ -172,7 +150,7 @@ export class CitizenController {
       }
     }
 
-    const date = new Date(dateOfBirth).getTime();
+    const date = new Date(data.dateOfBirth).getTime();
     const now = Date.now();
 
     if (date > now) {
@@ -181,26 +159,26 @@ export class CitizenController {
 
     const citizen = await prisma.citizen.create({
       data: {
-        userId: ctx.get("user").id || undefined,
-        address,
-        postal: postal || null,
-        weight,
-        height,
-        hairColor,
-        dateOfBirth,
-        ethnicityId: ethnicity,
-        name,
-        surname,
-        genderId: gender,
-        eyeColor,
-        driversLicenseId: driversLicense || undefined,
-        weaponLicenseId: weaponLicense || undefined,
-        pilotLicenseId: pilotLicense || undefined,
-        ccwId: ccw || undefined,
-        phoneNumber: phoneNumber || null,
-        imageId: validateImgurURL(body.get("image")),
+        userId: user.id || undefined,
+        address: data.address,
+        postal: data.postal || null,
+        weight: data.weight,
+        height: data.height,
+        hairColor: data.hairColor,
+        dateOfBirth: data.dateOfBirth,
+        ethnicityId: data.ethnicity,
+        name: data.name,
+        surname: data.surname,
+        genderId: data.gender,
+        eyeColor: data.eyeColor,
+        driversLicenseId: data.driversLicense || undefined,
+        weaponLicenseId: data.weaponLicense || undefined,
+        pilotLicenseId: data.pilotLicense || undefined,
+        ccwId: data.ccw || undefined,
+        phoneNumber: data.phoneNumber || null,
+        imageId: validateImgurURL(data.image),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
-        occupation: occupation || null,
+        occupation: data.occupation || null,
       },
       include: {
         gender: true,
@@ -212,7 +190,11 @@ export class CitizenController {
       },
     });
 
-    await linkDlCategories(citizen.id, driversLicenseCategory, pilotLicenseCategory);
+    await linkDlCategories(
+      citizen.id,
+      data.driversLicenseCategory ?? [],
+      data.pilotLicenseCategory ?? [],
+    );
 
     return citizen;
   }
@@ -220,13 +202,10 @@ export class CitizenController {
   @Put("/:id")
   async updateCitizen(
     @PathParams("id") citizenId: string,
-    @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
   ) {
-    const error = validate(CREATE_CITIZEN_SCHEMA, body.toJSON(), true);
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -234,23 +213,9 @@ export class CitizenController {
       },
     });
 
-    canManageInvariant(citizen?.userId, ctx.get("user"), new NotFound("notFound"));
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
-    const {
-      address,
-      weight,
-      height,
-      hairColor,
-      eyeColor,
-      dateOfBirth,
-      ethnicity,
-      gender,
-      phoneNumber,
-      occupation,
-      postal,
-    } = body.toJSON();
-
-    const date = new Date(dateOfBirth).getTime();
+    const date = new Date(data.dateOfBirth).getTime();
     const now = Date.now();
 
     if (date > now) {
@@ -262,26 +227,23 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        address,
-        postal: postal || null,
-        weight,
-        height,
-        hairColor,
-        dateOfBirth,
-        ethnicityId: ethnicity,
-        genderId: gender,
-        eyeColor,
-        phoneNumber: phoneNumber || undefined,
-        occupation: occupation || undefined,
-        imageId: validateImgurURL(body.get("image")),
+        address: data.address,
+        postal: data.postal || null,
+        weight: data.weight,
+        height: data.height,
+        hairColor: data.hairColor,
+        dateOfBirth: data.dateOfBirth,
+        ethnicityId: data.ethnicity,
+        genderId: data.gender,
+        eyeColor: data.eyeColor,
+        phoneNumber: data.phoneNumber,
+        occupation: data.occupation,
+        imageId: validateImgurURL(data.image),
         socialSecurityNumber: !citizen.socialSecurityNumber
           ? generateString(9, { numbersOnly: true })
           : undefined,
       },
-      include: {
-        gender: true,
-        ethnicity: true,
-      },
+      include: { gender: true, ethnicity: true },
     });
 
     return updated;
@@ -331,24 +293,16 @@ export class CitizenController {
 
 export async function linkDlCategories(
   citizenId: string,
-  driversLicenseCategory: string[] = [],
-  pilotLicenseCategory: string[] = [],
+  driversLicenseCategory: string[],
+  pilotLicenseCategory: string[],
 ) {
   await Promise.all(
     [...driversLicenseCategory, ...pilotLicenseCategory].map(async (fullId) => {
       const [id] = fullId.split("-");
 
       await prisma.citizen.update({
-        where: {
-          id: citizenId,
-        },
-        data: {
-          dlCategory: {
-            connect: {
-              id,
-            },
-          },
-        },
+        where: { id: citizenId },
+        data: { dlCategory: { connect: { id } } },
       });
     }),
   );
@@ -357,20 +311,14 @@ export async function linkDlCategories(
 export async function unlinkDlCategories(
   citizen: Citizen & { dlCategory: DriversLicenseCategoryValue[] },
 ) {
-  await Promise.all([
+  await Promise.all(
     citizen.dlCategory.map(async (v) => {
       await prisma.citizen.update({
         where: {
           id: citizen.id,
         },
-        data: {
-          dlCategory: {
-            disconnect: {
-              id: v.id,
-            },
-          },
-        },
+        data: { dlCategory: { disconnect: { id: v.id } } },
       });
     }),
-  ]);
+  );
 }
