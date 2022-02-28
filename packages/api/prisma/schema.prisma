@@ -91,22 +91,23 @@ model DiscordRoles {
   id      String @id @default(cuid())
   guildId String
 
-  leoRole             DiscordRole? @relation("leoRole", fields: [leoRoleId], references: [id])
+  leoRole             DiscordRole?  @relation("leoRole", fields: [leoRoleId], references: [id])
   leoRoleId           String?
-  leoSupervisorRole   DiscordRole? @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
+  leoRoles            DiscordRole[] @relation("leoRoles")
+  leoSupervisorRole   DiscordRole?  @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
   leoSupervisorRoleId String?
-  emsFdRole           DiscordRole? @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
+  emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
   emsFdRoleId         String?
-  dispatchRole        DiscordRole? @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
+  dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
   dispatchRoleId      String?
-  towRole             DiscordRole? @relation("towRole", fields: [towRoleId], references: [id])
+  towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
   towRoleId           String?
-  taxiRole            DiscordRole? @relation("taxiRole", fields: [taxiRoleId], references: [id])
+  taxiRole            DiscordRole?  @relation("taxiRole", fields: [taxiRoleId], references: [id])
   taxiRoleId          String?
-  adminRole           DiscordRole? @relation("adminRole", fields: [adminRoleId], references: [id])
+  adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
   adminRoleId         String?
   whitelistedRoleId   String?
-  whitelistedRole     DiscordRole? @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
+  whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
 
   roles DiscordRole[]
   cad   cad[]
@@ -118,6 +119,7 @@ model DiscordRole {
   discordRoles       DiscordRoles   @relation(fields: [discordRolesId], references: [id])
   discordRolesId     String
   leoRoles           DiscordRoles[] @relation("leoRole")
+  leoRolesArr        DiscordRoles[] @relation("leoRoles")
   emsFdRoles         DiscordRoles[] @relation("emsFdRole")
   dispatchRoles      DiscordRoles[] @relation("dispatchRole")
   towRoles           DiscordRoles[] @relation("towRole")

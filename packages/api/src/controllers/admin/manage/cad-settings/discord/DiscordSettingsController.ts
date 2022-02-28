@@ -84,7 +84,6 @@ export class DiscordSettingsController {
     const createUpdateData = {
       guildId,
       dispatchRoleId: data.dispatchRoleId ?? null,
-      leoRoleId: data.leoRoleId ?? null,
       leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
       emsFdRoleId: data.emsFdRoleId ?? null,
       towRoleId: data.towRoleId ?? null,
@@ -99,15 +98,27 @@ export class DiscordSettingsController {
       create: createUpdateData,
     });
 
-    await prisma.cad.update({
+    await prisma.$transaction(
+      (data.leoRoles ?? []).map((roleId) => {
+        return prisma.discordRoles.update({
+          where: { id: discordRoles.id },
+          data: { leoRoles: { connect: { id: roleId } } },
+        });
+      }),
+    );
+
+    const updated = await prisma.cad.update({
       where: { id: cad.id },
       data: { discordRolesId: discordRoles.id },
+      include: { discordRoles: { include: { roles: true, leoRoles: true } } },
     });
 
-    return discordRoles;
+    return updated.discordRoles;
   }
 
-  protected doesRoleExist(roles: { id: string }[], roleId: string) {
-    return roles.some((v) => v.id === roleId);
+  protected doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
+    return roles.some((v) =>
+      typeof roleId === "string" ? v.id === roleId : roleId.includes(v.id),
+    );
   }
 }

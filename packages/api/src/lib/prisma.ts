@@ -1,11 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { divisionToDivisions } from "migrations/divisionToDivisions";
 import { pairedSymbolToTemplate } from "migrations/pairedSymbolToTemplate";
+import { leoRoleToLeoRoles } from "migrations/leoRoleToLeoRoles";
 
 export const prisma = new PrismaClient({ errorFormat: "pretty", log: ["info", "warn", "error"] });
 
 async function handleMigrations() {
-  await Promise.all([divisionToDivisions(), pairedSymbolToTemplate()]);
+  await Promise.all([divisionToDivisions(), pairedSymbolToTemplate(), leoRoleToLeoRoles()]);
 }
 
 try {

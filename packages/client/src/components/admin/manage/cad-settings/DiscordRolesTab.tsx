@@ -22,7 +22,11 @@ export function DiscordRolesTab() {
   );
 
   const INITIAL_VALUES = {
-    leoRoleId: discordRoles.leoRoleId,
+    leoRoles:
+      discordRoles.leoRoles?.map((v) => ({
+        label: v.name,
+        value: v.id,
+      })) ?? [],
     emsFdRoleId: discordRoles.emsFdRoleId,
     dispatchRoleId: discordRoles.dispatchRoleId,
     leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
@@ -43,7 +47,7 @@ export function DiscordRolesTab() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/admin/manage/cad-settings/discord", {
       method: "POST",
-      data: values,
+      data: { ...values, leoRoles: values.leoRoles.map((v) => v.value) },
     });
 
     if (Array.isArray(json)) {
@@ -98,17 +102,18 @@ export function DiscordRolesTab() {
 
             <SettingsFormField
               description="The Discord role that represents the LEO permission"
-              errorMessage={errors.leoRoleId}
+              errorMessage={errors.leoRoles as string}
               label="LEO Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.leoRoleId}
-                name="leoRoleId"
+                value={values.leoRoles}
+                name="leoRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>
