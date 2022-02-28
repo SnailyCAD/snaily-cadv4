@@ -72,7 +72,7 @@ export function ActiveIncidents() {
   }
 
   function involvedOfficers(incident: FullIncident) {
-    return incident.officersInvolved.length <= 0 ? (
+    return (incident.officersInvolved?.length ?? 0) <= 0 ? (
       <span>{common("none")}</span>
     ) : (
       incident.officersInvolved.map((o) => `${generateCallsign(o)} ${makeUnitName(o)}`).join(", ")

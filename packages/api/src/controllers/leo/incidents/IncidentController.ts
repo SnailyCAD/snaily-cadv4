@@ -10,6 +10,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import type { Officer } from ".prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
+import type { z } from "zod";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -63,23 +64,7 @@ export class IncidentController {
       },
     });
 
-    await Promise.all(
-      (data.involvedOfficers ?? []).map(async (id: string) => {
-        if (data.isActive) {
-          await prisma.officer.update({
-            where: { id },
-            data: { activeIncidentId: incident.id },
-          });
-        }
-
-        return prisma.leoIncident.update({
-          where: {
-            id: incident.id,
-          },
-          data: { officersInvolved: { connect: { id } } },
-        });
-      }),
-    );
+    await this.connectOfficersInvolved(incident.id, data);
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -141,23 +126,7 @@ export class IncidentController {
       },
     });
 
-    await Promise.all(
-      (data.involvedOfficers ?? []).map(async (id: string) => {
-        if (data.isActive) {
-          await prisma.officer.update({
-            where: { id },
-            data: { activeIncidentId: incident.id },
-          });
-        }
-
-        return prisma.leoIncident.update({
-          where: {
-            id: incident.id,
-          },
-          data: { officersInvolved: { connect: { id } } },
-        });
-      }),
-    );
+    await this.connectOfficersInvolved(incident.id, data);
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -190,5 +159,29 @@ export class IncidentController {
     });
 
     return true;
+  }
+
+  protected async connectOfficersInvolved(
+    incidentId: string,
+    data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "involvedOfficers" | "isActive">,
+  ) {
+    await prisma.$transaction(
+      (data.involvedOfficers ?? []).map((id: string) => {
+        return prisma.leoIncident.update({
+          where: { id: incidentId },
+          data: {
+            officersInvolved: {
+              connect: { id },
+              update: data.isActive
+                ? {
+                    where: { id },
+                    data: { activeIncidentId: incidentId },
+                  }
+                : undefined,
+            },
+          },
+        });
+      }),
+    );
   }
 }
