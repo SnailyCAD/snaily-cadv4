@@ -4,16 +4,10 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/index";
-import { leoProperties } from "lib/leo/activeOfficer";
 import { CREATE_911_CALL_EVENT } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
-
-export const incidentInclude = {
-  creator: { include: leoProperties },
-  officersInvolved: { include: leoProperties },
-  events: true,
-};
+import { incidentInclude } from "./IncidentController";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)

@@ -13,6 +13,7 @@ import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schem
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "./911-calls/Calls911Controller";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -57,11 +58,7 @@ export class DispatchController {
 
     const activeIncidents = await prisma.leoIncident.findMany({
       where: { isActive: true },
-      include: {
-        creator: { include: leoProperties },
-        officersInvolved: { include: leoProperties },
-        events: true,
-      },
+      include: incidentInclude,
     });
 
     return { deputies, officers, activeIncidents, activeDispatchers };

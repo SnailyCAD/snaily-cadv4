@@ -11,6 +11,13 @@ import type { Officer } from ".prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 
+export const incidentInclude = {
+  creator: { include: leoProperties },
+  officersInvolved: { include: leoProperties },
+  events: true,
+  situationCode: { include: { value: true } },
+};
+
 @Controller("/incidents")
 @UseBeforeEach(IsAuth)
 export class IncidentController {
@@ -24,11 +31,7 @@ export class IncidentController {
   async getAllIncidents() {
     const incidents = await prisma.leoIncident.findMany({
       where: { NOT: { isActive: true } },
-      include: {
-        creator: { include: leoProperties },
-        officersInvolved: { include: leoProperties },
-        events: true,
-      },
+      include: incidentInclude,
     });
 
     const officers = await prisma.officer.findMany({
@@ -56,6 +59,7 @@ export class IncidentController {
         injuriesOrFatalities: data.injuriesOrFatalities,
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
+        situationCodeId: data.situationCodeId ?? null,
       },
     });
 
@@ -79,10 +83,7 @@ export class IncidentController {
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
-      include: {
-        creator: { include: leoProperties },
-        officersInvolved: { include: leoProperties },
-      },
+      include: incidentInclude,
     });
 
     if (!updated) {
@@ -136,6 +137,7 @@ export class IncidentController {
         injuriesOrFatalities: data.injuriesOrFatalities,
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
+        situationCodeId: data.situationCodeId ?? null,
       },
     });
 
@@ -159,10 +161,7 @@ export class IncidentController {
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
-      include: {
-        creator: { include: leoProperties },
-        officersInvolved: { include: leoProperties },
-      },
+      include: incidentInclude,
     });
 
     if (!updated) {

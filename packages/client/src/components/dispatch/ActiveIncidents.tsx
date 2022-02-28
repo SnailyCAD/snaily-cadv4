@@ -109,6 +109,7 @@ export function ActiveIncidents() {
                 firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
                 arrestsMade: common(yesOrNoText(incident.arrestsMade)),
+                situationCode: incident.situationCode?.value.value ?? common("none"),
                 description: (
                   <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
                     {incident.description && !incident.descriptionData ? (
@@ -151,6 +152,7 @@ export function ActiveIncidents() {
             { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
             { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
             { Header: t("arrestsMade"), accessor: "arrestsMade" },
+            { Header: t("situationCode"), accessor: "situationCode" },
             { Header: common("description"), accessor: "description" },
             { Header: common("createdAt"), accessor: "createdAt" },
             { Header: common("actions"), accessor: "actions" },

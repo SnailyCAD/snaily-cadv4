@@ -643,6 +643,8 @@ export interface LeoIncident {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean | null;
+  situationCode: StatusValue | null;
+  situationCodeId: string | null;
   events?: IncidentEvent[];
 }
 
