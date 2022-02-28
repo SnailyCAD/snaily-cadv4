@@ -14,7 +14,7 @@ export async function updateMemberRolesLogin(
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
-    include: { roles: true },
+    include: { roles: true, leoRoles: true },
   });
 
   if (!discordRoles) return;
@@ -29,7 +29,10 @@ export async function updateMemberRolesLogin(
   if (!discordMember?.user?.id || discordMember.pending) return;
 
   const updateData = {
-    isLeo: hasRole(discordRoles.leoRoleId, discordMember.roles),
+    isLeo: hasRole(
+      discordRoles.leoRoles.map((v) => v.id),
+      discordMember.roles,
+    ),
     isSupervisor: hasRole(discordRoles.leoSupervisorRoleId, discordMember.roles),
     isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
     isEmsFd: hasRole(discordRoles.emsFdRoleId, discordMember.roles),
@@ -55,10 +58,10 @@ export async function updateMemberRolesLogin(
   return updatedUser;
 }
 
-function hasRole(roleId: string | null, roleIds: string[]) {
+function hasRole(roleId: string | string[] | null, roleIds: string[]) {
   if (!roleId) return undefined;
 
-  return roleIds.some((v) => v === roleId);
+  return roleIds.some((v) => (typeof roleId === "string" ? v === roleId : roleId.includes(v)));
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {
