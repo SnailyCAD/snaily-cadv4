@@ -86,7 +86,8 @@ export function ImageSelectInput({ label, valueKey = "image", image, setImage }:
             type="button"
             variant="danger"
             onClick={() => {
-              setFieldValue(valueKey, "");
+              setFieldValue(valueKey, null);
+              setImage(null);
             }}
           >
             {common("delete")}

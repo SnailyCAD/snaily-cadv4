@@ -56,6 +56,7 @@ export class ManageCitizensController {
         whitelisted: data.whitelisted,
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
+        logoId: data.image,
         miscCadSettings: {
           update: {
             roleplayEnabled: data.roleplayEnabled,
