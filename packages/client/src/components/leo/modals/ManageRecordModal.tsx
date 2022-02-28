@@ -7,7 +7,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -62,7 +62,10 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
         )
       : penalCode.values;
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const requestData = {
       ...values,
       type,
@@ -78,6 +81,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       const { json } = await execute(`/records/record/${record.id}`, {
         method: "PUT",
         data: requestData,
+        helpers,
       });
 
       if (json.id) {
@@ -88,6 +92,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       const { json } = await execute("/records", {
         method: "POST",
         data: requestData,
+        helpers,
       });
 
       if (json.id) {

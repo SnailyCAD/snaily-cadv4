@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const VIOLATION = z.object({
+  fine: z.number().nullable().optional(),
+  jailTime: z.number().nullable().optional(),
+  bail: z.number().nullable().optional(),
+  // optional on client, required on server
+  penalCodeId: z.string().optional(),
+});
+
 export const SEIZED_ITEM_SCHEMA = z.object({
   illegal: z.boolean().nullable().optional(),
   item: z.string().min(1),
@@ -14,7 +22,7 @@ export const CREATE_TICKET_SCHEMA = z.object({
     .regex(/ARREST_REPORT|TICKET|WRITTEN_WARNING/),
   citizenId: z.string().min(2).max(255),
   citizenName: z.string().min(2).max(255),
-  violations: z.array(z.any()).min(1),
+  violations: z.array(VIOLATION).min(1),
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
   notes: z.string(),

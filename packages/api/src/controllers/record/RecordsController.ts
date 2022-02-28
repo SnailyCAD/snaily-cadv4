@@ -15,6 +15,7 @@ import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/c
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
 import { leoProperties } from "lib/leo/activeOfficer";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -88,7 +89,7 @@ export class RecordsController {
     });
 
     if (!citizen || `${citizen.name} ${citizen.surname}` !== data.citizenName) {
-      throw new NotFound("citizenNotFound");
+      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
 
     const ticket = await prisma.record.create({
@@ -115,39 +116,32 @@ export class RecordsController {
     const seizedItems: SeizedItem[] = [];
 
     await Promise.all(
-      data.violations.map(
-        async (rawItem: {
-          penalCodeId: string;
-          fine: number | null;
-          jailTime: number | null;
-          bail: number | null;
-        }) => {
-          const item = await validateRecordData({
-            ...rawItem,
-            ticketId: ticket.id,
-          });
+      data.violations.map(async (rawItem) => {
+        const item = await validateRecordData({
+          ...rawItem,
+          ticketId: ticket.id,
+        });
 
-          const violation = await prisma.violation.create({
-            data: {
-              fine: item.fine,
-              bail: item.bail,
-              jailTime: item.jailTime,
-              penalCode: {
-                connect: {
-                  id: item.penalCodeId,
-                },
-              },
-              records: {
-                connect: {
-                  id: ticket.id,
-                },
+        const violation = await prisma.violation.create({
+          data: {
+            fine: item.fine,
+            bail: item.bail,
+            jailTime: item.jailTime,
+            penalCode: {
+              connect: {
+                id: item.penalCodeId,
               },
             },
-          });
+            records: {
+              connect: {
+                id: ticket.id,
+              },
+            },
+          },
+        });
 
-          violations.push(violation);
-        },
-      ),
+        violations.push(violation);
+      }),
     );
 
     await Promise.all(
@@ -190,7 +184,7 @@ export class RecordsController {
     }
 
     const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData(v)),
+      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: record.id })),
     );
 
     await unlinkViolations(record.violations);
