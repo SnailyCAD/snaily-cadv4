@@ -90,8 +90,6 @@ export interface ApiToken {
 export type DiscordRoles = {
   id: string;
   guildId: string;
-  leoRoleId: null;
-  leoRole: null;
   leoRoles?: DiscordRole[];
   leoSupervisorRoleId: string | null;
   leoSupervisorRole: DiscordRole | null;
