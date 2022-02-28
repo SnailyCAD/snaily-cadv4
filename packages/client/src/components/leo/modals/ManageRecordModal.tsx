@@ -77,6 +77,8 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       })),
     };
 
+    validateRecords(values.violations, helpers);
+
     if (record) {
       const { json } = await execute(`/records/record/${record.id}`, {
         method: "PUT",
@@ -182,7 +184,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
               <Input value={values.postal} name="postal" onChange={handleChange} />
             </FormField>
 
-            <FormField errorMessage={errors.violations as string} label={t("violations")}>
+            <FormField label={t("violations")}>
               <SelectPenalCode
                 penalCodes={penalCodes}
                 value={values.violations}
@@ -215,4 +217,27 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       </Formik>
     </Modal>
   );
+}
+
+function validateRecords(data: any[], helpers: FormikHelpers<any>) {
+  data.forEach(({ value }) => {
+    const isFinesEnabled = value.fine?.enabled;
+    const fine = value.fine?.value;
+    check(isFinesEnabled, fine, value.id, "fine");
+
+    const isJailTimeEnabled = value.jailTime?.enabled;
+    const jailTime = value.jailTime?.value;
+    check(isJailTimeEnabled, jailTime, value.id, "jailTime");
+  });
+
+  function check(enabled: boolean, value: unknown, id: string, fieldName: "fine" | "jailTime") {
+    if (enabled && !value) {
+      throw helpers.setFieldError(
+        `violations[${id}].${fieldName}`,
+        "You must enter a value if field is enabled",
+      );
+    }
+  }
+
+  return true;
 }
