@@ -22,7 +22,8 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { ShouldDoType } from "@snailycad/types";
+import { ShouldDoType, StatusValueType } from "@snailycad/types";
+import { useValues } from "context/ValuesContext";
 
 interface Props {
   incident?: FullIncident | null;
@@ -46,7 +47,9 @@ export function ManageIncidentModal({
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
   const { activeOfficer } = useLeoState();
+  const { codes10 } = useValues();
   const router = useRouter();
+
   const isDispatch = router.pathname.includes("/dispatch");
   const isLeoIncidents = router.pathname === "/officer/incidents";
   const creator = isDispatch || !incident?.creator ? null : incident.creator;
@@ -88,13 +91,6 @@ export function ManageIncidentModal({
 
     if (id) {
       closeModal(ModalIds.ManageIncident);
-
-      if (!isDispatch) {
-        router.replace({
-          pathname: router.pathname,
-          query: router.query,
-        });
-      }
     }
   }
 
@@ -111,6 +107,7 @@ export function ManageIncidentModal({
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
     isActive: isDispatch ? true : incident?.isActive ?? false,
+    situationCodeId: incident?.situationCodeId ?? null,
   };
 
   return (
@@ -175,6 +172,26 @@ export function ManageIncidentModal({
                   <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
                 </FormField>
               </FormRow>
+
+              <FormField
+                className="mt-1"
+                optional
+                errorMessage={errors.situationCodeId}
+                label={t("situationCode")}
+              >
+                <Select
+                  isClearable
+                  values={codes10.values
+                    .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                    .map((v) => ({
+                      label: v.value.value,
+                      value: v.id,
+                    }))}
+                  onChange={handleChange}
+                  name="situationCodeId"
+                  value={values.situationCodeId}
+                />
+              </FormField>
 
               <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
