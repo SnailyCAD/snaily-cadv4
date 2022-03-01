@@ -20,7 +20,7 @@ import { DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailyca
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { type TValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
+import { getValueStrFromValue } from "src/pages/admin/values/[path]";
 import { ModalIds } from "types/ModalIds";
 import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
@@ -38,14 +38,15 @@ import {
   isStatusValue,
   isVehicleValue,
   isWeaponValue,
+  AnyValue,
 } from "@snailycad/utils/dist/typeguards";
 
 interface Props {
   type: ValueType;
-  value: TValue | null;
+  value: AnyValue | null;
   clType?: DriversLicenseCategoryType | null;
-  onCreate: (newValue: TValue) => void;
-  onUpdate: (oldValue: TValue, newValue: TValue) => void;
+  onCreate: (newValue: AnyValue) => void;
+  onUpdate: (oldValue: AnyValue, newValue: AnyValue) => void;
 }
 
 const BUSINESS_VALUES = [

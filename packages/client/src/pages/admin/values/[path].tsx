@@ -8,18 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import {
-  type DepartmentValue,
-  type DivisionValue,
-  type DriversLicenseCategoryValue,
-  type EmployeeValue,
-  type PenalCode,
-  type PenalCodeGroup,
-  type StatusValue,
-  type Value,
-  type VehicleValue,
-  ValueType,
-} from "@snailycad/types";
+import { type PenalCode, type PenalCodeGroup, ValueType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -34,7 +23,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { isBaseValue } from "@snailycad/utils/dist/typeguards";
+import { isBaseValue, type AnyValue } from "@snailycad/utils/dist/typeguards";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -44,27 +33,18 @@ const ImportValuesModal = dynamic(async () => {
   return (await import("components/admin/values/import/ImportValuesModal")).ImportValuesModal;
 });
 
-export type TValue =
-  | Value<ValueType>
-  | EmployeeValue
-  | StatusValue
-  | DivisionValue
-  | DepartmentValue
-  | DriversLicenseCategoryValue
-  | VehicleValue;
-
 interface Props {
-  pathValues: { type: ValueType; values: TValue[] };
+  pathValues: { type: ValueType; values: AnyValue[] };
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<TValue[]>(data);
+  const [values, setValues] = React.useState<AnyValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const tableSelect = useTableSelect(values);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<TValue | null>(null);
+  const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -94,7 +74,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     ];
   }, [extraTableHeaders, common, tableSelect]);
 
-  async function setList(list: TValue[]) {
+  async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(values, list)) return;
 
     setValues((p) =>
@@ -123,12 +103,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     });
   }
 
-  function handleDeleteClick(value: TValue) {
+  function handleDeleteClick(value: AnyValue) {
     setTempValue(value);
     openModal(ModalIds.AlertDeleteValue);
   }
 
-  function handleEditClick(value: TValue) {
+  function handleEditClick(value: AnyValue) {
     setTempValue(value);
     openModal(ModalIds.ManageValue);
   }
@@ -327,7 +307,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   };
 };
 
-export function sortValues(values: TValue[]): any[] {
+export function sortValues(values: AnyValue[]): any[] {
   return values.sort((a, b) => {
     const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
     const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);
@@ -338,7 +318,7 @@ export function sortValues(values: TValue[]): any[] {
   });
 }
 
-export function findCreatedAtAndPosition(value: TValue) {
+export function findCreatedAtAndPosition(value: AnyValue) {
   if (isBaseValue(value)) {
     return {
       createdAt: new Date(value.createdAt),
@@ -352,7 +332,7 @@ export function findCreatedAtAndPosition(value: TValue) {
   };
 }
 
-export function handleFilter(value: TValue, search: string) {
+export function handleFilter(value: AnyValue, search: string) {
   if (!search) return true;
   const str = isBaseValue(value) ? value.value : value.value.value;
 
@@ -360,12 +340,12 @@ export function handleFilter(value: TValue, search: string) {
   return false;
 }
 
-export function getValueStrFromValue(value: TValue) {
+export function getValueStrFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
   return isBase ? value.value : value.value.value;
 }
 
-export function getCreatedAtFromValue(value: TValue) {
+export function getCreatedAtFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
   return isBase ? value.createdAt : value.value.createdAt;
 }
@@ -374,8 +354,8 @@ export function getCreatedAtFromValue(value: TValue) {
  * only update db if the list was actually moved.
  */
 export function hasTableDataChanged(
-  prevList: (TValue | PenalCode | PenalCodeGroup)[],
-  newList: (TValue | PenalCode | PenalCodeGroup)[],
+  prevList: (AnyValue | PenalCode | PenalCodeGroup)[],
+  newList: (AnyValue | PenalCode | PenalCodeGroup)[],
 ) {
   let wasMoved = false;
 
