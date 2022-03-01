@@ -103,6 +103,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
+          isDefault: common(yesOrNoText(v.isDefault)),
         };
       }
       default: {
@@ -147,7 +148,10 @@ export function useTableHeadersOfType(type: ValueType) {
       return [{ Header: t("gameHash"), accessor: "gameHash" }];
     }
     case "LICENSE": {
-      return [{ Header: t("licenseType"), accessor: "licenseType" }];
+      return [
+        { Header: t("licenseType"), accessor: "licenseType" },
+        { Header: t("isDefault"), accessor: "isDefault" },
+      ];
     }
     default: {
       return [];
