@@ -111,16 +111,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/useful@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "@casper124578/useful@npm:1.5.0"
+"@casper124578/useful@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "@casper124578/useful@npm:1.5.1"
   dependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
   peerDependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 264204d4c681f53b28e41f8d22e576be2867dce02653f54f221a7fde4a0ab08aacf153ec491aa4d6e817a669c6fd6ad2edf5c66c1201dd22c537caa99a978b1f
+  checksum: a8062a55d59a9d6f46d227e458653bae3db87d02a8cddd855082bea8af2c030fe14c6e84d1693867bb073aeef9d7fba3da96529f5e775fd0d902b257518af538
   languageName: node
   linkType: hard
 
@@ -1371,7 +1371,7 @@ __metadata:
   resolution: "@snailycad/client@workspace:packages/client"
   dependencies:
     "@casper124578/use-socket.io": 3.1.1
-    "@casper124578/useful": ^1.5.0
+    "@casper124578/useful": ^1.5.1
     "@headlessui/react": ^1.5.0
     "@radix-ui/react-accordion": ^0.1.6
     "@radix-ui/react-context-menu": ^0.1.6
