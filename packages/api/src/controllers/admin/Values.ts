@@ -1,16 +1,15 @@
-import { ValueType } from ".prisma/client";
-import { BASE_VALUE_SCHEMA, PENAL_CODE_SCHEMA, validate } from "@snailycad/schemas";
+import { CODES_10_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
-import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
+import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/index";
 import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { validateSchema } from "lib/validateSchema";
-import { upsertWarningApplicable } from "lib/records/penal-code";
 import type { ValuesSelect } from "lib/values/types";
+import { validateSchema } from "lib/validateSchema";
+import { ValueType, ShouldDoType, StatusValueType } from "@prisma/client";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   VEHICLE: { name: "vehicleValue" },
@@ -130,56 +129,24 @@ export class ValuesController {
   @Patch("/:id")
   @Description("Update a value by the specified type and id")
   async patchValueByPathAndId(
-    @BodyParams() body: JsonRequestBody,
-    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+    @PathParams("id") valueId: string,
     @PathParams("path") path: string,
   ) {
-    const error = validate(BASE_VALUE_SCHEMA, body.toJSON(), true);
     const type = this.getTypeFromPath(path);
 
-    if (error && ![ValueType.PENAL_CODE as ValueType].includes(type)) {
-      throw new BadRequest(error);
-    }
-
-    if (type === ValueType.PENAL_CODE) {
-      const data = validateSchema(PENAL_CODE_SCHEMA, body.toJSON());
-
-      const penalCode = await prisma.penalCode.findUnique({
-        where: { id },
-      });
-
-      if (!penalCode) {
-        throw new NotFound("penalCodeNotFound");
-      }
-
-      const updated = await prisma.penalCode.update({
-        where: { id },
-        data: {
-          title: body.get("title"),
-          description: body.get("description"),
-          descriptionData: body.descriptionData,
-          groupId: body.get("groupId") || null,
-          ...(await upsertWarningApplicable(data, penalCode)),
-        },
-        include: {
-          warningApplicable: true,
-          warningNotApplicable: true,
-        },
-      });
-
-      return updated;
-    }
-
     if (type === ValueType.CODES_10) {
+      const data = validateSchema(CODES_10_SCHEMA, body);
+
       const statusValue = await prisma.statusValue.findUnique({
-        where: { id },
+        where: { id: valueId },
         include: { departments: true },
       });
 
       await Promise.all(
         (statusValue?.departments ?? []).map(async (v) => {
           await prisma.statusValue.update({
-            where: { id },
+            where: { id: valueId },
             data: { departments: { disconnect: { id: v.id } } },
           });
         }),
@@ -187,195 +154,49 @@ export class ValuesController {
 
       await prisma.statusValue.update({
         where: {
-          id,
+          id: valueId,
         },
         data: {
-          value: { update: { value: body.get("value") } },
-          whatPages: body.get("whatPages") ?? [],
-          shouldDo: body.get("shouldDo"),
-          color: body.get("color") || null,
-          type: body.get("type") || "STATUS_CODE",
+          value: { update: { value: data.value } },
+          whatPages: data.whatPages ?? [],
+          shouldDo: data.shouldDo as ShouldDoType,
+          color: data.color || null,
+          type: (data.type as StatusValueType | null) ?? "STATUS_CODE",
         },
       });
 
       await Promise.all(
-        (body.get("departments") ?? []).map(async (departmentId: string) => {
+        (data.departments ?? []).map(async (departmentId: string) => {
           await prisma.statusValue.update({
-            where: { id },
+            where: { id: valueId },
             data: { departments: { connect: { id: departmentId } } },
           });
         }),
       );
 
       const updated = await prisma.statusValue.findUnique({
-        where: { id },
+        where: { id: valueId },
         include: { value: true, departments: { include: { value: true } } },
       });
 
       return updated;
     }
 
-    if (type === ValueType.DEPARTMENT) {
-      if (body.get("isDefaultDepartment")) {
-        const existing = await prisma.departmentValue.findFirst({
-          where: { isDefaultDepartment: true },
-        });
+    const handler = typeHandlers[type];
+    const arr = await handler([body], valueId);
+    const [value] = "success" in arr ? arr.success : arr;
 
-        if (existing && existing.id !== id) {
-          throw new ExtendedBadRequest({
-            isDefaultDepartment: "Only 1 department can be set a default.",
-          });
-        }
-      }
-
-      const updated = await prisma.departmentValue.update({
-        where: {
-          id,
-        },
-        data: {
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
-          isDefaultDepartment: body.get("whitelisted") ? false : body.get("isDefaultDepartment"),
-          whitelisted: body.get("whitelisted"),
-          callsign: body.get("callsign") || null,
-          type: body.get("type"),
-        },
-        include: {
-          value: true,
-        },
-      });
-
-      return updated;
-    }
-
-    if (type === ValueType.DIVISION) {
-      if (!body.get("departmentId")) {
-        throw new BadRequest("departmentIdRequired");
-      }
-
-      const current = await prisma.divisionValue.findUnique({
-        where: {
-          id,
-        },
-        select: {
-          departmentId: true,
-          valueId: true,
-        },
-      });
-      if (!current) {
-        throw new NotFound("divisionNotFound");
-      }
-
-      const departmentId = body.get("departmentId");
-
-      await prisma.value.update({
-        where: {
-          id: current.valueId,
-        },
-        data: {
-          value: body.get("value"),
-        },
-      });
-
-      const updated = await prisma.divisionValue.update({
-        where: {
-          id,
-        },
-        data: {
-          callsign: body.get("callsign") || null,
-          departmentId,
-        },
-        include: {
-          value: true,
-          department: { include: { value: true } },
-        },
-      });
-
-      return updated;
-    }
-
-    if (type === ValueType.DRIVERSLICENSE_CATEGORY) {
-      if (!body.get("type")) {
-        throw new BadRequest("typeIsRequired");
-      }
-
-      const dlCategory = await prisma.driversLicenseCategoryValue.update({
-        where: {
-          id,
-        },
-        data: {
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
-        },
-        include: { value: true },
-      });
-
-      return dlCategory;
-    }
-
-    if (type === ValueType.VEHICLE) {
-      const vehicleValue = await prisma.vehicleValue.update({
-        where: {
-          id,
-        },
-        data: {
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
-          hash: body.get("hash") || null,
-        },
-        include: { value: true },
-      });
-
-      return vehicleValue;
-    }
-
-    if (type === ValueType.WEAPON) {
-      const weaponValue = await prisma.weaponValue.update({
-        where: {
-          id,
-        },
-        data: {
-          value: {
-            update: {
-              value: body.get("value"),
-            },
-          },
-          hash: body.get("hash") || null,
-        },
-        include: { value: true },
-      });
-
-      return weaponValue;
-    }
-
-    const updated = await prisma.value.update({
-      where: {
-        id,
-      },
-      data: {
-        value: body.get("value"),
-        licenseType: type === ValueType.LICENSE ? body.get("licenseType") : undefined,
-        isDefault: type === ValueType.LICENSE ? body.get("isDefault") : undefined,
-      },
-    });
-
-    return updated;
+    return value;
   }
 
   @Put("/positions")
   @Description("Update the positions of the values by the specified type")
-  async updatePositions(@PathParams("path") path: ValueType, @BodyParams() body: JsonRequestBody) {
+  async updatePositions(
+    @PathParams("path") path: ValueType,
+    @BodyParams() body: { ids: string[] },
+  ) {
     const type = this.getTypeFromPath(path);
-    const ids = body.get("ids");
+    const ids = body.ids;
 
     if (!Array.isArray(ids)) {
       throw new BadRequest("mustBeArray");

@@ -901,9 +901,6 @@ export interface TruckLog {
  * Enums
  */
 
-// Based on
-// https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
-
 export enum Feature {
   BLEETER = "BLEETER",
   TOW = "TOW",

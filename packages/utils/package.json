@@ -2,6 +2,22 @@
   "name": "@snailycad/utils",
   "version": "1.0.0-beta.64",
   "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./callsign": "./dist/callsign.js",
+    "./typeguards": "./dist/typeguards.js",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "callsign": [
+        "dist/callsign.d.ts"
+      ],
+      "typeguards": [
+        "dist/typeguards.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"

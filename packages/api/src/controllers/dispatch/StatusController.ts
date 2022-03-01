@@ -21,7 +21,7 @@ import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/index";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client";
-import { generateCallsign } from "@snailycad/utils";
+import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 
