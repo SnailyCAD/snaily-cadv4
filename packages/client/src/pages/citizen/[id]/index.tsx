@@ -41,7 +41,7 @@ export default function CitizenId() {
   const { citizen } = useCitizen();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, ALLOW_CITIZEN_DELETION_BY_NON_ADMIN } = useFeatureEnabled();
 
   async function handleDelete() {
     if (!citizen) return;
@@ -134,9 +134,11 @@ export default function CitizenId() {
               <a>{t("editCitizen")}</a>
             </Link>
           </Button>
-          <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
-            {t("deleteCitizen")}
-          </Button>
+          {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
+            <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
+              {t("deleteCitizen")}
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -153,18 +155,20 @@ export default function CitizenId() {
 
       <CitizenImageModal />
 
-      <AlertModal
-        onDeleteClick={handleDelete}
-        title={t("deleteCitizen")}
-        description={t.rich("alert_deleteCitizen", {
-          citizen: `${citizen.name} ${citizen.surname}`,
-          span: (children) => {
-            return <span className="font-semibold">{children}</span>;
-          },
-        })}
-        id={ModalIds.AlertDeleteCitizen}
-        state={state}
-      />
+      {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
+        <AlertModal
+          onDeleteClick={handleDelete}
+          title={t("deleteCitizen")}
+          description={t.rich("alert_deleteCitizen", {
+            citizen: `${citizen.name} ${citizen.surname}`,
+            span: (children) => {
+              return <span className="font-semibold">{children}</span>;
+            },
+          })}
+          id={ModalIds.AlertDeleteCitizen}
+          state={state}
+        />
+      ) : null}
     </Layout>
   );
 }

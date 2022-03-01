@@ -120,6 +120,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, dispatch will be able to manage the radio channel a unit is in. This can then be used to enhance the experience via the CAD's Public API.",
   },
+  ALLOW_CITIZEN_DELETION_BY_NON_ADMIN: {
+    name: "Allow citizen deletion by citizen creator",
+    description:
+      "When disabled, this will only allow administrators to delete citizens. Users who created a citizen will not be able to delete them themselves.",
+  },
 };
 
 export function DisabledFeaturesArea() {

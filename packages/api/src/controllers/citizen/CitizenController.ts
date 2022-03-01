@@ -5,7 +5,7 @@ import { Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BadRequest, NotFound } from "@tsed/exceptions";
+import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
@@ -91,6 +91,15 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
+    const cad = ctx.get("cad") as cad;
+    const disallowDeletion = cad.disabledFeatures.includes(
+      Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN,
+    );
+
+    if (disallowDeletion) {
+      throw new Forbidden("onlyAdminsCanDeleteCitizens");
+    }
+
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
