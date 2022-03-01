@@ -91,7 +91,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const data = {
       ...values,
       type: dlType ? dlType : values.type,
-      whatPages: values.whatPages.map((v: any) => v.value),
+      whatPages: values.whatPages?.map((v: any) => v.value),
       departments: values.departments?.map((v: any) => v.value),
     };
 
@@ -136,11 +136,13 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
     isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
 
-    // @ts-expect-error shortcut
-    whatPages: makeDefaultWhatPages(value).map((v) => ({
-      label: WHAT_PAGES_LABELS[v],
-      value: v,
-    })),
+    whatPages:
+      value && isStatusValue(value)
+        ? makeDefaultWhatPages(value)?.map((v) => ({
+            label: WHAT_PAGES_LABELS[v],
+            value: v,
+          }))
+        : [],
 
     showPicker: false,
     departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
