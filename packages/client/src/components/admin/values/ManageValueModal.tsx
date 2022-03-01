@@ -4,7 +4,7 @@ import {
   HASH_SCHEMA,
   CODES_10_SCHEMA,
   BUSINESS_ROLE_SCHEMA,
-  VALUE_SCHEMA,
+  BASE_VALUE_SCHEMA,
 } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -146,7 +146,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
-    const schemaToUse = EXTRA_SCHEMAS[type] ?? VALUE_SCHEMA;
+    const schemaToUse = EXTRA_SCHEMAS[type] ?? BASE_VALUE_SCHEMA;
     const errors = handleValidate(schemaToUse)(values);
 
     if (values.color && !hexColor().test(values.color)) {

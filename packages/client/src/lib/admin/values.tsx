@@ -1,4 +1,4 @@
-import { LICENSE_LABELS } from "components/admin/values/ManageValueModal";
+import { LICENSE_LABELS } from "components/admin/values/manage-modal/LicenseFields";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
 import type { TValue } from "src/pages/admin/values/[path]";

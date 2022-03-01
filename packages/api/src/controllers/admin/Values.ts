@@ -1,5 +1,5 @@
 import { ValueType } from ".prisma/client";
-import { PENAL_CODE_SCHEMA, validate, VALUE_SCHEMA } from "@snailycad/schemas";
+import { BASE_VALUE_SCHEMA, PENAL_CODE_SCHEMA, validate } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
 import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -134,7 +134,7 @@ export class ValuesController {
     @PathParams("id") id: string,
     @PathParams("path") path: string,
   ) {
-    const error = validate(VALUE_SCHEMA, body.toJSON(), true);
+    const error = validate(BASE_VALUE_SCHEMA, body.toJSON(), true);
     const type = this.getTypeFromPath(path);
 
     if (error && !["PENAL_CODE"].includes(type)) {
