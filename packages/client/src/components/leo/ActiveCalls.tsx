@@ -37,6 +37,7 @@ function ActiveCallsInner() {
 
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
+  const leo = useTranslations("Leo");
   const common = useTranslations("Common");
   const { user } = useAuth();
   const router = useRouter();
@@ -138,7 +139,6 @@ function ActiveCallsInner() {
     <div className="overflow-hidden rounded-md card">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
-
         <div>
           <Button
             variant="cancel"
@@ -170,7 +170,7 @@ function ActiveCallsInner() {
                   rowProps: {
                     className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
                   },
-                  name: call.name,
+                  name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: call.location,
                   description:
                     call.description && !call.descriptionData ? (

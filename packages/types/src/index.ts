@@ -704,6 +704,7 @@ export interface Call911 {
   situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
+  viaDispatch: boolean | null;
 }
 
 /**
