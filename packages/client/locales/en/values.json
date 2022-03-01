@@ -19,6 +19,7 @@
     "departments": "Departments",
     "isDefaultDepartment": "Default Department",
     "deleteSelectedValues": "Delete Selected Values",
+    "isDefault": "Is Default",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
