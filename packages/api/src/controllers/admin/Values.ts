@@ -1,7 +1,6 @@
-import { ValueType } from ".prisma/client";
 import { CODES_10_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
-import { Delete, Description, JsonRequestBody, Patch, Post, Put } from "@tsed/schema";
+import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
@@ -10,7 +9,7 @@ import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { ValuesSelect } from "lib/values/types";
 import { validateSchema } from "lib/validateSchema";
-import type { ShouldDoType, StatusValueType } from "@prisma/client";
+import { ValueType, ShouldDoType, StatusValueType } from "@prisma/client";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   VEHICLE: { name: "vehicleValue" },
@@ -192,9 +191,12 @@ export class ValuesController {
 
   @Put("/positions")
   @Description("Update the positions of the values by the specified type")
-  async updatePositions(@PathParams("path") path: ValueType, @BodyParams() body: JsonRequestBody) {
+  async updatePositions(
+    @PathParams("path") path: ValueType,
+    @BodyParams() body: { ids: string[] },
+  ) {
     const type = this.getTypeFromPath(path);
-    const ids = body.get("ids");
+    const ids = body.ids;
 
     if (!Array.isArray(ids)) {
       throw new BadRequest("mustBeArray");
