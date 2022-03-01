@@ -23,7 +23,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { isBaseValue, type AnyValue } from "@snailycad/utils/dist/typeguards";
+import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;

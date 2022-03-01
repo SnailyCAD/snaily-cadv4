@@ -39,7 +39,7 @@ import {
   isVehicleValue,
   isWeaponValue,
   AnyValue,
-} from "@snailycad/utils/dist/typeguards";
+} from "@snailycad/utils/typeguards";
 
 interface Props {
   type: ValueType;

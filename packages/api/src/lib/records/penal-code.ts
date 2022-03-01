@@ -10,10 +10,6 @@ export async function upsertWarningApplicable(
   warningApplicableId?: string;
   warningNotApplicableId?: string;
 }> {
-  if (penalCode?.warningApplicableId) {
-    body.warningApplicable = true;
-  }
-
   let id;
   if (body.warningApplicable) {
     const fines = parsePenalCodeValues(body.fines);
@@ -40,9 +36,11 @@ export async function upsertWarningApplicable(
   }
 
   const key = body.warningApplicable ? "warningApplicableId" : "warningNotApplicableId";
+  const nullkey = body.warningApplicable ? "warningNotApplicableId" : "warningApplicableId";
 
   return {
     [key]: id,
+    [nullkey]: null,
   };
 }
 
