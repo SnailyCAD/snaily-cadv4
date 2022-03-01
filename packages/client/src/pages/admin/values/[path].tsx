@@ -34,6 +34,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
+import { isBaseValue } from "@snailycad/utils/dist/typeguards";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -338,7 +339,7 @@ export function sortValues(values: TValue[]): any[] {
 }
 
 export function findCreatedAtAndPosition(value: TValue) {
-  if ("position" in value) {
+  if (isBaseValue(value)) {
     return {
       createdAt: new Date(value.createdAt),
       position: value.position,
@@ -353,18 +354,20 @@ export function findCreatedAtAndPosition(value: TValue) {
 
 export function handleFilter(value: TValue, search: string) {
   if (!search) return true;
-  const str = "createdAt" in value ? value.value : value.value.value;
+  const str = isBaseValue(value) ? value.value : value.value.value;
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
 }
 
 export function getValueStrFromValue(value: TValue) {
-  return "createdAt" in value ? value.value : value.value.value;
+  const isBase = isBaseValue(value);
+  return isBase ? value.value : value.value.value;
 }
 
 export function getCreatedAtFromValue(value: TValue) {
-  return "createdAt" in value ? value.createdAt : value.value.createdAt;
+  const isBase = isBaseValue(value);
+  return isBase ? value.createdAt : value.value.createdAt;
 }
 
 /**

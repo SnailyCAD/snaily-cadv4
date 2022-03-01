@@ -21,6 +21,10 @@ export type ValueWithValueObj =
 
 export type AnyValue = Value<ValueType> | ValueWithValueObj;
 
+export function isBaseValue(value: AnyValue): value is Value<ValueType> {
+  return "createdAt" in value && typeof value.type === "string";
+}
+
 export function hasValueObj(value: AnyValue): value is ValueWithValueObj {
   return "value" in value && typeof value.value === "object";
 }
@@ -43,4 +47,8 @@ export function isDepartmentValue(value: AnyValue): value is DepartmentValue {
 
 export function isDivisionValue(value: AnyValue): value is DivisionValue {
   return hasValueObj(value) && value.value.type === ValueType.DIVISION;
+}
+
+export function isEmployeeValue(value: AnyValue): value is EmployeeValue {
+  return hasValueObj(value) && value.value.type === ValueType.BUSINESS_ROLE;
 }

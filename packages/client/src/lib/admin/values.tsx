@@ -19,6 +19,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
+import { isBaseValue } from "@snailycad/utils";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -42,7 +43,7 @@ export function useTableDataOfType(type: ValueType) {
 
   function get(value: TValue) {
     // state mismatch prevention
-    const valueType = "createdAt" in value ? value.type : value.value.type;
+    const valueType = isBaseValue(value) ? value.type : value.value.type;
     if (valueType !== type) return;
 
     switch (type) {

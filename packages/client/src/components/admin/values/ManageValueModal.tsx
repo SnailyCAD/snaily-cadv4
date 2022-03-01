@@ -30,6 +30,15 @@ import {
   WHAT_PAGES_LABELS,
 } from "./manage-modal/StatusValueFields";
 import { LicenseFields } from "./manage-modal/LicenseFields";
+import {
+  isEmployeeValue,
+  isBaseValue,
+  isDepartmentValue,
+  isDivisionValue,
+  isStatusValue,
+  isVehicleValue,
+  isWeaponValue,
+} from "@snailycad/utils/dist/typeguards";
 
 interface Props {
   type: ValueType;
@@ -82,7 +91,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       ...values,
       type: dlType ? dlType : values.type,
       whatPages: values.whatPages.map((v: any) => v.value),
-      departments: values.departments.map((v: any) => v.value),
+      departments: values.departments?.map((v: any) => v.value),
     };
 
     if (value) {
@@ -112,39 +121,29 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
   const INITIAL_VALUES = {
     value: value ? getValueStrFromValue(value) : "",
-    as: typeof value?.value === "string" ? "" : value && "as" in value ? value.as : "",
-    shouldDo:
-      typeof value?.value === "string" ? "" : value && "shouldDo" in value ? value.shouldDo : "",
-    departmentId:
-      typeof value?.value === "string"
-        ? ""
-        : value && "departmentId" in value
-        ? value.departmentId
-        : "",
-    // @ts-expect-error shortcut
-    callsign: value?.callsign ?? "",
-    // @ts-expect-error shortcut
-    color: value?.color ?? "",
-    // @ts-expect-error shortcut
-    type: value?.type ?? "STATUS_CODE",
-    // @ts-expect-error shortcut
-    hash: value?.hash ?? "",
-    // @ts-expect-error shortcut
-    licenseType: value?.licenseType ?? null,
-    // @ts-expect-error shortcut
-    whitelisted: value?.whitelisted ?? false,
-    // @ts-expect-error shortcut
-    isDefaultDepartment: value?.isDefaultDepartment ?? false,
+    as: value && isEmployeeValue(value) ? value.as : "",
+    shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
+    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
+    callsign:
+      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
+
+    color: value && isStatusValue(value) ? value.color : "",
+    type: value && isStatusValue(value) ? value.type : "STATUS_CODE",
+    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
+
+    licenseType: value && isBaseValue(value) ? value.licenseType : null,
+    whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
+    isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
+
     // @ts-expect-error shortcut
     whatPages: makeDefaultWhatPages(value).map((v) => ({
       label: WHAT_PAGES_LABELS[v],
       value: v,
     })),
+
     showPicker: false,
-    // @ts-expect-error shortcut
-    departments: defaultDepartments(value),
-    // @ts-expect-error shortcut
-    isDefault: value?.isDefault ?? undefined,
+    departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
+    isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
   };
 
   function validate(values: typeof INITIAL_VALUES) {
