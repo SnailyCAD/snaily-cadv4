@@ -15,7 +15,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
-import { ArrowRight } from "react-bootstrap-icons";
+import { ArrowRight, Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -23,6 +23,9 @@ import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
+import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
+import { classNames } from "lib/classNames";
+import { useActiveUnitsState } from "state/activeUnitsState";
 
 export function ActiveOfficers() {
   const { activeOfficers, setActiveOfficers } = useActiveOfficers();
@@ -38,6 +41,7 @@ export function ActiveOfficers() {
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -78,155 +82,177 @@ export function ActiveOfficers() {
 
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3 flex items-center justify-between">
         <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
+
+        <div>
+          <Button
+            variant="cancel"
+            className={classNames("px-1.5 hover:bg-dark-bg", showLeoFilters && "bg-dark-bg")}
+            onClick={() => setShowFilters("leo", !showLeoFilters)}
+            title={common("filters")}
+          >
+            <Filter aria-label={common("filters")} />
+          </Button>
+        </div>
       </header>
 
       {activeOfficers.length <= 0 ? (
         <p className="px-4 py-2">{t("noActiveOfficers")}</p>
       ) : (
-        <Table
-          isWithinCard
-          containerProps={{ className: "mb-3 px-4" }}
-          data={activeOfficers.map((officer) => {
-            const color = officer.status?.color;
-            const activeIncident =
-              "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
-            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-            const shouldShowSplit =
-              activeOfficer &&
-              "officers" in activeOfficer &&
-              "officers" in officer &&
-              officer.id === activeOfficer.id;
+        <>
+          <ActiveUnitsSearch type="leo" />
 
-            const canBeOpened =
-              isDispatch ||
-              shouldShowSplit ||
-              (activeOfficer &&
-                activeOfficer.id !== officer.id &&
-                !("officers" in officer) &&
-                !("officers" in activeOfficer));
+          <Table
+            isWithinCard
+            filter={leoSearch}
+            containerProps={{ className: "mb-3 px-4" }}
+            data={activeOfficers.map((officer) => {
+              const color = officer.status?.color;
+              const activeIncident =
+                "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
 
-            const codesMapped = codes10.values
-              .filter((v) => v.type === "STATUS_CODE")
-              .map((v) => ({
-                name: v.value.value,
-                onClick: () => setStatus(officer.id, v),
-                "aria-label": `Set status to ${v.value.value}`,
-                title: `Set status to ${v.value.value}`,
-              }));
+              const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+              const shouldShowSplit =
+                activeOfficer &&
+                "officers" in activeOfficer &&
+                "officers" in officer &&
+                officer.id === activeOfficer.id;
 
-            const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+              const canBeOpened =
+                isDispatch ||
+                shouldShowSplit ||
+                (activeOfficer &&
+                  activeOfficer.id !== officer.id &&
+                  !("officers" in officer) &&
+                  !("officers" in activeOfficer));
 
-            return {
-              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
-              officer: (
-                <ContextMenu
-                  canBeOpened={canBeOpened ?? false}
-                  asChild
-                  items={
-                    isDispatch
-                      ? codesMapped
-                      : [
-                          {
-                            name: shouldShowSplit ? t("unmerge") : t("merge"),
-                            onClick: () => {
-                              shouldShowSplit ? handleunMerge(officer.id) : handleMerge(officer.id);
+              const codesMapped = codes10.values
+                .filter((v) => v.type === "STATUS_CODE")
+                .map((v) => ({
+                  name: v.value.value,
+                  onClick: () => setStatus(officer.id, v),
+                  "aria-label": `Set status to ${v.value.value}`,
+                  title: `Set status to ${v.value.value}`,
+                }));
+
+              const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
+
+              return {
+                rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+                name: nameAndCallsign,
+                officer: (
+                  <ContextMenu
+                    canBeOpened={canBeOpened ?? false}
+                    asChild
+                    items={
+                      isDispatch
+                        ? codesMapped
+                        : [
+                            {
+                              name: shouldShowSplit ? t("unmerge") : t("merge"),
+                              onClick: () => {
+                                shouldShowSplit
+                                  ? handleunMerge(officer.id)
+                                  : handleMerge(officer.id);
+                              },
                             },
-                          },
-                        ]
-                  }
-                >
-                  <span
-                    className="flex items-center capitalize cursor-default"
-                    // * 9 to fix overlapping issues with next table column
-                    style={{ minWidth: nameAndCallsign.length * 9 }}
+                          ]
+                    }
                   >
-                    {"imageId" in officer && officer.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", officer.imageId)}
+                    <span
+                      className="flex items-center capitalize cursor-default"
+                      // * 9 to fix overlapping issues with next table column
+                      style={{ minWidth: nameAndCallsign.length * 9 }}
+                    >
+                      {"imageId" in officer && officer.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", officer.imageId)}
+                        />
+                      ) : null}
+                      {"officers" in officer ? (
+                        <div className="flex items-center">
+                          {generateCallsign(officer, "pairedUnitTemplate")}
+                          <span className="mx-4">
+                            <ArrowRight />
+                          </span>
+                          {officer.officers.map((officer) => (
+                            <React.Fragment key={officer.id}>
+                              {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      ) : (
+                        nameAndCallsign
+                      )}
+                    </span>
+                  </ContextMenu>
+                ),
+                badgeNumber: !("officers" in officer) && String(officer.badgeNumber),
+                department:
+                  (!("officers" in officer) && officer.department?.value.value) ?? common("none"),
+                division: !("officers" in officer) && formatUnitDivisions(officer),
+                rank: (!("officers" in officer) && officer.rank?.value) ?? common("none"),
+                status: (
+                  <span className="flex items-center">
+                    {useDot && color ? (
+                      <span
+                        style={{ background: color }}
+                        className="block w-3 h-3 mr-2 rounded-full"
                       />
                     ) : null}
-                    {"officers" in officer ? (
-                      <div className="flex items-center">
-                        {generateCallsign(officer, "pairedUnitTemplate")}
-                        <span className="mx-4">
-                          <ArrowRight />
-                        </span>
-                        {officer.officers.map((officer) => (
-                          <React.Fragment key={officer.id}>
-                            {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    ) : (
-                      nameAndCallsign
-                    )}
+                    {officer.status?.value?.value}
                   </span>
-                </ContextMenu>
-              ),
-              badgeNumber: !("officers" in officer) && String(officer.badgeNumber),
-              department:
-                (!("officers" in officer) && officer.department?.value.value) ?? common("none"),
-              division: !("officers" in officer) && formatUnitDivisions(officer),
-              rank: (!("officers" in officer) && officer.rank?.value) ?? common("none"),
-              status: (
-                <span className="flex items-center">
-                  {useDot && color ? (
-                    <span
-                      style={{ background: color }}
-                      className="block w-3 h-3 mr-2 rounded-full"
-                    />
-                  ) : null}
-                  {officer.status?.value?.value}
-                </span>
-              ),
-              incident: activeIncident ? (
-                <Button
-                  onClick={() =>
-                    handleIncidentOpen({
-                      ...activeIncident,
-                      isActive: true,
-                    } as FullIncident)
-                  }
-                >
-                  #{activeIncident.caseNumber}
-                </Button>
-              ) : (
-                common("none")
-              ),
-              radioChannel:
-                "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
-              actions: isDispatch ? (
-                <>
+                ),
+                incident: activeIncident ? (
                   <Button
-                    disabled={!hasActiveDispatchers}
-                    onClick={() => handleEditClick(officer)}
-                    small
-                    variant="success"
+                    onClick={() =>
+                      handleIncidentOpen({
+                        ...activeIncident,
+                        isActive: true,
+                      } as FullIncident)
+                    }
                   >
-                    {common("manage")}
+                    #{activeIncident.caseNumber}
                   </Button>
-                </>
-              ) : null,
-            };
-          })}
-          columns={[
-            { Header: t("officer"), accessor: "officer" },
-            { Header: t("badgeNumber"), accessor: "badgeNumber" },
-            { Header: t("department"), accessor: "department" },
-            { Header: t("division"), accessor: "division" },
-            { Header: t("rank"), accessor: "rank" },
-            { Header: t("status"), accessor: "status" },
-            ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
-            RADIO_CHANNEL_MANAGEMENT
-              ? { Header: t("radioChannel"), accessor: "radioChannel" }
-              : null,
-            isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
-          ]}
-        />
+                ) : (
+                  common("none")
+                ),
+                radioChannel:
+                  "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
+                actions: isDispatch ? (
+                  <>
+                    <Button
+                      disabled={!hasActiveDispatchers}
+                      onClick={() => handleEditClick(officer)}
+                      small
+                      variant="success"
+                    >
+                      {common("manage")}
+                    </Button>
+                  </>
+                ) : null,
+              };
+            })}
+            columns={[
+              { Header: t("officer"), accessor: "officer" },
+              // a hidden header since the Table component can't search through React components.
+              { Header: t("officer"), accessor: "name", width: 0, maxWidth: 0 },
+              { Header: t("badgeNumber"), accessor: "badgeNumber" },
+              { Header: t("department"), accessor: "department" },
+              { Header: t("division"), accessor: "division" },
+              { Header: t("rank"), accessor: "rank" },
+              { Header: t("status"), accessor: "status" },
+              ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
+              RADIO_CHANNEL_MANAGEMENT
+                ? { Header: t("radioChannel"), accessor: "radioChannel" }
+                : null,
+              isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+            ]}
+          />
+        </>
       )}
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
