@@ -250,10 +250,10 @@ export const typeHandlers = {
   },
 };
 
-function createValueObj(value: string, type: ValueType) {
+function createValueObj(value: string, type: ValueType, isDefault = false) {
   return {
     create: {
-      isDefault: false,
+      isDefault,
       type,
       value,
     },
