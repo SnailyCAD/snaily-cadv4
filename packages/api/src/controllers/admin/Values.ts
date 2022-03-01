@@ -137,11 +137,11 @@ export class ValuesController {
     const error = validate(BASE_VALUE_SCHEMA, body.toJSON(), true);
     const type = this.getTypeFromPath(path);
 
-    if (error && !["PENAL_CODE"].includes(type)) {
+    if (error && ![ValueType.PENAL_CODE as ValueType].includes(type)) {
       throw new BadRequest(error);
     }
 
-    if (type === "PENAL_CODE") {
+    if (type === ValueType.PENAL_CODE) {
       const data = validateSchema(PENAL_CODE_SCHEMA, body.toJSON());
 
       const penalCode = await prisma.penalCode.findUnique({
@@ -170,7 +170,7 @@ export class ValuesController {
       return updated;
     }
 
-    if (type === "CODES_10") {
+    if (type === ValueType.CODES_10) {
       const statusValue = await prisma.statusValue.findUnique({
         where: { id },
         include: { departments: true },
@@ -215,7 +215,7 @@ export class ValuesController {
       return updated;
     }
 
-    if (type === "DEPARTMENT") {
+    if (type === ValueType.DEPARTMENT) {
       if (body.get("isDefaultDepartment")) {
         const existing = await prisma.departmentValue.findFirst({
           where: { isDefaultDepartment: true },
@@ -251,7 +251,7 @@ export class ValuesController {
       return updated;
     }
 
-    if (type === "DIVISION") {
+    if (type === ValueType.DIVISION) {
       if (!body.get("departmentId")) {
         throw new BadRequest("departmentIdRequired");
       }
@@ -297,7 +297,7 @@ export class ValuesController {
       return updated;
     }
 
-    if (type === "DRIVERSLICENSE_CATEGORY") {
+    if (type === ValueType.DRIVERSLICENSE_CATEGORY) {
       if (!body.get("type")) {
         throw new BadRequest("typeIsRequired");
       }
@@ -319,7 +319,7 @@ export class ValuesController {
       return dlCategory;
     }
 
-    if (type === "VEHICLE") {
+    if (type === ValueType.VEHICLE) {
       const vehicleValue = await prisma.vehicleValue.update({
         where: {
           id,
@@ -338,7 +338,7 @@ export class ValuesController {
       return vehicleValue;
     }
 
-    if (type === "WEAPON") {
+    if (type === ValueType.WEAPON) {
       const weaponValue = await prisma.weaponValue.update({
         where: {
           id,
@@ -363,7 +363,8 @@ export class ValuesController {
       },
       data: {
         value: body.get("value"),
-        licenseType: type === "LICENSE" ? body.get("licenseType") : undefined,
+        licenseType: type === ValueType.LICENSE ? body.get("licenseType") : undefined,
+        isDefault: type === ValueType.LICENSE ? body.get("isDefault") : undefined,
       },
     });
 

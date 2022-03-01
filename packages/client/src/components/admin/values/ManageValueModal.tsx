@@ -143,6 +143,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     showPicker: false,
     // @ts-expect-error shortcut
     departments: defaultDepartments(value),
+    // @ts-expect-error shortcut
+    isDefault: value?.isDefault ?? undefined,
   };
 
   function validate(values: typeof INITIAL_VALUES) {

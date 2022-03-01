@@ -13,7 +13,7 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
+import { Citizen, DriversLicenseCategoryValue, User, ValueType } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
@@ -157,6 +157,11 @@ export class CitizenController {
       throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
     }
 
+    const defaultLicenseValue = await prisma.value.findFirst({
+      where: { isDefault: true, type: ValueType.LICENSE },
+    });
+    const defaultLicenseValueId = defaultLicenseValue?.id ?? null;
+
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
@@ -171,10 +176,10 @@ export class CitizenController {
         surname: data.surname,
         genderId: data.gender,
         eyeColor: data.eyeColor,
-        driversLicenseId: data.driversLicense || undefined,
-        weaponLicenseId: data.weaponLicense || undefined,
-        pilotLicenseId: data.pilotLicense || undefined,
-        ccwId: data.ccw || undefined,
+        driversLicenseId: data.driversLicense || defaultLicenseValueId,
+        weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
+        pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
+        ccwId: data.ccw || defaultLicenseValueId,
         phoneNumber: data.phoneNumber || null,
         imageId: validateImgurURL(data.image),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
