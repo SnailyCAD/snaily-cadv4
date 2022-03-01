@@ -125,7 +125,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color : "",
-    type: value && isStatusValue(value) ? value.type : "STATUS_CODE",
+    type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
     departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
     whatPages:
       value && isStatusValue(value)
