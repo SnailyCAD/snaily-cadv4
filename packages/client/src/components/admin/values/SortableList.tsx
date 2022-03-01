@@ -1,21 +1,22 @@
 import { ReactSortable } from "react-sortablejs";
 import { ArrowsExpand } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
-import { handleFilter, sortValues, TValue } from "src/pages/admin/values/[path]";
+import { handleFilter, sortValues } from "src/pages/admin/values/[path]";
 import { Button } from "components/Button";
+import type { AnyValue } from "@snailycad/utils";
 
 interface ListProps {
-  values: TValue[];
+  values: AnyValue[];
   search: string;
   setList: any;
-  handleEdit: (value: TValue) => void;
-  handleDelete: (value: TValue) => void;
+  handleEdit: (value: AnyValue) => void;
+  handleDelete: (value: AnyValue) => void;
 }
 
 export function SortableList({ values, search, setList, handleEdit, handleDelete }: ListProps) {
   const common = useTranslations("Common");
 
-  function checkMoved(list: TValue[]) {
+  function checkMoved(list: AnyValue[]) {
     let wasMoved = false;
 
     for (let i = 0; i < values.length; i++) {

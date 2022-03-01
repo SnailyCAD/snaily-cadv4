@@ -4,11 +4,11 @@ import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { useDownload } from "@casper124578/useful";
-import type { TValue } from "src/pages/admin/values/[path]";
 import { Dropdown } from "components/Dropdown";
 import type { PenalCode } from "@snailycad/types";
+import type { AnyValue } from "@snailycad/utils";
 
-export function OptionsDropdown({ values }: { values: (TValue | PenalCode)[] }) {
+export function OptionsDropdown({ values }: { values: (AnyValue | PenalCode)[] }) {
   const t = useTranslations("Values");
   const { openModal } = useModal();
   const download = useDownload();

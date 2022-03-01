@@ -1,7 +1,6 @@
 import { LICENSE_LABELS } from "components/admin/values/manage-modal/LicenseFields";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
-import type { TValue } from "src/pages/admin/values/[path]";
 import {
   type StatusValue,
   StatusValueType,
@@ -19,6 +18,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
+import { type AnyValue, isBaseValue } from "@snailycad/utils";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -40,9 +40,9 @@ export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
 
-  function get(value: TValue) {
+  function get(value: AnyValue) {
     // state mismatch prevention
-    const valueType = "createdAt" in value ? value.type : value.value.type;
+    const valueType = isBaseValue(value) ? value.type : value.value.type;
     if (valueType !== type) return;
 
     switch (type) {
