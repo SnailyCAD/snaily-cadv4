@@ -1,8 +1,9 @@
 import create from "zustand";
 
 interface ActiveUnitsState {
-  showFilters: boolean;
-  setShowFilters(v: boolean): void;
+  showLeoFilters: boolean;
+  showEmsFilters: boolean;
+  setShowFilters(type: "leo" | "ems-fd", v: boolean): void;
 
   leoSearch: string;
   emsSearch: string;
@@ -10,8 +11,12 @@ interface ActiveUnitsState {
 }
 
 export const useActiveUnitsState = create<ActiveUnitsState>((set) => ({
-  showFilters: false,
-  setShowFilters: (v) => set({ showFilters: v }),
+  showLeoFilters: false,
+  showEmsFilters: false,
+  setShowFilters: (type, v) => {
+    const propName = type === "leo" ? "showLeoFilters" : "showEmsFilters";
+    set({ [propName]: v } as unknown as ActiveUnitsState);
+  },
 
   leoSearch: "",
   emsSearch: "",

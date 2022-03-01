@@ -41,7 +41,7 @@ export function ActiveOfficers() {
   const { execute } = useFetch();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
-  const { leoSearch, showFilters, setShowFilters } = useActiveUnitsState();
+  const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -88,8 +88,8 @@ export function ActiveOfficers() {
         <div>
           <Button
             variant="cancel"
-            className={classNames("px-1.5 hover:bg-dark-bg", showFilters && "bg-dark-bg")}
-            onClick={() => setShowFilters(!showFilters)}
+            className={classNames("px-1.5 hover:bg-dark-bg", showLeoFilters && "bg-dark-bg")}
+            onClick={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
           >
             <Filter aria-label={common("filters")} />

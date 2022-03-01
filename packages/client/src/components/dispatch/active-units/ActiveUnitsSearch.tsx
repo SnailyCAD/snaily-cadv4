@@ -9,8 +9,14 @@ interface Props {
 
 export function ActiveUnitsSearch({ type }: Props) {
   const setSearchType = type === "leo" ? "leoSearch" : "emsSearch";
+  const showFiltersType = type === "leo" ? "showLeoFilters" : "showEmsFilters";
+
   const common = useTranslations("Common");
-  const { showFilters, setSearch, [setSearchType]: search } = useActiveUnitsState();
+  const {
+    [showFiltersType]: showFilters,
+    [setSearchType]: search,
+    setSearch,
+  } = useActiveUnitsState();
 
   return showFilters ? (
     <div className="px-4 mt-2 mb-5">

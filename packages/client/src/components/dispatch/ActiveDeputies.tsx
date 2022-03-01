@@ -19,6 +19,10 @@ import { useValues } from "context/ValuesContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
+import { useActiveUnitsState } from "state/activeUnitsState";
+import { classNames } from "lib/classNames";
+import { Filter } from "react-bootstrap-icons";
+import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 
 export function ActiveDeputies() {
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
@@ -32,6 +36,7 @@ export function ActiveDeputies() {
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { codes10 } = useValues();
   const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -45,92 +50,111 @@ export function ActiveDeputies() {
 
   return (
     <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3 flex items-center justify-between">
         <h3 className="text-xl font-semibold">{t("Ems.activeDeputies")}</h3>
+
+        <div>
+          <Button
+            variant="cancel"
+            className={classNames("px-1.5 hover:bg-dark-bg", showEmsFilters && "bg-dark-bg")}
+            onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
+            title={common("filters")}
+          >
+            <Filter aria-label={common("filters")} />
+          </Button>
+        </div>
       </header>
 
       {activeDeputies.length <= 0 ? (
         <p className="px-4 py-2">{t("Ems.noActiveDeputies")}</p>
       ) : (
-        <Table
-          isWithinCard
-          containerProps={{ className: "mb-3 px-4" }}
-          data={activeDeputies.map((deputy) => {
-            const color = deputy.status?.color;
-            const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+        <>
+          <ActiveUnitsSearch type="ems-fd" />
 
-            const codesMapped = codes10.values
-              .filter((v) => v.type === "STATUS_CODE")
-              .map((v) => ({
-                name: v.value.value,
-                onClick: () => setStatus(deputy.id, v),
-                "aria-label": `Set status to ${v.value.value}`,
-                title: `Set status to ${v.value.value}`,
-              }));
+          <Table
+            isWithinCard
+            containerProps={{ className: "mb-3 px-4" }}
+            filter={emsSearch}
+            data={activeDeputies.map((deputy) => {
+              const color = deputy.status?.color;
+              const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
-            const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
+              const codesMapped = codes10.values
+                .filter((v) => v.type === "STATUS_CODE")
+                .map((v) => ({
+                  name: v.value.value,
+                  onClick: () => setStatus(deputy.id, v),
+                  "aria-label": `Set status to ${v.value.value}`,
+                  title: `Set status to ${v.value.value}`,
+                }));
 
-            return {
-              rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
-              deputy: (
-                <ContextMenu asChild items={codesMapped}>
-                  <span // * 9 to fix overlapping issues with next table column
-                    style={{ minWidth: nameAndCallsign.length * 9 }}
-                  >
-                    {deputy.imageId ? (
-                      <img
-                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                        draggable={false}
-                        src={makeImageUrl("units", deputy.imageId)}
+              const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
+
+              return {
+                rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
+                name: nameAndCallsign,
+                deputy: (
+                  <ContextMenu asChild items={codesMapped}>
+                    <span // * 9 to fix overlapping issues with next table column
+                      style={{ minWidth: nameAndCallsign.length * 9 }}
+                    >
+                      {deputy.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("units", deputy.imageId)}
+                        />
+                      ) : null}
+                      {nameAndCallsign}
+                    </span>
+                  </ContextMenu>
+                ),
+                badgeNumber: deputy.badgeNumber,
+                department: deputy.department.value.value,
+                division: formatUnitDivisions(deputy),
+                rank: deputy.rank?.value ?? common("none"),
+                status: (
+                  <span className="flex items-center">
+                    {useDot && color ? (
+                      <span
+                        style={{ background: color }}
+                        className="block w-3 h-3 mr-2 rounded-full"
                       />
                     ) : null}
-                    {nameAndCallsign}
+                    {deputy.status?.value?.value}
                   </span>
-                </ContextMenu>
-              ),
-              badgeNumber: deputy.badgeNumber,
-              department: deputy.department.value.value,
-              division: formatUnitDivisions(deputy),
-              rank: deputy.rank?.value ?? common("none"),
-              status: (
-                <span className="flex items-center">
-                  {useDot && color ? (
-                    <span
-                      style={{ background: color }}
-                      className="block w-3 h-3 mr-2 rounded-full"
-                    />
-                  ) : null}
-                  {deputy.status?.value?.value}
-                </span>
-              ),
-              radioChannel: <UnitRadioChannelModal unit={deputy} />,
-              actions: isDispatch ? (
-                <>
-                  <Button
-                    disabled={!hasActiveDispatchers}
-                    onClick={() => handleEditClick(deputy)}
-                    small
-                    variant="success"
-                  >
-                    {common("manage")}
-                  </Button>
-                </>
-              ) : null,
-            };
-          })}
-          columns={[
-            { Header: t("Ems.deputy"), accessor: "deputy" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
-            { Header: t("Leo.department"), accessor: "department" },
-            { Header: t("Leo.division"), accessor: "division" },
-            { Header: t("Leo.rank"), accessor: "rank" },
-            { Header: t("Leo.status"), accessor: "status" },
-            RADIO_CHANNEL_MANAGEMENT
-              ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
-              : null,
-            isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
-          ]}
-        />
+                ),
+                radioChannel: <UnitRadioChannelModal unit={deputy} />,
+                actions: isDispatch ? (
+                  <>
+                    <Button
+                      disabled={!hasActiveDispatchers}
+                      onClick={() => handleEditClick(deputy)}
+                      small
+                      variant="success"
+                    >
+                      {common("manage")}
+                    </Button>
+                  </>
+                ) : null,
+              };
+            })}
+            columns={[
+              { Header: t("Ems.deputy"), accessor: "deputy" },
+              // a hidden header since the Table component can't search through React components.
+              { Header: t("Ems.deputy"), accessor: "name", width: 0, maxWidth: 0 },
+              { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+              { Header: t("Leo.department"), accessor: "department" },
+              { Header: t("Leo.division"), accessor: "division" },
+              { Header: t("Leo.rank"), accessor: "rank" },
+              { Header: t("Leo.status"), accessor: "status" },
+              RADIO_CHANNEL_MANAGEMENT
+                ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
+                : null,
+              isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
+            ]}
+          />
+        </>
       )}
 
       {tempUnit ? (
