@@ -9,7 +9,7 @@
   "devDependencies": {
     "@snailycad/types": "1.0.0-beta.64",
     "tsup": "^5.11.13",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   },
   "tsup": {
     "entry": [
