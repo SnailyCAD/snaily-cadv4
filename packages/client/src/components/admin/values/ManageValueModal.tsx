@@ -122,20 +122,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
   const INITIAL_VALUES = {
     value: value ? getValueStrFromValue(value) : "",
-    as: value && isEmployeeValue(value) ? value.as : "",
-    shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
-    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
-    callsign:
-      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
 
+    shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color : "",
     type: value && isStatusValue(value) ? value.type : "STATUS_CODE",
-    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
-
-    licenseType: value && isBaseValue(value) ? value.licenseType : null,
-    whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
-    isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
-
+    departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
     whatPages:
       value && isStatusValue(value)
         ? makeDefaultWhatPages(value)?.map((v) => ({
@@ -144,9 +135,19 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
           }))
         : [],
 
-    showPicker: false,
-    departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
+    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
+    whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
+    isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
+    callsign:
+      value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",
+
+    as: value && isEmployeeValue(value) ? value.as : "",
+    hash: value && (isVehicleValue(value) || isWeaponValue(value)) ? value.hash ?? "" : undefined,
+
+    licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+
+    showPicker: false,
   };
 
   function validate(values: typeof INITIAL_VALUES) {
