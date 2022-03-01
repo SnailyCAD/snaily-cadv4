@@ -239,10 +239,11 @@ export const typeHandlers = {
       data.map((item) =>
         prisma.value.create({
           data: {
-            isDefault: false,
+            isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
             type: type as ValueType,
             value: item.value,
-            licenseType: type === "LICENSE" ? (item.licenseType as ValueLicenseType) : undefined,
+            licenseType:
+              type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
           },
         }),
       ),
@@ -250,10 +251,10 @@ export const typeHandlers = {
   },
 };
 
-function createValueObj(value: string, type: ValueType, isDefault = false) {
+function createValueObj(value: string, type: ValueType) {
   return {
     create: {
-      isDefault,
+      isDefault: false,
       type,
       value,
     },
