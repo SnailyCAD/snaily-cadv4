@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
-import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
+import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
@@ -66,8 +66,10 @@ export class Calls911Controller {
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: cad,
+    @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
   ) {
     const data = validateSchema(CREATE_911_CALL, body);
+    const isFromDispatch = isFromDispatchHeader === "true" && user.isDispatch;
 
     const call = await prisma.call911.create({
       data: {
@@ -78,6 +80,7 @@ export class Calls911Controller {
         name: data.name,
         userId: user.id || undefined,
         situationCodeId: data.situationCode ?? null,
+        viaDispatch: isFromDispatch,
       },
       include: callInclude,
     });
