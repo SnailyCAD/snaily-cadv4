@@ -97,6 +97,15 @@ export class StatusController {
         },
       });
 
+      const isOfficerDisabled = officer?.whitelistStatus
+        ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
+          !officer.department?.isDefaultDepartment
+        : false;
+
+      if (isOfficerDisabled) {
+        throw new BadRequest("cannotUseThisOfficer");
+      }
+
       if (
         officer?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
         code.shouldDo !== ShouldDoType.PANIC_BUTTON
@@ -107,15 +116,6 @@ export class StatusController {
         code.shouldDo === ShouldDoType.PANIC_BUTTON
       ) {
         this.socket.emitPanicButtonLeo(officer, "ON");
-      }
-
-      const isOfficerDisabled = officer?.whitelistStatus
-        ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
-          !officer.department?.isDefaultDepartment
-        : false;
-
-      if (isOfficerDisabled) {
-        throw new BadRequest("cannotUseThisOfficer");
       }
     }
 

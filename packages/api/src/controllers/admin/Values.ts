@@ -1,4 +1,3 @@
-import { CODES_10_SCHEMA } from "@snailycad/schemas";
 import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
 import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -8,8 +7,7 @@ import { IsAuth } from "middlewares/index";
 import { typeHandlers } from "./values/Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import type { ValuesSelect } from "lib/values/types";
-import { validateSchema } from "lib/validateSchema";
-import { ValueType, ShouldDoType, StatusValueType } from "@prisma/client";
+import { ValueType } from "@prisma/client";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   VEHICLE: { name: "vehicleValue" },
@@ -83,7 +81,7 @@ export class ValuesController {
   async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
     const type = this.getTypeFromPath(path);
 
-    if (type === "DEPARTMENT") {
+    if (type === ValueType.DEPARTMENT) {
       if (body.isDefaultDepartment) {
         const existing = await prisma.departmentValue.findFirst({
           where: { isDefaultDepartment: true },
@@ -134,53 +132,6 @@ export class ValuesController {
     @PathParams("path") path: string,
   ) {
     const type = this.getTypeFromPath(path);
-
-    if (type === ValueType.CODES_10) {
-      const data = validateSchema(CODES_10_SCHEMA, body);
-
-      const statusValue = await prisma.statusValue.findUnique({
-        where: { id: valueId },
-        include: { departments: true },
-      });
-
-      await Promise.all(
-        (statusValue?.departments ?? []).map(async (v) => {
-          await prisma.statusValue.update({
-            where: { id: valueId },
-            data: { departments: { disconnect: { id: v.id } } },
-          });
-        }),
-      );
-
-      await prisma.statusValue.update({
-        where: {
-          id: valueId,
-        },
-        data: {
-          value: { update: { value: data.value } },
-          whatPages: data.whatPages ?? [],
-          shouldDo: data.shouldDo as ShouldDoType,
-          color: data.color || null,
-          type: (data.type as StatusValueType | null) ?? "STATUS_CODE",
-        },
-      });
-
-      await Promise.all(
-        (data.departments ?? []).map(async (departmentId: string) => {
-          await prisma.statusValue.update({
-            where: { id: valueId },
-            data: { departments: { connect: { id: departmentId } } },
-          });
-        }),
-      );
-
-      const updated = await prisma.statusValue.findUnique({
-        where: { id: valueId },
-        include: { value: true, departments: { include: { value: true } } },
-      });
-
-      return updated;
-    }
 
     const handler = typeHandlers[type];
     const arr = await handler([body], valueId);

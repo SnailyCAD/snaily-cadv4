@@ -235,21 +235,49 @@ export const typeHandlers = {
       }),
     );
   },
-  CODES_10: async (body: unknown) => {
+  CODES_10: async (body: unknown, id?: string) => {
     const data = validateSchema(CODES_10_ARR, body);
     const DEFAULT_WHAT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
     return handlePromiseAll(data, async (item) => {
       const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
 
-      const value = await prisma.statusValue.create({
-        data: {
+      const value = await prisma.statusValue.findUnique({
+        where: { id: String(id) },
+        select: { id: true, departments: true },
+      });
+
+      if (value) {
+        await Promise.all(
+          (value?.departments ?? []).map(async (v) => {
+            await prisma.statusValue.update({
+              where: { id: value.id },
+              data: { departments: { disconnect: { id: v.id } } },
+            });
+          }),
+        );
+      }
+
+      const data = {
+        update: {
           type: item.type as StatusValueType,
           color: item.color,
           shouldDo: item.shouldDo as ShouldDoType,
           whatPages: whatPages as WhatPages[],
-          value: createValueObj(item.value, ValueType.CODES_10),
+          value: createValueObj(item.value, ValueType.CODES_10, "update"),
         },
+        create: {
+          type: item.type as StatusValueType,
+          color: item.color,
+          shouldDo: item.shouldDo as ShouldDoType,
+          whatPages: whatPages as WhatPages[],
+          value: createValueObj(item.value, ValueType.CODES_10, "create"),
+        },
+      };
+
+      const updatedValue = await prisma.statusValue.upsert({
+        where: { id: String(id) },
+        ...data,
         include: { value: true },
       });
 
@@ -258,7 +286,7 @@ export const typeHandlers = {
         (item.departments ?? []).map(async (departmentId, idx) => {
           const isLast = idx + 1 === item.departments?.length;
           const statusValue = await prisma.statusValue.update({
-            where: { id: value.id },
+            where: { id: updatedValue.id },
             data: { departments: { connect: { id: departmentId } } },
             include: isLast
               ? { value: true, departments: { include: { value: true } } }
@@ -272,12 +300,12 @@ export const typeHandlers = {
       );
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return { ...value, ...(last ?? {}) };
+      return { ...updatedValue, ...(last ?? {}) };
     });
   },
   PENAL_CODE: async (body: unknown, id?: string) => {
     const data = validateSchema(PENAL_CODE_ARR, body);
-    const penalCode = id && (await prisma.penalCode.findUnique({ where: { id } }));
+    const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
 
     return handlePromiseAll(data, async (item) => {
       const data = {
