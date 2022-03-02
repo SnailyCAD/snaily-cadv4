@@ -13,7 +13,7 @@ import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
-import { NameSearchResult, useNameSearch } from "state/nameSearchState";
+import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
@@ -58,7 +58,7 @@ export function NameSearchModal() {
   const { cad } = useAuth();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
-  const { openModal } = useModal();
+  const { openModal, setCanBeClosed } = useModal();
   const isLeo = router.pathname === "/officer";
   const [toggled, setToggled] = React.useState<Toggled | null>(null);
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
@@ -70,6 +70,7 @@ export function NameSearchModal() {
       setResults(null);
       setToggled(null);
       setCurrentResult(null);
+      setCanBeClosed(true);
     }
   }, [isOpen, setCurrentResult, setResults]);
 

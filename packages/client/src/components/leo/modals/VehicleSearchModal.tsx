@@ -8,14 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type {
-  Business,
-  Citizen,
-  RegisteredVehicle,
-  TruckLog,
-  Value,
-  ValueType,
-} from "@snailycad/types";
+import type { RegisteredVehicle } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
@@ -24,9 +17,10 @@ import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 
 export function VehicleSearchModal() {
-  const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
+  const { currentResult, setCurrentResult } = useVehicleSearch();
 
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -36,12 +30,11 @@ export function VehicleSearchModal() {
   const { BUSINESS } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
-  const showMarkStolen =
-    results && typeof results !== "boolean" && isLeo && !results.reportedStolen;
+  const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.VehicleSearch)) {
-      setResults(null);
+      setCurrentResult(undefined);
     }
   }, [isOpen]);
 
@@ -53,28 +46,27 @@ export function VehicleSearchModal() {
     });
 
     if (json.id) {
-      setResults(json);
+      setCurrentResult(json);
     } else {
-      setResults(false);
+      setCurrentResult(null);
     }
   }
 
   async function handleMarkStolen() {
-    if (!results || typeof results === "boolean") return;
+    if (!currentResult) return;
 
-    const { json } = await execute(`/bolos/mark-stolen/${results.id}`, {
+    const { json } = await execute(`/bolos/mark-stolen/${currentResult.id}`, {
       method: "POST",
       data: {
-        id: results.id,
-        color: results.color,
-        modelId: results.modelId,
-        plate: results.plate,
+        id: currentResult.id,
+        color: currentResult.color,
+        modelId: currentResult.modelId,
+        plate: currentResult.plate,
       },
     });
 
     if (json) {
-      // @ts-expect-error ignore
-      setResults((p) => ({ ...p, reportedStolen: true }));
+      setCurrentResult({ ...currentResult, reportedStolen: true });
     }
   }
 
@@ -96,7 +88,7 @@ export function VehicleSearchModal() {
               <InputSuggestions
                 onSuggestionClick={(suggestion: VehicleSearchResult) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
-                  setResults(suggestion);
+                  setCurrentResult(suggestion);
                 }}
                 Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
                   <div className="flex items-center">
@@ -118,13 +110,15 @@ export function VehicleSearchModal() {
               />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{t("vehicleNotFound")}</p> : null}
-
-            {typeof results !== "boolean" && results ? (
+            {!currentResult ? (
+              typeof currentResult === "undefined" ? null : (
+                <p>{t("vehicleNotFound")}</p>
+              )
+            ) : (
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                {results.reportedStolen ? (
+                {currentResult.reportedStolen ? (
                   <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
                     {t("vehicleReportedStolen")}
                   </div>
@@ -132,36 +126,36 @@ export function VehicleSearchModal() {
 
                 <ul className="mt-2">
                   <li>
-                    <Infofield label={vT("plate")}>{results.plate.toUpperCase()}</Infofield>
+                    <Infofield label={vT("plate")}>{currentResult.plate.toUpperCase()}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("model")}>{results.model.value.value}</Infofield>
+                    <Infofield label={vT("model")}>{currentResult.model.value.value}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("color")}> {results.color}</Infofield>
+                    <Infofield label={vT("color")}> {currentResult.color}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("vinNumber")}>{results.vinNumber}</Infofield>
+                    <Infofield label={vT("vinNumber")}>{currentResult.vinNumber}</Infofield>
                   </li>
                   <li>
                     <Infofield label={vT("vinNumber")}>
-                      {results.registrationStatus.value}
+                      {currentResult.registrationStatus.value}
                     </Infofield>
                   </li>
                   <li>
                     <Infofield label={common("createdAt")}>
-                      <FullDate>{results.createdAt}</FullDate>
+                      <FullDate>{currentResult.createdAt}</FullDate>
                     </Infofield>
                   </li>
                   <li>
                     <Infofield className="capitalize" label={vT("owner")}>
-                      {results.citizen.name} {results.citizen.surname}
+                      {currentResult.citizen.name} {currentResult.citizen.surname}
                     </Infofield>
                   </li>
                   {BUSINESS ? (
                     <li>
                       <Infofield className="capitalize" label={vT("business")}>
-                        {results.Business[0]?.name ?? common("none")}
+                        {currentResult.Business[0]?.name ?? common("none")}
                       </Infofield>
                     </li>
                   ) : null}
@@ -170,19 +164,19 @@ export function VehicleSearchModal() {
                       childrenProps={{
                         className: classNames(
                           "capitalize",
-                          results.reportedStolen && "text-red-700 font-semibold",
+                          currentResult.reportedStolen && "text-red-700 font-semibold",
                         ),
                       }}
                       label={t("reportedStolen")}
                     >
-                      {common(yesOrNoText(results.reportedStolen))}
+                      {common(yesOrNoText(currentResult.reportedStolen))}
                     </Infofield>
                   </li>
                 </ul>
 
-                <TruckLogsTable results={results} />
+                <TruckLogsTable result={currentResult} />
               </div>
-            ) : null}
+            )}
 
             <footer className={`mt-5 flex ${showMarkStolen ? "justify-between" : "justify-end"}`}>
               {showMarkStolen ? (
@@ -221,11 +215,4 @@ export function VehicleSearchModal() {
       </Formik>
     </Modal>
   );
-}
-
-export interface VehicleSearchResult extends RegisteredVehicle {
-  citizen: Citizen;
-  registrationStatus: Value<ValueType.LICENSE>;
-  TruckLog: TruckLog[];
-  Business: Business[];
 }

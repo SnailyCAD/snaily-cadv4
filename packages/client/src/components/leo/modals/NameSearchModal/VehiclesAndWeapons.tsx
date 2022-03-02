@@ -3,6 +3,12 @@ import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { RegisteredVehicle, Weapon } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { Button } from "components/Button";
+import { useVehicleSearch } from "state/search/vehicleSearchState";
+import { useModal } from "context/ModalContext";
+import { useNameSearch } from "state/search/nameSearchState";
+import { ModalIds } from "types/ModalIds";
+import { useWeaponSearch } from "state/search/weaponSearchState";
 
 interface Props {
   vehicles: RegisteredVehicle[];
@@ -13,6 +19,27 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { currentResult } = useNameSearch();
+  const { openModal, setCanBeClosed } = useModal();
+  const { setCurrentResult: setVehicleResult } = useVehicleSearch();
+  const { setCurrentResult: setWeaponResult } = useWeaponSearch();
+
+  function handlePlateClick(vehicle: RegisteredVehicle) {
+    if (!currentResult) return;
+
+    // todo: fetch truck-logs
+    setVehicleResult({ ...vehicle, citizen: currentResult, Business: [], TruckLog: [] });
+    openModal(ModalIds.VehicleSearch);
+    setCanBeClosed(false);
+  }
+
+  function handleWeaponClick(weapon: Weapon) {
+    if (!currentResult) return;
+
+    setWeaponResult({ ...weapon, citizen: currentResult });
+    openModal(ModalIds.WeaponSearch);
+    setCanBeClosed(false);
+  }
 
   return (
     <>
@@ -24,7 +51,11 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
         ) : (
           <Table
             data={vehicles.map((vehicle) => ({
-              plate: vehicle.plate,
+              plate: (
+                <Button type="button" onClick={() => handlePlateClick(vehicle)}>
+                  {vehicle.plate}
+                </Button>
+              ),
               model: vehicle.model.value.value,
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
@@ -52,7 +83,11 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
           ) : (
             <Table
               data={weapons.map((weapon) => ({
-                model: weapon.model.value.value,
+                model: (
+                  <Button type="button" onClick={() => handleWeaponClick(weapon)}>
+                    {weapon.model.value.value}
+                  </Button>
+                ),
                 registrationStatus: weapon.registrationStatus.value,
                 serialNumber: weapon.serialNumber,
               }))}
