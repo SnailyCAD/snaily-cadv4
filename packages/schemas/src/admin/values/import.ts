@@ -86,7 +86,9 @@ export const PENAL_CODE_SCHEMA = z.object({
   description: z.string().nullable().optional(),
   groupId: z.string().nullable().optional(),
   warningApplicable: z.boolean().optional(),
-  fines: z.any().nullable().optional(),
+  warningNotApplicable: z.boolean().optional(),
+  warningFines: z.any().nullable().optional(),
+  warningNotFines: z.any().nullable().optional(),
   bail: z.any().nullable().optional(),
   prisonTerm: z.any().nullable().optional(),
 });
