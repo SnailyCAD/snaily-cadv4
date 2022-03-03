@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/schemas",
-  "version": "1.0.0-beta.64",
+  "version": "1.0.0-beta.65",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
