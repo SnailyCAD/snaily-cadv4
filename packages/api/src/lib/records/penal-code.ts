@@ -9,7 +9,7 @@ export async function upsertWarningApplicable(
   body: z.infer<typeof PENAL_CODE_SCHEMA>,
   penalCode?: PickWarningPenalCode,
 ): Promise<PickWarningPenalCode> {
-  let idData: PickWarningPenalCode = { warningApplicableId: null, warningNotApplicableId: null };
+  const idData: PickWarningPenalCode = { warningApplicableId: null, warningNotApplicableId: null };
 
   if (body.warningApplicable) {
     const fines = parsePenalCodeValues(body.warningFines);
