@@ -26,6 +26,12 @@ import { ManageOccupationModal } from "components/citizen/modals/ManageOccupatio
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
+import dynamic from "next/dynamic";
+import { WeaponSearchModal } from "../WeaponSearchModal";
+
+const VehicleSearchModal = dynamic(
+  async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
+);
 
 const enum Toggled {
   VEHICLES = 0,
@@ -58,7 +64,7 @@ export function NameSearchModal() {
   const { cad } = useAuth();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
-  const { openModal, setCanBeClosed } = useModal();
+  const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
   const [toggled, setToggled] = React.useState<Toggled | null>(null);
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
@@ -70,7 +76,6 @@ export function NameSearchModal() {
       setResults(null);
       setToggled(null);
       setCurrentResult(null);
-      setCanBeClosed(true);
     }
   }, [isOpen, setCurrentResult, setResults]);
 
@@ -388,6 +393,8 @@ export function NameSearchModal() {
 
             <AutoSubmit />
             <EditCitizenLicenses />
+            <VehicleSearchModal />
+            <WeaponSearchModal />
           </Form>
         )}
       </Formik>

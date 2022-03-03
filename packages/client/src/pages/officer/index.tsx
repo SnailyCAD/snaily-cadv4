@@ -20,6 +20,8 @@ import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import type { FullIncident } from "./incidents";
+import { useModal } from "context/ModalContext";
+import { ModalIds } from "types/ModalIds";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -70,6 +72,7 @@ export default function OfficerDashboard({
   const t = useTranslations("Leo");
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
+  const { isOpen } = useModal();
 
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
@@ -111,8 +114,13 @@ export default function OfficerDashboard({
 
       <SelectOfficerModal />
       <NotepadModal />
-      <WeaponSearchModal />
-      <VehicleSearchModal />
+      {/* name search have their own vehicle/weapon search modal */}
+      {isOpen(ModalIds.NameSearch) ? null : (
+        <>
+          <WeaponSearchModal />
+          <VehicleSearchModal />
+        </>
+      )}
       <NameSearchModal />
       <CreateWarrantModal />
 

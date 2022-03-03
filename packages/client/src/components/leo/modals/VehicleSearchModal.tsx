@@ -36,7 +36,7 @@ export function VehicleSearchModal() {
     if (!isOpen(ModalIds.VehicleSearch)) {
       setCurrentResult(undefined);
     }
-  }, [isOpen]);
+  }, [isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/vehicle", {
@@ -71,7 +71,7 @@ export function VehicleSearchModal() {
   }
 
   const INITIAL_VALUES = {
-    plateOrVin: "",
+    plateOrVin: currentResult?.vinNumber ?? "",
   };
 
   return (

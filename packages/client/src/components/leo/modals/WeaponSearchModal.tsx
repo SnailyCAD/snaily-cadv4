@@ -24,7 +24,7 @@ export function WeaponSearchModal() {
     if (!isOpen(ModalIds.WeaponSearch)) {
       setCurrentResult(undefined);
     }
-  }, [isOpen]);
+  }, [isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/weapon", {
@@ -41,7 +41,7 @@ export function WeaponSearchModal() {
   }
 
   const INITIAL_VALUES = {
-    serialNumber: "",
+    serialNumber: currentResult?.serialNumber ?? "",
   };
 
   return (

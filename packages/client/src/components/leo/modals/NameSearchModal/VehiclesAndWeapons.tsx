@@ -20,7 +20,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const common = useTranslations("Common");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const { currentResult } = useNameSearch();
-  const { openModal, setCanBeClosed } = useModal();
+  const { openModal } = useModal();
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
 
@@ -30,7 +30,6 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
     // todo: fetch truck-logs
     setVehicleResult({ ...vehicle, citizen: currentResult, Business: [], TruckLog: [] });
     openModal(ModalIds.VehicleSearch);
-    setCanBeClosed(false);
   }
 
   function handleWeaponClick(weapon: Weapon) {
@@ -38,7 +37,6 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
 
     setWeaponResult({ ...weapon, citizen: currentResult });
     openModal(ModalIds.WeaponSearch);
-    setCanBeClosed(false);
   }
 
   return (
@@ -52,7 +50,12 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
           <Table
             data={vehicles.map((vehicle) => ({
               plate: (
-                <Button type="button" onClick={() => handlePlateClick(vehicle)}>
+                <Button
+                  title={common("openInSearch")}
+                  small
+                  type="button"
+                  onClick={() => handlePlateClick(vehicle)}
+                >
                   {vehicle.plate}
                 </Button>
               ),
@@ -84,7 +87,12 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
             <Table
               data={weapons.map((weapon) => ({
                 model: (
-                  <Button type="button" onClick={() => handleWeaponClick(weapon)}>
+                  <Button
+                    title={common("openInSearch")}
+                    small
+                    type="button"
+                    onClick={() => handleWeaponClick(weapon)}
+                  >
                     {weapon.model.value.value}
                   </Button>
                 ),

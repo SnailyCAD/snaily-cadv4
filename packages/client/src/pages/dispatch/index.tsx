@@ -21,6 +21,8 @@ import { Title } from "components/shared/Title";
 import type { ActiveDispatchers, Bolo, EmsFdDeputy, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "../officer/incidents";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -65,6 +67,7 @@ export default function OfficerDashboard(props: Props) {
   const { signal100Enabled, Component } = useSignal100();
   const { unit, PanicButton } = usePanicButton();
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { isOpen } = useModal();
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -114,8 +117,13 @@ export default function OfficerDashboard(props: Props) {
       </div>
 
       <NotepadModal />
-      <WeaponSearchModal />
-      <VehicleSearchModal />
+      {/* name search have their own vehicle/weapon search modal */}
+      {isOpen(ModalIds.NameSearch) ? null : (
+        <>
+          <WeaponSearchModal />
+          <VehicleSearchModal />
+        </>
+      )}
       <AddressSearchModal />
       <NameSearchModal />
     </Layout>
