@@ -37,9 +37,11 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       descriptionData: values.descriptionData,
       title: values.title,
       warningApplicable: values.warningApplicable,
-      fines: values.warningApplicable ? values.fines1.values : values.fines2.values,
-      prisonTerm: values.warningApplicable ? null : values.prisonTerm.values,
-      bail: values.warningApplicable ? null : values.bail.values,
+      warningNotApplicable: values.warningNotApplicable,
+      warningFines: values.warningApplicable ? values.fines1.values : null,
+      warningNotFines: values.warningNotApplicable ? values.fines2.values : null,
+      prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
+      bail: values.warningNotApplicable ? values.bail.values : null,
       groupId: values.group === "ungrouped" || !values.group ? null : values.group,
     };
 
@@ -71,7 +73,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
     description: penalCode?.description ?? "",
     descriptionData: dataToSlate(penalCode),
     group: penalCode?.groupId ?? "",
-    warningApplicable: !!penalCode?.warningApplicable,
+    warningApplicable: !!penalCode?.warningApplicableId,
+    warningNotApplicable: !!penalCode?.warningNotApplicableId,
     fines1: {
       enabled: (penalCode?.warningApplicable?.fines.length ?? 0) > 0,
       values: penalCode?.warningApplicable?.fines ?? [],
@@ -130,8 +133,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
                 <FormField checkbox label="Warning applicable">
                   <Input
                     checked={values.warningApplicable}
-                    onChange={() => setFieldValue("warningApplicable", true)}
-                    type="radio"
+                    onChange={() => setFieldValue("warningApplicable", !values.warningApplicable)}
+                    type="checkbox"
                   />
                 </FormField>
 
@@ -143,9 +146,11 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
               <div className="ml-2.5">
                 <FormField checkbox label="Warning not applicable">
                   <Input
-                    checked={!values.warningApplicable}
-                    onChange={() => setFieldValue("warningApplicable", false)}
-                    type="radio"
+                    checked={values.warningNotApplicable}
+                    onChange={() =>
+                      setFieldValue("warningNotApplicable", !values.warningNotApplicable)
+                    }
+                    type="checkbox"
                   />
                 </FormField>
 
@@ -180,7 +185,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 const FieldsRow = ({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) => {
   const { values, handleChange, setFieldValue } = useFormikContext<any>();
 
-  const disabled = keyValue === "fines1" ? !values.warningApplicable : values.warningApplicable;
+  const disabled = keyValue === "fines1" ? !values.warningApplicable : !values.warningNotApplicable;
   const fieldDisabled = !values[keyValue].enabled;
   const isDisabled = disabled || fieldDisabled;
 

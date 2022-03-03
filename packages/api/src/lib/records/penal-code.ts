@@ -3,16 +3,16 @@ import type { PENAL_CODE_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import type { z } from "zod";
 
+type PickWarningPenalCode = Pick<PenalCode, "warningApplicableId" | "warningNotApplicableId">;
+
 export async function upsertWarningApplicable(
   body: z.infer<typeof PENAL_CODE_SCHEMA>,
-  penalCode?: Pick<PenalCode, "warningApplicableId" | "warningNotApplicableId">,
-): Promise<{
-  warningApplicableId?: string;
-  warningNotApplicableId?: string;
-}> {
-  let id;
+  penalCode?: PickWarningPenalCode,
+): Promise<PickWarningPenalCode> {
+  let idData: PickWarningPenalCode = { warningApplicableId: null, warningNotApplicableId: null };
+
   if (body.warningApplicable) {
-    const fines = parsePenalCodeValues(body.fines);
+    const fines = parsePenalCodeValues(body.warningFines);
 
     const data = await prisma.warningApplicable.upsert({
       where: { id: String(penalCode?.warningApplicableId) },
@@ -20,9 +20,11 @@ export async function upsertWarningApplicable(
       update: { fines },
     });
 
-    id = data.id;
-  } else {
-    const fines = parsePenalCodeValues(body.fines);
+    idData.warningApplicableId = data.id;
+  }
+
+  if (body.warningNotApplicable) {
+    const fines = parsePenalCodeValues(body.warningNotFines);
     const prisonTerm = parsePenalCodeValues(body.prisonTerm);
     const bail = parsePenalCodeValues(body.bail);
 
@@ -32,16 +34,10 @@ export async function upsertWarningApplicable(
       update: { fines, prisonTerm, bail },
     });
 
-    id = data.id;
+    idData.warningNotApplicableId = data.id;
   }
 
-  const key = body.warningApplicable ? "warningApplicableId" : "warningNotApplicableId";
-  const nullkey = body.warningApplicable ? "warningNotApplicableId" : "warningApplicableId";
-
-  return {
-    [key]: id,
-    [nullkey]: null,
-  };
+  return idData;
 }
 
 function parsePenalCodeValues(arr: unknown): [number, number] | [] {
