@@ -97,9 +97,10 @@ export function ActiveDeputies() {
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   deputy: (
-                    <ContextMenu asChild items={codesMapped}>
+                    <ContextMenu canBeOpened={isDispatch} asChild items={codesMapped}>
                       <span // * 9 to fix overlapping issues with next table column
                         style={{ minWidth: nameAndCallsign.length * 9 }}
+                        className="capitalize cursor-default"
                       >
                         {deputy.imageId ? (
                           <img
