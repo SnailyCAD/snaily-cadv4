@@ -44,7 +44,8 @@
     "crop": "Crop",
     "hide": "Hide",
     "show": "Show",
-    "filters": "Filters"
+    "filters": "Filters",
+    "openInSearch": "Open in search"
   },
   "Nav": {
     "citizen": "Citizen",
