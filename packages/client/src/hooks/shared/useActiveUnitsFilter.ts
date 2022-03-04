@@ -9,17 +9,20 @@ export function useActiveUnitsFilter() {
 
   function handleFilter(unit: Officer | CombinedLeoUnit | EmsFdDeputy, search: string) {
     const isCombined = !("citizenId" in unit) || "officers" in unit;
-    if (isCombined) {
-      return;
-    }
 
-    const nameAndCallsign = `${generateCallsign(unit)} ${makeUnitName(unit)}`;
+    const nameAndCallsign = isCombined
+      ? `${generateCallsign(unit, "pairedUnitTemplate")}`
+      : `${generateCallsign(unit)} ${makeUnitName(unit)}`;
 
-    const department = unit.department?.value.value ?? common("none");
-    const rank = unit.rank?.value ?? common("none");
+    const officers =
+      isCombined &&
+      unit.officers.map((v) => `${generateCallsign(v)} ${makeUnitName(v)}`).join(", ");
+
+    const department = !isCombined && (unit.department?.value.value ?? common("none"));
+    const rank = !isCombined && (unit.rank?.value ?? common("none"));
     const status = unit.status?.value.value ?? common("none");
     const radioChannel = unit.radioChannelId ?? common("none");
-    const badgeNumber = unit.badgeNumber;
+    const badgeNumber = !isCombined && unit.badgeNumber;
     const divisions =
       "divisions" in unit ? unit.divisions : "division" in unit ? [unit.division] : [];
     const divisionString = divisions.map((v) => v.value.value).join(",");
@@ -32,10 +35,11 @@ export function useActiveUnitsFilter() {
       radioChannel,
       badgeNumber,
       divisionString,
+      officers,
     ];
 
-    const searchableString = searchableArr.join(" ").toLowerCase();
-    return searchableString.includes(search.toLowerCase());
+    const searchableString = searchableArr.filter(Boolean).join(" ").toLowerCase();
+    return searchableString.includes(search.trim().toLowerCase());
   }
 
   return { handleFilter };
