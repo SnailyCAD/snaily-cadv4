@@ -11,8 +11,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
   const department = isCombined ? null : unit.department;
 
   const unitDivision =
-    "division" in unit ? unit.division : "divisions" in unit ? unit.divisions : [];
-
+    "divisions" in unit ? unit.divisions : "division" in unit ? unit.division : [];
   const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
   if (!template) {
