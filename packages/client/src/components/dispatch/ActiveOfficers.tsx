@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { ActiveOfficer, useLeoState } from "state/leoState";
+import type { ActiveOfficer } from "state/leoState";
 import { ManageUnitModal } from "./modals/ManageUnit";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -10,36 +10,30 @@ import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { CombinedLeoUnit, StatusViewMode } from "@snailycad/types";
-import { useImageUrl } from "hooks/useImageUrl";
-import { ContextMenu } from "components/shared/ContextMenu";
-import { useValues } from "context/ValuesContext";
-import useFetch from "lib/useFetch";
-import { ArrowRight, Filter } from "react-bootstrap-icons";
+import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
+import { Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
-import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { classNames } from "lib/classNames";
 import { useActiveUnitsState } from "state/activeUnitsState";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
+import { MergeUnitModal } from "./active-units/MergeUnitModal";
+import { OfficerColumn } from "./active-units/officers/OfficerColumn";
 
 export function ActiveOfficers() {
-  const { activeOfficers, setActiveOfficers } = useActiveOfficers();
-  const { setStatus } = useUnitStatusChange({ units: activeOfficers, setUnits: setActiveOfficers });
-  const { activeOfficer } = useLeoState();
+  const { activeOfficers } = useActiveOfficers();
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
-  const { makeImageUrl } = useImageUrl();
-  const { codes10 } = useValues();
-  const { execute } = useFetch();
+
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { ACTIVE_INCIDENTS, RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
   const { leoSearch, showLeoFilters, setShowFilters } = useActiveUnitsState();
@@ -59,27 +53,6 @@ export function ActiveOfficers() {
   function handleIncidentOpen(incident: FullIncident) {
     setTempIncident(incident);
     openModal(ModalIds.ManageIncident);
-  }
-
-  async function handleMerge(id: string) {
-    await execute("/dispatch/status/merge", {
-      data: { id },
-      method: "POST",
-    });
-  }
-
-  async function handleunMerge(id: string) {
-    const { json } = await execute(`/dispatch/status/unmerge/${id}`, {
-      data: { id },
-      method: "POST",
-    });
-
-    if (json) {
-      router.replace({
-        pathname: router.pathname,
-        query: router.query,
-      });
-    }
   }
 
   return (
@@ -116,28 +89,6 @@ export function ActiveOfficers() {
                   "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-                const shouldShowSplit =
-                  activeOfficer &&
-                  "officers" in activeOfficer &&
-                  "officers" in officer &&
-                  officer.id === activeOfficer.id;
-
-                const canBeOpened =
-                  isDispatch ||
-                  shouldShowSplit ||
-                  (activeOfficer &&
-                    activeOfficer.id !== officer.id &&
-                    !("officers" in officer) &&
-                    !("officers" in activeOfficer));
-
-                const codesMapped = codes10.values
-                  .filter((v) => v.type === "STATUS_CODE")
-                  .map((v) => ({
-                    name: v.value.value,
-                    onClick: () => setStatus(officer.id, v),
-                    "aria-label": `Set status to ${v.value.value}`,
-                    title: `Set status to ${v.value.value}`,
-                  }));
 
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
 
@@ -145,53 +96,11 @@ export function ActiveOfficers() {
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   officer: (
-                    <ContextMenu
-                      canBeOpened={canBeOpened ?? false}
-                      asChild
-                      items={
-                        isDispatch
-                          ? codesMapped
-                          : [
-                              {
-                                name: shouldShowSplit ? t("unmerge") : t("merge"),
-                                onClick: () => {
-                                  shouldShowSplit
-                                    ? handleunMerge(officer.id)
-                                    : handleMerge(officer.id);
-                                },
-                              },
-                            ]
-                      }
-                    >
-                      <span
-                        className="flex items-center capitalize cursor-default"
-                        // * 9 to fix overlapping issues with next table column
-                        style={{ minWidth: nameAndCallsign.length * 9 }}
-                      >
-                        {"imageId" in officer && officer.imageId ? (
-                          <img
-                            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                            draggable={false}
-                            src={makeImageUrl("units", officer.imageId)}
-                          />
-                        ) : null}
-                        {"officers" in officer ? (
-                          <div className="flex items-center">
-                            {generateCallsign(officer, "pairedUnitTemplate")}
-                            <span className="mx-4">
-                              <ArrowRight />
-                            </span>
-                            {officer.officers.map((officer) => (
-                              <React.Fragment key={officer.id}>
-                                {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                              </React.Fragment>
-                            ))}
-                          </div>
-                        ) : (
-                          nameAndCallsign
-                        )}
-                      </span>
-                    </ContextMenu>
+                    <OfficerColumn
+                      nameAndCallsign={nameAndCallsign}
+                      setTempUnit={setTempUnit}
+                      officer={officer}
+                    />
                   ),
                   badgeNumber: !("officers" in officer) && String(officer.badgeNumber),
                   department:
@@ -257,6 +166,13 @@ export function ActiveOfficers() {
       )}
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
+      {tempUnit ? (
+        <MergeUnitModal
+          isDispatch={isDispatch}
+          unit={tempUnit as Officer}
+          onClose={() => setTempUnit(null)}
+        />
+      ) : null}
       {tempIncident ? (
         <ManageIncidentModal incident={tempIncident} onClose={() => setTempIncident(null)} />
       ) : null}

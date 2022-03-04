@@ -232,35 +232,37 @@ export class StatusController {
   @UseBefore(ActiveOfficer)
   @Post("/merge")
   @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
-  async mergeOfficers(
-    @BodyParams("id") id: string,
-    @Context("activeOfficer") activeOfficer: Officer,
-  ) {
-    if (id === activeOfficer.id) {
+  async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
+    const officers = await prisma.$transaction(
+      ids.map((officer) => {
+        return prisma.officer.findFirst({
+          where: {
+            id: officer.id,
+          },
+        });
+      }),
+    );
+
+    if (officers.some((v) => v === null)) {
+      throw new BadRequest("officerNotFoundInArray");
+    }
+
+    const existing = officers.some((v) => v?.combinedLeoUnitId);
+    if (existing) {
       throw new BadRequest("officerAlreadyMerged");
     }
 
-    const existing = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        OR: [
-          {
-            officers: { some: { id } },
-          },
-          {
-            officers: { some: { id: activeOfficer.id } },
-          },
-          {
-            id,
-          },
-          {
-            id: activeOfficer.id,
-          },
-        ],
-      },
+    const entryOfficerId = ids.find((v) => v.entry)?.id;
+    if (!entryOfficerId) {
+      throw new BadRequest("noEntryOfficer");
+    }
+
+    const entryOfficer = await prisma.officer.findUnique({
+      where: { id: entryOfficerId },
     });
 
-    if (existing) {
-      throw new BadRequest("officerAlreadyMerged");
+    if (!entryOfficer) {
+      throw new BadRequest("noEntryOfficer");
     }
 
     const status = await prisma.statusValue.findFirst({
@@ -268,34 +270,35 @@ export class StatusController {
       select: { id: true },
     });
 
-    const unit = await prisma.combinedLeoUnit.create({
+    const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,
-        callsign: activeOfficer.callsign,
+        callsign: entryOfficer.callsign,
       },
     });
 
-    const [, updated] = await Promise.all(
-      [id, activeOfficer.id].map(async (idd) => {
+    const data = await Promise.all(
+      ids.map(async ({ id: officerId }) => {
         await prisma.officer.update({
-          where: { id: idd },
+          where: { id: officerId },
           data: { statusId: null },
         });
 
         return prisma.combinedLeoUnit.update({
           where: {
-            id: unit.id,
+            id: combinedUnit.id,
           },
           data: {
-            officers: { connect: { id: idd } },
+            officers: { connect: { id: officerId } },
           },
         });
       }),
     );
 
+    const last = data[data.length - 1];
     this.socket.emitUpdateOfficerStatus();
 
-    return updated;
+    return last;
   }
 
   @Post("/unmerge/:id")
