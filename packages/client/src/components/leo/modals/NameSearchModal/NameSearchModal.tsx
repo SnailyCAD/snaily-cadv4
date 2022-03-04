@@ -13,7 +13,7 @@ import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { RecordsArea } from "./RecordsArea";
-import { NameSearchResult, useNameSearch } from "state/nameSearchState";
+import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
@@ -26,6 +26,15 @@ import { ManageOccupationModal } from "components/citizen/modals/ManageOccupatio
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
+import dynamic from "next/dynamic";
+
+const VehicleSearchModal = dynamic(
+  async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
+);
+
+const WeaponSearchModal = dynamic(
+  async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
+);
 
 const enum Toggled {
   VEHICLES = 0,
@@ -387,6 +396,8 @@ export function NameSearchModal() {
 
             <AutoSubmit />
             <EditCitizenLicenses />
+            <VehicleSearchModal />
+            <WeaponSearchModal />
           </Form>
         )}
       </Formik>

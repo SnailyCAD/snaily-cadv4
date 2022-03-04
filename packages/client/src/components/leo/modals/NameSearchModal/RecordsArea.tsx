@@ -7,7 +7,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { useNameSearch } from "state/nameSearchState";
+import { useNameSearch } from "state/search/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";

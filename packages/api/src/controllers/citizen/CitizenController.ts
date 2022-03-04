@@ -24,6 +24,8 @@ export const citizenInclude = {
     include: {
       model: { include: { value: true } },
       registrationStatus: true,
+      TruckLog: true,
+      Business: true,
     },
     where: {
       // hide business vehicles
