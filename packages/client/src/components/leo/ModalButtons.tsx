@@ -8,6 +8,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface MButton {
   nameKey: [string, string];
@@ -78,8 +79,8 @@ export function ModalButtons() {
 
   const name =
     !isButtonDisabled &&
-    ("officers" in activeOfficer
-      ? activeOfficer.callsign
+    (isUnitCombined(activeOfficer)
+      ? generateCallsign(activeOfficer, "pairedUnitTemplate")
       : `${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`);
 
   return (
