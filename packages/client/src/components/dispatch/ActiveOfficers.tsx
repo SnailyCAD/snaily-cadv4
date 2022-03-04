@@ -59,9 +59,14 @@ export function ActiveOfficers() {
     openModal(ModalIds.ManageIncident);
   }
 
-  async function handleMerge(id: string) {
+  async function handleMerge(officerId: string) {
+    if (!activeOfficer) return;
+
+    const mainOfficer = { entry: true, id: activeOfficer.id };
+    const officerToMergeWith = { id: officerId, entry: false };
+
     await execute("/dispatch/status/merge", {
-      data: { id },
+      data: { ids: [mainOfficer, officerToMergeWith] },
       method: "POST",
     });
   }
