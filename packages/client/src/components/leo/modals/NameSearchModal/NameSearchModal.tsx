@@ -27,10 +27,13 @@ import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
-import { WeaponSearchModal } from "../WeaponSearchModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
+);
+
+const WeaponSearchModal = dynamic(
+  async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
 );
 
 const enum Toggled {
