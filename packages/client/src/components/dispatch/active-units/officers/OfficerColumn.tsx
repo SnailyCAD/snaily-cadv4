@@ -5,7 +5,7 @@ import { ContextMenu } from "components/shared/ContextMenu";
 import { useValues } from "context/ValuesContext";
 import useFetch from "lib/useFetch";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
-import { isUnitCombined } from "@snailycad/utils";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import { ArrowRight } from "react-bootstrap-icons";
@@ -57,8 +57,8 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
     shouldShowSplit ||
     (activeOfficer &&
       activeOfficer.id !== officer.id &&
-      !("officers" in officer) &&
-      !("officers" in activeOfficer));
+      isUnitOfficer(officer) &&
+      isUnitOfficer(activeOfficer));
 
   async function handleMerge(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
