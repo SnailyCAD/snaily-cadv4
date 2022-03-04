@@ -22,7 +22,7 @@ import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearc
 export function VehicleSearchModal() {
   const { currentResult, setCurrentResult } = useVehicleSearch();
 
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
@@ -50,6 +50,15 @@ export function VehicleSearchModal() {
     } else {
       setCurrentResult(null);
     }
+  }
+
+  function handleNameClick() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.NameSearch, {
+      name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
+    });
+    closeModal(ModalIds.VehicleSearch);
   }
 
   async function handleMarkStolen() {
@@ -149,7 +158,9 @@ export function VehicleSearchModal() {
                   </li>
                   <li>
                     <Infofield className="capitalize" label={vT("owner")}>
-                      {currentResult.citizen.name} {currentResult.citizen.surname}
+                      <Button small type="button" onClick={handleNameClick}>
+                        {currentResult.citizen.name} {currentResult.citizen.surname}
+                      </Button>
                     </Infofield>
                   </li>
                   {BUSINESS ? (

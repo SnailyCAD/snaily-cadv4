@@ -13,7 +13,7 @@ import { Infofield } from "components/shared/Infofield";
 import { useWeaponSearch } from "state/search/weaponSearchState";
 
 export function WeaponSearchModal() {
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const wT = useTranslations("Weapons");
   const t = useTranslations("Leo");
@@ -25,6 +25,15 @@ export function WeaponSearchModal() {
       setCurrentResult(undefined);
     }
   }, [isOpen, setCurrentResult]);
+
+  function handleNameClick() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.NameSearch, {
+      name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
+    });
+    closeModal(ModalIds.WeaponSearch);
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/weapon", {
@@ -80,7 +89,9 @@ export function WeaponSearchModal() {
                   </li>
                   <li>
                     <Infofield className="capitalize" label={t("owner")}>
-                      {currentResult.citizen.name} {currentResult.citizen.surname}
+                      <Button small type="button" onClick={handleNameClick}>
+                        {currentResult.citizen.name} {currentResult.citizen.surname}
+                      </Button>
                     </Infofield>
                   </li>
                 </ul>
