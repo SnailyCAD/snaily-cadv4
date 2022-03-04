@@ -58,18 +58,14 @@ export function Select({ name, onChange, ...rest }: Props) {
     }
 
     if (actionMeta.action === "clear" && Array.isArray(value)) {
-      onChange({
-        target: {
-          name,
-          value: rest.isMulti ? fixedOptions : changedValue?.value ?? null,
-        },
-      } as any);
-      return;
+      return onChange({
+        target: { name, value: rest.isMulti ? fixedOptions : changedValue?.value ?? null },
+      });
     }
 
     onChange({
       target: { name, value: rest.isMulti ? changedValue : changedValue?.value ?? null },
-    } as any);
+    });
   }
 
   return (
@@ -79,7 +75,7 @@ export function Select({ name, onChange, ...rest }: Props) {
       isClearable={fixedClearable ? value.some((v) => !v.isFixed) : rest.isClearable}
       value={value}
       options={rest.values}
-      onChange={(v: any, meta: any) => handleChange(v, meta)}
+      onChange={(v: any, meta) => handleChange(v, meta)}
       noOptionsMessage={() => common("noOptions")}
       styles={styles({ ...theme, hasError: !!rest.errorMessage })}
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
