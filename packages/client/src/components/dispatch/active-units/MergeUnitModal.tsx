@@ -17,11 +17,12 @@ import { makeUnitName } from "lib/utils";
 import { useLeoState } from "state/leoState";
 
 interface Props {
+  isDispatch: boolean;
   unit: Officer;
   onClose?(): void;
 }
 
-export function MergeUnitModal({ unit, onClose }: Props) {
+export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
   const { activeOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const { activeOfficers } = useActiveOfficers();
@@ -49,14 +50,14 @@ export function MergeUnitModal({ unit, onClose }: Props) {
       data: values.ids.map((v) => ({ entry: v.isFixed, id: v.value })),
     });
 
-    if (Array.isArray(json)) {
+    if (json.id) {
       handleClose();
     }
   }
 
   const INITIAL_VALUES = {
     ids:
-      activeOfficer && isUnitOfficer(activeOfficer)
+      activeOfficer && isUnitOfficer(activeOfficer) && !isDispatch
         ? [makeValuesOption(unit, true), makeValuesOption(activeOfficer, true)]
         : [makeValuesOption(unit, true)],
   };

@@ -233,30 +233,24 @@ export class StatusController {
   @Post("/merge")
   @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
   async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
-    // const existing = await prisma.combinedLeoUnit.findFirst({
-    //   where: {
-    //     or: [
-    //       {
-    //         officers: { some: { id } },
-    //       },
-    //       {
-    //         officers: { some: { id: activeOfficer.id } },
-    //       },
-    //       {
-    //         id,
-    //       },
-    //       {
-    //         id: activeOfficer.id,
-    //       },
-    //     ],
-    //   },
-    // });
+    const officers = await prisma.$transaction(
+      ids.map((officer) => {
+        return prisma.officer.findFirst({
+          where: {
+            id: officer.id,
+          },
+        });
+      }),
+    );
 
-    // if (existing) {
-    //   throw new BadRequest("officerAlreadyMerged");
-    // }
+    if (officers.some((v) => v === null)) {
+      throw new BadRequest("officerNotFoundInArray");
+    }
 
-    // todo: fix existing
+    const existing = officers.some((v) => v?.combinedLeoUnitId);
+    if (existing) {
+      throw new BadRequest("officerAlreadyMerged");
+    }
 
     const entryOfficerId = ids.find((v) => v.entry)?.id;
     if (!entryOfficerId) {
@@ -301,9 +295,10 @@ export class StatusController {
       }),
     );
 
+    const last = data[data.length - 1];
     this.socket.emitUpdateOfficerStatus();
 
-    return data;
+    return last;
   }
 
   @Post("/unmerge/:id")

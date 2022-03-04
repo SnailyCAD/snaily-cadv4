@@ -167,7 +167,11 @@ export function ActiveOfficers() {
 
       {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
       {tempUnit ? (
-        <MergeUnitModal unit={tempUnit as Officer} onClose={() => setTempUnit(null)} />
+        <MergeUnitModal
+          isDispatch={isDispatch}
+          unit={tempUnit as Officer}
+          onClose={() => setTempUnit(null)}
+        />
       ) : null}
       {tempIncident ? (
         <ManageIncidentModal incident={tempIncident} onClose={() => setTempIncident(null)} />
