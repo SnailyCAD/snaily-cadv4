@@ -1,5 +1,11 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
-import ReactSelect, { Props as SelectProps, GroupBase, StylesConfig } from "react-select";
+import ReactSelect, {
+  Props as SelectProps,
+  GroupBase,
+  StylesConfig,
+  ActionMeta,
+} from "react-select";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "context/ModalContext";
 import { MultiValueContainerContextMenu } from "./select/MultiValueContainerContextMenu";
@@ -9,6 +15,7 @@ export interface SelectValue<Value = string> {
   readonly label: string;
   readonly value: Value;
   readonly isDisabled?: boolean;
+  readonly isFixed?: boolean;
 }
 
 interface Props<Value extends SelectValue = SelectValue<any>>
@@ -37,19 +44,42 @@ export function Select({ name, onChange, ...rest }: Props) {
     typeof window !== "undefined" &&
     window.document.body.classList.contains("dark");
 
+  const fixedClearable =
+    Array.isArray(value) && value.some((v) => typeof v.isFixed !== "undefined");
   const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
+  const fixedOptions = React.useMemo(
+    () => (Array.isArray(value) ? value.filter((v) => v.isFixed) : []),
+    [value],
+  );
 
-  function handleChange(value: SelectValue | null) {
-    onChange({ target: { name, value: rest.isMulti ? value : value?.value ?? null } } as any);
+  function handleChange(changedValue: SelectValue | null, actionMeta: ActionMeta<any>) {
+    if (["pop-value", "remove-value"].includes(actionMeta.action) && changedValue?.isFixed) {
+      return;
+    }
+
+    if (actionMeta.action === "clear" && Array.isArray(value)) {
+      onChange({
+        target: {
+          name,
+          value: rest.isMulti ? fixedOptions : changedValue?.value ?? null,
+        },
+      } as any);
+      return;
+    }
+
+    onChange({
+      target: { name, value: rest.isMulti ? changedValue : changedValue?.value ?? null },
+    } as any);
   }
 
   return (
     <ReactSelect
       {...rest}
       isDisabled={rest.disabled ?? !canBeClosed}
+      isClearable={fixedClearable ? value.some((v) => !v.isFixed) : rest.isClearable}
       value={value}
       options={rest.values}
-      onChange={(v: any) => handleChange(v)}
+      onChange={(v: any, meta: any) => handleChange(v, meta)}
       noOptionsMessage={() => common("noOptions")}
       styles={styles({ ...theme, hasError: !!rest.errorMessage })}
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -135,7 +165,7 @@ export function styles({
       borderRadius: "2px 0 0 2px",
     }),
     multiValueRemove: (base, props) => {
-      if (props.isDisabled) {
+      if (props.isDisabled || (props.data as any).isFixed) {
         return { ...base, display: "none" };
       }
 

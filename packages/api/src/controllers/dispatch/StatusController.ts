@@ -232,10 +232,10 @@ export class StatusController {
   @UseBefore(ActiveOfficer)
   @Post("/merge")
   @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
-  async mergeOfficers(@BodyParams("ids") ids: { entry?: boolean; id: string }[]) {
+  async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
     // const existing = await prisma.combinedLeoUnit.findFirst({
     //   where: {
-    //     OR: [
+    //     or: [
     //       {
     //         officers: { some: { id } },
     //       },

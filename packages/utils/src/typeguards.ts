@@ -8,6 +8,9 @@ import {
   DivisionValue,
   EmployeeValue,
   DriversLicenseCategoryValue,
+  Officer,
+  CombinedLeoUnit,
+  EmsFdDeputy,
 } from "@snailycad/types";
 
 export type ValueWithValueObj =
@@ -51,4 +54,14 @@ export function isDivisionValue(value: AnyValue): value is DivisionValue {
 
 export function isEmployeeValue(value: AnyValue): value is EmployeeValue {
   return hasValueObj(value) && value.value.type === ValueType.BUSINESS_ROLE;
+}
+
+export function isUnitCombined(
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy,
+): unit is CombinedLeoUnit {
+  return !("citizenId" in unit) || "officers" in unit;
+}
+
+export function isUnitOfficer(unit: Officer | CombinedLeoUnit | EmsFdDeputy): unit is Officer {
+  return !isUnitCombined(unit) && "divisions" in unit && Array.isArray(unit.divisions);
 }
