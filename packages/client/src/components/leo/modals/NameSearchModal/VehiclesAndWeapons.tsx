@@ -4,7 +4,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { RegisteredVehicle, Weapon } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { useVehicleSearch } from "state/search/vehicleSearchState";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 import { useModal } from "context/ModalContext";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
@@ -24,11 +24,10 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
   const { setCurrentResult: setWeaponResult } = useWeaponSearch();
 
-  function handlePlateClick(vehicle: RegisteredVehicle) {
+  function handlePlateClick(vehicle: VehicleSearchResult) {
     if (!currentResult) return;
 
-    // todo: fetch truck-logs
-    setVehicleResult({ ...vehicle, citizen: currentResult, Business: [], TruckLog: [] });
+    setVehicleResult({ ...vehicle, citizen: currentResult });
     openModal(ModalIds.VehicleSearch);
   }
 
@@ -54,7 +53,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
                   title={common("openInSearch")}
                   small
                   type="button"
-                  onClick={() => handlePlateClick(vehicle)}
+                  onClick={() => handlePlateClick(vehicle as VehicleSearchResult)}
                 >
                   {vehicle.plate}
                 </Button>

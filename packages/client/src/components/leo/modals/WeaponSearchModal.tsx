@@ -89,7 +89,12 @@ export function WeaponSearchModal() {
                   </li>
                   <li>
                     <Infofield className="capitalize" label={t("owner")}>
-                      <Button small type="button" onClick={handleNameClick}>
+                      <Button
+                        title={common("openInSearch")}
+                        small
+                        type="button"
+                        onClick={handleNameClick}
+                      >
                         {currentResult.citizen.name} {currentResult.citizen.surname}
                       </Button>
                     </Infofield>

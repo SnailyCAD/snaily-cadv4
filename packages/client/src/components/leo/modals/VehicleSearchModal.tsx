@@ -158,7 +158,12 @@ export function VehicleSearchModal() {
                   </li>
                   <li>
                     <Infofield className="capitalize" label={vT("owner")}>
-                      <Button small type="button" onClick={handleNameClick}>
+                      <Button
+                        title={common("openInSearch")}
+                        small
+                        type="button"
+                        onClick={handleNameClick}
+                      >
                         {currentResult.citizen.name} {currentResult.citizen.surname}
                       </Button>
                     </Infofield>
