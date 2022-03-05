@@ -1,6 +1,8 @@
-import { $log } from "@tsed/common";
+import { $log } from "@tsed/logger";
 import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./server";
+import { resolve } from "node:path";
+import { readFile } from "node:fs/promises";
 
 async function bootstrap() {
   try {
@@ -8,10 +10,22 @@ async function bootstrap() {
     const platform = await PlatformExpress.bootstrap(Server);
 
     await platform.listen();
-    console.info("SnailyCADv4 is running");
+    const version = await getCADVersion();
+    const versionStr = version ? `with version ${version}` : "";
+
+    console.log(`SnailyCADv4 is running ${versionStr}`);
   } catch (er) {
     $log.error(er);
   }
+}
+
+async function getCADVersion(): Promise<string | null> {
+  const packageJsonPath = resolve(process.cwd(), "package.json");
+  const packageJson = await readFile(packageJsonPath, "utf-8").catch(() => null);
+  if (!packageJson) return null;
+
+  const json = JSON.parse(packageJson);
+  return json.version;
 }
 
 bootstrap();

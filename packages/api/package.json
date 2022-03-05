@@ -11,6 +11,8 @@
     "copy-env": "node ../../scripts/copy-env.mjs --api"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.148",
+    "@swc/helpers": "^0.3.6",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cookie": "^0.4.1",
@@ -21,10 +23,11 @@
     "@types/jsonwebtoken": "8.5.8",
     "@types/node": "^17.0.21",
     "@types/qrcode": "^1.4.2",
-    "esbuild": "^0.14.23",
+    "esbuild": "^0.14.25",
     "esbuild-register": "^3.3.2",
-    "ts-node": "^10.5.0",
-    "tsconfig-paths": "^3.12.0",
+    "regenerator-runtime": "^0.13.9",
+    "ts-node": "^10.6.0",
+    "tsconfig-paths": "^3.13.0",
     "typescript": "^4.6.2"
   },
   "dependencies": {
@@ -34,15 +37,15 @@
     "@snailycad/schemas": "1.0.0-beta.66",
     "@snailycad/types": "1.0.0-beta.66",
     "@snailycad/utils": "1.0.0-beta.66",
-    "@tsed/common": "^6.103.2",
-    "@tsed/core": "^6.103.2",
-    "@tsed/di": "^6.103.2",
-    "@tsed/exceptions": "^6.103.2",
-    "@tsed/json-mapper": "^6.103.2",
-    "@tsed/platform-express": "^6.103.2",
-    "@tsed/schema": "^6.103.2",
-    "@tsed/socketio": "^6.103.2",
-    "@tsed/swagger": "^6.103.2",
+    "@tsed/common": "^6.104.0",
+    "@tsed/core": "^6.104.0",
+    "@tsed/di": "^6.104.0",
+    "@tsed/exceptions": "^6.104.0",
+    "@tsed/json-mapper": "^6.104.0",
+    "@tsed/platform-express": "^6.104.0",
+    "@tsed/schema": "^6.104.0",
+    "@tsed/socketio": "^6.104.0",
+    "@tsed/swagger": "^6.104.0",
     "bcrypt": "^5.0.1",
     "compression": "1.7.4",
     "cookie": "^0.4.2",
@@ -58,6 +61,6 @@
     "prisma": "^3.10.0",
     "qrcode": "^1.5.0",
     "socket.io": "^4.4.1",
-    "undici": "^4.14.1"
+    "undici": "^4.15.0"
   }
 }
