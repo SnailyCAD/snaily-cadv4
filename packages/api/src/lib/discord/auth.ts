@@ -29,10 +29,13 @@ export async function updateMemberRolesLogin(
   if (!discordMember?.user?.id || discordMember.pending) return;
 
   const updateData = {
-    isLeo: hasRole(
-      discordRoles.leoRoles.map((v) => v.id),
-      discordMember.roles,
-    ),
+    isLeo:
+      discordRoles.leoRoles.length <= 0
+        ? undefined
+        : hasRole(
+            discordRoles.leoRoles.map((v) => v.id),
+            discordMember.roles,
+          ),
     isSupervisor: hasRole(discordRoles.leoSupervisorRoleId, discordMember.roles),
     isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
     isEmsFd: hasRole(discordRoles.emsFdRoleId, discordMember.roles),
