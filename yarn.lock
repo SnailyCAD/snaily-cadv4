@@ -75,7 +75,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config@npm:^2.4.5":
+"@casper124578/eslint-config@npm:^2.3.2":
   version: 2.4.5
   resolution: "@casper124578/eslint-config@npm:2.4.5"
   dependencies:
@@ -9155,7 +9155,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snailycad@workspace:."
   dependencies:
-    "@casper124578/eslint-config": ^2.4.5
+    "@casper124578/eslint-config": ^2.3.2
     "@casper124578/eslint-config-next": ^1.2.1
     "@casper124578/eslint-config-react": ^2.2.1
     colorette: 2.0.16
