@@ -15,7 +15,7 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./911-calls/Calls911Controller";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/index";
@@ -170,7 +170,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
         data: { statusId },
-        include: { status: { include: { value: true } }, officers: { include: leoProperties } },
+        include: combinedUnitProperties,
       });
     }
 
