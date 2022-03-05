@@ -753,6 +753,8 @@ model CombinedLeoUnit {
   id             String         @id @default(uuid())
   officers       Officer[]
   callsign       String
+  callsign2      String?
+  incremental    Int?
   radioChannelId String?
   status         StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId       String?

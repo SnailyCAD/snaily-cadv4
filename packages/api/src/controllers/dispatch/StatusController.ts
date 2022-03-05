@@ -8,18 +8,17 @@ import {
   EmsFdDeputy,
 } from ".prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
-import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
+import { Req, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Description, Post, Put } from "@tsed/schema";
+import { Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { callInclude, findUnit } from "./911-calls/Calls911Controller";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/index";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client";
 import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
@@ -171,7 +170,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
         data: { statusId },
-        include: { status: { include: { value: true } }, officers: { include: leoProperties } },
+        include: combinedUnitProperties,
       });
     }
 
@@ -227,114 +226,6 @@ export class StatusController {
     }
 
     return updatedUnit;
-  }
-
-  @UseBefore(ActiveOfficer)
-  @Post("/merge")
-  @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
-  async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
-    const officers = await prisma.$transaction(
-      ids.map((officer) => {
-        return prisma.officer.findFirst({
-          where: {
-            id: officer.id,
-          },
-        });
-      }),
-    );
-
-    if (officers.some((v) => v === null)) {
-      throw new BadRequest("officerNotFoundInArray");
-    }
-
-    const existing = officers.some((v) => v?.combinedLeoUnitId);
-    if (existing) {
-      throw new BadRequest("officerAlreadyMerged");
-    }
-
-    const entryOfficerId = ids.find((v) => v.entry)?.id;
-    if (!entryOfficerId) {
-      throw new BadRequest("noEntryOfficer");
-    }
-
-    const entryOfficer = await prisma.officer.findUnique({
-      where: { id: entryOfficerId },
-    });
-
-    if (!entryOfficer) {
-      throw new BadRequest("noEntryOfficer");
-    }
-
-    const status = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
-      select: { id: true },
-    });
-
-    const combinedUnit = await prisma.combinedLeoUnit.create({
-      data: {
-        statusId: status?.id ?? null,
-        callsign: entryOfficer.callsign,
-      },
-    });
-
-    const data = await Promise.all(
-      ids.map(async ({ id: officerId }) => {
-        await prisma.officer.update({
-          where: { id: officerId },
-          data: { statusId: null },
-        });
-
-        return prisma.combinedLeoUnit.update({
-          where: {
-            id: combinedUnit.id,
-          },
-          data: {
-            officers: { connect: { id: officerId } },
-          },
-        });
-      }),
-    );
-
-    const last = data[data.length - 1];
-    this.socket.emitUpdateOfficerStatus();
-
-    return last;
-  }
-
-  @Post("/unmerge/:id")
-  @Description("Unmerge officers by the combinedUnitId")
-  async unmergeOfficers(@PathParams("id") unitId: string) {
-    const unit = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        id: unitId,
-      },
-      include: {
-        officers: { select: { id: true } },
-      },
-    });
-
-    if (!unit) {
-      throw new NotFound("notFound");
-    }
-
-    await Promise.all(
-      unit.officers.map(async ({ id }) => {
-        await prisma.officer.update({
-          where: { id },
-          data: { statusId: unit.statusId },
-        });
-      }),
-    );
-
-    await prisma.assignedUnit.deleteMany({
-      where: { combinedLeoId: unitId },
-    });
-
-    await prisma.combinedLeoUnit.delete({
-      where: { id: unitId },
-    });
-
-    this.socket.emitUpdateOfficerStatus();
   }
 }
 
