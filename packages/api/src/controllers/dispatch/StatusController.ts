@@ -89,11 +89,7 @@ export class StatusController {
     if (type === "leo") {
       const officer = await prisma.officer.findUnique({
         where: { id: unit.id },
-        include: {
-          status: { select: { shouldDo: true } },
-          department: true,
-          whitelistStatus: leoProperties.whitelistStatus,
-        },
+        include: leoProperties,
       });
 
       const isOfficerDisabled = officer?.whitelistStatus
@@ -224,6 +220,8 @@ export class StatusController {
     } else {
       this.socket.emitUpdateDeputyStatus();
     }
+
+    console.log({ type, updatedUnit });
 
     return updatedUnit;
   }
