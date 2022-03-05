@@ -26,6 +26,7 @@ import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
+import { isUnitCombined } from "@snailycad/utils";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -61,9 +62,9 @@ function ActiveCallsInner() {
   const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
-  const makeUnit = (unit: AssignedUnit) =>
-    "officers" in unit.unit
-      ? unit.unit.callsign
+  const makeAssignedUnit = (unit: AssignedUnit) =>
+    isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
 
   useListener(
@@ -188,7 +189,8 @@ function ActiveCallsInner() {
                     ),
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
-                  assignedUnits: call.assignedUnits.map(makeUnit).join(", ") || common("none"),
+                  assignedUnits:
+                    call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none"),
                   actions: (
                     <>
                       <Button

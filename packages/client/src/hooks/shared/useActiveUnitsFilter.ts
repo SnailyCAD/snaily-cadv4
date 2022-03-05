@@ -1,4 +1,5 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
@@ -8,10 +9,10 @@ export function useActiveUnitsFilter() {
   const common = useTranslations("Common");
 
   function handleFilter(unit: Officer | CombinedLeoUnit | EmsFdDeputy, search: string) {
-    const isCombined = !("citizenId" in unit) || "officers" in unit;
+    const isCombined = isUnitCombined(unit);
 
     const nameAndCallsign = isCombined
-      ? `${generateCallsign(unit, "pairedUnitTemplate")}`
+      ? generateCallsign(unit, "pairedUnitTemplate")
       : `${generateCallsign(unit)} ${makeUnitName(unit)}`;
 
     const officers =

@@ -10,6 +10,7 @@ import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Status } from "components/shared/Status";
+import { isUnitOfficer } from "@snailycad/utils";
 
 interface Props {
   units: Unit[];
@@ -59,10 +60,8 @@ export function AllUnitsTab({ units }: Props) {
       <Table
         disabledColumnId={["dropdown"]}
         data={units.map((unit) => {
-          const departmentStatus = "whitelistStatus" in unit ? unit.whitelistStatus?.status : null;
-          const departmentStatusFormatted = departmentStatus
-            ? departmentStatus.toLowerCase() ?? "—"
-            : "—";
+          const departmentStatus = isUnitOfficer(unit) ? unit.whitelistStatus?.status : null;
+          const departmentStatusFormatted = departmentStatus ? departmentStatus.toLowerCase() : "—";
 
           return {
             dropdown: (

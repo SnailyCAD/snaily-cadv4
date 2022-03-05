@@ -20,6 +20,7 @@ import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
+import { isUnitOfficer } from "@snailycad/utils";
 
 type Unit = (Officer & { logs: OfficerLog[] }) | EmsFdDeputy;
 
@@ -57,7 +58,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
     return null;
   }
 
-  const divisions = "divisions" in unit ? unit.divisions : [];
+  const divisions = isUnitOfficer(unit) ? unit.divisions : [];
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
@@ -107,7 +108,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
             </FormField>
 
             <FormField label={t("division")}>
-              {"divisions" in unit ? (
+              {isUnitOfficer(unit) ? (
                 <Select
                   isMulti
                   value={values.divisions}

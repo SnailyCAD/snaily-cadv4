@@ -24,6 +24,7 @@ import { useActiveUnitsState } from "state/activeUnitsState";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
 import { MergeUnitModal } from "./active-units/MergeUnitModal";
 import { OfficerColumn } from "./active-units/officers/OfficerColumn";
+import { isUnitOfficer } from "@snailycad/utils/typeguards";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -85,8 +86,7 @@ export function ActiveOfficers() {
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
                 const color = officer.status?.color;
-                const activeIncident =
-                  "officers" in officer ? null : (officer.activeIncident as FullIncident | null);
+                const activeIncident = isUnitOfficer(officer) && officer.activeIncident;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
@@ -102,11 +102,11 @@ export function ActiveOfficers() {
                       officer={officer}
                     />
                   ),
-                  badgeNumber: !("officers" in officer) && String(officer.badgeNumber),
+                  badgeNumber: isUnitOfficer(officer) && String(officer.badgeNumber),
                   department:
-                    (!("officers" in officer) && officer.department?.value.value) ?? common("none"),
-                  division: !("officers" in officer) && formatUnitDivisions(officer),
-                  rank: (!("officers" in officer) && officer.rank?.value) ?? common("none"),
+                    (isUnitOfficer(officer) && officer.department?.value.value) ?? common("none"),
+                  division: isUnitOfficer(officer) && formatUnitDivisions(officer),
+                  rank: (isUnitOfficer(officer) && officer.rank?.value) ?? common("none"),
                   status: (
                     <span className="flex items-center">
                       {useDot && color ? (
@@ -132,8 +132,7 @@ export function ActiveOfficers() {
                   ) : (
                     common("none")
                   ),
-                  radioChannel:
-                    "radioChannelId" in officer ? <UnitRadioChannelModal unit={officer} /> : null,
+                  radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <>
                       <Button
