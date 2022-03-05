@@ -221,8 +221,6 @@ export class StatusController {
       this.socket.emitUpdateDeputyStatus();
     }
 
-    console.log({ type, updatedUnit });
-
     return updatedUnit;
   }
 }
