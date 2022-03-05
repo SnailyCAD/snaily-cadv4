@@ -9,6 +9,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
   const callsign = isCombined ? unit.officers[0]?.callsign : unit.callsign;
   const callsign2 = isCombined ? null : unit.callsign2;
   const department = isCombined ? null : unit.department;
+  const incremental = isCombined ? unit.incremental : null;
 
   const unitDivision =
     "divisions" in unit ? unit.divisions : "division" in unit ? unit.division : [];
@@ -23,6 +24,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
     callsign1: callsign,
     callsign2,
     division: division?.callsign,
+    incremental,
   };
 
   const templateArr: (string | null)[] = template.split(/[{}]/);
@@ -30,7 +32,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
     const idx = templateArr.indexOf(replacer);
 
     if (value) {
-      templateArr[idx] = value;
+      templateArr[idx] = value.toString();
     } else {
       templateArr[idx] = null;
     }
