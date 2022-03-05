@@ -669,6 +669,7 @@ export interface CombinedLeoUnit {
   statusId: string | null;
   status: StatusValue | null;
   radioChannelId: string | null;
+  incremental: number | null;
   officers: Officer[];
 }
 

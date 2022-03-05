@@ -4,7 +4,7 @@ import { Description, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
-import type { Socket } from "services/SocketService";
+import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
 
 @Controller("/dispatch/status")
@@ -57,11 +57,13 @@ export class CombinedUnitsController {
       select: { id: true },
     });
 
+    const nextInt = await this.findNextAvailableIncremental();
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,
         callsign: entryOfficer.callsign,
         callsign2: entryOfficer.callsign2,
+        incremental: nextInt,
       },
     });
 
@@ -123,5 +125,24 @@ export class CombinedUnitsController {
     });
 
     this.socket.emitUpdateOfficerStatus();
+  }
+
+  /**
+   * find the first smallest missing item from an array
+   */
+  protected async findNextAvailableIncremental() {
+    const units = await prisma.combinedLeoUnit.findMany({
+      where: { incremental: { not: null } },
+    });
+
+    const incrementalNumbers = units.map((v) => v.incremental!);
+    const sorted = incrementalNumbers.sort((a, b) => a - b);
+    let nextIncremental = 1;
+
+    for (let i = 0; i < sorted.length; i++) {
+      if (sorted[i] === nextIncremental) nextIncremental++;
+    }
+
+    return nextIncremental;
   }
 }
