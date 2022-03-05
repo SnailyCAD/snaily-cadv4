@@ -24,6 +24,7 @@ import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { isUnitCombined } from "@snailycad/utils";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -80,8 +81,8 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
   }
 
   function makeUnit(unit: AssignedUnit) {
-    return "officers" in unit.unit
-      ? unit.unit.callsign
+    return isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
 

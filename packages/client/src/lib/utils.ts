@@ -12,6 +12,7 @@ import {
   ValueType,
   EmsFdDeputy,
 } from "@snailycad/types";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils/typeguards";
 import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
@@ -80,9 +81,7 @@ export async function requestAll(
 }
 
 export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit) {
-  if (!("citizen" in unit)) {
-    return "";
-  }
+  if (isUnitCombined(unit)) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;
 }
@@ -92,7 +91,7 @@ export function yesOrNoText(t: boolean): "yes" | "no" {
 }
 
 export function formatUnitDivisions(unit: Officer | EmsFdDeputy) {
-  const division = "divisions" in unit ? null : unit.division.value.value;
+  const division = isUnitOfficer(unit) ? null : unit.division.value.value;
   if (!("divisions" in unit)) return division as string;
   const divisions = unit.divisions.map((d) => d.value.value).join(", ");
 
@@ -120,7 +119,7 @@ export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: V
 export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {
   if (!unit) return null;
 
-  const whitelistStatus = "whitelistStatus" in unit ? unit.whitelistStatus : null;
+  const whitelistStatus = isUnitOfficer(unit) ? unit.whitelistStatus : null;
 
   if (whitelistStatus) {
     if (whitelistStatus.status === WhitelistStatus.DECLINED) {
@@ -134,7 +133,7 @@ export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {
 }
 
 export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
-  if (!("whitelistStatus" in unit)) return getUnitDepartment(unit)?.value.value ?? null;
+  if (!isUnitOfficer(unit)) return getUnitDepartment(unit)?.value.value ?? null;
 
   const whitelistStatus = unit.whitelistStatus;
   const department = unit.department;

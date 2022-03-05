@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useDispatchState } from "state/dispatchState";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
+import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 
 interface Props {
   unit: Officer | EmsFdDeputy | CombinedLeoUnit;
@@ -129,5 +130,5 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
 function isOfficer(
   unit: Officer | EmsFdDeputy | CombinedLeoUnit,
 ): unit is Officer | CombinedLeoUnit {
-  return "divisions" in unit || "officers" in unit;
+  return isUnitCombined(unit) || isUnitOfficer(unit);
 }

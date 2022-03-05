@@ -8,6 +8,7 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import { makeUnitName } from "lib/utils";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
+import { isUnitCombined } from "@snailycad/utils";
 
 export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any>) {
   const { codes10 } = useValues();
@@ -36,10 +37,9 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
       await execute(`/911-calls/events/${call.id}`, {
         method: "POST",
         data: {
-          description:
-            "officers" in unit
-              ? `${unit.callsign} / ${status.value.value}`
-              : `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
+          description: isUnitCombined(unit)
+            ? `${generateCallsign(unit, "pairedUnitTemplate")} / ${status.value.value}`
+            : `${generateCallsign(unit)} ${makeUnitName(unit)} / ${status.value.value}`,
         },
       });
     }
@@ -60,9 +60,9 @@ export function MultiValueContainerContextMenu(props: MultiValueGenericProps<any
 
   if (unit) {
     codesMapped.unshift({
-      name: !("officers" in unit)
-        ? `${generateCallsign(unit)} ${makeUnitName(unit)}`
-        : unit.callsign,
+      name: isUnitCombined(unit)
+        ? generateCallsign(unit, "pairedUnitTemplate")
+        : `${generateCallsign(unit)} ${makeUnitName(unit)}`,
       component: "Label",
     });
   }

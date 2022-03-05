@@ -24,6 +24,7 @@ import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { useValues } from "context/ValuesContext";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface Props {
   call: Full911Call | null;
@@ -213,8 +214,8 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   function makeLabel(value: string) {
     const unit = allUnits.find((v) => v.id === value) ?? units.find((v) => v.id === value);
 
-    if (unit && "officers" in unit) {
-      return `${unit.callsign}`;
+    if (unit && isUnitCombined(unit)) {
+      return generateCallsign(unit, "pairedUnitTemplate");
     }
 
     return unit ? `${generateCallsign(unit)} ${makeUnitName(unit)}` : "";

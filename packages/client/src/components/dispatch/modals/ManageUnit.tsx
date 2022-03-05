@@ -18,6 +18,8 @@ import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types"
 import { classNames } from "lib/classNames";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
+import { isUnitCombined } from "@snailycad/utils";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
 interface Props {
   type?: "ems-fd" | "leo";
@@ -32,6 +34,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   const { codes10 } = useValues();
   const { activeOfficers, setActiveOfficers } = useDispatchState();
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { generateCallsign } = useGenerateCallsign();
 
   const t = useTranslations("Leo");
   const setUnits = type === "leo" ? setActiveOfficers : setActiveDeputies;
@@ -71,10 +74,9 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
     return null;
   }
 
-  const title =
-    "officers" in unit
-      ? `${common("manage")} ${unit.callsign}`
-      : `${common("manage")} ${unit.callsign} ${makeUnitName(unit)}`;
+  const title = isUnitCombined(unit)
+    ? `${common("manage")} ${generateCallsign(unit, "pairedUnitTemplate")}`
+    : `${common("manage")} ${generateCallsign(unit)} ${makeUnitName(unit)}`;
 
   const INITIAL_VALUES = {
     status: unit.status?.id ?? null,
@@ -107,10 +109,10 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
             <footer
               className={classNames(
                 "flex mt-5",
-                "officers" in unit ? "justify-between" : "justify-end",
+                isUnitCombined(unit) ? "justify-between" : "justify-end",
               )}
             >
-              {"officers" in unit ? (
+              {isUnitCombined(unit) ? (
                 <Button
                   disabled={state === "loading"}
                   onClick={handleUnmerge}

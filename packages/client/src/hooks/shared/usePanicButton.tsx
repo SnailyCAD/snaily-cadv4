@@ -5,6 +5,7 @@ import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import { isUnitCombined } from "@snailycad/utils";
 
 export function usePanicButton() {
   const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
@@ -25,7 +26,7 @@ function Component({ unit }: { unit: Officer | EmsFdDeputy | CombinedLeoUnit }) 
   const { generateCallsign } = useGenerateCallsign();
   const callsign = generateCallsign(
     unit,
-    "officers" in unit ? "pairedUnitTemplate" : "callsignTemplate",
+    isUnitCombined(unit) ? "pairedUnitTemplate" : "callsignTemplate",
   );
 
   return (

@@ -98,14 +98,14 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
         // * 9 to fix overlapping issues with next table column
         style={{ minWidth: nameAndCallsign.length * 9 }}
       >
-        {"imageId" in officer && officer.imageId ? (
+        {isUnitOfficer(officer) && officer.imageId ? (
           <img
             className="rounded-md w-[30px] h-[30px] object-cover mr-2"
             draggable={false}
             src={makeImageUrl("units", officer.imageId)}
           />
         ) : null}
-        {"officers" in officer ? (
+        {isUnitCombined(officer) ? (
           <div className="flex items-center">
             {generateCallsign(officer, "pairedUnitTemplate")}
             <span className="mx-4">
