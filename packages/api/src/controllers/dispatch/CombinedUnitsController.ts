@@ -107,9 +107,9 @@ export class CombinedUnitsController {
       throw new NotFound("notFound");
     }
 
-    await Promise.all(
-      unit.officers.map(async ({ id }) => {
-        await prisma.officer.update({
+    await prisma.$transaction(
+      unit.officers.map(({ id }) => {
+        return prisma.officer.update({
           where: { id },
           data: { statusId: unit.statusId },
         });
