@@ -68,6 +68,8 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               model: vehicle.model.value.value,
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+              insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               actions: (
@@ -97,6 +99,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               { Header: t("model"), accessor: "model" },
               { Header: t("color"), accessor: "color" },
               { Header: t("registrationStatus"), accessor: "registrationStatus" },
+              { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
               { Header: t("vinNumber"), accessor: "vinNumber" },
               { Header: common("createdAt"), accessor: "createdAt" },
               { Header: common("actions"), accessor: "actions" },

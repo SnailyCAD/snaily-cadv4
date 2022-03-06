@@ -87,7 +87,7 @@ export function RegisterVehicleModal({
   const INITIAL_VALUES = {
     model: vehicle?.modelId ?? "",
     color: vehicle?.color ?? "",
-    insuranceStatus: vehicle?.insuranceStatus ?? "",
+    insuranceStatus: vehicle?.insuranceStatusId ?? "",
     registrationStatus: vehicle?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
@@ -182,6 +182,20 @@ export function RegisterVehicleModal({
                 }))}
                 value={values.registrationStatus}
                 name="registrationStatus"
+                onChange={handleChange}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.insuranceStatus} label={tVehicle("insuranceStatus")}>
+              <Select
+                values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS).map(
+                  (license) => ({
+                    label: license.value,
+                    value: license.id,
+                  }),
+                )}
+                value={values.insuranceStatus}
+                name="insuranceStatus"
                 onChange={handleChange}
               />
             </FormField>

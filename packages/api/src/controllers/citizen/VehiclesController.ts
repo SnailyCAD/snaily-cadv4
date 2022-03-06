@@ -73,9 +73,10 @@ export class VehiclesController {
         color: data.color,
         citizenId: citizen.id,
         modelId,
-        registrationStatusId: data.registrationStatus as string,
+        registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || generateString(17),
         userId: user.id || undefined,
+        insuranceStatusId: data.insuranceStatus,
       },
       include: {
         model: { include: { value: true } },

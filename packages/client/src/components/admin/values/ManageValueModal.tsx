@@ -151,6 +151,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   };
 
   function validate(values: typeof INITIAL_VALUES) {
+    if (type === ValueType.LICENSE) {
+      // temporary fix, it seems to not update the schema :thinking:
+      return {};
+    }
+
     const schemaToUse = EXTRA_SCHEMAS[type] ?? BASE_VALUE_SCHEMA;
     const errors = handleValidate(schemaToUse)(values);
 
