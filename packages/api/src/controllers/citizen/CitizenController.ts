@@ -13,10 +13,11 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { Citizen, DriversLicenseCategoryValue, User, ValueType } from "@prisma/client";
+import { User, ValueType } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
+import { manyToManyHelper } from "utils/manyToMany";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -208,10 +209,13 @@ export class CitizenController {
       },
     });
 
-    await linkDlCategories(
-      citizen.id,
-      data.driversLicenseCategory ?? [],
-      data.pilotLicenseCategory ?? [],
+    const newArr = [...(data.driversLicenseCategory ?? []), ...(data.pilotLicenseCategory ?? [])];
+    const disconnectConnectArr = manyToManyHelper([], newArr);
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
+      ),
     );
 
     return citizen;
@@ -307,36 +311,4 @@ export class CitizenController {
 
     return data;
   }
-}
-
-export async function linkDlCategories(
-  citizenId: string,
-  driversLicenseCategory: string[],
-  pilotLicenseCategory: string[],
-) {
-  await Promise.all(
-    [...driversLicenseCategory, ...pilotLicenseCategory].map(async (fullId) => {
-      const [id] = fullId.split("-");
-
-      await prisma.citizen.update({
-        where: { id: citizenId },
-        data: { dlCategory: { connect: { id } } },
-      });
-    }),
-  );
-}
-
-export async function unlinkDlCategories(
-  citizen: Citizen & { dlCategory: DriversLicenseCategoryValue[] },
-) {
-  await Promise.all(
-    citizen.dlCategory.map(async (v) => {
-      await prisma.citizen.update({
-        where: {
-          id: citizen.id,
-        },
-        data: { dlCategory: { disconnect: { id: v.id } } },
-      });
-    }),
-  );
 }

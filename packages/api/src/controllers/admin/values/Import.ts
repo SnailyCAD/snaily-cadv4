@@ -30,11 +30,11 @@ import {
   type ValueLicenseType,
   WhatPages,
   ValueType,
-  StatusValue,
   Value,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
+import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -247,17 +247,6 @@ export const typeHandlers = {
         select: { id: true, departments: true },
       });
 
-      if (value) {
-        await Promise.all(
-          (value?.departments ?? []).map(async (v) => {
-            await prisma.statusValue.update({
-              where: { id: value.id },
-              data: { departments: { disconnect: { id: v.id } } },
-            });
-          }),
-        );
-      }
-
       const data = {
         update: {
           type: item.type as StatusValueType,
@@ -281,26 +270,27 @@ export const typeHandlers = {
         include: { value: true },
       });
 
-      let last: StatusValue | null = null;
-      await Promise.all(
-        (item.departments ?? []).map(async (departmentId, idx) => {
-          const isLast = idx + 1 === item.departments?.length;
-          const statusValue = await prisma.statusValue.update({
-            where: { id: updatedValue.id },
-            data: { departments: { connect: { id: departmentId } } },
-            include: isLast
-              ? { value: true, departments: { include: { value: true } } }
-              : undefined,
-          });
-
-          if (isLast) {
-            last = statusValue;
-          }
-        }),
+      const disconnectConnectArr = manyToManyHelper(
+        value?.departments?.map((v) => v.id) ?? [],
+        item.departments ?? [],
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return { ...updatedValue, ...(last ?? {}) };
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.statusValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { value: true, departments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated;
     });
   },
   PENAL_CODE: async (body: unknown, id?: string) => {

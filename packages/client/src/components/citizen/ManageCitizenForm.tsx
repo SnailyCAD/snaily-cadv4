@@ -235,7 +235,7 @@ export function ManageCitizenForm({
                       .filter((v) => v.type === "AUTOMOTIVE")
                       .map((v) => ({
                         label: v.value.value,
-                        value: [v.id, v.type].join("-"),
+                        value: v.id,
                       }))}
                     value={values.driversLicenseCategory}
                     onChange={handleChange}
@@ -283,7 +283,7 @@ export function ManageCitizenForm({
                       .filter((v) => v.type === "AVIATION")
                       .map((v) => ({
                         label: v.value.value,
-                        value: [v.id, v.type].join("-"),
+                        value: v.id,
                       }))}
                     value={values.pilotLicenseCategory}
                     onChange={handleChange}
