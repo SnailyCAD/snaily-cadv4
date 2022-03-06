@@ -76,6 +76,8 @@ export class DiscordSettingsController {
     const rolesBody = Array.isArray(roles) ? roles : [];
 
     Object.values(data).map((roleId) => {
+      if (Array.isArray(roleId) && roleId.length <= 0) return;
+
       if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
         throw new BadRequest("invalidRoleId");
       }
