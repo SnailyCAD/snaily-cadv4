@@ -220,6 +220,8 @@ export interface RegisteredVehicle {
   registrationStatus: Value<ValueType.LICENSE>;
   insuranceStatus: Value<ValueType.LICENSE> | null;
   insuranceStatusId: string | null;
+  inspectionStatus: VehicleInspectionStatus | null;
+  taxStatus: VehicleTaxStatus | null;
   reportedStolen: boolean;
   impounded: boolean;
   flags?: Value<ValueType.VEHICLE_FLAG>[];
@@ -1035,4 +1037,14 @@ export enum ExpungementRequestStatus {
 export enum WarrantStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
+}
+
+export enum VehicleInspectionStatus {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum VehicleTaxStatus {
+  TAXED = "TAXED",
+  UNTAXED = "UNTAXED",
 }

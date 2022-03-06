@@ -1,5 +1,5 @@
 import type { MiscCadSettings, User } from ".prisma/client";
-import { Feature } from "@prisma/client";
+import { Feature, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -77,6 +77,8 @@ export class VehiclesController {
         vinNumber: data.vinNumber || generateString(17),
         userId: user.id || undefined,
         insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
       },
       include: {
         model: { include: { value: true } },
@@ -154,9 +156,12 @@ export class VehiclesController {
       data: {
         modelId: data.model,
         color: data.color,
-        registrationStatusId: data.registrationStatus as string,
+        registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || vehicle.vinNumber,
         reportedStolen: data.reportedStolen ?? false,
+        insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
       },
       include: {
         model: { include: { value: true } },

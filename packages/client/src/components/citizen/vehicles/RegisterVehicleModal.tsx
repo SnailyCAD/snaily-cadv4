@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
@@ -10,7 +11,13 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle, ValueLicenseType } from "@snailycad/types";
+import {
+  Citizen,
+  RegisteredVehicle,
+  ValueLicenseType,
+  VehicleTaxStatus,
+  VehicleInspectionStatus,
+} from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
@@ -20,6 +27,7 @@ import { Toggle } from "components/form/Toggle";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/businessState";
 import { filterLicenseTypes } from "lib/utils";
+import { FormRow } from "components/form/FormRow";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -57,6 +65,36 @@ export function RegisterVehicleModal({
     onClose?.();
   }
 
+  const TAX_STATUS_LABELS = React.useMemo(
+    () => ({
+      [VehicleTaxStatus.TAXED]: tVehicle("taxed"),
+      [VehicleTaxStatus.UNTAXED]: tVehicle("untaxed"),
+    }),
+    [tVehicle],
+  );
+
+  const TAX_STATUS = React.useMemo(() => {
+    return Object.values(VehicleTaxStatus).map((v) => ({
+      label: TAX_STATUS_LABELS[v],
+      value: v,
+    }));
+  }, [TAX_STATUS_LABELS]);
+
+  const INSPECTION_STATUS_LABELS = React.useMemo(
+    () => ({
+      [VehicleInspectionStatus.PASSED]: tVehicle("passed"),
+      [VehicleInspectionStatus.FAILED]: tVehicle("failed"),
+    }),
+    [tVehicle],
+  );
+
+  const INSPECTION_STATUS = React.useMemo(() => {
+    return Object.values(VehicleInspectionStatus).map((v) => ({
+      label: INSPECTION_STATUS_LABELS[v],
+      value: v,
+    }));
+  }, [INSPECTION_STATUS_LABELS]);
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
@@ -88,6 +126,8 @@ export function RegisterVehicleModal({
     model: vehicle?.modelId ?? "",
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatusId ?? "",
+    inspectionStatus: vehicle?.inspectionStatus ?? null,
+    taxStatus: vehicle?.taxStatus ?? null,
     registrationStatus: vehicle?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
     plate: vehicle?.plate ?? "",
@@ -102,7 +142,7 @@ export function RegisterVehicleModal({
       title={t("registerVehicle")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.RegisterVehicle)}
-      className="w-[600px]"
+      className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
@@ -168,37 +208,65 @@ export function RegisterVehicleModal({
               />
             </FormField>
 
-            <FormField
-              errorMessage={errors.registrationStatus}
-              label={tVehicle("registrationStatus")}
-            >
-              <Select
-                values={filterLicenseTypes(
-                  license.values,
-                  ValueLicenseType.REGISTRATION_STATUS,
-                ).map((license) => ({
-                  label: license.value,
-                  value: license.id,
-                }))}
-                value={values.registrationStatus}
-                name="registrationStatus"
-                onChange={handleChange}
-              />
-            </FormField>
-
-            <FormField errorMessage={errors.insuranceStatus} label={tVehicle("insuranceStatus")}>
-              <Select
-                values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS).map(
-                  (license) => ({
+            <FormRow>
+              <FormField
+                errorMessage={errors.registrationStatus}
+                label={tVehicle("registrationStatus")}
+              >
+                <Select
+                  values={filterLicenseTypes(
+                    license.values,
+                    ValueLicenseType.REGISTRATION_STATUS,
+                  ).map((license) => ({
                     label: license.value,
                     value: license.id,
-                  }),
-                )}
-                value={values.insuranceStatus}
-                name="insuranceStatus"
-                onChange={handleChange}
-              />
-            </FormField>
+                  }))}
+                  value={values.registrationStatus}
+                  name="registrationStatus"
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField errorMessage={errors.insuranceStatus} label={tVehicle("insuranceStatus")}>
+                <Select
+                  isClearable
+                  values={filterLicenseTypes(license.values, ValueLicenseType.INSURANCE_STATUS).map(
+                    (license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }),
+                  )}
+                  value={values.insuranceStatus}
+                  name="insuranceStatus"
+                  onChange={handleChange}
+                />
+              </FormField>
+            </FormRow>
+
+            <FormRow>
+              <FormField
+                errorMessage={errors.inspectionStatus}
+                label={tVehicle("inspectionStatus")}
+              >
+                <Select
+                  isClearable
+                  values={INSPECTION_STATUS}
+                  value={values.inspectionStatus}
+                  name="inspectionStatus"
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField errorMessage={errors.taxStatus} label={tVehicle("taxStatus")}>
+                <Select
+                  isClearable
+                  values={TAX_STATUS}
+                  value={values.taxStatus}
+                  name="taxStatus"
+                  onChange={handleChange}
+                />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.color} label={tVehicle("color")}>
               <Input onChange={handleChange} name="color" value={values.color} />

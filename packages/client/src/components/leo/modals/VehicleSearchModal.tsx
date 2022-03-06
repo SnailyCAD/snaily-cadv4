@@ -141,7 +141,7 @@ export function VehicleSearchModal() {
                   </div>
                 ) : null}
 
-                <ul className="mt-2">
+                <ul className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-1">
                   <li>
                     <Infofield label={vT("plate")}>{currentResult.plate.toUpperCase()}</Infofield>
                   </li>
@@ -162,6 +162,16 @@ export function VehicleSearchModal() {
                   <li>
                     <Infofield label={vT("insuranceStatus")}>
                       {currentResult.insuranceStatus?.value ?? common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("taxStatus")}>
+                      {currentResult.taxStatus ?? common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("inspectionStatus")}>
+                      {currentResult.inspectionStatus ?? common("none")}
                     </Infofield>
                   </li>
                   <li>

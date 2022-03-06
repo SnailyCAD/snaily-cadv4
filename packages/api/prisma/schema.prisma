@@ -240,28 +240,30 @@ model Citizen {
 }
 
 model RegisteredVehicle {
-  id                   String             @id @default(cuid())
-  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String                   @id @default(cuid())
+  user                 User?                    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String?
-  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen              Citizen                  @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  vinNumber            String             @unique @db.VarChar(255)
-  plate                String             @unique @db.VarChar(255)
-  model                VehicleValue       @relation(fields: [modelId], references: [id])
+  vinNumber            String                   @unique @db.VarChar(255)
+  plate                String                   @unique @db.VarChar(255)
+  model                VehicleValue             @relation(fields: [modelId], references: [id])
   modelId              String
-  color                String             @db.VarChar(255)
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @default(now()) @updatedAt
-  registrationStatus   Value              @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
+  color                String                   @db.VarChar(255)
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @default(now()) @updatedAt
+  registrationStatus   Value                    @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  flags                Value[]            @relation("vehicleFlags")
-  insuranceStatus      Value?             @relation("insuranceStatusToValue", fields: [insuranceStatusId], references: [id])
+  flags                Value[]                  @relation("vehicleFlags")
+  insuranceStatus      Value?                   @relation("insuranceStatusToValue", fields: [insuranceStatusId], references: [id])
   insuranceStatusId    String?
-  reportedStolen       Boolean            @default(false)
-  impounded            Boolean            @default(false)
+  inspectionStatus     VehicleInspectionStatus?
+  taxStatus            VehicleTaxStatus?
+  reportedStolen       Boolean                  @default(false)
+  impounded            Boolean                  @default(false)
   TruckLog             TruckLog[]
   ImpoundedVehicle     ImpoundedVehicle[]
-  Business             Business[]         @relation("registeredBusinessVehicles")
+  Business             Business[]               @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
@@ -1018,6 +1020,16 @@ enum ExpungementRequestStatus {
   ACCEPTED
   DENIED
   PENDING
+}
+
+enum VehicleInspectionStatus {
+  PASSED
+  FAILED
+}
+
+enum VehicleTaxStatus {
+  TAXED
+  UNTAXED
 }
 
 // other
