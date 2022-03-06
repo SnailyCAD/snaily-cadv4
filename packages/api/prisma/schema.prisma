@@ -183,17 +183,6 @@ model User2FA {
   userId String
 }
 
-enum StatusViewMode {
-  FULL_ROW_COLOR
-  DOT_COLOR
-}
-
-enum TableActionsAlignment {
-  NONE
-  LEFT
-  RIGHT
-}
-
 model Citizen {
   id                   String                        @id @default(cuid())
   socialSecurityNumber String?
@@ -250,18 +239,6 @@ model Citizen {
   NameChangeRequest    NameChangeRequest[]
 }
 
-enum Rank {
-  OWNER
-  ADMIN
-  USER
-}
-
-enum WhitelistStatus {
-  ACCEPTED
-  PENDING
-  DECLINED
-}
-
 model RegisteredVehicle {
   id                   String             @id @default(cuid())
   user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -277,7 +254,9 @@ model RegisteredVehicle {
   updatedAt            DateTime           @default(now()) @updatedAt
   registrationStatus   Value              @relation("registrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  insuranceStatus      String             @db.VarChar(255)
+  flags                Value[]            @relation("vehicleFlags")
+  insuranceStatus      Value?             @relation("insuranceStatusToValue", fields: [insuranceStatusId], references: [id])
+  insuranceStatusId    String?
   reportedStolen       Boolean            @default(false)
   impounded            Boolean            @default(false)
   TruckLog             TruckLog[]
@@ -316,7 +295,7 @@ model MedicalRecord {
   bloodGroupId String?
 }
 
-// admin values
+// values
 model Value {
   id        String    @id @default(cuid())
   type      ValueType
@@ -351,11 +330,8 @@ model Value {
   ImpoundedVehicle                ImpoundedVehicle[]
   TowCall                         TowCall[]
   MedicalRecord                   MedicalRecord[]
-}
-
-enum ValueLicenseType {
-  LICENSE
-  REGISTRATION_STATUS
+  vehicleFlags                    RegisteredVehicle[]           @relation("vehicleFlags")
+  insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
 }
 
 model PenalCode {
@@ -470,34 +446,6 @@ model WeaponValue {
   value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash    String?
   weapon  Weapon[] @relation("weaponModelToValue")
-}
-
-enum DepartmentType {
-  LEO
-  EMS_FD
-}
-
-enum ValueType {
-  LICENSE
-  GENDER
-  ETHNICITY
-  VEHICLE
-  WEAPON
-  BLOOD_GROUP
-  BUSINESS_ROLE
-  CODES_10
-  PENAL_CODE
-  DEPARTMENT
-  OFFICER_RANK
-  DIVISION
-  DRIVERSLICENSE_CATEGORY
-  IMPOUND_LOT
-}
-
-enum DriversLicenseCategoryType {
-  AUTOMOTIVE
-  AVIATION
-  WATER
 }
 
 // notifications
@@ -623,12 +571,6 @@ model EmployeeValue {
   valueId   String
   as        EmployeeAsEnum @default(EMPLOYEE)
   employees Employee[]     @relation("employeeToValue")
-}
-
-enum EmployeeAsEnum {
-  OWNER
-  MANAGER
-  EMPLOYEE
 }
 
 // leo
@@ -761,30 +703,6 @@ model CombinedLeoUnit {
   AssignedUnit   AssignedUnit[]
 }
 
-enum StatusValueType {
-  STATUS_CODE
-  SITUATION_CODE
-}
-
-enum StatusEnum {
-  ON_DUTY
-  OFF_DUTY
-}
-
-enum WhatPages {
-  DISPATCH
-  EMS_FD
-  LEO
-}
-
-enum ShouldDoType {
-  SET_OFF_DUTY
-  SET_ON_DUTY
-  SET_ASSIGNED
-  SET_STATUS
-  PANIC_BUTTON
-}
-
 // dispatching
 model ActiveDispatchers {
   id        String   @id @default(cuid())
@@ -862,12 +780,6 @@ model Bolo {
   officerId   String?
 }
 
-enum BoloType {
-  VEHICLE
-  PERSON
-  OTHER
-}
-
 // tickets, arrest reports, warrants, written warnings
 model Record {
   id                   String              @id @default(uuid())
@@ -897,17 +809,6 @@ model RecordRelease {
   Record     Record[]
 }
 
-enum ReleaseType {
-  TIME_OUT
-  BAIL_POSTED
-}
-
-enum RecordType {
-  ARREST_REPORT
-  TICKET
-  WRITTEN_WARNING
-}
-
 model Warrant {
   id                   String              @id @default(uuid())
   citizen              Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
@@ -935,11 +836,6 @@ model RecordLog {
   updatedAt DateTime @default(now()) @updatedAt
 }
 
-enum WarrantStatus {
-  ACTIVE
-  INACTIVE
-}
-
 // Expungement requests
 model ExpungementRequest {
   id        String                   @id @default(uuid())
@@ -952,12 +848,6 @@ model ExpungementRequest {
   updatedAt DateTime                 @default(now()) @updatedAt
   warrants  Warrant[]
   records   Record[]
-}
-
-enum ExpungementRequestStatus {
-  ACCEPTED
-  DENIED
-  PENDING
 }
 
 model NameChangeRequest {
@@ -1012,6 +902,121 @@ model TruckLog {
   endedAt   String             @db.VarChar(255)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @default(now()) @updatedAt
+}
+
+enum StatusViewMode {
+  FULL_ROW_COLOR
+  DOT_COLOR
+}
+
+enum TableActionsAlignment {
+  NONE
+  LEFT
+  RIGHT
+}
+
+enum Rank {
+  OWNER
+  ADMIN
+  USER
+}
+
+enum WhitelistStatus {
+  ACCEPTED
+  PENDING
+  DECLINED
+}
+
+enum ValueLicenseType {
+  LICENSE
+  REGISTRATION_STATUS
+}
+
+enum DepartmentType {
+  LEO
+  EMS_FD
+}
+
+enum ValueType {
+  LICENSE
+  GENDER
+  ETHNICITY
+  VEHICLE
+  WEAPON
+  BLOOD_GROUP
+  BUSINESS_ROLE
+  CODES_10
+  PENAL_CODE
+  DEPARTMENT
+  OFFICER_RANK
+  DIVISION
+  DRIVERSLICENSE_CATEGORY
+  IMPOUND_LOT
+  VEHICLE_FLAG
+}
+
+enum DriversLicenseCategoryType {
+  AUTOMOTIVE
+  AVIATION
+  WATER
+}
+
+enum EmployeeAsEnum {
+  OWNER
+  MANAGER
+  EMPLOYEE
+}
+
+enum StatusValueType {
+  STATUS_CODE
+  SITUATION_CODE
+}
+
+enum StatusEnum {
+  ON_DUTY
+  OFF_DUTY
+}
+
+enum WhatPages {
+  DISPATCH
+  EMS_FD
+  LEO
+}
+
+enum ShouldDoType {
+  SET_OFF_DUTY
+  SET_ON_DUTY
+  SET_ASSIGNED
+  SET_STATUS
+  PANIC_BUTTON
+}
+
+enum BoloType {
+  VEHICLE
+  PERSON
+  OTHER
+}
+
+enum ReleaseType {
+  TIME_OUT
+  BAIL_POSTED
+}
+
+enum RecordType {
+  ARREST_REPORT
+  TICKET
+  WRITTEN_WARNING
+}
+
+enum WarrantStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ExpungementRequestStatus {
+  ACCEPTED
+  DENIED
+  PENDING
 }
 
 // other

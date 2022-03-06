@@ -36,6 +36,7 @@ export const enum ModalIds {
   Manage911Call = "Manage911CallModal",
   MergeUnit = "MergeUnitModal",
 
+  ManageVehicleFlags = "ManageVehicleFlagsModal",
   AddressSearch = "AddressSearchModal",
   NameSearch = "NameSearchModal",
   VehicleSearch = "VehicleSearchModal",

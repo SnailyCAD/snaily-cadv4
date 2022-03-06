@@ -28,6 +28,7 @@ interface Context {
   businessRole: ContextValue<ValueType.BUSINESS_ROLE, EmployeeValue>;
   codes10: ContextValue<ValueType.CODES_10, StatusValue>;
   vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
+  vehicleFlag: ContextValue<ValueType.VEHICLE_FLAG>;
   penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
   department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;

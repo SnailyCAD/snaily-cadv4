@@ -22,6 +22,7 @@ export const citizenInclude = {
   user: { select: userProperties },
   vehicles: {
     include: {
+      flags: true,
       model: { include: { value: true } },
       registrationStatus: true,
       TruckLog: true,

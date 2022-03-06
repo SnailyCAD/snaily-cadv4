@@ -18,6 +18,8 @@ import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
+import { Pencil } from "react-bootstrap-icons";
+import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 
 export function VehicleSearchModal() {
   const { currentResult, setCurrentResult } = useVehicleSearch();
@@ -59,6 +61,12 @@ export function VehicleSearchModal() {
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
     closeModal(ModalIds.VehicleSearch);
+  }
+
+  function handleEditVehicleFlags() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.ManageVehicleFlags);
   }
 
   async function handleMarkStolen() {
@@ -176,6 +184,19 @@ export function VehicleSearchModal() {
                     </li>
                   ) : null}
                   <li>
+                    <Infofield className="capitalize flex items-center gap-2" label={vT("flags")}>
+                      <Button
+                        type="button"
+                        onClick={handleEditVehicleFlags}
+                        title={t("manageVehicleFlags")}
+                        className="px-1 mr-2"
+                      >
+                        <Pencil />
+                      </Button>
+                      {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
                     <Infofield
                       childrenProps={{
                         className: classNames(
@@ -229,6 +250,8 @@ export function VehicleSearchModal() {
           </Form>
         )}
       </Formik>
+
+      <ManageVehicleFlagsModal />
     </Modal>
   );
 }

@@ -54,6 +54,7 @@
     "deleteVehicle": "Delete Vehicle",
     "reportAsStolen": "Report as stolen",
     "registeredVehicles": "Registered Vehicles",
+    "flags": "Flags",
     "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone."
   },
   "Weapons": {

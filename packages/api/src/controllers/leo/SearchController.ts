@@ -140,6 +140,7 @@ export class SearchController {
         TruckLog: true,
         Business: true,
         citizen: includeCitizenInfo ? { include: { warrants: true } } : true,
+        flags: true,
       },
     };
 
