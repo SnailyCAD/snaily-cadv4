@@ -155,8 +155,13 @@ export function VehicleSearchModal() {
                     <Infofield label={vT("vinNumber")}>{currentResult.vinNumber}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("vinNumber")}>
+                    <Infofield label={vT("registrationStatus")}>
                       {currentResult.registrationStatus.value}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("insuranceStatus")}>
+                      {currentResult.insuranceStatus?.value ?? common("none")}
                     </Infofield>
                   </li>
                   <li>
