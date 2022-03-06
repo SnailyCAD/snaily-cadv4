@@ -28,6 +28,7 @@ export const VEHICLE_SCHEMA = z.object({
   model: z.string().min(2),
   color: z.string().min(2).max(255),
   registrationStatus: z.string().min(2).max(255),
+  insuranceStatus: z.string().max(255),
   citizenId: z.string().min(2).max(255),
   vinNumber: z.string().max(17).optional(),
   reportedStolen: z.boolean().optional(),

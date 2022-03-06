@@ -25,6 +25,7 @@ export const citizenInclude = {
       flags: true,
       model: { include: { value: true } },
       registrationStatus: true,
+      insuranceStatus: true,
       TruckLog: true,
       Business: true,
     },

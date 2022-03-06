@@ -137,6 +137,7 @@ export class SearchController {
       include: {
         model: { include: { value: true } },
         registrationStatus: true,
+        insuranceStatus: true,
         TruckLog: true,
         Business: true,
         citizen: includeCitizenInfo ? { include: { warrants: true } } : true,
