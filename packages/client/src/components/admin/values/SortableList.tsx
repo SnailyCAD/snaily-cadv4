@@ -58,10 +58,10 @@ export function SortableList({ values, search, setList, handleEdit, handleDelete
             </div>
 
             <div>
-              <Button onClick={() => handleEdit(value)} variant="success">
+              <Button small onClick={() => handleEdit(value)} variant="success">
                 {common("edit")}
               </Button>
-              <Button onClick={() => handleDelete(value)} variant="danger" className="ml-2">
+              <Button small onClick={() => handleDelete(value)} variant="danger" className="ml-2">
                 {common("delete")}
               </Button>
             </div>
