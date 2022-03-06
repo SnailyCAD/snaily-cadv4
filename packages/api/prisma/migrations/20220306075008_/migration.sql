@@ -4,6 +4,9 @@
   - You are about to drop the column `insuranceStatus` on the `RegisteredVehicle` table. All the data in the column will be lost.
 
 */
+-- AlterEnum
+ALTER TYPE "ValueType" ADD VALUE 'VEHICLE_FLAG';
+
 -- AlterTable
 ALTER TABLE "RegisteredVehicle" DROP COLUMN "insuranceStatus",
 ADD COLUMN     "insuranceStatusId" TEXT;

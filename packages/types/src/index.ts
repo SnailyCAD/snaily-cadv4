@@ -218,7 +218,7 @@ export interface RegisteredVehicle {
   updatedAt: Date;
   registrationStatusId: string;
   registrationStatus: Value<ValueType.LICENSE>;
-  insuranceStatus: string;
+  insuranceStatus: Value<ValueType>;
   reportedStolen: boolean;
   impounded: boolean;
   flags?: Value<ValueType.VEHICLE_FLAG>[];
