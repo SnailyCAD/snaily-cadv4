@@ -1323,15 +1323,17 @@ __metadata:
     "@snailycad/schemas": 1.0.0-beta.66
     "@snailycad/types": 1.0.0-beta.66
     "@snailycad/utils": 1.0.0-beta.66
-    "@tsed/common": ^6.103.2
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
-    "@tsed/platform-express": ^6.103.2
-    "@tsed/schema": ^6.103.2
-    "@tsed/socketio": ^6.103.2
-    "@tsed/swagger": ^6.103.2
+    "@swc/core": ^1.2.148
+    "@swc/helpers": ^0.3.6
+    "@tsed/common": ^6.105.0
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
+    "@tsed/platform-express": ^6.105.0
+    "@tsed/schema": ^6.105.0
+    "@tsed/socketio": ^6.105.0
+    "@tsed/swagger": ^6.105.0
     "@types/bcrypt": ^5.0.0
     "@types/compression": ^1.7.2
     "@types/cookie": ^0.4.1
@@ -1348,7 +1350,7 @@ __metadata:
     cookie-parser: 1.4.6
     cors: 2.8.5
     discord-api-types: 0.27.3
-    esbuild: ^0.14.23
+    esbuild: ^0.14.25
     esbuild-register: ^3.3.2
     express: 4.17.3
     glob: ^7.2.0
@@ -1358,11 +1360,12 @@ __metadata:
     otplib: ^12.0.1
     prisma: ^3.10.0
     qrcode: ^1.5.0
+    regenerator-runtime: ^0.13.9
     socket.io: ^4.4.1
-    ts-node: ^10.5.0
-    tsconfig-paths: ^3.12.0
+    ts-node: ^10.7.0
+    tsconfig-paths: ^3.13.0
     typescript: ^4.6.2
-    undici: ^4.14.1
+    undici: ^4.15.0
   languageName: unknown
   linkType: soft
 
@@ -1483,6 +1486,154 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/core-android-arm-eabi@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-android-arm-eabi@npm:1.2.148"
+  conditions: os=android & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@swc/core-android-arm64@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-android-arm64@npm:1.2.148"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-arm64@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-darwin-arm64@npm:1.2.148"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-darwin-x64@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-darwin-x64@npm:1.2.148"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-freebsd-x64@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-freebsd-x64@npm:1.2.148"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm-gnueabihf@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.2.148"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-gnu@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.2.148"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-arm64-musl@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-linux-arm64-musl@npm:1.2.148"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-gnu@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-linux-x64-gnu@npm:1.2.148"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-linux-x64-musl@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-linux-x64-musl@npm:1.2.148"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-arm64-msvc@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.2.148"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-ia32-msvc@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.2.148"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@swc/core-win32-x64-msvc@npm:1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core-win32-x64-msvc@npm:1.2.148"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@swc/core@npm:^1.2.148":
+  version: 1.2.148
+  resolution: "@swc/core@npm:1.2.148"
+  dependencies:
+    "@swc/core-android-arm-eabi": 1.2.148
+    "@swc/core-android-arm64": 1.2.148
+    "@swc/core-darwin-arm64": 1.2.148
+    "@swc/core-darwin-x64": 1.2.148
+    "@swc/core-freebsd-x64": 1.2.148
+    "@swc/core-linux-arm-gnueabihf": 1.2.148
+    "@swc/core-linux-arm64-gnu": 1.2.148
+    "@swc/core-linux-arm64-musl": 1.2.148
+    "@swc/core-linux-x64-gnu": 1.2.148
+    "@swc/core-linux-x64-musl": 1.2.148
+    "@swc/core-win32-arm64-msvc": 1.2.148
+    "@swc/core-win32-ia32-msvc": 1.2.148
+    "@swc/core-win32-x64-msvc": 1.2.148
+  dependenciesMeta:
+    "@swc/core-android-arm-eabi":
+      optional: true
+    "@swc/core-android-arm64":
+      optional: true
+    "@swc/core-darwin-arm64":
+      optional: true
+    "@swc/core-darwin-x64":
+      optional: true
+    "@swc/core-freebsd-x64":
+      optional: true
+    "@swc/core-linux-arm-gnueabihf":
+      optional: true
+    "@swc/core-linux-arm64-gnu":
+      optional: true
+    "@swc/core-linux-arm64-musl":
+      optional: true
+    "@swc/core-linux-x64-gnu":
+      optional: true
+    "@swc/core-linux-x64-musl":
+      optional: true
+    "@swc/core-win32-arm64-msvc":
+      optional: true
+    "@swc/core-win32-ia32-msvc":
+      optional: true
+    "@swc/core-win32-x64-msvc":
+      optional: true
+  bin:
+    swcx: run_swcx.js
+  checksum: 3c3c68b36b2a1913246c029e73b84a1615eb4ba78bc478e70c3ba51d0c467d6d2e55d55b3936366a0a99bc7370028b5bd82931626515501d639e42397e039d2e
+  languageName: node
+  linkType: hard
+
+"@swc/helpers@npm:^0.3.6":
+  version: 0.3.6
+  resolution: "@swc/helpers@npm:0.3.6"
+  checksum: 94122aa282e543125d8bc6262917362234a23e434f04a39f657f871201431dc8ba39892d708d423713b6f80ccbd1d6a5f7efd68c0921031a13c8c1d0b1ef87e6
+  languageName: node
+  linkType: hard
+
 "@szmarczak/http-timer@npm:^1.1.2":
   version: 1.1.2
   resolution: "@szmarczak/http-timer@npm:1.1.2"
@@ -1527,95 +1678,95 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/common@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/common@npm:6.103.2"
+"@tsed/common@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/common@npm:6.105.0"
   dependencies:
-    "@tsed/components-scan": 6.103.2
-    "@tsed/core": 6.103.2
-    "@tsed/exceptions": 6.103.2
-    "@tsed/json-mapper": 6.103.2
+    "@tsed/components-scan": 6.105.0
+    "@tsed/core": 6.105.0
+    "@tsed/exceptions": 6.105.0
+    "@tsed/json-mapper": 6.105.0
     "@tsed/logger": ">=6.1.0"
     "@tsed/logger-file": ">=6.1.0"
-    "@tsed/perf": 6.103.2
-    "@tsed/platform-cache": 6.103.2
-    "@tsed/platform-exceptions": 6.103.2
-    "@tsed/platform-log-middleware": 6.103.2
-    "@tsed/platform-middlewares": 6.103.2
-    "@tsed/platform-params": 6.103.2
-    "@tsed/platform-response-filter": 6.103.2
-    "@tsed/platform-views": 6.103.2
-    "@tsed/schema": 6.103.2
+    "@tsed/perf": 6.105.0
+    "@tsed/platform-cache": 6.105.0
+    "@tsed/platform-exceptions": 6.105.0
+    "@tsed/platform-log-middleware": 6.105.0
+    "@tsed/platform-middlewares": 6.105.0
+    "@tsed/platform-params": 6.105.0
+    "@tsed/platform-response-filter": 6.105.0
+    "@tsed/platform-views": 6.105.0
+    "@tsed/schema": 6.105.0
     "@types/json-schema": 7.0.7
     "@types/on-finished": 2.3.1
     on-finished: 2.3.0
     tslib: 2.2.0
     uuid: 8.3.2
   peerDependencies:
-    "@tsed/di": ^6.103.2
+    "@tsed/di": ^6.105.0
     "@tsed/logger": ">=6.1.0"
     "@tsed/logger-file": ">=6.1.0"
-  checksum: 60f141517df87a8b9b99a471e1127951c35f54306d028b76e1190769d845146bfbbea6fe7487007344722ab17707c0204aec4f37182eeb8823e4b70d31eafc93
+  checksum: 0c97010d71d43b187fafea806515e37d010f840681edfe810d90809347c2dcd3c7c1e80d4d8b1c8b2297e3b3bd91004694943cdd146454c35d30b783396f8254
   languageName: node
   linkType: hard
 
-"@tsed/components-scan@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/components-scan@npm:6.103.2"
+"@tsed/components-scan@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/components-scan@npm:6.105.0"
   dependencies:
     globby: 11.0.3
     normalize-path: 3.0.0
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-  checksum: 2ad7d84078b38f49f79490be5612d0e47e05c9ece7740c07763a28a5050e639bdcfab45bd5764dd43446e114f01e316f19ba750154caac1e2837b475b6f6da4a
+    "@tsed/core": ^6.105.0
+  checksum: 61c143b47c57e57dd57ead22581fffa147cca87e85114bc10dbe5202248d0a9cad918918d81db9f14569e7fdacb430cf657fa599f103d60550332403fa6c34ba
   languageName: node
   linkType: hard
 
-"@tsed/core@npm:6.103.2, @tsed/core@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/core@npm:6.103.2"
+"@tsed/core@npm:6.105.0, @tsed/core@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/core@npm:6.105.0"
   dependencies:
     reflect-metadata: ^0.1.13
     tslib: 2.2.0
-  checksum: c02b0111b1494dc4b9689c7079764fedf286541c1e91b6a1fdb0bcbc9d9bf51b298a2a007eef41a93784a649f1f1e24e5ec27eb48c88363a9cbaf01d975b0752
+  checksum: 775d195c4595fc63eb9948d1f613a758301479b4caaa91c0da502444b5920159b7568728821f7df20ccc933aa83105b6b3112f6026bec6f1f6afa6fb3a81023d
   languageName: node
   linkType: hard
 
-"@tsed/di@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/di@npm:6.103.2"
+"@tsed/di@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/di@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
+    "@tsed/core": ^6.105.0
     "@tsed/logger": ">=6.1.0"
-    "@tsed/schema": ^6.103.2
-  checksum: cbc3e6eb23e4da4e2d495574dc3d13df061cff8e7055a6776a37c924d1da1a58c8d7368a8002a1bc3e5e9b42793072e54c800be498638be0f91ab684cdcb54fa
+    "@tsed/schema": ^6.105.0
+  checksum: 4b7321ae4923dbd3ccd1e944d06affd948194986165f1debf7cc8a6f70aafdf9634700beb72b2f1fada4879dbe4119e4353e7f4ca4547e0af388d0c367be4571
   languageName: node
   linkType: hard
 
-"@tsed/exceptions@npm:6.103.2, @tsed/exceptions@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/exceptions@npm:6.103.2"
+"@tsed/exceptions@npm:6.105.0, @tsed/exceptions@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/exceptions@npm:6.105.0"
   dependencies:
     change-case: 4.1.2
     statuses: ">=2.0.1"
     tslib: 2.2.0
-  checksum: cd44a4f7ac39ef7074ed154b4f9be8b835bbc4dca733a308308fe9fae1943b0da95d8c13a643123864511f5d4a44015d8005ab226dfb3c320e60ebdbf853e586
+  checksum: 59a7c9594bdf78a02eb8fef46e98850fcf49b49f04013ac965ccc4b1b26b5b6e419e1c3cf85a568ccff62d6369e54fa9c2bbc3c166a239e3957678f65771d48a
   languageName: node
   linkType: hard
 
-"@tsed/json-mapper@npm:6.103.2, @tsed/json-mapper@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/json-mapper@npm:6.103.2"
+"@tsed/json-mapper@npm:6.105.0, @tsed/json-mapper@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/json-mapper@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: 3408c1e52fd668bc055869acff6b6b931c62bea63b5354f07fa8476a253b10c87dc65fcc26f50e757e4b2a3fc55e252239f9216c6f023a55d289f4b148be58f4
+    "@tsed/core": ^6.105.0
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: c3e2286059b411ca85e7152eedb8e00e7352fdf722f96ed791e16fc11a721b476de4df51f1f79fecf1e42383696def387158eb9a379180e4aa76009fb01ef066
   languageName: node
   linkType: hard
 
@@ -1643,161 +1794,161 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/openspec@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/openspec@npm:6.103.2"
-  checksum: b7371f2c2ff390ec765cbed42a58c966d8878bfe8141ab1273ad9b374b9e56b4f3b9b4fe11ec96bf4d9ffedfec1b302908bea91dec3afc3450d00138aeabed1b
+"@tsed/openspec@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/openspec@npm:6.105.0"
+  checksum: 58bd55d2474dc646864bdee3558275908f3bcb3707c0eee5211d212d26cfff8176d14e32cdd67d178909c60655547dd3b5ef586bd19f8ed8d25db8e63229471e
   languageName: node
   linkType: hard
 
-"@tsed/perf@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/perf@npm:6.103.2"
+"@tsed/perf@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/perf@npm:6.105.0"
   dependencies:
-    "@tsed/core": 6.103.2
+    "@tsed/core": 6.105.0
     chalk: ^4.1.0
     tslib: 2.2.0
-  checksum: adf74eb1b2bc3e27c19e17c7ba4a8dcb3c44e2dd3d1e6d5540e0014e3331b0229fca04cb9a0066697a08d21e726410a229d2778f2b5f1c0d8a8196819a06bcac
+  checksum: 85cc8b1a731e1ddefee7c93254c392fb5ff89562a711691d2ee731b1439b6da62f7829fdc225edf4e462a8a826272cfaf7c905c843c48d18a888b302f4809d39
   languageName: node
   linkType: hard
 
-"@tsed/platform-cache@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-cache@npm:6.103.2"
+"@tsed/platform-cache@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-cache@npm:6.105.0"
   dependencies:
     "@types/cache-manager": ^3.4.2
     cache-manager: ^3.4.1
     micromatch: 4.0.4
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: 8493d5b626ab8c4d3e0e1c3ab98e547ade43800fe03dc31560afca19733cafe4be4ce775c5a526d1637183f06a1974d05ec43157f71752c6b3b94a82ac15b89c
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: 91b01f1e98a0922a9f4308549c6708eb8569350c71cacad9028d7a7b9f6f42776b8e62bd159219a8dd4d8dc241ed358b529792fb4890cdb3eab2707b6d18efae
   languageName: node
   linkType: hard
 
-"@tsed/platform-exceptions@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-exceptions@npm:6.103.2"
+"@tsed/platform-exceptions@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-exceptions@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: caa316997f8c49c52cf9ce3b6b00edc3ab8b4cea57802d330f25db8e9d62c0457a8a37bc66d5e8619edc9ed9978339dbb7b635e1e8587b0a35aefbf75d9c249f
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: dc29d469141347867943fb90931c98ae1218d9daa5c8ba6e78e06dc31bd59db7b071cf9bb244f7e7deb272b73a4c7f2001f9d8391e21d7398a2f6d59f40bccb1
   languageName: node
   linkType: hard
 
-"@tsed/platform-express@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-express@npm:6.103.2"
+"@tsed/platform-express@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-express@npm:6.105.0"
   dependencies:
     express: ^4.17.1
     multer: ^1.4.2
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/common": ^6.103.2
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
+    "@tsed/common": ^6.105.0
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
     "@tsed/logger": ">=6.1.0"
-    "@tsed/openspec": ^6.103.2
-    "@tsed/platform-views": ^6.103.2
-    "@tsed/schema": ^6.103.2
+    "@tsed/openspec": ^6.105.0
+    "@tsed/platform-views": ^6.105.0
+    "@tsed/schema": ^6.105.0
     "@types/multer": ^1.4.5
     body-parser: 1.19.0
   peerDependenciesMeta:
     "@tsed/platform-views":
       optional: true
-  checksum: b78edde7125a4a9710df6b8e14cea1da524e360f9fa7aa601c93881544456de1b51324a6259089ad9cfcc6a8bfb469cd18a533edd4b3c53b4d51c97df02ca2d0
+  checksum: 0b3d86bac61a9fc962918e83e9616f47870a5d78927e96227a0fbdd6a7be532c946a1da5950532313bcb8c80fdeecbfc79af51b4fb29c36cee60366b0b205a06
   languageName: node
   linkType: hard
 
-"@tsed/platform-log-middleware@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-log-middleware@npm:6.103.2"
+"@tsed/platform-log-middleware@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-log-middleware@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/di": ^6.103.2
-    "@tsed/platform-middlewares": ^6.103.2
-    "@tsed/platform-params": ^6.103.2
-  checksum: c14ce1e4e522e0166ce04347e6b544171d59a8ac09541e29520826f3a2930e2c751a1c8e13cdcd2d66fff19e13dc0f60072cbf1578d6188e7fccd96ef3d28b0a
+    "@tsed/di": ^6.105.0
+    "@tsed/platform-middlewares": ^6.105.0
+    "@tsed/platform-params": ^6.105.0
+  checksum: 8ca3bb2afaff32b472c78db51cf65c2007105f702f3432014d737b56df4b79a64556c0cfebb86e1e4e914f3450172facf4dc1ae345615b2cffa6ecd979ac78c0
   languageName: node
   linkType: hard
 
-"@tsed/platform-middlewares@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-middlewares@npm:6.103.2"
+"@tsed/platform-middlewares@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-middlewares@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: 44a0073ecb18f87a9883f41aa65899f27573c15b7a2f305bb739f6e4275e3bfc9752dd80e416209f11e86fb74e3aa1981cb6ce3326f5c5e75a884a866ff8189d
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: 50b0456ce5da948be918f479a06a19b37565db65f900b4799eca0e42643896f3568bc59054bda675d2cf996aa2bc6d98a99bc0054a2ffa4e53b5d1dc7fab24a8
   languageName: node
   linkType: hard
 
-"@tsed/platform-params@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-params@npm:6.103.2"
+"@tsed/platform-params@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-params@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: 449f4b1c187c8a32295a6fd59db130d63714979eb40913a6edcee9a487a3b338713922595219d2d14b4fb74dfbca8f8381d8daa47545cb01452003a90e554bbc
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: 9176fdd46c50087a51da219a1d69f64f681baab92025599d1ee2db5dda1f921c7d56954d9b59c77c01c4090548272ae3efc89f1993a881eda3a155561428a1e5
   languageName: node
   linkType: hard
 
-"@tsed/platform-response-filter@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-response-filter@npm:6.103.2"
+"@tsed/platform-response-filter@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-response-filter@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: ff3379e73c78399684489710d8332c684b2f4b9d8f788d92c49119c7bc8a148f9974c5b1f0a81050e51fb918208dc5c8da69d6bdca0c420dd6c85546d7930dc1
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: 7cd34dbbfa3eb7237047f2f2cae7095271374ab295a84aefb31ea201fcd1502fb398714bd5f234c7a0f61e1d996dbcaee52413e5e84ad552a693f4e181484ef3
   languageName: node
   linkType: hard
 
-"@tsed/platform-views@npm:6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/platform-views@npm:6.103.2"
+"@tsed/platform-views@npm:6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/platform-views@npm:6.105.0"
   dependencies:
     consolidate: ^0.16.0
     ejs: ^3.1.5
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
     "@tsed/engines": ^1.1.5
-    "@tsed/exceptions": ^6.103.2
-    "@tsed/schema": ^6.103.2
+    "@tsed/exceptions": ^6.105.0
+    "@tsed/schema": ^6.105.0
   peerDependenciesMeta:
     "@tsed/engines":
       optional: true
-  checksum: 8107bf9d6c4392448ab4425c8dfcc0c85240845fa03348f88c7094341c414bae138ccf3058ffab362e95f44d6e325ce076a58047169f5224269dddf6637a662f
+  checksum: 017e32106fb4e4c276ffb2fcdfdac21e8cf359b1a3204ff1b55dab170b468aa5d59da025dcab1ee6432fa355d6a2cbf58173917b337f7fbd6f1ce5b6f91c0b2d
   languageName: node
   linkType: hard
 
-"@tsed/schema@npm:6.103.2, @tsed/schema@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/schema@npm:6.103.2"
+"@tsed/schema@npm:6.105.0, @tsed/schema@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/schema@npm:6.105.0"
   dependencies:
-    "@tsed/openspec": 6.103.2
+    "@tsed/openspec": 6.105.0
     camel-case: 4.1.2
     json-schema: 0.4.0
     micromatch: 4.0.4
@@ -1805,47 +1956,47 @@ __metadata:
     statuses: ">=2.0.1"
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/core": ^6.103.2
+    "@tsed/core": ^6.105.0
   peerDependenciesMeta:
     "@tsed/code":
       optional: false
-  checksum: df835d3b2ca6ac506a20aaea604b17a40b0313b8aa95ad1d8e69cc1faacbf9549d833624faf684cd69ed172565a54b966fe7e5c4f329ed84cc945f98cb76a710
+  checksum: 846f5bb8fa4b5b6e52977496878d839a9020b75bb9a210d3967ebed37c60b32daaa4c5ce838f4874e2046bb003de8e48c181f52c85e7c5e5c4f2d78dffe40fa4
   languageName: node
   linkType: hard
 
-"@tsed/socketio@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/socketio@npm:6.103.2"
+"@tsed/socketio@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/socketio@npm:6.105.0"
   dependencies:
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/common": ^6.103.2
-    "@tsed/core": ^6.103.2
-    "@tsed/di": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
+    "@tsed/common": ^6.105.0
+    "@tsed/core": ^6.105.0
+    "@tsed/di": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
     "@tsed/logger": ">=6.1.0"
-    "@tsed/openspec": ^6.103.2
-    "@tsed/schema": ^6.103.2
+    "@tsed/openspec": ^6.105.0
+    "@tsed/schema": ^6.105.0
     socket.io: ">=4.0.0"
-  checksum: 5223591f947ac4b3ccc38baf5f96f3a449742227353ea8d1bd9185528e83615728711dcb6210722140cbd34ec0c6cc015397a3dbbaa4540ae66f54d02b416b6e
+  checksum: 232e6672da7467b1f736600e46e3bb8f7a977c50dd5407488524880ec7033353ad122d4dc893c8712d57a7026febb660801adda4228a3527bc7b1785eb089554
   languageName: node
   linkType: hard
 
-"@tsed/swagger@npm:^6.103.2":
-  version: 6.103.2
-  resolution: "@tsed/swagger@npm:6.103.2"
+"@tsed/swagger@npm:^6.105.0":
+  version: 6.105.0
+  resolution: "@tsed/swagger@npm:6.105.0"
   dependencies:
-    "@tsed/openspec": 6.103.2
+    "@tsed/openspec": 6.105.0
     fs-extra: 9.0.1
     micromatch: 4.0.4
-    swagger-ui-dist: ^3.46.0
+    swagger-ui-dist: ^4.5.2
     tslib: 2.2.0
   peerDependencies:
-    "@tsed/common": ^6.103.2
-    "@tsed/core": ^6.103.2
-    "@tsed/json-mapper": ^6.103.2
-    "@tsed/schema": ^6.103.2
-  checksum: c830192f58dc1e6435fe0ed6fedfda65bedd969ffc5616106c339b23f6129870624d71ab57d1a0e8fced77720aaf2c4a7d7aa667d5abe847f0cc19f0289dfd02
+    "@tsed/common": ^6.105.0
+    "@tsed/core": ^6.105.0
+    "@tsed/json-mapper": ^6.105.0
+    "@tsed/schema": ^6.105.0
+  checksum: 72456048f77f183f72e6f88c7841e0f444462bc5ea1fec3fef5604949a2e6ad45a5355c5b4a1c0680259737b6c6b86766a43ad5022485fd66f091a9eb090e163
   languageName: node
   linkType: hard
 
@@ -4134,6 +4285,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild-android-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-android-64@npm:0.14.25"
+  conditions: os=android & cpu=x64
+  languageName: node
+  linkType: hard
+
 "esbuild-android-arm64@npm:0.14.11":
   version: 0.14.11
   resolution: "esbuild-android-arm64@npm:0.14.11"
@@ -4141,9 +4299,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-android-arm64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-android-arm64@npm:0.14.23"
+"esbuild-android-arm64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-android-arm64@npm:0.14.25"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
@@ -4155,9 +4313,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-darwin-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-darwin-64@npm:0.14.23"
+"esbuild-darwin-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-darwin-64@npm:0.14.25"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -4169,9 +4327,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-darwin-arm64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-darwin-arm64@npm:0.14.23"
+"esbuild-darwin-arm64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-darwin-arm64@npm:0.14.25"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -4183,9 +4341,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-freebsd-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-freebsd-64@npm:0.14.23"
+"esbuild-freebsd-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-freebsd-64@npm:0.14.25"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
@@ -4197,9 +4355,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-freebsd-arm64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-freebsd-arm64@npm:0.14.23"
+"esbuild-freebsd-arm64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-freebsd-arm64@npm:0.14.25"
   conditions: os=freebsd & cpu=arm64
   languageName: node
   linkType: hard
@@ -4211,9 +4369,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-32@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-32@npm:0.14.23"
+"esbuild-linux-32@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-32@npm:0.14.25"
   conditions: os=linux & cpu=ia32
   languageName: node
   linkType: hard
@@ -4225,9 +4383,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-64@npm:0.14.23"
+"esbuild-linux-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-64@npm:0.14.25"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
@@ -4239,9 +4397,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-arm64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-arm64@npm:0.14.23"
+"esbuild-linux-arm64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-arm64@npm:0.14.25"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
@@ -4253,9 +4411,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-arm@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-arm@npm:0.14.23"
+"esbuild-linux-arm@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-arm@npm:0.14.25"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
@@ -4267,9 +4425,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-mips64le@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-mips64le@npm:0.14.23"
+"esbuild-linux-mips64le@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-mips64le@npm:0.14.25"
   conditions: os=linux & cpu=mips64el
   languageName: node
   linkType: hard
@@ -4281,16 +4439,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-ppc64le@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-ppc64le@npm:0.14.23"
+"esbuild-linux-ppc64le@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-ppc64le@npm:0.14.25"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
 
-"esbuild-linux-riscv64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-riscv64@npm:0.14.23"
+"esbuild-linux-riscv64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-riscv64@npm:0.14.25"
   conditions: os=linux & cpu=riscv64
   languageName: node
   linkType: hard
@@ -4302,9 +4460,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-s390x@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-linux-s390x@npm:0.14.23"
+"esbuild-linux-s390x@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-linux-s390x@npm:0.14.25"
   conditions: os=linux & cpu=s390x
   languageName: node
   linkType: hard
@@ -4316,9 +4474,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-netbsd-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-netbsd-64@npm:0.14.23"
+"esbuild-netbsd-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-netbsd-64@npm:0.14.25"
   conditions: os=netbsd & cpu=x64
   languageName: node
   linkType: hard
@@ -4330,9 +4488,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-openbsd-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-openbsd-64@npm:0.14.23"
+"esbuild-openbsd-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-openbsd-64@npm:0.14.25"
   conditions: os=openbsd & cpu=x64
   languageName: node
   linkType: hard
@@ -4353,9 +4511,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-sunos-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-sunos-64@npm:0.14.23"
+"esbuild-sunos-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-sunos-64@npm:0.14.25"
   conditions: os=sunos & cpu=x64
   languageName: node
   linkType: hard
@@ -4367,9 +4525,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-windows-32@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-windows-32@npm:0.14.23"
+"esbuild-windows-32@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-windows-32@npm:0.14.25"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
@@ -4381,9 +4539,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-windows-64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-windows-64@npm:0.14.23"
+"esbuild-windows-64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-windows-64@npm:0.14.25"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -4395,9 +4553,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-windows-arm64@npm:0.14.23":
-  version: 0.14.23
-  resolution: "esbuild-windows-arm64@npm:0.14.23"
+"esbuild-windows-arm64@npm:0.14.25":
+  version: 0.14.25
+  resolution: "esbuild-windows-arm64@npm:0.14.25"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -4467,30 +4625,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.23":
-  version: 0.14.23
-  resolution: "esbuild@npm:0.14.23"
+"esbuild@npm:^0.14.25":
+  version: 0.14.25
+  resolution: "esbuild@npm:0.14.25"
   dependencies:
-    esbuild-android-arm64: 0.14.23
-    esbuild-darwin-64: 0.14.23
-    esbuild-darwin-arm64: 0.14.23
-    esbuild-freebsd-64: 0.14.23
-    esbuild-freebsd-arm64: 0.14.23
-    esbuild-linux-32: 0.14.23
-    esbuild-linux-64: 0.14.23
-    esbuild-linux-arm: 0.14.23
-    esbuild-linux-arm64: 0.14.23
-    esbuild-linux-mips64le: 0.14.23
-    esbuild-linux-ppc64le: 0.14.23
-    esbuild-linux-riscv64: 0.14.23
-    esbuild-linux-s390x: 0.14.23
-    esbuild-netbsd-64: 0.14.23
-    esbuild-openbsd-64: 0.14.23
-    esbuild-sunos-64: 0.14.23
-    esbuild-windows-32: 0.14.23
-    esbuild-windows-64: 0.14.23
-    esbuild-windows-arm64: 0.14.23
+    esbuild-android-64: 0.14.25
+    esbuild-android-arm64: 0.14.25
+    esbuild-darwin-64: 0.14.25
+    esbuild-darwin-arm64: 0.14.25
+    esbuild-freebsd-64: 0.14.25
+    esbuild-freebsd-arm64: 0.14.25
+    esbuild-linux-32: 0.14.25
+    esbuild-linux-64: 0.14.25
+    esbuild-linux-arm: 0.14.25
+    esbuild-linux-arm64: 0.14.25
+    esbuild-linux-mips64le: 0.14.25
+    esbuild-linux-ppc64le: 0.14.25
+    esbuild-linux-riscv64: 0.14.25
+    esbuild-linux-s390x: 0.14.25
+    esbuild-netbsd-64: 0.14.25
+    esbuild-openbsd-64: 0.14.25
+    esbuild-sunos-64: 0.14.25
+    esbuild-windows-32: 0.14.25
+    esbuild-windows-64: 0.14.25
+    esbuild-windows-arm64: 0.14.25
   dependenciesMeta:
+    esbuild-android-64:
+      optional: true
     esbuild-android-arm64:
       optional: true
     esbuild-darwin-64:
@@ -4531,7 +4692,7 @@ __metadata:
       optional: true
   bin:
     esbuild: bin/esbuild
-  checksum: 41d26f9022a9f95a1ccf280fd6c2cf2684264663c03d5d4338bfab17710292b9c2ca45624ed55d9f37d7be5f29557ebd6d101b21ed5592fb0b6e6ac5e76bc58d
+  checksum: 076fa82293d91d4a9c5ad27f8bde01fb86dc60b60b6d12c3deb917c5c7e9235b324e27114fc6e7e1fee9c9a1796fd094eac306c3b44b77a3819929472ee29450
   languageName: node
   linkType: hard
 
@@ -8537,7 +8698,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.4":
+"regenerator-runtime@npm:^0.13.4, regenerator-runtime@npm:^0.13.9":
   version: 0.13.9
   resolution: "regenerator-runtime@npm:0.13.9"
   checksum: 65ed455fe5afd799e2897baf691ca21c2772e1a969d19bb0c4695757c2d96249eb74ee3553ea34a91062b2a676beedf630b4c1551cc6299afb937be1426ec55e
@@ -9063,7 +9224,7 @@ __metadata:
     husky: ^7.0.4
     prettier: ^2.5.1
     pretty-quick: ^3.1.3
-    turbo: ^1.1.4
+    turbo: ^1.1.5
   languageName: unknown
   linkType: soft
 
@@ -9495,10 +9656,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^3.46.0":
-  version: 3.52.5
-  resolution: "swagger-ui-dist@npm:3.52.5"
-  checksum: a8bd28bf475c67ad8445a2bb864c4130415d001caeb5db54f0a561785ac9f7df77230a7634520e9c10f25b568035a8f924ecc059945d4caed00a3f2a39ca243c
+"swagger-ui-dist@npm:^4.5.2":
+  version: 4.6.1
+  resolution: "swagger-ui-dist@npm:4.6.1"
+  checksum: ca867260b2e25069742fd2be9911a1f80cd00289d2cc195d7e81660cec68b483cdaae7cf65ce79a11209ec47c52461b9305e648810f0d41189f3f5ec8f1abfa4
   languageName: node
   linkType: hard
 
@@ -9717,9 +9878,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.5.0":
-  version: 10.5.0
-  resolution: "ts-node@npm:10.5.0"
+"ts-node@npm:^10.7.0":
+  version: 10.7.0
+  resolution: "ts-node@npm:10.7.0"
   dependencies:
     "@cspotcode/source-map-support": 0.7.0
     "@tsconfig/node10": ^1.0.7
@@ -9747,10 +9908,11 @@ __metadata:
   bin:
     ts-node: dist/bin.js
     ts-node-cwd: dist/bin-cwd.js
+    ts-node-esm: dist/bin-esm.js
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: d51ac8a9b3582ce3705cef8d35f3372e40caa277dbd7c7baeb651961538f13d2f11f22402614348f78d9b10501bd1cb5f05ec4f2ec9a74bd0e288de769c32335
+  checksum: 2a379e43f7478d0b79e1e63af91fe222d83857727957df4bd3bdf3c0a884de5097b12feb9bbf530074526b8874c0338b0e6328cf334f3a5e2c49c71e837273f7
   languageName: node
   linkType: hard
 
@@ -9763,6 +9925,18 @@ __metadata:
     minimist: ^1.2.0
     strip-bom: ^3.0.0
   checksum: 4999ec6cd1c7cc06750a460dbc0d39fe3595a4308cb5f1d0d0a8283009cf9c0a30d5a156508c28fe3a47760508af5263ab288fc23d71e9762779674257a95d3b
+  languageName: node
+  linkType: hard
+
+"tsconfig-paths@npm:^3.13.0":
+  version: 3.13.0
+  resolution: "tsconfig-paths@npm:3.13.0"
+  dependencies:
+    "@types/json5": ^0.0.29
+    json5: ^1.0.1
+    minimist: ^1.2.0
+    strip-bom: ^3.0.0
+  checksum: 64f0de3c882c016cdfe34d5261087fcf0c75048c4206ee32540e36df9f99d82d2caa5872135d3b6704324f5fd7d9032131caf316c1da83c2ac465d5dfb2aafd4
   languageName: node
   linkType: hard
 
@@ -9835,106 +10009,106 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-darwin-64@npm:1.1.4"
+"turbo-darwin-64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-darwin-64@npm:1.1.5"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-darwin-arm64@npm:1.1.4"
+"turbo-darwin-arm64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-darwin-arm64@npm:1.1.5"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-freebsd-64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-freebsd-64@npm:1.1.4"
+"turbo-freebsd-64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-freebsd-64@npm:1.1.5"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-freebsd-arm64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-freebsd-arm64@npm:1.1.4"
+"turbo-freebsd-arm64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-freebsd-arm64@npm:1.1.5"
   conditions: os=freebsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-32@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-32@npm:1.1.4"
+"turbo-linux-32@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-32@npm:1.1.5"
   conditions: os=linux & cpu=ia32
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-64@npm:1.1.4"
+"turbo-linux-64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-64@npm:1.1.5"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-arm64@npm:1.1.4"
+"turbo-linux-arm64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-arm64@npm:1.1.5"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-arm@npm:1.1.4"
+"turbo-linux-arm@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-arm@npm:1.1.5"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"turbo-linux-mips64le@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-mips64le@npm:1.1.4"
+"turbo-linux-mips64le@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-mips64le@npm:1.1.5"
   conditions: os=linux & cpu=mips64el
   languageName: node
   linkType: hard
 
-"turbo-linux-ppc64le@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-linux-ppc64le@npm:1.1.4"
+"turbo-linux-ppc64le@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-linux-ppc64le@npm:1.1.5"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
 
-"turbo-windows-32@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-windows-32@npm:1.1.4"
+"turbo-windows-32@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-windows-32@npm:1.1.5"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:1.1.4":
-  version: 1.1.4
-  resolution: "turbo-windows-64@npm:1.1.4"
+"turbo-windows-64@npm:1.1.5":
+  version: 1.1.5
+  resolution: "turbo-windows-64@npm:1.1.5"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "turbo@npm:1.1.4"
+"turbo@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "turbo@npm:1.1.5"
   dependencies:
-    turbo-darwin-64: 1.1.4
-    turbo-darwin-arm64: 1.1.4
-    turbo-freebsd-64: 1.1.4
-    turbo-freebsd-arm64: 1.1.4
-    turbo-linux-32: 1.1.4
-    turbo-linux-64: 1.1.4
-    turbo-linux-arm: 1.1.4
-    turbo-linux-arm64: 1.1.4
-    turbo-linux-mips64le: 1.1.4
-    turbo-linux-ppc64le: 1.1.4
-    turbo-windows-32: 1.1.4
-    turbo-windows-64: 1.1.4
+    turbo-darwin-64: 1.1.5
+    turbo-darwin-arm64: 1.1.5
+    turbo-freebsd-64: 1.1.5
+    turbo-freebsd-arm64: 1.1.5
+    turbo-linux-32: 1.1.5
+    turbo-linux-64: 1.1.5
+    turbo-linux-arm: 1.1.5
+    turbo-linux-arm64: 1.1.5
+    turbo-linux-mips64le: 1.1.5
+    turbo-linux-ppc64le: 1.1.5
+    turbo-windows-32: 1.1.5
+    turbo-windows-64: 1.1.5
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -9962,7 +10136,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: e1f32ba08c80cab64b6751b0502facf1e58ee7c1e0e25e78ebb9383135088f2deab53f626bbd52377ec78aaa7742b7ead61c5134b5421eec1406cdb65c2ddb45
+  checksum: ebc312e868a02b93711802ad5287b1cab79c5cf9fffca197b53b15dae4c936a47d295deedebe993676a528576c84f2d879f76d954ffca0785376dba4c01883af
   languageName: node
   linkType: hard
 
@@ -10061,10 +10235,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^4.14.1":
-  version: 4.14.1
-  resolution: "undici@npm:4.14.1"
-  checksum: d64a7fa0e388a43819bb7860268f9f2c917bc14a3e6ab7956bdc73492016bfc58c8d5055eca8f5c3d402f275a1c87a92c2467d77ec34dbaca2c4a6e35e760e5a
+"undici@npm:^4.15.0":
+  version: 4.15.0
+  resolution: "undici@npm:4.15.0"
+  checksum: be1f7bc0cf17dacc0b2619c694f2d8c3d17d2ca23264469a7032425e5f5c2915cc105f6efa2df26da368bb6921b76c3f0207f727b2fdc11e8e35c6c16839f848
   languageName: node
   linkType: hard
 
