@@ -189,6 +189,7 @@ export function VehicleSearchModal() {
                         type="button"
                         onClick={handleEditVehicleFlags}
                         title={t("manageVehicleFlags")}
+                        aria-label={t("manageVehicleFlags")}
                         className="px-1 mr-2"
                       >
                         <Pencil />
