@@ -24,7 +24,8 @@
       ],
       "outputs": [
         ".env"
-      ]
+      ],
+      "cache": false
     },
     "build": {
       "dependsOn": [
@@ -38,13 +39,15 @@
       "outputs": [
         ".next/**",
         "dist/**"
-      ]
+      ],
+      "cache": false
     },
     "typecheck": {
       "dependsOn": [
         "^typecheck"
       ],
-      "outputs": []
+      "outputs": [],
+      "cache": false
     }
   },
   "globalDependencies": [
