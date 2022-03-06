@@ -11,11 +11,7 @@ import { useTranslations } from "next-intl";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
 
-interface Props {
-  onClose?: () => void;
-}
-
-export function ManageVehicleFlagsModal({ onClose }: Props) {
+export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -34,13 +30,8 @@ export function ManageVehicleFlagsModal({ onClose }: Props) {
 
     if (json.flags) {
       setCurrentResult({ ...currentResult, ...json });
-      handleClose();
+      closeModal(ModalIds.ManageVehicleFlags);
     }
-  }
-
-  function handleClose() {
-    onClose?.();
-    closeModal(ModalIds.ManageVehicleFlags);
   }
 
   function makeValueOption(v: Value<ValueType.VEHICLE_FLAG>) {
@@ -59,7 +50,7 @@ export function ManageVehicleFlagsModal({ onClose }: Props) {
     <Modal
       title={t("manageVehicleFlags")}
       isOpen={isOpen(ModalIds.ManageVehicleFlags)}
-      onClose={handleClose}
+      onClose={() => closeModal(ModalIds.ManageVehicleFlags)}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -79,7 +70,7 @@ export function ManageVehicleFlagsModal({ onClose }: Props) {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={handleClose}
+                onClick={() => closeModal(ModalIds.ManageVehicleFlags)}
                 variant="cancel"
               >
                 {common("cancel")}
