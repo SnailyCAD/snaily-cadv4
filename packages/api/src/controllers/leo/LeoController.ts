@@ -471,22 +471,15 @@ export class LeoController {
       throw new NotFound("notFound");
     }
 
-    await prisma.$transaction(
-      vehicle.flags.map((v) => {
-        return prisma.registeredVehicle.update({
-          where: { id: vehicle.id },
-          data: { flags: { disconnect: { id: v.id } } },
-        });
-      }),
+    const disconnectConnectArr = manyToManyHelper(
+      vehicle.flags.map((v) => v.id),
+      flags,
     );
 
     await prisma.$transaction(
-      flags.map((v) => {
-        return prisma.registeredVehicle.update({
-          where: { id: vehicle.id },
-          data: { flags: { connect: { id: v } } },
-        });
-      }),
+      disconnectConnectArr.map((v) =>
+        prisma.registeredVehicle.update({ where: { id: vehicle.id }, data: { flags: v } }),
+      ),
     );
 
     const updated = await prisma.registeredVehicle.findUnique({
