@@ -930,6 +930,7 @@ enum WhitelistStatus {
 enum ValueLicenseType {
   LICENSE
   REGISTRATION_STATUS
+  INSURANCE_STATUS
 }
 
 enum DepartmentType {
