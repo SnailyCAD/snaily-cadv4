@@ -1,8 +1,9 @@
 import { z } from "zod";
 
+const LICENSE_TYPE_REGEX = /LICENSE|INSURANCE_STATUS|REGISTRATION_STATUS/;
 export const BASE_VALUE_SCHEMA = z.object({
   value: z.string().min(1).max(255),
-  licenseType: z.any().nullable().optional(),
+  licenseType: z.string().regex(LICENSE_TYPE_REGEX).nullable().optional(),
   isDefault: z.boolean().nullable().optional(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);

@@ -52,14 +52,16 @@ export function LicenseFields() {
         </ul>
       </FormField>
 
-      <div className="flex flex-col w-full">
-        <FormField checkbox errorMessage={errors.isDefault as string} label="Default license">
-          <Toggle name="isDefault" toggled={values.isDefault ?? false} onClick={handleChange} />
-        </FormField>
-        <p className="text-base italic">
-          This license will be given to a citizen when they are first created.
-        </p>
-      </div>
+      {!values.licenseType || values.licenseType === ValueLicenseType.LICENSE ? (
+        <div className="flex flex-col w-full">
+          <FormField checkbox errorMessage={errors.isDefault as string} label="Default license">
+            <Toggle name="isDefault" toggled={values.isDefault ?? false} onClick={handleChange} />
+          </FormField>
+          <p className="text-base italic">
+            This license will be given to a citizen when they are first created.
+          </p>
+        </div>
+      ) : null}
     </>
   );
 }
