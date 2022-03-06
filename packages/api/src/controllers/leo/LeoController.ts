@@ -20,11 +20,12 @@ import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import type { DivisionValue, MiscCadSettings } from "@prisma/client";
+import type { MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
+import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -116,7 +117,20 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(officer, data.divisions as string[]);
+    const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
+
+    const updated = getLastOfArray(
+      await prisma.$transaction(
+        disconnectConnectArr.map((v, idx) =>
+          prisma.officer.update({
+            where: { id: officer.id },
+            data: { divisions: v },
+            include: idx + 1 === disconnectConnectArr.length ? leoProperties : undefined,
+          }),
+        ),
+      ),
+    );
+
     return updated;
   }
 
@@ -165,11 +179,20 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    await unlinkDivisionsFromOfficer(officer);
-
     const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       officer,
+    );
+
+    const disconnectConnectArr = manyToManyHelper(
+      officer.divisions.map((v) => v.id),
+      data.divisions as string[],
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.officer.update({ where: { id: officer.id }, data: { divisions: v } }),
+      ),
     );
 
     const updatedOfficer = await prisma.officer.update({
@@ -188,8 +211,7 @@ export class LeoController {
       include: leoProperties,
     });
 
-    const updated = await linkDivisionsToOfficer(updatedOfficer, data.divisions as string[]);
-    return updated;
+    return updatedOfficer;
   }
 
   @Delete("/:id")
@@ -501,45 +523,6 @@ export class LeoController {
 
     return true;
   }
-}
-
-export async function linkDivisionsToOfficer(
-  officer: Officer & { divisions: DivisionValue[] },
-  divisions: string[],
-) {
-  await Promise.all(
-    divisions.map(async (id) => {
-      return prisma.officer.update({
-        where: { id: officer.id },
-        data: {
-          divisions: { connect: { id } },
-        },
-        include: leoProperties,
-      });
-    }),
-  );
-
-  const updated = await prisma.officer.findUnique({
-    where: { id: officer.id },
-    include: leoProperties,
-  });
-
-  return updated!;
-}
-
-export async function unlinkDivisionsFromOfficer(
-  officer: Officer & { divisions: DivisionValue[] },
-) {
-  await Promise.all(
-    officer.divisions.map(async ({ id }) => {
-      return prisma.officer.update({
-        where: { id: officer.id },
-        data: {
-          divisions: { disconnect: { id } },
-        },
-      });
-    }),
-  );
 }
 
 export async function validateMaxDivisionsPerOfficer(

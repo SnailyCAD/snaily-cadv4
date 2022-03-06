@@ -8,7 +8,7 @@ import { canManageInvariant } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
-import { linkDlCategories, unlinkDlCategories } from "./CitizenController";
+import { manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -32,8 +32,6 @@ export class LicensesController {
 
     canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
-    await unlinkDlCategories(citizen);
-
     await prisma.citizen.update({
       where: {
         id: citizen.id,
@@ -46,10 +44,16 @@ export class LicensesController {
       },
     });
 
-    await linkDlCategories(
-      citizen.id,
-      data.driversLicenseCategory ?? [],
-      data.pilotLicenseCategory ?? [],
+    const newArr = [...(data.driversLicenseCategory ?? []), ...(data.pilotLicenseCategory ?? [])];
+    const disconnectConnectArr = manyToManyHelper(
+      citizen.dlCategory.map((v) => v.id),
+      newArr,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
+      ),
     );
 
     const updated = await prisma.citizen.findUnique({

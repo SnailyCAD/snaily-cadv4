@@ -5,17 +5,14 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Description, Get, Post, Put } from "@tsed/schema";
-import {
-  linkDivisionsToOfficer,
-  unlinkDivisionsFromOfficer,
-  validateMaxDivisionsPerOfficer,
-} from "controllers/leo/LeoController";
+import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/index";
 import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { manyToManyHelper } from "utils/manyToMany";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
 type Action = typeof ACTIONS[number];
@@ -142,7 +139,16 @@ export class ManageUnitsController {
 
       await validateMaxDivisionsPerOfficer(data.divisions, cad);
 
-      await unlinkDivisionsFromOfficer(unit);
+      const disconnectConnectArr = manyToManyHelper(
+        (unit.divisions as { id: string }[]).map((v) => v.id),
+        data.divisions as string[],
+      );
+
+      await prisma.$transaction(
+        disconnectConnectArr.map((v) =>
+          prisma.officer.update({ where: { id: unit.id }, data: { divisions: v } }),
+        ),
+      );
     }
 
     // @ts-expect-error ignore
@@ -158,11 +164,8 @@ export class ManageUnitsController {
         callsign: data.callsign,
         badgeNumber: data.badgeNumber,
       },
+      include: type === "officer" ? leoProperties : unitProperties,
     });
-
-    if (type === "officer") {
-      return linkDivisionsToOfficer(unit, data.divisions as string[]);
-    }
 
     return updated;
   }
