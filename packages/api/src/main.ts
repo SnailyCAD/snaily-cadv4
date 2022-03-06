@@ -3,6 +3,7 @@ import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./server";
 import { resolve } from "node:path";
 import { readFile } from "node:fs/promises";
+import process from "node:process";
 
 async function bootstrap() {
   try {
