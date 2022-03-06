@@ -36,8 +36,6 @@ export function ManageVehicleFlagsModal({ onClose }: Props) {
       setCurrentResult({ ...currentResult, ...json });
       handleClose();
     }
-
-    console.log({ json });
   }
 
   function handleClose() {
