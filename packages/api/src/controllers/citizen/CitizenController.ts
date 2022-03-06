@@ -211,19 +211,12 @@ export class CitizenController {
 
     const newArr = [...(data.driversLicenseCategory ?? []), ...(data.pilotLicenseCategory ?? [])];
     const disconnectConnectArr = manyToManyHelper([], newArr);
-    console.log(JSON.stringify(disconnectConnectArr, null, 4));
 
     await prisma.$transaction(
       disconnectConnectArr.map((v) =>
         prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
       ),
     );
-
-    // await linkDlCategories(
-    //   citizen.id,
-    //   data.driversLicenseCategory ?? [],
-    //   data.pilotLicenseCategory ?? [],
-    // );
 
     return citizen;
   }
