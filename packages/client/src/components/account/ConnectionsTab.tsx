@@ -15,7 +15,8 @@ export function ConnectionsTab() {
   function handleConnectClick() {
     const url = findUrl();
 
-    const fullUrl = `${url}/auth/discord`;
+    // append date so browsers don't cache this URL.
+    const fullUrl = `${url}/auth/discord?v=${new Date().toISOString()}`;
     window.location.href = fullUrl;
   }
 
