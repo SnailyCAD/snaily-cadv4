@@ -37,7 +37,6 @@ export async function importVehiclesHandler(body: unknown[]) {
         data: {
           citizenId: data.ownerId,
           plate: data.plate,
-          insuranceStatus: "null",
           color: data.color,
           registrationStatusId: data.registrationStatusId,
           modelId: data.modelId,

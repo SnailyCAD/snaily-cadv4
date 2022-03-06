@@ -434,6 +434,47 @@ export class LeoController {
     return updated;
   }
 
+  @Put("/vehicle-flags/:vehicleId")
+  @Description("Update the vehicle flags by its id")
+  async updateVehicleFlags(
+    @BodyParams("flags") flags: string[],
+    @PathParams("vehicleId") vehicleId: string,
+  ) {
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicleId },
+      select: { id: true, flags: true },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.$transaction(
+      vehicle.flags.map((v) => {
+        return prisma.registeredVehicle.update({
+          where: { id: vehicle.id },
+          data: { flags: { disconnect: { id: v.id } } },
+        });
+      }),
+    );
+
+    await prisma.$transaction(
+      flags.map((v) => {
+        return prisma.registeredVehicle.update({
+          where: { id: vehicle.id },
+          data: { flags: { connect: { id: v } } },
+        });
+      }),
+    );
+
+    const updated = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicle.id },
+      select: { id: true, flags: true },
+    });
+
+    return updated;
+  }
+
   @Delete("/impounded-vehicles/:id")
   @Description("Remove a vehicle from the impound lot")
   async checkoutImpoundedVehicle(@PathParams("id") id: string) {

@@ -218,9 +218,10 @@ export interface RegisteredVehicle {
   updatedAt: Date;
   registrationStatusId: string;
   registrationStatus: Value<ValueType.LICENSE>;
-  insuranceStatus: string;
+  insuranceStatus: Value<ValueType>;
   reportedStolen: boolean;
   impounded: boolean;
+  flags?: Value<ValueType.VEHICLE_FLAG>[];
 }
 
 /**
@@ -962,6 +963,7 @@ export enum ValueType {
   DIVISION = "DIVISION",
   DRIVERSLICENSE_CATEGORY = "DRIVERSLICENSE_CATEGORY",
   IMPOUND_LOT = "IMPOUND_LOT",
+  VEHICLE_FLAG = "VEHICLE_FLAG",
 }
 
 export enum ValueLicenseType {

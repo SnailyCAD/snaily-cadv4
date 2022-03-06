@@ -76,7 +76,6 @@ export class VehiclesController {
         registrationStatusId: data.registrationStatus as string,
         vinNumber: data.vinNumber || generateString(17),
         userId: user.id || undefined,
-        insuranceStatus: "",
       },
       include: {
         model: { include: { value: true } },

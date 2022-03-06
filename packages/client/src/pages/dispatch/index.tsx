@@ -139,7 +139,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     activeDeputies,
     activeOfficers,
   ] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division", []],
+    [
+      "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag",
+      [],
+    ],
     ["/911-calls", []],
     ["/bolos", []],
     ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],

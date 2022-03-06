@@ -107,5 +107,11 @@
     "ADD": "Add Impound Lot",
     "DELETE": "Delete Impound Lot",
     "EDIT": "Edit Impound Lot"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Manage Vehicle flags",
+    "ADD": "Add vehicle flag",
+    "DELETE": "Delete vehicle flag",
+    "EDIT": "Edit vehicle flag"
   }
 }
