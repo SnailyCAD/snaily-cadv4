@@ -125,7 +125,7 @@ export function RegisterVehicleModal({
   const INITIAL_VALUES = {
     model: vehicle?.modelId ?? "",
     color: vehicle?.color ?? "",
-    insuranceStatus: vehicle?.insuranceStatusId ?? "",
+    insuranceStatus: vehicle?.insuranceStatusId ?? null,
     inspectionStatus: vehicle?.inspectionStatus ?? null,
     taxStatus: vehicle?.taxStatus ?? null,
     registrationStatus: vehicle?.registrationStatusId ?? "",
