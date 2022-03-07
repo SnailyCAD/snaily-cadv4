@@ -95,21 +95,13 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.WEAPON, "update"),
-          },
-          create: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.WEAPON, "create"),
-          },
-        };
-
         return prisma.weaponValue.upsert({
           include: { value: true },
           where: { id: String(id) },
-          ...data,
+          ...makePrismaData(ValueType.WEAPON, {
+            hash: item.hash,
+            value: item.value,
+          }),
         });
       }),
     );
@@ -119,20 +111,12 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            as: item.as as EmployeeAsEnum,
-            value: createValueObj(item.value, ValueType.BUSINESS_ROLE, "update"),
-          },
-          create: {
-            as: item.as as EmployeeAsEnum,
-            value: createValueObj(item.value, ValueType.BUSINESS_ROLE, "create"),
-          },
-        };
-
         return prisma.employeeValue.upsert({
           where: { id: String(id) },
-          ...data,
+          ...makePrismaData(ValueType.BUSINESS_ROLE, {
+            as: item.as as EmployeeAsEnum,
+            value: item.value,
+          }),
           include: { value: true },
         });
       }),
@@ -143,20 +127,12 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            type: item.type as DriversLicenseCategoryType,
-            value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY, "update"),
-          },
-          create: {
-            type: item.type as DriversLicenseCategoryType,
-            value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY, "create"),
-          },
-        };
-
         return prisma.driversLicenseCategoryValue.upsert({
           where: { id: String(id) },
-          ...data,
+          ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
+            type: item.type as DriversLicenseCategoryType,
+            value: item.value,
+          }),
           include: { value: true },
         });
       }),
@@ -167,26 +143,15 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            type: item.type as DepartmentType,
-            callsign: item.callsign,
-            value: createValueObj(item.value, ValueType.DEPARTMENT, "update"),
-            isDefaultDepartment: item.isDefaultDepartment ?? false,
-            whitelisted: item.whitelisted ?? false,
-          },
-          create: {
-            type: item.type as DepartmentType,
-            callsign: item.callsign,
-            value: createValueObj(item.value, ValueType.DEPARTMENT, "create"),
-            isDefaultDepartment: item.isDefaultDepartment ?? false,
-            whitelisted: item.whitelisted ?? false,
-          },
-        };
-
         return prisma.departmentValue.upsert({
           where: { id: String(id) },
-          ...data,
+          ...makePrismaData(ValueType.DEPARTMENT, {
+            type: item.type as DepartmentType,
+            callsign: item.callsign,
+            value: item.value,
+            isDefaultDepartment: item.isDefaultDepartment ?? false,
+            whitelisted: item.whitelisted ?? false,
+          }),
           include: { value: true },
         });
       }),
@@ -197,31 +162,13 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            callsign: item.callsign,
-            department: { connect: { id: item.departmentId } },
-            value: createValueObj(item.value, ValueType.DIVISION, "update"),
-          },
-          create: {
-            callsign: item.callsign,
-            department: { connect: { id: item.departmentId } },
-            value: createValueObj(item.value, ValueType.DIVISION, "create"),
-          },
-        };
-
         return prisma.divisionValue.upsert({
           where: { id: String(id) },
-          ...data,
-          update: {
-            value: {
-              update: {
-                value: {
-                  set: item.value,
-                },
-              },
-            },
-          },
+          ...makePrismaData(ValueType.DIVISION, {
+            callsign: item.callsign,
+            department: { connect: { id: item.departmentId } },
+            value: item.value,
+          }),
           include: { value: true, department: { include: { value: true } } },
         });
       }),
@@ -239,26 +186,15 @@ export const typeHandlers = {
         select: { id: true, departments: true },
       });
 
-      const data = {
-        update: {
-          type: item.type as StatusValueType,
-          color: item.color,
-          shouldDo: item.shouldDo as ShouldDoType,
-          whatPages: whatPages as WhatPages[],
-          value: createValueObj(item.value, ValueType.CODES_10, "update"),
-        },
-        create: {
-          type: item.type as StatusValueType,
-          color: item.color,
-          shouldDo: item.shouldDo as ShouldDoType,
-          whatPages: whatPages as WhatPages[],
-          value: createValueObj(item.value, ValueType.CODES_10, "create"),
-        },
-      };
-
       const updatedValue = await prisma.statusValue.upsert({
         where: { id: String(id) },
-        ...data,
+        ...makePrismaData(ValueType.CODES_10, {
+          type: item.type as StatusValueType,
+          color: item.color,
+          shouldDo: item.shouldDo as ShouldDoType,
+          whatPages: whatPages as WhatPages[],
+          value: item.value,
+        }),
         include: { value: true },
       });
 
