@@ -79,20 +79,12 @@ export const typeHandlers = {
 
     return prisma.$transaction(
       data.map((item) => {
-        const data = {
-          update: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.VEHICLE, "update"),
-          },
-          create: {
-            hash: item.hash,
-            value: createValueObj(item.value, ValueType.VEHICLE, "create"),
-          },
-        };
-
         return prisma.vehicleValue.upsert({
           where: { id: String(id) },
-          ...data,
+          ...makePrismaData(ValueType.VEHICLE, {
+            hash: item.hash,
+            value: item.value,
+          }),
           include: { value: true },
         });
       }),
@@ -363,6 +355,21 @@ export const typeHandlers = {
     );
   },
 };
+
+function makePrismaData<T extends { value: string }>(type: ValueType, data: T) {
+  const { value, ...rest } = data;
+
+  return {
+    update: {
+      ...rest,
+      value: createValueObj(value, type, "update"),
+    },
+    create: {
+      ...rest,
+      value: createValueObj(value, type, "create"),
+    },
+  };
+}
 
 function createValueObj(
   value: string,
