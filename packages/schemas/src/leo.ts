@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { VEHICLE_SCHEMA } from "./citizen";
 
 export const SELECT_VALUE = z.object({
   value: z.any(),
@@ -47,4 +48,11 @@ export const LEO_INCIDENT_SCHEMA = z.object({
   involvedOfficers: z.array(z.any()).min(0).optional(),
   isActive: z.boolean().nullable().optional(),
   situationCodeId: z.string().max(255).nullable().optional(),
+});
+
+export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
+  inspectionStatus: true,
+  insuranceStatus: true,
+  registrationStatus: true,
+  taxStatus: true,
 });

@@ -7,7 +7,11 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
+import {
+  CREATE_OFFICER_SCHEMA,
+  LICENSE_SCHEMA,
+  LEO_VEHICLE_LICENSE_SCHEMA,
+} from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -20,7 +24,7 @@ import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import type { MiscCadSettings } from "@prisma/client";
+import type { MiscCadSettings, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -451,6 +455,39 @@ export class LeoController {
         weaponLicenseId: data.weaponLicense,
       },
       include: citizenInclude,
+    });
+
+    return updated;
+  }
+
+  @Put("/vehicle-licenses/:vehicleId")
+  @Description("Update the licenses of a vehicle by its id")
+  async updateVehicleLicenses(
+    @BodyParams() body: unknown,
+    @PathParams("vehicleId") vehicleId: string,
+  ) {
+    const data = validateSchema(LEO_VEHICLE_LICENSE_SCHEMA, body);
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: {
+        id: vehicleId,
+      },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("notFound");
+    }
+
+    const updated = await prisma.registeredVehicle.update({
+      where: {
+        id: vehicle.id,
+      },
+      data: {
+        registrationStatusId: data.registrationStatus,
+        insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+      },
     });
 
     return updated;

@@ -20,9 +20,12 @@ import { FullDate } from "components/shared/FullDate";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
 import { Pencil } from "react-bootstrap-icons";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
+import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
+import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 
 export function VehicleSearchModal() {
   const { currentResult, setCurrentResult } = useVehicleSearch();
+  const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
 
   const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -67,6 +70,12 @@ export function VehicleSearchModal() {
     if (!currentResult) return;
 
     openModal(ModalIds.ManageVehicleFlags);
+  }
+
+  function handleEditLicenses() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.ManageVehicleLicenses);
   }
 
   async function handleMarkStolen() {
@@ -143,6 +152,18 @@ export function VehicleSearchModal() {
 
                 <ul className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-1">
                   <li>
+                    <Infofield className="capitalize" label={vT("owner")}>
+                      <Button
+                        title={common("openInSearch")}
+                        small
+                        type="button"
+                        onClick={handleNameClick}
+                      >
+                        {currentResult.citizen.name} {currentResult.citizen.surname}
+                      </Button>
+                    </Infofield>
+                  </li>
+                  <li>
                     <Infofield label={vT("plate")}>{currentResult.plate.toUpperCase()}</Infofield>
                   </li>
                   <li>
@@ -166,12 +187,16 @@ export function VehicleSearchModal() {
                   </li>
                   <li>
                     <Infofield label={vT("taxStatus")}>
-                      {currentResult.taxStatus ?? common("none")}
+                      {currentResult.taxStatus
+                        ? TAX_STATUS_LABELS[currentResult.taxStatus]
+                        : common("none")}
                     </Infofield>
                   </li>
                   <li>
                     <Infofield label={vT("inspectionStatus")}>
-                      {currentResult.inspectionStatus ?? common("none")}
+                      {currentResult.inspectionStatus
+                        ? INSPECTION_STATUS_LABELS[currentResult.inspectionStatus]
+                        : common("none")}
                     </Infofield>
                   </li>
                   <li>
@@ -179,18 +204,7 @@ export function VehicleSearchModal() {
                       <FullDate>{currentResult.createdAt}</FullDate>
                     </Infofield>
                   </li>
-                  <li>
-                    <Infofield className="capitalize" label={vT("owner")}>
-                      <Button
-                        title={common("openInSearch")}
-                        small
-                        type="button"
-                        onClick={handleNameClick}
-                      >
-                        {currentResult.citizen.name} {currentResult.citizen.surname}
-                      </Button>
-                    </Infofield>
-                  </li>
+
                   {BUSINESS ? (
                     <li>
                       <Infofield className="capitalize" label={vT("business")}>
@@ -231,9 +245,9 @@ export function VehicleSearchModal() {
               </div>
             )}
 
-            <footer className={`mt-5 flex ${showMarkStolen ? "justify-between" : "justify-end"}`}>
-              {showMarkStolen ? (
-                <div>
+            <footer className="mt-5 flex justify-between">
+              <div className="flex gap-2">
+                {showMarkStolen ? (
                   <Button
                     type="button"
                     onClick={() => handleMarkStolen()}
@@ -242,8 +256,17 @@ export function VehicleSearchModal() {
                   >
                     {vT("reportAsStolen")}
                   </Button>
-                </div>
-              ) : null}
+                ) : null}
+
+                <Button
+                  type="button"
+                  onClick={() => handleEditLicenses()}
+                  variant="cancel"
+                  className="px-1.5"
+                >
+                  {t("editLicenses")}
+                </Button>
+              </div>
 
               <div className="flex">
                 <Button
@@ -268,6 +291,7 @@ export function VehicleSearchModal() {
       </Formik>
 
       <ManageVehicleFlagsModal />
+      <ManageVehicleLicensesModal />
     </Modal>
   );
 }
