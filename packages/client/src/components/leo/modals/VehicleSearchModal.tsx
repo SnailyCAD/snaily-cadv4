@@ -258,7 +258,7 @@ export function VehicleSearchModal() {
                   </Button>
                 ) : null}
 
-                {isLeo ? (
+                {isLeo && currentResult ? (
                   <Button
                     type="button"
                     onClick={() => handleEditLicenses()}
