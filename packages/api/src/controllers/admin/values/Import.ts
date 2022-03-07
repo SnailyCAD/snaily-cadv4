@@ -296,14 +296,8 @@ function makePrismaData<T extends { value: string }>(type: ValueType, data: T) {
   const { value, ...rest } = data;
 
   return {
-    update: {
-      ...rest,
-      value: createValueObj(value, type, "update"),
-    },
-    create: {
-      ...rest,
-      value: createValueObj(value, type, "create"),
-    },
+    update: { ...rest, value: createValueObj(value, type, "update") },
+    create: { ...rest, value: createValueObj(value, type, "create") },
   };
 }
 
