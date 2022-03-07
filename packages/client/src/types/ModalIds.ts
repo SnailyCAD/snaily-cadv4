@@ -50,7 +50,6 @@ export const enum ModalIds {
   ManageUnit = "ManageUnitModal",
   CreateWarrant = "CreateWarrantModal",
   ManageIncident = "ManageIncidentModal",
-  EditCitizenLicenses = "EditCitizenLicensesModal",
   LinkCallToIncident = "LinkCallToIncidentModal",
   ManageSeizedItems = "ManageSeizedItemsModal",
 
