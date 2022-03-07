@@ -7,6 +7,8 @@ import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import type { RegisteredVehicle, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
+import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
@@ -33,7 +35,7 @@ export async function importVehiclesHandler(body: unknown[]) {
 
   return Promise.all(
     data.map(async (data) => {
-      return prisma.registeredVehicle.create({
+      const vehicle = await prisma.registeredVehicle.create({
         data: {
           citizenId: data.ownerId,
           plate: data.plate,
@@ -42,10 +44,32 @@ export async function importVehiclesHandler(body: unknown[]) {
           modelId: data.modelId,
           vinNumber: generateString(17),
           reportedStolen: data.reportedStolen ?? false,
+          inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+          taxStatus: data.taxStatus as VehicleTaxStatus | null,
+          insuranceStatusId: data.insuranceStatus,
         },
 
         include: vehiclesInclude,
       });
+
+      let last: RegisteredVehicle = vehicle;
+      if (data.flags) {
+        const disconnectConnectArr = manyToManyHelper([], data.flags);
+
+        last = getLastOfArray(
+          await prisma.$transaction(
+            disconnectConnectArr.map((v, idx) =>
+              prisma.registeredVehicle.update({
+                where: { id: vehicle.id },
+                data: { flags: v },
+                include: idx + 1 === disconnectConnectArr.length ? vehiclesInclude : undefined,
+              }),
+            ),
+          ),
+        );
+      }
+
+      return last;
     }),
   );
 }

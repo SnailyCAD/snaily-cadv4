@@ -23,8 +23,8 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   image: z.any().nullable().optional(),
 });
 
-const TAX_STATUS_REGEX = /TAXED|UNTAXED/;
-const INSPECTION_STATUS_REGEX = /PASSED|FAILED/;
+export const TAX_STATUS_REGEX = /TAXED|UNTAXED/;
+export const INSPECTION_STATUS_REGEX = /PASSED|FAILED/;
 
 export const VEHICLE_SCHEMA = z.object({
   plate: z.string().min(2),
