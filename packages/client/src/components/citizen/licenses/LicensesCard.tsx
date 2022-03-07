@@ -6,8 +6,9 @@ import { ManageLicensesModal } from "./ManageLicensesModal";
 import { CitizenWithVehAndWep, useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
+import { DriversLicenseCategoryType } from "@snailycad/types";
 
-const types = ["driversLicense", "pilotLicense", "weaponLicense", "ccw"] as const;
+const types = ["driversLicense", "pilotLicense", "weaponLicense", "waterLicense", "ccw"] as const;
 
 export function LicensesCard() {
   const { openModal } = useModal();
@@ -39,7 +40,7 @@ export function LicensesCard() {
 interface Props {
   citizen: Pick<
     CitizenWithVehAndWep,
-    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "ccw"
+    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "ccw" | "waterLicense"
   >;
 }
 
@@ -48,15 +49,19 @@ export function CitizenLicenses({ citizen }: Props) {
   const common = useTranslations("Common");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
+  const categoryTypes: Record<string, DriversLicenseCategoryType> = {
+    driversLicense: DriversLicenseCategoryType.AUTOMOTIVE,
+    pilotLicense: DriversLicenseCategoryType.AVIATION,
+    waterLicense: DriversLicenseCategoryType.WATER,
+  };
+
+  console.log({ citizen });
+
   return (
     <>
       {types.map((type) => {
         const category =
-          type === "driversLicense"
-            ? citizen.dlCategory.filter((v) => v.type === "AUTOMOTIVE")
-            : type === "pilotLicense"
-            ? citizen.dlCategory.filter((v) => v.type === "AVIATION")
-            : null;
+          categoryTypes[type] && citizen.dlCategory.filter((v) => v.type === categoryTypes[type]);
 
         const returnNull = ["weaponLicense", "ccw"].includes(type) && !WEAPON_REGISTRATION;
 

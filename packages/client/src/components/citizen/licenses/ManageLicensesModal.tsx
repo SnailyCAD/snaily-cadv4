@@ -33,6 +33,7 @@ export function ManageLicensesModal() {
         ...values,
         driversLicenseCategory: values.driversLicenseCategory.map((v) => v.value),
         pilotLicenseCategory: values.pilotLicenseCategory.map((v) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v) => v.value),
       },
     });
 
@@ -51,6 +52,7 @@ export function ManageLicensesModal() {
     driversLicense: citizen.driversLicenseId ?? null,
     pilotLicense: citizen.pilotLicenseId ?? null,
     weaponLicense: citizen.weaponLicenseId ?? null,
+    waterLicense: citizen.waterLicenseId ?? null,
     ccw: citizen.ccwId ?? null,
     driversLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === "AUTOMOTIVE")
@@ -60,6 +62,12 @@ export function ManageLicensesModal() {
       })),
     pilotLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === "AVIATION")
+      .map((v) => ({
+        value: v.id,
+        label: v.value.value,
+      })),
+    waterLicenseCategory: citizen.dlCategory
+      .filter((v) => v.type === "WATER")
       .map((v) => ({
         value: v.id,
         label: v.value.value,
@@ -141,6 +149,41 @@ export function ManageLicensesModal() {
                     }))}
                   value={values.pilotLicenseCategory}
                   name="pilotLicenseCategory"
+                  onChange={handleChange}
+                />
+              </FormField>
+            </FormRow>
+
+            <FormRow>
+              <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
+                <Select
+                  isClearable
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                    (license) => ({
+                      label: license.value,
+                      value: license.id,
+                    }),
+                  )}
+                  value={values.waterLicense}
+                  name="waterLicense"
+                  onChange={handleChange}
+                />
+              </FormField>
+
+              <FormField
+                errorMessage={errors.waterLicenseCategory as string}
+                label={t("waterLicenseCategory")}
+              >
+                <Select
+                  isMulti
+                  values={driverslicenseCategory.values
+                    .filter((v) => v.type === "WATER")
+                    .map((category) => ({
+                      label: category.value.value,
+                      value: category.id,
+                    }))}
+                  value={values.waterLicenseCategory}
+                  name="waterLicenseCategory"
                   onChange={handleChange}
                 />
               </FormField>
