@@ -258,14 +258,16 @@ export function VehicleSearchModal() {
                   </Button>
                 ) : null}
 
-                <Button
-                  type="button"
-                  onClick={() => handleEditLicenses()}
-                  variant="cancel"
-                  className="px-1.5"
-                >
-                  {t("editLicenses")}
-                </Button>
+                {isLeo ? (
+                  <Button
+                    type="button"
+                    onClick={() => handleEditLicenses()}
+                    variant="cancel"
+                    className="px-1.5"
+                  >
+                    {t("editLicenses")}
+                  </Button>
+                ) : null}
               </div>
 
               <div className="flex">
