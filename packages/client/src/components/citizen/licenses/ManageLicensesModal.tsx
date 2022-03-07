@@ -36,19 +36,19 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
     waterLicense: citizen.waterLicenseId ?? null,
     ccw: citizen.ccwId ?? null,
     driversLicenseCategory: citizen.dlCategory
-      .filter((v) => v.type === "AUTOMOTIVE")
+      .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
       })),
     pilotLicenseCategory: citizen.dlCategory
-      .filter((v) => v.type === "AVIATION")
+      .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
       })),
     waterLicenseCategory: citizen.dlCategory
-      .filter((v) => v.type === "WATER")
+      .filter((v) => v.type === DriversLicenseCategoryType.WATER)
       .map((v) => ({
         value: v.id,
         label: v.value.value,

@@ -87,7 +87,12 @@ export function NameSearchModal() {
 
     const { json } = await execute(`/leo/licenses/${currentResult.id}`, {
       method: "PUT",
-      data: values,
+      data: {
+        ...values,
+        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+      },
     });
 
     if (json) {

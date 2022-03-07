@@ -55,6 +55,7 @@ export class ImportCitizensController {
         const newArr = [
           ...(data.driversLicenseCategoryIds ?? []),
           ...(data.pilotLicenseCategoryIds ?? []),
+          ...(data.waterLicenseCategoryIds ?? []),
         ];
         const disconnectConnectArr = manyToManyHelper([], newArr);
 
