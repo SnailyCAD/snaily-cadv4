@@ -11,13 +11,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import {
-  Citizen,
-  RegisteredVehicle,
-  ValueLicenseType,
-  VehicleTaxStatus,
-  VehicleInspectionStatus,
-} from "@snailycad/types";
+import { Citizen, RegisteredVehicle, ValueLicenseType } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
@@ -28,6 +22,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useBusinessState } from "state/businessState";
 import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
+import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -54,6 +49,7 @@ export function RegisterVehicleModal({
   const { cad } = useAuth();
   const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
   const { currentBusiness, currentEmployee } = useBusinessState();
+  const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
   const { vehicle: vehicles, license } = useValues();
   const validate = handleValidate(VEHICLE_SCHEMA);
@@ -64,36 +60,6 @@ export function RegisterVehicleModal({
     closeModal(ModalIds.RegisterVehicle);
     onClose?.();
   }
-
-  const TAX_STATUS_LABELS = React.useMemo(
-    () => ({
-      [VehicleTaxStatus.TAXED]: tVehicle("taxed"),
-      [VehicleTaxStatus.UNTAXED]: tVehicle("untaxed"),
-    }),
-    [tVehicle],
-  );
-
-  const TAX_STATUS = React.useMemo(() => {
-    return Object.values(VehicleTaxStatus).map((v) => ({
-      label: TAX_STATUS_LABELS[v],
-      value: v,
-    }));
-  }, [TAX_STATUS_LABELS]);
-
-  const INSPECTION_STATUS_LABELS = React.useMemo(
-    () => ({
-      [VehicleInspectionStatus.PASSED]: tVehicle("passed"),
-      [VehicleInspectionStatus.FAILED]: tVehicle("failed"),
-    }),
-    [tVehicle],
-  );
-
-  const INSPECTION_STATUS = React.useMemo(() => {
-    return Object.values(VehicleInspectionStatus).map((v) => ({
-      label: INSPECTION_STATUS_LABELS[v],
-      value: v,
-    }));
-  }, [INSPECTION_STATUS_LABELS]);
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
