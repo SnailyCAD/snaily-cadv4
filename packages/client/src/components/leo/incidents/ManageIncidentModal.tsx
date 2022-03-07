@@ -22,8 +22,9 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { ShouldDoType, StatusValueType } from "@snailycad/types";
+import { StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface Props {
   incident?: FullIncident | null;
@@ -56,11 +57,22 @@ export function ManageIncidentModal({
   const areEventsReadonly = !isDispatch || isLeoIncidents;
 
   const { state, execute } = useFetch();
-  const { allOfficers } = useDispatchState();
+  const { allOfficers, activeOfficers } = useDispatchState();
+  const officersForSelect = isDispatch ? activeOfficers : allOfficers;
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);
     onClose?.();
+  }
+
+  function makeLabel(value: string) {
+    const unit = allOfficers.find((v) => v.id === value);
+
+    if (unit && isUnitCombined(unit)) {
+      return generateCallsign(unit, "pairedUnitTemplate");
+    }
+
+    return unit ? `${generateCallsign(unit)} ${makeUnitName(unit)}` : "";
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -100,7 +112,7 @@ export function ManageIncidentModal({
     descriptionData: dataToSlate(incident),
     involvedOfficers:
       incident?.officersInvolved.map((v) => ({
-        label: `${generateCallsign(v)} ${makeUnitName(v)}`,
+        label: makeLabel(v.id),
         value: v.id,
       })) ?? ([] as SelectValue[]),
     firearmsInvolved: incident?.firearmsInvolved ?? false,
@@ -130,19 +142,11 @@ export function ManageIncidentModal({
                   value={values.involvedOfficers}
                   name="involvedOfficers"
                   onChange={handleChange}
-                  values={allOfficers
-                    .filter((v) =>
-                      creator
-                        ? v.id !== activeOfficer?.id
-                        : isDispatch
-                        ? v.status
-                          ? v.status.shouldDo !== ShouldDoType.SET_OFF_DUTY
-                          : false
-                        : true,
-                    )
+                  values={officersForSelect
+                    .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
 
                     .map((v) => ({
-                      label: `${generateCallsign(v)} ${makeUnitName(v)}`,
+                      label: makeLabel(v.id),
                       value: v.id,
                     }))}
                 />
