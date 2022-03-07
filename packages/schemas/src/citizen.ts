@@ -23,12 +23,17 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   image: z.any().nullable().optional(),
 });
 
+const TAX_STATUS_REGEX = /TAXED|UNTAXED/;
+const INSPECTION_STATUS_REGEX = /PASSED|FAILED/;
+
 export const VEHICLE_SCHEMA = z.object({
   plate: z.string().min(2),
   model: z.string().min(2),
   color: z.string().min(2).max(255),
   registrationStatus: z.string().min(2).max(255),
-  insuranceStatus: z.string().max(255),
+  insuranceStatus: z.string().max(255).nullable(),
+  taxStatus: z.string().regex(TAX_STATUS_REGEX).nullable(),
+  inspectionStatus: z.string().regex(INSPECTION_STATUS_REGEX).nullable(),
   citizenId: z.string().min(2).max(255),
   vinNumber: z.string().max(17).optional(),
   reportedStolen: z.boolean().optional(),
