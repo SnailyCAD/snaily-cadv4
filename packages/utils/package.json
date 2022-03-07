@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.0.0-beta.66",
+  "version": "1.0.0-beta.67",
   "main": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js",
@@ -23,7 +23,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/types": "1.0.0-beta.66",
+    "@snailycad/types": "1.0.0-beta.67",
     "tsup": "^5.11.13",
     "typescript": "^4.6.2"
   },
