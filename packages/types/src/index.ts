@@ -186,6 +186,8 @@ export interface Citizen {
   weaponLicense: Value<ValueType.LICENSE> | null;
   pilotLicenseId: string | null;
   pilotLicense: Value<ValueType.LICENSE> | null;
+  waterLicenseId: string | null;
+  waterLicense: Value<ValueType.LICENSE> | null;
   ccwId: string | null;
   ccw: Value<ValueType.LICENSE> | null;
   imageId: string | null;

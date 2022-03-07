@@ -48,6 +48,7 @@ export const citizenInclude = {
   driversLicense: true,
   ccw: true,
   pilotLicense: true,
+  waterLicense: true,
   dlCategory: { include: { value: true } },
   Record: {
     include: {
@@ -193,6 +194,7 @@ export class CitizenController {
         driversLicenseId: data.driversLicense || defaultLicenseValueId,
         weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
         pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
+        waterLicenseId: data.waterLicense || defaultLicenseValueId,
         ccwId: data.ccw || defaultLicenseValueId,
         phoneNumber: data.phoneNumber || null,
         imageId: validateImgurURL(data.image),
@@ -206,10 +208,15 @@ export class CitizenController {
         driversLicense: true,
         ccw: true,
         pilotLicense: true,
+        waterLicense: true,
       },
     });
 
-    const newArr = [...(data.driversLicenseCategory ?? []), ...(data.pilotLicenseCategory ?? [])];
+    const newArr = [
+      ...(data.driversLicenseCategory ?? []),
+      ...(data.pilotLicenseCategory ?? []),
+      ...(data.waterLicenseCategory ?? []),
+    ];
     const disconnectConnectArr = manyToManyHelper([], newArr);
 
     await prisma.$transaction(
