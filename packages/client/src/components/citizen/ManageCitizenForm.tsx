@@ -215,8 +215,12 @@ export function ManageCitizenForm({
           </FormField>
 
           {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
-            <FormRow className="mt-5">
-              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+            <FormRow flexLike className="mt-5">
+              <FormField
+                className="w-full"
+                errorMessage={errors.driversLicense}
+                label={t("driversLicense")}
+              >
                 <Select
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
@@ -249,7 +253,11 @@ export function ManageCitizenForm({
               </FormField>
 
               {WEAPON_REGISTRATION ? (
-                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                <FormField
+                  className="w-full"
+                  errorMessage={errors.weaponLicense}
+                  label={t("weaponLicense")}
+                >
                   <Select
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (v) => ({
@@ -264,7 +272,11 @@ export function ManageCitizenForm({
                 </FormField>
               ) : null}
 
-              <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
+              <FormField
+                className="w-full"
+                errorMessage={errors.pilotLicense}
+                label={t("pilotLicense")}
+              >
                 <Select
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
@@ -296,8 +308,13 @@ export function ManageCitizenForm({
                 </FormField>
               </FormField>
 
-              <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
+              <FormField
+                className="w-full"
+                errorMessage={errors.waterLicense}
+                label={t("waterLicense")}
+              >
                 <Select
+                  isClearable
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
                     value: v.id,
@@ -329,7 +346,7 @@ export function ManageCitizenForm({
               </FormField>
 
               {WEAPON_REGISTRATION ? (
-                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                <FormField className="w-full" errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (v) => ({
