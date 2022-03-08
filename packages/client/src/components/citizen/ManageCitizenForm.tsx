@@ -12,7 +12,7 @@ import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import { Formik, FormikHelpers } from "formik";
-import { Citizen, ValueLicenseType } from "@snailycad/types";
+import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -77,8 +77,10 @@ export function ManageCitizenForm({
     driversLicense: "",
     pilotLicense: "",
     weaponLicense: "",
+    waterLicense: null,
     driversLicenseCategory: null,
     pilotLicenseCategory: null,
+    waterLicenseCategory: null,
     ccw: "",
   };
 
@@ -213,8 +215,12 @@ export function ManageCitizenForm({
           </FormField>
 
           {showLicenseFields && ALLOW_CITIZEN_UPDATE_LICENSE ? (
-            <FormRow className="mt-5">
-              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+            <FormRow flexLike className="mt-5">
+              <FormField
+                className="w-full"
+                errorMessage={errors.driversLicense}
+                label={t("driversLicense")}
+              >
                 <Select
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
@@ -232,7 +238,7 @@ export function ManageCitizenForm({
                 >
                   <Select
                     values={driverslicenseCategory.values
-                      .filter((v) => v.type === "AUTOMOTIVE")
+                      .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
                       .map((v) => ({
                         label: v.value.value,
                         value: v.id,
@@ -247,7 +253,11 @@ export function ManageCitizenForm({
               </FormField>
 
               {WEAPON_REGISTRATION ? (
-                <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
+                <FormField
+                  className="w-full"
+                  errorMessage={errors.weaponLicense}
+                  label={t("weaponLicense")}
+                >
                   <Select
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (v) => ({
@@ -262,7 +272,11 @@ export function ManageCitizenForm({
                 </FormField>
               ) : null}
 
-              <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
+              <FormField
+                className="w-full"
+                errorMessage={errors.pilotLicense}
+                label={t("pilotLicense")}
+              >
                 <Select
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
@@ -280,7 +294,7 @@ export function ManageCitizenForm({
                 >
                   <Select
                     values={driverslicenseCategory.values
-                      .filter((v) => v.type === "AVIATION")
+                      .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
                       .map((v) => ({
                         label: v.value.value,
                         value: v.id,
@@ -294,8 +308,45 @@ export function ManageCitizenForm({
                 </FormField>
               </FormField>
 
+              <FormField
+                className="w-full"
+                errorMessage={errors.waterLicense}
+                label={t("waterLicense")}
+              >
+                <Select
+                  isClearable
+                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                  value={values.waterLicense}
+                  onChange={handleChange}
+                  name="waterLicense"
+                />
+
+                <FormField
+                  errorMessage={errors.waterLicenseCategory}
+                  className="mt-2"
+                  label={t("waterLicenseCategory")}
+                >
+                  <Select
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: v.id,
+                      }))}
+                    value={values.waterLicenseCategory}
+                    onChange={handleChange}
+                    name="waterLicenseCategory"
+                    isMulti
+                    isClearable
+                  />
+                </FormField>
+              </FormField>
+
               {WEAPON_REGISTRATION ? (
-                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                <FormField className="w-full" errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (v) => ({

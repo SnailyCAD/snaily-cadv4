@@ -15,11 +15,13 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   driversLicense: z.string().max(255).nullable().optional(),
   weaponLicense: z.string().max(255).nullable().optional(),
   pilotLicense: z.string().max(255).nullable().optional(),
+  waterLicense: z.string().max(255).nullable().optional(),
   ccw: z.string().max(255).nullable().optional(),
   phoneNumber: z.string().max(255).nullable().optional(),
   occupation: z.string().nullable().optional(),
   driversLicenseCategory: z.array(z.any()).nullable().optional(),
   pilotLicenseCategory: z.array(z.any()).nullable().optional(),
+  waterLicenseCategory: z.array(z.any()).nullable().optional(),
   image: z.any().nullable().optional(),
 });
 
@@ -53,13 +55,15 @@ export const WEAPON_SCHEMA = z.object({
   serialNumber: z.string().max(10).optional(),
 });
 
-export const LICENSE_SCHEMA = z.object({
-  driversLicense: z.string().max(255).nullable(),
-  weaponLicense: z.string().max(255).nullable(),
-  pilotLicense: z.string().max(255).nullable(),
-  ccw: z.string().max(255).nullable(),
-  driversLicenseCategory: z.array(z.any()).nullable().optional(),
-  pilotLicenseCategory: z.array(z.any()).nullable().optional(),
+export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
+  driversLicense: true,
+  driversLicenseCategory: true,
+  ccw: true,
+  pilotLicense: true,
+  pilotLicenseCategory: true,
+  weaponLicense: true,
+  waterLicense: true,
+  waterLicenseCategory: true,
 });
 
 export const MEDICAL_RECORD_SCHEMA = z.object({

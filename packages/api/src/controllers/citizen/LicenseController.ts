@@ -41,10 +41,15 @@ export class LicensesController {
         driversLicenseId: data.driversLicense,
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
+        waterLicenseId: data.waterLicense,
       },
     });
 
-    const newArr = [...(data.driversLicenseCategory ?? []), ...(data.pilotLicenseCategory ?? [])];
+    const newArr = [
+      ...(data.driversLicenseCategory ?? []),
+      ...(data.pilotLicenseCategory ?? []),
+      ...(data.waterLicenseCategory ?? []),
+    ];
     const disconnectConnectArr = manyToManyHelper(
       citizen.dlCategory.map((v) => v.id),
       newArr,
@@ -65,6 +70,7 @@ export class LicensesController {
         driversLicense: true,
         ccw: true,
         pilotLicense: true,
+        waterLicense: true,
         dlCategory: { include: { value: true } },
       },
     });

@@ -6,14 +6,34 @@ import { ManageLicensesModal } from "./ManageLicensesModal";
 import { CitizenWithVehAndWep, useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
+import { DriversLicenseCategoryType } from "@snailycad/types";
+import useFetch from "lib/useFetch";
 
-const types = ["driversLicense", "pilotLicense", "weaponLicense", "ccw"] as const;
+const types = ["driversLicense", "pilotLicense", "weaponLicense", "waterLicense", "ccw"] as const;
 
 export function LicensesCard() {
-  const { openModal } = useModal();
-  const { citizen } = useCitizen(false);
+  const { openModal, closeModal } = useModal();
+  const { citizen, setCurrentCitizen } = useCitizen(false);
   const { ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
   const t = useTranslations("Citizen");
+  const { execute, state } = useFetch();
+
+  async function onSubmit(values: any) {
+    const { json } = await execute(`/licenses/${citizen.id}`, {
+      method: "PUT",
+      data: {
+        ...values,
+        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+      },
+    });
+
+    if (json?.id) {
+      setCurrentCitizen({ ...citizen, ...json });
+      closeModal(ModalIds.ManageLicenses);
+    }
+  }
 
   return (
     <div className="p-4 card">
@@ -31,7 +51,9 @@ export function LicensesCard() {
         <CitizenLicenses citizen={citizen} />
       </div>
 
-      {ALLOW_CITIZEN_UPDATE_LICENSE ? <ManageLicensesModal /> : null}
+      {ALLOW_CITIZEN_UPDATE_LICENSE ? (
+        <ManageLicensesModal state={state} onSubmit={onSubmit} citizen={citizen} />
+      ) : null}
     </div>
   );
 }
@@ -39,7 +61,7 @@ export function LicensesCard() {
 interface Props {
   citizen: Pick<
     CitizenWithVehAndWep,
-    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "ccw"
+    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "ccw" | "waterLicense"
   >;
 }
 
@@ -48,15 +70,17 @@ export function CitizenLicenses({ citizen }: Props) {
   const common = useTranslations("Common");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
+  const categoryTypes: Record<string, DriversLicenseCategoryType> = {
+    driversLicense: DriversLicenseCategoryType.AUTOMOTIVE,
+    pilotLicense: DriversLicenseCategoryType.AVIATION,
+    waterLicense: DriversLicenseCategoryType.WATER,
+  };
+
   return (
     <>
       {types.map((type) => {
         const category =
-          type === "driversLicense"
-            ? citizen.dlCategory.filter((v) => v.type === "AUTOMOTIVE")
-            : type === "pilotLicense"
-            ? citizen.dlCategory.filter((v) => v.type === "AVIATION")
-            : null;
+          categoryTypes[type] && citizen.dlCategory.filter((v) => v.type === categoryTypes[type]);
 
         const returnNull = ["weaponLicense", "ccw"].includes(type) && !WEAPON_REGISTRATION;
 

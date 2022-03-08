@@ -19,7 +19,6 @@ import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
-import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
@@ -27,6 +26,7 @@ import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
+import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -81,6 +81,25 @@ export function NameSearchModal() {
       setCurrentResult(null);
     }
   }, [isOpen, setCurrentResult, setResults]);
+
+  async function handleLicensesSubmit(values: any) {
+    if (!currentResult) return;
+
+    const { json } = await execute(`/leo/licenses/${currentResult.id}`, {
+      method: "PUT",
+      data: {
+        ...values,
+        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+      },
+    });
+
+    if (json) {
+      setCurrentResult({ ...currentResult, ...json });
+      closeModal(ModalIds.ManageLicenses);
+    }
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/name", {
@@ -310,7 +329,7 @@ export function NameSearchModal() {
                       small
                       type="button"
                       className="mt-2"
-                      onClick={() => openModal(ModalIds.EditCitizenLicenses)}
+                      onClick={() => openModal(ModalIds.ManageLicenses)}
                     >
                       {t("editLicenses")}
                     </Button>
@@ -395,9 +414,15 @@ export function NameSearchModal() {
             </footer>
 
             <AutoSubmit />
-            <EditCitizenLicenses />
             <VehicleSearchModal />
             <WeaponSearchModal />
+            {currentResult ? (
+              <ManageLicensesModal
+                state={state}
+                onSubmit={handleLicensesSubmit}
+                citizen={currentResult}
+              />
+            ) : null}
           </Form>
         )}
       </Formik>

@@ -438,11 +438,28 @@ export class LeoController {
       where: {
         id: citizenId,
       },
+      include: { dlCategory: true },
     });
 
     if (!citizen) {
       throw new NotFound("notFound");
     }
+
+    const newArr = [
+      ...(data.driversLicenseCategory ?? []),
+      ...(data.pilotLicenseCategory ?? []),
+      ...(data.waterLicenseCategory ?? []),
+    ];
+    const disconnectConnectArr = manyToManyHelper(
+      citizen.dlCategory.map((v) => v.id),
+      newArr,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
+      ),
+    );
 
     const updated = await prisma.citizen.update({
       where: {
@@ -453,6 +470,7 @@ export class LeoController {
         driversLicenseId: data.driversLicense,
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
+        waterLicenseId: data.waterLicense,
       },
       include: citizenInclude,
     });

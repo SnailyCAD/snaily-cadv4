@@ -29,6 +29,8 @@
     "phoneNumber": "Phone Number",
     "pilotLicense": "Pilot License",
     "pilotLicenseCategory": "Pilot License Categories",
+    "waterLicense": "Water License",
+    "waterLicenseCategory": "Water License Categories",
     "ccw": "CCW",
     "createTaxiCall": "Create Taxi Call",
     "create911Call": "Create 911 Call",
