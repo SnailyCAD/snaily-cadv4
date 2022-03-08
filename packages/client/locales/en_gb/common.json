@@ -43,7 +43,9 @@
     "cropImage": "Crop Image",
     "crop": "Crop",
     "hide": "Hide",
-    "show": "Show"
+    "show": "Show",
+    "filters": "Filters",
+    "openInSearch": "Open in search"
   },
   "Nav": {
     "citizen": "Civilian",
@@ -62,7 +64,7 @@
     "incidents": "Incidents",
     "impoundLot": "Impound Lot",
     "manageUnits": "Manage Units",
-    "jail": "Prison",
+    "jail": "Custody",
     "tow": "Tow",
     "towLogs": "Tow Logs",
     "emsFd": "Emergency Services",
@@ -118,6 +120,7 @@
     "mustSetBotTokenGuildId": "This feature cannot be used because there was no `BOT_TOKEN` or `GUILD_ID` present. Please read how to enable Discord Roles: https://cad-docs.caspertheghost.me/docs/discord-integration/discord-roles",
     "maxDepartmentsReachedPerUser": "You've reached the max set of units with this force. Please choose a different force or try again later.",
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
-    "Invalid Permissions": "You don't have permissions to access this API Route."
+    "Invalid Permissions": "You don't have permissions to access this API Route.",
+    "alreadyPendingNameChange": "This civilian already has a pending name change request."
   }
 }
