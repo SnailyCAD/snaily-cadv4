@@ -24,33 +24,33 @@ const OFFICER = {
 } as unknown as Officer;
 
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
-  expect(typeguards.hasValueObj(VEHICLE_VALUE)).eq(true);
+  expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
 
 test("typeguards.hasValueObj -> LICENSE_VALUE", () => {
-  expect(typeguards.hasValueObj(LICENSE_VALUE)).eq(false);
+  expect(typeguards.hasValueObj(LICENSE_VALUE)).toBe(false);
 });
 
 test("typeguards.isBaseValue -> LICENSE_VALUE -> true", () => {
-  expect(typeguards.isBaseValue(LICENSE_VALUE)).eq(true);
+  expect(typeguards.isBaseValue(LICENSE_VALUE)).toBe(true);
 });
 
 test("typeguards.isBaseValue -> VEHICLE_VALUE -> false", () => {
-  expect(typeguards.isBaseValue(VEHICLE_VALUE)).eq(false);
+  expect(typeguards.isBaseValue(VEHICLE_VALUE)).toBe(false);
 });
 
 test("typeguards.isVehicleValue -> VEHICLE_VALUE -> true", () => {
-  expect(typeguards.isVehicleValue(VEHICLE_VALUE)).eq(true);
+  expect(typeguards.isVehicleValue(VEHICLE_VALUE)).toBe(true);
 });
 
 test("typeguards.isVehicleValue -> LICENSE_VALUE -> false", () => {
-  expect(typeguards.isVehicleValue(LICENSE_VALUE)).eq(false);
+  expect(typeguards.isVehicleValue(LICENSE_VALUE)).toBe(false);
 });
 
 test("typeguards.isWeaponValue -> WEAPON_VALUE -> true", () => {
-  expect(typeguards.isWeaponValue(WEAPON_VALUE)).eq(true);
+  expect(typeguards.isWeaponValue(WEAPON_VALUE)).toBe(true);
 });
 
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {
-  expect(typeguards.isUnitOfficer(OFFICER)).eq(true);
+  expect(typeguards.isUnitOfficer(OFFICER)).toBe(true);
 });
