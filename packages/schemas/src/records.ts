@@ -38,10 +38,6 @@ export const CREATE_WARRANT_SCHEMA = z.object({
   description: z.string(),
 });
 
-export const UPDATE_WARRANT_SCHEMA = z.object({
-  status: z
-    .string()
-    .min(1)
-    .max(255)
-    .regex(/ACTIVE|INACTIVE/),
+export const UPDATE_WARRANT_SCHEMA = CREATE_WARRANT_SCHEMA.pick({
+  status: true,
 });

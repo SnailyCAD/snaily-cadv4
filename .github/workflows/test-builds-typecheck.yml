@@ -34,5 +34,5 @@ jobs:
       - name: Run turbo build
         run: yarn turbo run build
 
-      - name: Run turbo typecheck
-        run: yarn turbo run typecheck
+      - name: Run turbo test
+        run: yarn turbo run test

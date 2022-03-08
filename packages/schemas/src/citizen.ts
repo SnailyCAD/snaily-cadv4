@@ -29,8 +29,8 @@ export const TAX_STATUS_REGEX = /TAXED|UNTAXED/;
 export const INSPECTION_STATUS_REGEX = /PASSED|FAILED/;
 
 export const VEHICLE_SCHEMA = z.object({
-  plate: z.string().min(2),
-  model: z.string().min(2),
+  plate: z.string().min(2).max(255),
+  model: z.string().min(2).max(255),
   color: z.string().min(2).max(255),
   registrationStatus: z.string().min(2).max(255),
   insuranceStatus: z.string().max(255).nullable(),
