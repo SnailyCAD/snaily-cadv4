@@ -1,9 +1,16 @@
 {
   "Courthouse": {
     "courthouse": "Magistrates",
-    "requestExpungement": "Request Expungement",
-    "noExpungementRequests": "You do not have any expungement requests",
+    "requestExpungement": "Request Record Seal",
+    "noExpungementRequests": "You do not have any seal requests",
     "request": "Request",
-    "noPendingRequests": "There are no pending expungement requests"
+    "noPendingRequests": "There are no pending seal requests",
+    "expungementRequests": "Seal requests",
+    "nameChangeRequests": "Deed poll requests",
+    "requestNameChange": "Request deed poll",
+    "noNameChangeRequests": "There are no deed poll requests.",
+    "newName": "New Name",
+    "newSurname": "New surname",
+    "status": "Status"
   }
 }
