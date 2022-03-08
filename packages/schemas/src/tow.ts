@@ -12,10 +12,10 @@ export const TOW_SCHEMA = z.object({
   callCountyService: z.boolean().optional(),
 });
 
-export const UPDATE_TOW_SCHEMA = z.object({
-  location: z.string().min(2).max(255),
-  description: z.string().optional().nullable(),
-  descriptionData: z.any().optional().nullable(),
-  assignedUnitId: z.string().max(255).nullable(),
-  postal: z.string().max(255).optional().nullable(),
+export const UPDATE_TOW_SCHEMA = TOW_SCHEMA.pick({
+  location: true,
+  description: true,
+  descriptionData: true,
+  assignedUnitId: true,
+  postal: true,
 });
