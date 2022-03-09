@@ -34,3 +34,5 @@ export function UsePermissions(data: RouteData) {
     UseBefore(UsePermissionsMiddleware),
   );
 }
+
+export { Permissions };

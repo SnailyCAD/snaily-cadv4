@@ -10,6 +10,7 @@ import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
@@ -30,6 +31,9 @@ export class ManageUnitsController {
 
   @Get("/")
   @Description("Get all the units in the CAD")
+  @UsePermissions({
+    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+  })
   async getUnits() {
     const units = await Promise.all([
       (
@@ -45,6 +49,9 @@ export class ManageUnitsController {
 
   @Get("/:id")
   @Description("Get a unit by their id")
+  @UsePermissions({
+    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+  })
   async getUnit(@PathParams("id") id: string) {
     let unit: any = await prisma.officer.findUnique({
       where: { id },
@@ -67,6 +74,9 @@ export class ManageUnitsController {
 
   @Put("/off-duty")
   @Description("Set specified units off-duty")
+  @UsePermissions({
+    permissions: [Permissions.ManageUnits],
+  })
   async setSelectedOffDuty(@BodyParams("ids") ids: string[]) {
     const updated = await Promise.all(
       ids.map(async (fullId) => {
@@ -106,6 +116,9 @@ export class ManageUnitsController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    permissions: [Permissions.ManageUnits],
+  })
   @Description("Update a unit by its id")
   async updateUnit(
     @PathParams("id") id: string,
@@ -172,6 +185,9 @@ export class ManageUnitsController {
 
   @Post("/departments/:officerId")
   @Description("Accept or decline a unit into a department")
+  @UsePermissions({
+    permissions: [Permissions.ManageUnits],
+  })
   async acceptOrDeclineUnit(
     @PathParams("officerId") officerId: string,
     @BodyParams("action") action: Action | null,

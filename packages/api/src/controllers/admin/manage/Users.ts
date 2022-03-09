@@ -16,8 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
-import { UsePermissions } from "middlewares/UsePermissions";
-import { Permissions } from "@snailycad/permissions";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")

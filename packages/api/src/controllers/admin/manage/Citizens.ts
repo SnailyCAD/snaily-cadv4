@@ -13,6 +13,7 @@ import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import type { User } from "@prisma/client";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -29,6 +30,9 @@ export class ManageCitizensController {
 
   @Get("/:id")
   @Description("Get a citizen by its id")
+  @UsePermissions({
+    permissions: [Permissions.ViewCitizens, Permissions.DeleteCitizens, Permissions.ManageCitizens],
+  })
   async getCitizen(@PathParams("id") id: string) {
     const citizen = await prisma.citizen.findUnique({
       where: { id },
@@ -40,6 +44,9 @@ export class ManageCitizensController {
 
   @Put("/:id")
   @Description("Update a citizen by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageCitizens],
+  })
   async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
@@ -94,6 +101,9 @@ export class ManageCitizensController {
 
   @Delete("/:id")
   @Description("Delete a citizen by its id")
+  @UsePermissions({
+    permissions: [Permissions.DeleteCitizens],
+  })
   async deleteCitizen(
     @Context("user") user: User,
     @BodyParams("reason") reason: string,
