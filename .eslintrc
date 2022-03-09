@@ -20,7 +20,9 @@
     }
   },
   "rules": {
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    "@next/next/no-server-import-in-page": "error",
+    "@next/next/no-script-component-in-head-component": "off"
   },
   "overrides": [
     {

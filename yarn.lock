@@ -95,33 +95,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-next@npm:3.0.3-alpha.0":
-  version: 3.0.3-alpha.0
-  resolution: "@casper124578/eslint-config-next@npm:3.0.3-alpha.0"
+"@casper124578/eslint-config-next@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@casper124578/eslint-config-next@npm:3.0.0"
   dependencies:
-    eslint-config-next: ^12.0.7
+    eslint-config-next: ^12.1.0
   peerDependencies:
     eslint: ">=7.4.0"
-  checksum: b913bcd3a3923fbe72426321419b06f9af5a95d3a92672a92b418d7d9e543f4148a59816839523e67ec90a1308e9e82b1df147f5f368074c111c40194a30ad3d
+    next: ">=12.1.0"
+  checksum: e0f3dc67a32eac688ea811a9c0f155a2e596577b472ddaee44303ef5b9ba1a05632e07e44531cdea879f6e714d8ab4c141eb5029fe095dd830195366c1b4aa55
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-react@npm:3.0.3-alpha.0":
-  version: 3.0.3-alpha.0
-  resolution: "@casper124578/eslint-config-react@npm:3.0.3-alpha.0"
+"@casper124578/eslint-config-react@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@casper124578/eslint-config-react@npm:3.0.0"
   dependencies:
     eslint-plugin-jsx-a11y: ^6.5.1
-    eslint-plugin-react: ^7.28.0
+    eslint-plugin-react: ^7.29.3
     eslint-plugin-react-hooks: ^4.3.0
   peerDependencies:
     eslint: ">=7.4.0"
-  checksum: 9fd3f4448abe76ebafc456618bcd1a52bce23d0d3cb824efa52ae567832a164dd5b2b7f6b1205fffef055d751637053a8c9a26c083b75872b653d8e7bddf2976
+  checksum: 8cef1d1e2533133fde68444b58d6c5ef476c5400a04338775cf279c86946759a3ddad21196fa9d12e3c5916accd4152e97554c855dfdcccb6479f9bf667c539d
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config@npm:3.0.2-alpha.0":
-  version: 3.0.2-alpha.0
-  resolution: "@casper124578/eslint-config@npm:3.0.2-alpha.0"
+"@casper124578/eslint-config@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@casper124578/eslint-config@npm:3.0.0"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^5.14.0
     "@typescript-eslint/parser": ^5.14.0
@@ -133,7 +134,7 @@ __metadata:
   peerDependencies:
     eslint: ">=7.4.0"
     prettier: ">=2.5.0"
-  checksum: 4b8ce4fb305bdb1fd5760951f897d278e09fc3eb1df6ebb1a071005acf879ae6e240d3ca48d335ac6acfc421e12855d845fb12344a97aa41752c1eb74f6e861b
+  checksum: c26985c2a74291d2dfa0a0f3ef0fb1f49199ba0b738660881c1dc0773617e3c40ed57b64d14ee4cc0b697cf1963d69c8a68d2c53c10ea7ea25f813a2a14c0a60
   languageName: node
   linkType: hard
 
@@ -4655,7 +4656,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-next@npm:^12.0.7":
+"eslint-config-next@npm:^12.1.0":
   version: 12.1.0
   resolution: "eslint-config-next@npm:12.1.0"
   dependencies:
@@ -4814,7 +4815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.0, eslint-plugin-react@npm:^7.28.0":
+"eslint-plugin-react@npm:^7.27.0, eslint-plugin-react@npm:^7.29.3":
   version: 7.29.3
   resolution: "eslint-plugin-react@npm:7.29.3"
   dependencies:
@@ -9182,9 +9183,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snailycad@workspace:."
   dependencies:
-    "@casper124578/eslint-config": 3.0.2-alpha.0
-    "@casper124578/eslint-config-next": 3.0.3-alpha.0
-    "@casper124578/eslint-config-react": 3.0.3-alpha.0
+    "@casper124578/eslint-config": 3.0.0
+    "@casper124578/eslint-config-next": 3.0.0
+    "@casper124578/eslint-config-react": 3.0.0
     colorette: 2.0.16
     concurrently: ^7.0.0
     copy: ^0.3.2
