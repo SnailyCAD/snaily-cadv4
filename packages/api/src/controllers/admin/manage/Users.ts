@@ -16,6 +16,8 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
+import { UsePermissions } from "middlewares/UsePermissions";
+import { Permissions } from "@snailycad/permissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -26,6 +28,14 @@ export class ManageUsersController {
   }
 
   @Get("/")
+  @UsePermissions({
+    permissions: [
+      Permissions.ViewUsers,
+      Permissions.ManageUsers,
+      Permissions.BanUsers,
+      Permissions.DeleteUsers,
+    ],
+  })
   @Description("Get all the users in the CAD")
   async getUsers() {
     const users = await prisma.user.findMany({
@@ -36,6 +46,14 @@ export class ManageUsersController {
   }
 
   @Get("/:id")
+  @UsePermissions({
+    permissions: [
+      Permissions.ViewUsers,
+      Permissions.ManageUsers,
+      Permissions.BanUsers,
+      Permissions.DeleteUsers,
+    ],
+  })
   async getUserById(
     @PathParams("id") userId: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
@@ -52,6 +70,9 @@ export class ManageUsersController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
   async updateUserById(
     @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
@@ -98,6 +119,9 @@ export class ManageUsersController {
   }
 
   @Post("/temp-password/:id")
+  @UsePermissions({
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
   async giveUserTempPassword(@PathParams("id") userId: string) {
     const user = await prisma.user.findFirst({
       where: {
@@ -135,6 +159,9 @@ export class ManageUsersController {
   }
 
   @Post("/:id/:type")
+  @UsePermissions({
+    permissions: [Permissions.BanUsers],
+  })
   async banUserById(
     @Context() ctx: Context,
     @PathParams("id") userId: string,
@@ -175,6 +202,9 @@ export class ManageUsersController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    permissions: [Permissions.DeleteUsers],
+  })
   async deleteUserAccount(@PathParams("id") userId: string) {
     const user = await prisma.user.findFirst({
       where: {
@@ -199,6 +229,9 @@ export class ManageUsersController {
   }
 
   @Post("/pending/:id/:type")
+  @UsePermissions({
+    permissions: [Permissions.ManageUsers],
+  })
   async acceptOrDeclineUser(
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
