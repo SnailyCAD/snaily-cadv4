@@ -25,8 +25,7 @@ export class AdminManageExpungementRequests {
     @PathParams("id") id: string,
     @BodyParams("type") type: ExpungementRequestStatus,
   ) {
-    const isCorrect = Object.values(ExpungementRequestStatus).some((v) => v === type);
-
+    const isCorrect = Object.values(ExpungementRequestStatus).includes(type);
     if (!isCorrect) {
       throw new BadRequest("invalidType");
     }

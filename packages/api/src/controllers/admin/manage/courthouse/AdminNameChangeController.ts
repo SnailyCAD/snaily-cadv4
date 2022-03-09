@@ -26,7 +26,7 @@ export class AdminNameChangeController {
     @PathParams("id") id: string,
     @BodyParams("type") type: WhitelistStatus,
   ) {
-    const isCorrect = Object.values(WhitelistStatus).some((v) => v === type);
+    const isCorrect = Object.values(WhitelistStatus).includes(type);
     if (!isCorrect) {
       throw new BadRequest("invalidType");
     }

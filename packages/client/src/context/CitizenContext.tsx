@@ -56,7 +56,7 @@ export function useCitizen(citizenNull = true): Context<boolean> {
   citizenNull;
   const context = React.useContext(CitizenContext);
   if (typeof context === "undefined") {
-    throw new Error("`useCitizen` must be used within an `CitizenProvider`");
+    throw new TypeError("`useCitizen` must be used within an `CitizenProvider`");
   }
 
   return context;

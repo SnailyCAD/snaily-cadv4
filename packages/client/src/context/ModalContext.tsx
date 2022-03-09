@@ -62,7 +62,7 @@ export function useModal() {
   const context = React.useContext(ModalContext);
 
   if (!context) {
-    throw new Error("`useModal` must be used within a `ModalProvider`");
+    throw new TypeError("`useModal` must be used within a `ModalProvider`");
   }
 
   return context;
