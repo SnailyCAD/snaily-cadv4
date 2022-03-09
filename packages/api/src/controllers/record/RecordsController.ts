@@ -10,7 +10,7 @@ import { prisma } from "lib/prisma";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -199,12 +199,9 @@ export class RecordsController {
       include: { officer: { include: leoProperties } },
     });
 
-    const violations: Violation[] = [];
-    const seizedItems: SeizedItem[] = [];
-
-    await Promise.all(
-      validatedViolations.map(async (item) => {
-        const created = await prisma.violation.create({
+    const violations = await prisma.$transaction(
+      validatedViolations.map((item) => {
+        return prisma.violation.create({
           data: {
             fine: item.fine,
             bail: item.bail,
@@ -218,14 +215,12 @@ export class RecordsController {
           },
           include: { penalCode: true },
         });
-
-        violations.push(created);
       }),
     );
 
-    await Promise.all(
-      (data.seizedItems ?? []).map(async (item) => {
-        const seizedItem = await prisma.seizedItem.create({
+    const seizedItems = await prisma.$transaction(
+      (data.seizedItems ?? []).map((item) => {
+        return prisma.seizedItem.create({
           data: {
             item: item.item,
             illegal: item.illegal ?? false,
@@ -233,8 +228,6 @@ export class RecordsController {
             recordId: updated.id,
           },
         });
-
-        seizedItems.push(seizedItem);
       }),
     );
 

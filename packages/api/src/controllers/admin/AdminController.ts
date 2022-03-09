@@ -5,7 +5,7 @@ import glob from "glob";
 import { join } from "node:path";
 import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { WhitelistStatus } from ".prisma/client";
 
 @Controller("/admin")

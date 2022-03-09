@@ -13,7 +13,7 @@ import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { Description } from "@tsed/schema";
@@ -60,7 +60,7 @@ export class DiscordAuth {
     const data = await getDiscordData(code);
     const authUser = await getSessionUser(req, false);
 
-    if (!data) {
+    if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
     }
 

@@ -18,7 +18,7 @@ import { callInclude, findUnit } from "./911-calls/Calls911Controller";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client";
 import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";

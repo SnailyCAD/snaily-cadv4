@@ -6,7 +6,7 @@ import { Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
@@ -40,15 +40,14 @@ export class ManageCitizensController {
 
   @Put("/:id")
   @Description("Update a citizen by its id")
-  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: any) {
-    // todo: use admin import schema. This schema should be updated in the next PR (issue ref #323)
+  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.update({
       where: { id },
       data: {
         address: data.address,
-        postal: body.postal || null,
+        postal: data.postal || null,
         weight: data.weight,
         height: data.height,
         hairColor: data.hairColor,
@@ -58,14 +57,14 @@ export class ManageCitizensController {
         surname: data.surname,
         genderId: data.gender,
         eyeColor: data.eyeColor,
-        driversLicenseId: body.driversLicense || undefined,
-        weaponLicenseId: body.weaponLicense || undefined,
-        pilotLicenseId: body.pilotLicense || undefined,
-        ccwId: body.ccw || undefined,
-        phoneNumber: body.phoneNumber || null,
+        driversLicenseId: data.driversLicense || undefined,
+        weaponLicenseId: data.weaponLicense || undefined,
+        pilotLicenseId: data.pilotLicense || undefined,
+        ccwId: data.ccw || undefined,
+        phoneNumber: data.phoneNumber || null,
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
-        occupation: body.occupation || null,
-        imageId: validateImgurURL(body.image),
+        occupation: data.occupation || null,
+        imageId: validateImgurURL(data.image),
       },
       include: citizenInclude,
     });

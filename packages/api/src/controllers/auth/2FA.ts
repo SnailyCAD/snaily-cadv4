@@ -69,7 +69,7 @@ export class User2FA {
     return dataUri;
   }
 
-  @Delete()
+  @Delete("/")
   @Description("Disable two step authentication for the authenticated user")
   async disable2FA(
     @Context("user") user: User,

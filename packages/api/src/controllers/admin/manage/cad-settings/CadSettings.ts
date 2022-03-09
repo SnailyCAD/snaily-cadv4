@@ -8,7 +8,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth, setDiscordAUth } from "middlewares/index";
+import { IsAuth, setDiscordAUth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";

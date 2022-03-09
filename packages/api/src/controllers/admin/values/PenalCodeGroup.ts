@@ -2,7 +2,7 @@ import { BodyParams, Controller, PathParams, UseBeforeEach } from "@tsed/common"
 import { Delete, Description, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 
@@ -55,10 +55,10 @@ export class ValuesController {
       throw new NotFound("notFound");
     }
 
-    const updated = await prisma.penalCodeGroup.delete({
+    const deleted = await prisma.penalCodeGroup.delete({
       where: { id },
     });
 
-    return !!updated;
+    return !!deleted;
   }
 }
