@@ -1464,6 +1464,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snailycad/permissions@workspace:packages/permissions":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/permissions@workspace:packages/permissions"
+  dependencies:
+    tsup: ^5.11.13
+    type-fest: ^2.12.0
+    typescript: ^4.6.2
+    vite: ^2.8.6
+    vitest: ^0.6.0
+    zod: ^3.12.0
+  languageName: unknown
+  linkType: soft
+
 "@snailycad/schemas@1.0.0-beta.68, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
