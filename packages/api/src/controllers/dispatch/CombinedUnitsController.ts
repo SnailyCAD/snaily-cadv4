@@ -30,7 +30,7 @@ export class CombinedUnitsController {
       }),
     );
 
-    if (officers.include(null)) {
+    if (officers.includes(null)) {
       throw new BadRequest("officerNotFoundInArray");
     }
 
