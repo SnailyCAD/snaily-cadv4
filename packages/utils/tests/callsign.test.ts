@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { generateCallsign } from "../src/callsign";
 
 // simple test data
-const OFFICER = {
+export const OFFICER = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "john", surname: "doe" },
@@ -13,7 +13,7 @@ const OFFICER = {
   citizenId: "xxxxx",
 } as any;
 
-const EMS_FD_DEPUTY = {
+export const EMS_FD_DEPUTY = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "john", surname: "doe" },
@@ -23,7 +23,7 @@ const EMS_FD_DEPUTY = {
   citizenId: "xxxxx",
 } as any;
 
-const COMBINED_UNIT = {
+export const COMBINED_UNIT = {
   callsign: OFFICER.callsign,
   callsign2: OFFICER.callsign2,
   department: OFFICER.department,

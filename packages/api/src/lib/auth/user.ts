@@ -88,15 +88,11 @@ export function canManageInvariant<T extends Error>(
   authUser: User,
   error: T,
 ): asserts userId {
-  if (!userId) {
-    throw error;
-  }
-
   if (!userId && (authUser.rank as string) !== "API_TOKEN") {
     throw error;
   }
 
-  if (userId && userId !== authUser.id) {
+  if ((authUser.rank as string) !== "API_TOKEN" && userId && userId !== authUser.id) {
     throw error;
   }
 }
