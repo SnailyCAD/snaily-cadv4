@@ -21,10 +21,10 @@ export interface ContextItem extends ButtonProps {
   component?: keyof typeof components;
 }
 
-export function ContextMenu({ items, canBeOpened = true, asChild = false, children }: Props) {
+export function ContextMenu({ items, canBeOpened = true, asChild, children }: Props) {
   const { canBeClosed, setCanBeClosed } = useModal();
 
-  function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement>) {
     item.onClick?.(e);
     setCanBeClosed(true);
   }

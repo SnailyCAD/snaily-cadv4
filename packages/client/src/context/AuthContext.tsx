@@ -132,7 +132,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 export function useAuth() {
   const context = React.useContext(AuthContext);
   if (typeof context === "undefined") {
-    throw new Error("`useAuth` must be used within an `AuthProvider`");
+    throw new TypeError("`useAuth` must be used within an `AuthProvider`");
   }
 
   return context;

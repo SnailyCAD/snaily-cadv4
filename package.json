@@ -9,17 +9,17 @@
   "scripts": {
     "format:quick": "pretty-quick --staged --pattern \"packages/**/*.{js,jsx,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
-    "lint": "eslint . --ext .ts,.js,.tsx,.jsx,.mjs",
-    "lint:fix": "eslint . --ext .ts,.js,.tsx,.jsx,.mjs --fix",
+    "lint": "yarn run eslint . --ext .ts,.js,.tsx,.jsx,.mjs",
+    "lint:fix": "yarn run eslint . --ext .ts,.js,.tsx,.jsx,.mjs --fix",
     "prepare": "husky install",
     "bump-version": "node scripts/bump-version.mjs",
     "postinstall": "husky install"
   },
   "license": "MIT",
   "devDependencies": {
-    "@casper124578/eslint-config": "^2.3.2",
-    "@casper124578/eslint-config-next": "^1.2.1",
-    "@casper124578/eslint-config-react": "^2.2.1",
+    "@casper124578/eslint-config": "3.0.2-alpha.0",
+    "@casper124578/eslint-config-next": "3.0.3-alpha.0",
+    "@casper124578/eslint-config-react": "3.0.3-alpha.0",
     "colorette": "2.0.16",
     "concurrently": "^7.0.0",
     "copy": "^0.3.2",
