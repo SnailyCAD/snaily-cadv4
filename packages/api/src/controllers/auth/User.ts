@@ -64,10 +64,10 @@ export class AccountController {
 
   @Delete("/")
   @Description("Delete the authenticated user's account")
-  async deleteAuthUser(@Context() ctx: Context) {
+  async deleteAuthUser(@Context("user") user: User) {
     await prisma.user.delete({
       where: {
-        id: ctx.get("user").id,
+        id: user.id,
       },
     });
   }

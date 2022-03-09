@@ -5,7 +5,7 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 
 const businessInclude = {
   citizen: {

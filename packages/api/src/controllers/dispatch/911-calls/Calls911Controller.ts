@@ -6,7 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";

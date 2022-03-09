@@ -9,7 +9,7 @@ import { Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 
 import {
   HASH_SCHEMA_ARR,

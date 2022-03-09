@@ -14,7 +14,7 @@ const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 
 @Controller("/admin/import/vehicles")
 export class ImportVehiclesController {
-  @Get("")
+  @Get()
   async getVehicles() {
     const vehicles = await prisma.registeredVehicle.findMany({ include: vehiclesInclude });
     return vehicles;

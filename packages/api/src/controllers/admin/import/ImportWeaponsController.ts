@@ -12,7 +12,7 @@ const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
 @Controller("/admin/import/weapons")
 export class ImportWeaponsController {
-  @Get("")
+  @Get("/")
   async getWeapons() {
     const weapons = await prisma.weapon.findMany({ include: weaponsInclude });
     return weapons;

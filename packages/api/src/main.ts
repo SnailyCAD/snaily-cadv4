@@ -7,7 +7,6 @@ import process from "node:process";
 
 async function bootstrap() {
   try {
-    $log.debug("Starting server...");
     const platform = await PlatformExpress.bootstrap(Server);
 
     await platform.listen();

@@ -6,11 +6,11 @@ import { BodyParams, PathParams } from "@tsed/platform-params";
 import { Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/CourtController";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/expungement-requests")
-export class ManageCourthouseController {
+export class AdminManageExpungementRequests {
   @Get("/")
   async getRequests() {
     const requests = await prisma.expungementRequest.findMany({
@@ -41,21 +41,19 @@ export class ManageCourthouseController {
     }
 
     if (type === ExpungementRequestStatus.ACCEPTED) {
-      await Promise.all(
-        request.warrants?.map(async (warrant) => {
-          await prisma.warrant.delete({
+      await prisma.$transaction([
+        ...request.warrants.map((warrant) => {
+          return prisma.warrant.delete({
             where: { id: warrant.id },
           });
         }),
-      );
 
-      await Promise.all(
-        request.records?.map(async (record) => {
-          await prisma.record.delete({
+        ...request.records.map((record) => {
+          return prisma.record.delete({
             where: { id: record.id },
           });
         }),
-      );
+      ]);
     }
 
     const updated = await prisma.expungementRequest.update({

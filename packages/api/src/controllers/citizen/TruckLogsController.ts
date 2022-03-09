@@ -5,7 +5,7 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { validateSchema } from "lib/validateSchema";
 

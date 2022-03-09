@@ -6,7 +6,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
@@ -40,20 +40,13 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
   ) {
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: userProperties });
-
-    const citizens =
-      selectCitizens && user
-        ? await prisma.citizen.findMany({
-            where: { userId },
-            include: citizenInclude,
-          })
-        : undefined;
-
-    if (user && selectCitizens) {
-      // @ts-expect-error ignore
-      user.citizens = citizens;
-    }
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        ...userProperties,
+        ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+      },
+    });
 
     return user;
   }
@@ -109,9 +102,7 @@ export class ManageUsersController {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
-        NOT: {
-          rank: "OWNER",
-        },
+        NOT: { rank: Rank.OWNER },
       },
     });
 
@@ -188,9 +179,7 @@ export class ManageUsersController {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
-        NOT: {
-          rank: "OWNER",
-        },
+        NOT: { rank: Rank.OWNER },
       },
     });
 
@@ -223,9 +212,7 @@ export class ManageUsersController {
       where: {
         id: userId,
         whitelistStatus: WhitelistStatus.PENDING,
-        NOT: {
-          rank: "OWNER",
-        },
+        NOT: { rank: Rank.OWNER },
       },
     });
 
@@ -233,13 +220,12 @@ export class ManageUsersController {
       throw new NotFound("notFound");
     }
 
+    const whitelistStatus = type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED;
     const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
-      data: {
-        whitelistStatus: type === "accept" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
-      },
+      data: { whitelistStatus },
     });
 
     if (updated.discordId && cad.whitelisted) {

@@ -16,9 +16,10 @@ import {
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type { User } from "@snailycad/types";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -56,7 +57,7 @@ export class BleeterController {
 
   @Post("/")
   @Description("Create a bleeter post")
-  async createPost(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createPost(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(BLEETER_SCHEMA, body);
 
     const post = await prisma.bleeterPost.create({
@@ -64,7 +65,7 @@ export class BleeterController {
         title: data.title,
         body: data.body,
         bodyData: data.bodyData,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
     });
 
@@ -76,7 +77,7 @@ export class BleeterController {
   async updatePost(
     @PathParams("id") postId: string,
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
   ) {
     const data = validateSchema(BLEETER_SCHEMA, body);
 
@@ -86,7 +87,7 @@ export class BleeterController {
       },
     });
 
-    if (!post || post.userId !== ctx.get("user").id) {
+    if (!post || post.userId !== user.id) {
       throw new NotFound("notFound");
     }
 
@@ -107,7 +108,7 @@ export class BleeterController {
   @Post("/:id")
   @Description("Upload a header image to an already created bleeter post")
   async uploadImageToPost(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") postId: string,
     @MultipartFile("image") file: PlatformMulterFile,
   ) {
@@ -117,7 +118,7 @@ export class BleeterController {
       },
     });
 
-    if (!post || post.userId !== ctx.get("user").id) {
+    if (!post || post.userId !== user.id) {
       throw new NotFound("notFound");
     }
 
@@ -148,14 +149,14 @@ export class BleeterController {
 
   @Delete("/:id")
   @Description("Delete a bleeter post its id")
-  async deleteBleetPost(@PathParams("id") postId: string, @Context() ctx: Context) {
+  async deleteBleetPost(@PathParams("id") postId: string, @Context("user") user: User) {
     const post = await prisma.bleeterPost.findUnique({
       where: {
         id: postId,
       },
     });
 
-    if (!post || post.userId !== ctx.get("user").id) {
+    if (!post || post.userId !== user.id) {
       throw new NotFound("notFound");
     }
 

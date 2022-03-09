@@ -16,6 +16,7 @@ export const UPDATE_TOW_SCHEMA = TOW_SCHEMA.pick({
   location: true,
   description: true,
   descriptionData: true,
-  assignedUnitId: true,
   postal: true,
+}).extend({
+  assignedUnitId: z.string().max(255).nullable(),
 });

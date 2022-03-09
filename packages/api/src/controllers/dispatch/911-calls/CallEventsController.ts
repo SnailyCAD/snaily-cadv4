@@ -6,7 +6,7 @@ import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 
 @Controller("/911-calls/events")

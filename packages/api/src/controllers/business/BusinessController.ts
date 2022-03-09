@@ -2,7 +2,7 @@ import { Controller } from "@tsed/di";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { Delete, Get, Hidden, Post, Put } from "@tsed/schema";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import {
   CREATE_COMPANY_SCHEMA,
   JOIN_COMPANY_SCHEMA,
@@ -12,6 +12,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
 import { validateSchema } from "lib/validateSchema";
+import type { User } from "@snailycad/types";
 
 const businessInclude = {
   citizen: {
@@ -34,10 +35,10 @@ const businessInclude = {
 @Hidden()
 export class BusinessController {
   @Get("/")
-  async getBusinessesByUser(@Context() ctx: Context) {
+  async getBusinessesByUser(@Context("user") user: User) {
     const businesses = await prisma.employee.findMany({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
         business: { NOT: { status: WhitelistStatus.DECLINED } },
         NOT: { whitelistStatus: WhitelistStatus.DECLINED },
       },
@@ -55,7 +56,7 @@ export class BusinessController {
 
   @Get("/business/:id")
   async getBusinesses(
-    @Context() ctx: Context,
+    @Context("user") user: User,
     @PathParams("id") id: string,
     @QueryParams("employeeId") employeeId: string,
   ) {
@@ -127,7 +128,7 @@ export class BusinessController {
         })
       : null;
 
-    if (!employee || employee.userId !== ctx.get("user").id) {
+    if (!employee || employee.userId !== user.id) {
       throw new NotFound("employeeNotFound");
     }
 
@@ -138,14 +139,14 @@ export class BusinessController {
   async updateBusiness(
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
   ) {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId!,
-        userId: ctx.get("user").id,
+        userId: user.id,
         businessId,
         role: {
           as: "OWNER",
@@ -176,14 +177,14 @@ export class BusinessController {
   async deleteBusiness(
     @PathParams("id") businessId: string,
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
+    @Context("user") user: User,
   ) {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     const employee = await prisma.employee.findFirst({
       where: {
         id: data.employeeId,
-        userId: ctx.get("user").id,
+        userId: user.id,
         businessId,
         role: {
           as: "OWNER",

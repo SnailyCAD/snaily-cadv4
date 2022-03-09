@@ -17,7 +17,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Officer, ShouldDoType, User } from ".prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
