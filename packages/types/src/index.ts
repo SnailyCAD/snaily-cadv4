@@ -147,6 +147,7 @@ export interface User {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
+  permissions: number | null;
 }
 
 /**
