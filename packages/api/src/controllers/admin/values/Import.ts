@@ -38,9 +38,9 @@ import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
-export class ValuesController {
+export class ImportValuesViaFileController {
   @Post("/")
-  async patchValueByPathAndId(
+  async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
   ) {
