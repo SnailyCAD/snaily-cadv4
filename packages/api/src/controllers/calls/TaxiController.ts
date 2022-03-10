@@ -45,13 +45,15 @@ export class TaxiController {
   async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: data.creatorId!,
-      },
-    });
+    if (data.creatorId) {
+      const citizen = await prisma.citizen.findUnique({
+        where: {
+          id: data.creatorId!,
+        },
+      });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    }
 
     const call = await prisma.taxiCall.create({
       data: {
