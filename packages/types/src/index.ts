@@ -456,6 +456,7 @@ export interface TowCall {
   deliveryAddressId: string | null;
   plate: string | null;
   model: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
@@ -477,6 +478,7 @@ export interface TaxiCall {
   assignedUnit: Citizen | null;
   location: string;
   postal: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
