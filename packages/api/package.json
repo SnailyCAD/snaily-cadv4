@@ -11,7 +11,7 @@
     "copy-env": "node ../../scripts/copy-env.mjs --api"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.148",
+    "@swc/core": "^1.2.152",
     "@swc/helpers": "^0.3.6",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
@@ -37,21 +37,21 @@
     "@snailycad/schemas": "1.0.0-beta.68",
     "@snailycad/types": "1.0.0-beta.68",
     "@snailycad/utils": "1.0.0-beta.68",
-    "@tsed/common": "^6.105.0",
-    "@tsed/core": "^6.105.0",
-    "@tsed/di": "^6.105.0",
-    "@tsed/exceptions": "^6.105.0",
-    "@tsed/json-mapper": "^6.105.0",
-    "@tsed/platform-express": "^6.105.0",
-    "@tsed/schema": "^6.105.0",
-    "@tsed/socketio": "^6.105.0",
-    "@tsed/swagger": "^6.105.0",
+    "@tsed/common": "^6.105.3",
+    "@tsed/core": "^6.105.3",
+    "@tsed/di": "^6.105.3",
+    "@tsed/exceptions": "^6.105.3",
+    "@tsed/json-mapper": "^6.105.3",
+    "@tsed/platform-express": "^6.105.3",
+    "@tsed/schema": "^6.105.3",
+    "@tsed/socketio": "^6.105.3",
+    "@tsed/swagger": "^6.105.3",
     "bcrypt": "^5.0.1",
     "compression": "1.7.4",
     "cookie": "^0.4.2",
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
-    "discord-api-types": "0.27.3",
+    "discord-api-types": "0.29.0",
     "express": "4.17.3",
     "glob": "^7.2.0",
     "jsonwebtoken": "8.5.1",
@@ -61,6 +61,6 @@
     "prisma": "^3.10.0",
     "qrcode": "^1.5.0",
     "socket.io": "^4.4.1",
-    "undici": "^4.15.0"
+    "undici": "^4.15.1"
   }
 }
