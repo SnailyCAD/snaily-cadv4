@@ -491,6 +491,7 @@ model TowCall {
   deliveryAddressId String?
   plate             String?  @db.VarChar(255)
   model             String?  @db.VarChar(255)
+  name              String?
   description       String?  @db.Text
   descriptionData   Json?
   creator           Citizen? @relation("towCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
@@ -509,6 +510,7 @@ model TaxiCall {
   assignedUnitId  String?
   location        String   @db.VarChar(255)
   postal          String?  @db.Text
+  name            String?
   description     String?  @db.Text
   descriptionData Json?
   creator         Citizen? @relation("taxiCallCreator", fields: [creatorId], references: [id], onDelete: SetNull)
