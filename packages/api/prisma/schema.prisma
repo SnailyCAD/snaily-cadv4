@@ -337,6 +337,7 @@ model Value {
   vehicleFlags                    RegisteredVehicle[]           @relation("vehicleFlags")
   insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
+  FlagValue                       FlagValue[]                   @relation("flagValueToValue")
 }
 
 model PenalCode {
@@ -451,6 +452,13 @@ model WeaponValue {
   value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash    String?
   weapon  Weapon[] @relation("weaponModelToValue")
+}
+
+model FlagValue {
+  id      String         @id @default(cuid())
+  valueId String
+  value   Value          @relation("flagValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type    FlagValueType?
 }
 
 // notifications
@@ -958,7 +966,9 @@ enum ValueType {
   DIVISION
   DRIVERSLICENSE_CATEGORY
   IMPOUND_LOT
+  // VEHICLE_FLAG = deprecated
   VEHICLE_FLAG
+  FLAG
 }
 
 enum DriversLicenseCategoryType {
@@ -1033,6 +1043,11 @@ enum VehicleInspectionStatus {
 enum VehicleTaxStatus {
   TAXED
   UNTAXED
+}
+
+enum FlagValueType {
+  VEHICLE
+  CITIZEN
 }
 
 // other
