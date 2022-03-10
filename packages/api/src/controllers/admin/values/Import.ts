@@ -63,6 +63,10 @@ export class ImportValuesViaFileController {
       throw new BadRequest("couldNotParseBody");
     }
 
+    if (!Array.isArray(body)) {
+      throw new BadRequest("Body must be an array");
+    }
+
     const handler = typeHandlers[type as keyof typeof typeHandlers];
     const data = await handler(body, type);
     return data;
