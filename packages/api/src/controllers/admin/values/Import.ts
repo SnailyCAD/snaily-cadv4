@@ -38,9 +38,9 @@ import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
-export class ValuesController {
+export class ImportValuesViaFileController {
   @Post("/")
-  async patchValueByPathAndId(
+  async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
   ) {
@@ -61,6 +61,10 @@ export class ValuesController {
 
     if (!body) {
       throw new BadRequest("couldNotParseBody");
+    }
+
+    if (!Array.isArray(body)) {
+      throw new BadRequest("Body must be an array");
     }
 
     const handler = typeHandlers[type as keyof typeof typeHandlers];
@@ -258,6 +262,8 @@ export const typeHandlers = {
   LICENSE: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "LICENSE", id),
   VEHICLE_FLAG: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
+  CITIZEN_FLAG: async (body: unknown, id?: string) =>
+    typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
   OFFICER_RANK: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "OFFICER_RANK", id),
 

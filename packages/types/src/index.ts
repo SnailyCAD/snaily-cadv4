@@ -201,6 +201,7 @@ export interface Citizen {
   createdAt: Date;
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
+  flags?: Value<ValueType.CITIZEN_FLAG>[];
 }
 
 /**
@@ -457,6 +458,7 @@ export interface TowCall {
   deliveryAddressId: string | null;
   plate: string | null;
   model: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
@@ -478,6 +480,7 @@ export interface TaxiCall {
   assignedUnit: Citizen | null;
   location: string;
   postal: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
@@ -970,6 +973,7 @@ export enum ValueType {
   DRIVERSLICENSE_CATEGORY = "DRIVERSLICENSE_CATEGORY",
   IMPOUND_LOT = "IMPOUND_LOT",
   VEHICLE_FLAG = "VEHICLE_FLAG",
+  CITIZEN_FLAG = "CITIZEN_FLAG",
 }
 
 export enum ValueLicenseType {

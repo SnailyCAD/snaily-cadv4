@@ -21,6 +21,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 
 export const citizenInclude = {
   user: { select: userProperties },
+  flags: true,
   vehicles: {
     include: {
       flags: true,
