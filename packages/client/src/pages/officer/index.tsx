@@ -139,7 +139,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       ["/leo", { officers: [], citizens: [] }],
       ["/leo/active-officer", null],
       [
-        "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag",
+        "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag",
         [],
       ],
       ["/911-calls", []],

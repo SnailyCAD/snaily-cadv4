@@ -545,6 +545,40 @@ export class LeoController {
     return updated;
   }
 
+  @Put("/citizen-flags/:citizenId")
+  @Description("Update the citizens flags by their id")
+  async updateCitizenFlags(
+    @BodyParams("flags") flags: string[],
+    @PathParams("citizenId") citizenId: string,
+  ) {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: citizenId },
+      select: { id: true, flags: true },
+    });
+
+    if (!citizen) {
+      throw new NotFound("notFound");
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      citizen.flags.map((v) => v.id),
+      flags,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.citizen.update({ where: { id: citizen.id }, data: { flags: v } }),
+      ),
+    );
+
+    const updated = await prisma.citizen.findUnique({
+      where: { id: citizen.id },
+      select: { id: true, flags: true },
+    });
+
+    return updated;
+  }
+
   @Delete("/impounded-vehicles/:id")
   @Description("Remove a vehicle from the impound lot")
   async checkoutImpoundedVehicle(@PathParams("id") id: string) {

@@ -27,6 +27,7 @@ import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
 import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
+import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -60,6 +61,7 @@ export function NameSearchModal() {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
+  const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -150,6 +152,7 @@ export function NameSearchModal() {
 
   const hasWarrants =
     (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+
   const INITIAL_VALUES = {
     name: payloadName ?? "",
   };
@@ -321,18 +324,35 @@ export function NameSearchModal() {
                   </div>
 
                   <div className="w-full">
-                    <ul className="flex flex-col">
-                      <CitizenLicenses citizen={currentResult} />
-                    </ul>
+                    <div>
+                      <ul className="flex flex-col">
+                        <CitizenLicenses citizen={currentResult} />
+                      </ul>
 
-                    <Button
-                      small
-                      type="button"
-                      className="mt-2"
-                      onClick={() => openModal(ModalIds.ManageLicenses)}
-                    >
-                      {t("editLicenses")}
-                    </Button>
+                      <Button
+                        small
+                        type="button"
+                        className="mt-2"
+                        onClick={() => openModal(ModalIds.ManageLicenses)}
+                      >
+                        {t("editLicenses")}
+                      </Button>
+                    </div>
+
+                    <div className="mt-4">
+                      <Infofield label={vT("flags")}>
+                        {currentResult.flags?.map((v) => v.value).join(", ") ?? common("none")}
+                      </Infofield>
+
+                      <Button
+                        small
+                        type="button"
+                        className="mt-2"
+                        onClick={() => openModal(ModalIds.ManageCitizenFlags)}
+                      >
+                        {t("manageCitizenFlags")}
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
@@ -416,6 +436,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal />
             <WeaponSearchModal />
+            <ManageCitizenFlagsModal />
             {currentResult ? (
               <ManageLicensesModal
                 state={state}

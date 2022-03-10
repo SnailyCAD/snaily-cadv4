@@ -29,6 +29,7 @@ interface Context {
   codes10: ContextValue<ValueType.CODES_10, StatusValue>;
   vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
   vehicleFlag: ContextValue<ValueType.VEHICLE_FLAG>;
+  citizenFlag: ContextValue<ValueType.CITIZEN_FLAG>;
   penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
   department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;
@@ -96,7 +97,7 @@ export function normalizeValue(value: ValueType | (string & {})) {
   if (split.length > 1) {
     split = split.map((v, idx) => {
       if (idx > 0) {
-        return [v[0]!.toUpperCase(), v.substr(1).toLowerCase()].join("");
+        return [v[0]!.toUpperCase(), v.substring(1).toLowerCase()].join("");
       }
 
       return v.toLowerCase();

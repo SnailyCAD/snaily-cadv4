@@ -200,6 +200,7 @@ export interface Citizen {
   createdAt: Date;
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
+  flags?: Value<ValueType.CITIZEN_FLAG>[];
 }
 
 /**
