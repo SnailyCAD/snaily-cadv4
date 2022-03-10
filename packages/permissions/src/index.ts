@@ -11,7 +11,8 @@ export function hasPermission(userPermissions: number, toCheck: readonly Permiss
   return !!(toCheckTotal & userPermissions);
 }
 
-export function getPermissions(userPermissions: number) {
+export type PermissionNames = keyof typeof Permissions;
+export function getPermissions(userPermissions: number): Record<PermissionNames, boolean> {
   const permissions: Record<string, boolean> = {};
 
   Object.entries(Permissions).forEach(([name, value]) => {
