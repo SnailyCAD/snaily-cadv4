@@ -1040,11 +1040,6 @@ enum VehicleTaxStatus {
   UNTAXED
 }
 
-enum FlagValueType {
-  VEHICLE
-  CITIZEN
-}
-
 // other
 enum Feature {
   BLEETER

@@ -1,3 +1,6 @@
+-- AlterEnum
+ALTER TYPE "ValueType" ADD VALUE 'CITIZEN_FLAG';
+
 -- CreateTable
 CREATE TABLE "_citizenFlags" (
     "A" TEXT NOT NULL,

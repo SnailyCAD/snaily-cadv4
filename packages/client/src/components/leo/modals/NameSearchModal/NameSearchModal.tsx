@@ -344,14 +344,16 @@ export function NameSearchModal() {
                         {currentResult.flags?.map((v) => v.value).join(", ") ?? common("none")}
                       </Infofield>
 
-                      <Button
-                        small
-                        type="button"
-                        className="mt-2"
-                        onClick={() => openModal(ModalIds.ManageCitizenFlags)}
-                      >
-                        {t("manageCitizenFlags")}
-                      </Button>
+                      {isLeo ? (
+                        <Button
+                          small
+                          type="button"
+                          className="mt-2"
+                          onClick={() => openModal(ModalIds.ManageCitizenFlags)}
+                        >
+                          {t("manageCitizenFlags")}
+                        </Button>
+                      ) : null}
                     </div>
                   </div>
                 </div>
