@@ -132,7 +132,7 @@ function isAxiosError(error: any): error is AxiosError {
 }
 
 function isErrorKey(key: string): key is ErrorMessage {
-  return Object.keys(Common.Errors).some((e) => e === key);
+  return Object.keys(Common.Errors).includes(key);
 }
 
 function getErrorObj(error: unknown) {

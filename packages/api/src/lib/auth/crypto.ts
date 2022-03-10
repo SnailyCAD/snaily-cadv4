@@ -1,6 +1,6 @@
 // https://github.com/calendso/calendso/blob/main/lib/crypto.ts
 import { Buffer } from "node:buffer";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 const ALGORITHM = "aes256";
 const INPUT_ENCODING = "utf8";

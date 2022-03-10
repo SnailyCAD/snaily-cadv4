@@ -1,4 +1,4 @@
-import process from "process";
+import process from "node:process";
 import { REST } from "@discordjs/rest";
 
 export const DISCORD_API_VERSION = "10" as const;

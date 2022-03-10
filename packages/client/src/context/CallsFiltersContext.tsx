@@ -60,7 +60,7 @@ export function CallsFiltersProvider({ children }: ProviderProps) {
 export function useCallsFilters(): Context {
   const context = React.useContext(CallsFiltersContext);
   if (typeof context === "undefined") {
-    throw new Error("`useCallsFilters` must be used within an `CallsFiltersProvider`");
+    throw new TypeError("`useCallsFilters` must be used within an `CallsFiltersProvider`");
   }
 
   return context;

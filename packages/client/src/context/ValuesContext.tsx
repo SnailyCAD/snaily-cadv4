@@ -82,7 +82,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
 export function useValues() {
   const context = React.useContext(ValuesContext);
   if (typeof context === "undefined") {
-    throw new Error("`useValues` must be used within an `ValuesContext`");
+    throw new TypeError("`useValues` must be used within an `ValuesContext`");
   }
 
   return context;
