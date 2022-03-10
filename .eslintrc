@@ -1,5 +1,10 @@
 {
   "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
   "extends": [
     "@casper124578/eslint-config",
     "@casper124578/eslint-config-react",
