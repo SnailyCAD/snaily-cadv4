@@ -262,6 +262,8 @@ export const typeHandlers = {
   LICENSE: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "LICENSE", id),
   VEHICLE_FLAG: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
+  CITIZEN_FLAG: async (body: unknown, id?: string) =>
+    typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
   OFFICER_RANK: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "OFFICER_RANK", id),
 

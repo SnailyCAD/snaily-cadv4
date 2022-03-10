@@ -200,6 +200,7 @@ export interface Citizen {
   createdAt: Date;
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
+  flags?: Value<ValueType.CITIZEN_FLAG>[];
 }
 
 /**
@@ -971,6 +972,7 @@ export enum ValueType {
   DRIVERSLICENSE_CATEGORY = "DRIVERSLICENSE_CATEGORY",
   IMPOUND_LOT = "IMPOUND_LOT",
   VEHICLE_FLAG = "VEHICLE_FLAG",
+  CITIZEN_FLAG = "CITIZEN_FLAG",
 }
 
 export enum ValueLicenseType {
