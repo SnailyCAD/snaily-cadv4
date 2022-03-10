@@ -128,7 +128,9 @@ export default function Tow(props: Props) {
                   {common("viewDescription")}
                 </Button>
               ),
-            caller: call.creator ? `${call.creator.name} ${call.creator.surname}` : "Dispatch",
+            caller: call.creator
+              ? `${call.creator.name} ${call.creator.surname}`
+              : call.name ?? "Dispatch",
             assignedUnit: assignedUnit(call),
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (

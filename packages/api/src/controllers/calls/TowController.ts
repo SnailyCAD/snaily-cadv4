@@ -128,6 +128,7 @@ export class TowController {
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
         ended: data.callCountyService || false,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -184,6 +185,7 @@ export class TowController {
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {

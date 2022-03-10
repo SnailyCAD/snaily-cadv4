@@ -62,6 +62,7 @@ export class TaxiController {
         descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -114,6 +115,7 @@ export class TaxiController {
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
