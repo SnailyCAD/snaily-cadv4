@@ -219,6 +219,7 @@ model Citizen {
   phoneNumber          String?
   dateOfDead           DateTime?
   occupation           String?                       @db.Text
+  flags                Value[]                       @relation("citizenFlags")
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   medicalRecords       MedicalRecord[]
@@ -337,6 +338,7 @@ model Value {
   vehicleFlags                    RegisteredVehicle[]           @relation("vehicleFlags")
   insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
+  citizenFlags                    Citizen[]                     @relation("citizenFlags")
 }
 
 model PenalCode {
@@ -961,6 +963,7 @@ enum ValueType {
   DRIVERSLICENSE_CATEGORY
   IMPOUND_LOT
   VEHICLE_FLAG
+  CITIZEN_FLAG
 }
 
 enum DriversLicenseCategoryType {
