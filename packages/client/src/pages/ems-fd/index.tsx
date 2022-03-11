@@ -41,7 +41,7 @@ const SearchMedicalRecordModal = dynamic(async () => {
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
-  const { signal100Enabled, Component } = useSignal100();
+  const { signal100Enabled, audio, Component } = useSignal100();
 
   const state = useEmsFdState();
   const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
@@ -59,7 +59,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
     <Layout className="dark:text-white">
       <Title>{t("Ems.emsFd")}</Title>
 
-      {signal100Enabled ? <Component /> : null}
+      {signal100Enabled ? <Component audio={audio} /> : null}
 
       <UtilityPanel>
         <div className="px-4">
