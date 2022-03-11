@@ -1,6 +1,7 @@
-import { Permissions, hasPermission } from "@snailycad/permissions";
+import { Permissions, hasPermission, getPermissions } from "@snailycad/permissions";
 import { useAuth } from "context/AuthContext";
 
+export { Permissions };
 export function usePermission() {
   const { user } = useAuth();
 
@@ -10,5 +11,11 @@ export function usePermission() {
     return hasPermission(user.permissions ?? 0, permissionsToCheck);
   }
 
-  return _hasPermission;
+  function _getPermissions() {
+    if (!user) return false;
+    // todo: add default permissions?
+    return getPermissions(user.permissions ?? 0);
+  }
+
+  return { hasPermissions: _hasPermission, getPermissions: _getPermissions };
 }

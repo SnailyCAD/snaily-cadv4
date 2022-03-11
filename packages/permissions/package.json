@@ -29,13 +29,19 @@
     "silent": true
   },
   "exports": {
-    ".": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./permissions": {
-      "default": "./dist/permissions.js",
-      "types": "./dist/permissions.d.ts"
+    ".": "./dist/index.js",
+    "./defaults/*": "./dist/defaults/*",
+    "./permissions": "./dist/permissions.js",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "permissions": [
+        "dist/permissions.d.ts"
+      ],
+      "defaults": [
+        "dist/defaults/index.d.ts"
+      ]
     }
   }
 }

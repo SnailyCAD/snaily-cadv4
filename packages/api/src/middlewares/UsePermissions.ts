@@ -1,4 +1,4 @@
-import { Middleware, MiddlewareMethods, Context } from "@tsed/common";
+import { Middleware, MiddlewareMethods, Context, Req } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
 import type { User } from "@snailycad/types";
@@ -11,11 +11,15 @@ interface RouteData {
 
 @Middleware()
 export class UsePermissionsMiddleware implements MiddlewareMethods {
-  async use(@Context() ctx: Context) {
-    const routeData = ctx.endpoint.get(UsePermissionsMiddleware) as RouteData;
+  async use(@Context() ctx: Context, @Req() req: Req) {
+    const routeDataOrFunc = ctx.endpoint.get(UsePermissionsMiddleware) as
+      | RouteData
+      | UsePermissionsFunc;
     const user = ctx.get("user") as User;
-    console.log({ user });
+    const routeData =
+      typeof routeDataOrFunc === "function" ? routeDataOrFunc(req) : routeDataOrFunc;
 
+    console.log({ user });
     console.log({ routeData });
 
     const hasPerm = hasPermission(
@@ -28,7 +32,8 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
   }
 }
 
-export function UsePermissions(data: RouteData) {
+type UsePermissionsFunc = (request: Req) => RouteData;
+export function UsePermissions(data: RouteData | UsePermissionsFunc) {
   return useDecorators(
     StoreSet(UsePermissionsMiddleware, data),
     UseBefore(UsePermissionsMiddleware),

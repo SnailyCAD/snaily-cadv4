@@ -1,24 +1,50 @@
 import { useRouter } from "next/router";
 import { ChevronDown } from "react-bootstrap-icons";
-import { useAuth } from "context/AuthContext";
 import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export function OfficerDropdown() {
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
-  const { user } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const items = [
     { name: t("myOfficers"), href: "/my-officers" },
     { name: t("myOfficerLogs"), href: "/my-officer-logs" },
-    { name: t("incidents"), href: "/incidents" },
-    { name: t("impoundLot"), href: "/impound-lot" },
-    { name: t("jail"), href: "/jail" },
-    { name: t("callHistory"), href: "/call-history" },
+    {
+      name: t("incidents"),
+      href: "/incidents",
+      show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents]),
+    },
+    {
+      name: t("impoundLot"),
+      href: "/impound-lot",
+      show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot]),
+    },
+    {
+      name: t("jail"),
+      href: "/jail",
+      show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail]),
+    },
+    {
+      name: t("callHistory"),
+      href: "/call-history",
+      show: hasPermissions([Permissions.ViewCallHistory]),
+    },
+    {
+      name: t("manageUnits"),
+      href: "/admin/manage/units",
+      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits]),
+    },
+    {
+      name: t("citizenLogs"),
+      href: "/officer/supervisor/citizen-logs",
+      // show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits]),
+    },
   ];
 
   return (
@@ -38,7 +64,12 @@ export function OfficerDropdown() {
       <Dropdown.LinkItem href="/officer">{t("dashboard")}</Dropdown.LinkItem>
 
       {items.map((item) => {
+        const show = item.show ?? true;
         const path = item.href;
+
+        if (!show) {
+          return null;
+        }
 
         return (
           <Dropdown.LinkItem key={path} href={`/officer${path}`}>
@@ -46,15 +77,6 @@ export function OfficerDropdown() {
           </Dropdown.LinkItem>
         );
       })}
-
-      {user?.isSupervisor ? (
-        <>
-          <Dropdown.LinkItem href="/admin/manage/units">{t("manageUnits")}</Dropdown.LinkItem>
-          <Dropdown.LinkItem href="/officer/supervisor/citizen-logs">
-            {t("citizenLogs")}
-          </Dropdown.LinkItem>
-        </>
-      ) : null}
     </Dropdown>
   );
 }
