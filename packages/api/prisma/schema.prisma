@@ -153,6 +153,7 @@ model User {
   updatedAt                DateTime              @default(now()) @updatedAt
   discordId                String?
   lastDiscordSyncTimestamp DateTime?
+  permissions              BigInt?
 
 
   // relational data

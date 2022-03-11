@@ -18,32 +18,32 @@ export function OfficerDropdown() {
     {
       name: t("incidents"),
       href: "/incidents",
-      show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents]),
+      show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents], true),
     },
     {
       name: t("impoundLot"),
       href: "/impound-lot",
-      show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot]),
+      show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot], true),
     },
     {
       name: t("jail"),
       href: "/jail",
-      show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail]),
+      show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail], true),
     },
     {
       name: t("callHistory"),
       href: "/call-history",
-      show: hasPermissions([Permissions.ViewCallHistory]),
+      show: hasPermissions([Permissions.ViewCallHistory], true),
     },
     {
       name: t("manageUnits"),
       href: "/admin/manage/units",
-      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits]),
+      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
     },
     {
       name: t("citizenLogs"),
       href: "/officer/supervisor/citizen-logs",
-      // show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits]),
+      // show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
     },
   ];
 

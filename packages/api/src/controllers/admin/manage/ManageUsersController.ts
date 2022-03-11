@@ -7,7 +7,7 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BAN_SCHEMA, UPDATE_USER_SCHEMA } from "@snailycad/schemas";
+import { BAN_SCHEMA, UPDATE_USER_SCHEMA, PERMISSIONS_SCHEMA } from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
@@ -66,6 +66,35 @@ export class ManageUsersController {
     });
 
     return user;
+  }
+
+  @Put("/permissions/:id")
+  @UsePermissions({
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
+  async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(PERMISSIONS_SCHEMA, body);
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
+    }
+
+    const permissions = this.parsePermissions(data);
+
+    const updated = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: { permissions },
+      select: userProperties,
+    });
+
+    return updated;
   }
 
   @Put("/:id")
@@ -265,5 +294,22 @@ export class ManageUsersController {
     }
 
     return true;
+  }
+
+  protected parsePermissions(data: Record<string, number>) {
+    let updatedPermissions = 0;
+    const entries = Object.entries(Permissions);
+
+    entries.forEach(([name, value]) => {
+      if (typeof name !== "string") return;
+      if (typeof value === "string") return;
+
+      const updatedPermission = data[name];
+      if (!updatedPermission) return;
+
+      updatedPermissions |= value;
+    });
+
+    return updatedPermissions;
   }
 }
