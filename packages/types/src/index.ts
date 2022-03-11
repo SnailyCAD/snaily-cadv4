@@ -147,6 +147,8 @@ export interface User {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
+  soundSettingsId: string | null;
+  soundSettings?: UserSoundSettings | null;
 }
 
 /**
@@ -157,6 +159,16 @@ export interface User2FA {
   id: string;
   secret: string;
   userId: string;
+}
+
+/**
+ * Model UserSoundSettings
+ *
+ */
+export interface UserSoundSettings {
+  id: string;
+  panicButton: boolean;
+  signal100: boolean;
 }
 
 /**

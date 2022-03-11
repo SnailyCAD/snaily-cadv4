@@ -34,7 +34,7 @@ export class AccountController {
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
+    const { soundSettings, username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -46,6 +46,22 @@ export class AccountController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
+    let soundSettingsId = null;
+    if (soundSettings) {
+      const updateCreateData = {
+        panicButton: soundSettings.panicButton,
+        signal100: soundSettings.signal100,
+      };
+
+      const updated = await prisma.userSoundSettings.upsert({
+        where: { id: String(user.soundSettingsId) },
+        create: updateCreateData,
+        update: updateCreateData,
+      });
+
+      soundSettingsId = updated.id;
+    }
+
     const updated = await prisma.user.update({
       where: {
         id: user.id,
@@ -55,6 +71,7 @@ export class AccountController {
         isDarkTheme,
         statusViewMode,
         tableActionsAlignment,
+        soundSettingsId,
       },
       select: userProperties,
     });
