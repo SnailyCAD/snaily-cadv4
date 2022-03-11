@@ -207,7 +207,13 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
+      const owner = await prisma.citizen.findUnique({
+        where: { id: vehicle.citizenId },
+      });
+
+      // registered vehicles may not have `userId`
+      // therefore we should use `citizen`
+      canManageInvariant(owner?.userId, user, new NotFound("notFound"));
     }
     await prisma.registeredVehicle.delete({
       where: {
