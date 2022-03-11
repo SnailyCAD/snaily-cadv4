@@ -148,6 +148,8 @@ export interface User {
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
   permissions: bigint | null;
+  soundSettingsId: string | null;
+  soundSettings?: UserSoundSettings | null;
 }
 
 /**
@@ -158,6 +160,16 @@ export interface User2FA {
   id: string;
   secret: string;
   userId: string;
+}
+
+/**
+ * Model UserSoundSettings
+ *
+ */
+export interface UserSoundSettings {
+  id: string;
+  panicButton: boolean;
+  signal100: boolean;
 }
 
 /**

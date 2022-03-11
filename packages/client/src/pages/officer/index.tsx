@@ -70,8 +70,8 @@ export default function OfficerDashboard({
   const { setCalls, setBolos, setActiveOfficers, activeOfficers, setActiveIncidents } =
     useDispatchState();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component } = useSignal100();
-  const { unit, PanicButton } = usePanicButton();
+  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
+  const { unit, audio, PanicButton } = usePanicButton();
   const { isOpen } = useModal();
 
   React.useEffect(() => {
@@ -88,8 +88,8 @@ export default function OfficerDashboard({
     <Layout className="dark:text-white">
       <Title>{t("officer")}</Title>
 
-      {signal100Enabled ? <Component /> : null}
-      {unit ? <PanicButton unit={unit} /> : null}
+      {signal100Enabled ? <Component audio={signal100Audio} /> : null}
+      {unit ? <PanicButton audio={audio} unit={unit} /> : null}
 
       <UtilityPanel>
         <div className="px-4">

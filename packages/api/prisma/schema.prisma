@@ -154,6 +154,8 @@ model User {
   discordId                String?
   lastDiscordSyncTimestamp DateTime?
   permissions              BigInt?
+  soundSettings            UserSoundSettings?    @relation(fields: [soundSettingsId], references: [id])
+  soundSettingsId  String?
 
 
   // relational data
@@ -175,6 +177,13 @@ model User {
   ActiveDispatchers    ActiveDispatchers[]
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
+}
+
+model UserSoundSettings {
+  id          String  @id @default(uuid())
+  panicButton Boolean @default(true)
+  signal100   Boolean @default(true)
+  User        User[]
 }
 
 model User2FA {
