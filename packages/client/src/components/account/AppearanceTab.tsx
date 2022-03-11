@@ -35,6 +35,7 @@ export function AppearanceTab() {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
+    soundSettings: user.soundSettings ?? { panicButton: true, signal100: true },
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -81,6 +82,26 @@ export function AppearanceTab() {
                 name="tableActionsAlignment"
               />
             </FormField>
+
+            <div className="mb-5">
+              <h3 className="text-2xl font-semibold mb-3">Sounds</h3>
+
+              <FormField label="Panic Button" checkbox>
+                <Toggle
+                  toggled={values.soundSettings.panicButton}
+                  onClick={handleChange}
+                  name="soundSettings.panicButton"
+                />
+              </FormField>
+
+              <FormField label="Signal 100" checkbox>
+                <Toggle
+                  toggled={values.soundSettings.signal100}
+                  onClick={handleChange}
+                  name="soundSettings.signal100"
+                />
+              </FormField>
+            </div>
 
             <Button
               className="flex items-center gap-2"

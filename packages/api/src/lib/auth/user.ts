@@ -28,6 +28,8 @@ export const userProperties = {
   discordId: true,
   tableActionsAlignment: true,
   lastDiscordSyncTimestamp: true,
+  soundSettingsId: true,
+  soundSettings: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
