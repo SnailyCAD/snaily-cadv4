@@ -25,9 +25,10 @@ interface Props {
   isTow?: boolean;
   onUpdate?: (old: CallData, newC: CallData) => void;
   onDelete?: (call: CallData) => void;
+  onClose?(): void;
 }
 
-export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props) {
+export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
@@ -82,7 +83,12 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
       }
     }
 
+    handleClose();
+  }
+
+  function handleClose() {
     closeModal(ModalIds.ManageTowCall);
+    onClose?.();
   }
 
   const INITIAL_VALUES = {
@@ -97,7 +103,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.ManageTowCall)}
+      onClose={handleClose}
       title={title}
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
@@ -149,11 +155,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
                 </Button>
               ) : null}
               <div className="flex items-center">
-                <Button
-                  type="reset"
-                  onClick={() => closeModal(ModalIds.ManageTowCall)}
-                  variant="cancel"
-                >
+                <Button type="reset" onClick={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button
