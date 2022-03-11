@@ -147,7 +147,7 @@ export interface User {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
-  permissions: bigint | null;
+  permissions: number | null;
   soundSettingsId: string | null;
   soundSettings?: UserSoundSettings | null;
 }

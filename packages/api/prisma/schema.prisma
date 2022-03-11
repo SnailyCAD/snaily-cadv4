@@ -153,7 +153,7 @@ model User {
   updatedAt                DateTime              @default(now()) @updatedAt
   discordId                String?
   lastDiscordSyncTimestamp DateTime?
-  permissions              BigInt?
+  permissions              Int?
   soundSettings            UserSoundSettings?    @relation(fields: [soundSettingsId], references: [id])
   soundSettingsId  String?
 
