@@ -14,10 +14,11 @@ import { useRouter } from "next/router";
 
 interface Props {
   call: TowCall | TaxiCall | null;
-  onSuccess: (old: TowCall | TaxiCall, newC: TowCall | TaxiCall) => void;
+  onSuccess(old: TowCall | TaxiCall, newC: TowCall | TaxiCall): void;
+  onClose?(): void;
 }
 
-export function AssignToCallModal({ call, onSuccess }: Props) {
+export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -54,11 +55,16 @@ export function AssignToCallModal({ call, onSuccess }: Props) {
     }
   }
 
+  function handleClose() {
+    closeModal(ModalIds.AssignToTowCall);
+    onClose?.();
+  }
+
   return (
     <Modal
       title={t("selectUnit")}
       isOpen={isOpen(ModalIds.AssignToTowCall)}
-      onClose={() => closeModal(ModalIds.AssignToTowCall)}
+      onClose={handleClose}
       className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -78,11 +84,7 @@ export function AssignToCallModal({ call, onSuccess }: Props) {
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.AssignToTowCall)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button
