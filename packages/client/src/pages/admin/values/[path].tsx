@@ -180,7 +180,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 
         <div className="flex gap-2">
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <OptionsDropdown values={values} />
+          <OptionsDropdown type={type} values={values} />
         </div>
       </header>
 
