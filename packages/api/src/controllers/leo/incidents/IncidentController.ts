@@ -11,6 +11,7 @@ import type { Officer } from ".prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -29,6 +30,10 @@ export class IncidentController {
 
   @Get("/")
   @Description("Get all the created incidents")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async getAllIncidents() {
     const incidents = await prisma.leoIncident.findMany({
       where: { NOT: { isActive: true } },
@@ -44,6 +49,10 @@ export class IncidentController {
 
   @UseBefore(ActiveOfficer)
   @Post("/")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async createIncident(
     @BodyParams() body: unknown,
     @Context("activeOfficer") officer: Officer | null,
@@ -85,6 +94,10 @@ export class IncidentController {
 
   @UseBefore(ActiveOfficer)
   @Put("/:id")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async updateIncident(@BodyParams() body: unknown, @PathParams("id") incidentId: string) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
 
@@ -145,6 +158,10 @@ export class IncidentController {
 
   @Delete("/:id")
   @Description("Delete an incident by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isSupervisor,
+  })
   async deleteIncident(@PathParams("id") incidentId: string) {
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },

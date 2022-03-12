@@ -7,6 +7,7 @@ import { Forbidden } from "@tsed/exceptions";
 
 interface RouteData {
   permissions: Permissions[];
+  fallback: ((user: User) => boolean) | boolean;
 }
 
 @Middleware()
