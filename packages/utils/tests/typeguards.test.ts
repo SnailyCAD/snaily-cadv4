@@ -33,6 +33,13 @@ const LICENSE_VALUE = {
   createdAt: new Date(),
 } as Value<ValueType.LICENSE>;
 
+const PENAL_CODE_VALUE = {
+  title: "Hello world",
+  description: "Some text here",
+  warningApplicableId: null,
+  warningApplicable: "xxx",
+} as any;
+
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
@@ -75,6 +82,14 @@ test("typeguards.isDivisionValue -> DIVISION_VALUE -> true", () => {
 
 test("typeguards.isEmployeeValue -> EMPLOYEE_VALUE -> true", () => {
   expect(typeguards.isEmployeeValue(EMPLOYEE_VALUE)).toBe(true);
+});
+
+test("typeguards.isPenalCodeValue -> PENAL_CODE_VALUE -> true", () => {
+  expect(typeguards.isPenalCodeValue(PENAL_CODE_VALUE)).toBe(true);
+});
+
+test("typeguards.isBaseValue -> PENAL_CODE_VALUE -> false", () => {
+  expect(typeguards.isBaseValue(PENAL_CODE_VALUE)).toBe(false);
 });
 
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {
