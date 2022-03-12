@@ -23,6 +23,9 @@ import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
 import { DangerZone } from "components/admin/manage/users/DangerZone";
 import { Title } from "components/shared/Title";
+import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
 
 interface Props {
   user: User | null;
@@ -34,6 +37,7 @@ export default function ManageCitizens(props: Props) {
   const common = useTranslations("Common");
   const router = useRouter();
   const { user: session } = useAuth();
+  const { openModal } = useModal();
 
   React.useEffect(() => {
     if (!user) {
@@ -132,6 +136,14 @@ export default function ManageCitizens(props: Props) {
                 </FormField>
               </FormRow>
 
+              <Button
+                type="button"
+                className="my-5"
+                onClick={() => openModal(ModalIds.ManagePermissions)}
+              >
+                Manage Permissions
+              </Button>
+
               <FormRow>
                 <FormField optional errorMessage={errors.steamId} label="Steam ID">
                   <Input name="steamId" onChange={handleChange} value={values.steamId} />
@@ -164,6 +176,7 @@ export default function ManageCitizens(props: Props) {
         </Formik>
 
         <BanArea setUser={setUser} user={user} />
+        <ManagePermissionsModal user={user} />
         {user.rank !== "OWNER" ? <DangerZone user={user} /> : null}
       </div>
     </AdminLayout>

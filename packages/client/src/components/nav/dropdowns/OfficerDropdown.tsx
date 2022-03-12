@@ -13,26 +13,26 @@ export function OfficerDropdown() {
   const { hasPermissions } = usePermission();
 
   const items = [
-    { name: t("myOfficers"), href: "/my-officers" },
-    { name: t("myOfficerLogs"), href: "/my-officer-logs" },
+    { name: t("myOfficers"), href: "/officer/my-officers" },
+    { name: t("myOfficerLogs"), href: "/officer/my-officer-logs" },
     {
       name: t("incidents"),
-      href: "/incidents",
+      href: "/officer/incidents",
       show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents], true),
     },
     {
       name: t("impoundLot"),
-      href: "/impound-lot",
+      href: "/officer/impound-lot",
       show: hasPermissions([Permissions.ManageImpoundLot, Permissions.ViewImpoundLot], true),
     },
     {
       name: t("jail"),
-      href: "/jail",
+      href: "/officer/jail",
       show: hasPermissions([Permissions.ManageJail, Permissions.ViewJail], true),
     },
     {
       name: t("callHistory"),
-      href: "/call-history",
+      href: "/officer/call-history",
       show: hasPermissions([Permissions.ViewCallHistory], true),
     },
     {
@@ -72,7 +72,7 @@ export function OfficerDropdown() {
         }
 
         return (
-          <Dropdown.LinkItem key={path} href={`/officer${path}`}>
+          <Dropdown.LinkItem key={path} href={path}>
             {item.name}
           </Dropdown.LinkItem>
         );

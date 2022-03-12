@@ -30,6 +30,7 @@ export const userProperties = {
   lastDiscordSyncTimestamp: true,
   soundSettingsId: true,
   soundSettings: true,
+  permissions: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
