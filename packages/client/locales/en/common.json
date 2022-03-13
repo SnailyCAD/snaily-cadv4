@@ -46,7 +46,8 @@
     "show": "Show",
     "filters": "Filters",
     "openInSearch": "Open in search",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "success": "Success"
   },
   "Nav": {
     "citizen": "Citizen",
