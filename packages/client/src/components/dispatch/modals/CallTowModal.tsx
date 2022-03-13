@@ -11,9 +11,9 @@ import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
+import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import type { Full911Call } from "state/dispatchState";
 import { useEmsFdState } from "state/emsFdState";
 import { useLeoState } from "state/leoState";
@@ -48,8 +48,11 @@ export function DispatchCallTowModal({ call }: Props) {
     });
 
     if (json.id) {
-      // todo: add translation
-      toast.success("Created.");
+      toastMessage({
+        title: common("success"),
+        message: t("Calls.towCallCreated"),
+        icon: "success",
+      });
     }
 
     closeModal(ModalIds.ManageTowCall);
