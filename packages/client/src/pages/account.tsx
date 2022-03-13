@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { canUseDiscordAuth } from "lib/utils";
 
 const AccountSettingsTab = dynamic(async () => {
@@ -42,7 +42,7 @@ export default function Account() {
 
   React.useEffect(() => {
     if (error && mounted) {
-      toastError({ message: error });
+      toastMessage({ message: error });
     }
   }, [error, mounted]);
 

@@ -13,7 +13,7 @@ import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
 import { type FullBusiness, useBusinessState } from "state/businessState";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
@@ -46,7 +46,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
       if (!json.business.whitelisted) {
         router.push(`/business/${json.businessId}/${json.id}`);
       } else {
-        toastError({ icon: null, message: t("businessIsWhitelisted") });
+        toastMessage({ icon: null, message: t("businessIsWhitelisted") });
       }
     }
   }

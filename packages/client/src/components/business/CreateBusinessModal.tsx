@@ -16,7 +16,7 @@ import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
 import type { FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
@@ -44,7 +44,7 @@ export function CreateBusinessModal({ onCreate }: Props) {
 
     if (json.id) {
       if (json.business.status === WhitelistStatus.PENDING) {
-        toastError({ icon: null, message: error("businessCreatedButPending") });
+        toastMessage({ icon: null, message: error("businessCreatedButPending") });
       } else {
         router.push(`/business/${json.id}/${json.employee?.id}`);
       }

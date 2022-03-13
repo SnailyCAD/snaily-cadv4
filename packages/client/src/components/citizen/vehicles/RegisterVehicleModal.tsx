@@ -23,6 +23,7 @@ import { useBusinessState } from "state/businessState";
 import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -83,6 +84,11 @@ export function RegisterVehicleModal({
       });
 
       if (json?.id) {
+        toastMessage({
+          title: common("success"),
+          message: tVehicle("successVehicleRegistered", { plate: values.plate }),
+          icon: "success",
+        });
         onCreate?.(json);
       }
     }

@@ -17,6 +17,7 @@ import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   weapon: Weapon | null;
@@ -64,6 +65,11 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       });
 
       if (json?.id) {
+        toastMessage({
+          title: common("success"),
+          message: tWeapon("successWeaponRegistered"),
+          icon: "success",
+        });
         onCreate?.(json);
       }
     }

@@ -20,6 +20,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   record?: Record | null;
@@ -39,16 +40,19 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       isEdit,
       title: isEdit ? "editTicket" : "createTicket",
       id: id ?? ModalIds.CreateTicket,
+      success: "successCreateTicket",
     },
     [RecordType.ARREST_REPORT]: {
       isEdit,
       title: isEdit ? "editArrestReport" : "createArrestReport",
       id: id ?? ModalIds.CreateArrestReport,
+      success: "successCreateArrestReport",
     },
     [RecordType.WRITTEN_WARNING]: {
       isEdit,
       title: isEdit ? "editWrittenWarning" : "createWrittenWarning",
       id: id ?? ModalIds.CreateWrittenWarning,
+      success: "successCreateWarning",
     },
   };
 
@@ -98,6 +102,12 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       });
 
       if (json.id) {
+        toastMessage({
+          title: common("success"),
+          message: t(data[type].success, { citizen: values.citizenName }),
+          icon: "success",
+        });
+
         closeModal(data[type].id);
       }
     }
