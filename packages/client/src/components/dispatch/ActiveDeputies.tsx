@@ -61,6 +61,7 @@ export function ActiveDeputies() {
             className={classNames("px-1.5 hover:bg-dark-bg", showEmsFilters && "bg-dark-bg")}
             onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
             title={common("filters")}
+            disabled={activeDeputies.length <= 0}
           >
             <Filter aria-label={common("filters")} />
           </Button>

@@ -13,6 +13,8 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
+import Link from "next/link";
+import { Button } from "components/Button";
 
 interface Props {
   employee: FullEmployee | null;
@@ -81,6 +83,12 @@ export default function BusinessId(props: Props) {
         <h1 className="text-3xl font-semibold">
           {currentBusiness.name} - {common("manage")}
         </h1>
+
+        <div>
+          <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}`}>
+            <Button>{common("goBack")}</Button>
+          </Link>
+        </div>
       </header>
 
       <div className="mt-3">

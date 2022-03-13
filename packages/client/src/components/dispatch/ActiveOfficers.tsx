@@ -67,6 +67,7 @@ export function ActiveOfficers() {
             className={classNames("px-1.5 hover:bg-dark-bg", showLeoFilters && "bg-dark-bg")}
             onClick={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
+            disabled={activeOfficers.length <= 0}
           >
             <Filter aria-label={common("filters")} />
           </Button>
