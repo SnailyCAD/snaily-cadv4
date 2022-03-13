@@ -73,15 +73,32 @@ export function ManageCitizenForm({
     postal: citizen?.postal ?? "",
     occupation: citizen?.occupation ?? "",
 
-    // only for /citizen/create
-    driversLicense: "",
-    pilotLicense: "",
-    weaponLicense: "",
-    waterLicense: null,
-    driversLicenseCategory: null,
-    pilotLicenseCategory: null,
-    waterLicenseCategory: null,
-    ccw: "",
+    driversLicense: citizen?.driversLicenseId ?? null,
+    pilotLicense: citizen?.pilotLicenseId ?? null,
+    weaponLicense: citizen?.weaponLicenseId ?? null,
+    waterLicense: citizen?.waterLicenseId ?? null,
+    ccw: citizen?.ccwId ?? null,
+    driversLicenseCategory:
+      citizen?.dlCategory
+        .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
+        .map((v) => ({
+          value: v.id,
+          label: v.value.value,
+        })) ?? [],
+    pilotLicenseCategory:
+      citizen?.dlCategory
+        .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
+        .map((v) => ({
+          value: v.id,
+          label: v.value.value,
+        })) ?? [],
+    waterLicenseCategory:
+      citizen?.dlCategory
+        .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+        .map((v) => ({
+          value: v.id,
+          label: v.value.value,
+        })) ?? [],
   };
 
   async function handleSubmit(
@@ -232,7 +249,7 @@ export function ManageCitizenForm({
                 />
 
                 <FormField
-                  errorMessage={errors.driversLicenseCategory}
+                  errorMessage={errors.driversLicenseCategory as string}
                   className="mt-2"
                   label={t("driversLicenseCategory")}
                 >
@@ -288,7 +305,7 @@ export function ManageCitizenForm({
                 />
 
                 <FormField
-                  errorMessage={errors.pilotLicenseCategory}
+                  errorMessage={errors.pilotLicenseCategory as string}
                   className="mt-2"
                   label={t("pilotLicenseCategory")}
                 >
@@ -325,7 +342,7 @@ export function ManageCitizenForm({
                 />
 
                 <FormField
-                  errorMessage={errors.waterLicenseCategory}
+                  errorMessage={errors.waterLicenseCategory as string}
                   className="mt-2"
                   label={t("waterLicenseCategory")}
                 >

@@ -122,9 +122,9 @@ export default function CitizenLogs({ logs: data }: Props) {
                 return {
                   citizen: `${item.citizen.name} ${item.citizen.surname}`,
                   actions: (
-                    <>
-                      <Button onClick={() => setCurrentLog(item)}>{common("view")}</Button>
-                    </>
+                    <Button small onClick={() => setCurrentLog(item)}>
+                      {common("view")}
+                    </Button>
                   ),
                 };
               })}

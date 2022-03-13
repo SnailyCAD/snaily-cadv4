@@ -5,14 +5,20 @@ interface Props {
   children: React.ReactNode;
 }
 
+enum Colors {
+  GREEN = "#3fc89c",
+  ORANGE = "#ffb55b",
+  RED = "#ff7b82",
+}
+
 export function Status({ state, children }: Props) {
   const colors = {
-    [WhitelistStatus.ACCEPTED]: "#3fc89c",
-    [ExpungementRequestStatus.ACCEPTED]: "#3fc89c",
-    [WhitelistStatus.PENDING]: "#ffb55b",
-    [ExpungementRequestStatus.PENDING]: "#ffb55b",
-    [WhitelistStatus.DECLINED]: "#ff7b82",
-    [ExpungementRequestStatus.DENIED]: "#ff7b82",
+    [WhitelistStatus.ACCEPTED]: Colors.GREEN,
+    [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
+    [WhitelistStatus.PENDING]: Colors.ORANGE,
+    [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
+    [WhitelistStatus.DECLINED]: Colors.RED,
+    [ExpungementRequestStatus.DENIED]: Colors.RED,
   };
 
   return (
