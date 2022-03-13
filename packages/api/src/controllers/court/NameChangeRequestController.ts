@@ -34,6 +34,12 @@ export class NameChangeRequestController {
       throw new NotFound("citizenNotFound");
     }
 
+    const prevFullname = `${citizen.name} ${citizen.surname}`;
+    const newFullname = `${data.newName} ${data.newSurname}`;
+    if (prevFullname === newFullname) {
+      throw new ExtendedBadRequest({ citizenId: "nameChangeRequestNotNew" });
+    }
+
     const existing = await prisma.nameChangeRequest.findFirst({
       where: {
         citizenId: data.citizenId,

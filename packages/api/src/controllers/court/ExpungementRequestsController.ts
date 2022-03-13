@@ -15,7 +15,7 @@ export const expungementRequestInclude = {
 
 @Controller("/expungement-requests")
 @UseBeforeEach(IsAuth)
-export class CourtController {
+export class ExpungementRequestsController {
   @Get("/")
   async getRequestPerUser(@Context("user") user: User) {
     const requests = await prisma.expungementRequest.findMany({
