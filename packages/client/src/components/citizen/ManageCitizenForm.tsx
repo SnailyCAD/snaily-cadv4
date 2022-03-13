@@ -84,21 +84,21 @@ export function ManageCitizenForm({
         .map((v) => ({
           value: v.id,
           label: v.value.value,
-        })) ?? [],
+        })) ?? null,
     pilotLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
         .map((v) => ({
           value: v.id,
           label: v.value.value,
-        })) ?? [],
+        })) ?? null,
     waterLicenseCategory:
       citizen?.dlCategory
         .filter((v) => v.type === DriversLicenseCategoryType.WATER)
         .map((v) => ({
           value: v.id,
           label: v.value.value,
-        })) ?? [],
+        })) ?? null,
   };
 
   async function handleSubmit(
