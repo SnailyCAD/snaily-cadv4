@@ -122,7 +122,7 @@ export default function CitizenId() {
             </Infofield>
 
             <Infofield label={t("address")}>{formatCitizenAddress(citizen)}</Infofield>
-            <Infofield label={t("phoneNumber")}>{citizen.phoneNumber ?? common("none")}</Infofield>
+            <Infofield label={t("phoneNumber")}>{citizen.phoneNumber || common("none")}</Infofield>
 
             <ManageOccupationModal occupation={citizen.occupation} />
           </div>
@@ -153,7 +153,7 @@ export default function CitizenId() {
         <RecordsArea records={citizen.Record} />
       </div>
 
-      <CitizenImageModal />
+      <CitizenImageModal citizen={citizen} />
 
       {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
         <AlertModal

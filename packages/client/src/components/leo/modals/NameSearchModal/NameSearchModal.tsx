@@ -28,6 +28,7 @@ import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
 import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
+import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -274,11 +275,17 @@ export function NameSearchModal() {
                 <div className="flex">
                   <div className="mr-2 min-w-[100px]">
                     {currentResult.imageId ? (
-                      <img
-                        className="rounded-full w-[100px] h-[100px] object-cover"
-                        draggable={false}
-                        src={makeImageUrl("citizens", currentResult.imageId)}
-                      />
+                      <button
+                        type="button"
+                        onClick={() => openModal(ModalIds.CitizenImage)}
+                        className="cursor-pointer"
+                      >
+                        <img
+                          className="rounded-full w-[100px] h-[100px] object-cover"
+                          draggable={false}
+                          src={makeImageUrl("citizens", currentResult.imageId)}
+                        />
+                      </button>
                     ) : (
                       <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
                     )}
@@ -440,11 +447,14 @@ export function NameSearchModal() {
             <WeaponSearchModal />
             <ManageCitizenFlagsModal />
             {currentResult ? (
-              <ManageLicensesModal
-                state={state}
-                onSubmit={handleLicensesSubmit}
-                citizen={currentResult}
-              />
+              <>
+                <ManageLicensesModal
+                  state={state}
+                  onSubmit={handleLicensesSubmit}
+                  citizen={currentResult}
+                />
+                <CitizenImageModal citizen={currentResult} />
+              </>
             ) : null}
           </Form>
         )}

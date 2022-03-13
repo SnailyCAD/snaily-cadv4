@@ -70,7 +70,7 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
           )}
           <span className="font-semibold">{t("occupation")}: </span>
         </span>
-        <span className="max-w-[400px]">{occupation ?? common("none")}</span>
+        <span className="max-w-[400px]">{occupation || common("none")}</span>
       </p>
 
       {isLeo ? null : (

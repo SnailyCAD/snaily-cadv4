@@ -1,11 +1,14 @@
+import type { Citizen } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "context/ModalContext";
 import { useImageUrl } from "hooks/useImageUrl";
 import { ModalIds } from "types/ModalIds";
 
-export function CitizenImageModal() {
-  const { citizen } = useCitizen(false);
+interface Props {
+  citizen: Citizen;
+}
+
+export function CitizenImageModal({ citizen }: Props) {
   const { isOpen, closeModal } = useModal();
   const { makeImageUrl } = useImageUrl();
 
