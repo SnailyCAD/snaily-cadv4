@@ -27,6 +27,26 @@ export class ManageCitizensController {
     return citizens;
   }
 
+  @Get("/records-logs")
+  async getRecordLogsForCitizen() {
+    const citizens = await prisma.recordLog.findMany({
+      include: {
+        warrant: { include: { officer: { include: leoProperties } } },
+        records: {
+          include: {
+            officer: { include: leoProperties },
+            violations: { include: { penalCode: true } },
+          },
+        },
+        citizen: {
+          include: { user: { select: userProperties }, gender: true, ethnicity: true },
+        },
+      },
+    });
+
+    return citizens;
+  }
+
   @Get("/:id")
   @Description("Get a citizen by its id")
   async getCitizen(@PathParams("id") id: string) {
@@ -70,26 +90,6 @@ export class ManageCitizensController {
     });
 
     return citizen;
-  }
-
-  @Get("/records-logs")
-  async getRecordLogsForCitizen() {
-    const citizens = await prisma.recordLog.findMany({
-      include: {
-        warrant: { include: { officer: { include: leoProperties } } },
-        records: {
-          include: {
-            officer: { include: leoProperties },
-            violations: { include: { penalCode: true } },
-          },
-        },
-        citizen: {
-          include: { user: { select: userProperties }, gender: true, ethnicity: true },
-        },
-      },
-    });
-
-    return citizens;
   }
 
   @Delete("/:id")
