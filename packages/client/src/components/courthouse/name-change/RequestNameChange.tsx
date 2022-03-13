@@ -95,8 +95,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {/* {t("request")} */}
-                do
+                {t("request")}
               </Button>
             </footer>
           </Form>
