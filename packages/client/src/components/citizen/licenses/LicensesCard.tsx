@@ -9,7 +9,7 @@ import { Infofield } from "components/shared/Infofield";
 import { DriversLicenseCategoryType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 
-const types = ["driversLicense", "pilotLicense", "weaponLicense", "waterLicense", "ccw"] as const;
+const types = ["driversLicense", "pilotLicense", "weaponLicense", "waterLicense"] as const;
 
 export function LicensesCard() {
   const { openModal, closeModal } = useModal();
@@ -26,6 +26,7 @@ export function LicensesCard() {
         driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
         pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
         waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value),
       },
     });
 
@@ -61,7 +62,7 @@ export function LicensesCard() {
 interface Props {
   citizen: Pick<
     CitizenWithVehAndWep,
-    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "ccw" | "waterLicense"
+    "dlCategory" | "driversLicense" | "pilotLicense" | "weaponLicense" | "waterLicense"
   >;
 }
 
@@ -74,6 +75,7 @@ export function CitizenLicenses({ citizen }: Props) {
     driversLicense: DriversLicenseCategoryType.AUTOMOTIVE,
     pilotLicense: DriversLicenseCategoryType.AVIATION,
     waterLicense: DriversLicenseCategoryType.WATER,
+    weaponLicense: DriversLicenseCategoryType.FIREARM,
   };
 
   return (
@@ -82,8 +84,7 @@ export function CitizenLicenses({ citizen }: Props) {
         const category =
           categoryTypes[type] && citizen.dlCategory.filter((v) => v.type === categoryTypes[type]);
 
-        const returnNull = ["weaponLicense", "ccw"].includes(type) && !WEAPON_REGISTRATION;
-
+        const returnNull = type === "weaponLicense" && !WEAPON_REGISTRATION;
         if (returnNull) {
           return null;
         }
