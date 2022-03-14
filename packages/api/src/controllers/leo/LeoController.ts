@@ -22,7 +22,10 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { citizenInclude } from "controllers/citizen/CitizenController";
+import {
+  citizenInclude,
+  updateCitizenLicenseCategories,
+} from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
 import type { MiscCadSettings, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
@@ -445,22 +448,7 @@ export class LeoController {
       throw new NotFound("notFound");
     }
 
-    const newArr = [
-      ...(data.driversLicenseCategory ?? []),
-      ...(data.pilotLicenseCategory ?? []),
-      ...(data.waterLicenseCategory ?? []),
-      ...(data.firearmLicenseCategory ?? []),
-    ];
-    const disconnectConnectArr = manyToManyHelper(
-      citizen.dlCategory.map((v) => v.id),
-      newArr,
-    );
-
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
-      ),
-    );
+    await updateCitizenLicenseCategories(citizen, data);
 
     const updated = await prisma.citizen.update({
       where: {
