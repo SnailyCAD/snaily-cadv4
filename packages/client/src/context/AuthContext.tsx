@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
 import { cad as CAD, Rank, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
-import { useIsFeatureEnabled } from "lib/utils";
+import { useIsRouteFeatureEnabled } from "hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 
@@ -44,7 +44,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   const [isForbidden, setForbidden] = React.useState(false);
   const router = useRouter();
 
-  const isEnabled = useIsFeatureEnabled(cad ?? {});
+  const isEnabled = useIsRouteFeatureEnabled(cad ?? {});
 
   const handleGetUser = React.useCallback(async () => {
     getSessionUser()

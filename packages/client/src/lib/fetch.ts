@@ -3,7 +3,7 @@ import { serialize } from "cookie";
 import type { IncomingMessage } from "connect";
 import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { IFRAME_COOKIE_NAME } from "src/pages/api/token";
+import { IFRAME_COOKIE_NAME } from "../pages/api/token";
 
 export type RequestData = Record<string, unknown>;
 
