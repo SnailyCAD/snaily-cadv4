@@ -100,13 +100,13 @@ export function formatUnitDivisions(unit: Officer | EmsFdDeputy) {
 
 export function formatCitizenAddress(citizen: Pick<Citizen, "address" | "postal">) {
   const { address, postal } = citizen;
-  return `${address} ${postal ? `(${postal})` : ""}`;
+  return `${address}${postal ? ` (${postal})` : ""}`;
 }
 
 export function formatDate(date: string | Date | number, options?: { onlyDate: boolean }) {
   const dateObj = new Date(date);
-  const hmsString = options?.onlyDate ? "" : "HH:mm:ss";
-  return format(dateObj, `yyyy-MM-dd ${hmsString}`);
+  const hmsString = options?.onlyDate ? "" : " HH:mm:ss";
+  return format(dateObj, `yyyy-MM-dd${hmsString}`);
 }
 
 export function filterLicenseTypes(licenses: Value<ValueType.LICENSE>[], type: ValueLicenseType) {
