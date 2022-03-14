@@ -6,18 +6,19 @@ import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
-import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
+import { CREATE_CITIZEN_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
+import type { z } from "zod";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { Feature, cad, MiscCadSettings } from ".prisma/client";
+import { Citizen, Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { User, ValueType } from "@prisma/client";
+import { DriversLicenseCategoryValue, Prisma, User, ValueType } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
-import { manyToManyHelper } from "utils/manyToMany";
+import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -47,7 +48,6 @@ export const citizenInclude = {
   gender: true,
   weaponLicense: true,
   driversLicense: true,
-  ccw: true,
   pilotLicense: true,
   waterLicense: true,
   dlCategory: { include: { value: true } },
@@ -196,37 +196,24 @@ export class CitizenController {
         weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
         pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
         waterLicenseId: data.waterLicense || defaultLicenseValueId,
-        ccwId: data.ccw || defaultLicenseValueId,
         phoneNumber: data.phoneNumber || null,
         imageId: validateImgurURL(data.image),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
       },
-      include: {
-        gender: true,
-        ethnicity: true,
-        weaponLicense: true,
-        driversLicense: true,
-        ccw: true,
-        pilotLicense: true,
-        waterLicense: true,
-      },
     });
 
-    const newArr = [
-      ...(data.driversLicenseCategory ?? []),
-      ...(data.pilotLicenseCategory ?? []),
-      ...(data.waterLicenseCategory ?? []),
-    ];
-    const disconnectConnectArr = manyToManyHelper([], newArr);
+    const updated = await updateCitizenLicenseCategories(citizen, data, {
+      gender: true,
+      ethnicity: true,
+      weaponLicense: true,
+      driversLicense: true,
+      pilotLicense: true,
+      waterLicense: true,
+      dlCategory: { include: { value: true } },
+    });
 
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
-      ),
-    );
-
-    return citizen;
+    return updated;
   }
 
   @Put("/:id")
@@ -319,4 +306,40 @@ export class CitizenController {
 
     return data;
   }
+}
+
+export async function updateCitizenLicenseCategories(
+  citizen: Citizen & { dlCategory?: DriversLicenseCategoryValue[] },
+  data: Partial<
+    Pick<
+      z.infer<typeof LICENSE_SCHEMA>,
+      | "driversLicenseCategory"
+      | "pilotLicenseCategory"
+      | "waterLicenseCategory"
+      | "firearmLicenseCategory"
+    >
+  >,
+  include?: Prisma.CitizenInclude,
+) {
+  const newArr = [
+    ...(data.driversLicenseCategory ?? []),
+    ...(data.pilotLicenseCategory ?? []),
+    ...(data.waterLicenseCategory ?? []),
+    ...(data.firearmLicenseCategory ?? []),
+  ];
+  const disconnectConnectArr = manyToManyHelper(citizen.dlCategory?.map((v) => v.id) ?? [], newArr);
+
+  const last = getLastOfArray(
+    await prisma.$transaction(
+      disconnectConnectArr.map((v, idx) =>
+        prisma.citizen.update({
+          where: { id: citizen.id },
+          data: { dlCategory: v },
+          include: idx + 1 === disconnectConnectArr.length ? include : undefined,
+        }),
+      ),
+    ),
+  );
+
+  return last;
 }

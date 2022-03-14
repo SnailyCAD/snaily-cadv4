@@ -17,11 +17,12 @@ import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailyca
 
 interface Props {
   onSubmit(values: any): Promise<void>;
+  allowRemoval?: boolean;
   citizen: Citizen;
   state: "loading" | "error" | null;
 }
 
-export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
+export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSubmit }: Props) {
   const { isOpen, closeModal } = useModal();
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
@@ -34,7 +35,6 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
     pilotLicense: citizen.pilotLicenseId ?? null,
     weaponLicense: citizen.weaponLicenseId ?? null,
     waterLicense: citizen.waterLicenseId ?? null,
-    ccw: citizen.ccwId ?? null,
     driversLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
       .map((v) => ({
@@ -49,6 +49,12 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
       })),
     waterLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === DriversLicenseCategoryType.WATER)
+      .map((v) => ({
+        value: v.id,
+        label: v.value.value,
+      })),
+    firearmLicenseCategory: citizen.dlCategory
+      .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
@@ -68,7 +74,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -103,7 +109,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -138,7 +144,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -171,37 +177,40 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             </FormRow>
 
             {WEAPON_REGISTRATION ? (
-              <>
+              <FormRow>
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
-                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                      (license) => ({
-                        label: license.value,
-                        value: license.id,
+                      (v) => ({
+                        label: v.value,
+                        value: v.id,
                       }),
                     )}
                     value={values.weaponLicense}
-                    name="weaponLicense"
                     onChange={handleChange}
+                    name="weaponLicense"
                   />
                 </FormField>
 
-                <FormField errorMessage={errors.ccw} label={t("ccw")}>
+                <FormField
+                  errorMessage={errors.firearmLicenseCategory as string}
+                  label={t("firearmLicenseCategory")}
+                >
                   <Select
-                    isClearable
-                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                      (license) => ({
-                        label: license.value,
-                        value: license.id,
-                      }),
-                    )}
-                    value={values.ccw}
-                    name="ccw"
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: v.id,
+                      }))}
+                    value={values.firearmLicenseCategory}
                     onChange={handleChange}
+                    name="firearmLicenseCategory"
+                    isMulti
+                    isClearable
                   />
                 </FormField>
-              </>
+              </FormRow>
             ) : null}
 
             <footer className="flex justify-end mt-5">

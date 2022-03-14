@@ -1,13 +1,15 @@
 import { X } from "react-bootstrap-icons";
-import toast, { type ToastOptions, ErrorIcon } from "react-hot-toast";
+import toast, { type ToastOptions, ErrorIcon, CheckmarkIcon } from "react-hot-toast";
 
 interface Options extends ToastOptions {
   message: string;
   title?: string;
+  icon?: "success" | "error" | null;
 }
 
-export function toastError(options: Options) {
-  const { title, message, ...rest } = options;
+export function toastMessage(options: Options) {
+  const { title, message, icon, ...rest } = options;
+  const Icon = icon !== null ? icon === "success" ? <CheckmarkIcon /> : <ErrorIcon /> : null;
 
   return toast.custom((t) => {
     return (
@@ -18,7 +20,7 @@ export function toastError(options: Options) {
       >
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
-            <div className="flex-shrink-0 pt-0.5">{rest.icon !== null ? <ErrorIcon /> : null}</div>
+            <div className="flex-shrink-0 pt-0.5">{Icon}</div>
             <div className="ml-3 flex-1 -mt-1">
               {title ? (
                 <p className="capitalize text-[1.05em] mb-1 font-semibold text-gray-900 dark:text-gray-100">

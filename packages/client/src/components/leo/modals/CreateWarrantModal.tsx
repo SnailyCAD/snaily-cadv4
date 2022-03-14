@@ -13,6 +13,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { Citizen } from "@snailycad/types";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
+import { toastMessage } from "lib/toastMessage";
 
 export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
@@ -28,11 +29,16 @@ export function CreateWarrantModal() {
     const { json } = await execute("/records/create-warrant", {
       method: "POST",
       data: values,
+      helpers,
     });
 
     if (json.id) {
-      // todo: alert success
-      helpers.resetForm();
+      toastMessage({
+        title: common("success"),
+        message: t("successCreateWarrant", { citizen: values.citizenName }),
+        icon: "success",
+      });
+
       closeModal(ModalIds.CreateWarrant);
     }
   }

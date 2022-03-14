@@ -4,7 +4,7 @@ import { handleRequest } from "./fetch";
 import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 import type { FormikHelpers } from "formik";
-import { toastError } from "./error";
+import { toastMessage } from "./toastMessage";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -73,9 +73,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       }
 
       if (typeof options.noToast === "string" && options.noToast !== error && !hasAddedError) {
-        toastError({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: errorTitle });
       } else if (!options.noToast && !hasAddedError) {
-        toastError({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: errorTitle });
       }
 
       setState("error");

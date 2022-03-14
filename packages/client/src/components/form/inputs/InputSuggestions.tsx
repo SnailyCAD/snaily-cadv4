@@ -40,6 +40,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
     const { json } = await execute(options.apiPath, {
       ...options,
+      noToast: true,
       data,
     });
 

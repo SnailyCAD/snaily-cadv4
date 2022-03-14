@@ -28,6 +28,26 @@ export class ManageCitizensController {
     return citizens;
   }
 
+  @Get("/records-logs")
+  async getRecordLogsForCitizen() {
+    const citizens = await prisma.recordLog.findMany({
+      include: {
+        warrant: { include: { officer: { include: leoProperties } } },
+        records: {
+          include: {
+            officer: { include: leoProperties },
+            violations: { include: { penalCode: true } },
+          },
+        },
+        citizen: {
+          include: { user: { select: userProperties }, gender: true, ethnicity: true },
+        },
+      },
+    });
+
+    return citizens;
+  }
+
   @Get("/:id")
   @Description("Get a citizen by its id")
   @UsePermissions({
@@ -67,7 +87,6 @@ export class ManageCitizensController {
         driversLicenseId: data.driversLicense || undefined,
         weaponLicenseId: data.weaponLicense || undefined,
         pilotLicenseId: data.pilotLicense || undefined,
-        ccwId: data.ccw || undefined,
         phoneNumber: data.phoneNumber || null,
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
@@ -77,26 +96,6 @@ export class ManageCitizensController {
     });
 
     return citizen;
-  }
-
-  @Get("/records-logs")
-  async getRecordLogsForCitizen() {
-    const citizens = await prisma.recordLog.findMany({
-      include: {
-        warrant: { include: { officer: { include: leoProperties } } },
-        records: {
-          include: {
-            officer: { include: leoProperties },
-            violations: { include: { penalCode: true } },
-          },
-        },
-        citizen: {
-          include: { user: { select: userProperties }, gender: true, ethnicity: true },
-        },
-      },
-    });
-
-    return citizens;
   }
 
   @Delete("/:id")

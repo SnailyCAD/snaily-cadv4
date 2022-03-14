@@ -45,7 +45,9 @@
     "hide": "Hide",
     "show": "Show",
     "filters": "Filters",
-    "openInSearch": "Open in search"
+    "openInSearch": "Open in search",
+    "goBack": "Go back",
+    "success": "Success"
   },
   "Nav": {
     "citizen": "Citizen",
@@ -121,6 +123,7 @@
     "maxDepartmentsReachedPerUser": "You've reached the max set of units with this department. Please choose a different department or try again later.",
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
     "Invalid Permissions": "You don't have permissions to access this API Route.",
-    "alreadyPendingNameChange": "This citizen already has a pending name change request."
+    "alreadyPendingNameChange": "This citizen already has a pending name change request.",
+    "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name."
   }
 }

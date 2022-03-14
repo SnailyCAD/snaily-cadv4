@@ -14,7 +14,7 @@ import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
+import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useTranslations } from "use-intl";
@@ -78,8 +78,11 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
       });
 
       if (json.id) {
-        // todo: add translation
-        toast.success("Created.");
+        toastMessage({
+          title: common("success"),
+          message: t(isTow ? "towCallCreated" : "taxiCallCreated"),
+          icon: "success",
+        });
       }
     }
 

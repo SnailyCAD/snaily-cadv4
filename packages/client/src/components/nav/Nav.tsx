@@ -96,7 +96,7 @@ export function Nav({ maxWidth }: Props) {
 
               {user?.isDispatch ? <DispatchDropdown /> : null}
 
-              {COURTHOUSE ? (
+              {user && COURTHOUSE ? (
                 <Link href="/courthouse">
                   <a
                     className={classNames(

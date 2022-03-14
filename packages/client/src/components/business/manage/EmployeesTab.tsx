@@ -6,11 +6,12 @@ import { FullEmployee, useBusinessState } from "state/businessState";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { ManageEmployeeModal } from "./ManageEmployeeModal";
-import { EmployeeAsEnum } from "@snailycad/types";
+import { EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { yesOrNoText } from "lib/utils";
+import { Status } from "components/shared/Status";
 
 export function EmployeesTab() {
   const [tempEmployee, setTempEmployee] = React.useState<FullEmployee | null>(null);
@@ -82,13 +83,18 @@ export function EmployeesTab() {
           canCreatePosts: common(yesOrNoText(employee.canCreatePosts)),
           employeeOfTheMonth: common(yesOrNoText(employee.employeeOfTheMonth)),
           whitelistStatus: (
-            <span className="capitalize">{employee.whitelistStatus.toLowerCase()}</span>
+            <Status state={employee.whitelistStatus}>
+              {employee.whitelistStatus.toLowerCase()}
+            </Status>
           ),
           actions: (
             <>
               <Button
                 small
-                disabled={employee.role.as === EmployeeAsEnum.OWNER}
+                disabled={
+                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.whitelistStatus === WhitelistStatus.PENDING
+                }
                 onClick={() => handleManageClick(employee)}
                 variant="success"
               >
@@ -96,7 +102,10 @@ export function EmployeesTab() {
               </Button>
               <Button
                 small
-                disabled={employee.role.as === EmployeeAsEnum.OWNER}
+                disabled={
+                  employee.role.as === EmployeeAsEnum.OWNER ||
+                  employee.whitelistStatus === WhitelistStatus.PENDING
+                }
                 onClick={() => handleFireClick(employee)}
                 className="ml-2"
                 variant="danger"

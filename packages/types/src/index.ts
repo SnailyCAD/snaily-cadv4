@@ -13,8 +13,6 @@ export interface cad {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
-  /** @deprecated */
-  discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
   taxiWhitelisted: boolean;
@@ -201,8 +199,6 @@ export interface Citizen {
   pilotLicense: Value<ValueType.LICENSE> | null;
   waterLicenseId: string | null;
   waterLicense: Value<ValueType.LICENSE> | null;
-  ccwId: string | null;
-  ccw: Value<ValueType.LICENSE> | null;
   imageId: string | null;
   note: string | null;
   dead: boolean | null;
@@ -1003,6 +999,7 @@ export enum DriversLicenseCategoryType {
   AUTOMOTIVE = "AUTOMOTIVE",
   AVIATION = "AVIATION",
   WATER = "WATER",
+  FIREARM = "FIREARM",
 }
 
 export enum EmployeeAsEnum {

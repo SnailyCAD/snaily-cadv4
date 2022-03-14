@@ -1,6 +1,6 @@
 import type { cad } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { convertToMap } from "lib/map/utils";
 import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
@@ -51,7 +51,7 @@ export function RenderMapPlayers() {
   );
 
   const onError = React.useCallback(() => {
-    toastError({
+    toastMessage({
       message: `Unable to make a Websocket connection to ${url}`,
       title: "Connection Error",
       duration: 10_000,
@@ -135,7 +135,7 @@ function getCADURL(cad: cad | null) {
 
   if (!liveMapURL) {
     !warned &&
-      toastError({
+      toastMessage({
         duration: Infinity,
         message: "There was no live_map_url provided from the CAD-Settings.",
       });
@@ -145,7 +145,7 @@ function getCADURL(cad: cad | null) {
 
   if (!liveMapURL.startsWith("ws")) {
     !warned &&
-      toastError({
+      toastMessage({
         duration: Infinity,
         message: "The live_map_url did not start with ws. Make sure it is a WebSocket protocol",
       });

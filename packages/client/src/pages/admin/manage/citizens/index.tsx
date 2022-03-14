@@ -8,8 +8,6 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
-import { TabList, TabsContent } from "components/shared/TabList";
-import Link from "next/link";
 
 interface Props {
   citizens: (Citizen & { user: User })[];
@@ -29,19 +27,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
 
       <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CITIZENS")}</h1>
 
-      <TabList
-        tabs={[
-          { name: "All Citizens", value: "allCitizens" },
-          { name: "Advanced", value: "advanced" },
-        ]}
-      >
-        <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
-        <TabsContent value="advanced">
-          <Link href="/admin/import/citizens">
-            <a className="underline">This has been moved to its own page.</a>
-          </Link>
-        </TabsContent>
-      </TabList>
+      <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
     </AdminLayout>
   );
 }

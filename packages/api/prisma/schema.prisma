@@ -980,6 +980,7 @@ enum DriversLicenseCategoryType {
   AUTOMOTIVE
   AVIATION
   WATER
+  FIREARM
 }
 
 enum EmployeeAsEnum {

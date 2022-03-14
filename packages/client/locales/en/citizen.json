@@ -31,6 +31,7 @@
     "pilotLicenseCategory": "Pilot License Categories",
     "waterLicense": "Water License",
     "waterLicenseCategory": "Water License Categories",
+    "firearmLicenseCategory": "Firearm License Categories",
     "ccw": "CCW",
     "createTaxiCall": "Create Taxi Call",
     "create911Call": "Create 911 Call",
@@ -63,6 +64,7 @@
     "untaxed": "Untaxed",
     "passed": "Passed",
     "failed": "Failed",
+    "successVehicleRegistered": "Successfully registered a vehicle with plate: {plate}",
     "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone."
   },
   "Weapons": {
@@ -74,6 +76,7 @@
     "noWeapons": "You do not have any weapons registered yet.",
     "deleteWeapon": "Delete Weapon",
     "registeredWeapons": "Registered Weapons",
+    "successWeaponRegistered": "Successfully registered a weapon",
     "alert_deleteWeapon": "Are you sure you want to delete this weapon? This action cannot be undone."
   },
   "MedicalRecords": {

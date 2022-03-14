@@ -8,7 +8,7 @@ import { generateString } from "utils/generateString";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
-import { manyToManyHelper } from "utils/manyToMany";
+import { updateCitizenLicenseCategories } from "controllers/citizen/CitizenController";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -39,7 +39,6 @@ export class ImportCitizensController {
             weaponLicenseId: data.weaponLicenseId ?? null,
             driversLicenseId: data.driversLicenseId ?? null,
             pilotLicenseId: data.pilotLicenseId ?? null,
-            ccwId: data.ccwId ?? null,
           },
           include: { gender: true, ethnicity: true },
         });
@@ -52,20 +51,23 @@ export class ImportCitizensController {
           await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
         }
 
-        const newArr = [
-          ...(data.driversLicenseCategoryIds ?? []),
-          ...(data.pilotLicenseCategoryIds ?? []),
-          ...(data.waterLicenseCategoryIds ?? []),
-        ];
-        const disconnectConnectArr = manyToManyHelper([], newArr);
+        const licenseData = {
+          driversLicenseCategory: data.driversLicenseCategoryIds,
+          pilotLicenseCategory: data.pilotLicenseCategoryIds,
+          waterLicenseCategory: data.waterLicenseCategoryIds,
+          firearmLicenseCategory: data.firearmLicenseCategoryIds,
+        };
+        const updated = await updateCitizenLicenseCategories(citizen, licenseData, {
+          gender: true,
+          ethnicity: true,
+          weaponLicense: true,
+          driversLicense: true,
+          pilotLicense: true,
+          waterLicense: true,
+          dlCategory: { include: { value: true } },
+        });
 
-        await prisma.$transaction(
-          disconnectConnectArr.map((v) =>
-            prisma.citizen.update({ where: { id: citizen.id }, data: { dlCategory: v } }),
-          ),
-        );
-
-        return citizen;
+        return updated;
       }),
     );
   }

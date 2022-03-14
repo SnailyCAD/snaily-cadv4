@@ -25,6 +25,7 @@ import { CREATE_911_CALL } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   call: Full911Call | null;
@@ -45,6 +46,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { department, division, codes10 } = useValues();
   const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
+  const isCitizen = router.pathname.includes("/citizen");
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
@@ -188,6 +190,13 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
       });
 
       if (json.id) {
+        isCitizen &&
+          toastMessage({
+            title: common("success"),
+            message: t("911CallCreated"),
+            icon: "success",
+          });
+
         setCalls([json, ...calls]);
         closeModal(ModalIds.Manage911Call);
       }

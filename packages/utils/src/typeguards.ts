@@ -11,7 +11,6 @@ import {
   Officer,
   CombinedLeoUnit,
   EmsFdDeputy,
-  PenalCode,
 } from "@snailycad/types";
 
 export type ValueWithValueObj =
@@ -23,10 +22,10 @@ export type ValueWithValueObj =
   | EmployeeValue
   | DriversLicenseCategoryValue;
 
-export type AnyValue = Value<ValueType> | ValueWithValueObj | PenalCode;
+export type AnyValue = Value<ValueType> | ValueWithValueObj;
 
 export function isBaseValue(value: AnyValue): value is Value<ValueType> {
-  return !isPenalCodeValue(value) && "createdAt" in value && typeof value.type === "string";
+  return "createdAt" in value && typeof value.type === "string";
 }
 
 export function hasValueObj(value: AnyValue): value is ValueWithValueObj {
@@ -55,10 +54,6 @@ export function isDivisionValue(value: AnyValue): value is DivisionValue {
 
 export function isEmployeeValue(value: AnyValue): value is EmployeeValue {
   return hasValueObj(value) && value.value.type === ValueType.BUSINESS_ROLE;
-}
-
-export function isPenalCodeValue(value: AnyValue): value is PenalCode {
-  return "title" in value && "warningApplicableId" in value;
 }
 
 export function isUnitCombined(
