@@ -7,6 +7,9 @@ import {
   formatCitizenAddress,
   formatUnitDivisions,
   makeUnitName,
+  getUnitDepartment,
+  formatOfficerDepartment,
+  requestAll,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -69,7 +72,7 @@ export const TEST_EMS_FD_DEPUTY = {
   callsign2: "92",
   citizen: { name: "jane", surname: "doe" },
   badgeNumber: 6034,
-  department: { value: { value: "LSPD" }, callsign: "A" },
+  department: { value: { value: "Fire" }, callsign: "A" },
   division: { value: { value: "Patrol" }, callsign: "P" },
   citizenId: "xxxxx",
 } as any;
@@ -88,4 +91,91 @@ test("Should format an officers' name", () => {
 
 test("Should format an EMS/FD deputy name", () => {
   expect(makeUnitName(TEST_EMS_FD_DEPUTY)).toMatch("jane doe");
+});
+
+test("Should return unit department -> null", () => {
+  expect(getUnitDepartment(null)).toBe(null);
+});
+
+test("Should return unit department -> TEST_OFFICER", () => {
+  expect(getUnitDepartment(TEST_OFFICER)).toMatchInlineSnapshot(`
+    {
+      "callsign": "A",
+      "value": {
+        "value": "LSPD",
+      },
+    }
+  `);
+});
+
+test("Should return unit department -> TEST_OFFICER & whitelisted department PENDING", () => {
+  TEST_OFFICER.whitelistStatus = {
+    status: "PENDING",
+    department: { callsign: "B", value: { value: "Trainee" } },
+  };
+
+  expect(getUnitDepartment(TEST_OFFICER)).toMatchInlineSnapshot(`
+    {
+      "callsign": "B",
+      "value": {
+        "value": "Trainee",
+      },
+    }
+  `);
+});
+
+test("Should return unit department -> TEST_OFFICER & whitelisted department DECLINED", () => {
+  TEST_OFFICER.whitelistStatus = {
+    status: "DECLINED",
+    department: { callsign: "B", value: { value: "Trainee" } },
+  };
+
+  expect(getUnitDepartment(TEST_OFFICER)).toMatchInlineSnapshot(`
+    {
+      "callsign": "A",
+      "value": {
+        "value": "LSPD",
+      },
+    }
+  `);
+});
+
+test("Should return unit department -> TEST_EMS_FD_DEPUTY", () => {
+  expect(getUnitDepartment(TEST_EMS_FD_DEPUTY)).toMatchInlineSnapshot(`
+    {
+      "callsign": "A",
+      "value": {
+        "value": "Fire",
+      },
+    }
+  `);
+});
+
+test("Should format unit department -> TEST_EMS_FD_DEPUTY", () => {
+  expect(formatOfficerDepartment(TEST_EMS_FD_DEPUTY)).toMatchInlineSnapshot('"Fire"');
+});
+
+test("Should format unit department -> TEST_OFFICER", () => {
+  expect(formatOfficerDepartment(TEST_OFFICER)).toMatchInlineSnapshot('"LSPD"');
+});
+
+test("Should format unit department -> TEST_OFFICER & whitelist status", () => {
+  TEST_OFFICER.whitelistStatus = {
+    status: "PENDING",
+    department: { callsign: "B", value: { value: "Trainee" } },
+  };
+
+  expect(formatOfficerDepartment(TEST_OFFICER)).toMatchInlineSnapshot('"LSPD (Trainee)"');
+});
+
+test("Should return defaultValue for requestAll", async () => {
+  expect(await requestAll({} as any, [["/test", { officers: [], incidents: [] }]]))
+    .toMatchInlineSnapshot(`
+    [
+      {
+        "incidents": [],
+        "officers": [],
+      },
+    ]
+  `);
 });
