@@ -1,4 +1,5 @@
 /* eslint-disable quotes */
+import { ValueLicenseType } from "@snailycad/types";
 import { expect, test } from "vitest";
 import {
   calculateAge,
@@ -10,6 +11,8 @@ import {
   getUnitDepartment,
   formatOfficerDepartment,
   requestAll,
+  filterLicenseTypes,
+  canUseDiscordAuth,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -91,6 +94,10 @@ test("Should format an officers' name", () => {
 
 test("Should format an EMS/FD deputy name", () => {
   expect(makeUnitName(TEST_EMS_FD_DEPUTY)).toMatch("jane doe");
+});
+
+test("Should not format a combined unit's name", () => {
+  expect(makeUnitName({ officers: [] } as any)).toMatch("");
 });
 
 test("Should return unit department -> null", () => {
@@ -178,4 +185,69 @@ test("Should return defaultValue for requestAll", async () => {
       },
     ]
   `);
+});
+
+const TEST_VALUES = [
+  { licenseType: ValueLicenseType.LICENSE },
+  { licenseType: ValueLicenseType.INSURANCE_STATUS },
+  { licenseType: ValueLicenseType.REGISTRATION_STATUS },
+  { licenseType: ValueLicenseType.LICENSE },
+  { licenseType: ValueLicenseType.REGISTRATION_STATUS },
+  { licenseType: null },
+] as any;
+
+test("Should filter license types -> LICENSE", () => {
+  expect(filterLicenseTypes(TEST_VALUES, ValueLicenseType.LICENSE)).toMatchInlineSnapshot(`
+    [
+      {
+        "licenseType": "LICENSE",
+      },
+      {
+        "licenseType": "LICENSE",
+      },
+      {
+        "licenseType": null,
+      },
+    ]
+  `);
+});
+
+test("Should filter license types -> REGISTRATION_STATUS", () => {
+  expect(filterLicenseTypes(TEST_VALUES, ValueLicenseType.REGISTRATION_STATUS))
+    .toMatchInlineSnapshot(`
+    [
+      {
+        "licenseType": "REGISTRATION_STATUS",
+      },
+      {
+        "licenseType": "REGISTRATION_STATUS",
+      },
+      {
+        "licenseType": null,
+      },
+    ]
+  `);
+});
+
+test("Should filter license types -> INSURANCE_STATUS", () => {
+  expect(filterLicenseTypes(TEST_VALUES, ValueLicenseType.INSURANCE_STATUS)).toMatchInlineSnapshot(`
+    [
+      {
+        "licenseType": "INSURANCE_STATUS",
+      },
+      {
+        "licenseType": null,
+      },
+    ]
+  `);
+});
+
+test("Should handle Discord auth -> window not defined", () => {
+  expect(canUseDiscordAuth()).toBe(false);
+});
+
+test("Should handle Discord auth -> window defined", () => {
+  // @ts-expect-error testing purposes
+  global.window = { location: "test", parent: { location: "test" } };
+  expect(canUseDiscordAuth()).toBe(true);
 });
