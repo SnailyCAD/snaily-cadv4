@@ -17,7 +17,7 @@ import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailyca
 
 interface Props {
   onSubmit(values: any): Promise<void>;
-  allowRemoval: boolean;
+  allowRemoval?: boolean;
   citizen: Citizen;
   state: "loading" | "error" | null;
 }
