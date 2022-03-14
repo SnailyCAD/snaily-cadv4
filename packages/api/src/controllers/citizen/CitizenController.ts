@@ -47,7 +47,6 @@ export const citizenInclude = {
   gender: true,
   weaponLicense: true,
   driversLicense: true,
-  ccw: true,
   pilotLicense: true,
   waterLicense: true,
   dlCategory: { include: { value: true } },
@@ -196,7 +195,6 @@ export class CitizenController {
         weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
         pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
         waterLicenseId: data.waterLicense || defaultLicenseValueId,
-        ccwId: data.ccw || defaultLicenseValueId,
         phoneNumber: data.phoneNumber || null,
         imageId: validateImgurURL(data.image),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
@@ -207,9 +205,9 @@ export class CitizenController {
         ethnicity: true,
         weaponLicense: true,
         driversLicense: true,
-        ccw: true,
         pilotLicense: true,
         waterLicense: true,
+        dlCategory: { include: { value: true } },
       },
     });
 
@@ -217,6 +215,7 @@ export class CitizenController {
       ...(data.driversLicenseCategory ?? []),
       ...(data.pilotLicenseCategory ?? []),
       ...(data.waterLicenseCategory ?? []),
+      ...(data.firearmLicenseCategory ?? []),
     ];
     const disconnectConnectArr = manyToManyHelper([], newArr);
 

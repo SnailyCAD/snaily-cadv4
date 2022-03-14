@@ -95,6 +95,7 @@ export function NameSearchModal() {
         driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
         pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
         waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value),
       },
     });
 

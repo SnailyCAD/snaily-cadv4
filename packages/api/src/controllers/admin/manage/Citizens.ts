@@ -80,7 +80,6 @@ export class ManageCitizensController {
         driversLicenseId: data.driversLicense || undefined,
         weaponLicenseId: data.weaponLicense || undefined,
         pilotLicenseId: data.pilotLicense || undefined,
-        ccwId: data.ccw || undefined,
         phoneNumber: data.phoneNumber || null,
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,

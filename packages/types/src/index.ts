@@ -1002,6 +1002,7 @@ export enum DriversLicenseCategoryType {
   AUTOMOTIVE = "AUTOMOTIVE",
   AVIATION = "AVIATION",
   WATER = "WATER",
+  FIREARM = "FIREARM",
 }
 
 export enum EmployeeAsEnum {

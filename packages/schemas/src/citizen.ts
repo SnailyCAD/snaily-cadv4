@@ -22,6 +22,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   driversLicenseCategory: z.array(z.any()).nullable().optional(),
   pilotLicenseCategory: z.array(z.any()).nullable().optional(),
   waterLicenseCategory: z.array(z.any()).nullable().optional(),
+  firearmLicenseCategory: z.array(z.any()).nullable().optional(),
   image: z.any().nullable().optional(),
 });
 
@@ -58,10 +59,10 @@ export const WEAPON_SCHEMA = z.object({
 export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
   driversLicense: true,
   driversLicenseCategory: true,
-  ccw: true,
   pilotLicense: true,
   pilotLicenseCategory: true,
   weaponLicense: true,
+  firearmLicenseCategory: true,
   waterLicense: true,
   waterLicenseCategory: true,
 });

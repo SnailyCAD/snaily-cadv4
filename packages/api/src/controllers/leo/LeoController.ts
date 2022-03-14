@@ -449,6 +449,7 @@ export class LeoController {
       ...(data.driversLicenseCategory ?? []),
       ...(data.pilotLicenseCategory ?? []),
       ...(data.waterLicenseCategory ?? []),
+      ...(data.firearmLicenseCategory ?? []),
     ];
     const disconnectConnectArr = manyToManyHelper(
       citizen.dlCategory.map((v) => v.id),
@@ -466,7 +467,6 @@ export class LeoController {
         id: citizen.id,
       },
       data: {
-        ccwId: data.ccw,
         driversLicenseId: data.driversLicense,
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,

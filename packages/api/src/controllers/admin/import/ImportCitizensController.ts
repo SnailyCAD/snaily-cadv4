@@ -39,7 +39,6 @@ export class ImportCitizensController {
             weaponLicenseId: data.weaponLicenseId ?? null,
             driversLicenseId: data.driversLicenseId ?? null,
             pilotLicenseId: data.pilotLicenseId ?? null,
-            ccwId: data.ccwId ?? null,
           },
           include: { gender: true, ethnicity: true },
         });
@@ -56,6 +55,7 @@ export class ImportCitizensController {
           ...(data.driversLicenseCategoryIds ?? []),
           ...(data.pilotLicenseCategoryIds ?? []),
           ...(data.waterLicenseCategoryIds ?? []),
+          ...(data.firearmLicenseCategoryIds ?? []),
         ];
         const disconnectConnectArr = manyToManyHelper([], newArr);
 
