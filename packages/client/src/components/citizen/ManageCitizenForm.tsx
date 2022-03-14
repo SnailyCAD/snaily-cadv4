@@ -246,6 +246,7 @@ export function ManageCitizenForm({
                 label={t("driversLicense")}
               >
                 <Select
+                  isClearable
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
                     value: v.id,
@@ -283,6 +284,7 @@ export function ManageCitizenForm({
                   label={t("weaponLicense")}
                 >
                   <Select
+                    isClearable
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (v) => ({
                         label: v.value,
@@ -322,6 +324,7 @@ export function ManageCitizenForm({
                 label={t("pilotLicense")}
               >
                 <Select
+                  isClearable
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map((v) => ({
                     label: v.value,
                     value: v.id,
