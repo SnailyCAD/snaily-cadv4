@@ -70,7 +70,7 @@ const TEST_OFFICER = {
   citizenId: "xxxxx",
 } as any;
 
-export const TEST_EMS_FD_DEPUTY = {
+const TEST_EMS_FD_DEPUTY = {
   callsign: "E",
   callsign2: "92",
   citizen: { name: "jane", surname: "doe" },

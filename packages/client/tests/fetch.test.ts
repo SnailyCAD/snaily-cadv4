@@ -11,3 +11,9 @@ test.fails("Should return error instance", async () => {
 test("Should find the correct development URL", () => {
   expect(findUrl()).toMatchInlineSnapshot('"http://localhost:8080/v1"');
 });
+
+test("Should find the correct development URL via Docker", () => {
+  process.env.NEXT_PUBLIC_PROD_ORIGIN = "http://api:8080/v1";
+  global.window = {};
+  expect(findUrl()).toMatchInlineSnapshot('"http://localhost:8080/v1"');
+});
