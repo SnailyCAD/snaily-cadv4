@@ -57,7 +57,7 @@ export class ImportCitizensController {
           waterLicenseCategory: data.waterLicenseCategoryIds,
           firearmLicenseCategory: data.firearmLicenseCategoryIds,
         };
-        const updated = await updateCitizenLicenseCategories(citizen.id, licenseData, {
+        const updated = await updateCitizenLicenseCategories(citizen, licenseData, {
           gender: true,
           ethnicity: true,
           weaponLicense: true,
