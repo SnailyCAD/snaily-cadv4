@@ -449,6 +449,7 @@ export function NameSearchModal() {
             {currentResult ? (
               <>
                 <ManageLicensesModal
+                  allowRemoval={false}
                   state={state}
                   onSubmit={handleLicensesSubmit}
                   citizen={currentResult}

@@ -17,11 +17,12 @@ import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailyca
 
 interface Props {
   onSubmit(values: any): Promise<void>;
+  allowRemoval: boolean;
   citizen: Citizen;
   state: "loading" | "error" | null;
 }
 
-export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
+export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSubmit }: Props) {
   const { isOpen, closeModal } = useModal();
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
@@ -68,7 +69,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -103,7 +104,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -138,7 +139,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
             <FormRow>
               <FormField errorMessage={errors.waterLicense} label={t("waterLicense")}>
                 <Select
-                  isClearable
+                  isClearable={allowRemoval}
                   values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                     (license) => ({
                       label: license.value,
@@ -174,7 +175,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
               <>
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
-                    isClearable
+                    isClearable={allowRemoval}
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,
@@ -189,7 +190,7 @@ export function ManageLicensesModal({ state, citizen, onSubmit }: Props) {
 
                 <FormField errorMessage={errors.ccw} label={t("ccw")}>
                   <Select
-                    isClearable
+                    isClearable={allowRemoval}
                     values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
                       (license) => ({
                         label: license.value,
