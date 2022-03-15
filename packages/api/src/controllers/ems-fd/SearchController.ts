@@ -15,6 +15,23 @@ export class SearchController {
   @Post("/medical-name")
   @Description("Search citizens by name for medical records")
   async searchName(@BodyParams("name") fullName: string) {
+    const citizen = await this.findCitizenByName(fullName);
+    return citizen;
+  }
+
+  @Post("/medical-records")
+  @Description("Search medical records by citizen name")
+  async getMedicalRecords(@BodyParams("name") name: string) {
+    const [citizen] = await this.findCitizenByName(name);
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    return citizen;
+  }
+
+  protected async findCitizenByName(fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
@@ -55,29 +72,6 @@ export class SearchController {
         },
         include: citizenSearchInclude,
       });
-    }
-
-    return citizen;
-  }
-
-  @Post("/medical-records")
-  @Description("Search medical records by citizen name")
-  async getMedicalRecords(@BodyParams("name") name: string) {
-    const citizen = await prisma.citizen.findFirst({
-      where: {
-        name,
-      },
-      include: {
-        medicalRecords: {
-          include: {
-            bloodGroup: true,
-          },
-        },
-      },
-    });
-
-    if (!citizen) {
-      throw new NotFound("citizenNotFound");
     }
 
     return citizen;

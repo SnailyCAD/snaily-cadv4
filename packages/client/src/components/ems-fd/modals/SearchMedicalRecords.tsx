@@ -53,11 +53,15 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       noToast: true,
     });
 
-    if (json.id || json?.medicalRecords?.length > 0) {
-      setResults(json);
-    } else {
-      setResults(false);
+    handleFoundName(json);
+  }
+
+  function handleFoundName(data: SearchResult | null) {
+    if (!data?.id || data.medicalRecords.length <= 0) {
+      return setResults(false);
     }
+
+    setResults(data);
   }
 
   const INITIAL_VALUES = {
@@ -84,7 +88,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               <InputSuggestions
                 onSuggestionClick={(suggestion: SearchResult) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
-                  setResults(suggestion);
+                  handleFoundName(suggestion);
                 }}
                 Component={({ suggestion }: { suggestion: Citizen }) => (
                   <div className="flex items-center">
@@ -116,37 +120,35 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{ems("citizenNoMedicalRecords")}</p> : null}
+            {typeof results === "boolean" && !results ? (
+              <p>{ems("citizenNoMedicalRecords")}</p>
+            ) : null}
 
             {typeof results !== "boolean" && results !== null ? (
-              results.medicalRecords.length <= 0 ? (
-                <p>{ems("citizenNoMedicalRecords")}</p>
-              ) : (
-                <Table
-                  data={results.medicalRecords.map((record) => ({
-                    type: record.type,
-                    bloodGroup: record.bloodGroup?.value ?? common("none"),
-                    description: record.description,
-                    actions: (
-                      <Button
-                        small
-                        variant={results.dead ? "success" : "danger"}
-                        type="button"
-                        onClick={handleDeclare}
-                        disabled={state === "loading"}
-                      >
-                        {results.dead ? ems("declareAlive") : ems("declareDead")}
-                      </Button>
-                    ),
-                  }))}
-                  columns={[
-                    { Header: t("diseases"), accessor: "type" },
-                    { Header: t("bloodGroup"), accessor: "bloodGroup" },
-                    { Header: common("description"), accessor: "description" },
-                    { Header: common("actions"), accessor: "actions" },
-                  ]}
-                />
-              )
+              <Table
+                data={results.medicalRecords.map((record) => ({
+                  type: record.type,
+                  bloodGroup: record.bloodGroup?.value ?? common("none"),
+                  description: record.description,
+                  actions: (
+                    <Button
+                      small
+                      variant={results.dead ? "success" : "danger"}
+                      type="button"
+                      onClick={handleDeclare}
+                      disabled={state === "loading"}
+                    >
+                      {results.dead ? ems("declareAlive") : ems("declareDead")}
+                    </Button>
+                  ),
+                }))}
+                columns={[
+                  { Header: t("diseases"), accessor: "type" },
+                  { Header: t("bloodGroup"), accessor: "bloodGroup" },
+                  { Header: common("description"), accessor: "description" },
+                  { Header: common("actions"), accessor: "actions" },
+                ]}
+              />
             ) : null}
 
             <footer className="flex justify-end mt-5">
