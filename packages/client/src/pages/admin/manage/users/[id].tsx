@@ -7,7 +7,7 @@ import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { User } from "@snailycad/types";
+import { Rank, User } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -163,8 +163,12 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <BanArea setUser={setUser} user={user} />
-        {user.rank !== "OWNER" ? <DangerZone user={user} /> : null}
+        {user.rank !== Rank.OWNER ? (
+          <>
+            <BanArea setUser={setUser} user={user} />
+            <DangerZone user={user} />
+          </>
+        ) : null}
       </div>
     </AdminLayout>
   );

@@ -337,19 +337,21 @@ export function NameSearchModal() {
                         <CitizenLicenses citizen={currentResult} />
                       </ul>
 
-                      <Button
-                        small
-                        type="button"
-                        className="mt-2"
-                        onClick={() => openModal(ModalIds.ManageLicenses)}
-                      >
-                        {t("editLicenses")}
-                      </Button>
+                      {isLeo ? (
+                        <Button
+                          small
+                          type="button"
+                          className="mt-2"
+                          onClick={() => openModal(ModalIds.ManageLicenses)}
+                        >
+                          {t("editLicenses")}
+                        </Button>
+                      ) : null}
                     </div>
 
                     <div className="mt-4">
                       <Infofield label={vT("flags")}>
-                        {currentResult.flags?.map((v) => v.value).join(", ") ?? common("none")}
+                        {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
                       </Infofield>
 
                       {isLeo ? (

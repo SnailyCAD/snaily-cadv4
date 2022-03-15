@@ -34,7 +34,7 @@ export function DangerZone({ user }: Props) {
   }
 
   return (
-    <div className="p-3 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
+    <div className="p-4 mt-5 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
       <div className="flex mt-3">
