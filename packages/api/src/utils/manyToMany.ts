@@ -63,6 +63,8 @@ function merge<T extends string | object, Accessor extends T extends string ? ne
 }
 
 export function getLastOfArray<T>(arr: T[]): T {
+  console.log({ arr });
+
   const last = arr[arr.length - 1];
   return last as T;
 }
