@@ -67,13 +67,18 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions
                 onSuggestionClick={(suggestion: Citizen) => {
-                  setFieldValue("citizenId", suggestion.id);
-                  setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
+                  const newValues = {
+                    ...values,
+                    citizenId: suggestion.id,
+                    citizenName: `${suggestion.name} ${suggestion.surname}`,
+                  };
+
+                  setValues(newValues, true);
                 }}
                 Component={({ suggestion }: { suggestion: Citizen }) => (
                   <div className="flex items-center">

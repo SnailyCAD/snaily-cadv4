@@ -133,9 +133,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                         variant={results.dead ? "success" : "danger"}
                         type="button"
                         onClick={handleDeclare}
-                        className=""
+                        disabled={state === "loading"}
                       >
-                        {results.dead ? ems("declareDead") : t("declareAlive")}
+                        {results.dead ? ems("declareAlive") : ems("declareDead")}
                       </Button>
                     ),
                   }))}
