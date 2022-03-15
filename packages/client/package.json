@@ -16,7 +16,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@casper124578/use-socket.io": "3.1.1",
+    "@casper124578/use-socket.io": "3.1.2",
     "@casper124578/useful": "^1.5.2",
     "@headlessui/react": "^1.5.0",
     "@radix-ui/react-accordion": "^0.1.6",
@@ -56,9 +56,9 @@
     "react-sortablejs": "^6.1.1",
     "react-table": "^7.7.0",
     "react-use": "^17.3.2",
-    "slate": "^0.73.1",
+    "slate": "^0.75.0",
     "slate-history": "^0.66.0",
-    "slate-react": "^0.74.2",
+    "slate-react": "^0.75.0",
     "socket.io-client": "^4.4.1",
     "sortablejs": "^1.14.0",
     "type-fest": "^2.12.0",
