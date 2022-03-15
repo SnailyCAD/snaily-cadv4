@@ -68,7 +68,8 @@ export function AdminSidebar() {
             <ul className="flex flex-col space-y-1.5 mt-3">
               {management.map((type) =>
                 (!BUSINESS && type === "BUSINESSES") ||
-                (!COURTHOUSE && type === "EXPUNGEMENT_REQUESTS") ? null : (
+                (!COURTHOUSE &&
+                  ["EXPUNGEMENT_REQUESTS", "NAME_CHANGE_REQUESTS"].includes(type)) ? null : (
                   <SidebarItem
                     disabled={type !== "UNITS" && user?.rank === Rank.USER}
                     key={type}

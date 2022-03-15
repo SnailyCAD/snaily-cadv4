@@ -69,6 +69,7 @@ export function SelectDeputyModal() {
                 values={deputies.map((deputy) => ({
                   label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
                   value: deputy.id,
+                  isDisabled: deputy.suspended,
                 }))}
               />
             </FormField>
