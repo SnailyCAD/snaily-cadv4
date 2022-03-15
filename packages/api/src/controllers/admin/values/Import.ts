@@ -222,7 +222,7 @@ export const typeHandlers = {
         ),
       );
 
-      return updated;
+      return updated || updatedValue;
     });
   },
   PENAL_CODE: async (body: unknown, id?: string) => {

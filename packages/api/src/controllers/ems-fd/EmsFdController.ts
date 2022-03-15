@@ -27,15 +27,7 @@ export class EmsFdController {
       include: unitProperties,
     });
 
-    const citizens = await prisma.citizen.findMany({
-      select: {
-        name: true,
-        surname: true,
-        id: true,
-      },
-    });
-
-    return { deputies, citizens };
+    return { deputies };
   }
 
   @Post("/")
@@ -233,6 +225,7 @@ export class EmsFdController {
         userId: citizen.userId,
         type: data.type,
         description: data.description,
+        bloodGroupId: data.bloodGroup ?? null,
       },
     });
 

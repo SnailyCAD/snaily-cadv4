@@ -9,8 +9,10 @@ import useFetch from "lib/useFetch";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import type { Citizen, MedicalRecord } from "@snailycad/types";
-import { Input } from "components/form/inputs/Input";
 import { Table } from "components/shared/Table";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import { useImageUrl } from "hooks/useImageUrl";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   onClose?(): void;
@@ -22,6 +24,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const ems = useTranslations("Ems");
+  const { makeImageUrl } = useImageUrl();
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const [results, setResults] = React.useState<SearchResult | null | boolean>(null);
 
@@ -49,11 +53,15 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       noToast: true,
     });
 
-    if (json.id || json?.medicalRecords?.length > 0) {
-      setResults(json);
-    } else {
-      setResults(false);
+    handleFoundName(json);
+  }
+
+  function handleFoundName(data: SearchResult | null) {
+    if (!data?.id || data.medicalRecords.length <= 0) {
+      return setResults(false);
     }
+
+    setResults(data);
   }
 
   const INITIAL_VALUES = {
@@ -74,13 +82,47 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       className="w-[750px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, setFieldValue, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.name} label={t("citizen")}>
-              <Input required onChange={handleChange} name="name" value={values.name} />
+              <InputSuggestions
+                onSuggestionClick={(suggestion: SearchResult) => {
+                  setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
+                  handleFoundName(suggestion);
+                }}
+                Component={({ suggestion }: { suggestion: Citizen }) => (
+                  <div className="flex items-center">
+                    {suggestion.imageId ? (
+                      <img
+                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                        draggable={false}
+                        src={makeImageUrl("citizens", suggestion.imageId)}
+                      />
+                    ) : null}
+                    <p>
+                      {suggestion.name} {suggestion.surname}{" "}
+                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                        <>(SSN: {suggestion.socialSecurityNumber})</>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/medical-name",
+                  method: "POST",
+                  dataKey: "name",
+                }}
+                inputProps={{
+                  value: values.name,
+                  name: "name",
+                  onChange: handleChange,
+                }}
+              />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{ems("citizenNoMedicalRecords")}</p> : null}
+            {typeof results === "boolean" && !results ? (
+              <p>{ems("citizenNoMedicalRecords")}</p>
+            ) : null}
 
             {typeof results !== "boolean" && results !== null ? (
               <Table
@@ -94,16 +136,16 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       variant={results.dead ? "success" : "danger"}
                       type="button"
                       onClick={handleDeclare}
-                      className=""
+                      disabled={state === "loading"}
                     >
-                      {results.dead ? "Declare Alive" : "Declare dead"}
+                      {results.dead ? ems("declareAlive") : ems("declareDead")}
                     </Button>
                   ),
                 }))}
                 columns={[
                   { Header: t("diseases"), accessor: "type" },
                   { Header: t("bloodGroup"), accessor: "bloodGroup" },
-                  { Header: t("description"), accessor: "description" },
+                  { Header: common("description"), accessor: "description" },
                   { Header: common("actions"), accessor: "actions" },
                 ]}
               />
