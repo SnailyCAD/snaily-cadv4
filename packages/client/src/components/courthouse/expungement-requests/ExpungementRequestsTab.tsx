@@ -78,7 +78,6 @@ export function ExpungementRequestsTab(props: Props) {
               tickets,
               status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
               createdAt: <FullDate>{request.createdAt}</FullDate>,
-              actions: <></>,
             };
           })}
           columns={[

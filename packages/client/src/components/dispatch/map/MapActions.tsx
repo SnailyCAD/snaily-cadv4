@@ -22,11 +22,6 @@ export function MapActions() {
         <Button onClick={() => openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>
-        {/* {user?.rank !== Rank.USER ? (
-          <Button disabled className="btn btn-primary">
-            TODO
-          </Button>
-        ) : null} */}
       </div>,
       portalRef,
     )

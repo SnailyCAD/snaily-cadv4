@@ -138,7 +138,7 @@ export function DispatchCallTowModal({ call }: Props) {
             <FormField
               errorMessage={errors.callCountyService}
               checkbox
-              label={"Call County Service"}
+              label={t("Calls.callCountyService")}
             >
               <Input
                 type="checkbox"

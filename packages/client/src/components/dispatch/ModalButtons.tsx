@@ -93,16 +93,14 @@ export function DispatchModalButtons() {
           ),
       )}
 
-      <Button onClick={handleSignal100} id="signal100">
+      <Button disabled={!hasActiveDispatchers} onClick={handleSignal100} id="signal100">
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
       {features.ACTIVE_DISPATCHERS ? (
-        <>
-          <Button onClick={handleStateChangeDispatcher}>
-            {isActive ? "Go off-duty" : "Go on-duty"}
-          </Button>
-        </>
+        <Button onClick={handleStateChangeDispatcher}>
+          {isActive ? t("Leo.goOffDuty") : t("Leo.goOnDuty")}
+        </Button>
       ) : null}
     </ul>
   );

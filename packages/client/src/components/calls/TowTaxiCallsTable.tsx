@@ -30,6 +30,7 @@ export function TowTaxiCallsTable({ calls, noCallsText, setCalls }: Props) {
   const { openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
+  const leo = useTranslations("Leo");
 
   function handleViewDescription(call: TowCall | TaxiCall) {
     setTempCall(call);
@@ -92,7 +93,7 @@ export function TowTaxiCallsTable({ calls, noCallsText, setCalls }: Props) {
               ),
             caller: call.creator
               ? `${call.creator.name} ${call.creator.surname}`
-              : call.name ?? "Dispatch",
+              : call.name ?? leo("dispatch"),
             assignedUnit: assignedUnit(call),
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (

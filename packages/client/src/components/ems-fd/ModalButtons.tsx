@@ -43,7 +43,7 @@ export function ModalButtons() {
       {!isButtonDisabled ? (
         <p className="text-lg">
           <span className="font-semibold">{t("Ems.activeDeputy")}: </span>
-          {`${generateCallsign(activeDeputy)} ${makeUnitName(activeDeputy)}`}
+          {generateCallsign(activeDeputy)} {makeUnitName(activeDeputy)}
         </p>
       ) : null}
 
