@@ -109,7 +109,7 @@ function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {})
   const message = error.response?.data?.message ?? error.message;
   const name = error.name;
 
-  if (name && ["NOT_FOUND", "Error"].includes(name)) {
+  if (name && !message && ["NOT_FOUND", "Error"].includes(name)) {
     return name;
   }
 

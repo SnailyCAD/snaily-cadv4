@@ -116,7 +116,7 @@ export function Manage2FAModal() {
   return (
     <Modal
       onClose={onCancel}
-      title={t("2fa")}
+      title={shouldDisable ? t("disable2FA") : t("enable2FA")}
       isOpen={isOpen(ModalIds.Manage2FA)}
       className="w-[500px]"
     >
@@ -178,7 +178,11 @@ export function Manage2FAModal() {
                 variant={shouldDisable ? "danger" : "default"}
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {shouldDisable ? "Disable" : currentStep === Steps.VerifyCode ? "Verify" : "Next"}
+                {shouldDisable
+                  ? t("disable")
+                  : currentStep === Steps.VerifyCode
+                  ? t("verify")
+                  : t("next")}
               </Button>
             </footer>
           </Form>

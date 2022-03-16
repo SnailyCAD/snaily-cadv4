@@ -14,7 +14,7 @@ import { TwoFactorAuthArea } from "./2fa/TwoFactorAuthArea";
 
 export function AccountSettingsTab() {
   const { user } = useAuth();
-  const t = useTranslations("Account");
+  const t = useTranslations();
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
 
@@ -34,12 +34,12 @@ export function AccountSettingsTab() {
   }
 
   return (
-    <TabsContent aria-label={t("accountSettings")} value="accountSettings">
-      <h3 className="text-2xl font-semibold">{t("accountSettings")}</h3>
+    <TabsContent aria-label={t("Account.accountSettings")} value="accountSettings">
+      <h3 className="text-2xl font-semibold">{t("Account.accountSettings")}</h3>
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-2">
-            <FormField label="Username" errorMessage={errors.username}>
+            <FormField label={t("Auth.username")} errorMessage={errors.username}>
               <Input value={values.username} onChange={handleChange} name="username" />
             </FormField>
 

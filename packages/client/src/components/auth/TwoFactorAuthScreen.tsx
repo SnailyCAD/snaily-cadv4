@@ -47,9 +47,7 @@ export function TwoFactorAuthScreen({ isLoading, errorMessage }: Props) {
         {t("twoFactorCode")}
       </h1>
 
-      <p className="dark:text-gray-300 my-4">
-        Please enter the 6-digit code from your authenticator app
-      </p>
+      <p className="dark:text-gray-300 my-4">{t("sixDigitCode")}</p>
 
       <FormField errorMessage={errorMessage} label={t("totpCode")}>
         <input hidden type="hidden" value={value} name="totpCode" />
