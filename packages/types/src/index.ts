@@ -32,6 +32,7 @@ export interface cad {
   autoSetUserProperties: AutoSetUserProperties | null;
   discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
+  version: string | null;
 }
 
 /**

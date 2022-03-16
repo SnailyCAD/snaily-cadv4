@@ -12,6 +12,7 @@ import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser, userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { updateMemberRolesLogin } from "lib/discord/auth";
+import { getCADVersion } from "src/main";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
@@ -139,7 +140,7 @@ export class IsAuth implements MiddlewareMethods {
       }
     }
 
-    ctx.set("cad", setDiscordAUth(cad));
+    ctx.set("cad", { ...setDiscordAUth(cad), version: await getCADVersion() });
   }
 }
 

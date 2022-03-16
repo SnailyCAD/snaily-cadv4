@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { useAuth } from "context/AuthContext";
+import { toastMessage } from "lib/toastMessage";
 
 enum Steps {
   EnterPassword = 0,
@@ -56,6 +57,11 @@ export function Manage2FAModal() {
         if (typeof json === "boolean" && json) {
           setUser({ ...user!, twoFactorEnabled: false });
           closeModal(ModalIds.Manage2FA);
+          toastMessage({
+            title: common("success"),
+            message: t("disable2faSuccess"),
+            icon: "success",
+          });
         }
 
         return;
@@ -86,6 +92,11 @@ export function Manage2FAModal() {
 
       if (typeof json === "boolean" && json) {
         setUser({ ...user!, twoFactorEnabled: true });
+        toastMessage({
+          title: common("success"),
+          message: t("enable2faSuccess"),
+          icon: "success",
+        });
         reset();
       }
     }

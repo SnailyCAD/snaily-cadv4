@@ -19,13 +19,17 @@ async function bootstrap() {
   }
 }
 
-async function getCADVersion(): Promise<string | null> {
+let versionCache: string;
+export async function getCADVersion(): Promise<string | null> {
   const packageJsonPath = resolve(process.cwd(), "package.json");
   const packageJson = await readFile(packageJsonPath, "utf-8").catch(() => null);
   if (!packageJson) return null;
 
   const json = JSON.parse(packageJson);
-  return json.version;
+
+  versionCache ??= json.version;
+
+  return versionCache;
 }
 
 bootstrap();
