@@ -12,10 +12,6 @@ export const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, Props>(
       resolvedRef.current.indeterminate = indeterminate;
     }, [resolvedRef, indeterminate]);
 
-    return (
-      <>
-        <input className="cursor-pointer" type="checkbox" ref={resolvedRef} {...rest} />
-      </>
-    );
+    return <input className="cursor-pointer" type="checkbox" ref={resolvedRef} {...rest} />;
   },
 );
