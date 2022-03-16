@@ -64,11 +64,14 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <Table
             isWithinCard
             data={vehicles.map((vehicle) => ({
+              rowProps: {
+                title: vehicle.impounded ? t("vehicleImpounded") : undefined,
+                className: vehicle.impounded ? "opacity-50" : undefined,
+              },
               plate: vehicle.plate,
               model: vehicle.model.value.value,
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
