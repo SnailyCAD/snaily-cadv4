@@ -22,7 +22,7 @@ export async function updateMemberRoles(
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
-    include: { roles: true, leoRoles: true },
+    include: { roles: true, leoRoles: true, emsFdRoles: true },
   });
 
   if (!discordRoles) return;
@@ -39,10 +39,15 @@ export async function updateMemberRoles(
     method: createMethod(user.isLeo),
   }));
 
+  const emsFdRoles = discordRoles.emsFdRoles.map((role) => ({
+    roleId: role.id,
+    method: createMethod(user.isEmsFd),
+  }));
+
   const data = [
     ...leoRoles,
+    ...emsFdRoles,
     { roleId: discordRoles.leoSupervisorRoleId, method: createMethod(user.isSupervisor) },
-    { roleId: discordRoles.emsFdRoleId, method: createMethod(user.isEmsFd) },
     { roleId: discordRoles.dispatchRoleId, method: createMethod(user.isDispatch) },
     { roleId: discordRoles.towRoleId, method: createMethod(user.isTow) },
     { roleId: discordRoles.taxiRoleId, method: createMethod(user.isTaxi) },

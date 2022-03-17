@@ -4,11 +4,12 @@ import { Get, Post } from "@tsed/schema";
 import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
-import type { cad } from "@prisma/client";
+import type { cad, DiscordRole, DiscordRoles } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { getRest } from "lib/discord/config";
+import { manyToManyHelper } from "utils/manyToMany";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -87,7 +88,6 @@ export class DiscordSettingsController {
       guildId,
       dispatchRoleId: data.dispatchRoleId ?? null,
       leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
-      emsFdRoleId: data.emsFdRoleId ?? null,
       towRoleId: data.towRoleId ?? null,
       taxiRoleId: data.taxiRoleId ?? null,
       adminRoleId: data.adminRoleId ?? null,
@@ -98,21 +98,16 @@ export class DiscordSettingsController {
       where: { id: String(cad.discordRolesId) },
       update: createUpdateData,
       create: createUpdateData,
+      include: { leoRoles: true, emsFdRoles: true },
     });
 
-    await prisma.$transaction(
-      (data.leoRoles ?? []).map((roleId) => {
-        return prisma.discordRoles.update({
-          where: { id: discordRoles.id },
-          data: { leoRoles: { connect: { id: roleId } } },
-        });
-      }),
-    );
+    await this.updateLeoRoles(discordRoles, (data.leoRoles as string[] | null) ?? []);
+    await this.updateEmsFdRoles(discordRoles, (data.emsFdRoles as string[] | null) ?? []);
 
     const updated = await prisma.cad.update({
       where: { id: cad.id },
       data: { discordRolesId: discordRoles.id },
-      include: { discordRoles: { include: { roles: true, leoRoles: true } } },
+      include: { discordRoles: { include: { roles: true, leoRoles: true, emsFdRoles: true } } },
     });
 
     return updated.discordRoles;
@@ -121,6 +116,38 @@ export class DiscordSettingsController {
   protected doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
     return roles.some((v) =>
       typeof roleId === "string" ? v.id === roleId : roleId.includes(v.id),
+    );
+  }
+
+  protected async updateLeoRoles(
+    discordRoles: DiscordRoles & { leoRoles: DiscordRole[] },
+    newRoles: string[],
+  ) {
+    const disconnectConnectArr = manyToManyHelper(
+      discordRoles.leoRoles.map((v) => v.id),
+      newRoles,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.discordRoles.update({ where: { id: discordRoles.id }, data: { leoRoles: v } }),
+      ),
+    );
+  }
+
+  protected async updateEmsFdRoles(
+    discordRoles: DiscordRoles & { emsFdRoles: DiscordRole[] },
+    newRoles: string[],
+  ) {
+    const disconnectConnectArr = manyToManyHelper(
+      discordRoles.emsFdRoles.map((v) => v.id),
+      newRoles,
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.discordRoles.update({ where: { id: discordRoles.id }, data: { emsFdRoles: v } }),
+      ),
     );
   }
 }

@@ -14,7 +14,7 @@ export async function updateMemberRolesLogin(
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
-    include: { roles: true, leoRoles: true },
+    include: { roles: true, leoRoles: true, emsFdRoles: true },
   });
 
   if (!discordRoles) return;
@@ -28,17 +28,21 @@ export async function updateMemberRolesLogin(
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
+  const isLeo = hasRole(
+    discordRoles.leoRoles.map((v) => v.id),
+    discordMember.roles,
+  );
+
+  const isEmsFd = hasRole(
+    discordRoles.emsFdRoles.map((v) => v.id),
+    discordMember.roles,
+  );
+
   const updateData = {
-    isLeo:
-      discordRoles.leoRoles.length <= 0
-        ? undefined
-        : hasRole(
-            discordRoles.leoRoles.map((v) => v.id),
-            discordMember.roles,
-          ),
+    isLeo: discordRoles.leoRoles.length <= 0 ? undefined : isLeo,
+    isEmsFd: discordRoles.emsFdRoles.length <= 0 ? undefined : isEmsFd,
     isSupervisor: hasRole(discordRoles.leoSupervisorRoleId, discordMember.roles),
     isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
-    isEmsFd: hasRole(discordRoles.emsFdRoleId, discordMember.roles),
     isTow: hasRole(discordRoles.towRoleId, discordMember.roles),
     isTaxi: hasRole(discordRoles.taxiRoleId, discordMember.roles),
     rank:
