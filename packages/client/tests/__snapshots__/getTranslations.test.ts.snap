@@ -13,6 +13,7 @@ exports[`Should return translations for calls & admin in EN 1`] = `
     "assignToCall": "Assign to call",
     "assignedUnit": "Assigned Unit",
     "assignedUnits": "Assigned Units",
+    "callCountyService": "Call County Service",
     "callEvents": "Call Events",
     "callFilters": "Call Filters",
     "callTow": "Call Tow",
