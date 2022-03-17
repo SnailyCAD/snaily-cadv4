@@ -180,6 +180,7 @@ exports[`Should return translations for calls & admin in EN 1`] = `
     "importViaFile": "Import via file",
     "inBolo": "In BOLO",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
+    "managePermissions": "Manage Permissions",
     "management": "Management",
     "noBusinesses": "There are no businesses for this CAD yet.",
     "noCitizens": "There are no citizens for this CAD yet.",
