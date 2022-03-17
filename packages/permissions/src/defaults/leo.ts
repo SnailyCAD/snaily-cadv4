@@ -9,4 +9,5 @@ export const defaultLeoPermissions = [
   Permissions.ManageJail,
   Permissions.ViewCallHistory,
   Permissions.ManageCallHistory,
+  Permissions.LiveMap,
 ];

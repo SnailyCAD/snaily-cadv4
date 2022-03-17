@@ -1,5 +1,5 @@
 export enum Permissions {
-  // << 10 = leo
+  // leo related
   ViewIncidents = "ViewIncidents",
   ManageIncidents = "ManageIncidents",
   ViewImpoundLot = "ViewImpoundLot",
@@ -8,8 +8,12 @@ export enum Permissions {
   ManageJail = "ManageJail",
   ViewCallHistory = "ViewCallHistory",
   ManageCallHistory = "ManageCallHistory",
+  LiveMap = "LiveMap",
 
-  // << 80 = admin
+  //  citizen related
+  ViewTowLogs = "ViewTowLogs",
+
+  // admin related
   ViewUsers = "ViewUsers",
   ManageUsers = "ManageUsers",
   BanUsers = "BanUsers",
