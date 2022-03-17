@@ -32,7 +32,7 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
       routeData.permissions,
     );
 
-    if (!user.permissions && fallback) {
+    if (!user.permissions?.length && fallback) {
       hasPerm = fallback;
     }
 

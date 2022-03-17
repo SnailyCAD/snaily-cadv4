@@ -16,6 +16,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   users: User[];
@@ -25,6 +26,7 @@ export default function ManageUsers({ users: data }: Props) {
   const [users, setUsers] = React.useState<User[]>(data);
   const [search, setSearch] = React.useState("");
   const { cad } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -79,7 +81,12 @@ export default function ManageUsers({ users: data }: Props) {
               { Header: "EMS/FD Access", accessor: "isEmsFd" },
               { Header: "Dispatch Access", accessor: "isDispatch" },
               cad?.whitelisted ? { Header: "Whitelist Status", accessor: "whitelistStatus" } : null,
-              { Header: common("actions"), accessor: "actions" },
+              hasPermissions(
+                [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+                true,
+              )
+                ? { Header: common("actions"), accessor: "actions" }
+                : null,
             ]}
           />
         </TabsContent>

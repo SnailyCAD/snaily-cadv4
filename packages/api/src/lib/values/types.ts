@@ -23,7 +23,7 @@ export type ValuesSelect =
   | ({ name: "departmentValue" } & Prisma.DepartmentValueFindManyArgs)
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs);
 
-// todo: use this
+// @ts-expect-error todo: use this
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   LICENSE: [Permissions.ManageValueLicense],
 };

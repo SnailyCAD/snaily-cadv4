@@ -75,4 +75,4 @@ export const UPDATE_USER_SCHEMA = z.object({
   discordId: z.string().max(255),
 });
 
-export const PERMISSIONS_SCHEMA = z.record(z.number());
+export const PERMISSIONS_SCHEMA = z.record(z.string());

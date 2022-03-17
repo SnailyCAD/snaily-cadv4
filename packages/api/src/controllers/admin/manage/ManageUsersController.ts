@@ -28,6 +28,7 @@ export class ManageUsersController {
 
   @Get("/")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUsers,
       Permissions.ManageUsers,
@@ -46,6 +47,7 @@ export class ManageUsersController {
 
   @Get("/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewUsers,
       Permissions.ManageUsers,
@@ -70,6 +72,7 @@ export class ManageUsersController {
 
   @Put("/permissions/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
@@ -99,6 +102,7 @@ export class ManageUsersController {
 
   @Put("/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async updateUserById(
@@ -148,6 +152,7 @@ export class ManageUsersController {
 
   @Post("/temp-password/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
   async giveUserTempPassword(@PathParams("id") userId: string) {
@@ -188,6 +193,7 @@ export class ManageUsersController {
 
   @Post("/:id/:type")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.BanUsers],
   })
   async banUserById(
@@ -231,6 +237,7 @@ export class ManageUsersController {
 
   @Delete("/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUsers],
   })
   async deleteUserAccount(@PathParams("id") userId: string) {
@@ -258,6 +265,7 @@ export class ManageUsersController {
 
   @Post("/pending/:id/:type")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers],
   })
   async acceptOrDeclineUser(
@@ -296,20 +304,21 @@ export class ManageUsersController {
     return true;
   }
 
-  protected parsePermissions(data: Record<string, number>) {
-    let updatedPermissions = 0;
-    const entries = Object.entries(Permissions);
+  protected parsePermissions(data: Record<string, string>) {
+    const permissions: string[] = [];
+    const values = Object.values(Permissions);
 
-    entries.forEach(([name, value]) => {
-      if (typeof name !== "string") return;
-      if (typeof value === "string") return;
-
+    values.forEach((name) => {
       const updatedPermission = data[name];
       if (!updatedPermission) return;
 
-      updatedPermissions |= value;
+      console.log({ updatedPermission });
+
+      permissions.push(updatedPermission);
     });
 
-    return updatedPermissions;
+    console.log({ permissions });
+
+    return permissions;
   }
 }

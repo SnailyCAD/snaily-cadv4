@@ -10,11 +10,11 @@ export function hasPermission(
   for (const perm of toCheck) {
     if (!userPermissions.includes(perm)) {
       invalids.push(perm);
-      return false;
+      continue;
     }
   }
 
-  return true;
+  return invalids.length !== toCheck.length;
 }
 
 export type PermissionNames = keyof typeof Permissions;

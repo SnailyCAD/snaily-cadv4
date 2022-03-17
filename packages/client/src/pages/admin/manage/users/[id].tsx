@@ -17,15 +17,23 @@ import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { BanArea } from "components/admin/manage/users/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
-import { DangerZone } from "components/admin/manage/users/DangerZone";
 import { Title } from "components/shared/Title";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { usePermission, Permissions } from "hooks/usePermission";
+import dynamic from "next/dynamic";
+
+const DangerZone = dynamic(
+  async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
+);
+
+const BanArea = dynamic(
+  async () => (await import("components/admin/manage/users/BanArea")).BanArea,
+);
 
 interface Props {
   user: User | null;
@@ -38,6 +46,7 @@ export default function ManageCitizens(props: Props) {
   const router = useRouter();
   const { user: session } = useAuth();
   const { openModal } = useModal();
+  const { hasPermissions } = usePermission();
 
   React.useEffect(() => {
     if (!user) {
@@ -175,13 +184,14 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <BanArea setUser={setUser} user={user} />
         <ManagePermissionsModal user={user} />
 
         {user.rank !== Rank.OWNER ? (
           <>
-            <BanArea setUser={setUser} user={user} />
-            <DangerZone user={user} />
+            {hasPermissions([Permissions.BanUsers], true) ? (
+              <BanArea setUser={setUser} user={user} />
+            ) : null}
+            {hasPermissions([Permissions.DeleteUsers], true) ? <DangerZone user={user} /> : null}
           </>
         ) : null}
       </div>
