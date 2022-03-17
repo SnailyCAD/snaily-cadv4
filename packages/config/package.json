@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/config",
-  "version": "1.0.0-beta.72",
+  "version": "1.0.0-beta.73",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.0.0-beta.72",
+    "@snailycad/types": "1.0.0-beta.73",
     "tsup": "^5.12.1",
     "typescript": "^4.6.2",
     "vite": "^2.8.6",

@@ -23,7 +23,7 @@ type Type = typeof TYPES[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
-export class ManageUnitsController {
+export class AdminManageUnitsController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;
@@ -191,13 +191,15 @@ export class ManageUnitsController {
   async acceptOrDeclineUnit(
     @PathParams("officerId") officerId: string,
     @BodyParams("action") action: Action | null,
-    @BodyParams("type") type: Type,
+    @BodyParams("type") type: Type | null,
   ) {
+    console.log({ action, type });
+
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
     }
 
-    if (!TYPES.includes(type)) {
+    if (!type || !TYPES.includes(type)) {
       throw new BadRequest("invalidType");
     }
 

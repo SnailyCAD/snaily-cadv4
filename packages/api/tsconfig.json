@@ -28,5 +28,7 @@
       "migrations/*": ["./src/migrations/*"]
     }
   },
-  "ts-node": {}
+  "ts-node": {
+    "swc": true
+  }
 }
