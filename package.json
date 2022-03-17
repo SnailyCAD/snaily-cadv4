@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "snailycad",
-  "version": "1.0.0-beta.72",
+  "version": "1.0.0-beta.73",
   "packageManager": "yarn@3.2.0",
   "workspaces": [
     "packages/**"
