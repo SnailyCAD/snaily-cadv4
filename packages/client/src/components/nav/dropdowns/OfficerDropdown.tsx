@@ -43,7 +43,7 @@ export function OfficerDropdown() {
     {
       name: t("citizenLogs"),
       href: "/officer/supervisor/citizen-logs",
-      // show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
+      show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
     },
   ];
 

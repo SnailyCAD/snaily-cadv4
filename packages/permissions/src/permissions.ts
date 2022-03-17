@@ -9,6 +9,7 @@ export enum Permissions {
   ViewCallHistory = "ViewCallHistory",
   ManageCallHistory = "ManageCallHistory",
   LiveMap = "LiveMap",
+  ViewCitizenLogs = "ViewCitizenLogs",
 
   //  citizen related
   ViewTowLogs = "ViewTowLogs",
