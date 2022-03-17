@@ -1443,10 +1443,10 @@ __metadata:
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.40
     "@types/react-dom": ^17.0.13
-    "@types/react-table": ^7.7.9
+    "@types/react-table": ^7.7.10
     "@types/sortablejs": ^1.10.7
     "@types/uuid": ^8.3.4
-    autoprefixer: ^10.4.2
+    autoprefixer: ^10.4.4
     axios: ^0.26.1
     date-fns: ^2.28.0
     formik: ^2.2.9
@@ -1456,7 +1456,7 @@ __metadata:
     next: ^12.1.0
     next-intl: 2.4.0
     nookies: ^2.5.2
-    postcss: ^8.4.8
+    postcss: ^8.4.12
     pretty-bytes: ^6.0.0
     react: ^17.0.2
     react-bootstrap-icons: ^1.7.2
@@ -1483,7 +1483,7 @@ __metadata:
     typescript: ^4.6.2
     uuid: ^8.3.2
     vite: ^2.8.6
-    vitest: ^0.6.1
+    vitest: ^0.7.0
     zod: ^3.13.4
     zustand: ^3.7.1
   languageName: unknown
@@ -1497,7 +1497,7 @@ __metadata:
     tsup: ^5.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
-    vitest: ^0.6.1
+    vitest: ^0.7.0
   languageName: unknown
   linkType: soft
 
@@ -1531,7 +1531,7 @@ __metadata:
     tsup: ^5.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
-    vitest: ^0.6.1
+    vitest: ^0.7.0
   languageName: unknown
   linkType: soft
 
@@ -2354,12 +2354,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-table@npm:^7.7.9":
-  version: 7.7.9
-  resolution: "@types/react-table@npm:7.7.9"
+"@types/react-table@npm:^7.7.10":
+  version: 7.7.10
+  resolution: "@types/react-table@npm:7.7.10"
   dependencies:
     "@types/react": "*"
-  checksum: 3f6c847c8e904479875bb249af02b70e271c5480d0f8b94f7da96eb3980a83cf011d7e558e885259851e3af8defb6493deb147227242766ebca37c9cb630c306
+  checksum: 840f845c226c37c3f13f023974c37b4e941b7588c42dc5fcd5165463fd25005a9504a2c0d48df3325c0a63c2dc99c60fe1dfee4654b501b781ec2df3a4abfa64
   languageName: node
   linkType: hard
 
@@ -3066,13 +3066,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.2":
-  version: 10.4.2
-  resolution: "autoprefixer@npm:10.4.2"
+"autoprefixer@npm:^10.4.4":
+  version: 10.4.4
+  resolution: "autoprefixer@npm:10.4.4"
   dependencies:
-    browserslist: ^4.19.1
-    caniuse-lite: ^1.0.30001297
-    fraction.js: ^4.1.2
+    browserslist: ^4.20.2
+    caniuse-lite: ^1.0.30001317
+    fraction.js: ^4.2.0
     normalize-range: ^0.1.2
     picocolors: ^1.0.0
     postcss-value-parser: ^4.2.0
@@ -3080,7 +3080,7 @@ __metadata:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: dbd13e641eaa7d7e3121769c22cc439222f1a9d0371a583d12300849de7287ece1e793767ff9902842dbfd56c4b7c19ed9fe1947c9f343ba2f4f3519dbddfdef
+  checksum: bd42e23d71af0228b6b0b27d0d0b33c95e67562e55eb4ca0e221cf795a06482c90d565d6544a5f4090d8e303b09b200845fa2bcaaa707d1e8777974250dffe1f
   languageName: node
   linkType: hard
 
@@ -3239,18 +3239,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.19.1":
-  version: 4.20.0
-  resolution: "browserslist@npm:4.20.0"
+"browserslist@npm:^4.20.2":
+  version: 4.20.2
+  resolution: "browserslist@npm:4.20.2"
   dependencies:
-    caniuse-lite: ^1.0.30001313
-    electron-to-chromium: ^1.4.76
+    caniuse-lite: ^1.0.30001317
+    electron-to-chromium: ^1.4.84
     escalade: ^3.1.1
     node-releases: ^2.0.2
     picocolors: ^1.0.0
   bin:
     browserslist: cli.js
-  checksum: 6d77f54bd43e7e1b86c3f10a3aa84b6c198f2ecc8b345ebd42cb9feb1c143554ad62a0eaf1365f28d14589a4d1fb12b367ade3798fa493dab5cff4ca525384aa
+  checksum: 18e09beeae32e69fea45fc3642240fb63027b1460d90e24da86377177dca3d82c80f8fa44469d95109e3962f08eb2a23e03037bd5e1f1ec38e4866e2a8572435
   languageName: node
   linkType: hard
 
@@ -3453,10 +3453,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001283, caniuse-lite@npm:^1.0.30001297, caniuse-lite@npm:^1.0.30001313":
+"caniuse-lite@npm:^1.0.30001283":
   version: 1.0.30001314
   resolution: "caniuse-lite@npm:1.0.30001314"
   checksum: d82e1b8b287b1b2d2ed25c4495fe293276853dd9c77553c722929a6142fc49b3dd5ea21a95f6410d93319434a5bd071c304ea92e93debbcf292a9156cf08b35d
+  languageName: node
+  linkType: hard
+
+"caniuse-lite@npm:^1.0.30001317":
+  version: 1.0.30001317
+  resolution: "caniuse-lite@npm:1.0.30001317"
+  checksum: 0a5fc7fb8c54dde515c2d468e5fc9e0cf2e82dd40d596cdffed90f64c50b5dadd0ab0c25e04769d86488b3115f949abd31d54d1f74d0029b45fa8206a031f47a
   languageName: node
   linkType: hard
 
@@ -4565,10 +4572,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.4.76":
-  version: 1.4.78
-  resolution: "electron-to-chromium@npm:1.4.78"
-  checksum: 3a579fe3c6626dc3a311566cd41ee6cbf2dc2666285c5e329784f4a9329a572b9b5f73c717db4466fdc8d295e0b7a6ee23ad1b5160771979c4a9fd9f8667c681
+"electron-to-chromium@npm:^1.4.84":
+  version: 1.4.86
+  resolution: "electron-to-chromium@npm:1.4.86"
+  checksum: 41d9f8ef28bba0cbc79a7662fb067dc47f418ca6a7a0df5f251a231e05cc2c7dfe40b6328e3da68661218ca1e682476caf8147b4fe35508b96d2e264a14a1992
   languageName: node
   linkType: hard
 
@@ -6119,7 +6126,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fraction.js@npm:^4.1.2":
+"fraction.js@npm:^4.2.0":
   version: 4.2.0
   resolution: "fraction.js@npm:4.2.0"
   checksum: 8c76a6e21dedea87109d6171a0ac77afa14205794a565d71cb10d2925f629a3922da61bf45ea52dbc30bce4d8636dc0a27213a88cbd600eab047d82f9a3a94c5
@@ -9504,7 +9511,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.6, postcss@npm:^8.4.8":
+"postcss@npm:^8.4.12":
+  version: 8.4.12
+  resolution: "postcss@npm:8.4.12"
+  dependencies:
+    nanoid: ^3.3.1
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: 248e3d0f9bbb8efaafcfda7f91627a29bdc9a19f456896886330beb28c5abea0e14c7901b35191928602e2eccbed496b1e94097d27a0b2a980854cd00c7a835f
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.6":
   version: 8.4.8
   resolution: "postcss@npm:8.4.8"
   dependencies:
@@ -9552,12 +9570,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "prettier@npm:2.5.1"
+"prettier@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "prettier@npm:2.6.0"
   bin:
     prettier: bin-prettier.js
-  checksum: 21b9408476ea1c544b0e45d51ceb94a84789ff92095abb710942d780c862d0daebdb29972d47f6b4d0f7ebbfb0ffbf56cc2cfa3e3e9d1cca54864af185b15b66
+  checksum: 3e527ad62279676778a8404d18174d7ca2365ada4caba6eebbcdd9907d1187afd3bc6ade5b4e5f5d4549bb9fb71e45ca8930d71500017635524f8fc05bc52e93
   languageName: node
   linkType: hard
 
@@ -10801,7 +10819,7 @@ __metadata:
     dotenv: ^16.0.0
     eslint: ^8.11.0
     husky: ^7.0.4
-    prettier: ^2.5.1
+    prettier: ^2.6.0
     pretty-quick: ^3.1.3
     turbo: ^1.1.6
   languageName: unknown
@@ -12480,9 +12498,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "vitest@npm:0.6.1"
+"vitest@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "vitest@npm:0.7.0"
   dependencies:
     "@types/chai": ^4.3.0
     "@types/chai-subset": ^1.3.3
@@ -12507,7 +12525,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 2064a0cc2fbe70cb11531f8bbdfb4e11b2cd32b83947ce434588c6395d590d91be5d88e1b45452d047c09530d362ba62e6ce444b9e69106a5ed55b3e0b5e1ad7
+  checksum: c8b19d373e788ee730ce3cf7fe033f85943e06ea7f719687fa3f2f14e4f8911343b7dbde007c892482e16de2fd65a18f1cf82c8a074f4e4deaa807c98af0866a
   languageName: node
   linkType: hard
 
