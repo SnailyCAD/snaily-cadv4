@@ -23,7 +23,7 @@ export function ManagePermissionsModal({ user }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
-  const userPermissions = getPermissions(user.permissions ?? 0);
+  const userPermissions = getPermissions(user.permissions ?? []);
   const permissions = Object.keys(Permissions).filter((v) => isNaN(v as any));
   const { state, execute } = useFetch();
 
@@ -91,7 +91,7 @@ export function ManagePermissionsModal({ user }: Props) {
 }
 
 function makePermissionsData(data: Record<PermissionNames, boolean>) {
-  const newPermissions: Partial<Record<PermissionNames, number>> = {};
+  const newPermissions: Partial<Record<PermissionNames, Permissions>> = {};
 
   for (const key in data) {
     const permission = data[key as PermissionNames];

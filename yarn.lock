@@ -638,7 +638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^3.10.0":
+"@prisma/client@npm:^3.11.0":
   version: 3.11.0
   resolution: "@prisma/client@npm:3.11.0"
   dependencies:
@@ -1367,23 +1367,24 @@ __metadata:
   resolution: "@snailycad/api@workspace:packages/api"
   dependencies:
     "@discordjs/rest": ^0.3.0
-    "@prisma/client": ^3.10.0
+    "@prisma/client": ^3.11.0
     "@snailycad/config": 1.0.0-beta.72
     "@snailycad/permissions": 1.0.0-beta.72
     "@snailycad/schemas": 1.0.0-beta.72
     "@snailycad/types": 1.0.0-beta.72
     "@snailycad/utils": 1.0.0-beta.72
-    "@swc/core": ^1.2.155
-    "@swc/helpers": ^0.3.6
-    "@tsed/common": ^6.106.0
-    "@tsed/core": ^6.106.0
-    "@tsed/di": ^6.106.0
-    "@tsed/exceptions": ^6.106.0
-    "@tsed/json-mapper": ^6.106.0
-    "@tsed/platform-express": ^6.106.0
-    "@tsed/schema": ^6.106.0
-    "@tsed/socketio": ^6.106.0
-    "@tsed/swagger": ^6.106.0
+    "@swc/cli": ^0.1.55
+    "@swc/core": ^1.2.157
+    "@swc/helpers": ^0.3.8
+    "@tsed/common": ^6.107.2
+    "@tsed/core": ^6.107.2
+    "@tsed/di": ^6.107.2
+    "@tsed/exceptions": ^6.107.2
+    "@tsed/json-mapper": ^6.107.2
+    "@tsed/platform-express": ^6.107.2
+    "@tsed/schema": ^6.107.2
+    "@tsed/socketio": ^6.107.2
+    "@tsed/swagger": ^6.107.2
     "@types/bcrypt": ^5.0.0
     "@types/compression": ^1.7.2
     "@types/cookie": ^0.4.1
@@ -1408,7 +1409,7 @@ __metadata:
     nanoid: ^3.3.1
     nodemon: ^2.0.15
     otplib: ^12.0.1
-    prisma: ^3.10.0
+    prisma: ^3.11.0
     qrcode: ^1.5.0
     regenerator-runtime: ^0.13.9
     socket.io: ^4.4.1
@@ -1564,6 +1565,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@swc/cli@npm:^0.1.55":
+  version: 0.1.55
+  resolution: "@swc/cli@npm:0.1.55"
+  dependencies:
+    commander: ^7.1.0
+    fast-glob: ^3.2.5
+    slash: 3.0.0
+    source-map: ^0.7.3
+  peerDependencies:
+    "@swc/core": ^1.2.66
+    chokidar: ^3.5.1
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  bin:
+    spack: bin/spack.js
+    swc: bin/swc.js
+  checksum: db6a727716acffd6202158bb47ab1541f9b43f1a8146c8588b33a969330f08ffbc59d813bad192929acb67f6675aabeee20618522b0b7533a9f77b35c49edaa1
+  languageName: node
+  linkType: hard
+
 "@swc/core-android-arm-eabi@npm:1.2.157":
   version: 1.2.157
   resolution: "@swc/core-android-arm-eabi@npm:1.2.157"
@@ -1655,7 +1677,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.2.155":
+"@swc/core@npm:^1.2.157":
   version: 1.2.157
   resolution: "@swc/core@npm:1.2.157"
   dependencies:
@@ -1705,7 +1727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.3.6":
+"@swc/helpers@npm:^0.3.8":
   version: 0.3.8
   resolution: "@swc/helpers@npm:0.3.8"
   checksum: 105e77db7757e6955490bc4551899f5130db373b8d8d15f558859f218138c308928274383f2df65702c51c302e434fbccd632a2a3c413f6d2edcb56c20b1ac82
@@ -1756,7 +1778,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/common@npm:^6.106.0":
+"@tsed/common@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/common@npm:6.107.2"
   dependencies:
@@ -1801,7 +1823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/core@npm:6.107.2, @tsed/core@npm:^6.106.0":
+"@tsed/core@npm:6.107.2, @tsed/core@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/core@npm:6.107.2"
   dependencies:
@@ -1811,7 +1833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/di@npm:^6.106.0":
+"@tsed/di@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/di@npm:6.107.2"
   dependencies:
@@ -1824,7 +1846,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/exceptions@npm:6.107.2, @tsed/exceptions@npm:^6.106.0":
+"@tsed/exceptions@npm:6.107.2, @tsed/exceptions@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/exceptions@npm:6.107.2"
   dependencies:
@@ -1835,7 +1857,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/json-mapper@npm:6.107.2, @tsed/json-mapper@npm:^6.106.0":
+"@tsed/json-mapper@npm:6.107.2, @tsed/json-mapper@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/json-mapper@npm:6.107.2"
   dependencies:
@@ -1921,7 +1943,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/platform-express@npm:^6.106.0":
+"@tsed/platform-express@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/platform-express@npm:6.107.2"
   dependencies:
@@ -2022,7 +2044,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/schema@npm:6.107.2, @tsed/schema@npm:^6.106.0":
+"@tsed/schema@npm:6.107.2, @tsed/schema@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/schema@npm:6.107.2"
   dependencies:
@@ -2044,7 +2066,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/socketio@npm:^6.106.0":
+"@tsed/socketio@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/socketio@npm:6.107.2"
   dependencies:
@@ -2062,7 +2084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/swagger@npm:^6.106.0":
+"@tsed/swagger@npm:^6.107.2":
   version: 6.107.2
   resolution: "@tsed/swagger@npm:6.107.2"
   dependencies:
@@ -3791,6 +3813,13 @@ __metadata:
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: d7b9913ff92cae20cb577a4ac6fcc121bd6223319e54a40f51a14740a681ad5c574fd29a57da478a5f234a6fa6c52cbf0b7c641353e03c648b1ae85ba670b977
+  languageName: node
+  linkType: hard
+
+"commander@npm:^7.1.0":
+  version: 7.2.0
+  resolution: "commander@npm:7.2.0"
+  checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
   languageName: node
   linkType: hard
 
@@ -5611,7 +5640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.9":
+"fast-glob@npm:^3.1.1, fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9":
   version: 3.2.11
   resolution: "fast-glob@npm:3.2.11"
   dependencies:
@@ -9362,7 +9391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^3.10.0":
+"prisma@npm:^3.11.0":
   version: 3.11.0
   resolution: "prisma@npm:3.11.0"
   dependencies:
@@ -10508,7 +10537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slash@npm:^3.0.0":
+"slash@npm:3.0.0, slash@npm:^3.0.0":
   version: 3.0.0
   resolution: "slash@npm:3.0.0"
   checksum: 94a93fff615f25a999ad4b83c9d5e257a7280c90a32a7cb8b4a87996e4babf322e469c42b7f649fd5796edd8687652f3fb452a86dc97a816f01113183393f11c
