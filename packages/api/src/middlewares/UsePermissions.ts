@@ -24,7 +24,7 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     console.log({ routeData });
 
     const hasPerm = hasPermission(
-      Permissions.ViewUsers | Permissions.ManageUsers,
+      [Permissions.ViewUsers, Permissions.ManageUsers],
       routeData.permissions,
     );
     if (!hasPerm) {

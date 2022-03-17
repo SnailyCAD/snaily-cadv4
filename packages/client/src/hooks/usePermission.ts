@@ -19,7 +19,7 @@ export function usePermission() {
   function _getPermissions() {
     if (!user) return false;
     // todo: add default permissions?
-    return getPermissions(user.permissions ?? 0);
+    return getPermissions(user.permissions ?? []);
   }
 
   return { hasPermissions: _hasPermission, getPermissions: _getPermissions };
