@@ -1,25 +1,30 @@
-import { Permissions } from "./permissions";
+import { allPermissions, type Permissions } from "./permissions";
 
 export * from "./permissions";
-export function hasPermission(userPermissions: number, toCheck: readonly Permissions[]) {
-  let toCheckTotal = 0;
+export function hasPermission(
+  userPermissions: readonly (string | Permissions)[],
+  toCheck: readonly Permissions[],
+) {
+  const invalids = [];
 
-  for (const p of toCheck) {
-    toCheckTotal |= p;
+  for (const perm of toCheck) {
+    if (!userPermissions.includes(perm)) {
+      invalids.push(perm);
+      return false;
+    }
   }
 
-  return !!(toCheckTotal & userPermissions);
+  return true;
 }
 
 export type PermissionNames = keyof typeof Permissions;
-export function getPermissions(userPermissions: number): Record<PermissionNames, boolean> {
+export function getPermissions(
+  userPermissions: readonly (string | Permissions)[],
+): Record<PermissionNames, boolean> {
   const permissions: Record<string, boolean> = {};
 
-  Object.entries(Permissions).forEach(([name, value]) => {
-    const n = Number(value);
-    if (isNaN(n)) return;
-
-    permissions[name] = hasPermission(userPermissions, [n]);
+  allPermissions.forEach((name) => {
+    permissions[name] = hasPermission(userPermissions, [name as Permissions]);
   });
 
   return permissions;

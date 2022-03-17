@@ -1,8 +1,12 @@
 import { test, expect } from "vitest";
 import { hasPermission, Permissions, allPermissions, getPermissions } from "../src/index";
 
-const manageUsers =
-  Permissions.ViewUsers | Permissions.ManageUsers | Permissions.BanUsers | Permissions.DeleteUsers;
+const manageUsers = [
+  Permissions.ViewUsers,
+  Permissions.ManageUsers,
+  Permissions.BanUsers,
+  Permissions.DeleteUsers,
+];
 
 test("Should allow a user to manage/delete/ban a user", () => {
   expect(
@@ -17,17 +21,16 @@ test("Should allow a user to manage/delete/ban a user", () => {
 
 test("Should not allow a user to manage/delete/ban a user", () => {
   expect(
-    hasPermission(Permissions.ViewUsers, [
-      Permissions.ManageUsers,
-      Permissions.BanUsers,
-      Permissions.DeleteUsers,
-    ]),
+    hasPermission(
+      [Permissions.ViewUsers],
+      [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+    ),
   ).toBe(false);
 });
 
 test("Should not allow a user to delete a user", () => {
   expect(
-    hasPermission(Permissions.ViewUsers | Permissions.ManageUsers, [Permissions.DeleteUsers]),
+    hasPermission([Permissions.ViewUsers, Permissions.ManageUsers], [Permissions.DeleteUsers]),
   ).toBe(false);
 });
 
