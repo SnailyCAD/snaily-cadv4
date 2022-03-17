@@ -90,9 +90,9 @@ export type DiscordRoles = {
   id: string;
   guildId: string;
   leoRoles?: DiscordRole[];
+  emsFdRoles?: DiscordRole[];
   leoSupervisorRoleId: string | null;
   leoSupervisorRole: DiscordRole | null;
-  emsFdRoleId: string | null;
   emsFdRole: DiscordRole | null;
   dispatchRoleId: string | null;
   dispatchRole: DiscordRole | null;
