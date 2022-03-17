@@ -69,6 +69,6 @@ export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
 export const MEDICAL_RECORD_SCHEMA = z.object({
   type: z.string().max(255),
   description: z.string(),
-  bloodGroup: z.string().max(255),
+  bloodGroup: z.string().max(255).nullable(),
   citizenId: z.string().min(2).max(255),
 });

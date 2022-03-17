@@ -59,6 +59,8 @@ function omitUnnecessaryProperties(values: readonly any[]) {
       delete v.createdAt;
       delete v.updatedAt;
       delete v.type;
+
+      return v;
     }
 
     if (isStatusValue(v)) {

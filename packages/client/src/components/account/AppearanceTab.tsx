@@ -55,11 +55,11 @@ export function AppearanceTab() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-3">
-            <FormField checkbox errorMessage={errors.isDarkTheme} label="Dark Theme">
+            <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
             </FormField>
 
-            <FormField errorMessage={errors.statusViewMode} label="Status View">
+            <FormField errorMessage={errors.statusViewMode} label={t("statusView")}>
               <Select
                 values={Object.values(StatusViewMode).map((v) => ({
                   value: v,
@@ -71,7 +71,7 @@ export function AppearanceTab() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.tableActionsAlignment} label="Table Actions Alignment">
+            <FormField errorMessage={errors.tableActionsAlignment} label={t("tableAlignment")}>
               <Select
                 values={Object.values(TableActionsAlignment).map((v) => ({
                   value: v,
@@ -84,9 +84,9 @@ export function AppearanceTab() {
             </FormField>
 
             <div className="mb-5">
-              <h3 className="text-2xl font-semibold mb-3">Sounds</h3>
+              <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
 
-              <FormField label="Panic Button" checkbox>
+              <FormField label={t("panicButton")} checkbox>
                 <Toggle
                   toggled={values.soundSettings.panicButton}
                   onClick={handleChange}
@@ -94,7 +94,7 @@ export function AppearanceTab() {
                 />
               </FormField>
 
-              <FormField label="Signal 100" checkbox>
+              <FormField label={t("signal100")} checkbox>
                 <Toggle
                   toggled={values.soundSettings.signal100}
                   onClick={handleChange}

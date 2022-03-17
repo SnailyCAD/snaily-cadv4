@@ -25,7 +25,6 @@ export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
   const t = useTranslations("Calls");
   const { citizens } = useCitizen();
   const router = useRouter();
-
   const isTow = router.pathname === "/tow";
 
   const INITIAL_VALUES = {

@@ -72,7 +72,7 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ values, handleChange }) => (
           <Form>
-            <FormField label={"Officers"}>
+            <FormField label={t("officers")}>
               <Select
                 isMulti
                 values={activeOfficers.filter(isUnitOfficer).map((v) => makeValuesOption(v))}

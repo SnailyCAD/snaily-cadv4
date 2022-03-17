@@ -15,7 +15,7 @@ export const CREATE_911_CALL = z.object({
 });
 
 export const LINK_INCIDENT_TO_CALL = z.object({
-  incidentId: z.string().min(2).max(255),
+  incidentIds: z.array(z.any()),
 });
 
 export const CREATE_911_CALL_EVENT = z.object({

@@ -38,7 +38,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
     <AdminLayout>
       <Title>{t("adminDashboard")}</Title>
 
-      <h1 className="text-3xl font-semibold dark:text-white">Dashboard</h1>
+      <h1 className="text-3xl font-semibold dark:text-white">{t("adminDashboard")}</h1>
 
       <Group name="Users">
         <Item count={counts.activeUsers} name="active" />
@@ -89,7 +89,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
 
 const Group = ({ name, children }: { name: string; children: React.ReactNode }) => {
   return (
-    <section className="max-w-2xl my-2 mb-7">
+    <section className="max-w-2xl my-2 mb-7 select-none">
       <h4 className="text-lg">{name}</h4>
 
       <div className="flex justify-between">{children}</div>

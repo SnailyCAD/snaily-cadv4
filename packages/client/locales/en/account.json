@@ -19,10 +19,18 @@
     "scanQRCode": "Scan this QR code to add it to your authenticator app",
     "verifyCode": " Verify by entering a code from your authenticator app",
     "disable": "Disable",
-    "enable2FA": "Enable 2FA",
-    "disable2FA": "Disable 2FA",
+    "enable2FA": "Enable Two-Factor Authentication",
+    "disable2FA": "Disable Two-Factor Authentication",
     "next": "Next",
-    "verify": "Verify"
+    "verify": "Verify",
+    "enable2faSuccess": "Successfully enabled Two-Factor Authentication",
+    "disable2faSuccess": "Successfully disabled Two-Factor Authentication",
+    "darkTheme": "Dark Theme",
+    "statusView": "Status View",
+    "tableAlignment": "Table Actions Alignment",
+    "sounds": "Sounds",
+    "panicButton": "Panic Button",
+    "signal100": "Signal 100"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

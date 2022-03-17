@@ -203,7 +203,7 @@ export class CitizenController {
       },
     });
 
-    const updated = await updateCitizenLicenseCategories(citizen, data, {
+    await updateCitizenLicenseCategories(citizen, data, {
       gender: true,
       ethnicity: true,
       weaponLicense: true,
@@ -213,7 +213,7 @@ export class CitizenController {
       dlCategory: { include: { value: true } },
     });
 
-    return updated;
+    return citizen;
   }
 
   @Put("/:id")

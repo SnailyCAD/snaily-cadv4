@@ -1,121 +1,69 @@
 /* eslint-disable */
-import {
-  UseColumnOrderInstanceProps,
-  UseColumnOrderState,
-  UseExpandedHooks,
-  UseExpandedInstanceProps,
-  UseExpandedOptions,
-  UseExpandedRowProps,
-  UseExpandedState,
-  UseFiltersColumnOptions,
-  UseFiltersColumnProps,
-  UseFiltersInstanceProps,
-  UseFiltersOptions,
-  UseFiltersState,
-  UseGlobalFiltersColumnOptions,
-  UseGlobalFiltersInstanceProps,
-  UseGlobalFiltersOptions,
-  UseGlobalFiltersState,
-  UseGroupByCellProps,
-  UseGroupByColumnOptions,
-  UseGroupByColumnProps,
-  UseGroupByHooks,
-  UseGroupByInstanceProps,
-  UseGroupByOptions,
-  UseGroupByRowProps,
-  UseGroupByState,
-  UsePaginationInstanceProps,
-  UsePaginationOptions,
-  UsePaginationState,
-  UseResizeColumnsColumnOptions,
-  UseResizeColumnsColumnProps,
-  UseResizeColumnsOptions,
-  UseResizeColumnsState,
-  UseRowSelectHooks,
-  UseRowSelectInstanceProps,
-  UseRowSelectOptions,
-  UseRowSelectRowProps,
-  UseRowSelectState,
-  UseRowStateCellProps,
-  UseRowStateInstanceProps,
-  UseRowStateOptions,
-  UseRowStateRowProps,
-  UseRowStateState,
-  UseSortByColumnOptions,
-  UseSortByColumnProps,
-  UseSortByHooks,
-  UseSortByInstanceProps,
-  UseSortByOptions,
-  UseSortByState,
-} from "react-table";
+import type * as T from "react-table";
 
 declare module "react-table" {
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
 
   export interface TableOptions<D extends Record<string, unknown>>
-    extends UseExpandedOptions<D>,
-      UseFiltersOptions<D>,
-      UseGlobalFiltersOptions<D>,
-      UseGroupByOptions<D>,
-      UsePaginationOptions<D>,
-      UseResizeColumnsOptions<D>,
-      UseRowSelectOptions<D>,
-      UseRowStateOptions<D>,
-      UseSortByOptions<D>,
-      // note that having Record here allows you to add anything to the options, this matches the spirit of the
-      // underlying js library, but might be cleaner if it's replaced by a more specific type that matches your
-      // feature set, this is a safe default.
-      Record<string, any> {}
+    extends T.UseExpandedOptions<D>,
+      T.UseFiltersOptions<D>,
+      T.UseGlobalFiltersOptions<D>,
+      T.UseGroupByOptions<D>,
+      T.UsePaginationOptions<D>,
+      T.UseResizeColumnsOptions<D>,
+      T.UseRowSelectOptions<D>,
+      T.UseRowStateOptions<D>,
+      T.UseSortByOptions<D> {}
 
   export interface Hooks<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseExpandedHooks<D>,
-      UseGroupByHooks<D>,
-      UseRowSelectHooks<D>,
-      UseSortByHooks<D> {}
+    extends T.UseExpandedHooks<D>,
+      T.UseGroupByHooks<D>,
+      T.UseRowSelectHooks<D>,
+      T.UseSortByHooks<D> {}
 
   export interface TableInstance<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseColumnOrderInstanceProps<D>,
-      UseExpandedInstanceProps<D>,
-      UseFiltersInstanceProps<D>,
-      UseGlobalFiltersInstanceProps<D>,
-      UseGroupByInstanceProps<D>,
-      UsePaginationInstanceProps<D>,
-      UseRowSelectInstanceProps<D>,
-      UseRowStateInstanceProps<D>,
-      UseSortByInstanceProps<D> {}
+    extends T.UseColumnOrderInstanceProps<D>,
+      T.UseExpandedInstanceProps<D>,
+      T.UseFiltersInstanceProps<D>,
+      T.UseGlobalFiltersInstanceProps<D>,
+      T.UseGroupByInstanceProps<D>,
+      T.UsePaginationInstanceProps<D>,
+      T.UseRowSelectInstanceProps<D>,
+      T.UseRowStateInstanceProps<D>,
+      T.UseSortByInstanceProps<D> {}
 
   export interface TableState<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseColumnOrderState<D>,
-      UseExpandedState<D>,
-      UseFiltersState<D>,
-      UseGlobalFiltersState<D>,
-      UseGroupByState<D>,
-      UsePaginationState<D>,
-      UseResizeColumnsState<D>,
-      UseRowSelectState<D>,
-      UseRowStateState<D>,
-      UseSortByState<D> {}
+    extends T.UseColumnOrderState<D>,
+      T.UseExpandedState<D>,
+      T.UseFiltersState<D>,
+      T.UseGlobalFiltersState<D>,
+      T.UseGroupByState<D>,
+      T.UsePaginationState<D>,
+      T.UseResizeColumnsState<D>,
+      T.UseRowSelectState<D>,
+      T.UseRowStateState<D>,
+      T.UseSortByState<D> {}
 
   export interface ColumnInterface<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseFiltersColumnOptions<D>,
-      UseGlobalFiltersColumnOptions<D>,
-      UseGroupByColumnOptions<D>,
-      UseResizeColumnsColumnOptions<D>,
-      UseSortByColumnOptions<D> {}
+    extends T.UseFiltersColumnOptions<D>,
+      T.UseGlobalFiltersColumnOptions<D>,
+      T.UseGroupByColumnOptions<D>,
+      T.UseResizeColumnsColumnOptions<D>,
+      T.UseSortByColumnOptions<D> {}
 
   export interface ColumnInstance<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseFiltersColumnProps<D>,
-      UseGroupByColumnProps<D>,
-      UseResizeColumnsColumnProps<D>,
-      UseSortByColumnProps<D> {}
+    extends T.UseFiltersColumnProps<D>,
+      T.UseGroupByColumnProps<D>,
+      T.UseResizeColumnsColumnProps<D>,
+      T.UseSortByColumnProps<D> {}
 
   export interface Cell<D extends Record<string, unknown> = Record<string, unknown>, V = any>
-    extends UseGroupByCellProps<D>,
-      UseRowStateCellProps<D> {}
+    extends T.UseGroupByCellProps<D>,
+      T.UseRowStateCellProps<D> {}
 
   export interface Row<D extends Record<string, unknown> = Record<string, unknown>>
-    extends UseExpandedRowProps<D>,
-      UseGroupByRowProps<D>,
-      UseRowSelectRowProps<D>,
-      UseRowStateRowProps<D> {}
+    extends T.UseExpandedRowProps<D>,
+      T.UseGroupByRowProps<D>,
+      T.UseRowSelectRowProps<D>,
+      T.UseRowStateRowProps<D> {}
 }

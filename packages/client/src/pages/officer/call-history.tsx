@@ -31,13 +31,14 @@ const DescriptionModal = dynamic(
 );
 
 interface Props {
-  data: (Full911Call & { incidents: LeoIncident[] })[];
+  data: Full911Call[];
   incidents: LeoIncident[];
   officers: Officer[];
   deputies: EmsFdDeputy[];
 }
 
-export default function CallHistory({ data: calls, incidents, officers, deputies }: Props) {
+export default function CallHistory({ data, incidents, officers, deputies }: Props) {
+  const [calls, setCalls] = React.useState(data);
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
@@ -123,7 +124,7 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
             filter={search}
             defaultSort={{ columnId: "createdAt", descending: true }}
             data={calls.map((call) => {
-              const caseNumbers = call.incidents.map((i) => `#${i.caseNumber}`).join(", ");
+              const caseNumbers = (call.incidents ?? []).map((i) => `#${i.caseNumber}`).join(", ");
               return {
                 checkbox: (
                   <input
@@ -183,7 +184,21 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
         </>
       )}
 
-      <LinkCallToIncidentModal incidents={incidents} call={tempCall} />
+      <LinkCallToIncidentModal
+        onSave={(call) => {
+          setCalls((calls) =>
+            calls.map((c) => {
+              if (c.id === call.id) {
+                return call;
+              }
+
+              return c;
+            }),
+          );
+        }}
+        incidents={incidents}
+        call={tempCall}
+      />
       <AlertModal
         title={t("purgeSelectedCalls")}
         description={t.rich("alert_purgeSelectedCalls", {

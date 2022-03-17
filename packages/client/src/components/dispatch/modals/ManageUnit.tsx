@@ -17,7 +17,6 @@ import { makeUnitName } from "lib/utils";
 import { CombinedLeoUnit, StatusValueType, StatusValue } from "@snailycad/types";
 import { classNames } from "lib/classNames";
 import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
-import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { isUnitCombined } from "@snailycad/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 
@@ -32,8 +31,8 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
   const { codes10 } = useValues();
-  const { activeOfficers, setActiveOfficers } = useDispatchState();
-  const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { activeOfficers, activeDeputies, setActiveDeputies, setActiveOfficers } =
+    useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
 
   const t = useTranslations("Leo");

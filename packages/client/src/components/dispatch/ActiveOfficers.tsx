@@ -90,7 +90,6 @@ export function ActiveOfficers() {
                 const activeIncident = isUnitOfficer(officer) && officer.activeIncident;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
-
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
 
                 return {

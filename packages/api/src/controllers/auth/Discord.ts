@@ -116,6 +116,9 @@ export class DiscordAuth {
           username: data.username,
           password: "",
           discordId: data.id,
+          isTow: !cad?.towWhitelisted,
+          isTaxi: !cad?.taxiWhitelisted,
+          whitelistStatus: cad?.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
         },
       });
 

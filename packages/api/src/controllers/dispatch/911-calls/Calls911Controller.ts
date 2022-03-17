@@ -14,6 +14,7 @@ import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad, Call911 } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
+import { manyToManyHelper } from "utils/manyToMany";
 
 const assignedUnitsInclude = {
   include: {
@@ -250,6 +251,38 @@ export class Calls911Controller {
     return true;
   }
 
+  @Post("/link-incident/:callId")
+  async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
+
+    const call = await prisma.call911.findUnique({
+      where: { id: callId },
+      include: { incidents: true },
+    });
+
+    if (!call) {
+      throw new NotFound("callNotFound");
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      call.incidents.map((v) => v.id),
+      data.incidentIds as string[],
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((v) =>
+        prisma.call911.update({ where: { id: call.id }, data: { incidents: v } }),
+      ),
+    );
+
+    const updated = await prisma.call911.findUnique({
+      where: { id: call.id },
+      include: { incidents: true },
+    });
+
+    return updated;
+  }
+
   @Post("/:type/:callId")
   async assignToCall(
     @PathParams("type") callType: "assign" | "unassign",
@@ -313,35 +346,6 @@ export class Calls911Controller {
     this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
 
     return this.officerOrDeputyToUnit(updated);
-  }
-
-  @Post("/link-incident/:callId")
-  async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
-    const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
-    const incidentId = data.incidentId;
-
-    const call = await prisma.call911.findUnique({
-      where: { id: callId },
-    });
-
-    if (!call) {
-      throw new NotFound("callNotFound");
-    }
-
-    const incident = await prisma.leoIncident.findUnique({
-      where: { id: incidentId },
-    });
-
-    if (!incident) {
-      throw new NotFound("incidentNotFound");
-    }
-
-    await prisma.leoIncident.update({
-      where: { id: incident.id },
-      data: { calls: { connect: { id: call.id } } },
-    });
-
-    return true;
   }
 
   protected officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {

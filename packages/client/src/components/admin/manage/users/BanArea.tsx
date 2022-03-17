@@ -2,7 +2,6 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
-import { useAuth } from "context/AuthContext";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -18,13 +17,8 @@ interface Props {
 export function BanArea({ user, setUser }: Props) {
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
-  const { user: session } = useAuth();
-
-  const formDisabled = user.rank === "OWNER" || user.id === session?.id;
 
   async function onSubmit(values: { reason: string }) {
-    if (formDisabled) return;
-
     const { json } = await execute(`/admin/manage/users/${user.id}/ban`, {
       method: "POST",
       data: values,
@@ -36,8 +30,6 @@ export function BanArea({ user, setUser }: Props) {
   }
 
   async function handleUnban() {
-    if (formDisabled) return;
-
     const { json } = await execute(`/admin/manage/users/${user.id}/unban`, {
       method: "POST",
     });
@@ -50,7 +42,7 @@ export function BanArea({ user, setUser }: Props) {
   const validate = handleValidate(BAN_SCHEMA);
 
   return (
-    <div className="p-3 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
+    <div className="p-4 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">Ban area</h1>
 
       {user.banned && user.rank !== "OWNER" ? (
@@ -70,7 +62,7 @@ export function BanArea({ user, setUser }: Props) {
         </div>
       ) : (
         <Formik validate={validate} onSubmit={onSubmit} initialValues={{ reason: "" }}>
-          {({ handleChange, handleSubmit, values, errors }) => (
+          {({ handleChange, handleSubmit, values, errors, isValid }) => (
             <form className="mt-3" onSubmit={handleSubmit}>
               <FormField errorMessage={errors.reason} label={common("reason")}>
                 <Input
@@ -78,14 +70,13 @@ export function BanArea({ user, setUser }: Props) {
                   value={values.reason}
                   onChange={handleChange}
                   name="reason"
-                  disabled={formDisabled}
                 />
               </FormField>
 
               <Button
                 className="flex items-center"
                 type="submit"
-                disabled={formDisabled || state === "loading"}
+                disabled={!isValid || state === "loading"}
                 variant="danger"
               >
                 {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}

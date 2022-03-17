@@ -88,7 +88,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             disabled={state === "loading"}
             onClick={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
           >
-            {common("cancel")}
+            {common("no")}
           </Button>
           <Button
             disabled={state === "loading"}
@@ -96,7 +96,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             onClick={handleCheckout}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("continue")}
+            {common("yes")}
           </Button>
         </div>
       </Modal>

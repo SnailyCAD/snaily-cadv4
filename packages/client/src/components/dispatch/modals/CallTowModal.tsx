@@ -9,7 +9,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
@@ -138,7 +138,7 @@ export function DispatchCallTowModal({ call }: Props) {
             <FormField
               errorMessage={errors.callCountyService}
               checkbox
-              label={"Call County Service"}
+              label={t("Calls.callCountyService")}
             >
               <Input
                 type="checkbox"
@@ -152,6 +152,8 @@ export function DispatchCallTowModal({ call }: Props) {
             <FormField errorMessage={errors.description} label={common("description")}>
               <Textarea name="description" onChange={handleChange} value={values.description} />
             </FormField>
+
+            <ImpoundLocationInfo />
 
             <footer className="flex justify-end mt-5">
               <div className="flex items-center">
@@ -177,4 +179,21 @@ export function DispatchCallTowModal({ call }: Props) {
       </Formik>
     </Modal>
   );
+}
+
+function ImpoundLocationInfo() {
+  const t = useTranslations("Leo");
+  const { values } = useFormikContext<{ plate: string | null; deliveryAddress: string | null }>();
+  const { impoundLot } = useValues();
+  const deliveryAddress =
+    values.deliveryAddress && impoundLot.values.find((v) => v.id === values.deliveryAddress);
+
+  return values.plate && deliveryAddress ? (
+    <p className="text-base italic">
+      {t("vehicleImpoundLocation", {
+        plate: values.plate,
+        impoundLocation: deliveryAddress.value,
+      })}
+    </p>
+  ) : null;
 }

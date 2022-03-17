@@ -27,7 +27,11 @@ export function DiscordRolesTab() {
         label: v.name,
         value: v.id,
       })) ?? [],
-    emsFdRoleId: discordRoles.emsFdRoleId,
+    emsFdRoles:
+      discordRoles.emsFdRoles?.map((v) => ({
+        label: v.name,
+        value: v.id,
+      })) ?? [],
     dispatchRoleId: discordRoles.dispatchRoleId,
     leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
     towRoleId: discordRoles.towRoleId,
@@ -47,7 +51,11 @@ export function DiscordRolesTab() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/admin/manage/cad-settings/discord", {
       method: "POST",
-      data: { ...values, leoRoles: values.leoRoles.map((v) => v.value) },
+      data: {
+        ...values,
+        leoRoles: values.leoRoles.map((v) => v.value),
+        emsFdRoles: values.emsFdRoles.map((v) => v.value),
+      },
     });
 
     if (Array.isArray(json)) {
@@ -137,17 +145,18 @@ export function DiscordRolesTab() {
 
             <SettingsFormField
               description="The Discord role that represents the EMS/FD permission"
-              errorMessage={errors.emsFdRoleId}
+              errorMessage={errors.emsFdRoles as string}
               label="EMS/FD Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.emsFdRoleId}
-                name="emsFdRoleId"
+                value={values.emsFdRoles}
+                name="emsFdRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>

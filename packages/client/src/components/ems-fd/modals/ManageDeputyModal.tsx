@@ -157,11 +157,11 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
             </FormField>
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+              <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>
                 <Input value={values.callsign} name="callsign" onChange={handleChange} />
               </FormField>
 
-              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+              <FormField errorMessage={errors.callsign2} label={t("Leo.callsign2")}>
                 <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
               </FormField>
             </FormRow>

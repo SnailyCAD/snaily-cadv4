@@ -28,15 +28,11 @@ export function useActiveIncidents() {
   useListener(
     { eventName: SocketEvents.CreateActiveIncident, checkHasListeners: true },
     (incident: FullIncident) => {
-      setActiveIncidents(
-        activeIncidents.map((inc) => {
-          if (inc.id !== incident.id && incident.isActive) {
-            return incident;
-          }
+      const alreadyExists = activeIncidents.some((v) => v.id === incident.id);
 
-          return inc;
-        }),
-      );
+      if (!alreadyExists && incident.isActive) {
+        setActiveIncidents([incident, ...activeIncidents]);
+      }
     },
     [activeIncidents, setActiveIncidents],
   );

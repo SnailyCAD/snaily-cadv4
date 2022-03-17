@@ -60,7 +60,7 @@ export function CreateWarrantModal() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenName} label="Name">
+            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
               <InputSuggestions
                 inputProps={{
                   value: values.citizenName,

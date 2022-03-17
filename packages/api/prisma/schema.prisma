@@ -98,6 +98,7 @@ model DiscordRoles {
   leoSupervisorRoleId String?
   emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
   emsFdRoleId         String?
+  emsFdRoles          DiscordRole[] @relation("emsFdRoles")
   dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
   dispatchRoleId      String?
   towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
@@ -121,6 +122,7 @@ model DiscordRole {
   leoRoles           DiscordRoles[] @relation("leoRole")
   leoRolesArr        DiscordRoles[] @relation("leoRoles")
   emsFdRoles         DiscordRoles[] @relation("emsFdRole")
+  emsFdRolesArr      DiscordRoles[] @relation("emsFdRoles")
   dispatchRoles      DiscordRoles[] @relation("dispatchRole")
   towRoles           DiscordRoles[] @relation("towRole")
   taxiRoles          DiscordRoles[] @relation("taxiRole")
@@ -155,7 +157,7 @@ model User {
   lastDiscordSyncTimestamp DateTime?
   permissions              Int?
   soundSettings            UserSoundSettings?    @relation(fields: [soundSettingsId], references: [id])
-  soundSettingsId  String?
+  soundSettingsId          String?
 
 
   // relational data

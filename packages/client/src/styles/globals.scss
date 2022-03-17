@@ -33,27 +33,6 @@ li {
   padding: 0 5px;
 }
 
-table {
-  @apply w-full overflow-auto;
-}
-
-th,
-td {
-  margin: 0;
-  @apply text-left p-2 px-3;
-}
-
-th {
-  @apply p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none;
-
-  &:first-child {
-    @apply rounded-tl-md;
-  }
-  &:last-child {
-    @apply rounded-tr-md;
-  }
-}
-
 .bleet-reset {
   h1 {
     @apply font-semibold text-3xl mb-2;

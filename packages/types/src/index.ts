@@ -32,6 +32,7 @@ export interface cad {
   autoSetUserProperties: AutoSetUserProperties | null;
   discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
+  version: string | null;
 }
 
 /**
@@ -89,9 +90,9 @@ export type DiscordRoles = {
   id: string;
   guildId: string;
   leoRoles?: DiscordRole[];
+  emsFdRoles?: DiscordRole[];
   leoSupervisorRoleId: string | null;
   leoSupervisorRole: DiscordRole | null;
-  emsFdRoleId: string | null;
   emsFdRole: DiscordRole | null;
   dispatchRoleId: string | null;
   dispatchRole: DiscordRole | null;
@@ -723,6 +724,7 @@ export interface Call911 {
   situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
+  incidents?: LeoIncident[];
   viaDispatch: boolean | null;
 }
 
