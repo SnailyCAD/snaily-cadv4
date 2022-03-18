@@ -63,7 +63,12 @@ export default function Taxi(props: Props) {
         <Button onClick={onCreateClick}>{t("createTaxiCall")}</Button>
       </header>
 
-      <TowTaxiCallsTable noCallsText={t("noTaxiCalls")} setCalls={setCalls} calls={calls} />
+      <TowTaxiCallsTable
+        type="taxi"
+        noCallsText={t("noTaxiCalls")}
+        setCalls={setCalls}
+        calls={calls}
+      />
     </Layout>
   );
 }

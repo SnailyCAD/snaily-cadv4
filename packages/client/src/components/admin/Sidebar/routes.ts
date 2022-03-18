@@ -36,20 +36,12 @@ export const managementRoutes: SidebarRoute[] = [
   },
   {
     type: "EXPUNGEMENT_REQUESTS",
-    permissions: [
-      Permissions.ViewExpungementRequests,
-      Permissions.ManageExpungementRequests,
-      Permissions.DeleteExpungementRequests,
-    ],
+    permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
   {
     type: "NAME_CHANGE_REQUESTS",
-    permissions: [
-      Permissions.ViewNameChangeRequests,
-      Permissions.ManageNameChangeRequests,
-      Permissions.DeleteNameChangeRequests,
-    ],
+    permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
 ];

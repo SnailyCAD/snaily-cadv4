@@ -30,7 +30,6 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./defaults/*": "./dist/defaults/*",
     "./permissions": "./dist/permissions.js",
     "./package.json": "./package.json"
   },
@@ -38,9 +37,6 @@
     "*": {
       "permissions": [
         "dist/permissions.d.ts"
-      ],
-      "defaults": [
-        "dist/defaults/*"
       ]
     }
   }

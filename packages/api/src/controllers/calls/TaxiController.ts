@@ -26,7 +26,7 @@ export class TaxiController {
   @Get("/")
   @Description("Get all the taxi calls")
   @UsePermissions({
-    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls, Permissions.ViewTowLogs],
+    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
   async getTaxiCalls() {
@@ -48,7 +48,7 @@ export class TaxiController {
   @Post("/")
   @Description("Create a new taxi call")
   @UsePermissions({
-    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls, Permissions.ViewTowLogs],
+    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
   async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
@@ -152,7 +152,7 @@ export class TaxiController {
     permissions: [Permissions.ManageTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
-  async deleteTowCall(@PathParams("id") callId: string) {
+  async endTaxiCall(@PathParams("id") callId: string) {
     const call = await prisma.taxiCall.findUnique({
       where: {
         id: callId,

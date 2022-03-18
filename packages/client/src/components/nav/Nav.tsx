@@ -15,7 +15,7 @@ import { useViewport } from "@casper124578/useful/hooks/useViewport";
 import { AccountDropdown } from "./dropdowns/AccountDropdown";
 import Head from "next/head";
 import { usePermission } from "hooks/usePermission";
-import { defaultPermissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Rank } from "@snailycad/types";
 
 interface Props {
@@ -90,13 +90,27 @@ export function Nav({ maxWidth }: Props) {
             >
               <CitizenDropdown />
 
-              {user?.isTow && TOW ? <TowDropdown /> : null}
+              {hasPermissions(
+                [Permissions.ViewTowCalls, Permissions.ManageTowCalls],
+                user?.isTow ?? false,
+              ) && TOW ? (
+                <TowDropdown />
+              ) : null}
 
-              {user?.isLeo ? <OfficerDropdown /> : null}
+              {hasPermissions(defaultPermissions.defaultLeoPermissions, user?.isLeo ?? false) ? (
+                <OfficerDropdown />
+              ) : null}
 
-              {user?.isEmsFd ? <EmsFdDropdown /> : null}
+              {hasPermissions([Permissions.EmsFd], user?.isEmsFd ?? false) ? (
+                <EmsFdDropdown />
+              ) : null}
 
-              {user?.isDispatch ? <DispatchDropdown /> : null}
+              {hasPermissions(
+                [Permissions.LiveMap, Permissions.Dispatch],
+                user?.isDispatch ?? false,
+              ) ? (
+                <DispatchDropdown />
+              ) : null}
 
               {user && COURTHOUSE ? (
                 <Link href="/courthouse">

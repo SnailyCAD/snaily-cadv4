@@ -1,6 +1,7 @@
 import { Permissions } from "../permissions";
 
 export const defaultLeoPermissions = [
+  Permissions.Leo,
   Permissions.ViewIncidents,
   Permissions.ManageIncidents,
   Permissions.ViewImpoundLot,

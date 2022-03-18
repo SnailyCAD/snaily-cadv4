@@ -46,7 +46,7 @@ export const defaultValuePermissions = [
 ];
 
 export const allDefaultAdminPermissions = [
-  ...defaultImportPermissions,
+  ...defaultManagementPermissions,
   ...defaultImportPermissions,
   ...defaultValuePermissions,
 ];

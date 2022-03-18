@@ -1,4 +1,5 @@
 import { test, expect } from "vitest";
+import { allDefaultAdminPermissions } from "../src/defaults";
 import { hasPermission, Permissions, allPermissions, getPermissions } from "../src/index";
 
 const manageUsers = [
@@ -42,6 +43,12 @@ test("Should allow a user to delete x with 'allPermissions'", () => {
       Permissions.DeleteBusinesses,
     ]),
   ).toBe(true);
+});
+
+test("Should allow a user to manage name change requests (Navbar tests)", () => {
+  expect(hasPermission(allDefaultAdminPermissions, [Permissions.ViewNameChangeRequests])).toBe(
+    true,
+  );
 });
 
 test("Should allow a user to manage 10-codes values", () => {

@@ -222,7 +222,7 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls],
     fallback: (u) => u.isTow,
   })
-  async deleteTowCall(@PathParams("id") callId: string) {
+  async endTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
       where: {
         id: callId,

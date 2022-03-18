@@ -13,8 +13,16 @@ export function OfficerDropdown() {
   const { hasPermissions } = usePermission();
 
   const items = [
-    { name: t("myOfficers"), href: "/officer/my-officers" },
-    { name: t("myOfficerLogs"), href: "/officer/my-officer-logs" },
+    {
+      name: t("myOfficers"),
+      href: "/officer/my-officers",
+      show: hasPermissions([Permissions.Leo], true),
+    },
+    {
+      name: t("myOfficerLogs"),
+      href: "/officer/my-officer-logs",
+      show: hasPermissions([Permissions.Leo], true),
+    },
     {
       name: t("incidents"),
       href: "/officer/incidents",

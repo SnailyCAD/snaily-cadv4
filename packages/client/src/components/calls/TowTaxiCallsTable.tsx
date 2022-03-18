@@ -7,6 +7,8 @@ import { useTranslations } from "next-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
+import { usePermission, Permissions } from "hooks/usePermission";
+import { useAuth } from "context/AuthContext";
 
 const AssignToCallModal = dynamic(
   async () => (await import("components/citizen/tow/AssignToTowCall")).AssignToCallModal,
@@ -23,14 +25,22 @@ interface Props {
   noCallsText: string;
   calls: (TowCall | TaxiCall)[];
   setCalls: React.Dispatch<React.SetStateAction<(TowCall | TaxiCall)[]>>;
+  type: "tow" | "taxi";
 }
 
-export function TowTaxiCallsTable({ calls, noCallsText, setCalls }: Props) {
+export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props) {
   const [tempCall, setTempCall] = React.useState<TowCall | TaxiCall | null>(null);
   const { openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
+  const { user } = useAuth();
+
+  const { hasPermissions } = usePermission();
+  const fallback = type === "tow" ? user?.isTow : user?.isTaxi;
+  const toCheckPerms =
+    type === "tow" ? [Permissions.ManageTowCalls] : [Permissions.ManageTaxiCalls];
+  const hasManagePermissions = hasPermissions(toCheckPerms, fallback ?? false);
 
   function handleViewDescription(call: TowCall | TaxiCall) {
     setTempCall(call);
@@ -114,7 +124,7 @@ export function TowTaxiCallsTable({ calls, noCallsText, setCalls }: Props) {
             { Header: t("caller"), accessor: "caller" },
             { Header: t("assignedUnit"), accessor: "assignedUnit" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

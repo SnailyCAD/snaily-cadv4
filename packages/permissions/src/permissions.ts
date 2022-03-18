@@ -1,5 +1,6 @@
 export enum Permissions {
   // leo related
+  Leo = "Leo",
   ViewIncidents = "ViewIncidents",
   ManageIncidents = "ManageIncidents",
   ViewImpoundLot = "ViewImpoundLot",
@@ -10,6 +11,9 @@ export enum Permissions {
   ManageCallHistory = "ManageCallHistory",
   LiveMap = "LiveMap",
   ViewCitizenLogs = "ViewCitizenLogs",
+
+  Dispatch = "Dispatch",
+  EmsFd = "EmsFd",
 
   //  citizen related
   ViewTaxiCalls = "ViewTaxiCalls",
