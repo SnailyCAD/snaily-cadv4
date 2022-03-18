@@ -71,6 +71,15 @@ test("Should allow a user to ban/manage a user with 'allPermissions'", () => {
   expect(hasPermission(allPermissions, [Permissions.BanUsers, Permissions.ManageUsers])).toBe(true);
 });
 
+test("Should return 'false' if user has no permissions", () => {
+  expect(
+    hasPermission(
+      [],
+      [Permissions.ManageBusinesses, Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
+    ),
+  ).toBe(false);
+});
+
 test("Should correctly return the user permissions", () => {
   expect(getPermissions(manageUsers)).toMatchObject({
     ViewUsers: true,

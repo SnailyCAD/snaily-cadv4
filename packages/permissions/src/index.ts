@@ -6,6 +6,10 @@ export function hasPermission(
   userPermissions: readonly (string | Permissions)[],
   toCheck: readonly Permissions[],
 ) {
+  if (userPermissions.length <= 0) {
+    return false;
+  }
+
   const invalids = [];
 
   for (const perm of toCheck) {
