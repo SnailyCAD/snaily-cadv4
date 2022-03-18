@@ -129,9 +129,9 @@ export function AdminSidebar() {
           onClick={() => setMenuOpen((o) => !o)}
           className={classNames("flex flex-col nav:hidden w-7", menuOpen ? "mt-5 ml-3" : "mb-10")}
         >
-          <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
-          <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
-          <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
+          <span className="my-0.5 rounded-md h-0.5 w-full bg-white" />
+          <span className="my-0.5 rounded-md h-0.5 w-full bg-white" />
+          <span className="my-0.5 rounded-md h-0.5 w-full bg-white" />
         </button>
       </aside>
     </div>

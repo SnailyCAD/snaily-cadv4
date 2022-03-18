@@ -87,7 +87,17 @@ export default function ManageCitizens(props: Props) {
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [
+          Permissions.BanUsers,
+          Permissions.ViewUsers,
+          Permissions.ManageUsers,
+          Permissions.DeleteUsers,
+        ],
+      }}
+    >
       <Title>
         {common("manage")} {user.username}
       </Title>

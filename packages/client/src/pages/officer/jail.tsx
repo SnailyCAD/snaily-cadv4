@@ -46,7 +46,13 @@ export default function Jail({ data: citizens }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewJail, Permissions.ManageJail],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("jail")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>

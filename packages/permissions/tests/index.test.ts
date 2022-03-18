@@ -72,12 +72,9 @@ test("Should allow a user to ban/manage a user with 'allPermissions'", () => {
 });
 
 test("Should return 'false' if user has no permissions", () => {
-  expect(
-    hasPermission(
-      [],
-      [Permissions.ManageBusinesses, Permissions.DeleteBusinesses, Permissions.ManageBusinesses],
-    ),
-  ).toBe(false);
+  expect(hasPermission([], [Permissions.DeleteBusinesses, Permissions.ManageBusinesses])).toBe(
+    false,
+  );
 });
 
 test("Should correctly return the user permissions", () => {
@@ -93,7 +90,6 @@ test("Should correctly return the user permissions", () => {
     ManageUnits: false,
     DeleteUnits: false,
     ViewBusinesses: false,
-    ManageBusinesses: false,
     DeleteBusinesses: false,
   });
 });
@@ -111,7 +107,6 @@ test("Should correctly return the user permissions with 'allPermissions'", () =>
     ManageUnits: false,
     DeleteUnits: false,
     ViewBusinesses: false,
-    ManageBusinesses: false,
     DeleteBusinesses: false,
   });
 });

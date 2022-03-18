@@ -11,6 +11,7 @@ import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
+import { Permissions } from "@snailycad/permissions";
 
 export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
@@ -39,7 +40,10 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   }, [data]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
+      className="dark:text-white"
+    >
       <Title>{t("myOfficerLogs")}</Title>
 
       <header className="flex items-center justify-between">

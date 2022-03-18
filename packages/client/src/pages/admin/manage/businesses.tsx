@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { type Business, type Citizen, type User, WhitelistStatus } from "@snailycad/types";
+import { type Business, type Citizen, type User, WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -20,6 +20,7 @@ import { useAuth } from "context/AuthContext";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
+import { Permissions } from "@snailycad/permissions";
 
 export type FullBusiness = Business & {
   user: User;
@@ -89,7 +90,16 @@ export default function ManageBusinesses({ businesses: data }: Props) {
   }, [data]);
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [
+          Permissions.ViewBusinesses,
+          Permissions.DeleteBusinesses,
+          Permissions.ManageBusinesses,
+        ],
+      }}
+    >
       <Title>{t("MANAGE_BUSINESSES")}</Title>
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>

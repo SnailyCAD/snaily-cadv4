@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { User, WhitelistStatus } from "@snailycad/types";
+import { Rank, User, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { TabList, TabsContent } from "components/shared/TabList";
@@ -42,7 +42,17 @@ export default function ManageUsers({ users: data }: Props) {
   ];
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [
+          Permissions.BanUsers,
+          Permissions.ViewUsers,
+          Permissions.ManageUsers,
+          Permissions.DeleteUsers,
+        ],
+      }}
+    >
       <Title>{t("MANAGE_USERS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>

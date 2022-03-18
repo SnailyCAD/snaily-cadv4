@@ -2,12 +2,15 @@ import { Permissions, allPermissions, hasPermission, getPermissions } from "@sna
 import { type User, Rank } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
-type Fallback = (user: User) => boolean;
+export type PermissionsFallback = (user: User) => boolean;
 export { Permissions };
 export function usePermission() {
   const { user } = useAuth();
 
-  function _hasPermission(permissionsToCheck: Permissions[], fallback: Fallback | boolean) {
+  function _hasPermission(
+    permissionsToCheck: Permissions[],
+    fallback: PermissionsFallback | boolean,
+  ) {
     if (!user) return false;
     if (user.rank === Rank.OWNER) {
       user.permissions = allPermissions;

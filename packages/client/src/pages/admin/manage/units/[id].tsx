@@ -14,13 +14,14 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
+import { Rank, EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
 import { isUnitOfficer } from "@snailycad/utils";
+import { Permissions } from "@snailycad/permissions";
 
 type Unit = (Officer & { logs: OfficerLog[] }) | EmsFdDeputy;
 
@@ -72,7 +73,12 @@ export default function SupervisorPanelPage({ unit }: Props) {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+      }}
+    >
       <Title>
         {common("manage")} {makeUnitName(unit)}
       </Title>

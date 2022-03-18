@@ -106,7 +106,13 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("incidents")}</Title>
 
       <header className="flex items-center justify-between">

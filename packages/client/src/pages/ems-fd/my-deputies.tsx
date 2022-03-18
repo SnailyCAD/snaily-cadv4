@@ -15,6 +15,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import type { EmsFdDeputy } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -58,7 +59,10 @@ export default function MyDeputies({ deputies: data }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
+      className="dark:text-white"
+    >
       <Title>{t("Ems.myDeputies")}</Title>
 
       <header className="flex items-center justify-between">

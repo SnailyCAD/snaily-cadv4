@@ -25,6 +25,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
+import { Permissions } from "@snailycad/permissions";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -94,7 +95,13 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }, [officers, deputies]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewCallHistory, Permissions.ManageCallHistory],
+      }}
+      className="dark:text-white"
+    >
       <Title>{leo("callHistory")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>

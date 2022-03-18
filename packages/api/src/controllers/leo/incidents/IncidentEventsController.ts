@@ -8,6 +8,7 @@ import { CREATE_911_CALL_EVENT } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import { incidentInclude } from "./IncidentController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
@@ -18,6 +19,11 @@ export class IncidentController {
   }
 
   @Post("/:incidentId")
+  @Description("Create a new incident event.")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async createIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @BodyParams() body: unknown,
@@ -49,6 +55,11 @@ export class IncidentController {
   }
 
   @Put("/:incidentId/:eventId")
+  @Description("Update an incident event by the incident id and event id.")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async updateIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
@@ -102,6 +113,10 @@ export class IncidentController {
 
   @Delete("/:incidentId/:eventId")
   @Description("Delete an incident event by the incident id and event id")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async deleteIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,

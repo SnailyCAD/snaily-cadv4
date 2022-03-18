@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { Citizen, User } from "@snailycad/types";
+import { Citizen, Rank, User } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -10,6 +10,7 @@ import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
 import useFetch from "lib/useFetch";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   citizen: Citizen & { user: User };
@@ -49,7 +50,16 @@ export default function ManageCitizens({ citizen }: Props) {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [
+          Permissions.ViewCitizens,
+          Permissions.DeleteCitizens,
+          Permissions.ManageCitizens,
+        ],
+      }}
+    >
       <Title>
         {common("manage")} {citizen.name} {citizen.surname}
       </Title>

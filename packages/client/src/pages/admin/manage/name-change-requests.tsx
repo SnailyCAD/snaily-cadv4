@@ -6,12 +6,13 @@ import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
-import { type NameChangeRequest, WhitelistStatus } from "@snailycad/types";
+import { type NameChangeRequest, WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   requests: NameChangeRequest[];
@@ -38,7 +39,12 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
+      }}
+    >
       <Title>{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</h1>

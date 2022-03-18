@@ -8,7 +8,8 @@ import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import { EmsFdDeputy, Officer, WhitelistStatus } from "@snailycad/types";
+import { EmsFdDeputy, Officer, WhitelistStatus, Rank } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -30,7 +31,12 @@ export default function SupervisorPanelPage({ units }: Props) {
   );
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+      }}
+    >
       <Title>{t("Management.MANAGE_UNITS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>

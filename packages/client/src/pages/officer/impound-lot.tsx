@@ -14,6 +14,7 @@ import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -48,7 +49,13 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("impoundLot")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>

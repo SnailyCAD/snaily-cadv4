@@ -23,6 +23,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import type { FullIncident } from "../officer/incidents";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { Permissions } from "@snailycad/permissions";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -82,7 +83,10 @@ export default function OfficerDashboard(props: Props) {
   }, [props]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.Dispatch] }}
+      className="dark:text-white"
+    >
       <Title>{t("dispatch")}</Title>
 
       {signal100Enabled ? <Component audio={signal100Audio} /> : null}

@@ -1,16 +1,36 @@
-import type * as React from "react";
+import * as React from "react";
 import { Nav } from "components/nav/Nav";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { classNames } from "lib/classNames";
 import { AdminSidebar } from "./Sidebar";
+import type { LayoutProps } from "components/Layout";
+import { usePermission } from "hooks/usePermission";
+import { useRouter } from "next/router";
 
 interface Props {
   children: React.ReactNode;
   className?: string;
+  permissions: LayoutProps["permissions"];
 }
 
-export function AdminLayout({ children, className }: Props) {
+export function AdminLayout({ children, className, permissions }: Props) {
+  const [forbidden, setForbidden] = React.useState(false);
+  // todo: create hook to remove duplicate code
+
   const { Component, roleplayStopped } = useRoleplayStopped();
+  const { hasPermissions } = usePermission();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (!hasPermissions(permissions.permissions, permissions.fallback)) {
+      router.push("/403");
+      setForbidden(true);
+    }
+  }, [hasPermissions, router, permissions]);
+
+  if (forbidden) {
+    return null;
+  }
 
   return (
     <>

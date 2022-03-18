@@ -8,12 +8,13 @@ import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
 import type { FullRequest } from "src/pages/courthouse";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { ExpungementRequestStatus } from "@snailycad/types";
+import { ExpungementRequestStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   requests: FullRequest[];
@@ -41,7 +42,12 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
+      }}
+    >
       <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>

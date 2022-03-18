@@ -13,6 +13,7 @@ import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { TowTaxiCallsTable } from "components/calls/TowTaxiCallsTable";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   calls: TowCall[];
@@ -54,7 +55,17 @@ export default function Tow(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isTow,
+        permissions: [
+          Permissions.ViewTowCalls,
+          Permissions.ViewTowLogs,
+          Permissions.ManageTowCalls,
+        ],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("tow")}</Title>
 
       <header className="flex items-center justify-between mb-5">
