@@ -7,6 +7,53 @@ export interface SidebarRoute {
   hidden?(features: Record<Feature, boolean>): boolean;
 }
 
+export const managementRoutes: SidebarRoute[] = [
+  {
+    type: "USERS",
+    permissions: [
+      Permissions.ViewUsers,
+      Permissions.ManageUsers,
+      Permissions.BanUsers,
+      Permissions.DeleteUsers,
+    ],
+  },
+  {
+    type: "CITIZENS",
+    permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
+  },
+  {
+    type: "UNITS",
+    permissions: [Permissions.ViewUnits, Permissions.ManageUnits, Permissions.DeleteUnits],
+  },
+  {
+    type: "BUSINESSES",
+    permissions: [
+      Permissions.ViewBusinesses,
+      Permissions.ManageBusinesses,
+      Permissions.DeleteBusinesses,
+    ],
+    hidden: ({ BUSINESS }) => !BUSINESS,
+  },
+  {
+    type: "EXPUNGEMENT_REQUESTS",
+    permissions: [
+      Permissions.ViewExpungementRequests,
+      Permissions.ManageExpungementRequests,
+      Permissions.DeleteExpungementRequests,
+    ],
+    hidden: ({ COURTHOUSE }) => !COURTHOUSE,
+  },
+  {
+    type: "NAME_CHANGE_REQUESTS",
+    permissions: [
+      Permissions.ViewNameChangeRequests,
+      Permissions.ManageNameChangeRequests,
+      Permissions.DeleteNameChangeRequests,
+    ],
+    hidden: ({ COURTHOUSE }) => !COURTHOUSE,
+  },
+];
+
 export const valueRoutes: SidebarRoute[] = [
   {
     type: ValueType.BLOOD_GROUP,

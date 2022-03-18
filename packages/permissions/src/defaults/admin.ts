@@ -1,6 +1,6 @@
 import { Permissions } from "../permissions";
 
-export const defaultAdminPermissions = [
+export const defaultManagementPermissions = [
   Permissions.ViewUsers,
   Permissions.ManageUsers,
   Permissions.BanUsers,
@@ -14,6 +14,15 @@ export const defaultAdminPermissions = [
   Permissions.ViewBusinesses,
   Permissions.ManageBusinesses,
   Permissions.DeleteBusinesses,
+];
+
+export const defaultImportPermissions = [
+  Permissions.ImportCitizens,
+  Permissions.ImportRegisteredVehicles,
+  Permissions.ImportRegisteredWeapons,
+];
+
+export const defaultValuePermissions = [
   Permissions.ManageValueLicense,
   Permissions.ManageValueGender,
   Permissions.ManageValueEthnicity,

@@ -37,6 +37,14 @@ export enum Permissions {
   ManageBusinesses = "ManageBusinesses",
   DeleteBusinesses = "DeleteBusinesses",
 
+  ViewExpungementRequests = "ViewExpungementRequests",
+  ManageExpungementRequests = "ManageExpungementRequests",
+  DeleteExpungementRequests = "DeleteExpungementRequests",
+
+  ViewNameChangeRequests = "ViewNameChangeRequests",
+  ManageNameChangeRequests = "ManageNameChangeRequests",
+  DeleteNameChangeRequests = "DeleteNameChangeRequests",
+
   ImportCitizens = "ImportCitizens",
   ImportRegisteredVehicles = "ImportRegisteredVehicles",
   ImportRegisteredWeapons = "ImportRegisteredWeapons",

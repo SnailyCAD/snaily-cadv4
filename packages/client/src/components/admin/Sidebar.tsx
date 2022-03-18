@@ -7,17 +7,10 @@ import { useRouter } from "next/router";
 import { Rank } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
-import { importRoutes, valueRoutes } from "./Sidebar/route";
-import { usePermission, Permissions } from "hooks/usePermission";
-
-const management = [
-  "USERS",
-  "CITIZENS",
-  "UNITS",
-  "BUSINESSES",
-  "EXPUNGEMENT_REQUESTS",
-  "NAME_CHANGE_REQUESTS",
-] as const;
+import { importRoutes, managementRoutes, valueRoutes } from "./Sidebar/routes";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
+import { SidebarSection } from "./Sidebar/SidebarSection";
 
 export function AdminSidebar() {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -63,24 +56,28 @@ export function AdminSidebar() {
             : "sticky w-14 nav:w-72 justify-end nav:justify-start items-center nav:items-start",
         )}
       >
-        <div className={menuOpen ? "block" : "hidden nav:block"} id="sidebar-content">
-          <section>
-            <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
-            <ul className="flex flex-col space-y-1.5 mt-3">
-              {management.map((type) =>
-                (!features.BUSINESS && type === "BUSINESSES") ||
-                (!features.COURTHOUSE &&
-                  ["EXPUNGEMENT_REQUESTS", "NAME_CHANGE_REQUESTS"].includes(type)) ? null : (
+        <div className={menuOpen ? "block" : "hidden nav:block w-full"} id="sidebar-content">
+          <SidebarSection
+            permissions={defaultPermissions.defaultManagementPermissions}
+            title={man("management")}
+          >
+            <>
+              {managementRoutes.map((route) => {
+                if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
+                  return null;
+                }
+
+                return (
                   <SidebarItem
-                    disabled={type !== "UNITS" && user?.rank === Rank.USER}
-                    key={type}
-                    isActive={isMActive(`/admin/manage/${makeType(type)}`)}
-                    href={`/admin/manage/${makeType(type)}`}
-                    text={man(`MANAGE_${type}`)}
+                    disabled={route.type !== "UNITS" && user?.rank === Rank.USER}
+                    key={route.type}
+                    isActive={isMActive(`/admin/manage/${makeType(route.type)}`)}
+                    href={`/admin/manage/${makeType(route.type)}`}
+                    text={man(`MANAGE_${route.type}`)}
                     onRouteClick={() => setMenuOpen(false)}
                   />
-                ),
-              )}
+                );
+              })}
 
               {user?.rank === Rank.OWNER ? (
                 <SidebarItem
@@ -90,60 +87,51 @@ export function AdminSidebar() {
                   onRouteClick={() => setMenuOpen(false)}
                 />
               ) : null}
-            </ul>
-          </section>
+            </>
+          </SidebarSection>
 
-          {hasPermissions(
-            [
-              Permissions.ImportCitizens,
-              Permissions.ImportRegisteredVehicles,
-              Permissions.ImportRegisteredWeapons,
-            ],
-            true,
-          ) ? (
-            <section className="mt-3">
-              <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("import")}</h1>
-              <ul className="flex flex-col space-y-1.5 mt-3">
-                {importRoutes.map((route) => {
-                  if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
-                    return null;
-                  }
+          <SidebarSection
+            permissions={defaultPermissions.defaultImportPermissions}
+            title={man("import")}
+          >
+            {importRoutes.map((route) => {
+              if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
+                return null;
+              }
 
-                  return (
-                    <SidebarItem
-                      key={route.type}
-                      isActive={isImportActive(route.type)}
-                      href={`/admin/import/${route.type.toLowerCase()}`}
-                      text={man(`IMPORT_${route.type}`)}
-                      onRouteClick={() => setMenuOpen(false)}
-                    />
-                  );
-                })}
-              </ul>
-            </section>
-          ) : null}
+              return (
+                <SidebarItem
+                  key={route.type}
+                  isActive={isImportActive(route.type)}
+                  href={`/admin/import/${route.type.toLowerCase()}`}
+                  text={man(`IMPORT_${route.type}`)}
+                  onRouteClick={() => setMenuOpen(false)}
+                />
+              );
+            })}
+          </SidebarSection>
 
           {user?.rank !== Rank.USER ? (
-            <section className="mt-3">
-              <h1 className="px-3 text-2xl font-semibold dark:text-white">{t("Values.values")}</h1>
-              <ul className="flex flex-col space-y-1.5 mt-3">
-                {valueRoutes.map((route) => {
-                  if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
-                    return null;
-                  }
+            <SidebarSection
+              permissions={defaultPermissions.defaultValuePermissions}
+              title={t("Values.values")}
+            >
+              {valueRoutes.map((route) => {
+                if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
+                  return null;
+                }
 
-                  return (
-                    <SidebarItem
-                      key={route.type}
-                      isActive={isValueActive(route.type.replace("_", "-"))}
-                      href={`/admin/values/${route.type.replace("_", "-").toLowerCase()}`}
-                      text={t(`${route.type.replace("-", "_")}.MANAGE`)}
-                      onRouteClick={() => setMenuOpen(false)}
-                    />
-                  );
-                })}
-              </ul>
-            </section>
+                return (
+                  <SidebarItem
+                    key={route.type}
+                    isActive={isValueActive(makeType(route.type))}
+                    href={`/admin/values/${makeType(route.type).toLowerCase()}`}
+                    text={t(`${route.type.replace("-", "_")}.MANAGE`)}
+                    onRouteClick={() => setMenuOpen(false)}
+                  />
+                );
+              })}
+            </SidebarSection>
           ) : null}
         </div>
 
