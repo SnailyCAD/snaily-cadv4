@@ -15,11 +15,7 @@ export class AdminNameChangeController {
   @Description("Get all the name change requests")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: [
-      Permissions.ViewNameChangeRequests,
-      Permissions.DeleteNameChangeRequests,
-      Permissions.ManageNameChangeRequests,
-    ],
+    permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
   })
   async getRequests() {
     const requests = await prisma.nameChangeRequest.findMany({
