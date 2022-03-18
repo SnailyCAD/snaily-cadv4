@@ -1,4 +1,4 @@
-import { ExpungementRequestStatus } from "@prisma/client";
+import { ExpungementRequestStatus, Rank } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -7,11 +7,16 @@ import { Get, Put } from "@tsed/schema";
 import { expungementRequestInclude } from "controllers/court/ExpungementRequestsController";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/expungement-requests")
 export class AdminManageExpungementRequests {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
+  })
   async getRequests() {
     const requests = await prisma.expungementRequest.findMany({
       include: expungementRequestInclude,
@@ -21,6 +26,10 @@ export class AdminManageExpungementRequests {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageExpungementRequests],
+  })
   async updateExpungementRequest(
     @PathParams("id") id: string,
     @BodyParams("type") type: ExpungementRequestStatus,

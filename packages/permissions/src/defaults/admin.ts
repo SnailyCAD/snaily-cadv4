@@ -14,6 +14,10 @@ export const defaultManagementPermissions = [
   Permissions.ViewBusinesses,
   Permissions.ManageBusinesses,
   Permissions.DeleteBusinesses,
+  Permissions.ViewNameChangeRequests,
+  Permissions.ManageNameChangeRequests,
+  Permissions.ViewExpungementRequests,
+  Permissions.ManageExpungementRequests,
 ];
 
 export const defaultImportPermissions = [
