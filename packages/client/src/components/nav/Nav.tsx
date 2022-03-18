@@ -14,6 +14,9 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
 import { AccountDropdown } from "./dropdowns/AccountDropdown";
 import Head from "next/head";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
+import { Rank } from "@snailycad/types";
 
 interface Props {
   maxWidth?: string;
@@ -27,6 +30,7 @@ export function Nav({ maxWidth }: Props) {
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const { hasPermissions } = usePermission();
 
   const { makeImageUrl } = useImageUrl();
   const url = cad && makeImageUrl("cad", cad.logoId);
@@ -107,7 +111,10 @@ export function Nav({ maxWidth }: Props) {
                 </Link>
               ) : null}
 
-              {user && user.rank !== "USER" ? (
+              {hasPermissions(
+                defaultPermissions.allDefaultAdminPermissions,
+                user?.rank !== Rank.USER,
+              ) ? (
                 <Link href="/admin">
                   <a
                     className={classNames(

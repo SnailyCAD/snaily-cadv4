@@ -40,3 +40,9 @@ export const defaultValuePermissions = [
   Permissions.ManageValueVehicleFlag,
   Permissions.ManageValueCitizenFlag,
 ];
+
+export const allDefaultAdminPermissions = [
+  ...defaultImportPermissions,
+  ...defaultImportPermissions,
+  ...defaultValuePermissions,
+];

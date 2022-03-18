@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Rank } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
-import { importRoutes, managementRoutes, valueRoutes } from "./Sidebar/routes";
+import { importRoutes, managementRoutes, SidebarRoute, valueRoutes } from "./Sidebar/routes";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { SidebarSection } from "./Sidebar/SidebarSection";
@@ -20,8 +20,6 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
-  const features = useFeatureEnabled();
-  const { hasPermissions } = usePermission();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -63,13 +61,9 @@ export function AdminSidebar() {
           >
             <>
               {managementRoutes.map((route) => {
-                if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
-                  return null;
-                }
-
                 return (
                   <SidebarItem
-                    disabled={route.type !== "UNITS" && user?.rank === Rank.USER}
+                    route={route}
                     key={route.type}
                     isActive={isMActive(`/admin/manage/${makeType(route.type)}`)}
                     href={`/admin/manage/${makeType(route.type)}`}
@@ -81,6 +75,7 @@ export function AdminSidebar() {
 
               {user?.rank === Rank.OWNER ? (
                 <SidebarItem
+                  route={null}
                   isActive={isMActive("/admin/manage/cad-settings")}
                   href="/admin/manage/cad-settings"
                   text={man("MANAGE_CAD_SETTINGS")}
@@ -95,12 +90,9 @@ export function AdminSidebar() {
             title={man("import")}
           >
             {importRoutes.map((route) => {
-              if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
-                return null;
-              }
-
               return (
                 <SidebarItem
+                  route={route}
                   key={route.type}
                   isActive={isImportActive(route.type)}
                   href={`/admin/import/${route.type.toLowerCase()}`}
@@ -117,12 +109,9 @@ export function AdminSidebar() {
               title={t("Values.values")}
             >
               {valueRoutes.map((route) => {
-                if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
-                  return null;
-                }
-
                 return (
                   <SidebarItem
+                    route={route}
                     key={route.type}
                     isActive={isValueActive(makeType(route.type))}
                     href={`/admin/values/${makeType(route.type).toLowerCase()}`}
@@ -153,21 +142,26 @@ interface ItemProps {
   isActive: boolean;
   text: string;
   href: string;
-  disabled?: boolean;
   onRouteClick(): void;
+  route: SidebarRoute | null;
 }
 
-function SidebarItem({ disabled, href, text, isActive, onRouteClick }: ItemProps) {
+function SidebarItem({ route, href, text, isActive, onRouteClick }: ItemProps) {
+  const features = useFeatureEnabled();
+  const { hasPermissions } = usePermission();
+
+  if (route && (route.hidden?.(features) || !hasPermissions(route.permissions, true))) {
+    return null;
+  }
+
   return (
     <li className="px-2">
-      <Link href={disabled ? "" : href}>
+      <Link href={href}>
         <a
           onClick={onRouteClick}
           className={classNames(
             "transition-colors rounded-md block px-4 py-1 dark:text-white hover:bg-gray-200 dark:hover:bg-dark-gray",
             isActive && "bg-gray-300 dark:bg-dark-gray dark:text-white",
-            disabled &&
-              "cursor-not-allowed opacity-60 hover:bg-transparent dark:hover:bg-transparent",
           )}
         >
           {text}
