@@ -312,12 +312,8 @@ export class ManageUsersController {
       const updatedPermission = data[name];
       if (!updatedPermission) return;
 
-      console.log({ updatedPermission });
-
       permissions.push(updatedPermission);
     });
-
-    console.log({ permissions });
 
     return permissions;
   }

@@ -12,6 +12,11 @@ export enum Permissions {
   ViewCitizenLogs = "ViewCitizenLogs",
 
   //  citizen related
+  ViewTaxiCalls = "ViewTaxiCalls",
+  ManageTaxiCalls = "ManageTaxiCalls",
+
+  ViewTowCalls = "ViewTowCalls",
+  ManageTowCalls = "ManageTowCalls",
   ViewTowLogs = "ViewTowLogs",
 
   // admin related
@@ -31,6 +36,10 @@ export enum Permissions {
   ViewBusinesses = "ViewBusinesses",
   ManageBusinesses = "ManageBusinesses",
   DeleteBusinesses = "DeleteBusinesses",
+
+  ImportCitizens = "ImportCitizens",
+  ImportRegisteredVehicles = "ImportRegisteredVehicles",
+  ImportRegisteredWeapons = "ImportRegisteredWeapons",
 
   ManageValueLicense = "ManageValueLicense",
   ManageValueGender = "ManageValueGender",

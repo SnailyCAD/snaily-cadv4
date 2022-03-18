@@ -1,4 +1,4 @@
-import { WhitelistStatus } from "@prisma/client";
+import { Rank, WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -32,6 +32,7 @@ export class AdminManageUnitsController {
   @Get("/")
   @Description("Get all the units in the CAD")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
   })
   async getUnits() {
@@ -50,6 +51,7 @@ export class AdminManageUnitsController {
   @Get("/:id")
   @Description("Get a unit by their id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
   })
   async getUnit(@PathParams("id") id: string) {
@@ -75,6 +77,7 @@ export class AdminManageUnitsController {
   @Put("/off-duty")
   @Description("Set specified units off-duty")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async setSelectedOffDuty(@BodyParams("ids") ids: string[]) {
@@ -117,6 +120,7 @@ export class AdminManageUnitsController {
 
   @Put("/:id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   @Description("Update a unit by its id")
@@ -186,6 +190,7 @@ export class AdminManageUnitsController {
   @Post("/departments/:officerId")
   @Description("Accept or decline a unit into a department")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async acceptOrDeclineUnit(

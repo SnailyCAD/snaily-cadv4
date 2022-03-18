@@ -4,9 +4,11 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Rank, ValueType } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
+import { importRoutes, valueRoutes } from "./Sidebar/route";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const management = [
   "USERS",
@@ -16,8 +18,6 @@ const management = [
   "EXPUNGEMENT_REQUESTS",
   "NAME_CHANGE_REQUESTS",
 ] as const;
-const imports = ["CITIZENS", "VEHICLES", "WEAPONS"] as const;
-const types = Object.values(ValueType).map((v) => v.replace("_", "-"));
 
 export function AdminSidebar() {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -27,7 +27,8 @@ export function AdminSidebar() {
   const man = useTranslations("Management");
   const router = useRouter();
   const { user } = useAuth();
-  const { BUSINESS, COURTHOUSE, WEAPON_REGISTRATION } = useFeatureEnabled();
+  const features = useFeatureEnabled();
+  const { hasPermissions } = usePermission();
 
   function isMActive(path: string) {
     return router.pathname === path;
@@ -67,8 +68,8 @@ export function AdminSidebar() {
             <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("management")}</h1>
             <ul className="flex flex-col space-y-1.5 mt-3">
               {management.map((type) =>
-                (!BUSINESS && type === "BUSINESSES") ||
-                (!COURTHOUSE &&
+                (!features.BUSINESS && type === "BUSINESSES") ||
+                (!features.COURTHOUSE &&
                   ["EXPUNGEMENT_REQUESTS", "NAME_CHANGE_REQUESTS"].includes(type)) ? null : (
                   <SidebarItem
                     disabled={type !== "UNITS" && user?.rank === Rank.USER}
@@ -92,21 +93,32 @@ export function AdminSidebar() {
             </ul>
           </section>
 
-          {user?.rank !== Rank.USER ? (
+          {hasPermissions(
+            [
+              Permissions.ImportCitizens,
+              Permissions.ImportRegisteredVehicles,
+              Permissions.ImportRegisteredWeapons,
+            ],
+            true,
+          ) ? (
             <section className="mt-3">
               <h1 className="px-3 text-2xl font-semibold dark:text-white">{man("import")}</h1>
               <ul className="flex flex-col space-y-1.5 mt-3">
-                {imports.map((type) =>
-                  type === "WEAPONS" && !WEAPON_REGISTRATION ? null : (
+                {importRoutes.map((route) => {
+                  if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
+                    return null;
+                  }
+
+                  return (
                     <SidebarItem
-                      key={type}
-                      isActive={isImportActive(type)}
-                      href={`/admin/import/${type.toLowerCase()}`}
-                      text={man(`IMPORT_${type}`)}
+                      key={route.type}
+                      isActive={isImportActive(route.type)}
+                      href={`/admin/import/${route.type.toLowerCase()}`}
+                      text={man(`IMPORT_${route.type}`)}
                       onRouteClick={() => setMenuOpen(false)}
                     />
-                  ),
-                )}
+                  );
+                })}
               </ul>
             </section>
           ) : null}
@@ -115,17 +127,21 @@ export function AdminSidebar() {
             <section className="mt-3">
               <h1 className="px-3 text-2xl font-semibold dark:text-white">{t("Values.values")}</h1>
               <ul className="flex flex-col space-y-1.5 mt-3">
-                {types.map((type) =>
-                  type === "WEAPON" && !WEAPON_REGISTRATION ? null : (
+                {valueRoutes.map((route) => {
+                  if (route.hidden?.(features) || !hasPermissions(route.permissions, true)) {
+                    return null;
+                  }
+
+                  return (
                     <SidebarItem
-                      key={type}
-                      isActive={isValueActive(type)}
-                      href={`/admin/values/${type.toLowerCase()}`}
-                      text={t(`${type.replace("-", "_")}.MANAGE`)}
+                      key={route.type}
+                      isActive={isValueActive(route.type.replace("_", "-"))}
+                      href={`/admin/values/${route.type.replace("_", "-").toLowerCase()}`}
+                      text={t(`${route.type.replace("-", "_")}.MANAGE`)}
                       onRouteClick={() => setMenuOpen(false)}
                     />
-                  ),
-                )}
+                  );
+                })}
               </ul>
             </section>
           ) : null}

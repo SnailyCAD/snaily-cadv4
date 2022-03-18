@@ -1,3 +1,4 @@
+import { Rank } from "@prisma/client";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
@@ -23,10 +24,11 @@ const businessInclude = {
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/businesses")
-export class ManageBusinessesController {
+export class AdminManageBusinessesController {
   @Get("/")
   @Description("Get all the businesses within the CAD")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [
       Permissions.ViewBusinesses,
       Permissions.DeleteBusinesses,
@@ -42,6 +44,7 @@ export class ManageBusinessesController {
   @Put("/:id")
   @Description("Update a business by its id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageBusinesses],
   })
   async updateBusiness(@BodyParams() body: any, @PathParams("id") businessId: string) {
@@ -67,6 +70,7 @@ export class ManageBusinessesController {
   @Delete("/:id")
   @Description("Delete a business by its id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteBusinesses],
   })
   async deleteBusiness(

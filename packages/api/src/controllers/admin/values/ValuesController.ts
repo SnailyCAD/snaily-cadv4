@@ -6,8 +6,9 @@ import { BadRequest } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import type { ValuesSelect } from "lib/values/types";
+import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
 import { ValueType } from "@prisma/client";
+import { UsePermissions } from "middlewares/UsePermissions";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   VEHICLE: { name: "vehicleValue" },
@@ -34,7 +35,7 @@ export class ValuesController {
 
     const values = await Promise.all(
       paths.map(async (path) => {
-        const type = this.getTypeFromPath(path);
+        const type = getTypeFromPath(path);
 
         const data = GET_VALUES[type];
         if (data) {
@@ -78,8 +79,9 @@ export class ValuesController {
 
   @Post("/")
   @Description("Create a new value by the specified type")
+  @UsePermissions(getPermissionsForValuesRequest)
   async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
-    const type = this.getTypeFromPath(path);
+    const type = getTypeFromPath(path);
 
     if (type === ValueType.DEPARTMENT) {
       if (body.isDefaultDepartment) {
@@ -104,8 +106,9 @@ export class ValuesController {
 
   @Delete("/bulk-delete")
   @Description("Bulk-delete values by the specified ids and type")
+  @UsePermissions(getPermissionsForValuesRequest)
   async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: any) {
-    const type = this.getTypeFromPath(path);
+    const type = getTypeFromPath(path);
     const ids = body as string[];
 
     const arr = await Promise.all(
@@ -119,19 +122,21 @@ export class ValuesController {
 
   @Delete("/:id")
   @Description("Delete a value by the specified type and id")
+  @UsePermissions(getPermissionsForValuesRequest)
   async deleteValueByPathAndId(@PathParams("id") id: string, @PathParams("path") path: string) {
-    const type = this.getTypeFromPath(path);
+    const type = getTypeFromPath(path);
     return this.deleteById(type, id);
   }
 
   @Patch("/:id")
   @Description("Update a value by the specified type and id")
+  @UsePermissions(getPermissionsForValuesRequest)
   async patchValueByPathAndId(
     @BodyParams() body: unknown,
     @PathParams("id") valueId: string,
     @PathParams("path") path: string,
   ) {
-    const type = this.getTypeFromPath(path);
+    const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
     const arr = await handler([body], valueId);
@@ -142,11 +147,12 @@ export class ValuesController {
 
   @Put("/positions")
   @Description("Update the positions of the values by the specified type")
+  @UsePermissions(getPermissionsForValuesRequest)
   async updatePositions(
     @PathParams("path") path: ValueType,
     @BodyParams() body: { ids: string[] },
   ) {
-    const type = this.getTypeFromPath(path);
+    const type = getTypeFromPath(path);
     const ids = body.ids;
 
     if (!Array.isArray(ids)) {
@@ -173,10 +179,6 @@ export class ValuesController {
         });
       }),
     );
-  }
-
-  protected getTypeFromPath(path: string): ValueType {
-    return path.replace("-", "_").toUpperCase() as ValueType;
   }
 
   protected async deleteById(type: ValueType, id: string) {

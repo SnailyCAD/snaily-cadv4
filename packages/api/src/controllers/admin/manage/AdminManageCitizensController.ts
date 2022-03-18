@@ -12,14 +12,18 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
-export class ManageCitizensController {
+export class AdminManageCitizensController {
   @Get("/")
   @Description("Get all the citizens within the CAD")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
+  })
   async getCitizens() {
     const citizens = await prisma.citizen.findMany({
       include: citizenInclude,
@@ -29,6 +33,15 @@ export class ManageCitizensController {
   }
 
   @Get("/records-logs")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [
+      Permissions.ViewCitizens,
+      Permissions.ManageCitizens,
+      Permissions.DeleteCitizens,
+      Permissions.ViewCitizenLogs,
+    ],
+  })
   async getRecordLogsForCitizen() {
     const citizens = await prisma.recordLog.findMany({
       include: {
@@ -51,7 +64,8 @@ export class ManageCitizensController {
   @Get("/:id")
   @Description("Get a citizen by its id")
   @UsePermissions({
-    permissions: [Permissions.ViewCitizens, Permissions.DeleteCitizens, Permissions.ManageCitizens],
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string) {
     const citizen = await prisma.citizen.findUnique({
@@ -65,6 +79,7 @@ export class ManageCitizensController {
   @Put("/:id")
   @Description("Update a citizen by its id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
   async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
@@ -101,6 +116,7 @@ export class ManageCitizensController {
   @Delete("/:id")
   @Description("Delete a citizen by its id")
   @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteCitizens],
   })
   async deleteCitizen(

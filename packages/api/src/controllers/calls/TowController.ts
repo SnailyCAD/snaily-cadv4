@@ -8,6 +8,7 @@ import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -24,6 +25,10 @@ export class TowController {
 
   @Get("/")
   @Description("Get all the tow calls")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
+    fallback: (u) => u.isTow,
+  })
   async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded
@@ -49,6 +54,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new tow call")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
+    fallback: (u) => u.isTow,
+  })
   async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
@@ -152,6 +161,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a tow call by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
   async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -205,6 +218,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a tow call by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
   async deleteTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
       where: {

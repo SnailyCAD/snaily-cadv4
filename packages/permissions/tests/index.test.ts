@@ -44,6 +44,22 @@ test("Should allow a user to delete x with 'allPermissions'", () => {
   ).toBe(true);
 });
 
+test("Should allow a user to manage 10-codes values", () => {
+  expect(
+    hasPermission(
+      [
+        Permissions.ViewUsers,
+        Permissions.DeleteUsers,
+        Permissions.ManageValueCodes10,
+        Permissions.ManageValueDepartment,
+        Permissions.ManageValueOfficerRank,
+        Permissions.ManageValueDivision,
+      ],
+      [Permissions.ManageValueCodes10],
+    ),
+  ).toBe(true);
+});
+
 test("Should allow a user to ban/manage a user with 'allPermissions'", () => {
   expect(hasPermission(allPermissions, [Permissions.BanUsers, Permissions.ManageUsers])).toBe(true);
 });

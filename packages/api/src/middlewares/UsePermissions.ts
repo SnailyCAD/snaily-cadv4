@@ -1,13 +1,13 @@
 import { Middleware, MiddlewareMethods, Context, Req } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
-import type { User } from "@snailycad/types";
+import type { User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { Forbidden } from "@tsed/exceptions";
 
 interface RouteData {
   permissions: Permissions[];
-  fallback?: ((user: User) => boolean) | boolean;
+  fallback: ((user: User) => boolean) | boolean;
 }
 
 @Middleware()
@@ -27,12 +27,9 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     console.log({ user });
     console.log({ routeData });
 
-    let hasPerm = hasPermission(
-      [Permissions.ViewUsers, Permissions.ManageUsers],
-      routeData.permissions,
-    );
+    let hasPerm = hasPermission(user.permissions, routeData.permissions);
 
-    if (!user.permissions?.length && fallback) {
+    if (!user.permissions.length && fallback && !hasPerm) {
       hasPerm = fallback;
     }
 
@@ -43,7 +40,7 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
 }
 
 type UsePermissionsFunc = (request: Req) => RouteData;
-export function UsePermissions(data: RouteData | UsePermissionsFunc) {
+export function UsePermissions(data: UsePermissionsFunc | RouteData) {
   return useDecorators(
     StoreSet(UsePermissionsMiddleware, data),
     UseBefore(UsePermissionsMiddleware),
