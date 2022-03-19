@@ -4,7 +4,12 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import { getPermissions, PermissionNames, Permissions } from "@snailycad/permissions";
+import {
+  getPermissions,
+  defaultPermissions,
+  PermissionNames,
+  Permissions,
+} from "@snailycad/permissions";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
 import { Form, Formik } from "formik";
@@ -17,6 +22,32 @@ interface Props {
   user: User;
 }
 
+const groups = [
+  {
+    name: "Admin",
+    permissions: defaultPermissions.allDefaultAdminPermissions,
+  },
+  {
+    name: "LEO",
+    permissions: defaultPermissions.defaultLeoPermissions,
+  },
+  {
+    name: "Dispatch",
+    permissions: defaultPermissions.defaultDispatchPermissions,
+  },
+  {
+    name: "EMS/FD",
+    permissions: defaultPermissions.defaultEmsFdPermissions,
+  },
+  {
+    name: "Citizen related",
+    permissions: [
+      ...defaultPermissions.defaultTowPermissions,
+      ...defaultPermissions.defaultTaxiPermissions,
+    ],
+  },
+];
+
 export function ManagePermissionsModal({ user }: Props) {
   const [search, setSearch] = React.useState("");
 
@@ -24,7 +55,6 @@ export function ManagePermissionsModal({ user }: Props) {
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
   const userPermissions = getPermissions(user.permissions ?? []);
-  const permissions = Object.keys(Permissions).filter((v) => isNaN(v as any));
   const { state, execute } = useFetch();
 
   async function handleSubmit(data: typeof INITIAL_VALUES) {
@@ -56,24 +86,38 @@ export function ManagePermissionsModal({ user }: Props) {
               <Input onChange={(e) => setSearch(e.target.value)} value={search} />
             </FormField>
 
-            <div className="grid grid-cols-1 md:grid-cols-3">
-              {permissions
-                .filter((v) => v.toLowerCase().includes(search.toLowerCase()))
-                .map((name) => {
-                  const formattedName = name.match(/[A-Z][a-z]+/g)?.join(" ") ?? name;
+            <div>
+              {groups.map((group) => {
+                const filtered = group.permissions.filter((v) =>
+                  v.toLowerCase().includes(search.toLowerCase()),
+                );
 
-                  return (
-                    <div key={name}>
-                      <FormField className="my-1" label={formattedName}>
-                        <Toggle
-                          onClick={handleChange}
-                          toggled={values[name as PermissionNames]}
-                          name={name}
-                        />
-                      </FormField>
+                if (filtered.length <= 0) {
+                  return null;
+                }
+
+                return (
+                  <div className="mb-5" key={group.name}>
+                    <h3 className="text-xl font-semibold">{group.name}</h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3">
+                      {filtered.map((permission) => {
+                        const formattedName =
+                          permission.match(/[A-Z][a-z]+/g)?.join(" ") ?? permission;
+                        return (
+                          <FormField key={permission} className="my-1" label={formattedName}>
+                            <Toggle
+                              onClick={handleChange}
+                              toggled={values[permission as PermissionNames]}
+                              name={permission}
+                            />
+                          </FormField>
+                        );
+                      })}
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
             </div>
 
             <Button
