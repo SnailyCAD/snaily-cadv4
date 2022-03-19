@@ -117,6 +117,10 @@ export class Calls911Controller {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async update911Call(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
@@ -233,6 +237,10 @@ export class Calls911Controller {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
       where: { id },
@@ -293,6 +301,10 @@ export class Calls911Controller {
   }
 
   @Post("/:type/:callId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
   async assignToCall(
     @PathParams("type") callType: "assign" | "unassign",
     @PathParams("callId") callId: string,

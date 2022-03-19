@@ -20,8 +20,4 @@ export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
   ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
-  [["GET", "POST"], { strict: true, route: "/v1/911-calls" }, () => true],
-  [["PUT", "DELETE", "POST"], "/v1/911-calls/events", (u) => u.isDispatch],
-  [["POST"], "/v1/911-calls/assign-to/", (u) => u.isLeo || u.isEmsFd],
-  [["PUT", "DELETE"], "/v1/911-calls", (u) => u.isDispatch],
 ];
