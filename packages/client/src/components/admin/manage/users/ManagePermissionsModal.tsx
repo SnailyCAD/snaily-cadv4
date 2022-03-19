@@ -68,6 +68,24 @@ export function ManagePermissionsModal({ user }: Props) {
     }
   }
 
+  function handleToggleAll(group: typeof groups[number], values: any, setValues: any) {
+    const shouldSetFalse = group.permissions.every((v) => v === values[v]);
+
+    if (shouldSetFalse) {
+      setValues({});
+    } else {
+      const obj = group.permissions.reduce(
+        (ac, cv) => ({
+          ...ac,
+          [cv]: cv,
+        }),
+        {},
+      );
+
+      setValues(obj);
+    }
+  }
+
   const INITIAL_VALUES = {
     ...userPermissions,
   };
@@ -80,7 +98,7 @@ export function ManagePermissionsModal({ user }: Props) {
       isOpen={isOpen(ModalIds.ManagePermissions)}
     >
       <Formik onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values }) => (
+        {({ handleChange, setValues, values }) => (
           <Form>
             <FormField label={common("search")} className="my-2">
               <Input onChange={(e) => setSearch(e.target.value)} value={search} />
@@ -98,7 +116,17 @@ export function ManagePermissionsModal({ user }: Props) {
 
                 return (
                   <div className="mb-5" key={group.name}>
-                    <h3 className="text-xl font-semibold">{group.name}</h3>
+                    <header className="flex items-center gap-3 mb-2">
+                      <h3 className="text-xl font-semibold">{group.name}</h3>
+
+                      <Button
+                        type="button"
+                        small
+                        onClick={() => handleToggleAll(group, values, setValues)}
+                      >
+                        Toggle all
+                      </Button>
+                    </header>
 
                     <div className="grid grid-cols-1 md:grid-cols-3">
                       {filtered.map((permission) => {

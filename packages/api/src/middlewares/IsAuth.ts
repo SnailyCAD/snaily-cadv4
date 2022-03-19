@@ -189,31 +189,12 @@ function hasPermissionForReq(req: Req, user: User) {
   const url = req.originalUrl.toLowerCase();
   const requestMethod = req.method.toUpperCase() as Method;
 
-  const [route] = PERMISSION_ROUTES.filter(([m, r]) => {
-    if (typeof r === "object" && "strict" in r) {
-      const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
+  const [route] = PERMISSION_ROUTES.filter(([m, route]) => {
+    const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
+    const isMethodTrue = m === "*" ? true : m.includes(requestMethod);
 
-      const isTrue = r.route === urlWithBackslash || r.route === url;
-      return isTrue;
-    }
-
-    if (typeof r === "string") {
-      const isTrue = r.startsWith(url) || url.startsWith(r);
-
-      if (m === "*") {
-        return isTrue;
-      }
-
-      return m.includes(requestMethod) && isTrue;
-    }
-
-    const isTrue = r.test(url) || url.match(r);
-
-    if (m === "*") {
-      return isTrue;
-    }
-
-    return m.includes(requestMethod) && isTrue;
+    const isTrue = (route.route === urlWithBackslash || route.route === url) && isMethodTrue;
+    return isTrue;
   });
 
   if (route) {

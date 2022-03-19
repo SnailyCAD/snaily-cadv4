@@ -54,10 +54,6 @@ export class TowController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new tow call")
-  @UsePermissions({
-    permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
-    fallback: (u) => u.isTow,
-  })
   async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 

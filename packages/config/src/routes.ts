@@ -15,9 +15,9 @@ type Rank = "ADMIN" | "OWNER" | "USER";
 type UserPicks = "isLeo" | "isDispatch" | "isEmsFd" | "isSupervisor" | "isTaxi" | "isTow";
 type User = Pick<_User, UserPicks> & { rank: Rank };
 
-type Route = string | RegExp | { strict: true; route: string | RegExp };
+type Route = { route: string };
 export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [
-  ["*", /\/v1\/admin\/manage\/cad-settings/, (u) => u.rank === "OWNER"],
+  ["*", { route: "/v1/admin/manage/cad-settings" }, (u) => u.rank === "OWNER"],
 ];

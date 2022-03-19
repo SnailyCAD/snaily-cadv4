@@ -47,10 +47,6 @@ export class TaxiController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new taxi call")
-  @UsePermissions({
-    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
-    fallback: (u) => u.isTaxi,
-  })
   async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
