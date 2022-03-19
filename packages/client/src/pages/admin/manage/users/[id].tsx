@@ -107,25 +107,25 @@ export default function ManageCitizens(props: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, handleSubmit, setFieldValue, isValid, values, errors }) => (
             <form onSubmit={handleSubmit}>
-              <FormField errorMessage={errors.rank} label="Rank">
-                <Select
-                  name="rank"
-                  onChange={handleChange}
-                  disabled={isRankDisabled}
-                  value={values.rank}
-                  values={
-                    isRankDisabled
-                      ? [{ value: user.rank, label: user.rank }]
-                      : [
-                          { value: "ADMIN", label: "Admin" },
-                          { value: "USER", label: "User" },
-                        ]
-                  }
-                />
-              </FormField>
-
               {values.useOldPerms ? (
                 <>
+                  <FormField errorMessage={errors.rank} label="Rank">
+                    <Select
+                      name="rank"
+                      onChange={handleChange}
+                      disabled={isRankDisabled}
+                      value={values.rank}
+                      values={
+                        isRankDisabled
+                          ? [{ value: user.rank, label: user.rank }]
+                          : [
+                              { value: "ADMIN", label: "Admin" },
+                              { value: "USER", label: "User" },
+                            ]
+                      }
+                    />
+                  </FormField>
+
                   <FormRow flexLike className="mt-5">
                     <FormField errorMessage={errors.isLeo} label="Leo Access">
                       <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
