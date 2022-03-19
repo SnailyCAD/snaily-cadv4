@@ -74,7 +74,6 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Put("/:id")
   @Description("Update a BOLO by its id")
-  @Description("Create a new BOLO")
   @UsePermissions({
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
