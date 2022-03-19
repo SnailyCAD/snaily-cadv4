@@ -90,12 +90,7 @@ export default function ManageCitizens(props: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [
-          Permissions.BanUsers,
-          Permissions.ViewUsers,
-          Permissions.ManageUsers,
-          Permissions.DeleteUsers,
-        ],
+        permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
       }}
     >
       <Title>

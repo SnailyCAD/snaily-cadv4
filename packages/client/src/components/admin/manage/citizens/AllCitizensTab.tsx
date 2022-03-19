@@ -13,6 +13,7 @@ import { Table } from "components/shared/Table";
 import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -29,6 +30,7 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
   const users = React.useMemo(() => makeUsersList(citizens), [citizens]);
+  const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
 
@@ -108,21 +110,25 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
                 user: citizen.user?.username ?? "No user",
                 actions: (
                   <>
-                    <Link href={`/admin/manage/citizens/${citizen.id}`}>
-                      <a>
-                        <Button variant="success" small>
-                          {common("edit")}
-                        </Button>
-                      </a>
-                    </Link>
-                    <Button
-                      className="ml-2"
-                      small
-                      variant="danger"
-                      onClick={() => handleDeleteClick(citizen)}
-                    >
-                      {common("delete")}
-                    </Button>
+                    {hasPermissions([Permissions.ManageCitizens], true) ? (
+                      <Link href={`/admin/manage/citizens/${citizen.id}`}>
+                        <a>
+                          <Button variant="success" small>
+                            {common("edit")}
+                          </Button>
+                        </a>
+                      </Link>
+                    ) : null}
+                    {hasPermissions([Permissions.DeleteCitizens], true) ? (
+                      <Button
+                        className="ml-2"
+                        small
+                        variant="danger"
+                        onClick={() => handleDeleteClick(citizen)}
+                      >
+                        {common("delete")}
+                      </Button>
+                    ) : null}
                   </>
                 ),
               }))}
@@ -136,7 +142,9 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               { Header: tCitizen("weight"), accessor: "weight" },
               { Header: tCitizen("height"), accessor: "height" },
               { Header: "User", accessor: "user" },
-              { Header: common("actions"), accessor: "actions" },
+              hasPermissions([Permissions.ManageCitizens, Permissions.DeleteCitizens], true)
+                ? { Header: common("actions"), accessor: "actions" }
+                : null,
             ]}
           />
         </ul>

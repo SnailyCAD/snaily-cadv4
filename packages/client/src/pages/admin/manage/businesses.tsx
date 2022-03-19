@@ -20,7 +20,7 @@ import { useAuth } from "context/AuthContext";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
-import { Permissions } from "@snailycad/permissions";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export type FullBusiness = Business & {
   user: User;
@@ -40,6 +40,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
   const { state, execute } = useFetch();
   const { isOpen, openModal, closeModal } = useModal();
+  const { hasPermissions } = usePermission();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -51,11 +52,14 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       name: t("allBusinesses"),
       value: "allBusinesses",
     },
-    {
+  ];
+
+  if (hasPermissions([Permissions.ManageBusinesses], true) && businessWhitelisted) {
+    TABS[1] = {
       name: `${t("pendingBusinesses")} (${pendingBusinesses.length})`,
       value: "pendingBusinesses",
-    },
-  ];
+    };
+  }
 
   function handleDeleteClick(value: FullBusiness) {
     setTempValue(value);
@@ -104,7 +108,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
 
       <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
 
-      <TabList tabs={businessWhitelisted ? TABS : TABS.splice(0, 1)}>
+      <TabList tabs={TABS}>
         <TabsContent aria-label={t("allBusinesses")} value="allBusinesses">
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>
 
@@ -143,7 +147,9 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                 { Header: t("user"), accessor: "user" },
                 businessWhitelisted ? { Header: t("status"), accessor: "status" } : null,
                 { Header: t("whitelisted"), accessor: "whitelisted" },
-                { Header: common("actions"), accessor: "actions" },
+                hasPermissions([Permissions.DeleteBusinesses], true)
+                  ? { Header: common("actions"), accessor: "actions" }
+                  : null,
               ]}
             />
           )}

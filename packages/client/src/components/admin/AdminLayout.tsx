@@ -22,6 +22,8 @@ export function AdminLayout({ children, className, permissions }: Props) {
   const router = useRouter();
 
   React.useEffect(() => {
+    if (!permissions) return;
+
     if (!hasPermissions(permissions.permissions, permissions.fallback)) {
       router.push("/403");
       setForbidden(true);

@@ -11,3 +11,7 @@ export const defaultLeoPermissions = [
   Permissions.ViewCallHistory,
   Permissions.ManageCallHistory,
 ];
+
+export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
+
+export const defaultEmsFdPermissions = [Permissions.EmsFd];

@@ -6,6 +6,8 @@ import type { GetServerSideProps } from "next";
 import prettyBytes from "pretty-bytes";
 import { useTranslations } from "next-intl";
 import { Title } from "components/shared/Title";
+import { defaultPermissions } from "@snailycad/permissions";
+import { Rank } from "@snailycad/types";
 
 interface Counts {
   activeUsers: number;
@@ -35,7 +37,12 @@ export default function Admin({ counts }: { counts: Counts | null }) {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        permissions: defaultPermissions.allDefaultAdminPermissions,
+        fallback: (u) => u.rank !== Rank.USER,
+      }}
+    >
       <Title>{t("adminDashboard")}</Title>
 
       <h1 className="text-3xl font-semibold dark:text-white">{t("adminDashboard")}</h1>

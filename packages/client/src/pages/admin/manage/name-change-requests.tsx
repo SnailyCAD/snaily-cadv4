@@ -12,7 +12,7 @@ import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
-import { Permissions } from "@snailycad/permissions";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   requests: NameChangeRequest[];
@@ -24,6 +24,8 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
   const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
 
   const { state, execute } = useFetch();
 
@@ -85,7 +87,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
             { Header: t("Courthouse.newName"), accessor: "newName" },
             { Header: t("Courthouse.status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

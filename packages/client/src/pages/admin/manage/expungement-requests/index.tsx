@@ -14,7 +14,7 @@ import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
-import { Permissions } from "@snailycad/permissions";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   requests: FullRequest[];
@@ -29,6 +29,8 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
 
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
 
   async function handleUpdate(id: string, type: ExpungementRequestStatus) {
     const { json } = await execute(`/admin/manage/expungement-requests/${id}`, {
@@ -100,7 +102,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
             { Header: leo("tickets"), accessor: "tickets" },
             { Header: leo("status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

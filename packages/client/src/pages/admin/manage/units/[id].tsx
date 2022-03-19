@@ -76,7 +76,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+        permissions: [Permissions.ManageUnits],
       }}
     >
       <Title>
