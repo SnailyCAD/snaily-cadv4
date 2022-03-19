@@ -38,15 +38,15 @@
     "@snailycad/schemas": "1.0.0-beta.73",
     "@snailycad/types": "1.0.0-beta.73",
     "@snailycad/utils": "1.0.0-beta.73",
-    "@tsed/common": "^6.106.0",
-    "@tsed/core": "^6.106.0",
-    "@tsed/di": "^6.106.0",
-    "@tsed/exceptions": "^6.106.0",
-    "@tsed/json-mapper": "^6.106.0",
-    "@tsed/platform-express": "^6.106.0",
-    "@tsed/schema": "^6.106.0",
-    "@tsed/socketio": "^6.106.0",
-    "@tsed/swagger": "^6.106.0",
+    "@tsed/common": "^6.107.2",
+    "@tsed/core": "^6.107.2",
+    "@tsed/di": "^6.107.2",
+    "@tsed/exceptions": "^6.107.2",
+    "@tsed/json-mapper": "^6.107.2",
+    "@tsed/platform-express": "^6.107.2",
+    "@tsed/schema": "^6.107.2",
+    "@tsed/socketio": "^6.107.2",
+    "@tsed/swagger": "^6.107.2",
     "bcrypt": "^5.0.1",
     "compression": "1.7.4",
     "cookie": "^0.4.2",
@@ -62,6 +62,6 @@
     "prisma": "^3.10.0",
     "qrcode": "^1.5.0",
     "socket.io": "^4.4.1",
-    "undici": "^4.15.1"
+    "undici": "^4.16.0"
   }
 }

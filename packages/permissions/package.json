@@ -12,11 +12,11 @@
     "tsup": "^5.12.1",
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
-    "vitest": "^0.7.0"
+    "vitest": "^0.7.6"
   },
   "dependencies": {
-    "type-fest": "^2.12.0",
-    "zod": "^3.13.4"
+    "type-fest": "^2.12.1",
+    "zod": "^3.14.2"
   },
   "tsup": {
     "entry": [
