@@ -39,6 +39,9 @@
     "departmentWhitelisting": "Department Whitelisting ({length})",
     "importViaFile": "Import via file",
     "managePermissions": "Manage Permissions",
+    "detailedPermissions": "Detailed Permissions",
+    "useOldPermissions": "Use old permissions",
+    "useNewPermissions": "Use new permissions",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."
   }

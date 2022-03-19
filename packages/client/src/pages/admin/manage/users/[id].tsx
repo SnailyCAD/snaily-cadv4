@@ -26,6 +26,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
+import { SettingsFormField } from "components/form/SettingsFormField";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -43,6 +44,7 @@ export default function ManageCitizens(props: Props) {
   const [user, setUser] = React.useState(props.user);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+  const t = useTranslations("Management");
   const router = useRouter();
   const { user: session } = useAuth();
   const { openModal } = useModal();
@@ -81,6 +83,7 @@ export default function ManageCitizens(props: Props) {
     isTaxi: user.isTaxi,
     steamId: user.steamId ?? "",
     discordId: user.discordId ?? "",
+    useOldPerms: false,
   };
 
   const isRankDisabled = user.rank === "OWNER" || user.id === session?.id;
@@ -101,7 +104,7 @@ export default function ManageCitizens(props: Props) {
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, handleSubmit, isValid, values, errors }) => (
+          {({ handleChange, handleSubmit, setFieldValue, isValid, values, errors }) => (
             <form onSubmit={handleSubmit}>
               <FormField errorMessage={errors.rank} label="Rank">
                 <Select
@@ -120,43 +123,76 @@ export default function ManageCitizens(props: Props) {
                 />
               </FormField>
 
-              <FormRow flexLike className="mt-5">
-                <FormField errorMessage={errors.isLeo} label="Leo Access">
-                  <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
-                </FormField>
+              {values.useOldPerms ? (
+                <>
+                  <FormRow flexLike className="mt-5">
+                    <FormField errorMessage={errors.isLeo} label="Leo Access">
+                      <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
+                    </FormField>
+                    <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
+                      <Toggle
+                        name="isSupervisor"
+                        onClick={handleChange}
+                        toggled={values.isSupervisor}
+                      />
+                    </FormField>
+                    <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
+                      <Toggle
+                        name="isDispatch"
+                        onClick={handleChange}
+                        toggled={values.isDispatch}
+                      />
+                    </FormField>
+                    <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
+                      <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
+                    </FormField>
+                    <FormField errorMessage={errors.isTow} label="Tow Access">
+                      <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
+                    </FormField>
+                    <FormField errorMessage={errors.isTaxi} label="Taxi Access">
+                      <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
+                    </FormField>
+                  </FormRow>
 
-                <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
-                  <Toggle
-                    name="isSupervisor"
-                    onClick={handleChange}
-                    toggled={values.isSupervisor}
-                  />
-                </FormField>
+                  <Button
+                    className="my-4"
+                    type="button"
+                    onClick={() => setFieldValue("useOldPerms", false)}
+                  >
+                    {t("useNewPermissions")}
+                  </Button>
+                </>
+              ) : (
+                <SettingsFormField
+                  description="A detailed permissions system where you can assign many actions to a user."
+                  label={
+                    <>
+                      <span className="p-0.5 px-1 rounded-md bg-gradient-to-tr from-[#1150d4] to-[#a245fc] text-sm mr-2 uppercase">
+                        new
+                      </span>
+                      <span>{t("detailedPermissions")}</span>
+                    </>
+                  }
+                >
+                  <Button
+                    className="!bg-dark-bg"
+                    type="button"
+                    onClick={() => openModal(ModalIds.ManagePermissions)}
+                  >
+                    {t("managePermissions")}
+                  </Button>
 
-                <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
-                  <Toggle name="isDispatch" onClick={handleChange} toggled={values.isDispatch} />
-                </FormField>
-
-                <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
-                  <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
-                </FormField>
-
-                <FormField errorMessage={errors.isTow} label="Tow Access">
-                  <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
-                </FormField>
-
-                <FormField errorMessage={errors.isTaxi} label="Taxi Access">
-                  <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
-                </FormField>
-              </FormRow>
-
-              <Button
-                type="button"
-                className="my-5"
-                onClick={() => openModal(ModalIds.ManagePermissions)}
-              >
-                Manage Permissions
-              </Button>
+                  <Button
+                    variant="cancel"
+                    className="ml-2 text-base"
+                    type="button"
+                    onClick={() => setFieldValue("useOldPerms", true)}
+                  >
+                    {/* todo: add warning modal  */}
+                    {t("useOldPermissions")}
+                  </Button>
+                </SettingsFormField>
+              )}
 
               <FormRow>
                 <FormField optional errorMessage={errors.steamId} label="Steam ID">
