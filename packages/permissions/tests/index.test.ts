@@ -67,6 +67,15 @@ test("Should allow a user to manage 10-codes values", () => {
   ).toBe(true);
 });
 
+test("Should allow an officer to update their status", () => {
+  expect(
+    hasPermission(
+      [Permissions.EmsFd, Permissions.Leo],
+      [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch, Permissions.ManageUnits],
+    ),
+  ).toBe(true);
+});
+
 test("Should allow a user to ban/manage a user with 'allPermissions'", () => {
   expect(hasPermission(allPermissions, [Permissions.BanUsers, Permissions.ManageUsers])).toBe(true);
 });
