@@ -33,6 +33,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -43,6 +44,10 @@ export class LeoController {
   }
 
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async getUserOfficers(@Context() ctx: Context) {
     const officers = await prisma.officer.findMany({
       where: {
@@ -63,6 +68,10 @@ export class LeoController {
   }
 
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createOfficer(
     @BodyParams() body: unknown,
     @Context("user") user: User,
@@ -142,6 +151,10 @@ export class LeoController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateOfficer(
     @PathParams("id") officerId: string,
     @BodyParams() body: unknown,
@@ -222,6 +235,10 @@ export class LeoController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async deleteOfficer(@PathParams("id") officerId: string, @Context() ctx: Context) {
     const officer = await prisma.officer.findFirst({
       where: {
@@ -244,6 +261,10 @@ export class LeoController {
   }
 
   @Get("/logs")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async getOfficerLogs(@Context() ctx: Context) {
     const logs = await prisma.officerLog.findMany({
       where: {
@@ -264,12 +285,20 @@ export class LeoController {
 
   @UseBefore(ActiveOfficer)
   @Get("/active-officer")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
+    permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
+  })
   async getActiveOfficer(@Context() ctx: Context) {
     return ctx.get("activeOfficer");
   }
 
   @Get("/active-officers")
   @Description("Get all the active officers")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
+    permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
+  })
   async getActiveOfficers() {
     const [officers, units] = await Promise.all([
       await prisma.officer.findMany({
@@ -291,6 +320,10 @@ export class LeoController {
   }
 
   @Post("/image/:id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") officerId: string,
@@ -334,6 +367,10 @@ export class LeoController {
 
   @Post("/panic-button")
   @Description("Set the panic button for an officer by their id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async panicButton(@Context("user") user: User, @BodyParams("officerId") officerId: string) {
     let type: "officer" | "combinedLeoUnit" = "officer";
 
@@ -414,23 +451,12 @@ export class LeoController {
     this.socket.emitPanicButtonLeo(officer, panicType);
   }
 
-  @Get("/impounded-vehicles")
-  @Description("Get all the impounded vehicles")
-  async getImpoundedVehicles() {
-    const vehicles = await prisma.impoundedVehicle.findMany({
-      include: {
-        location: true,
-        vehicle: {
-          include: { model: { include: { value: true } } },
-        },
-      },
-    });
-
-    return vehicles;
-  }
-
   @Put("/licenses/:citizenId")
   @Description("Update the licenses for a citizen by their id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateCitizenLicenses(
     @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
@@ -468,6 +494,10 @@ export class LeoController {
 
   @Put("/vehicle-licenses/:vehicleId")
   @Description("Update the licenses of a vehicle by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateVehicleLicenses(
     @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
@@ -501,6 +531,10 @@ export class LeoController {
 
   @Put("/vehicle-flags/:vehicleId")
   @Description("Update the vehicle flags by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateVehicleFlags(
     @BodyParams("flags") flags: string[],
     @PathParams("vehicleId") vehicleId: string,
@@ -535,6 +569,10 @@ export class LeoController {
 
   @Put("/citizen-flags/:citizenId")
   @Description("Update the citizens flags by their id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateCitizenFlags(
     @BodyParams("flags") flags: string[],
     @PathParams("citizenId") citizenId: string,
@@ -567,8 +605,31 @@ export class LeoController {
     return updated;
   }
 
+  @Get("/impounded-vehicles")
+  @Description("Get all the impounded vehicles")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
+  })
+  async getImpoundedVehicles() {
+    const vehicles = await prisma.impoundedVehicle.findMany({
+      include: {
+        location: true,
+        vehicle: {
+          include: { model: { include: { value: true } } },
+        },
+      },
+    });
+
+    return vehicles;
+  }
+
   @Delete("/impounded-vehicles/:id")
   @Description("Remove a vehicle from the impound lot")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ManageImpoundLot],
+  })
   async checkoutImpoundedVehicle(@PathParams("id") id: string) {
     const vehicle = await prisma.impoundedVehicle.findUnique({
       where: { id },

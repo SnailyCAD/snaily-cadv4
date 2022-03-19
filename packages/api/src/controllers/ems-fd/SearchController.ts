@@ -4,6 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 const citizenSearchInclude = {
   medicalRecords: { include: { bloodGroup: true } },
@@ -14,6 +15,10 @@ const citizenSearchInclude = {
 export class SearchController {
   @Post("/medical-name")
   @Description("Search citizens by name for medical records")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async searchName(@BodyParams("name") fullName: string) {
     const citizen = await this.findCitizenByName(fullName);
     return citizen;
@@ -21,6 +26,10 @@ export class SearchController {
 
   @Post("/medical-records")
   @Description("Search medical records by citizen name")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async getMedicalRecords(@BodyParams("name") name: string) {
     const [citizen] = await this.findCitizenByName(name);
 
