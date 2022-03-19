@@ -1,4 +1,11 @@
-import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
+import {
+  Controller,
+  BodyParams,
+  Context,
+  UseBefore,
+  PathParams,
+  UseBeforeEach,
+} from "@tsed/common";
 import { Description, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
@@ -17,6 +24,7 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/taxi")
+@UseBeforeEach(IsAuth)
 export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {
