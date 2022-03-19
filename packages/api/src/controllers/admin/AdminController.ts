@@ -7,11 +7,18 @@ import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { WhitelistStatus } from ".prisma/client";
+import { UsePermissions } from "middlewares/UsePermissions";
+import { Rank } from "@prisma/client";
+import { defaultPermissions } from "@snailycad/permissions";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
 export class AdminController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: defaultPermissions.allDefaultAdminPermissions,
+  })
   async getData() {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),

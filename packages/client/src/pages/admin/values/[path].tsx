@@ -8,7 +8,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { type PenalCode, type PenalCodeGroup, ValueType } from "@snailycad/types";
+import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -24,6 +24,7 @@ import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
+import { valueRoutes } from "components/admin/Sidebar/routes";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -42,6 +43,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const tableSelect = useTableSelect(values);
+  const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
   const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
@@ -167,7 +169,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: routeData?.permissions ?? [],
+      }}
+    >
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">

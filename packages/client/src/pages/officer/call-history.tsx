@@ -25,6 +25,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -42,6 +43,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
 
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -94,7 +97,13 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }, [officers, deputies]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewCallHistory, Permissions.ManageCallHistory],
+      }}
+      className="dark:text-white"
+    >
       <Title>{leo("callHistory")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
@@ -107,14 +116,16 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
             <FormField label={common("search")} className="my-2">
               <div className="flex gap-2">
                 <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-                <Button
-                  onClick={() => openModal(ModalIds.AlertPurgeCalls)}
-                  className="flex items-center gap-2 ml-2 min-w-fit"
-                  disabled={state === "loading" || tableSelect.selectedRows.length <= 0}
-                >
-                  {state === "loading" ? <Loader /> : null}
-                  {t("purgeSelected")}
-                </Button>
+                {hasManagePermissions ? (
+                  <Button
+                    onClick={() => openModal(ModalIds.AlertPurgeCalls)}
+                    className="flex items-center gap-2 ml-2 min-w-fit"
+                    disabled={state === "loading" || tableSelect.selectedRows.length <= 0}
+                  >
+                    {state === "loading" ? <Loader /> : null}
+                    {t("purgeSelected")}
+                  </Button>
+                ) : null}
               </div>
             </FormField>
           </div>
@@ -150,9 +161,11 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 createdAt: <FullDate>{call.createdAt}</FullDate>,
                 actions: (
                   <>
-                    <Button onClick={() => handleLinkClick(call)} small>
-                      {leo("linkToIncident")}
-                    </Button>
+                    {hasManagePermissions ? (
+                      <Button onClick={() => handleLinkClick(call)} small>
+                        {leo("linkToIncident")}
+                      </Button>
+                    ) : null}
                     <Button className="ml-2" onClick={() => handleViewClick(call)} small>
                       {leo("viewCall")}
                     </Button>
@@ -161,16 +174,18 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
               };
             })}
             columns={[
-              {
-                Header: (
-                  <IndeterminateCheckbox
-                    onChange={tableSelect.handleAllCheckboxes}
-                    checked={tableSelect.isTopCheckboxChecked}
-                    indeterminate={tableSelect.isIntermediate}
-                  />
-                ),
-                accessor: "checkbox",
-              },
+              hasManagePermissions
+                ? {
+                    Header: (
+                      <IndeterminateCheckbox
+                        onChange={tableSelect.handleAllCheckboxes}
+                        checked={tableSelect.isTopCheckboxChecked}
+                        indeterminate={tableSelect.isIntermediate}
+                      />
+                    ),
+                    accessor: "checkbox",
+                  }
+                : null,
               { Header: t("caller"), accessor: "caller" },
               { Header: t("location"), accessor: "location" },
               { Header: t("postal"), accessor: "postal" },

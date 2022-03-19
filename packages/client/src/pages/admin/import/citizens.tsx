@@ -9,13 +9,20 @@ import { AdvancedCitizensTab } from "components/admin/manage/citizens/AdvancedCi
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { Rank } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 export default function ImportCitizensPage() {
   const t = useTranslations("Management");
   const { openModal } = useModal();
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ImportCitizens],
+      }}
+    >
       <Title>{t("IMPORT_CITIZENS")}</Title>
 
       <header>

@@ -1,16 +1,24 @@
-import type * as React from "react";
+import * as React from "react";
 import { Nav } from "components/nav/Nav";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { classNames } from "lib/classNames";
 import { AdminSidebar } from "./Sidebar";
+import type { LayoutProps } from "components/Layout";
+import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
 
 interface Props {
   children: React.ReactNode;
   className?: string;
+  permissions?: LayoutProps["permissions"];
 }
 
-export function AdminLayout({ children, className }: Props) {
+export function AdminLayout({ children, className, permissions }: Props) {
   const { Component, roleplayStopped } = useRoleplayStopped();
+  const { forbidden, Loader } = useHasPermissionForLayout(permissions);
+
+  if (forbidden) {
+    return <Loader />;
+  }
 
   return (
     <>

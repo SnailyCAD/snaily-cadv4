@@ -17,12 +17,25 @@ import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
-import { BanArea } from "components/admin/manage/users/BanArea";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { requestAll } from "lib/utils";
-import { DangerZone } from "components/admin/manage/users/DangerZone";
 import { Title } from "components/shared/Title";
+import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "context/ModalContext";
+import { usePermission, Permissions } from "hooks/usePermission";
+import dynamic from "next/dynamic";
+import { SettingsFormField } from "components/form/SettingsFormField";
+import { AlertModal } from "components/modal/AlertModal";
+
+const DangerZone = dynamic(
+  async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
+);
+
+const BanArea = dynamic(
+  async () => (await import("components/admin/manage/users/BanArea")).BanArea,
+);
 
 interface Props {
   user: User | null;
@@ -32,8 +45,11 @@ export default function ManageCitizens(props: Props) {
   const [user, setUser] = React.useState(props.user);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
+  const t = useTranslations("Management");
   const router = useRouter();
   const { user: session } = useAuth();
+  const { openModal, closeModal } = useModal();
+  const { hasPermissions } = usePermission();
 
   React.useEffect(() => {
     if (!user) {
@@ -68,13 +84,19 @@ export default function ManageCitizens(props: Props) {
     isTaxi: user.isTaxi,
     steamId: user.steamId ?? "",
     discordId: user.discordId ?? "",
+    useOldPerms: false,
   };
 
   const isRankDisabled = user.rank === "OWNER" || user.id === session?.id;
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.BanUsers, Permissions.ManageUsers, Permissions.DeleteUsers],
+      }}
+    >
       <Title>
         {common("manage")} {user.username}
       </Title>
@@ -83,7 +105,7 @@ export default function ManageCitizens(props: Props) {
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, handleSubmit, isValid, values, errors }) => (
+          {({ handleChange, handleSubmit, setFieldValue, isValid, values, errors }) => (
             <form onSubmit={handleSubmit}>
               <FormField errorMessage={errors.rank} label="Rank">
                 <Select
@@ -102,35 +124,77 @@ export default function ManageCitizens(props: Props) {
                 />
               </FormField>
 
-              <FormRow flexLike className="mt-5">
-                <FormField errorMessage={errors.isLeo} label="Leo Access">
-                  <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
-                </FormField>
+              {values.useOldPerms ? (
+                <>
+                  <FormRow flexLike className="mt-5">
+                    <FormField errorMessage={errors.isLeo} label="Leo Access">
+                      <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
+                    </FormField>
+                    <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
+                      <Toggle
+                        name="isSupervisor"
+                        onClick={handleChange}
+                        toggled={values.isSupervisor}
+                      />
+                    </FormField>
+                    <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
+                      <Toggle
+                        name="isDispatch"
+                        onClick={handleChange}
+                        toggled={values.isDispatch}
+                      />
+                    </FormField>
+                    <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
+                      <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
+                    </FormField>
+                    <FormField errorMessage={errors.isTow} label="Tow Access">
+                      <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
+                    </FormField>
+                    <FormField errorMessage={errors.isTaxi} label="Taxi Access">
+                      <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
+                    </FormField>
+                  </FormRow>
 
-                <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
-                  <Toggle
-                    name="isSupervisor"
-                    onClick={handleChange}
-                    toggled={values.isSupervisor}
-                  />
-                </FormField>
+                  <Button
+                    className="my-4"
+                    type="button"
+                    onClick={() => setFieldValue("useOldPerms", false)}
+                  >
+                    {t("useNewPermissions")}
+                  </Button>
+                </>
+              ) : (
+                <SettingsFormField
+                  description="A detailed permissions system where you can assign many actions to a user."
+                  label={
+                    <>
+                      <span className="p-0.5 px-1 rounded-md bg-gradient-to-tr from-[#1150d4] to-[#a245fc] text-sm mr-2 uppercase">
+                        new
+                      </span>
+                      <span>{t("detailedPermissions")}</span>
+                    </>
+                  }
+                >
+                  <Button
+                    disabled={user.rank === Rank.OWNER}
+                    className="!bg-dark-bg"
+                    type="button"
+                    onClick={() => openModal(ModalIds.ManagePermissions)}
+                  >
+                    {t("managePermissions")}
+                  </Button>
 
-                <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
-                  <Toggle name="isDispatch" onClick={handleChange} toggled={values.isDispatch} />
-                </FormField>
-
-                <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
-                  <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
-                </FormField>
-
-                <FormField errorMessage={errors.isTow} label="Tow Access">
-                  <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
-                </FormField>
-
-                <FormField errorMessage={errors.isTaxi} label="Taxi Access">
-                  <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
-                </FormField>
-              </FormRow>
+                  <Button
+                    disabled={user.rank === Rank.OWNER}
+                    variant="cancel"
+                    className="ml-2 text-base"
+                    type="button"
+                    onClick={() => openModal(ModalIds.AlertUseOldPermissions)}
+                  >
+                    {t("useOldPermissions")}
+                  </Button>
+                </SettingsFormField>
+              )}
 
               <FormRow>
                 <FormField optional errorMessage={errors.steamId} label="Steam ID">
@@ -159,14 +223,36 @@ export default function ManageCitizens(props: Props) {
                   {common("save")}
                 </Button>
               </div>
+
+              <AlertModal
+                title={t("useOldPermissions")}
+                description={
+                  <>
+                    Are you sure you want to use the old permissions system.{" "}
+                    <span className="font-semibold">
+                      You cannot mix the old permissions with new permissions.
+                    </span>
+                  </>
+                }
+                id={ModalIds.AlertUseOldPermissions}
+                deleteText={t("useOldPermissions")}
+                onDeleteClick={() => {
+                  closeModal(ModalIds.AlertUseOldPermissions);
+                  setFieldValue("useOldPerms", true);
+                }}
+              />
             </form>
           )}
         </Formik>
 
+        <ManagePermissionsModal user={user} />
+
         {user.rank !== Rank.OWNER ? (
           <>
-            <BanArea setUser={setUser} user={user} />
-            <DangerZone user={user} />
+            {hasPermissions([Permissions.BanUsers], true) ? (
+              <BanArea setUser={setUser} user={user} />
+            ) : null}
+            {hasPermissions([Permissions.DeleteUsers], true) ? <DangerZone user={user} /> : null}
           </>
         ) : null}
       </div>

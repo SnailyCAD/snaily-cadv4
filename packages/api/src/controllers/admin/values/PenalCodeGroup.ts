@@ -5,12 +5,18 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_PENAL_CODE_GROUP_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { Rank } from "@prisma/client";
 
 @Controller("/admin/penal-code-group")
 @UseBeforeEach(IsAuth)
 export class ValuesController {
   @Post("/")
   @Description("Create a new penal-code group")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.OWNER,
+    permissions: [Permissions.ManageValuePenalCode],
+  })
   async createPenalCodeGroup(@BodyParams() body: unknown) {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
@@ -25,6 +31,10 @@ export class ValuesController {
 
   @Put("/:id")
   @Description("Edit a penal-code group by its id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.OWNER,
+    permissions: [Permissions.ManageValuePenalCode],
+  })
   async editPenalCodeGroup(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_PENAL_CODE_GROUP_SCHEMA, body);
 
@@ -46,6 +56,10 @@ export class ValuesController {
 
   @Delete("/:id")
   @Description("Delete a penal-code group by its id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.OWNER,
+    permissions: [Permissions.ManageValuePenalCode],
+  })
   async deletePenalCodeGroup(@PathParams("id") id: string) {
     const group = await prisma.penalCodeGroup.findUnique({
       where: { id },

@@ -14,6 +14,7 @@ import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -24,6 +25,8 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
 
   const [vehicles, setVehicles] = React.useState(data);
   const [tempVehicle, setTempVehicle] = React.useState<ImpoundedVehicle | null>(null);
@@ -48,7 +51,13 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("impoundLot")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>
@@ -71,7 +80,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             { Header: t("plate"), accessor: "plate" },
             { Header: t("model"), accessor: "model" },
             { Header: t("location"), accessor: "location" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

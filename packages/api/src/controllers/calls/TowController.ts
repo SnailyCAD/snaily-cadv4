@@ -1,4 +1,12 @@
-import { Controller, QueryParams, BodyParams, UseBefore, PathParams, Context } from "@tsed/common";
+import {
+  Controller,
+  QueryParams,
+  BodyParams,
+  UseBefore,
+  PathParams,
+  Context,
+  UseBeforeEach,
+} from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
@@ -8,6 +16,7 @@ import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -16,6 +25,7 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/tow")
+@UseBeforeEach(IsAuth)
 export class TowController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -24,6 +34,10 @@ export class TowController {
 
   @Get("/")
   @Description("Get all the tow calls")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
+    fallback: (u) => u.isTow,
+  })
   async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded
@@ -152,6 +166,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a tow call by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
   async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -205,7 +223,11 @@ export class TowController {
   @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a tow call by its id")
-  async deleteTowCall(@PathParams("id") callId: string) {
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
+  async endTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
       where: {
         id: callId,

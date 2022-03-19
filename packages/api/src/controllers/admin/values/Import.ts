@@ -35,11 +35,14 @@ import {
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { getPermissionsForValuesRequest } from "lib/values/utils";
+import { UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
 export class ImportValuesViaFileController {
   @Post("/")
+  @UsePermissions(getPermissionsForValuesRequest)
   async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,

@@ -15,6 +15,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad, Call911 } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const assignedUnitsInclude = {
   include: {
@@ -116,6 +117,10 @@ export class Calls911Controller {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async update911Call(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
@@ -211,6 +216,10 @@ export class Calls911Controller {
   }
 
   @Delete("/purge")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ManageCallHistory],
+  })
   async purgeCalls(@BodyParams("ids") ids: string[]) {
     if (!Array.isArray(ids)) return;
 
@@ -228,6 +237,10 @@ export class Calls911Controller {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
       where: { id },
@@ -252,6 +265,10 @@ export class Calls911Controller {
   }
 
   @Post("/link-incident/:callId")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ManageCallHistory],
+  })
   async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
 
@@ -284,6 +301,10 @@ export class Calls911Controller {
   }
 
   @Post("/:type/:callId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
   async assignToCall(
     @PathParams("type") callType: "assign" | "unassign",
     @PathParams("callId") callId: string,

@@ -34,6 +34,7 @@
     "@discordjs/rest": "^0.3.0",
     "@prisma/client": "^3.10.0",
     "@snailycad/config": "1.0.0-beta.73",
+    "@snailycad/permissions": "1.0.0-beta.73",
     "@snailycad/schemas": "1.0.0-beta.73",
     "@snailycad/types": "1.0.0-beta.73",
     "@snailycad/utils": "1.0.0-beta.73",

@@ -14,11 +14,16 @@ import { unitProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 export class EmsFdController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async getUserDeputies(@Context("user") user: User) {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
@@ -31,6 +36,10 @@ export class EmsFdController {
   }
 
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
@@ -89,6 +98,10 @@ export class EmsFdController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async updateDeputy(
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
@@ -161,6 +174,10 @@ export class EmsFdController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async deleteDeputy(@PathParams("id") id: string, @Context() ctx: Context) {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -184,12 +201,20 @@ export class EmsFdController {
 
   @Use(ActiveDeputy)
   @Get("/active-deputy")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+  })
   async getActiveDeputy(@Context() ctx: Context) {
     return ctx.get("activeDeputy");
   }
 
   @Get("/active-deputies")
   @Description("Get all the active EMS/FD deputies")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+  })
   async getActiveDeputies() {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
@@ -206,6 +231,10 @@ export class EmsFdController {
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async createMedicalRecord(@BodyParams() body: unknown) {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -234,6 +263,10 @@ export class EmsFdController {
 
   @Use(ActiveDeputy)
   @Post("/declare/:citizenId")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async declareCitizenDeadOrAlive(@PathParams("citizenId") citizenId: string) {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -259,6 +292,10 @@ export class EmsFdController {
   }
 
   @Post("/image/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") deputyId: string,

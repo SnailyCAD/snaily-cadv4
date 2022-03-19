@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { User, WhitelistStatus } from "@snailycad/types";
+import { Rank, User, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { TabList, TabsContent } from "components/shared/TabList";
@@ -16,6 +16,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   users: User[];
@@ -25,6 +26,7 @@ export default function ManageUsers({ users: data }: Props) {
   const [users, setUsers] = React.useState<User[]>(data);
   const [search, setSearch] = React.useState("");
   const { cad } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
@@ -40,7 +42,17 @@ export default function ManageUsers({ users: data }: Props) {
   ];
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [
+          Permissions.BanUsers,
+          Permissions.ViewUsers,
+          Permissions.ManageUsers,
+          Permissions.DeleteUsers,
+        ],
+      }}
+    >
       <Title>{t("MANAGE_USERS")}</Title>
 
       <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
@@ -79,7 +91,12 @@ export default function ManageUsers({ users: data }: Props) {
               { Header: "EMS/FD Access", accessor: "isEmsFd" },
               { Header: "Dispatch Access", accessor: "isDispatch" },
               cad?.whitelisted ? { Header: "Whitelist Status", accessor: "whitelistStatus" } : null,
-              { Header: common("actions"), accessor: "actions" },
+              hasPermissions(
+                [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+                true,
+              )
+                ? { Header: common("actions"), accessor: "actions" }
+                : null,
             ]}
           />
         </TabsContent>

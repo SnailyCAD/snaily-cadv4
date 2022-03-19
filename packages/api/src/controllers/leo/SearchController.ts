@@ -6,6 +6,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 export const citizenSearchInclude = {
   ...citizenInclude,
@@ -34,6 +35,10 @@ export const citizenSearchInclude = {
 export class SearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
   async searchName(@BodyParams("name") fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
@@ -91,6 +96,10 @@ export class SearchController {
 
   @Post("/weapon")
   @Description("Search weapons by their serialNumber")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
   async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
     if (!serialNumber || serialNumber.length < 3) {
       return null;
@@ -118,6 +127,10 @@ export class SearchController {
 
   @Post("/vehicle")
   @Description("Search vehicles by their plate or vinNumber")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
   async searchVehicle(
     @BodyParams("plateOrVin") plateOrVin: string,
     @QueryParams("includeMany") includeMany: boolean,

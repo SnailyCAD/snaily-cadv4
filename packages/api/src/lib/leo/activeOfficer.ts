@@ -1,4 +1,5 @@
 import type { User } from ".prisma/client";
+import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/user";
@@ -44,7 +45,11 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
       isDispatch = true;
     }
   } else {
-    if (!user.isLeo) {
+    const hasLeoPermissions = !user.permissions.length
+      ? user.isLeo
+      : hasPermission(user.permissions, [Permissions.Leo]);
+
+    if (!hasLeoPermissions) {
       throw new Forbidden("Invalid Permissions");
     }
   }

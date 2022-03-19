@@ -1370,6 +1370,7 @@ __metadata:
     "@discordjs/rest": ^0.3.0
     "@prisma/client": ^3.10.0
     "@snailycad/config": 1.0.0-beta.73
+    "@snailycad/permissions": 1.0.0-beta.73
     "@snailycad/schemas": 1.0.0-beta.73
     "@snailycad/types": 1.0.0-beta.73
     "@snailycad/utils": 1.0.0-beta.73
@@ -1437,6 +1438,7 @@ __metadata:
     "@react-aria/label": ^3.2.4
     "@react-aria/ssr": ^3.1.2
     "@snailycad/config": 1.0.0-beta.73
+    "@snailycad/permissions": 1.0.0-beta.73
     "@snailycad/schemas": 1.0.0-beta.73
     "@snailycad/types": 1.0.0-beta.73
     "@snailycad/utils": 1.0.0-beta.73
@@ -1501,6 +1503,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snailycad/permissions@1.0.0-beta.73, @snailycad/permissions@workspace:packages/permissions":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/permissions@workspace:packages/permissions"
+  dependencies:
+    tsup: ^5.12.1
+    type-fest: ^2.12.0
+    typescript: ^4.6.2
+    vite: ^2.8.6
+    vitest: ^0.7.0
+    zod: ^3.13.4
+  languageName: unknown
+  linkType: soft
+
 "@snailycad/schemas@1.0.0-beta.73, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
@@ -1515,6 +1530,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
+    "@snailycad/permissions": 1.0.0-beta.73
     tsup: ^5.12.1
     type-fest: ^2.12.0
     typescript: ^4.6.2

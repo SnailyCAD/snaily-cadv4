@@ -16,6 +16,7 @@ import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   data: (Citizen & { Record: Record[] })[];
@@ -26,6 +27,7 @@ export default function Jail({ data: citizens }: Props) {
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
+  const { hasPermissions } = usePermission();
   const router = useRouter();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
@@ -44,7 +46,13 @@ export default function Jail({ data: citizens }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewJail, Permissions.ManageJail],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("jail")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>
@@ -97,7 +105,9 @@ export default function Jail({ data: citizens }: Props) {
             { Header: t("jailTime"), accessor: "jailTime" },
             { Header: t("status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasPermissions([Permissions.ManageJail], true)
+              ? { Header: common("actions"), accessor: "actions" }
+              : null,
           ]}
         />
       )}

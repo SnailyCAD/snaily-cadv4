@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { Citizen, Weapon } from "@snailycad/types";
+import { Citizen, Rank, Weapon } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -15,6 +15,7 @@ import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   weapons: (Weapon & { citizen: Citizen })[];
@@ -30,7 +31,12 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
   const { openModal } = useModal();
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ImportRegisteredWeapons],
+      }}
+    >
       <Title>{t("IMPORT_WEAPONS")}</Title>
 
       <header>

@@ -7,7 +7,7 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BAN_SCHEMA, UPDATE_USER_SCHEMA } from "@snailycad/schemas";
+import { BAN_SCHEMA, UPDATE_USER_SCHEMA, PERMISSIONS_SCHEMA } from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
@@ -16,6 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -26,6 +27,15 @@ export class ManageUsersController {
   }
 
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [
+      Permissions.ViewUsers,
+      Permissions.ManageUsers,
+      Permissions.BanUsers,
+      Permissions.DeleteUsers,
+    ],
+  })
   @Description("Get all the users in the CAD")
   async getUsers() {
     const users = await prisma.user.findMany({
@@ -36,6 +46,15 @@ export class ManageUsersController {
   }
 
   @Get("/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [
+      Permissions.ViewUsers,
+      Permissions.ManageUsers,
+      Permissions.BanUsers,
+      Permissions.DeleteUsers,
+    ],
+  })
   async getUserById(
     @PathParams("id") userId: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
@@ -51,7 +70,41 @@ export class ManageUsersController {
     return user;
   }
 
+  @Put("/permissions/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
+  async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(PERMISSIONS_SCHEMA, body);
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
+    }
+
+    const permissions = this.parsePermissions(data);
+
+    const updated = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: { permissions },
+      select: userProperties,
+    });
+
+    return updated;
+  }
+
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
   async updateUserById(
     @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
@@ -98,6 +151,10 @@ export class ManageUsersController {
   }
 
   @Post("/temp-password/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
   async giveUserTempPassword(@PathParams("id") userId: string) {
     const user = await prisma.user.findFirst({
       where: {
@@ -135,6 +192,10 @@ export class ManageUsersController {
   }
 
   @Post("/:id/:type")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.BanUsers],
+  })
   async banUserById(
     @Context() ctx: Context,
     @PathParams("id") userId: string,
@@ -175,6 +236,10 @@ export class ManageUsersController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.DeleteUsers],
+  })
   async deleteUserAccount(@PathParams("id") userId: string) {
     const user = await prisma.user.findFirst({
       where: {
@@ -199,6 +264,10 @@ export class ManageUsersController {
   }
 
   @Post("/pending/:id/:type")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers],
+  })
   async acceptOrDeclineUser(
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
@@ -233,5 +302,19 @@ export class ManageUsersController {
     }
 
     return true;
+  }
+
+  protected parsePermissions(data: Record<string, string>) {
+    const permissions: string[] = [];
+    const values = Object.values(Permissions);
+
+    values.forEach((name) => {
+      const updatedPermission = data[name];
+      if (!updatedPermission) return;
+
+      permissions.push(updatedPermission);
+    });
+
+    return permissions;
   }
 }

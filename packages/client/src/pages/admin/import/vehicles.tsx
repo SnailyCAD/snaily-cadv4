@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { RegisteredVehicle } from "@snailycad/types";
+import { Rank, type RegisteredVehicle } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -15,6 +15,7 @@ import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   vehicles: RegisteredVehicle[];
@@ -30,7 +31,12 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
   const { openModal } = useModal();
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ImportRegisteredVehicles],
+      }}
+    >
       <Title>{t("IMPORT_VEHICLES")}</Title>
 
       <header>

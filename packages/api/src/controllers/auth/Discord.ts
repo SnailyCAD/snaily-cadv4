@@ -9,7 +9,11 @@ import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/user";
 import { cad, Feature, WhitelistStatus, type User } from "@prisma/client";
-import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
+import {
+  AUTH_TOKEN_EXPIRES_MS,
+  AUTH_TOKEN_EXPIRES_S,
+  getDefaultPermissionsForNewUser,
+} from "./Auth";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
@@ -73,7 +77,7 @@ export class DiscordAuth {
       where: { discordId: data.id },
     });
 
-    const cad = await prisma.cad.findFirst();
+    const cad = await prisma.cad.findFirst({ include: { autoSetUserProperties: true } });
     const discordRolesId = cad?.discordRolesId ?? null;
 
     /**
@@ -116,8 +120,7 @@ export class DiscordAuth {
           username: data.username,
           password: "",
           discordId: data.id,
-          isTow: !cad?.towWhitelisted,
-          isTaxi: !cad?.taxiWhitelisted,
+          permissions: getDefaultPermissionsForNewUser(cad),
           whitelistStatus: cad?.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
         },
       });

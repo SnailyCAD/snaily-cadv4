@@ -18,6 +18,7 @@ import { Title } from "components/shared/Title";
 import { HoverCard } from "components/shared/HoverCard";
 import { Info } from "react-bootstrap-icons";
 import { Status } from "components/shared/Status";
+import { Permissions } from "@snailycad/permissions";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -62,7 +63,10 @@ export default function MyOfficers({ officers: data }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
+      className="dark:text-white"
+    >
       <Title>{t("myOfficers")}</Title>
 
       <header className="flex items-center justify-between">

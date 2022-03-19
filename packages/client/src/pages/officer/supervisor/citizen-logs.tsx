@@ -14,6 +14,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { Permissions } from "@snailycad/permissions";
 
 type Log = RecordLog & { citizen: Citizen };
 interface Props {
@@ -36,7 +37,10 @@ export default function CitizenLogs({ logs: data }: Props) {
   const common = useTranslations("Common");
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.ViewCitizenLogs] }}
+      className="dark:text-white"
+    >
       <Title>{t("citizenLogs")}</Title>
 
       <header className="flex items-center justify-between">

@@ -11,6 +11,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Status } from "components/shared/Status";
 import { isUnitOfficer } from "@snailycad/utils";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   units: Unit[];
@@ -18,6 +19,8 @@ interface Props {
 
 export function AllUnitsTab({ units }: Props) {
   const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
 
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -49,13 +52,15 @@ export function AllUnitsTab({ units }: Props) {
 
   return (
     <TabsContent value="allUnits">
-      <Button
-        disabled={tableSelect.selectedRows.length <= 0}
-        onClick={setSelectedUnitsOffDuty}
-        className="mt-3"
-      >
-        Set selected units off-duty
-      </Button>
+      {hasManagePermissions ? (
+        <Button
+          disabled={tableSelect.selectedRows.length <= 0}
+          onClick={setSelectedUnitsOffDuty}
+          className="mt-3"
+        >
+          {t("setSelectedOffDuty")}
+        </Button>
+      ) : null}
 
       <Table
         disabledColumnId={["dropdown"]}
@@ -93,16 +98,18 @@ export function AllUnitsTab({ units }: Props) {
           };
         })}
         columns={[
-          {
-            Header: (
-              <IndeterminateCheckbox
-                onChange={tableSelect.handleAllCheckboxes}
-                checked={tableSelect.isTopCheckboxChecked}
-                indeterminate={tableSelect.isIntermediate}
-              />
-            ),
-            accessor: "dropdown",
-          },
+          hasManagePermissions
+            ? {
+                Header: (
+                  <IndeterminateCheckbox
+                    onChange={tableSelect.handleAllCheckboxes}
+                    checked={tableSelect.isTopCheckboxChecked}
+                    indeterminate={tableSelect.isIntermediate}
+                  />
+                ),
+                accessor: "dropdown",
+              }
+            : null,
           { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
           { Header: common("name"), accessor: "name" },
           { Header: t("Leo.callsign"), accessor: "callsign" },
@@ -113,7 +120,7 @@ export function AllUnitsTab({ units }: Props) {
           { Header: t("Leo.status"), accessor: "status" },
           { Header: t("Leo.suspended"), accessor: "suspended" },
           { Header: t("Leo.status"), accessor: "departmentStatus" },
-          { Header: common("actions"), accessor: "actions" },
+          hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
         ]}
       />
     </TabsContent>

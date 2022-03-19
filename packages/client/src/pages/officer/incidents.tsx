@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export type FullIncident = LeoIncident & { officersInvolved: Officer[] };
 
@@ -55,6 +56,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
   const { user } = useAuth();
   const { state, execute } = useFetch();
   const router = useRouter();
+  const { hasPermissions } = usePermission();
 
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
 
@@ -104,19 +106,27 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("incidents")}</Title>
 
       <header className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">{t("incidents")}</h1>
 
-        <Button
-          title={!isOfficerOnDuty ? "You must have an active officer." : ""}
-          disabled={!isOfficerOnDuty}
-          onClick={() => openModal(ModalIds.ManageIncident)}
-        >
-          {t("createIncident")}
-        </Button>
+        {hasPermissions([Permissions.ManageIncidents], true) ? (
+          <Button
+            title={!isOfficerOnDuty ? "You must have an active officer." : ""}
+            disabled={!isOfficerOnDuty}
+            onClick={() => openModal(ModalIds.ManageIncident)}
+          >
+            {t("createIncident")}
+          </Button>
+        ) : null}
       </header>
 
       {incidents.length <= 0 ? (
@@ -160,16 +170,19 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
             createdAt: <FullDate>{incident.createdAt}</FullDate>,
             actions: (
               <>
-                <Button
-                  small
-                  variant="success"
-                  className="mr-2"
-                  onClick={() => onEditClick(incident)}
-                  disabled={!isOfficerOnDuty}
-                >
-                  {common("edit")}
-                </Button>
-                {user?.isSupervisor ? (
+                {hasPermissions([Permissions.ManageIncidents], true) ? (
+                  <Button
+                    small
+                    variant="success"
+                    className="mr-2"
+                    onClick={() => onEditClick(incident)}
+                    disabled={!isOfficerOnDuty}
+                  >
+                    {common("edit")}
+                  </Button>
+                ) : null}
+
+                {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
                   <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
                     {common("delete")}
                   </Button>
@@ -192,7 +205,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
         />
       )}
 
-      {isOfficerOnDuty ? (
+      {isOfficerOnDuty && hasPermissions([Permissions.ManageIncidents], true) ? (
         <ManageIncidentModal
           onCreate={(incident) => setIncidents((p) => [incident, ...p])}
           onUpdate={(oldIncident, incident) => {
@@ -207,7 +220,8 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
           incident={tempIncident}
         />
       ) : null}
-      {user?.isSupervisor ? (
+
+      {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
         <AlertModal
           id={ModalIds.AlertDeleteIncident}
           title={t("deleteIncident")}

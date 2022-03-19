@@ -23,15 +23,7 @@ interface ProviderProps {
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
-  "/dispatch": (user) => user.isDispatch,
-  "/officer/supervisor": (user) => user.isLeo && user.isSupervisor,
-  "/officer": (user) => user.isLeo,
-  "/ems-fd": (user) => user.isEmsFd,
   "/admin/manage/cad-settings": (user) => user.rank === Rank.OWNER,
-  "/admin/manage/units": (user) => user.rank !== Rank.USER || user.isSupervisor,
-  "/admin": (user) => user.rank !== Rank.USER,
-  "/tow": (user) => user.isTow,
-  "/taxi": (user) => user.isTaxi,
 };
 
 const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];

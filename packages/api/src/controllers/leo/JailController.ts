@@ -9,6 +9,7 @@ import { ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const citizenInclude = {
   Record: {
@@ -31,6 +32,10 @@ const citizenInclude = {
 export class LeoController {
   @Get("/")
   @Description("Get all the citizens who are jailed")
+  @UsePermissions({
+    permissions: [Permissions.ViewJail, Permissions.ManageJail],
+    fallback: (u) => u.isLeo,
+  })
   async getImprisonedCitizens() {
     const citizens = await prisma.citizen.findMany({
       where: {
@@ -57,6 +62,10 @@ export class LeoController {
 
   @Delete("/:id")
   @Description("Release a citizen by its id and type (time out / released by)")
+  @UsePermissions({
+    permissions: [Permissions.ManageJail],
+    fallback: (u) => u.isLeo,
+  })
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
     const citizen = await prisma.citizen.findUnique({

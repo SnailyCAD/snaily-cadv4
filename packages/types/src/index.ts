@@ -1,5 +1,6 @@
 /* eslint-disable capitalized-comments */
 import type { JsonArray } from "type-fest";
+import type { Permissions } from "@snailycad/permissions";
 
 type DescriptionData = JsonArray;
 
@@ -146,6 +147,7 @@ export interface User {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
+  permissions: Permissions[] | null;
   soundSettingsId: string | null;
   soundSettings?: UserSoundSettings | null;
 }

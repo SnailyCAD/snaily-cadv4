@@ -17,6 +17,7 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import type { EmsFdDeputy } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -56,7 +57,10 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const t = useTranslations();
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
+      className="dark:text-white"
+    >
       <Title>{t("Ems.emsFd")}</Title>
 
       {signal100Enabled ? <Component audio={audio} /> : null}

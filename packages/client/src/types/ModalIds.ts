@@ -8,6 +8,7 @@ export const enum ModalIds {
   CitizenImage = "CitizenImageModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
+  ManagePermissions = "ManagePermissionsModal",
   ImportValues = "ImportValuesModal",
   ManagePenalCodeGroup = "AddPenalCodeGroupModal",
   ManageValue = "ManageValueModal",
@@ -93,4 +94,5 @@ export const enum ModalIds {
   AlertDeleteValue = "AlertDeleteValueModal",
   AlertDeleteSelectedValues = "AlertDeleteSelectedValuesModal",
   AlertDeclineOfficer = "AlertDeclineOfficerModal",
+  AlertUseOldPermissions = "AlertUseOldPermissionsModal",
 }

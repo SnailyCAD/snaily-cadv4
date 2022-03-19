@@ -23,6 +23,7 @@ import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client
 import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -34,6 +35,15 @@ export class StatusController {
 
   @Put("/:unitId")
   @Description("Update the status of a unit by its id.")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
+    permissions: [
+      Permissions.Dispatch,
+      Permissions.Leo,
+      Permissions.EmsFd,
+      Permissions.ManageUnits,
+    ],
+  })
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,

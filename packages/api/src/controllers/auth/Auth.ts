@@ -14,7 +14,8 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
-import { Feature } from "@prisma/client";
+import { AutoSetUserProperties, cad, Feature } from "@prisma/client";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -137,7 +138,8 @@ export class AuthController {
       ownerId: user.id,
     });
 
-    const autoSetUserProperties = cad.autoSetUserProperties;
+    const permissions = getDefaultPermissionsForNewUser(cad);
+
     const extraUserData: Partial<User> =
       userCount <= 0
         ? {
@@ -151,13 +153,9 @@ export class AuthController {
             whitelistStatus: WhitelistStatus.ACCEPTED,
           }
         : {
-            isTow: !cad.towWhitelisted,
-            isTaxi: !cad.taxiWhitelisted,
             rank: Rank.USER,
             whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
-            isDispatch: autoSetUserProperties?.dispatch ?? false,
-            isEmsFd: autoSetUserProperties?.emsFd ?? false,
-            isLeo: autoSetUserProperties?.leo ?? false,
+            permissions,
           };
 
     await prisma.user.update({
@@ -189,4 +187,32 @@ export class AuthController {
 
     return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };
   }
+}
+
+export function getDefaultPermissionsForNewUser(
+  cad: (cad & { autoSetUserProperties?: AutoSetUserProperties | null }) | null,
+) {
+  const permissions: Permissions[] = [];
+
+  if (!cad?.towWhitelisted) {
+    permissions.push(Permissions.ViewTowCalls, Permissions.ManageTowCalls, Permissions.ViewTowLogs);
+  }
+
+  if (!cad?.taxiWhitelisted) {
+    permissions.push(Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls);
+  }
+
+  if (cad?.autoSetUserProperties?.dispatch) {
+    permissions.push(...defaultPermissions.defaultDispatchPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.emsFd) {
+    permissions.push(...defaultPermissions.defaultEmsFdPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.leo) {
+    permissions.push(...defaultPermissions.defaultLeoPermissions);
+  }
+
+  return permissions;
 }

@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "context/ModalContext";
-import { type PenalCode, type PenalCodeGroup, ValueType } from "@snailycad/types";
+import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -21,6 +21,7 @@ import { Title } from "components/shared/Title";
 import { hasTableDataChanged } from "./[path]";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
+import { Permissions } from "@snailycad/permissions";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -178,7 +179,12 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageValuePenalCode],
+      }}
+    >
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex items-center justify-between">

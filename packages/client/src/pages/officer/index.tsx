@@ -22,6 +22,7 @@ import { UtilityPanel } from "components/shared/UtilityPanel";
 import type { FullIncident } from "./incidents";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
+import { Permissions } from "@snailycad/permissions";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -85,7 +86,10 @@ export default function OfficerDashboard({
   }, [bolos, calls, officers, activeOfficer]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
+      className="dark:text-white"
+    >
       <Title>{t("officer")}</Title>
 
       {signal100Enabled ? <Component audio={signal100Audio} /> : null}

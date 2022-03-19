@@ -8,6 +8,7 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
@@ -18,6 +19,10 @@ export class Calls911Controller {
   }
 
   @Post("/:callId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_911_CALL_EVENT, body);
 
@@ -42,6 +47,10 @@ export class Calls911Controller {
   }
 
   @Put("/:callId/:eventId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async updateCallEvent(
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,
@@ -83,6 +92,10 @@ export class Calls911Controller {
   }
 
   @Delete("/:callId/:eventId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async deleteCallEvent(
     @PathParams("callId") callId: string,
     @PathParams("eventId") eventId: string,

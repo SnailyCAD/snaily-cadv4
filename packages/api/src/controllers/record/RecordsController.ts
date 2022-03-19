@@ -16,12 +16,17 @@ import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")
   @Description("Create a new warrant")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
 
@@ -56,6 +61,10 @@ export class RecordsController {
 
   @Put("/warrant/:id")
   @Description("Update a warrant by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -79,6 +88,10 @@ export class RecordsController {
 
   @Post("/")
   @Description("Create a new ticket, written warning or arrest report")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -171,6 +184,10 @@ export class RecordsController {
 
   @Put("/record/:id")
   @Description("Update a ticket, written warning or arrest report by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -236,6 +253,10 @@ export class RecordsController {
 
   @Delete("/:id")
   @Description("Delete a ticket, written warning or arrest report by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),
