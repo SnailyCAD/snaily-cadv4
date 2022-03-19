@@ -176,6 +176,7 @@ export default function ManageCitizens(props: Props) {
                   }
                 >
                   <Button
+                    disabled={user.rank === Rank.OWNER}
                     className="!bg-dark-bg"
                     type="button"
                     onClick={() => openModal(ModalIds.ManagePermissions)}
@@ -184,12 +185,12 @@ export default function ManageCitizens(props: Props) {
                   </Button>
 
                   <Button
+                    disabled={user.rank === Rank.OWNER}
                     variant="cancel"
                     className="ml-2 text-base"
                     type="button"
                     onClick={() => openModal(ModalIds.AlertUseOldPermissions)}
                   >
-                    {/* todo: add warning modal  */}
                     {t("useOldPermissions")}
                   </Button>
                 </SettingsFormField>
