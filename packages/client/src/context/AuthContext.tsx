@@ -23,10 +23,6 @@ interface ProviderProps {
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
-  // "/dispatch": (user) => user.isDispatch,
-  // "/officer/supervisor": (user) => user.isLeo && user.isSupervisor,
-  // "/officer": (user) => user.isLeo,
-  // "/ems-fd": (user) => user.isEmsFd,
   "/admin/manage/cad-settings": (user) => user.rank === Rank.OWNER,
 };
 

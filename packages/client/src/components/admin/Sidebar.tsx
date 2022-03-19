@@ -103,25 +103,23 @@ export function AdminSidebar() {
             })}
           </SidebarSection>
 
-          {user?.rank !== Rank.USER ? (
-            <SidebarSection
-              permissions={defaultPermissions.defaultValuePermissions}
-              title={t("Values.values")}
-            >
-              {valueRoutes.map((route) => {
-                return (
-                  <SidebarItem
-                    route={route}
-                    key={route.type}
-                    isActive={isValueActive(makeType(route.type))}
-                    href={`/admin/values/${makeType(route.type).toLowerCase()}`}
-                    text={t(`${route.type.replace("-", "_")}.MANAGE`)}
-                    onRouteClick={() => setMenuOpen(false)}
-                  />
-                );
-              })}
-            </SidebarSection>
-          ) : null}
+          <SidebarSection
+            permissions={defaultPermissions.defaultValuePermissions}
+            title={t("Values.values")}
+          >
+            {valueRoutes.map((route) => {
+              return (
+                <SidebarItem
+                  route={route}
+                  key={route.type}
+                  isActive={isValueActive(makeType(route.type))}
+                  href={`/admin/values/${makeType(route.type).toLowerCase()}`}
+                  text={t(`${route.type.replace("-", "_")}.MANAGE`)}
+                  onRouteClick={() => setMenuOpen(false)}
+                />
+              );
+            })}
+          </SidebarSection>
         </div>
 
         <button

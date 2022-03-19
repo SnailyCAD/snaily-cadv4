@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 export interface LayoutProps {
   children: React.ReactNode;
-  permissions: { fallback: PermissionsFallback; permissions: Permissions[] };
+  permissions?: { fallback: PermissionsFallback; permissions: Permissions[] };
   className?: string;
   hideAlerts?: boolean;
   navMaxWidth?: string;

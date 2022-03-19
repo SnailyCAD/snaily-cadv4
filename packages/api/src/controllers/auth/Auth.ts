@@ -192,7 +192,7 @@ export class AuthController {
 export function getDefaultPermissionsForNewUser(
   cad: (cad & { autoSetUserProperties?: AutoSetUserProperties | null }) | null,
 ) {
-  const permissions = [];
+  const permissions: Permissions[] = [];
 
   if (!cad?.towWhitelisted) {
     permissions.push(Permissions.ViewTowCalls, Permissions.ManageTowCalls, Permissions.ViewTowLogs);
@@ -203,15 +203,15 @@ export function getDefaultPermissionsForNewUser(
   }
 
   if (cad?.autoSetUserProperties?.dispatch) {
-    permissions.push(defaultPermissions.defaultDispatchPermissions);
+    permissions.push(...defaultPermissions.defaultDispatchPermissions);
   }
 
   if (cad?.autoSetUserProperties?.emsFd) {
-    permissions.push(defaultPermissions.defaultEmsFdPermissions);
+    permissions.push(...defaultPermissions.defaultEmsFdPermissions);
   }
 
   if (cad?.autoSetUserProperties?.leo) {
-    permissions.push(defaultPermissions.defaultLeoPermissions);
+    permissions.push(...defaultPermissions.defaultLeoPermissions);
   }
 
   return permissions;

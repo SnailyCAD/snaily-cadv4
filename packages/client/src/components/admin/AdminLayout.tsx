@@ -6,11 +6,12 @@ import { AdminSidebar } from "./Sidebar";
 import type { LayoutProps } from "components/Layout";
 import { usePermission } from "hooks/usePermission";
 import { useRouter } from "next/router";
+import { Loader } from "components/Loader";
 
 interface Props {
   children: React.ReactNode;
   className?: string;
-  permissions: LayoutProps["permissions"];
+  permissions?: LayoutProps["permissions"];
 }
 
 export function AdminLayout({ children, className, permissions }: Props) {
@@ -31,7 +32,13 @@ export function AdminLayout({ children, className, permissions }: Props) {
   }, [hasPermissions, router, permissions]);
 
   if (forbidden) {
-    return null;
+    return (
+      <div id="unauthorized" className="fixed inset-0 grid bg-transparent place-items-center">
+        <span aria-label="loading...">
+          <Loader className="w-14 h-14 border-[3px]" />
+        </span>
+      </div>
+    );
   }
 
   return (

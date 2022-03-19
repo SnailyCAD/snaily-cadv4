@@ -8,6 +8,7 @@ import { useModal } from "context/ModalContext";
 import {
   DriversLicenseCategoryType,
   DriversLicenseCategoryValue,
+  Rank,
   ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -21,6 +22,7 @@ import { handleFilter } from "./[path]";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
+import { Permissions } from "@snailycad/permissions";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -113,7 +115,12 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageValueDLCategory],
+      }}
+    >
       <Title>{typeT("MANAGE")}</Title>
 
       <header className="flex flex-col">
