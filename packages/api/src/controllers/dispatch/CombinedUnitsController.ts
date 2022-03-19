@@ -6,6 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { ShouldDoType } from "@prisma/client";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -19,6 +20,10 @@ export class CombinedUnitsController {
   @Description(
     "Merge officers into a combined/merged unit via their ids. `entry: true` means it that officer will be the main unit.",
   )
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
     const officers = await prisma.$transaction(
       ids.map((officer) => {
@@ -93,6 +98,10 @@ export class CombinedUnitsController {
 
   @Post("/unmerge/:id")
   @Description("Unmerge officers by the combinedUnitId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async unmergeOfficers(@PathParams("id") unitId: string) {
     const unit = await prisma.combinedLeoUnit.findFirst({
       where: {

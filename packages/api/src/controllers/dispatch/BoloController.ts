@@ -11,6 +11,7 @@ import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import type { BoloType } from "@prisma/client";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -21,6 +22,10 @@ export class BoloController {
   }
 
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
   @Description("Get all the bolos")
   async getBolos() {
     const bolos = await prisma.bolo.findMany({
@@ -37,6 +42,10 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Post("/")
   @Description("Create a new BOLO")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
@@ -65,6 +74,11 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Put("/:id")
   @Description("Update a BOLO by its id")
+  @Description("Create a new BOLO")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async updateBolo(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
 
@@ -102,6 +116,10 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Delete("/:id")
   @Description("Delete a BOLO by its id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async deleteBolo(@PathParams("id") id: string) {
     const bolo = await prisma.bolo.findUnique({
       where: { id },
@@ -125,6 +143,10 @@ export class BoloController {
   @Use(ActiveOfficer)
   @Post("/mark-stolen/:id")
   @Description("Mark a vehicle as stolen by its id")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo],
+  })
   async reportVehicleStolen(@BodyParams() body: any) {
     const { id, color, plate } = body;
 

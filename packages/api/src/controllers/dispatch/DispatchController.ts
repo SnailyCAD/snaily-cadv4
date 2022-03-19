@@ -14,6 +14,7 @@ import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/a
 import { findUnit } from "./911-calls/Calls911Controller";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -24,6 +25,10 @@ export class DispatchController {
   }
 
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
   async getDispatchData() {
     const includeData = {
       include: {
@@ -66,6 +71,10 @@ export class DispatchController {
 
   @Post("/aop")
   @Description("Update the AOP in the CAD")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
@@ -86,6 +95,10 @@ export class DispatchController {
 
   @Post("/signal-100")
   @Description("Enable or disable signal 100")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async setSignal100(@Context("cad") cad: cad, @BodyParams("value") value: boolean) {
     if (typeof value !== "boolean") {
       throw new BadRequest("body.valueIsRequired");
@@ -107,6 +120,10 @@ export class DispatchController {
 
   @Post("/dispatchers-state")
   @Description("Set a dispatcher active or inactive")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad") as cad;
     const user = ctx.get("user") as User;
@@ -142,6 +159,10 @@ export class DispatchController {
   }
 
   @Put("/radio-channel/:unitId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
     const { unit, type } = await findUnit(unitId, undefined, true);
