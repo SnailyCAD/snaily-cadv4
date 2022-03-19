@@ -96,9 +96,9 @@ export class AuthController {
   async register(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 
-    const existing = await prisma.user.findUnique({
+    const existing = await prisma.user.findFirst({
       where: {
-        username: data.username,
+        username: { equals: data.username, mode: "insensitive" },
       },
     });
 
