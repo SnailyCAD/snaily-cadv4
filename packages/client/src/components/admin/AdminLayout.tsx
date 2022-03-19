@@ -4,9 +4,7 @@ import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { classNames } from "lib/classNames";
 import { AdminSidebar } from "./Sidebar";
 import type { LayoutProps } from "components/Layout";
-import { usePermission } from "hooks/usePermission";
-import { useRouter } from "next/router";
-import { Loader } from "components/Loader";
+import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
 
 interface Props {
   children: React.ReactNode;
@@ -15,30 +13,11 @@ interface Props {
 }
 
 export function AdminLayout({ children, className, permissions }: Props) {
-  const [forbidden, setForbidden] = React.useState(false);
-  // todo: create hook to remove duplicate code
-
   const { Component, roleplayStopped } = useRoleplayStopped();
-  const { hasPermissions } = usePermission();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!permissions) return;
-
-    if (!hasPermissions(permissions.permissions, permissions.fallback)) {
-      router.push("/403");
-      setForbidden(true);
-    }
-  }, [hasPermissions, router, permissions]);
+  const { forbidden, Loader } = useHasPermissionForLayout(permissions);
 
   if (forbidden) {
-    return (
-      <div id="unauthorized" className="fixed inset-0 grid bg-transparent place-items-center">
-        <span aria-label="loading...">
-          <Loader className="w-14 h-14 border-[3px]" />
-        </span>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

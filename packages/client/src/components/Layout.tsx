@@ -1,8 +1,8 @@
 import * as React from "react";
-import { usePermission, Permissions, PermissionsFallback } from "hooks/usePermission";
+import type { Permissions, PermissionsFallback } from "hooks/usePermission";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { Nav } from "./nav/Nav";
-import { useRouter } from "next/router";
+import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -19,23 +19,11 @@ export function Layout({
   className = "",
   permissions,
 }: LayoutProps) {
-  const [forbidden, setForbidden] = React.useState(false);
-
   const { Component, roleplayStopped } = useRoleplayStopped();
-  const { hasPermissions } = usePermission();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!permissions) return;
-
-    if (!hasPermissions(permissions.permissions, permissions.fallback)) {
-      router.push("/403");
-      setForbidden(true);
-    }
-  }, [hasPermissions, router, permissions]);
+  const { forbidden, Loader } = useHasPermissionForLayout(permissions);
 
   if (forbidden) {
-    return null;
+    return <Loader />;
   }
 
   return (
