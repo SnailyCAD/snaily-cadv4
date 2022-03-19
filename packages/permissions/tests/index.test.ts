@@ -1,6 +1,12 @@
 import { test, expect } from "vitest";
 import { allDefaultAdminPermissions } from "../src/defaults";
-import { hasPermission, Permissions, allPermissions, getPermissions } from "../src/index";
+import {
+  hasPermission,
+  Permissions,
+  allPermissions,
+  getPermissions,
+  defaultPermissions,
+} from "../src/index";
 
 const manageUsers = [
   Permissions.ViewUsers,
@@ -87,35 +93,22 @@ test("Should return 'false' if user has no permissions", () => {
 });
 
 test("Should correctly return the user permissions", () => {
-  expect(getPermissions(manageUsers)).toMatchObject({
-    ViewUsers: true,
-    ManageUsers: true,
-    BanUsers: true,
-    DeleteUsers: true,
-    ViewCitizens: false,
-    ManageCitizens: false,
-    DeleteCitizens: false,
-    ViewUnits: false,
-    ManageUnits: false,
-    DeleteUnits: false,
-    ViewBusinesses: false,
-    DeleteBusinesses: false,
-  });
+  expect(getPermissions(manageUsers)).toBeTypeOf("object");
 });
 
 test("Should correctly return the user permissions with 'allPermissions'", () => {
-  expect(getPermissions(allPermissions)).not.toMatchObject({
-    ViewUsers: true,
-    ManageUsers: true,
-    BanUsers: true,
-    DeleteUsers: true,
-    ViewCitizens: false,
-    ManageCitizens: false,
-    DeleteCitizens: false,
-    ViewUnits: false,
-    ManageUnits: false,
-    DeleteUnits: false,
-    ViewBusinesses: false,
-    DeleteBusinesses: false,
-  });
+  expect(getPermissions(allPermissions)).toBeTypeOf("object");
+});
+
+test("Should return correct defaultPermissions", () => {
+  expect(defaultPermissions.defaultLeoPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultEmsFdPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultDispatchPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultValuePermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultImportPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultManagementPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultImportPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultTowPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.defaultTaxiPermissions).toBeTypeOf("object");
+  expect(defaultPermissions.allDefaultAdminPermissions).toBeInstanceOf(Array);
 });
