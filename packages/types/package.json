@@ -12,8 +12,8 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "type-fest": "^2.12.0",
-    "zod": "^3.13.4"
+    "type-fest": "^2.12.1",
+    "zod": "^3.14.2"
   },
   "tsup": {
     "entry": [
