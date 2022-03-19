@@ -24,9 +24,6 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
     const fallback =
       typeof routeData.fallback === "function" ? routeData.fallback(user) : routeData.fallback;
 
-    console.log({ user });
-    console.log({ routeData });
-
     let hasPerm = hasPermission(user.permissions, routeData.permissions);
 
     if (!user.permissions.length && fallback && !hasPerm) {

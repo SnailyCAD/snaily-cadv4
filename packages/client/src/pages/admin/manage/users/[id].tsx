@@ -27,6 +27,7 @@ import { useModal } from "context/ModalContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { AlertModal } from "components/modal/AlertModal";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -47,7 +48,7 @@ export default function ManageCitizens(props: Props) {
   const t = useTranslations("Management");
   const router = useRouter();
   const { user: session } = useAuth();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
 
   React.useEffect(() => {
@@ -186,7 +187,7 @@ export default function ManageCitizens(props: Props) {
                     variant="cancel"
                     className="ml-2 text-base"
                     type="button"
-                    onClick={() => setFieldValue("useOldPerms", true)}
+                    onClick={() => openModal(ModalIds.AlertUseOldPermissions)}
                   >
                     {/* todo: add warning modal  */}
                     {t("useOldPermissions")}
@@ -221,6 +222,24 @@ export default function ManageCitizens(props: Props) {
                   {common("save")}
                 </Button>
               </div>
+
+              <AlertModal
+                title={t("useOldPermissions")}
+                description={
+                  <>
+                    Are you sure you want to use the old permissions system.{" "}
+                    <span className="font-semibold">
+                      You cannot mix the old permissions with new permissions.
+                    </span>
+                  </>
+                }
+                id={ModalIds.AlertUseOldPermissions}
+                deleteText={t("useOldPermissions")}
+                onDeleteClick={() => {
+                  closeModal(ModalIds.AlertUseOldPermissions);
+                  setFieldValue("useOldPerms", true);
+                }}
+              />
             </form>
           )}
         </Formik>
