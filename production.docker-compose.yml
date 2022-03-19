@@ -12,6 +12,7 @@ services:
       - cad_web
     volumes:
       - ./.data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   api:
     container_name: "snaily-cad-api"
@@ -34,6 +35,7 @@ services:
       NODE_ENV: production
     networks:
       - cad_web
+    restart: unless-stopped
 
   client:
     container_name: "snaily-cad-client"
@@ -56,6 +58,7 @@ services:
       - api
     networks:
       - cad_web
+    restart: unless-stopped
 
 volumes:
   redis-data:
