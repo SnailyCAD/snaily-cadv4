@@ -61,9 +61,11 @@ export function ManagePermissionsModal({ user }: Props) {
               {permissions
                 .filter((v) => v.toLowerCase().includes(search.toLowerCase()))
                 .map((name) => {
+                  const formattedName = name.match(/[A-Z][a-z]+/g)?.join(" ") ?? name;
+
                   return (
                     <div key={name}>
-                      <FormField label={name}>
+                      <FormField className="my-1" label={formattedName}>
                         <Toggle
                           onClick={handleChange}
                           toggled={values[name as PermissionNames]}
@@ -76,7 +78,7 @@ export function ManagePermissionsModal({ user }: Props) {
             </div>
 
             <Button
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 mt-5"
               type="submit"
               disabled={state === "loading"}
             >
