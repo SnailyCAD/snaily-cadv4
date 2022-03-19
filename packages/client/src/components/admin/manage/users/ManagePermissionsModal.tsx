@@ -33,7 +33,6 @@ export function ManagePermissionsModal({ user }: Props) {
       data: makePermissionsData(data),
     });
 
-    // todo
     if (json.id) {
       user.permissions = json.permissions;
     }

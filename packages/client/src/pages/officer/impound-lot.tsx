@@ -14,7 +14,7 @@ import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { Permissions } from "@snailycad/permissions";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -25,6 +25,8 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
 
   const [vehicles, setVehicles] = React.useState(data);
   const [tempVehicle, setTempVehicle] = React.useState<ImpoundedVehicle | null>(null);
@@ -78,7 +80,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             { Header: t("plate"), accessor: "plate" },
             { Header: t("model"), accessor: "model" },
             { Header: t("location"), accessor: "location" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

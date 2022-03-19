@@ -15,6 +15,7 @@ import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad, Call911 } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const assignedUnitsInclude = {
   include: {
@@ -211,6 +212,10 @@ export class Calls911Controller {
   }
 
   @Delete("/purge")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ManageCallHistory],
+  })
   async purgeCalls(@BodyParams("ids") ids: string[]) {
     if (!Array.isArray(ids)) return;
 
@@ -252,6 +257,10 @@ export class Calls911Controller {
   }
 
   @Post("/link-incident/:callId")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.ManageCallHistory],
+  })
   async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
 

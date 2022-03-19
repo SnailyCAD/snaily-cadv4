@@ -205,7 +205,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
         />
       )}
 
-      {hasPermissions([Permissions.ManageIncidents], true) ? (
+      {isOfficerOnDuty && hasPermissions([Permissions.ManageIncidents], true) ? (
         <ManageIncidentModal
           onCreate={(incident) => setIncidents((p) => [incident, ...p])}
           onUpdate={(oldIncident, incident) => {
@@ -220,6 +220,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
           incident={tempIncident}
         />
       ) : null}
+
       {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
         <AlertModal
           id={ModalIds.AlertDeleteIncident}

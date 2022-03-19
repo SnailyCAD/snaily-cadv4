@@ -13,6 +13,7 @@ import { getSessionUser, userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { getCADVersion } from "src/main";
+import { allPermissions } from "@snailycad/permissions";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
@@ -76,6 +77,7 @@ export class IsAuth implements MiddlewareMethods {
         isSupervisor: true,
         username: "Dispatch",
         whitelistStatus: WhitelistStatus.ACCEPTED,
+        permissions: allPermissions,
       };
       ctx.set("user", fakeUser);
     } else {

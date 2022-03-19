@@ -14,6 +14,11 @@ export function OfficerDropdown() {
 
   const items = [
     {
+      name: t("dashboard"),
+      href: "/officer",
+      show: hasPermissions([Permissions.Leo], true),
+    },
+    {
       name: t("myOfficers"),
       href: "/officer/my-officers",
       show: hasPermissions([Permissions.Leo], true),
@@ -69,8 +74,6 @@ export function OfficerDropdown() {
         </Button>
       }
     >
-      <Dropdown.LinkItem href="/officer">{t("dashboard")}</Dropdown.LinkItem>
-
       {items.map((item) => {
         const show = item.show ?? true;
         const path = item.href;
