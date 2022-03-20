@@ -1,40 +1,39 @@
 export enum SocketEvents {
-  CreateTowCall = "CREATE_TOW_CALL",
-  UpdateTowCall = "UPDATE_TOW_CALL",
-  EndTowCall = "END_TOW_CALL",
+  CreateTowCall = "CreateTowCall",
+  UpdateTowCall = "UpdateTowCall",
+  EndTowCall = "EndTowCall",
 
-  CreateTaxiCall = "CREATE_TAXI_CALL",
-  UpdateTaxiCall = "UPDATE_TAXI_CALL",
-  EndTaxiCall = "END_TAXI_CALL",
+  CreateTaxiCall = "CreateTaxiCall",
+  UpdateTaxiCall = "UpdateTaxiCall",
+  EndTaxiCall = "EndTaxiCall",
 
-  Create911Call = "CREATE_911_CALL",
-  Update911Call = "UPDATE_911_CALL",
-  End911Call = "END_911_CALL",
+  Create911Call = "Create911Call",
+  Update911Call = "Update911Call",
+  End911Call = "End911Call",
 
-  CreateBolo = "CREATE_BOLO",
-  UpdateBolo = "UPDATE_BOLO",
-  DeleteBolo = "DELETE_BOLO",
+  CreateBolo = "CreateBolo",
+  UpdateBolo = "UpdateBolo",
+  DeleteBolo = "DeleteBolo",
 
-  UpdateAreaOfPlay = "UPDATE_AREA_OF_PLAY",
+  UpdateAreaOfPlay = "UpdateAreaOfPlay",
+  UpdateOfficerStatus = "UpdateOfficerStatus",
+  UpdateEmsFdStatus = "UpdateEmsFdStatus",
+  UpdateDispatchersState = "UpdateDispatchersState",
 
-  UpdateOfficerStatus = "UPDATE_OFFICER_STATUS",
-  UpdateEmsFdStatus = "UPDATE_EMS_FD_STATUS",
-  UpdateDispatchersState = "UPDATE_DISPATCHERS_STATE",
+  UserBanned = "UserBanned",
+  UserDeleted = "UserDeleted",
 
-  UserBanned = "USER_BANNED",
-  UserDeleted = "USER_DELETED",
+  AddCallEvent = "AddCallEvent",
+  UpdateCallEvent = "UpdateCallEvent",
+  DeleteCallEvent = "DeleteCallEvent",
 
-  AddCallEvent = "ADD_CALL_EVENT",
-  UpdateCallEvent = "UPDATE_CALL_EVENT",
-  DeleteCallEvent = "DELETE_CALL_EVENT",
-
-  Signal100 = "SIGNAL_100",
+  Signal100 = "Signal100",
 
   PANIC_BUTTON_ON = "PANIC_BUTTON_ON",
   PANIC_BUTTON_OFF = "PANIC_BUTTON_OFF",
 
-  CreateActiveIncident = "CREATE_ACTIVE_INCIDENT",
-  UpdateActiveIncident = "UPDATE_ACTIVE_INCIDENT",
+  CreateActiveIncident = "CreateActiveIncident",
+  UpdateActiveIncident = "UpdateActiveIncident",
 
-  RoleplayStopped = "ROLEPLAY_STOPPED",
+  RoleplayStopped = "RoleplayStopped",
 }

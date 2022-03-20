@@ -8,7 +8,7 @@ import { generateString } from "utils/generateString";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
-import { updateCitizenLicenseCategories } from "controllers/citizen/CitizenController";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -57,6 +57,7 @@ export class ImportCitizensController {
           waterLicenseCategory: data.waterLicenseCategoryIds,
           firearmLicenseCategory: data.firearmLicenseCategoryIds,
         };
+
         const updated = await updateCitizenLicenseCategories(citizen, licenseData, {
           gender: true,
           ethnicity: true,

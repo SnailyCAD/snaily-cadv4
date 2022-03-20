@@ -8,7 +8,7 @@ import { canManageInvariant } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
-import { updateCitizenLicenseCategories } from "./CitizenController";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)

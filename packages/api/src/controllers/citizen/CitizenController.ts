@@ -6,19 +6,18 @@ import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
-import { CREATE_CITIZEN_SCHEMA, LICENSE_SCHEMA } from "@snailycad/schemas";
-import type { z } from "zod";
+import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { Citizen, Feature, cad, MiscCadSettings } from ".prisma/client";
+import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { DriversLicenseCategoryValue, Prisma, User, ValueType } from "@prisma/client";
+import { User, ValueType } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
-import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -203,16 +202,7 @@ export class CitizenController {
       },
     });
 
-    await updateCitizenLicenseCategories(citizen, data, {
-      gender: true,
-      ethnicity: true,
-      weaponLicense: true,
-      driversLicense: true,
-      pilotLicense: true,
-      waterLicense: true,
-      dlCategory: { include: { value: true } },
-    });
-
+    await updateCitizenLicenseCategories(citizen, data);
     return citizen;
   }
 
@@ -306,40 +296,4 @@ export class CitizenController {
 
     return data;
   }
-}
-
-export async function updateCitizenLicenseCategories(
-  citizen: Citizen & { dlCategory?: DriversLicenseCategoryValue[] },
-  data: Partial<
-    Pick<
-      z.infer<typeof LICENSE_SCHEMA>,
-      | "driversLicenseCategory"
-      | "pilotLicenseCategory"
-      | "waterLicenseCategory"
-      | "firearmLicenseCategory"
-    >
-  >,
-  include?: Prisma.CitizenInclude,
-) {
-  const newArr = [
-    ...(data.driversLicenseCategory ?? []),
-    ...(data.pilotLicenseCategory ?? []),
-    ...(data.waterLicenseCategory ?? []),
-    ...(data.firearmLicenseCategory ?? []),
-  ];
-  const disconnectConnectArr = manyToManyHelper(citizen.dlCategory?.map((v) => v.id) ?? [], newArr);
-
-  const last = getLastOfArray(
-    await prisma.$transaction(
-      disconnectConnectArr.map((v, idx) =>
-        prisma.citizen.update({
-          where: { id: citizen.id },
-          data: { dlCategory: v },
-          include: idx + 1 === disconnectConnectArr.length ? include : undefined,
-        }),
-      ),
-    ),
-  );
-
-  return last;
 }

@@ -22,10 +22,8 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import {
-  citizenInclude,
-  updateCitizenLicenseCategories,
-} from "controllers/citizen/CitizenController";
+import { citizenInclude } from "controllers/citizen/CitizenController";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { validateImgurURL } from "utils/image";
 import type { MiscCadSettings, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";

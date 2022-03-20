@@ -1521,6 +1521,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
+    tslib: ^2.3.1
     tsup: ^5.12.1
     typescript: ^4.6.2
     zod: ^3.14.2
@@ -1545,6 +1546,7 @@ __metadata:
   dependencies:
     "@snailycad/types": 1.0.0-beta.74
     c8: ^7.11.0
+    tslib: ^2.3.1
     tsup: ^5.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
