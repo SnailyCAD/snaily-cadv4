@@ -1,5 +1,6 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
 import type { Method } from "axios";
+import { useFocusWithin } from "@react-aria/interactions";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import * as React from "react";
@@ -17,7 +18,11 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
+
   const { state, execute } = useFetch();
+  const { focusWithinProps } = useFocusWithin({
+    onBlurWithin: () => setOpen(false),
+  });
 
   const ref = useOnclickOutside(() => setOpen(false));
   const firstItemRef = React.useRef<HTMLButtonElement>(null);
@@ -76,12 +81,8 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     onSearch(e);
   }
 
-  function handleBlur() {
-    setOpen(false);
-  }
-
   return (
-    <div ref={ref} className="relative w-full">
+    <div {...focusWithinProps} ref={ref} className="relative w-full">
       <Input
         {...inputProps}
         autoComplete="off"
@@ -98,8 +99,8 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
       {isOpen && suggestions.length > 0 ? (
         <FocusScope restoreFocus={false}>
-          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">
-            <ul onBlur={handleBlur} className="flex flex-col gap-y-1">
+          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-gray-3 max-h-60">
+            <ul className="flex flex-col gap-y-1">
               {suggestions.map((suggestion, idx) => (
                 <Suggestion
                   onSuggestionClick={handleSuggestionClick}
