@@ -8,7 +8,7 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import type { Feature } from "@snailycad/types";
+import type { CadFeature, Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
 
@@ -133,23 +133,22 @@ export function CADFeaturesTab() {
   const { cad, setCad } = useAuth();
 
   function createInitialValues() {
-    const reduced = cad?.features.reduce(
-      (ac, cv) => ({
-        ...ac,
-        [cv.feature]: cv.isEnabled,
-      }),
-      {},
-    );
+    const obj = {} as Record<Feature, CadFeature>;
 
-    return (reduced ?? {}) as Record<Feature, boolean>;
+    const cadFeatures = cad?.features ?? [];
+    for (const feature of cadFeatures) {
+      obj[feature.feature as Feature] = feature;
+    }
+
+    return obj;
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const featuresArr = Object.entries(values)
-      .map(([key, value]) => {
-        return !value ? key : null;
-      })
-      .filter(Boolean);
+    const featuresArr = [];
+
+    for (const feature in values.features) {
+      featuresArr.push(values.features[feature as Feature]);
+    }
 
     const { json } = await execute("/admin/manage/cad-settings/features", {
       method: "PUT",
@@ -158,11 +157,13 @@ export function CADFeaturesTab() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
-      setSearch("");
     }
   }
 
-  const INITIAL_VALUES = createInitialValues();
+  const INITIAL_VALUES = {
+    features: createInitialValues(),
+  };
+
   const features = Object.entries(FEATURES_LIST).filter(([, v]) =>
     !search.trim() ? true : v.name.toLowerCase().includes(search.toLowerCase()),
   ) as [Feature, FeatureItem][];
@@ -181,8 +182,8 @@ export function CADFeaturesTab() {
       </FormField>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, values }) => (
-          <Form onSubmit={handleSubmit}>
+        {({ handleChange, values }) => (
+          <Form>
             {features.map(([key, value]) => {
               return (
                 <div key={key}>
@@ -191,7 +192,15 @@ export function CADFeaturesTab() {
                     description={value.description}
                     label={value.name}
                   >
-                    <Toggle toggled={values[key]} onClick={handleChange} name={key} />
+                    <Toggle
+                      toggled={values.features[key].isEnabled}
+                      onClick={(v) => {
+                        console.log({ v });
+
+                        handleChange(v);
+                      }}
+                      name={`features.${key}.isEnabled`}
+                    />
                   </SettingsFormField>
                 </div>
               );
