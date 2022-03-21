@@ -7,7 +7,7 @@ import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import type { cad } from ".prisma/client";
-import { Feature, User } from "@prisma/client";
+import { CadFeature, Feature, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
@@ -125,11 +125,15 @@ export class DispatchController {
     permissions: [Permissions.Dispatch],
   })
   async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad") as cad;
+    const cad = ctx.get("cad") as cad & { features: CadFeature[] };
     const user = ctx.get("user") as User;
     const value = Boolean(body.value);
 
-    if (cad.disabledFeatures.includes(Feature.ACTIVE_DISPATCHERS)) {
+    const activeDispatchersEnabled = cad.features.some(
+      (v) => v.feature === Feature.ACTIVE_DISPATCHERS && v.isEnabled,
+    );
+
+    if (!activeDispatchersEnabled) {
       throw new BadRequest("featureDisabled");
     }
 

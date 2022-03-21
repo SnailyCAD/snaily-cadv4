@@ -112,7 +112,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   if (cad && !isEnabled) {
     return (
-      <main className="grid h-screen place-items-center">
+      <main className="grid h-screen place-items-center dark:text-white">
         <p>Feature is not enabled.</p>
       </main>
     );

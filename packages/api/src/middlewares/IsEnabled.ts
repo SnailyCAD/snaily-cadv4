@@ -25,14 +25,14 @@ export class IsEnabled implements MiddlewareMethods {
       await prisma.cad.findFirst({
         select: {
           id: true,
-          disabledFeatures: true,
+          features: true,
         },
       }),
     );
 
-    const disabledFeatures = cad?.disabledFeatures ?? [];
-    for (const feature of disabledFeatures) {
-      const route = featuresRoute[feature as Feature];
+    const cadFeatures = cad?.features ?? [];
+    for (const feature of cadFeatures) {
+      const route = featuresRoute[feature.feature];
 
       if (req.originalUrl.includes(route!) || req.baseUrl.includes(route!)) {
         throw new BadRequest("featureNotEnabled");

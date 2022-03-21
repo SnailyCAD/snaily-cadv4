@@ -30,7 +30,6 @@ export class ManageCitizensController {
         name: true,
         areaOfPlay: true,
         registrationCode: true,
-        disabledFeatures: true,
         miscCadSettings: true,
         features: true,
       },
@@ -74,7 +73,7 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/features")
-  async updateDisabledFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
+  async updateCadFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
     for (const feature of data.features) {
