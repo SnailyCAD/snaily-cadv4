@@ -28,9 +28,8 @@ const MiscFeatures = dynamic(
   async () => (await import("components/admin/manage/cad-settings/MiscFeatures")).MiscFeatures,
 );
 
-const DisabledFeaturesArea = dynamic(
-  async () =>
-    (await import("components/admin/manage/cad-settings/DisabledFeatures")).DisabledFeaturesArea,
+const CADFeaturesTab = dynamic(
+  async () => (await import("components/admin/manage/cad-settings/CADFeaturesTab")).CADFeaturesTab,
 );
 
 const ApiTokenTab = dynamic(
@@ -247,7 +246,7 @@ export default function CadSettings() {
         </TabsContent>
 
         <TabsContent aria-label={t("FEATURES")} value="FEATURES">
-          <DisabledFeaturesArea />
+          <CADFeaturesTab />
         </TabsContent>
 
         <TabsContent aria-label={t("MISC_SETTINGS")} value="MISC_SETTINGS">

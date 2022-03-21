@@ -1,6 +1,6 @@
 import process from "node:process";
 import { Rank, User } from ".prisma/client";
-import { cad, WhitelistStatus } from "@prisma/client";
+import { CadFeature, WhitelistStatus } from "@prisma/client";
 import {
   API_TOKEN_HEADER,
   DISABLED_API_TOKEN_ROUTES,
@@ -24,7 +24,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   taxiWhitelisted: true,
   whitelisted: true,
   businessWhitelisted: true,
-  disabledFeatures: true,
+  features: true,
   autoSetUserProperties: true,
   liveMapSocketURl: user?.rank === Rank.OWNER,
   registrationCode: user?.rank === Rank.OWNER,
@@ -149,16 +149,18 @@ export class IsAuth implements MiddlewareMethods {
   }
 }
 
-export function setDiscordAUth<T extends Pick<cad, "disabledFeatures"> | null = cad>(cad: T) {
+export function setDiscordAUth(cad?: { features?: CadFeature[] }) {
   const hasDiscordTokens = process.env["DISCORD_CLIENT_ID"] && process.env["DISCORD_CLIENT_SECRET"];
-  const isEnabled = !cad?.disabledFeatures.includes("DISCORD_AUTH");
+  const isEnabled = !cad?.features?.some((v) => v.isEnabled && v.feature === "DISCORD_AUTH");
+
+  const notEnabled = { isEnabled: false, feature: "DISCORD_AUTH" } as CadFeature;
 
   if (!cad && !hasDiscordTokens) {
-    return { disabledFeatures: ["DISCORD_AUTH"] };
+    return { features: [notEnabled] };
   }
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, disabledFeatures: [...(cad?.disabledFeatures ?? []), "DISCORD_AUTH"] };
+    return { ...cad, features: [...(cad?.features ?? []), notEnabled] };
   }
 
   return cad;

@@ -3,6 +3,7 @@ import { divisionToDivisions } from "migrations/divisionToDivisions";
 import { pairedSymbolToTemplate } from "migrations/pairedSymbolToTemplate";
 import { leoRoleToLeoRoles } from "migrations/leoRoleToLeoRoles";
 import { emsRoleToEmsRoles } from "migrations/emsRoleToEmsRoles";
+import { disabledFeatureToCadFeature } from "migrations/disabledFeatureToCadFeature";
 
 export const prisma = new PrismaClient({
   errorFormat: "colorless",
@@ -15,6 +16,7 @@ async function handleMigrations() {
     pairedSymbolToTemplate(),
     leoRoleToLeoRoles(),
     emsRoleToEmsRoles(),
+    disabledFeatureToCadFeature(),
   ]);
 }
 

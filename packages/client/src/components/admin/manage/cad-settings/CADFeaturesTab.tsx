@@ -8,11 +8,9 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import { Feature } from "@snailycad/types";
+import type { Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
-
-const FEATURES = Object.keys(Feature) as Feature[];
 
 interface FeatureItem {
   name: string;
@@ -91,10 +89,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Social Security Numbers",
     description: "When disabled, this will hide social security numbers",
   },
-  DISALLOW_TEXTFIELD_SELECTION: {
-    name: "Disallow custom values",
+  CUSTOM_TEXTFIELD_VALUES: {
+    name: "Custom textfield values",
     description:
-      "When disabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
+      "When enabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
   },
   ACTIVE_DISPATCHERS: {
     name: "Active Dispatchers",
@@ -127,7 +125,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
   },
 };
 
-export function DisabledFeaturesArea() {
+export function CADFeaturesTab() {
   const [search, setSearch] = React.useState("");
 
   const common = useTranslations("Common");
@@ -135,13 +133,15 @@ export function DisabledFeaturesArea() {
   const { cad, setCad } = useAuth();
 
   function createInitialValues() {
-    const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
+    const reduced = cad?.features.reduce(
+      (ac, cv) => ({
+        ...ac,
+        [cv.feature]: cv.isEnabled,
+      }),
+      {},
+    );
 
-    for (const feature of FEATURES) {
-      obj[feature] = !cad?.disabledFeatures?.includes(feature);
-    }
-
-    return obj;
+    return (reduced ?? {}) as Record<Feature, boolean>;
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
