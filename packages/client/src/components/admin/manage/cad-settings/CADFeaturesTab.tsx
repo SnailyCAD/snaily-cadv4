@@ -195,8 +195,6 @@ export function CADFeaturesTab() {
                     <Toggle
                       toggled={values.features[key].isEnabled}
                       onClick={(v) => {
-                        console.log({ v });
-
                         handleChange(v);
                       }}
                       name={`features.${key}.isEnabled`}

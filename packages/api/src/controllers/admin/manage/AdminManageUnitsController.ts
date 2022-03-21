@@ -198,8 +198,6 @@ export class AdminManageUnitsController {
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: Type | null,
   ) {
-    console.log({ action, type });
-
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
     }
