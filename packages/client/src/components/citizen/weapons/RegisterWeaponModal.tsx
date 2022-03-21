@@ -31,7 +31,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
-  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
+  const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
@@ -92,19 +92,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            {DISALLOW_TEXTFIELD_SELECTION ? (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Select
-                  values={weapons.values.map((weapon) => ({
-                    label: weapon.value.value,
-                    value: weapon.id,
-                  }))}
-                  value={values.model}
-                  name="model"
-                  onChange={handleChange}
-                />
-              </FormField>
-            ) : (
+            {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
                   list="weaponModelsList"
@@ -118,6 +106,18 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                     <span key={weapon.id}>{weapon.value.value}</span>
                   ))}
                 </datalist>
+              </FormField>
+            ) : (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Select
+                  values={weapons.values.map((weapon) => ({
+                    label: weapon.value.value,
+                    value: weapon.id,
+                  }))}
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
               </FormField>
             )}
 

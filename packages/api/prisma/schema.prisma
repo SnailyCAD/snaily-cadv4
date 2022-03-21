@@ -27,6 +27,7 @@ model cad {
   liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
   registrationCode        String?
+  features                 CadFeature[]
   disabledFeatures        Feature[]
   miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
   miscCadSettingsId       String?
@@ -38,6 +39,14 @@ model cad {
   autoSetUserPropertiesId String?
   discordRoles            DiscordRoles?          @relation(fields: [discordRolesId], references: [id])
   discordRolesId          String?
+}
+
+model CadFeature {
+  id        String  @id @default(cuid())
+  feature   Feature @unique
+  isEnabled Boolean @default(false)
+  cad       cad?    @relation(fields: [cadId], references: [id])
+  cadId     String?
 }
 
 model MiscCadSettings {
@@ -1067,6 +1076,8 @@ enum Feature {
   CALLS_911
   WEAPON_REGISTRATION
   SOCIAL_SECURITY_NUMBERS
+  CUSTOM_TEXTFIELD_VALUES
+  /// @deprecated, use `CUSTOM_TEXTFIELD_VALUES` instead
   DISALLOW_TEXTFIELD_SELECTION
   ACTIVE_DISPATCHERS
   ACTIVE_INCIDENTS

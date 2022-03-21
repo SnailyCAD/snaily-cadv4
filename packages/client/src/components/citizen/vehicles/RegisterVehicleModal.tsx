@@ -48,7 +48,7 @@ export function RegisterVehicleModal({
   const { citizen } = useCitizen(false);
   const router = useRouter();
   const { cad } = useAuth();
-  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
+  const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
   const { currentBusiness, currentEmployee } = useBusinessState();
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
@@ -134,19 +134,7 @@ export function RegisterVehicleModal({
               <Input value={values.vinNumber} name="vinNumber" onChange={handleChange} />
             </FormField>
 
-            {DISALLOW_TEXTFIELD_SELECTION ? (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Select
-                  values={vehicles.values.map((vehicle) => ({
-                    label: vehicle.value.value,
-                    value: vehicle.id,
-                  }))}
-                  value={values.model}
-                  name="model"
-                  onChange={handleChange}
-                />
-              </FormField>
-            ) : (
+            {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
                   list="vehicle-models-list"
@@ -160,6 +148,18 @@ export function RegisterVehicleModal({
                     <span key={vehicle.id}>{vehicle.value.value}</span>
                   ))}
                 </datalist>
+              </FormField>
+            ) : (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <Select
+                  values={vehicles.values.map((vehicle) => ({
+                    label: vehicle.value.value,
+                    value: vehicle.id,
+                  }))}
+                  value={values.model}
+                  name="model"
+                  onChange={handleChange}
+                />
               </FormField>
             )}
 

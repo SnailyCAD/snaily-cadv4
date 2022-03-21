@@ -13,7 +13,7 @@ import { Feature, cad, MiscCadSettings } from ".prisma/client";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import { User, ValueType } from "@prisma/client";
+import { CadFeature, User, ValueType } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
@@ -97,12 +97,13 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    const cad = ctx.get("cad") as cad;
-    const disallowDeletion = cad.disabledFeatures.includes(
-      Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN,
+    const cad = ctx.get("cad") as cad & { features: CadFeature[] };
+
+    const allowDeletion = cad.features.some(
+      (v) => v.feature === Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN && v.isEnabled,
     );
 
-    if (disallowDeletion) {
+    if (!allowDeletion) {
       throw new Forbidden("onlyAdminsCanDeleteCitizens");
     }
 
@@ -128,13 +129,13 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings | null },
+    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
-    const disabledFeatures = cad.disabledFeatures;
+    const features = cad.features;
     const miscSettings = cad.miscCadSettings;
     if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
@@ -148,11 +149,11 @@ export class CitizenController {
       }
     }
 
-    const doNotAllowDuplicateCitizenNames = disabledFeatures.includes(
-      Feature.ALLOW_DUPLICATE_CITIZEN_NAMES,
+    const allowDuplicateCitizenNames = features.some(
+      (v) => v.feature === Feature.ALLOW_DUPLICATE_CITIZEN_NAMES && v.isEnabled,
     );
 
-    if (doNotAllowDuplicateCitizenNames) {
+    if (!allowDuplicateCitizenNames) {
       const existing = await prisma.citizen.findFirst({
         where: {
           name: data.name,

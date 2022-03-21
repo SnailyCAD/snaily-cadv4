@@ -8,11 +8,9 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Toggle } from "components/form/Toggle";
-import { Feature } from "@snailycad/types";
+import type { CadFeature, Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
-
-const FEATURES = Object.keys(Feature) as Feature[];
 
 interface FeatureItem {
   name: string;
@@ -91,10 +89,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Social Security Numbers",
     description: "When disabled, this will hide social security numbers",
   },
-  DISALLOW_TEXTFIELD_SELECTION: {
-    name: "Disallow custom values",
+  CUSTOM_TEXTFIELD_VALUES: {
+    name: "Custom textfield values",
     description:
-      "When disabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
+      "When enabled, this will allow users to enter custom vehicle/weapon values when registering a vehicle/weapon",
   },
   ACTIVE_DISPATCHERS: {
     name: "Active Dispatchers",
@@ -127,7 +125,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
   },
 };
 
-export function DisabledFeaturesArea() {
+export function CADFeaturesTab() {
   const [search, setSearch] = React.useState("");
 
   const common = useTranslations("Common");
@@ -135,21 +133,22 @@ export function DisabledFeaturesArea() {
   const { cad, setCad } = useAuth();
 
   function createInitialValues() {
-    const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
+    const obj = {} as Record<Feature, CadFeature>;
 
-    for (const feature of FEATURES) {
-      obj[feature] = !cad?.disabledFeatures?.includes(feature);
+    const cadFeatures = cad?.features ?? [];
+    for (const feature of cadFeatures) {
+      obj[feature.feature as Feature] = feature;
     }
 
     return obj;
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const featuresArr = Object.entries(values)
-      .map(([key, value]) => {
-        return !value ? key : null;
-      })
-      .filter(Boolean);
+    const featuresArr = [];
+
+    for (const feature in values.features) {
+      featuresArr.push(values.features[feature as Feature]);
+    }
 
     const { json } = await execute("/admin/manage/cad-settings/features", {
       method: "PUT",
@@ -158,11 +157,13 @@ export function DisabledFeaturesArea() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
-      setSearch("");
     }
   }
 
-  const INITIAL_VALUES = createInitialValues();
+  const INITIAL_VALUES = {
+    features: createInitialValues(),
+  };
+
   const features = Object.entries(FEATURES_LIST).filter(([, v]) =>
     !search.trim() ? true : v.name.toLowerCase().includes(search.toLowerCase()),
   ) as [Feature, FeatureItem][];
@@ -181,8 +182,8 @@ export function DisabledFeaturesArea() {
       </FormField>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, values }) => (
-          <Form onSubmit={handleSubmit}>
+        {({ handleChange, values }) => (
+          <Form>
             {features.map(([key, value]) => {
               return (
                 <div key={key}>
@@ -191,7 +192,13 @@ export function DisabledFeaturesArea() {
                     description={value.description}
                     label={value.name}
                   >
-                    <Toggle toggled={values[key]} onClick={handleChange} name={key} />
+                    <Toggle
+                      toggled={values.features[key].isEnabled}
+                      onClick={(v) => {
+                        handleChange(v);
+                      }}
+                      name={`features.${key}.isEnabled`}
+                    />
                   </SettingsFormField>
                 </div>
               );

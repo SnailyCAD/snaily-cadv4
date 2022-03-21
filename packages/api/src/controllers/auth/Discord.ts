@@ -8,7 +8,7 @@ import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/user";
-import { cad, Feature, WhitelistStatus, type User } from "@prisma/client";
+import { cad, CadFeature, Feature, WhitelistStatus, type User } from "@prisma/client";
 import {
   AUTH_TOKEN_EXPIRES_MS,
   AUTH_TOKEN_EXPIRES_S,
@@ -193,9 +193,14 @@ export class DiscordAuth {
   @Delete("/")
   @UseBefore(IsAuth)
   @Description("Remove Discord OAuth2 from from authenticated user")
-  async removeDiscordAuth(@Context("user") user: User, @Context("cad") cad: cad) {
-    const features = cad.disabledFeatures;
-    if (features.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+  async removeDiscordAuth(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features: CadFeature[] },
+  ) {
+    const regularAuthEnabled = cad.features.some(
+      (v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled,
+    );
+    if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginDisabled");
     }
 

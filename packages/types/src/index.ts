@@ -22,7 +22,7 @@ export interface cad {
   liveMapSocketURl: string | null;
   logoId: string | null;
   registrationCode: string | null;
-  disabledFeatures: Feature[];
+  features: CadFeature[];
   miscCadSettingsId: string | null;
   miscCadSettings: MiscCadSettings | null;
   apiTokenId: string | null;
@@ -34,6 +34,17 @@ export interface cad {
   discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
   version: string | null;
+}
+
+/**
+ * Model MiscCadSettings
+ *
+ */
+
+export interface CadFeature {
+  id: string;
+  feature: Feature;
+  isEnabled: boolean;
 }
 
 /**
@@ -936,7 +947,7 @@ export enum Feature {
   CALLS_911 = "CALLS_911",
   WEAPON_REGISTRATION = "WEAPON_REGISTRATION",
   SOCIAL_SECURITY_NUMBERS = "SOCIAL_SECURITY_NUMBERS",
-  DISALLOW_TEXTFIELD_SELECTION = "DISALLOW_TEXTFIELD_SELECTION",
+  CUSTOM_TEXTFIELD_VALUES = "CUSTOM_TEXTFIELD_VALUES",
   ACTIVE_DISPATCHERS = "ACTIVE_DISPATCHERS",
   ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
   ALLOW_REGULAR_LOGIN = "ALLOW_REGULAR_LOGIN",

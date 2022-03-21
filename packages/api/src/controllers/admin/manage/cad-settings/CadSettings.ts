@@ -30,8 +30,8 @@ export class ManageCitizensController {
         name: true,
         areaOfPlay: true,
         registrationCode: true,
-        disabledFeatures: true,
         miscCadSettings: true,
+        features: true,
       },
     });
 
@@ -73,16 +73,26 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/features")
-  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateCadFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
-    const updated = await prisma.cad.update({
-      where: {
-        id: ctx.get("cad").id,
-      },
-      data: {
-        disabledFeatures: data.features as Feature[],
-      },
+    for (const feature of data.features) {
+      const createUpdateData = {
+        isEnabled: feature.isEnabled,
+        feature: feature.feature as Feature,
+        cadId: cad.id,
+      };
+
+      await prisma.cadFeature.upsert({
+        where: { feature: feature.feature as Feature },
+        create: createUpdateData,
+        update: createUpdateData,
+      });
+    }
+
+    const updated = prisma.cad.findUnique({
+      where: { id: cad.id },
+      include: { features: true },
     });
 
     return updated;

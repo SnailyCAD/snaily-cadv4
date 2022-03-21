@@ -2,7 +2,7 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import type { cad as CAD, Feature } from "@snailycad/types";
 
-export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeatures">>) {
+export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "features">>) {
   const [isEnabled, setIsEnabled] = React.useState(true);
   const router = useRouter();
 
@@ -16,12 +16,12 @@ export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "disabledFeature
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function checkEnabled() {
-    const disabledFeatures = cad.disabledFeatures ?? [];
+    const features = cad.features ?? [];
 
-    for (const feature of disabledFeatures) {
-      const route = featuresRoute[feature] as string;
+    for (const feature of features) {
+      const route = featuresRoute[feature.feature];
 
-      if (router.pathname.includes(route)) {
+      if (route && router.pathname.includes(route)) {
         setIsEnabled(false);
         break;
       } else {

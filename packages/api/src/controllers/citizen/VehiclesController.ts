@@ -1,5 +1,5 @@
 import type { MiscCadSettings, User } from ".prisma/client";
-import { Feature, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
+import { CadFeature, Feature, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -21,7 +21,7 @@ export class VehiclesController {
     const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
     const cad = ctx.get("cad") as {
-      disabledFeatures: Feature[];
+      features: CadFeature[];
       miscCadSettings?: MiscCadSettings;
     } | null;
 
@@ -48,7 +48,9 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
 
-    const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
+    const isCustomEnabled = cad?.features.some(
+      (v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled,
+    );
     let modelId = data.model;
 
     if (isCustomEnabled) {
