@@ -8,13 +8,12 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
 
 export function useFeatureEnabled() {
   const { cad } = useAuth();
-  const features = cad?.features ?? [{ isEnabled: false, feature: Feature.DISCORD_AUTH }];
-
+  const features = cad?.features;
   const obj: Record<Feature, boolean> = {} as Record<Feature, boolean>;
 
   Object.keys(Feature).map((feature) => {
-    const cadFeature = features.find((v) => v.feature === feature);
-    const isEnabled = DEFAULTS[feature] ?? cadFeature?.isEnabled ?? true;
+    const cadFeature = features?.find((v) => v.feature === feature);
+    const isEnabled = DEFAULTS[feature as Feature]?.isEnabled ?? cadFeature?.isEnabled ?? true;
 
     obj[feature as Feature] = isEnabled;
   });
