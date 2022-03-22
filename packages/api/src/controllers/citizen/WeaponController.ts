@@ -29,9 +29,9 @@ export class WeaponController {
 
     canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
-    const isCustomEnabled =
-      cad?.features.some((v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled) ??
-      true;
+    const isCustomEnabled = cad?.features.some(
+      (v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled,
+    );
     let modelId = data.model;
 
     if (isCustomEnabled) {

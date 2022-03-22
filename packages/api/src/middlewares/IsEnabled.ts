@@ -32,8 +32,11 @@ export class IsEnabled implements MiddlewareMethods {
 
     const cadFeatures = cad?.features ?? [];
     for (const feature of cadFeatures) {
-      const route = featuresRoute[feature.feature];
+      if (feature.isEnabled) {
+        continue;
+      }
 
+      const route = featuresRoute[feature.feature];
       if (req.originalUrl.includes(route!) || req.baseUrl.includes(route!)) {
         throw new BadRequest("featureNotEnabled");
       }
