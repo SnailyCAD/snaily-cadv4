@@ -48,9 +48,9 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
 
-    const isCustomEnabled = cad?.features.some(
-      (v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled,
-    );
+    const isCustomEnabled =
+      cad?.features.some((v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled) ??
+      true;
     let modelId = data.model;
 
     if (isCustomEnabled) {
