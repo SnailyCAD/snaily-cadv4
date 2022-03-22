@@ -173,6 +173,7 @@ export function RegisterVehicleModal({
                     value: values.modelName,
                     name: "modelName",
                     onChange: handleChange,
+                    errorMessage: errors.model,
                   }}
                 />
               </FormField>

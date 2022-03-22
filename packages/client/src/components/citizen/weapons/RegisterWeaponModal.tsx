@@ -131,6 +131,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                     value: values.modelName,
                     name: "modelName",
                     onChange: handleChange,
+                    errorMessage: errors.model,
                   }}
                 />
               </FormField>
