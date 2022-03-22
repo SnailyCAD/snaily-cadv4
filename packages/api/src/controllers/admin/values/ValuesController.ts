@@ -77,6 +77,30 @@ export class ValuesController {
     return values;
   }
 
+  @Get("/search")
+  async searchValues(@PathParams("path") path: string, @QueryParams("query") query: string) {
+    const type = getTypeFromPath(path);
+    const data = GET_VALUES[type];
+
+    if (data) {
+      // @ts-expect-error ignore
+      const values = await prisma[data.name].findMany({
+        include: { ...(data.include ?? {}), value: true },
+        orderBy: { value: { position: "asc" } },
+        where: { value: { value: { contains: query, mode: "insensitive" } } },
+      });
+
+      return values;
+    }
+
+    const values = await prisma.value.findMany({
+      where: { type, value: { contains: query, mode: "insensitive" } },
+      orderBy: { position: "asc" },
+    });
+
+    return values;
+  }
+
   @Post("/")
   @Description("Create a new value by the specified type")
   @UsePermissions(getPermissionsForValuesRequest)

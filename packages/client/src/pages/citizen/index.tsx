@@ -157,7 +157,7 @@ export default function CitizenPage({ citizens }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const [data, values] = await requestAll(req, [
     ["/citizen", []],
-    ["/admin/values/weapon?paths=license,vehicle", []],
+    ["/admin/values/license", []],
   ]);
 
   return {
