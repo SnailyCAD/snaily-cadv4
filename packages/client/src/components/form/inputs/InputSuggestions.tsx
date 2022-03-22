@@ -7,6 +7,7 @@ import * as React from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 import { useTranslations } from "next-intl";
+import { useDebounce } from "react-use";
 
 type ApiPathFunc = (inputValue: string) => string;
 
@@ -20,7 +21,16 @@ interface Props {
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
+
   const [localValue, setLocalValue] = React.useState("");
+  useDebounce(
+    () => {
+      onSearch(localValue);
+    },
+    150,
+    [localValue],
+  );
+
   const common = useTranslations("Common");
 
   const { state, execute } = useFetch();
@@ -31,10 +41,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const ref = useOnclickOutside(() => setOpen(false));
   const firstItemRef = React.useRef<HTMLButtonElement>(null);
 
-  async function onSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    const target = e.target as HTMLInputElement;
-    const value = target.value.trim();
-
+  async function onSearch(value: string) {
     setLocalValue(value);
 
     if (value.length < (options.minLength ?? 3)) {
@@ -84,8 +91,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
-    // todo: debounce
-    onSearch(e);
+    setLocalValue(e.target.value);
   }
 
   return (
