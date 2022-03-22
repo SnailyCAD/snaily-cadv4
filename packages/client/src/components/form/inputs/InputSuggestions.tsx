@@ -6,18 +6,22 @@ import useFetch from "lib/useFetch";
 import * as React from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
+import { useTranslations } from "next-intl";
+
+type ApiPathFunc = (inputValue: string) => string;
 
 interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
   onSuggestionClick?: (suggestion: any) => void;
   Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
-  options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };
+  options: { apiPath: string | ApiPathFunc; method: Method; minLength?: number; dataKey?: string };
 }
 
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
   const [localValue, setLocalValue] = React.useState("");
+  const common = useTranslations("Common");
 
   const { state, execute } = useFetch();
   const { focusWithinProps } = useFocusWithin({
@@ -43,7 +47,10 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
       data[options.dataKey] = value;
     }
 
-    const { json } = await execute(options.apiPath, {
+    const apiPath =
+      typeof options.apiPath === "function" ? options.apiPath(value) : options.apiPath;
+
+    const { json } = await execute(apiPath, {
       ...options,
       noToast: true,
       data,
@@ -97,10 +104,14 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
         </span>
       ) : null}
 
-      {isOpen && suggestions.length > 0 ? (
+      {isOpen ? (
         <FocusScope restoreFocus={false}>
           <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-gray-3 max-h-60">
             <ul className="flex flex-col gap-y-1">
+              {suggestions.length <= 0 ? (
+                <span className="text-neutral-600 dark:text-gray-500">{common("noOptions")}</span>
+              ) : null}
+
               {suggestions.map((suggestion, idx) => (
                 <Suggestion
                   onSuggestionClick={handleSuggestionClick}

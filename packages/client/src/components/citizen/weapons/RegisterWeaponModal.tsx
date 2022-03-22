@@ -11,13 +11,14 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, ValueLicenseType, Weapon } from "@snailycad/types";
+import { Citizen, ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   weapon: Weapon | null;
@@ -77,6 +78,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
 
   const INITIAL_VALUES = {
     model: weapon?.modelId ?? "",
+    modelName: weapon?.model.value.value ?? "",
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
     serialNumber: weapon?.serialNumber ?? "",
@@ -90,7 +92,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
@@ -109,14 +111,27 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               </FormField>
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Select
-                  values={weapons.values.map((weapon) => ({
-                    label: weapon.value.value,
-                    value: weapon.id,
-                  }))}
-                  value={values.model}
-                  name="model"
-                  onChange={handleChange}
+                <InputSuggestions
+                  onSuggestionClick={(suggestion: WeaponValue) => {
+                    setValues({
+                      ...values,
+                      modelName: suggestion.value.value,
+                      model: suggestion.id,
+                    });
+                  }}
+                  Component={({ suggestion }: { suggestion: WeaponValue }) => (
+                    <p className="w-full text-left">{suggestion.value.value}</p>
+                  )}
+                  options={{
+                    apiPath: (value) => `/admin/values/weapon/search?query=${value}`,
+                    method: "GET",
+                    minLength: 2,
+                  }}
+                  inputProps={{
+                    value: values.modelName,
+                    name: "modelName",
+                    onChange: handleChange,
+                  }}
                 />
               </FormField>
             )}

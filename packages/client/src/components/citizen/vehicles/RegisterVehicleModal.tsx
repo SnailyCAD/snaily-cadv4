@@ -165,7 +165,7 @@ export function RegisterVehicleModal({
                     <p className="w-full text-left">{suggestion.value.value}</p>
                   )}
                   options={{
-                    apiPath: `/admin/values/vehicle/search?query=${values.modelName}`,
+                    apiPath: (value) => `/admin/values/vehicle/search?query=${value}`,
                     method: "GET",
                     minLength: 2,
                   }}
