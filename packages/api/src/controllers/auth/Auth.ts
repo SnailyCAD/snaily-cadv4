@@ -55,9 +55,8 @@ export class AuthController {
 
     // only allow Discord auth (if enabled)
     const cad = await prisma.cad.findFirst({ include: { features: true } });
-    const regularAuthEnabled = cad?.features.some(
-      (v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled,
-    );
+    const regularAuthEnabled =
+      cad?.features.some((v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled) ?? true;
 
     if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginIsDisabled");
@@ -123,9 +122,9 @@ export class AuthController {
     }
 
     // only allow Discord auth
-    const regularAuthEnabled = preCad?.features.some(
-      (v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled,
-    );
+    const regularAuthEnabled =
+      preCad?.features.some((v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled) ??
+      true;
 
     if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginIsDisabled");

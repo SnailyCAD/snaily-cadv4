@@ -147,7 +147,13 @@ export function CADFeaturesTab() {
     const featuresArr = [];
 
     for (const feature in values.features) {
-      featuresArr.push(values.features[feature as Feature]);
+      const feat = values.features[feature as Feature];
+      const featObj = {
+        feature,
+        isEnabled: feat?.isEnabled ?? true,
+      };
+
+      featuresArr.push(featObj);
     }
 
     const { json } = await execute("/admin/manage/cad-settings/features", {
@@ -193,7 +199,7 @@ export function CADFeaturesTab() {
                     label={value.name}
                   >
                     <Toggle
-                      toggled={values.features[key].isEnabled}
+                      toggled={values.features[key]?.isEnabled ?? true}
                       onClick={(v) => {
                         handleChange(v);
                       }}
