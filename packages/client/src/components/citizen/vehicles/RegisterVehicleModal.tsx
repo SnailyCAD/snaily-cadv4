@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, RegisteredVehicle, ValueLicenseType } from "@snailycad/types";
+import { Citizen, RegisteredVehicle, ValueLicenseType, VehicleValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
@@ -24,6 +24,7 @@ import { filterLicenseTypes } from "lib/utils";
 import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -96,6 +97,7 @@ export function RegisterVehicleModal({
 
   const INITIAL_VALUES = {
     model: vehicle?.modelId ?? "",
+    modelName: vehicle?.model.value.value ?? "",
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatusId ?? null,
     inspectionStatus: vehicle?.inspectionStatus ?? null,
@@ -117,7 +119,7 @@ export function RegisterVehicleModal({
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
               <Input
@@ -151,14 +153,27 @@ export function RegisterVehicleModal({
               </FormField>
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Select
-                  values={vehicles.values.map((vehicle) => ({
-                    label: vehicle.value.value,
-                    value: vehicle.id,
-                  }))}
-                  value={values.model}
-                  name="model"
-                  onChange={handleChange}
+                <InputSuggestions
+                  onSuggestionClick={(suggestion: VehicleValue) => {
+                    setValues({
+                      ...values,
+                      modelName: suggestion.value.value,
+                      model: suggestion.id,
+                    });
+                  }}
+                  Component={({ suggestion }: { suggestion: VehicleValue }) => (
+                    <p className="w-full text-left">{suggestion.value.value}</p>
+                  )}
+                  options={{
+                    apiPath: `/admin/values/vehicle/search?query=${values.modelName}`,
+                    method: "GET",
+                    minLength: 2,
+                  }}
+                  inputProps={{
+                    value: values.modelName,
+                    name: "modelName",
+                    onChange: handleChange,
+                  }}
                 />
               </FormField>
             )}
