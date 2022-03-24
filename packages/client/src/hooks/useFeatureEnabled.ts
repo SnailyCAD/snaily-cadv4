@@ -13,7 +13,7 @@ export function useFeatureEnabled() {
 
   Object.keys(Feature).map((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
-    const isEnabled = DEFAULTS[feature as Feature]?.isEnabled ?? cadFeature?.isEnabled ?? true;
+    const isEnabled = cadFeature?.isEnabled ?? DEFAULTS[feature as Feature]?.isEnabled ?? true;
 
     obj[feature as Feature] = isEnabled;
   });
