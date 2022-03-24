@@ -15,6 +15,7 @@ import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, Feature } from "@prisma/client";
+import { getCADVersion } from "src/main";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -25,6 +26,7 @@ export class ManageCitizensController {
 
   @Get("/")
   async getCadSettings() {
+    const version = await getCADVersion();
     const cad = await prisma.cad.findFirst({
       select: {
         name: true,
@@ -35,7 +37,7 @@ export class ManageCitizensController {
       },
     });
 
-    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode };
+    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode, version };
   }
 
   @UseBefore(IsAuth)

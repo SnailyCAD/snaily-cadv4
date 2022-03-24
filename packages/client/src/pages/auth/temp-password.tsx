@@ -24,7 +24,7 @@ const INITIAL_VALUES = {
 export default function TempPassword() {
   const router = useRouter();
   const { state, execute } = useFetch();
-  const { user } = useAuth();
+  const { user, cad } = useAuth();
 
   const common = useTranslations("Common");
   const t = useTranslations("Auth");
@@ -58,7 +58,7 @@ export default function TempPassword() {
     <>
       <Title>{t("changePassword")}</Title>
 
-      <main className="flex justify-center pt-20">
+      <main className="flex flex-col items-center justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleSubmit, handleChange, errors, isValid }) => (
             <form
@@ -93,6 +93,9 @@ export default function TempPassword() {
             </form>
           )}
         </Formik>
+        {cad?.version ? (
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">v{cad.version}</p>
+        ) : null}
       </main>
     </>
   );

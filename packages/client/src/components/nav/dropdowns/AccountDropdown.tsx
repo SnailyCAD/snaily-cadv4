@@ -50,7 +50,7 @@ export function AccountDropdown() {
                   <div className="px-1 py-1">
                     <Menu.Item>
                       <Link href="/account">
-                        <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                        <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg rounded-md w-full px-3 py-1.5 text-sm transition-all">
                           {t("account")}
                         </a>
                       </Link>
@@ -61,7 +61,7 @@ export function AccountDropdown() {
                     <Menu.Item>
                       <button
                         onClick={handleLogout}
-                        className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
+                        className="text-red-500 text-left hover:bg-red-500 hover:text-black rounded-md w-full px-3 py-1.5 text-sm transition-all"
                       >
                         {t("logout")}
                       </button>
@@ -72,7 +72,7 @@ export function AccountDropdown() {
                 <div className="px-1 py-1">
                   <Menu.Item>
                     <Link href="/auth/login">
-                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg rounded-md w-full px-3 py-1.5 text-sm transition-all">
                         {t("login")}
                       </a>
                     </Link>
@@ -80,7 +80,7 @@ export function AccountDropdown() {
 
                   <Menu.Item>
                     <Link href="/auth/register">
-                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
+                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg rounded-md w-full px-3 py-1.5 text-sm transition-all">
                         {t("register")}
                       </a>
                     </Link>
@@ -90,7 +90,7 @@ export function AccountDropdown() {
 
               {cad?.version ? (
                 <div className="px-1 py-1">
-                  <p className="text-gray-900 dark:text-gray-200 block group  items-center w-full px-3 py-1.5 text-sm">
+                  <p className="text-gray-900 dark:text-gray-200 block w-full px-3 py-1.5 text-sm">
                     v{cad.version}
                   </p>
                 </div>

@@ -27,7 +27,7 @@ const INITIAL_VALUES = {
 };
 
 interface Props {
-  cad: Pick<cad, "registrationCode">;
+  cad: Pick<cad, "registrationCode" | "version">;
 }
 
 export default function Register({ cad }: Props) {
@@ -134,6 +134,9 @@ export default function Register({ cad }: Props) {
             </form>
           )}
         </Formik>
+        {cad.version ? (
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">v{cad.version}</p>
+        ) : null}
       </main>
     </>
   );

@@ -32,7 +32,7 @@ export default function Login() {
   const t = useTranslations("Auth");
   const tError = useTranslations("Errors");
   const { DISCORD_AUTH, ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
-  const { user } = useAuth();
+  const { user, cad } = useAuth();
 
   const authMessages = {
     banned: tError("userBanned"),
@@ -176,6 +176,9 @@ export default function Login() {
             </form>
           )}
         </Formik>
+        {cad?.version ? (
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">v{cad.version}</p>
+        ) : null}
       </main>
     </>
   );
