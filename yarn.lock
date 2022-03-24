@@ -1417,6 +1417,8 @@ __metadata:
     tsconfig-paths: ^3.14.0
     typescript: ^4.6.2
     undici: ^4.16.0
+    vite: ^2.8.6
+    vitest: ^0.7.10
   languageName: unknown
   linkType: soft
 
@@ -1486,7 +1488,7 @@ __metadata:
     typescript: ^4.6.2
     uuid: ^8.3.2
     vite: ^2.8.6
-    vitest: ^0.7.6
+    vitest: ^0.7.10
     zod: ^3.14.2
     zustand: ^3.7.1
   languageName: unknown
@@ -1500,7 +1502,7 @@ __metadata:
     tsup: ^5.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
-    vitest: ^0.7.6
+    vitest: ^0.7.10
   languageName: unknown
   linkType: soft
 
@@ -1512,7 +1514,7 @@ __metadata:
     type-fest: ^2.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
-    vitest: ^0.7.6
+    vitest: ^0.7.10
     zod: ^3.14.2
   languageName: unknown
   linkType: soft
@@ -1550,7 +1552,7 @@ __metadata:
     tsup: ^5.12.1
     typescript: ^4.6.2
     vite: ^2.8.6
-    vitest: ^0.7.6
+    vitest: ^0.7.10
   languageName: unknown
   linkType: soft
 
@@ -12488,7 +12490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.7.10, vite@npm:^2.8.6":
+"vite@npm:^2.8.6":
   version: 2.8.6
   resolution: "vite@npm:2.8.6"
   dependencies:
@@ -12517,9 +12519,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.7.6":
-  version: 0.7.6
-  resolution: "vitest@npm:0.7.6"
+"vitest@npm:^0.7.10":
+  version: 0.7.10
+  resolution: "vitest@npm:0.7.10"
   dependencies:
     "@types/chai": ^4.3.0
     "@types/chai-subset": ^1.3.3
@@ -12527,7 +12529,7 @@ __metadata:
     local-pkg: ^0.4.1
     tinypool: ^0.1.2
     tinyspy: ^0.3.0
-    vite: ^2.7.10
+    vite: ^2.8.6
   peerDependencies:
     "@vitest/ui": "*"
     c8: "*"
@@ -12544,7 +12546,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 710c0ee7d09c4b4a9419a4f9e2f3dc12ddf47a41ddfed6d314328ffef3fd87420d954ac70b9ace0bafa4d8061f2ffc34d2aa4562a396358d48eb3bec913859d8
+  checksum: cabe891d741ea8879cfe64ea37a0783054f484640a63994869d83155b918317b1503068da985408073349b2508bd0f29acfabdba42d6a394f8c57a25e0d17725
   languageName: node
   linkType: hard
 
