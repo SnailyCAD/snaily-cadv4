@@ -140,14 +140,21 @@ function ActiveCallsInner() {
     <div className="overflow-hidden rounded-md card">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
+
         <div>
           <Button
             variant="cancel"
-            className={classNames("px-1.5 hover:bg-dark-bg", showFilters && "bg-dark-bg")}
+            className={classNames(
+              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
+              showFilters && "dark:!bg-dark-bg !bg-gray-500",
+            )}
             onClick={() => setShowFilters((o) => !o)}
             title={t("callFilters")}
           >
-            <Filter aria-label={t("callFilters")} />
+            <Filter
+              className={classNames("group-hover:fill-white", showFilters && "text-white")}
+              aria-label={t("callFilters")}
+            />
           </Button>
         </div>
       </header>

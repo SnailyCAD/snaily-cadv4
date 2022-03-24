@@ -58,12 +58,18 @@ export function ActiveDeputies() {
         <div>
           <Button
             variant="cancel"
-            className={classNames("px-1.5 hover:bg-dark-bg", showEmsFilters && "bg-dark-bg")}
+            className={classNames(
+              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
+              showEmsFilters && "dark:!bg-dark-bg !bg-gray-500",
+            )}
             onClick={() => setShowFilters("ems-fd", !showEmsFilters)}
             title={common("filters")}
             disabled={activeDeputies.length <= 0}
           >
-            <Filter aria-label={common("filters")} />
+            <Filter
+              className={classNames("group-hover:fill-white", showEmsFilters && "text-white")}
+              aria-label={common("filters")}
+            />
           </Button>
         </div>
       </header>

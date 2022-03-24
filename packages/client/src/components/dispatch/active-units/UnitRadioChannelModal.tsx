@@ -84,8 +84,12 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
         <span>{unit.radioChannelId ? unit.radioChannelId : common("none")}</span>
 
         {isDispatch ? (
-          <Button variant={null} className="bg-dark-bg px-1.5" onClick={() => setIsOpen(true)}>
-            <Pencil />
+          <Button
+            variant={null}
+            className="dark:bg-dark-bg bg-gray-500 hover:bg-gray-600 px-1.5"
+            onClick={() => setIsOpen(true)}
+          >
+            <Pencil className="fill-current text-white" />
           </Button>
         ) : null}
       </span>

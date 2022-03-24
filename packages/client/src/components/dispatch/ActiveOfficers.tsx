@@ -64,12 +64,18 @@ export function ActiveOfficers() {
         <div>
           <Button
             variant="cancel"
-            className={classNames("px-1.5 hover:bg-dark-bg", showLeoFilters && "bg-dark-bg")}
+            className={classNames(
+              "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
+              showLeoFilters && "dark:!bg-dark-bg !bg-gray-500",
+            )}
             onClick={() => setShowFilters("leo", !showLeoFilters)}
             title={common("filters")}
             disabled={activeOfficers.length <= 0}
           >
-            <Filter aria-label={common("filters")} />
+            <Filter
+              className={classNames("group-hover:fill-white", showLeoFilters && "text-white")}
+              aria-label={common("filters")}
+            />
           </Button>
         </div>
       </header>

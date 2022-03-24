@@ -87,7 +87,7 @@ export function ActiveIncidents() {
         <div>
           <Button
             variant={null}
-            className="bg-gray-2 hover:bg-dark-bg"
+            className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
             onClick={handleCreateIncident}
           >
             {t("createIncident")}
