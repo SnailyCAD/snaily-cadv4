@@ -14,7 +14,7 @@ export class ValuesController {
   @Post("/")
   @Description("Create a new penal-code group")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.OWNER,
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async createPenalCodeGroup(@BodyParams() body: unknown) {
@@ -32,7 +32,7 @@ export class ValuesController {
   @Put("/:id")
   @Description("Edit a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.OWNER,
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async editPenalCodeGroup(@PathParams("id") id: string, @BodyParams() body: unknown) {
@@ -57,7 +57,7 @@ export class ValuesController {
   @Delete("/:id")
   @Description("Delete a penal-code group by its id")
   @UsePermissions({
-    fallback: (u) => u.rank !== Rank.OWNER,
+    fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageValuePenalCode],
   })
   async deletePenalCodeGroup(@PathParams("id") id: string) {
