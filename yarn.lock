@@ -138,17 +138,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/use-socket.io@npm:3.1.2":
-  version: 3.1.2
-  resolution: "@casper124578/use-socket.io@npm:3.1.2"
+"@casper124578/use-socket.io@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@casper124578/use-socket.io@npm:4.0.0"
   dependencies:
-    react: ">=17"
-    socket.io-client: ">=4.2"
+    react: 17.0.2
+    socket.io-client: 4.4.1
     tslib: ^2.3.1
+    zustand: ^3.7.1
   peerDependencies:
     react: ">=17"
     socket.io-client: ">=4.2"
-  checksum: 63e3df6b7bade195d5394d51c4d7663d36427d9f702cf5f31c9406a7a1b91e23b0582cbbfb2dbda4a388563c21ac2278ded73c4c67262301d4583e15288ddc06
+  checksum: 19ab4c08f2f5b960a46993674667f16cbacd288269417c5f0fe1f3346278e7ed6ad917b658f351d1f92165de2fb64fea04df8582428b671bb0ac34ae5af02dc0
   languageName: node
   linkType: hard
 
@@ -1426,7 +1427,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/client@workspace:packages/client"
   dependencies:
-    "@casper124578/use-socket.io": 3.1.2
+    "@casper124578/use-socket.io": 4.0.0
     "@casper124578/useful": ^1.5.3
     "@headlessui/react": ^1.5.0
     "@radix-ui/react-accordion": ^0.1.6
@@ -10110,7 +10111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:>=17, react@npm:^17.0.2":
+"react@npm:17.0.2, react@npm:^17.0.2":
   version: 17.0.2
   resolution: "react@npm:17.0.2"
   dependencies:
@@ -10877,7 +10878,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:>=4.2, socket.io-client@npm:^4.4.1":
+"socket.io-client@npm:4.4.1, socket.io-client@npm:^4.4.1":
   version: 4.4.1
   resolution: "socket.io-client@npm:4.4.1"
   dependencies:

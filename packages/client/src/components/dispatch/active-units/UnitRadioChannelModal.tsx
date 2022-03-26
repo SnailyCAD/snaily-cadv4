@@ -89,7 +89,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
             className="dark:bg-dark-bg bg-gray-500 hover:bg-gray-600 px-1.5"
             onClick={() => setIsOpen(true)}
           >
-            <Pencil className="fill-current text-white" />
+            <Pencil aria-label={t("manageRadioChannel")} className="fill-current text-white" />
           </Button>
         ) : null}
       </span>

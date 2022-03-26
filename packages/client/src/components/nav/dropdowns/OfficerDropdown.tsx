@@ -64,6 +64,7 @@ export function OfficerDropdown() {
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/officer") && "font-semibold")}
           variant="transparent"
         >
