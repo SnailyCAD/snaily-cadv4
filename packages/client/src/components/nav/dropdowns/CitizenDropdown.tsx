@@ -38,6 +38,7 @@ export function CitizenDropdown() {
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/citizen") && "font-semibold")}
           variant="transparent"
         >

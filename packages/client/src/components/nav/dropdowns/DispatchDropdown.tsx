@@ -16,6 +16,7 @@ export function DispatchDropdown() {
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/dispatch") && "font-semibold")}
           variant="transparent"
         >
