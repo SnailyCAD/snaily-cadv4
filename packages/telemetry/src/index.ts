@@ -1,11 +1,12 @@
 import process from "node:process";
+import axios from "axios";
 import os from "node:os";
 import { execSync } from "node:child_process";
 import { get, set } from "./cache";
 import { getCADVersion } from "@snailycad/utils/version";
 
 const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === "true";
-const REPORT_URL = "";
+const REPORT_URL = "https://snailycad-telementry.caspertheghost.workers.dev/";
 
 interface ErrorReport {
   name: string;
@@ -30,16 +31,23 @@ export async function report(errorReport: ErrorReport) {
     cadVersion,
     platform: os.platform(),
     os: os.platform(),
-    ...errorReport,
+    stack: errorReport.stack ?? null,
+    message: errorReport.message || null,
+    name: errorReport.name || "Unknown Error",
   };
 
-  const res = await fetch(REPORT_URL, {
-    method: "POST",
-    body: JSON.stringify(data),
-    cache: "no-cache",
-  });
-
-  console.log({ res });
+  try {
+    await axios({
+      url: REPORT_URL,
+      method: "POST",
+      data: JSON.stringify(data),
+    });
+  } catch (e: any) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(e.response);
+      console.log(e.response.data.errors);
+    }
+  }
 }
 
 async function getBinaryVersions(command: "yarn" | "node" | "npm") {

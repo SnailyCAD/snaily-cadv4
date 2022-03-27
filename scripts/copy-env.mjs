@@ -58,13 +58,15 @@ async function copyEnv(distDir) {
 
       const isClient = distDir.endsWith("client");
       const isApi = distDir.endsWith("api");
-      const type = isClient ? "client" : isApi ? "api" : "Unknown";
+      const type = isClient ? "client" : isApi ? "api" : null;
 
       if (isClient) {
         addPortToClientPackageJson();
       }
 
-      console.log(`✅ copied .env — ${type}`);
+      if (type) {
+        console.log(`✅ copied .env — ${type}`);
+      }
     });
   } catch (e) {
     console.log({ e });
@@ -80,6 +82,9 @@ if (copyToApi) {
   const API_PACKAGE_PATH = join(process.cwd(), "packages", "api");
   copyEnv(API_PACKAGE_PATH);
 }
+
+const TL_PACKAGE_PATH = join(process.cwd(), "packages", "telemetry");
+copyEnv(TL_PACKAGE_PATH);
 
 function hasArg(arg) {
   return args.includes(arg);

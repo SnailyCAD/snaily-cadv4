@@ -7,7 +7,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@snailycad/utils": "1.0.0-beta.77"
+    "@snailycad/utils": "1.0.0-beta.77",
+    "axios": "^0.26.1"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
