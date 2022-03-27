@@ -38,6 +38,7 @@ import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -95,6 +96,12 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions, cad);
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "officer",
+    });
 
     const officerCount = await prisma.officer.count({
       where: { userId: user.id },
@@ -105,17 +112,6 @@ export class LeoController {
       officerCount >= cad.miscCadSettings.maxOfficersPerUser
     ) {
       throw new BadRequest("maxLimitOfficersPerUserReached");
-    }
-
-    const departmentCount = await prisma.officer.count({
-      where: { userId: user.id, departmentId: data.department },
-    });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
     }
 
     const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
@@ -180,17 +176,13 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
-
-    const departmentCount = await prisma.officer.count({
-      where: { userId: user.id, departmentId: data.department, NOT: { id: officer.id } },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "officer",
+      unitId: officer.id,
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {

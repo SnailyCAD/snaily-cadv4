@@ -66,6 +66,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute(`/leo/${officer.id}`, {
         method: "PUT",
         data,
+        helpers,
       });
 
       officerId = json?.id;
@@ -77,6 +78,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute("/leo", {
         method: "POST",
         data,
+        helpers,
       });
 
       officerId = json.id;
