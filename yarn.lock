@@ -1531,6 +1531,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@snailycad/telementry@workspace:packages/telemetry":
+  version: 0.0.0-use.local
+  resolution: "@snailycad/telementry@workspace:packages/telemetry"
+  dependencies:
+    tslib: ^2.3.1
+    tsup: ^5.12.1
+    typescript: ^4.6.3
+  languageName: unknown
+  linkType: soft
+
 "@snailycad/types@1.0.0-beta.77, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
