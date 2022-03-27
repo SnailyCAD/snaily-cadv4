@@ -6,6 +6,7 @@
     ".": "./dist/index.js",
     "./callsign": "./dist/callsign.js",
     "./typeguards": "./dist/typeguards.js",
+    "./version": "./dist/version.js",
     "./package.json": "./package.json"
   },
   "typesVersions": {
@@ -15,6 +16,9 @@
       ],
       "typeguards": [
         "dist/typeguards.d.ts"
+      ],
+      "version": [
+        "dist/version.d.ts"
       ]
     }
   },
