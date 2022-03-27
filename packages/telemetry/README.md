@@ -1,3 +1,3 @@
-# @snailycad/telementry
+# @snailycad/telemetry
 
 TODO
