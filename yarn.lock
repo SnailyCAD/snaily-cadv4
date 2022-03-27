@@ -1531,10 +1531,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/telementry@workspace:packages/telemetry":
+"@snailycad/telemetry@workspace:packages/telemetry":
   version: 0.0.0-use.local
-  resolution: "@snailycad/telementry@workspace:packages/telemetry"
+  resolution: "@snailycad/telemetry@workspace:packages/telemetry"
   dependencies:
+    "@types/node": ^17.0.23
     tslib: ^2.3.1
     tsup: ^5.12.1
     typescript: ^4.6.3
