@@ -6,7 +6,11 @@ import {
   Officer,
   StatusValue,
   EmsFdDeputy,
-} from ".prisma/client";
+  Citizen,
+  CombinedLeoUnit,
+  Value,
+  WhitelistStatus,
+} from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -19,7 +23,6 @@ import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/a
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
-import { Citizen, CombinedLeoUnit, Value, WhitelistStatus } from "@prisma/client";
 import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";

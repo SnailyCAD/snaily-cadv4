@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import type { User } from ".prisma/client";
+import { ShouldDoType, User } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -15,7 +15,6 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
-import { ShouldDoType } from "@prisma/client";
 
 @Controller("/user")
 @UseBefore(IsAuth)

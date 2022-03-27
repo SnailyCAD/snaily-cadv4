@@ -6,9 +6,8 @@ import { join } from "node:path";
 import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
-import { WhitelistStatus } from ".prisma/client";
+import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
-import { Rank } from "@prisma/client";
 import { defaultPermissions } from "@snailycad/permissions";
 
 @Controller("/admin")

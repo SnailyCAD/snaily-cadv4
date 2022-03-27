@@ -10,7 +10,7 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from ".prisma/client";
+import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@snailycad/types";
 

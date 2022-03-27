@@ -1,4 +1,4 @@
-import type { User } from ".prisma/client";
+import type { User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";

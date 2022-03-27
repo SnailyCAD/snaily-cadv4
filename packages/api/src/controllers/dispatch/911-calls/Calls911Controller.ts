@@ -7,10 +7,18 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import { ShouldDoType, CombinedLeoUnit, Officer, EmsFdDeputy } from ".prisma/client";
 import { unitProperties, leoProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import type { DepartmentValue, DivisionValue, User, StatusValue } from "@prisma/client";
+import {
+  ShouldDoType,
+  CombinedLeoUnit,
+  Officer,
+  EmsFdDeputy,
+  DepartmentValue,
+  DivisionValue,
+  User,
+  StatusValue,
+} from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad, Call911 } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";

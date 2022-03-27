@@ -7,7 +7,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import type { Officer } from ".prisma/client";
+import type { Officer } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";

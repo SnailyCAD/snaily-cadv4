@@ -1,4 +1,4 @@
-import type { Feature } from ".prisma/client";
+import type { Feature } from "@prisma/client";
 import { Middleware, MiddlewareMethods, Req } from "@tsed/common";
 import { prisma } from "lib/prisma";
 import { BadRequest } from "@tsed/exceptions";

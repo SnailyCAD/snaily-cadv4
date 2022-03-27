@@ -1,6 +1,5 @@
 import process from "node:process";
-import { Rank, User } from ".prisma/client";
-import { CadFeature, WhitelistStatus } from "@prisma/client";
+import { Rank, User, CadFeature, WhitelistStatus } from "@prisma/client";
 import {
   API_TOKEN_HEADER,
   DISABLED_API_TOKEN_ROUTES,

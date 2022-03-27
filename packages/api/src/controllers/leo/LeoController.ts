@@ -15,7 +15,6 @@ import {
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { Officer, ShouldDoType, User } from ".prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
@@ -25,7 +24,14 @@ import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { validateImgurURL } from "utils/image";
-import type { MiscCadSettings, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
+import {
+  Officer,
+  ShouldDoType,
+  User,
+  MiscCadSettings,
+  VehicleInspectionStatus,
+  VehicleTaxStatus,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";

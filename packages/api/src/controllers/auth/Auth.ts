@@ -1,5 +1,4 @@
 import process from "node:process";
-import { User, WhitelistStatus, Rank } from ".prisma/client";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest } from "@tsed/exceptions";
@@ -14,7 +13,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
-import { AutoSetUserProperties, cad, Feature } from "@prisma/client";
+import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 
 // expire after 5 hours

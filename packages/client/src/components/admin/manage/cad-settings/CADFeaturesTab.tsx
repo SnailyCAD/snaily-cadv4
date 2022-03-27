@@ -133,7 +133,7 @@ export function CADFeaturesTab() {
   const { cad, setCad } = useAuth();
 
   function createInitialValues() {
-    const obj = {} as Record<Feature, CadFeature>;
+    const obj = {} as Partial<Record<Feature, CadFeature>>;
 
     const cadFeatures = cad?.features ?? [];
     for (const feature of cadFeatures) {

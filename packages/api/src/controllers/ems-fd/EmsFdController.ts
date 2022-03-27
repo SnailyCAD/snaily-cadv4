@@ -5,7 +5,7 @@ import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User } from ".prisma/client";
+import { type MiscCadSettings, ShouldDoType, type User } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";

@@ -6,7 +6,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { UPDATE_EMPLOYEE_SCHEMA, FIRE_EMPLOYEE_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { EmployeeAsEnum, WhitelistStatus } from ".prisma/client";
+import { EmployeeAsEnum, WhitelistStatus } from "@prisma/client";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
