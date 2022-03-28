@@ -58,7 +58,7 @@ export function AllUnitsTab({ units }: Props) {
           onClick={setSelectedUnitsOffDuty}
           className="mt-3"
         >
-          {t("setSelectedOffDuty")}
+          {t("Management.setSelectedOffDuty")}
         </Button>
       ) : null}
 
