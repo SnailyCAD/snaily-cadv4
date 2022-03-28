@@ -129,6 +129,7 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
 
             <FormField errorMessage={errors.categories as string} label={t("categories")}>
               <Select
+                closeMenuOnSelect={false}
                 isMulti
                 value={values.categories}
                 onChange={handleChange}
