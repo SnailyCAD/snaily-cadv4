@@ -944,6 +944,7 @@ export type DLExam = {
   status: DLExamStatus;
   createdAt: Date;
   updatedAt: Date;
+  categories?: DriversLicenseCategoryValue[];
 };
 
 /**

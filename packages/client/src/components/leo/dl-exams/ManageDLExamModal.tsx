@@ -7,6 +7,7 @@ import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
+import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -33,12 +34,18 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { driverslicenseCategory } = useValues();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    const data = {
+      ...values,
+      categories: values.categories?.map((v) => v.value) ?? [],
+    };
+
     if (exam) {
       const { json } = await execute(`/leo/dl-exams/${exam.id}`, {
         method: "PUT",
-        data: values,
+        data,
       });
 
       if (json.id) {
@@ -48,7 +55,7 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
     } else {
       const { json } = await execute("/leo/dl-exams", {
         method: "POST",
-        data: values,
+        data,
       });
 
       if (json.id) {
@@ -64,6 +71,11 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
     citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
     practiceExam: exam?.practiceExam ?? null,
+    categories:
+      exam?.categories?.map((v) => ({
+        label: v.value.value,
+        value: v.id,
+      })) ?? null,
   };
 
   return (
@@ -112,6 +124,19 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
                   name: "citizenName",
                   onChange: handleChange,
                 }}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.categories as string} label={t("categories")}>
+              <Select
+                isMulti
+                value={values.categories}
+                onChange={handleChange}
+                name="categories"
+                values={driverslicenseCategory.values.map((v) => ({
+                  label: v.value.value,
+                  value: v.id,
+                }))}
               />
             </FormField>
 

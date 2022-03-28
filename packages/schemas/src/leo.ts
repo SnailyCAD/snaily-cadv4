@@ -59,6 +59,8 @@ export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
 
 export const DL_EXAM_SCHEMA = z.object({
   citizenId: z.string().min(2),
+  status: z.string(),
   practiceExam: z.string().nullable(),
   theoryExam: z.string().nullable(),
+  categories: z.array(z.any()),
 });

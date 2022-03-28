@@ -58,8 +58,6 @@ export default function CitizenLogs({ exams: data }: Props) {
         ) : null}
       </header>
 
-      {console.log({ exams })}
-
       {exams.length <= 0 ? (
         <p className="mt-5">{t("noDLExams")}</p>
       ) : (
@@ -83,6 +81,7 @@ export default function CitizenLogs({ exams: data }: Props) {
                 <span className="capitalize">{exam.practiceExam?.toLowerCase() ?? "—"}</span>
               ),
               status: <Status state={exam.status}>{exam.status.toLowerCase()}</Status>,
+              categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
               createdAt: <FullDate>{exam.createdAt}</FullDate>,
               actions: (
                 <Button small onClick={() => handleEditClick(exam)}>
@@ -95,6 +94,7 @@ export default function CitizenLogs({ exams: data }: Props) {
               { Header: t("theoryExam"), accessor: "theoryExam" },
               { Header: t("practiceExam"), accessor: "practiceExam" },
               { Header: t("status"), accessor: "status" },
+              { Header: t("categories"), accessor: "categories" },
               { Header: common("createdAt"), accessor: "createdAt" },
               hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
                 ? { Header: common("actions"), accessor: "actions" }
@@ -123,10 +123,14 @@ export default function CitizenLogs({ exams: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [exams] = await requestAll(req, [["/leo/dl-exams", []]]);
+  const [exams, values] = await requestAll(req, [
+    ["/leo/dl-exams", []],
+    ["/admin/values/driverslicense_category", []],
+  ]);
 
   return {
     props: {
+      values,
       session: await getSessionUser(req),
       exams,
       messages: {
