@@ -1,3 +1,4 @@
+import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import { Citizen, DLExam, DLExamPassType } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -16,6 +17,8 @@ import { ModalIds } from "types/ModalIds";
 
 interface Props {
   exam: DLExam | null;
+  onUpdate?(oldExam: DLExam, newExam: DLExam): void;
+  onCreate?(exam: DLExam): void;
 }
 
 const PASS_FAIL_VALUES = [
@@ -23,7 +26,7 @@ const PASS_FAIL_VALUES = [
   { label: "Failed", value: DLExamPassType.FAILED },
 ];
 
-export function ManageDLExamModal({ exam }: Props) {
+export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { isOpen, closeModal } = useModal();
@@ -37,23 +40,28 @@ export function ManageDLExamModal({ exam }: Props) {
         method: "PUT",
         data: values,
       });
+
+      if (json.id) {
+        closeModal(ModalIds.ManageDLExam);
+        onUpdate?.(exam, json);
+      }
     } else {
       const { json } = await execute("/leo/dl-exams", {
         method: "POST",
         data: values,
       });
-    }
 
-    // if (json) {
-    //   closeModal(ModalIds.ManageDLExam);
-    //   onSave({ ...call, ...json });
-    // }
+      if (json.id) {
+        closeModal(ModalIds.ManageDLExam);
+        onCreate?.(json);
+      }
+    }
   }
 
-  const validate = handleValidate();
+  const validate = handleValidate(DL_EXAM_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: exam?.citizenId ?? null,
-    citizenName: exam ? `${exam?.citizen.name} ${exam?.citizen.surname}` : "",
+    citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
     practiceExam: exam?.practiceExam ?? null,
   };
@@ -109,6 +117,7 @@ export function ManageDLExamModal({ exam }: Props) {
 
             <FormField errorMessage={errors.theoryExam} label={t("theoryExam")}>
               <Select
+                isClearable
                 value={values.theoryExam}
                 onChange={handleChange}
                 name="theoryExam"
@@ -118,6 +127,7 @@ export function ManageDLExamModal({ exam }: Props) {
 
             <FormField errorMessage={errors.practiceExam} label={t("practiceExam")}>
               <Select
+                isClearable
                 value={values.practiceExam}
                 onChange={handleChange}
                 name="practiceExam"

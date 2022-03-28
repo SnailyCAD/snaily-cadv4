@@ -58,6 +58,8 @@ export default function CitizenLogs({ exams: data }: Props) {
         ) : null}
       </header>
 
+      {console.log({ exams })}
+
       {exams.length <= 0 ? (
         <p className="mt-5">{t("noDLExams")}</p>
       ) : (
@@ -72,10 +74,14 @@ export default function CitizenLogs({ exams: data }: Props) {
               columnId: "createdAt",
               descending: true,
             }}
-            data={data.map((exam) => ({
+            data={exams.map((exam) => ({
               citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
-              theoryExam: exam.theoryExam,
-              practiceExam: exam.practiceExam,
+              theoryExam: (
+                <span className="capitalize">{exam.theoryExam?.toLowerCase() ?? "—"}</span>
+              ),
+              practiceExam: (
+                <span className="capitalize">{exam.practiceExam?.toLowerCase() ?? "—"}</span>
+              ),
               status: <Status state={exam.status}>{exam.status.toLowerCase()}</Status>,
               createdAt: <FullDate>{exam.createdAt}</FullDate>,
               actions: (
@@ -86,9 +92,9 @@ export default function CitizenLogs({ exams: data }: Props) {
             }))}
             columns={[
               { Header: t("citizen"), accessor: "citizen" },
-              { Header: t("status"), accessor: "status" },
               { Header: t("theoryExam"), accessor: "theoryExam" },
               { Header: t("practiceExam"), accessor: "practiceExam" },
+              { Header: t("status"), accessor: "status" },
               { Header: common("createdAt"), accessor: "createdAt" },
               hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
                 ? { Header: common("actions"), accessor: "actions" }
@@ -98,18 +104,31 @@ export default function CitizenLogs({ exams: data }: Props) {
         </>
       )}
 
-      <ManageDLExamModal exam={tempExam} />
+      <ManageDLExamModal
+        onCreate={(exam) => {
+          setExams((p) => [exam, ...p]);
+        }}
+        onUpdate={(oldExam, newExam) => {
+          setExams((prev) => {
+            const idx = prev.findIndex((v) => v.id === oldExam.id);
+            prev[idx] = newExam;
+
+            return prev;
+          });
+        }}
+        exam={tempExam}
+      />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [logs] = await requestAll(req, [["/admin/manage/citizens/records-logs", []]]);
+  const [exams] = await requestAll(req, [["/leo/dl-exams", []]]);
 
   return {
     props: {
       session: await getSessionUser(req),
-      exams: logs,
+      exams,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
       },

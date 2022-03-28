@@ -938,8 +938,8 @@ export type DLExam = {
   id: string;
   citizen: Citizen;
   citizenId: string;
-  theoryExam: DLExamPassType;
-  practiceExam: DLExamPassType;
+  theoryExam: DLExamPassType | null;
+  practiceExam: DLExamPassType | null;
   cost: number | null;
   status: DLExamStatus;
   createdAt: Date;

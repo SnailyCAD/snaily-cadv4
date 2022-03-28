@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "DLExam" ALTER COLUMN "theoryExam" DROP NOT NULL,
+ALTER COLUMN "practiceExam" DROP NOT NULL;

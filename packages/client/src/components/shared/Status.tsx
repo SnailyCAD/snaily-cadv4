@@ -2,7 +2,7 @@ import { DLExamStatus, ExpungementRequestStatus, WhitelistStatus } from "@snaily
 
 interface Props {
   state: WhitelistStatus | ExpungementRequestStatus | DLExamStatus | null | undefined;
-  children: React.ReactNode;
+  children: string | null | undefined;
 }
 
 enum Colors {
@@ -24,6 +24,8 @@ export function Status({ state, children }: Props) {
     [DLExamStatus.FAILED]: Colors.RED,
   };
 
+  const text = !children ? "" : children.toLowerCase().replace(/_/g, " ");
+
   return (
     <span className="capitalize">
       {state ? (
@@ -32,7 +34,7 @@ export function Status({ state, children }: Props) {
           className="inline-block w-2.5 h-2.5 mr-2 rounded-full"
         />
       ) : null}
-      {children}
+      {text}
     </span>
   );
 }

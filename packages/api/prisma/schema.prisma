@@ -942,8 +942,8 @@ model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id])
   citizenId    String
-  theoryExam   DLExamPassType
-  practiceExam DLExamPassType
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
   categories   DriversLicenseCategoryValue[]
   cost         Int?
   status       DLExamStatus                  @default(IN_PROGRESS)
