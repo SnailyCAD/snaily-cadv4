@@ -27,7 +27,7 @@ model cad {
   liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
   registrationCode        String?
-  features                 CadFeature[]
+  features                CadFeature[]
   disabledFeatures        Feature[]
   miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
   miscCadSettingsId       String?
@@ -261,6 +261,7 @@ model Citizen {
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
+  DLExam               DLExam[]
 }
 
 model RegisteredVehicle {
@@ -458,6 +459,7 @@ model DriversLicenseCategoryValue {
   value    Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
   type     DriversLicenseCategoryType
   citizens Citizen[]                  @relation("dlCategoryToDLCategory")
+  DLExam   DLExam[]
 }
 
 model VehicleValue {
@@ -934,6 +936,30 @@ model TruckLog {
   updatedAt DateTime           @default(now()) @updatedAt
 }
 
+// DL Exams
+
+model DLExam {
+  id           String                        @id @default(uuid())
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id])
+  citizenId    String
+  theoryExam   DLExamPassType
+  practiceExam DLExamPassType
+  categories   DriversLicenseCategoryValue[]
+  cost         Int?
+  status       DLExamStatus                  @default(IN_PROGRESS)
+}
+
+enum DLExamPassType {
+  PASSED
+  FAILED
+}
+
+enum DLExamStatus {
+  IN_PROGRESS
+  PASSED
+  FAILED
+}
+
 enum StatusViewMode {
   FULL_ROW_COLOR
   DOT_COLOR
@@ -1085,4 +1111,5 @@ enum Feature {
   ALLOW_REGULAR_LOGIN
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
+  DL_EXAMS
 }
