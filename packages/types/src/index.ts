@@ -931,6 +931,22 @@ export interface TruckLog {
 }
 
 /**
+ * Model DLExam
+ *
+ */
+export type DLExam = {
+  id: string;
+  citizen: Citizen;
+  citizenId: string;
+  theoryExam: DLExamPassType;
+  practiceExam: DLExamPassType;
+  cost: number | null;
+  status: DLExamStatus;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
  * Enums
  */
 
@@ -1078,4 +1094,15 @@ export enum VehicleInspectionStatus {
 export enum VehicleTaxStatus {
   TAXED = "TAXED",
   UNTAXED = "UNTAXED",
+}
+
+export enum DLExamPassType {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum DLExamStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  PASSED = "PASSED",
+  FAILED = "FAILED",
 }

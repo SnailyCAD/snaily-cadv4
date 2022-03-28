@@ -1,7 +1,7 @@
-import { ExpungementRequestStatus, WhitelistStatus } from "@snailycad/types";
+import { DLExamStatus, ExpungementRequestStatus, WhitelistStatus } from "@snailycad/types";
 
 interface Props {
-  state: WhitelistStatus | ExpungementRequestStatus | null | undefined;
+  state: WhitelistStatus | ExpungementRequestStatus | DLExamStatus | null | undefined;
   children: React.ReactNode;
 }
 
@@ -15,10 +15,13 @@ export function Status({ state, children }: Props) {
   const colors = {
     [WhitelistStatus.ACCEPTED]: Colors.GREEN,
     [ExpungementRequestStatus.ACCEPTED]: Colors.GREEN,
+    [DLExamStatus.PASSED]: Colors.GREEN,
     [WhitelistStatus.PENDING]: Colors.ORANGE,
     [ExpungementRequestStatus.PENDING]: Colors.ORANGE,
+    [DLExamStatus.IN_PROGRESS]: Colors.ORANGE,
     [WhitelistStatus.DECLINED]: Colors.RED,
     [ExpungementRequestStatus.DENIED]: Colors.RED,
+    [DLExamStatus.FAILED]: Colors.RED,
   };
 
   return (

@@ -77,7 +77,8 @@
     "register": "Register",
     "callHistory": "Call History",
     "citizenLogs": "Citizen Logs",
-    "courthouse": "Courthouse"
+    "courthouse": "Courthouse",
+    "dlExams": "Driver License Exams"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",

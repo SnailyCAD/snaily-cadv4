@@ -5,12 +5,14 @@ import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function OfficerDropdown() {
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { hasPermissions } = usePermission();
+  const { DL_EXAMS } = useFeatureEnabled();
 
   const items = [
     {
@@ -58,10 +60,18 @@ export function OfficerDropdown() {
       href: "/officer/supervisor/citizen-logs",
       show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
     },
+    {
+      name: t("dlExams"),
+      href: "/officer/supervisor/dl-exams",
+      show:
+        DL_EXAMS &&
+        hasPermissions([Permissions.ViewDLExams, Permissions.ManageDLExams], (u) => u.isSupervisor),
+    },
   ];
 
   return (
     <Dropdown
+      className="min-w-[180px]"
       trigger={
         <Button
           role="listitem"
