@@ -1,4 +1,4 @@
-import type { DLExamPassType, DLExamStatus } from "@prisma/client";
+import { DLExamPassType, DLExamStatus } from "@prisma/client";
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
@@ -38,12 +38,13 @@ export class DLExamsController {
   async createDLEXam(@BodyParams() body: unknown) {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
+    const status = this.getExamStatus(data);
     const exam = await prisma.dLExam.create({
       data: {
         citizenId: data.citizenId,
         practiceExam: data.practiceExam as DLExamPassType | null,
         theoryExam: data.theoryExam as DLExamPassType | null,
-        status: data.status as DLExamStatus,
+        status,
       },
     });
 
@@ -96,13 +97,14 @@ export class DLExamsController {
       ),
     );
 
+    const status = this.getExamStatus(data);
     const updated = await prisma.dLExam.update({
       where: { id: examId },
       data: {
         citizenId: data.citizenId,
         practiceExam: data.practiceExam as DLExamPassType | null,
         theoryExam: data.theoryExam as DLExamPassType | null,
-        status: data.status as DLExamStatus,
+        status,
       },
       include: dlExamIncludes,
     });
@@ -131,4 +133,24 @@ export class DLExamsController {
 
     return true;
   }
+
+  protected getExamStatus(data: ExamData) {
+    if (!data.theoryExam || !data.practiceExam) {
+      return DLExamStatus.IN_PROGRESS;
+    }
+
+    const oneOfTypeFailed =
+      data.theoryExam === DLExamPassType.FAILED || data.practiceExam === DLExamPassType.FAILED;
+
+    if (oneOfTypeFailed) {
+      return DLExamStatus.FAILED;
+    }
+
+    return DLExamStatus.PASSED;
+  }
+}
+
+interface ExamData {
+  theoryExam: string | null;
+  practiceExam: string | null;
 }
