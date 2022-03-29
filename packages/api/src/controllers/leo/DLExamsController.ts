@@ -2,7 +2,7 @@ import type { DLExamPassType, DLExamStatus } from "@prisma/client";
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
-import { Get, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -45,7 +45,6 @@ export class DLExamsController {
         theoryExam: data.theoryExam as DLExamPassType | null,
         status: data.status as DLExamStatus,
       },
-      include: dlExamIncludes,
     });
 
     const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
@@ -60,6 +59,7 @@ export class DLExamsController {
 
     const updated = await prisma.dLExam.findUnique({
       where: { id: exam.id },
+      include: dlExamIncludes,
     });
 
     return updated;
@@ -96,7 +96,7 @@ export class DLExamsController {
       ),
     );
 
-    const updated = prisma.dLExam.update({
+    const updated = await prisma.dLExam.update({
       where: { id: examId },
       data: {
         citizenId: data.citizenId,
@@ -108,5 +108,27 @@ export class DLExamsController {
     });
 
     return updated;
+  }
+
+  @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor,
+    permissions: [Permissions.ManageDLExams],
+  })
+  async deleteDLEXam(@PathParams("id") examId: string) {
+    const exam = await prisma.dLExam.findUnique({
+      where: { id: examId },
+      include: { categories: true },
+    });
+
+    if (!exam) {
+      throw new NotFound("examNotFound");
+    }
+
+    await prisma.dLExam.delete({
+      where: { id: examId },
+    });
+
+    return true;
   }
 }

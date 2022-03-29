@@ -1,10 +1,11 @@
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
-import { Citizen, DLExam, DLExamPassType } from "@snailycad/types";
+import { Citizen, DLExam, DLExamPassType, DLExamStatus } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
+import { AlertModal } from "components/modal/AlertModal";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "context/ModalContext";
 import { useValues } from "context/ValuesContext";
@@ -20,6 +21,7 @@ interface Props {
   exam: DLExam | null;
   onUpdate?(oldExam: DLExam, newExam: DLExam): void;
   onCreate?(exam: DLExam): void;
+  onClose?(): void;
 }
 
 const PASS_FAIL_VALUES = [
@@ -27,16 +29,32 @@ const PASS_FAIL_VALUES = [
   { label: "Failed", value: DLExamPassType.FAILED },
 ];
 
-export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
+const EXAM_STATUSES = [
+  { label: "Passed", value: DLExamStatus.PASSED },
+  { label: "In Progress", value: DLExamStatus.IN_PROGRESS },
+  { label: "Failed", value: DLExamStatus.FAILED },
+];
+
+export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory } = useValues();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  function handleClose() {
+    closeModal(ModalIds.ManageDLExam);
+    onClose?.();
+  }
+
+  async function onSubmit(values: typeof INITIAL_VALUES, showAlert = true) {
+    // todo
+    if (showAlert) {
+      return openModal(ModalIds.AlertPassedExams);
+    }
+
     const data = {
       ...values,
       categories: values.categories?.map((v) => v.value) ?? [],
@@ -71,6 +89,7 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
     citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
     practiceExam: exam?.practiceExam ?? null,
+    status: exam?.status ?? null,
     categories:
       exam?.categories?.map((v) => ({
         label: v.value.value,
@@ -82,10 +101,14 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
     <Modal
       title={exam ? t("editDLExam") : t("createDLExam")}
       isOpen={isOpen(ModalIds.ManageDLExam)}
-      onClose={() => closeModal(ModalIds.ManageDLExam)}
+      onClose={handleClose}
       className="min-w-[600px]"
     >
-      <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+      <Formik
+        validate={validate}
+        onSubmit={(values) => onSubmit(values, values.status === DLExamStatus.PASSED)}
+        initialValues={INITIAL_VALUES}
+      >
         {({ handleChange, setValues, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
@@ -141,6 +164,15 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
               />
             </FormField>
 
+            <FormField errorMessage={errors.status} label={t("status")}>
+              <Select
+                value={values.status}
+                onChange={handleChange}
+                name="status"
+                values={EXAM_STATUSES}
+              />
+            </FormField>
+
             <FormField errorMessage={errors.theoryExam} label={t("theoryExam")}>
               <Select
                 isClearable
@@ -162,11 +194,7 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
             </FormField>
 
             <footer className="flex items-center justify-end gap-2 mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageDLExam)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
@@ -174,6 +202,13 @@ export function ManageDLExamModal({ exam, onCreate, onUpdate }: Props) {
                 {exam ? common("save") : common("create")}
               </Button>
             </footer>
+
+            <AlertModal
+              title="Passed Exams"
+              description="Passed exams are unable to be edited. This will also grant this citizen with a driver's license."
+              id={ModalIds.AlertPassedExams}
+              onDeleteClick={() => onSubmit(values, false)}
+            />
           </Form>
         )}
       </Formik>

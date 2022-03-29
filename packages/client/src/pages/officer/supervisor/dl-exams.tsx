@@ -18,6 +18,8 @@ import { ManageDLExamModal } from "components/leo/dl-exams/ManageDLExamModal";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 interface Props {
   exams: DLExam[];
@@ -29,9 +31,28 @@ export default function CitizenLogs({ exams: data }: Props) {
   const [tempExam, setTempExam] = React.useState<DLExam | null>(null);
 
   const { hasPermissions } = usePermission();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const { state, execute } = useFetch();
+
+  async function handleDelete() {
+    if (!tempExam) return;
+    const { json } = await execute(`/leo/dl-exams/${tempExam.id}`, {
+      method: "DELETE",
+    });
+
+    if (typeof json === "boolean") {
+      closeModal(ModalIds.AlertDeleteDLExam);
+      setExams((p) => p.filter((v) => v.id !== tempExam.id));
+      setTempExam(null);
+    }
+  }
+
+  function handleDeleteClick(exam: DLExam) {
+    setTempExam(exam);
+    openModal(ModalIds.AlertDeleteDLExam);
+  }
 
   function handleEditClick(exam: DLExam) {
     setTempExam(exam);
@@ -84,9 +105,19 @@ export default function CitizenLogs({ exams: data }: Props) {
               categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
               createdAt: <FullDate>{exam.createdAt}</FullDate>,
               actions: (
-                <Button small onClick={() => handleEditClick(exam)}>
-                  {common("edit")}
-                </Button>
+                <>
+                  <Button variant="success" small onClick={() => handleEditClick(exam)}>
+                    {common("edit")}
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    variant="danger"
+                    small
+                    onClick={() => handleDeleteClick(exam)}
+                  >
+                    {common("delete")}
+                  </Button>
+                </>
               ),
             }))}
             columns={[
@@ -104,7 +135,16 @@ export default function CitizenLogs({ exams: data }: Props) {
         </>
       )}
 
+      <AlertModal
+        title={t("deleteDLExam")}
+        id={ModalIds.AlertDeleteDLExam}
+        description={t("alert_deleteDLExam")}
+        onDeleteClick={handleDelete}
+        state={state}
+      />
+
       <ManageDLExamModal
+        onClose={() => setTempExam(null)}
         onCreate={(exam) => {
           setExams((p) => [exam, ...p]);
         }}
@@ -115,6 +155,7 @@ export default function CitizenLogs({ exams: data }: Props) {
 
             return prev;
           });
+          setTempExam(null);
         }}
         exam={tempExam}
       />
