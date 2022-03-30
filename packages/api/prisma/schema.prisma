@@ -361,6 +361,7 @@ model Value {
   insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
   citizenFlags                    Citizen[]                     @relation("citizenFlags")
+  DLExam                          DLExam[]                      @relation("dlExamToLicense")
 }
 
 model PenalCode {
@@ -944,6 +945,8 @@ model DLExam {
   citizenId    String
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?
+  license      Value?                        @relation("dlExamToLicense", fields: [licenseId], references: [id])
+  licenseId    String?
   categories   DriversLicenseCategoryValue[]
   cost         Int?
   status       DLExamStatus                  @default(IN_PROGRESS)

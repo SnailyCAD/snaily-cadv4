@@ -62,4 +62,5 @@ export const DL_EXAM_SCHEMA = z.object({
   practiceExam: z.string().nullable(),
   theoryExam: z.string().nullable(),
   categories: z.array(z.any()),
+  license: z.string(),
 });

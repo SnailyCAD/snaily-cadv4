@@ -35,7 +35,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
-  const { driverslicenseCategory } = useValues();
+  const { driverslicenseCategory, license } = useValues();
 
   function handleClose() {
     closeModal(ModalIds.ManageDLExam);
@@ -77,6 +77,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
     citizenName: exam ? `${exam.citizen.name} ${exam.citizen.surname}` : "",
     theoryExam: exam?.theoryExam ?? null,
     practiceExam: exam?.practiceExam ?? null,
+    license: exam?.licenseId ?? null,
     categories:
       exam?.categories?.map((v) => ({
         label: v.value.value,
@@ -129,7 +130,20 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
                   value: values.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
+                  disabled: !!exam,
                 }}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.license} label={t("license")}>
+              <Select
+                value={values.license}
+                onChange={handleChange}
+                name="license"
+                values={license.values.map((v) => ({
+                  label: v.value,
+                  value: v.id,
+                }))}
               />
             </FormField>
 

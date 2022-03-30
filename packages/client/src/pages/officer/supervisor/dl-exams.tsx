@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { DLExam } from "@snailycad/types";
+import { DLExam, DLExamStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -93,39 +93,49 @@ export default function CitizenLogs({ exams: data }: Props) {
               columnId: "createdAt",
               descending: true,
             }}
-            data={exams.map((exam) => ({
-              citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
-              theoryExam: (
-                <span className="capitalize">{exam.theoryExam?.toLowerCase() ?? "—"}</span>
-              ),
-              practiceExam: (
-                <span className="capitalize">{exam.practiceExam?.toLowerCase() ?? "—"}</span>
-              ),
-              status: <Status state={exam.status}>{exam.status.toLowerCase()}</Status>,
-              categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
-              createdAt: <FullDate>{exam.createdAt}</FullDate>,
-              actions: (
-                <>
-                  <Button variant="success" small onClick={() => handleEditClick(exam)}>
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    className="ml-2"
-                    variant="danger"
-                    small
-                    onClick={() => handleDeleteClick(exam)}
-                  >
-                    {common("delete")}
-                  </Button>
-                </>
-              ),
-            }))}
+            data={exams.map((exam) => {
+              const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
+              return {
+                rowProps: {
+                  className: hasPassedOrFailed ? "opacity-60" : undefined,
+                },
+                citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
+                theoryExam: (
+                  <span className="capitalize">{exam.theoryExam?.toLowerCase() ?? "—"}</span>
+                ),
+                practiceExam: (
+                  <span className="capitalize">{exam.practiceExam?.toLowerCase() ?? "—"}</span>
+                ),
+                status: <Status state={exam.status}>{exam.status.toLowerCase()}</Status>,
+                categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
+                license: exam.license.value,
+                createdAt: <FullDate>{exam.createdAt}</FullDate>,
+                actions: (
+                  <>
+                    {hasPassedOrFailed ? null : (
+                      <Button variant="success" small onClick={() => handleEditClick(exam)}>
+                        {common("edit")}
+                      </Button>
+                    )}
+                    <Button
+                      className="ml-2"
+                      variant="danger"
+                      small
+                      onClick={() => handleDeleteClick(exam)}
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ),
+              };
+            })}
             columns={[
               { Header: t("citizen"), accessor: "citizen" },
               { Header: t("theoryExam"), accessor: "theoryExam" },
               { Header: t("practiceExam"), accessor: "practiceExam" },
               { Header: t("status"), accessor: "status" },
               { Header: t("categories"), accessor: "categories" },
+              { Header: t("license"), accessor: "license" },
               { Header: common("createdAt"), accessor: "createdAt" },
               hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
                 ? { Header: common("actions"), accessor: "actions" }
@@ -141,6 +151,7 @@ export default function CitizenLogs({ exams: data }: Props) {
         description={t("alert_deleteDLExam")}
         onDeleteClick={handleDelete}
         state={state}
+        onClose={() => setTempExam(null)}
       />
 
       <ManageDLExamModal
@@ -166,7 +177,7 @@ export default function CitizenLogs({ exams: data }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const [exams, values] = await requestAll(req, [
     ["/leo/dl-exams", []],
-    ["/admin/values/driverslicense_category", []],
+    ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 
   return {

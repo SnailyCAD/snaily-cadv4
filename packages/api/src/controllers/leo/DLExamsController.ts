@@ -1,4 +1,4 @@
-import { DLExamPassType, DLExamStatus } from "@prisma/client";
+import { DLExam, DLExamPassType, DLExamStatus, DriversLicenseCategoryValue } from "@prisma/client";
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Controller, BodyParams, PathParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
@@ -11,6 +11,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 
 const dlExamIncludes = {
   citizen: true,
+  license: true,
   categories: { include: { value: true } },
 };
 
@@ -44,6 +45,7 @@ export class DLExamsController {
         citizenId: data.citizenId,
         practiceExam: data.practiceExam as DLExamPassType | null,
         theoryExam: data.theoryExam as DLExamPassType | null,
+        licenseId: data.license,
         status,
       },
     });
@@ -79,7 +81,7 @@ export class DLExamsController {
       include: { categories: true },
     });
 
-    if (!exam) {
+    if (!exam || exam.status !== DLExamStatus.IN_PROGRESS) {
       throw new NotFound("examNotFound");
     }
 
@@ -98,10 +100,13 @@ export class DLExamsController {
     );
 
     const status = this.getExamStatus(data);
+    if (status === DLExamStatus.PASSED) {
+      await this.grantLicenseToCitizen(exam);
+    }
+
     const updated = await prisma.dLExam.update({
       where: { id: examId },
       data: {
-        citizenId: data.citizenId,
         practiceExam: data.practiceExam as DLExamPassType | null,
         theoryExam: data.theoryExam as DLExamPassType | null,
         status,
@@ -147,6 +152,32 @@ export class DLExamsController {
     }
 
     return DLExamStatus.PASSED;
+  }
+
+  protected async grantLicenseToCitizen(
+    exam: DLExam & { categories: DriversLicenseCategoryValue[] },
+  ) {
+    const citizen = await prisma.citizen.findUnique({
+      where: { id: exam.citizenId },
+      include: { dlCategory: true },
+    });
+
+    if (!citizen) return;
+
+    const connectDisconnectArr = manyToManyHelper(citizen.dlCategory, exam.categories, "id");
+
+    await prisma.$transaction([
+      prisma.citizen.update({
+        where: { id: citizen.id },
+        data: { driversLicenseId: exam.licenseId },
+      }),
+      ...connectDisconnectArr.map((item) =>
+        prisma.citizen.update({
+          where: { id: citizen.id },
+          data: { dlCategory: item },
+        }),
+      ),
+    ]);
   }
 }
 

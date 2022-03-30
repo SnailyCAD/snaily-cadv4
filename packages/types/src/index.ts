@@ -934,7 +934,7 @@ export interface TruckLog {
  * Model DLExam
  *
  */
-export type DLExam = {
+export interface DLExam {
   id: string;
   citizen: Citizen;
   citizenId: string;
@@ -944,8 +944,10 @@ export type DLExam = {
   status: DLExamStatus;
   createdAt: Date;
   updatedAt: Date;
+  licenseId: string;
+  license: Value<ValueType.LICENSE>;
   categories?: DriversLicenseCategoryValue[];
-};
+}
 
 /**
  * Enums

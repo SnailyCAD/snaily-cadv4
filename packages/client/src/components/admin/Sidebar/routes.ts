@@ -44,11 +44,6 @@ export const managementRoutes: SidebarRoute[] = [
     permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
-  {
-    type: "DL_EXAM",
-    permissions: [Permissions.ViewDLExams, Permissions.ManageDLExams],
-    hidden: ({ DL_EXAMS }) => !DL_EXAMS,
-  },
 ];
 
 export const valueRoutes: SidebarRoute[] = [
