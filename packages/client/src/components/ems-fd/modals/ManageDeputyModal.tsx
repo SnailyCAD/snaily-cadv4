@@ -21,8 +21,8 @@ import type { EmsFdDeputy } from "@snailycad/types";
 
 interface Props {
   deputy: EmsFdDeputy | null;
-  onCreate?: (officer: EmsFdDeputy) => void;
-  onUpdate?: (old: EmsFdDeputy, newO: EmsFdDeputy) => void;
+  onCreate?(officer: EmsFdDeputy): void;
+  onUpdate?(old: EmsFdDeputy, newO: EmsFdDeputy): void;
   onClose?(): void;
 }
 

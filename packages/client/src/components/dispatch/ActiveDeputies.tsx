@@ -137,16 +137,14 @@ export function ActiveDeputies() {
                   ),
                   radioChannel: <UnitRadioChannelModal unit={deputy} />,
                   actions: isDispatch ? (
-                    <>
-                      <Button
-                        disabled={!hasActiveDispatchers}
-                        onClick={() => handleEditClick(deputy)}
-                        small
-                        variant="success"
-                      >
-                        {common("manage")}
-                      </Button>
-                    </>
+                    <Button
+                      disabled={!hasActiveDispatchers}
+                      onClick={() => handleEditClick(deputy)}
+                      small
+                      variant="success"
+                    >
+                      {common("manage")}
+                    </Button>
                   ) : null,
                 };
               })}

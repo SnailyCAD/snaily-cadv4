@@ -29,8 +29,8 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 interface Props {
   vehicle: RegisteredVehicle | null;
   citizens: Pick<Citizen, "name" | "surname" | "id">[];
-  onCreate?: (newV: RegisteredVehicle) => void;
-  onUpdate?: (old: RegisteredVehicle, newV: RegisteredVehicle) => void;
+  onCreate?(newV: RegisteredVehicle): void;
+  onUpdate?(old: RegisteredVehicle, newV: RegisteredVehicle): void;
   onClose?(): void;
 }
 

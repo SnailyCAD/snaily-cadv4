@@ -5,10 +5,10 @@ export type ActiveDeputy = EmsFdDeputy;
 
 interface EmsFdState {
   activeDeputy: ActiveDeputy | null;
-  setActiveDeputy: (deputy: ActiveDeputy | null) => void;
+  setActiveDeputy(deputy: ActiveDeputy | null): void;
 
   deputies: EmsFdDeputy[];
-  setDeputies: (deputies: EmsFdDeputy[]) => void;
+  setDeputies(deputies: EmsFdDeputy[]): void;
 }
 
 export const useEmsFdState = create<EmsFdState>((set) => ({

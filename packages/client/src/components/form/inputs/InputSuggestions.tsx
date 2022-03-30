@@ -13,8 +13,8 @@ type ApiPathFunc = (inputValue: string) => string;
 
 interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?: (suggestion: any) => void;
-  Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
+  onSuggestionClick?(suggestion: any): void;
+  Component({ suggestion }: { suggestion: any }): JSX.Element;
   options: { apiPath: string | ApiPathFunc; method: Method; minLength?: number; dataKey?: string };
 }
 

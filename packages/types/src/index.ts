@@ -98,7 +98,7 @@ export interface ApiToken {
  * Model DiscordRoles
  *
  */
-export type DiscordRoles = {
+export interface DiscordRoles {
   id: string;
   guildId: string;
   leoRoles?: DiscordRole[];
@@ -117,17 +117,17 @@ export type DiscordRoles = {
   whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
-};
+}
 
 /**
  * Model DiscordRole
  *
  */
-export type DiscordRole = {
+export interface DiscordRole {
   id: string;
   name: string;
   discordRolesId: string;
-};
+}
 
 /**
  * Model User
@@ -368,13 +368,13 @@ export interface Violation {
  * Model SeizedItem
  *
  */
-export type SeizedItem = {
+export interface SeizedItem {
   id: string;
   violationId: string;
   item: string;
   quantity: number;
   illegal: boolean;
-};
+}
 
 /**
  * Model DivisionValue

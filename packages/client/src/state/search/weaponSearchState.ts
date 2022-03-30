@@ -8,7 +8,7 @@ interface WeaponSearchResult extends Weapon {
 
 interface WeaponSearchState {
   currentResult: WeaponSearchResult | null | undefined;
-  setCurrentResult: (v: WeaponSearchResult | null | undefined) => void;
+  setCurrentResult(v: WeaponSearchResult | null | undefined): void;
 }
 
 export const useWeaponSearch = create<WeaponSearchState>((set) => ({

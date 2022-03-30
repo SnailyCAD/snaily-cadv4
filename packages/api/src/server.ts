@@ -44,7 +44,7 @@ export class Server {
   @Configuration()
   settings!: Configuration;
 
-  public $beforeRoutesInit(): void | Promise<any> {
+  public $beforeRoutesInit() {
     this.app
       .use(cookieParser())
       .use(compress())

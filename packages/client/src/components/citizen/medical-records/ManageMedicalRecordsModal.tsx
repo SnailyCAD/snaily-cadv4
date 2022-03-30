@@ -18,8 +18,8 @@ import { useValues } from "context/ValuesContext";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
-  onCreate?: (newV: MedicalRecord) => void;
-  onUpdate?: (old: MedicalRecord, newV: MedicalRecord) => void;
+  onCreate?(newV: MedicalRecord): void;
+  onUpdate?(old: MedicalRecord, newV: MedicalRecord): void;
   onClose?(): void;
 }
 

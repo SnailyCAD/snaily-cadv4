@@ -1,3 +1,4 @@
+/* eslint-disable no-self-compare */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable quotes */
 import { expect, test } from "vitest";

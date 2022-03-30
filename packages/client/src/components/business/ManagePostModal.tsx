@@ -15,8 +15,8 @@ import type { BusinessPost } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 
 interface Props {
-  onCreate: (post: BusinessPost) => void;
-  onUpdate: (old: BusinessPost, newPost: BusinessPost) => void;
+  onCreate(post: BusinessPost): void;
+  onUpdate(old: BusinessPost, newPost: BusinessPost): void;
   onClose?(): void;
   post: BusinessPost | null;
 }
