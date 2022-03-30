@@ -56,3 +56,11 @@ export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
   registrationStatus: true,
   taxStatus: true,
 });
+
+export const DL_EXAM_SCHEMA = z.object({
+  citizenId: z.string().min(2),
+  practiceExam: z.string().nullable(),
+  theoryExam: z.string().nullable(),
+  categories: z.array(z.any()),
+  license: z.string(),
+});

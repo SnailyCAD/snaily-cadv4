@@ -931,6 +931,24 @@ export interface TruckLog {
 }
 
 /**
+ * Model DLExam
+ *
+ */
+export interface DLExam {
+  id: string;
+  citizen: Citizen;
+  citizenId: string;
+  theoryExam: DLExamPassType | null;
+  practiceExam: DLExamPassType | null;
+  status: DLExamStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  licenseId: string;
+  license: Value<ValueType.LICENSE>;
+  categories?: DriversLicenseCategoryValue[];
+}
+
+/**
  * Enums
  */
 
@@ -954,6 +972,7 @@ export enum Feature {
   ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
   RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
+  DL_EXAMS = "DL_EXAMS",
 }
 
 export enum Rank {
@@ -1077,4 +1096,15 @@ export enum VehicleInspectionStatus {
 export enum VehicleTaxStatus {
   TAXED = "TAXED",
   UNTAXED = "UNTAXED",
+}
+
+export enum DLExamPassType {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum DLExamStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  PASSED = "PASSED",
+  FAILED = "FAILED",
 }

@@ -54,6 +54,7 @@ export const enum ModalIds {
   ManageIncident = "ManageIncidentModal",
   LinkCallToIncident = "LinkCallToIncidentModal",
   ManageSeizedItems = "ManageSeizedItemsModal",
+  ManageDLExam = "ManageDLExamModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
@@ -95,4 +96,5 @@ export const enum ModalIds {
   AlertDeleteSelectedValues = "AlertDeleteSelectedValuesModal",
   AlertDeclineOfficer = "AlertDeclineOfficerModal",
   AlertUseOldPermissions = "AlertUseOldPermissionsModal",
+  AlertDeleteDLExam = "AlertDeleteDLExamModal",
 }

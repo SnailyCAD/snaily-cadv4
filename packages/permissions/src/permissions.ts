@@ -11,6 +11,8 @@ export enum Permissions {
   ManageCallHistory = "ManageCallHistory",
   LiveMap = "LiveMap",
   ViewCitizenLogs = "ViewCitizenLogs",
+  ViewDLExams = "ViewDLExams",
+  ManageDLExams = "ManageDLExams",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",
