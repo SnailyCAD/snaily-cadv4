@@ -7,7 +7,7 @@ type ButtonProps = JSX.IntrinsicElements["button"];
 interface Props extends ButtonProps {
   toggled: boolean;
   name: string;
-  onClick: (value: any) => void;
+  onClick(value: any): void;
 }
 
 export const Toggle = React.forwardRef<HTMLButtonElement, Props>(

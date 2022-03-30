@@ -10,10 +10,7 @@ import { useTranslations } from "next-intl";
 interface Props<T extends IncidentEvent | Call911Event> {
   event: T | null;
   setEvent: React.Dispatch<React.SetStateAction<T | null>>;
-  onSubmit: (
-    values: { description: string },
-    helpers: FormikHelpers<{ description: string }>,
-  ) => void;
+  onSubmit(values: { description: string }, helpers: FormikHelpers<{ description: string }>): void;
   state: "loading" | "error" | null;
 }
 

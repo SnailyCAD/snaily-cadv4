@@ -21,16 +21,16 @@ export type FullBusiness = Business & {
 
 interface BusinessState {
   currentBusiness: FullBusiness | null;
-  setCurrentBusiness: (bus: FullBusiness | null) => void;
+  setCurrentBusiness(bus: FullBusiness | null): void;
 
   currentEmployee: FullEmployee | null;
-  setCurrentEmployee: (em: FullEmployee | null) => void;
+  setCurrentEmployee(em: FullEmployee | null): void;
 
   posts: BusinessPost[];
-  setPosts: (posts: BusinessPost[]) => void;
+  setPosts(posts: BusinessPost[]): void;
 
   joinableBusinesses: Business[];
-  setJoinableBusinesses: (businesses: Business[]) => void;
+  setJoinableBusinesses(businesses: Business[]): void;
 }
 
 export const useBusinessState = create<BusinessState>((set) => ({

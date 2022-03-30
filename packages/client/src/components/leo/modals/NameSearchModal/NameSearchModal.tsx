@@ -386,21 +386,16 @@ export function NameSearchModal() {
                     </Button>
                   </div>
 
-                  <>
-                    {toggled === Toggled.VEHICLES ? (
-                      <VehiclesAndWeaponsSection
-                        vehicles={currentResult.vehicles}
-                        weapons={currentResult.weapons}
-                      />
-                    ) : null}
+                  {toggled === Toggled.VEHICLES ? (
+                    <VehiclesAndWeaponsSection
+                      vehicles={currentResult.vehicles}
+                      weapons={currentResult.weapons}
+                    />
+                  ) : null}
 
-                    {toggled === Toggled.RECORDS ? (
-                      <RecordsArea
-                        warrants={currentResult.warrants}
-                        records={currentResult.Record}
-                      />
-                    ) : null}
-                  </>
+                  {toggled === Toggled.RECORDS ? (
+                    <RecordsArea warrants={currentResult.warrants} records={currentResult.Record} />
+                  ) : null}
                 </div>
               </div>
             ) : null}

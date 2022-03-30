@@ -68,7 +68,6 @@ export function DiscordWebhooksTab() {
           <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
             <SettingsFormField
               action="input"
-              // eslint-disable-next-line quotes
               description="The Discord channel where 911 calls will be sent to."
               errorMessage={errors.call911WebhookId}
               label="911 calls channel"

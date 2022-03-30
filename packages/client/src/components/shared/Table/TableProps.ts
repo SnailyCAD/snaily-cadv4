@@ -17,7 +17,7 @@ interface DefaultSort<T extends object, RowProps extends object> {
 }
 
 interface DragDrop {
-  handleMove: (list: any[]) => void;
+  handleMove(list: any[]): void;
   enabled?: boolean;
   disabledIndices?: number[];
 }

@@ -19,7 +19,7 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  onCreate?: (newV: MedicalRecord) => void;
+  onCreate?(newV: MedicalRecord): void;
   onClose?(): void;
 }
 

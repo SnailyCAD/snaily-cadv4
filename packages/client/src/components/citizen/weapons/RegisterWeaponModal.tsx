@@ -23,8 +23,8 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 interface Props {
   weapon: Weapon | null;
   citizens: Citizen[];
-  onCreate?: (newV: Weapon) => void;
-  onUpdate?: (old: Weapon, newV: Weapon) => void;
+  onCreate?(newV: Weapon): void;
+  onUpdate?(old: Weapon, newV: Weapon): void;
   onClose?(): void;
 }
 

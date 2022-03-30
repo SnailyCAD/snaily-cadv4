@@ -23,8 +23,8 @@ type CallData = Pick<TowCall, keyof TaxiCall> | TaxiCall;
 interface Props {
   call: CallData | null;
   isTow?: boolean;
-  onUpdate?: (old: CallData, newC: CallData) => void;
-  onDelete?: (call: CallData) => void;
+  onUpdate?(old: CallData, newC: CallData): void;
+  onDelete?(call: CallData): void;
   onClose?(): void;
 }
 

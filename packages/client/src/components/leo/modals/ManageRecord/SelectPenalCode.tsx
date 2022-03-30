@@ -40,33 +40,31 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
   }
 
   return (
-    <>
-      <FormRow flexLike>
-        <Select
-          className="w-[200px]"
-          onChange={onGroupChange}
-          value={currentGroup}
-          name="group"
-          values={groups.map((value) => ({
-            label: value.name,
-            value: value.id,
+    <FormRow flexLike>
+      <Select
+        className="w-[200px]"
+        onChange={onGroupChange}
+        value={currentGroup}
+        name="group"
+        values={groups.map((value) => ({
+          label: value.name,
+          value: value.id,
+        }))}
+      />
+      <Select
+        className="w-full"
+        extra={{ showPenalCodeDescriptions: true }}
+        value={value}
+        name="violations"
+        onChange={handleChange}
+        isMulti
+        values={codes
+          .filter((v) => !value.some((vio) => vio.value?.id === v.id))
+          .map((value) => ({
+            label: value.title,
+            value,
           }))}
-        />
-        <Select
-          className="w-full"
-          extra={{ showPenalCodeDescriptions: true }}
-          value={value}
-          name="violations"
-          onChange={handleChange}
-          isMulti
-          values={codes
-            .filter((v) => !value.some((vio) => vio.value?.id === v.id))
-            .map((value) => ({
-              label: value.title,
-              value,
-            }))}
-        />
-      </FormRow>
-    </>
+      />
+    </FormRow>
   );
 }
