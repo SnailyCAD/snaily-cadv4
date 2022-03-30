@@ -1640,10 +1640,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.2.161, @swc/core-linux-x64-musl@npm:^1.2.161":
+"@swc/core-linux-x64-musl@npm:1.2.161":
   version: 1.2.161
   resolution: "@swc/core-linux-x64-musl@npm:1.2.161"
-  checksum: 1dc8c942452d893cff3c2ff2f9b185f4105f53e26e8c2d196bda68729ebdb5a02da8993fc9efa309a0cc26ec623723895eaac5b71e000028d6fc93e841d57980
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
@@ -10665,7 +10664,6 @@ __metadata:
     "@casper124578/eslint-config": 4.1.0
     "@casper124578/eslint-config-next": 4.1.0
     "@casper124578/eslint-config-react": 4.1.0
-    "@swc/core-linux-x64-musl": ^1.2.161
     "@typescript-eslint/eslint-plugin": latest
     colorette: 2.0.16
     concurrently: ^7.0.0
