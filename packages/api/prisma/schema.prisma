@@ -944,10 +944,9 @@ model DLExam {
   citizenId    String
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?
-  license      Value?                        @relation("dlExamToLicense", fields: [licenseId], references: [id])
-  licenseId    String?
+  license      Value                         @relation("dlExamToLicense", fields: [licenseId], references: [id])
+  licenseId    String
   categories   DriversLicenseCategoryValue[]
-  cost         Int?
   status       DLExamStatus                  @default(IN_PROGRESS)
   createdAt    DateTime                      @default(now())
   updatedAt    DateTime                      @default(now()) @updatedAt

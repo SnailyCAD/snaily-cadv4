@@ -940,7 +940,6 @@ export interface DLExam {
   citizenId: string;
   theoryExam: DLExamPassType | null;
   practiceExam: DLExamPassType | null;
-  cost: number | null;
   status: DLExamStatus;
   createdAt: Date;
   updatedAt: Date;

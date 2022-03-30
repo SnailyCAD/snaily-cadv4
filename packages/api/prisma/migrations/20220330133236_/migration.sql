@@ -11,10 +11,12 @@ ALTER TYPE "Feature" ADD VALUE 'DL_EXAMS';
 CREATE TABLE "DLExam" (
     "id" TEXT NOT NULL,
     "citizenId" TEXT NOT NULL,
-    "theoryExam" "DLExamPassType" NOT NULL,
-    "practiceExam" "DLExamPassType" NOT NULL,
-    "cost" INTEGER,
+    "theoryExam" "DLExamPassType",
+    "practiceExam" "DLExamPassType",
+    "licenseId" TEXT NOT NULL,
     "status" "DLExamStatus" NOT NULL DEFAULT E'IN_PROGRESS',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "DLExam_pkey" PRIMARY KEY ("id")
 );
@@ -33,6 +35,9 @@ CREATE INDEX "_DLExamToDriversLicenseCategoryValue_B_index" ON "_DLExamToDrivers
 
 -- AddForeignKey
 ALTER TABLE "DLExam" ADD CONSTRAINT "DLExam_citizenId_fkey" FOREIGN KEY ("citizenId") REFERENCES "Citizen"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DLExam" ADD CONSTRAINT "DLExam_licenseId_fkey" FOREIGN KEY ("licenseId") REFERENCES "Value"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_DLExamToDriversLicenseCategoryValue" ADD FOREIGN KEY ("A") REFERENCES "DLExam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
