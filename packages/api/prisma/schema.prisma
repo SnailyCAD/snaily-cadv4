@@ -938,7 +938,6 @@ model TruckLog {
 }
 
 // DL Exams
-
 model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id])

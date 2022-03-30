@@ -71,7 +71,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            {DL_EXAMS ? (
+            {DL_EXAMS ? null : (
               <FormRow>
                 <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
                   <Select
@@ -106,7 +106,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
                   />
                 </FormField>
               </FormRow>
-            ) : null}
+            )}
 
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>
