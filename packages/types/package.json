@@ -1,13 +1,13 @@
 {
   "name": "@snailycad/types",
-  "version": "1.0.0-beta.77",
+  "version": "1.0.0-beta.78",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.0.0-beta.77",
+    "@snailycad/permissions": "1.0.0-beta.78",
     "tsup": "^5.12.1",
     "typescript": "^4.6.3"
   },
