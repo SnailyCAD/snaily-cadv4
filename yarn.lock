@@ -1381,17 +1381,17 @@ __metadata:
     "@snailycad/schemas": 1.0.0-beta.77
     "@snailycad/types": 1.0.0-beta.77
     "@snailycad/utils": 1.0.0-beta.77
-    "@swc/core": ^1.2.155
-    "@swc/helpers": ^0.3.6
-    "@tsed/common": ^6.107.4
-    "@tsed/core": ^6.107.4
-    "@tsed/di": ^6.107.4
-    "@tsed/exceptions": ^6.107.4
-    "@tsed/json-mapper": ^6.107.4
-    "@tsed/platform-express": ^6.107.4
-    "@tsed/schema": ^6.107.4
-    "@tsed/socketio": ^6.107.4
-    "@tsed/swagger": ^6.107.4
+    "@swc/core": ^1.2.161
+    "@swc/helpers": ^0.3.8
+    "@tsed/common": ^6.107.5
+    "@tsed/core": ^6.107.5
+    "@tsed/di": ^6.107.5
+    "@tsed/exceptions": ^6.107.5
+    "@tsed/json-mapper": ^6.107.5
+    "@tsed/platform-express": ^6.107.5
+    "@tsed/schema": ^6.107.5
+    "@tsed/socketio": ^6.107.5
+    "@tsed/swagger": ^6.107.5
     "@types/bcrypt": ^5.0.0
     "@types/compression": ^1.7.2
     "@types/cookie": ^0.4.1
@@ -1408,12 +1408,12 @@ __metadata:
     cookie-parser: 1.4.6
     cors: 2.8.5
     discord-api-types: 0.30.0
-    esbuild: ^0.14.27
+    esbuild: ^0.14.29
     esbuild-register: ^3.3.2
     express: 4.17.3
     glob: ^7.2.0
     jsonwebtoken: 8.5.1
-    nanoid: ^3.3.1
+    nanoid: ^3.3.2
     nodemon: ^2.0.15
     otplib: ^12.0.1
     prisma: ^3.11.1
@@ -1423,9 +1423,9 @@ __metadata:
     ts-node: ^10.7.0
     tsconfig-paths: ^3.14.1
     typescript: ^4.6.3
-    undici: ^4.16.0
-    vite: ^2.8.6
-    vitest: ^0.7.11
+    undici: ^5.0.0
+    vite: ^2.9.0
+    vitest: ^0.8.1
   languageName: unknown
   linkType: soft
 
@@ -1465,7 +1465,7 @@ __metadata:
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
     leaflet: ^1.7.1
-    next: ^12.1.0
+    next: ^12.1.2
     next-intl: 2.4.1
     nookies: ^2.5.2
     postcss: ^8.4.12
@@ -1494,9 +1494,9 @@ __metadata:
     type-fest: ^2.12.1
     typescript: ^4.6.3
     uuid: ^8.3.2
-    vite: ^2.8.6
-    vitest: ^0.7.11
-    zod: ^3.14.2
+    vite: ^2.9.0
+    vitest: ^0.8.1
+    zod: ^3.14.3
     zustand: ^3.7.1
   languageName: unknown
   linkType: soft
@@ -1508,8 +1508,8 @@ __metadata:
     "@snailycad/types": 1.0.0-beta.77
     tsup: ^5.12.1
     typescript: ^4.6.3
-    vite: ^2.8.6
-    vitest: ^0.7.11
+    vite: ^2.9.0
+    vitest: ^0.8.1
   languageName: unknown
   linkType: soft
 
@@ -1520,9 +1520,9 @@ __metadata:
     tsup: ^5.12.1
     type-fest: ^2.12.1
     typescript: ^4.6.3
-    vite: ^2.8.6
-    vitest: ^0.7.11
-    zod: ^3.14.2
+    vite: ^2.9.0
+    vitest: ^0.8.1
+    zod: ^3.14.3
   languageName: unknown
   linkType: soft
 
@@ -1533,7 +1533,7 @@ __metadata:
     tslib: ^2.3.1
     tsup: ^5.12.1
     typescript: ^4.6.3
-    zod: ^3.14.2
+    zod: ^3.14.3
   languageName: unknown
   linkType: soft
 
@@ -1545,7 +1545,7 @@ __metadata:
     tsup: ^5.12.1
     type-fest: ^2.12.1
     typescript: ^4.6.3
-    zod: ^3.14.2
+    zod: ^3.14.3
   languageName: unknown
   linkType: soft
 
@@ -1558,8 +1558,8 @@ __metadata:
     tslib: ^2.3.1
     tsup: ^5.12.1
     typescript: ^4.6.3
-    vite: ^2.8.6
-    vitest: ^0.7.11
+    vite: ^2.9.0
+    vitest: ^0.8.1
   languageName: unknown
   linkType: soft
 
@@ -1640,9 +1640,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.2.161":
+"@swc/core-linux-x64-musl@npm:1.2.161, @swc/core-linux-x64-musl@npm:^1.2.161":
   version: 1.2.161
   resolution: "@swc/core-linux-x64-musl@npm:1.2.161"
+  checksum: 1dc8c942452d893cff3c2ff2f9b185f4105f53e26e8c2d196bda68729ebdb5a02da8993fc9efa309a0cc26ec623723895eaac5b71e000028d6fc93e841d57980
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
@@ -1668,7 +1669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.2.155":
+"@swc/core@npm:^1.2.161":
   version: 1.2.161
   resolution: "@swc/core@npm:1.2.161"
   dependencies:
@@ -1718,7 +1719,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:^0.3.6":
+"@swc/helpers@npm:^0.3.8":
   version: 0.3.8
   resolution: "@swc/helpers@npm:0.3.8"
   checksum: 105e77db7757e6955490bc4551899f5130db373b8d8d15f558859f218138c308928274383f2df65702c51c302e434fbccd632a2a3c413f6d2edcb56c20b1ac82
@@ -1769,7 +1770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/common@npm:^6.107.4":
+"@tsed/common@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/common@npm:6.107.5"
   dependencies:
@@ -1814,7 +1815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/core@npm:6.107.5, @tsed/core@npm:^6.107.4":
+"@tsed/core@npm:6.107.5, @tsed/core@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/core@npm:6.107.5"
   dependencies:
@@ -1824,7 +1825,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/di@npm:^6.107.4":
+"@tsed/di@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/di@npm:6.107.5"
   dependencies:
@@ -1837,7 +1838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/exceptions@npm:6.107.5, @tsed/exceptions@npm:^6.107.4":
+"@tsed/exceptions@npm:6.107.5, @tsed/exceptions@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/exceptions@npm:6.107.5"
   dependencies:
@@ -1848,7 +1849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/json-mapper@npm:6.107.5, @tsed/json-mapper@npm:^6.107.4":
+"@tsed/json-mapper@npm:6.107.5, @tsed/json-mapper@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/json-mapper@npm:6.107.5"
   dependencies:
@@ -1934,7 +1935,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/platform-express@npm:^6.107.4":
+"@tsed/platform-express@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/platform-express@npm:6.107.5"
   dependencies:
@@ -2035,7 +2036,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/schema@npm:6.107.5, @tsed/schema@npm:^6.107.4":
+"@tsed/schema@npm:6.107.5, @tsed/schema@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/schema@npm:6.107.5"
   dependencies:
@@ -2057,7 +2058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/socketio@npm:^6.107.4":
+"@tsed/socketio@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/socketio@npm:6.107.5"
   dependencies:
@@ -2075,7 +2076,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/swagger@npm:^6.107.4":
+"@tsed/swagger@npm:^6.107.5":
   version: 6.107.5
   resolution: "@tsed/swagger@npm:6.107.5"
   dependencies:
@@ -4957,7 +4958,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.14.2, esbuild@npm:^0.14.27":
+"esbuild@npm:^0.14.2, esbuild@npm:^0.14.27, esbuild@npm:^0.14.29":
   version: 0.14.29
   resolution: "esbuild@npm:0.14.29"
   dependencies:
@@ -8420,7 +8421,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.30, nanoid@npm:^3.3.1":
+"nanoid@npm:^3.1.30, nanoid@npm:^3.3.1, nanoid@npm:^3.3.2":
   version: 3.3.2
   resolution: "nanoid@npm:3.3.2"
   bin:
@@ -8462,7 +8463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^12.1.0":
+"next@npm:^12.1.2":
   version: 12.1.2
   resolution: "next@npm:12.1.2"
   dependencies:
@@ -10664,6 +10665,7 @@ __metadata:
     "@casper124578/eslint-config": 4.1.0
     "@casper124578/eslint-config-next": 4.1.0
     "@casper124578/eslint-config-react": 4.1.0
+    "@swc/core-linux-x64-musl": ^1.2.161
     "@typescript-eslint/eslint-plugin": latest
     colorette: 2.0.16
     concurrently: ^7.0.0
@@ -12023,10 +12025,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^4.16.0":
-  version: 4.16.0
-  resolution: "undici@npm:4.16.0"
-  checksum: 5e88c2b3381085e25ed1d1a308610ac7ee985f478ac705af7a8e03213536e10f73ef8dd8d85e6ed38948d1883fa0ae935e04357c317b0f5d3d3c0211d0c8c393
+"undici@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "undici@npm:5.0.0"
+  checksum: 98bb9914aa0647840ce6fd518ac828b7760df8d9b747680d11260fcb4f50af0029b0513e5600bf0d3a812d9e3f8d9d787bbcbcee7b9e75aa5f7de6f9b0212898
   languageName: node
   linkType: hard
 
@@ -12293,7 +12295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^2.8.6":
+"vite@npm:^2.8.6, vite@npm:^2.9.0":
   version: 2.9.0
   resolution: "vite@npm:2.9.0"
   dependencies:
@@ -12322,9 +12324,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^0.7.11":
-  version: 0.7.13
-  resolution: "vitest@npm:0.7.13"
+"vitest@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "vitest@npm:0.8.1"
   dependencies:
     "@types/chai": ^4.3.0
     "@types/chai-subset": ^1.3.3
@@ -12349,7 +12351,7 @@ __metadata:
       optional: true
   bin:
     vitest: vitest.mjs
-  checksum: 7aaeb91fc421fe5218a7aef0e93eb3849807b94e8a68e81e4424e43dc8cca5126f673736de633635ae35cbfbbf6cce826b84f77fec109f9c79f035904601917a
+  checksum: 6ae9c7ab102a5f44aa4abf28bf756e510b9249b82ea5d467118dabc5e3fe0f810a8bae483b29b3de6f9cc057745a03bb0ece56eb0148a288469b0a1840936a31
   languageName: node
   linkType: hard
 
@@ -12744,7 +12746,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.14.2":
+"zod@npm:^3.14.3":
   version: 3.14.3
   resolution: "zod@npm:3.14.3"
   checksum: 55fb4feb51697f3daa806413f6e8c61e80931532b642de96d180f28e8ba3b89446ab879376443713075e39bb07b506ca7fc8119ca925a26790dfed6baa8dc8b6
