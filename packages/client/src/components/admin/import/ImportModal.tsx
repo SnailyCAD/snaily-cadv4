@@ -11,7 +11,7 @@ import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  onImport: (data: any[]) => void;
+  onImport(data: any[]): void;
   url: `/admin/import/${"vehicles" | "weapons" | "citizens"}`;
   id: ModalIds.ImportCitizens | ModalIds.ImportVehicles | ModalIds.ImportWeapons;
 }

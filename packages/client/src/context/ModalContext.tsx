@@ -4,10 +4,10 @@ import type { ModalIds } from "types/ModalIds";
 
 interface Context {
   canBeClosed: boolean;
-  isOpen: (id: ModalIds) => boolean;
-  closeModal: (id: ModalIds) => void;
-  openModal: <T = unknown>(id: ModalIds, payload?: T) => void;
-  getPayload: <T = unknown>(id: ModalIds) => T | null;
+  isOpen(id: ModalIds): boolean;
+  closeModal(id: ModalIds): void;
+  openModal<T = unknown>(id: ModalIds, payload?: T): void;
+  getPayload<T = unknown>(id: ModalIds): T | null;
   setCanBeClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

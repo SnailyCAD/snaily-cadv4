@@ -14,7 +14,7 @@ import { toastMessage } from "lib/toastMessage";
 
 interface Props {
   type: ValueType;
-  onImport: (data: any[]) => void;
+  onImport(data: any[]): void;
 }
 
 export function ImportValuesModal({ onImport, type }: Props) {

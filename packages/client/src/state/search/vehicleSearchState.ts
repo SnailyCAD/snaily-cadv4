@@ -17,7 +17,7 @@ export interface VehicleSearchResult extends RegisteredVehicle {
 
 interface VehicleSearchState {
   currentResult: VehicleSearchResult | null | undefined;
-  setCurrentResult: (v: VehicleSearchResult | null | undefined) => void;
+  setCurrentResult(v: VehicleSearchResult | null | undefined): void;
 }
 
 export const useVehicleSearch = create<VehicleSearchState>((set) => ({

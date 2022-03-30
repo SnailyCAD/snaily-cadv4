@@ -9,8 +9,8 @@ interface ListProps {
   values: AnyValue[];
   search: string;
   setList: any;
-  handleEdit: (value: AnyValue) => void;
-  handleDelete: (value: AnyValue) => void;
+  handleEdit(value: AnyValue): void;
+  handleDelete(value: AnyValue): void;
 }
 
 export function SortableList({ values, search, setList, handleEdit, handleDelete }: ListProps) {

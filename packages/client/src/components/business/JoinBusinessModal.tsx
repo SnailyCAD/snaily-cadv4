@@ -17,7 +17,7 @@ import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
-  onCreate: (business: FullBusiness) => void;
+  onCreate(business: FullBusiness): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {

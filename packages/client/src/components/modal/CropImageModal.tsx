@@ -6,8 +6,8 @@ import { useTranslations } from "use-intl";
 import { Modal } from "./Modal";
 
 interface Props {
-  onSuccess: (url: Blob, filename: string) => void;
-  onClose: () => void;
+  onSuccess(url: Blob, filename: string): void;
+  onClose(): void;
   isOpen: boolean;
   image: File | null;
   options?: { width?: number; height?: number; aspectRatio: number };

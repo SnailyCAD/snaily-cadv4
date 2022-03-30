@@ -9,7 +9,7 @@ type Props = Pick<ModalProps, "title" | "className"> & {
   id: ModalIds;
   description: string | React.ReactFragment;
   state?: any;
-  onDeleteClick: () => void;
+  onDeleteClick(): void;
   onClose?(): void;
 
   deleteText?: string;

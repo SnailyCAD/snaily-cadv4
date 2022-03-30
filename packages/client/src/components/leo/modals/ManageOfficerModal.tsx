@@ -22,8 +22,8 @@ import type { Officer } from "@snailycad/types";
 
 interface Props {
   officer: Officer | null;
-  onCreate?: (officer: Officer) => void;
-  onUpdate?: (old: Officer, newO: Officer) => void;
+  onCreate?(officer: Officer): void;
+  onUpdate?(old: Officer, newO: Officer): void;
   onClose?(): void;
 }
 

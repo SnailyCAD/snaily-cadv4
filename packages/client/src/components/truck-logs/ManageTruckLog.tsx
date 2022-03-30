@@ -18,8 +18,8 @@ import { useTranslations } from "use-intl";
 interface Props {
   log: TruckLog | null;
   registeredVehicles: RegisteredVehicle[];
-  onUpdate?: (old: TruckLog, newLog: TruckLog) => void;
-  onCreate?: (log: TruckLog) => void;
+  onUpdate?(old: TruckLog, newLog: TruckLog): void;
+  onCreate?(log: TruckLog): void;
   onClose?(): void;
 }
 

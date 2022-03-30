@@ -2,7 +2,7 @@ import create from "zustand";
 
 interface DispatchMapState {
   blipsHidden: boolean;
-  setBlipsHidden: (b: boolean) => void;
+  setBlipsHidden(b: boolean): void;
 }
 
 export const useDispatchMapState = create<DispatchMapState>((set) => ({

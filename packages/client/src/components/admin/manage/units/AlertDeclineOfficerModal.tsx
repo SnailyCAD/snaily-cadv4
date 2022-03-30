@@ -13,7 +13,7 @@ export function AlertDeclineOfficerModal({
   onSubmit,
   state,
 }: {
-  onSubmit: (data: { action: string; officer: Unit; helpers: any }) => void;
+  onSubmit(data: { action: string; officer: Unit; helpers: any }): void;
   state: "loading" | "idle" | "error" | null;
 }) {
   const common = useTranslations("Common");

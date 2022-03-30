@@ -11,7 +11,7 @@ import { Toggle } from "components/form/Toggle";
 
 interface Props {
   item?: SeizedItem | null;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function ManageSeizedItemsModal({ item, onClose }: Props) {

@@ -19,8 +19,8 @@ interface Props {
   type: ValueType;
   penalCode: PenalCode | null;
   groups: PenalCodeGroup[];
-  onCreate: (newValue: PenalCode) => void;
-  onUpdate: (oldValue: PenalCode, newValue: PenalCode) => void;
+  onCreate(newValue: PenalCode): void;
+  onUpdate(oldValue: PenalCode, newValue: PenalCode): void;
 }
 
 export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }: Props) {
