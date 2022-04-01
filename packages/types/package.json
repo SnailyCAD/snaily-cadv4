@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@snailycad/permissions": "1.0.0-beta.78",
-    "tsup": "^5.12.1",
+    "tsup": "^5.12.2",
     "typescript": "^4.6.3"
   },
   "dependencies": {
