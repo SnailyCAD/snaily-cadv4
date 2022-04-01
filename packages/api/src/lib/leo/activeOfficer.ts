@@ -11,6 +11,7 @@ export const unitProperties = {
   status: { include: { value: true } },
   citizen: { select: { name: true, surname: true, id: true } },
   user: { select: userProperties },
+  AssignedUnit: { where: { call911: { ended: false } } },
   rank: true,
 };
 
@@ -22,6 +23,7 @@ export const _leoProperties = {
   citizen: { select: { name: true, surname: true, id: true } },
   whitelistStatus: { include: { department: { include: { value: true } } } },
   user: { select: userProperties },
+  assignedUnit: { where: { call911: { ended: false } } },
   rank: true,
 };
 
