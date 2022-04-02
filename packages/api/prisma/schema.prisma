@@ -956,8 +956,15 @@ model DLExam {
 model CustomField {
   id       String              @id @default(uuid())
   name     String
-  value    String?
   category CustomFieldCategory
+  values   CustomFieldValue[]
+}
+
+model CustomFieldValue {
+  id      String      @id @default(uuid())
+  value   String?
+  field   CustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId String
 }
 
 enum CustomFieldCategory {

@@ -40,8 +40,8 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (field) {
-      const { json } = await execute(`/admin/custom-fields/${field.id}`, {
-        method: "PATCH",
+      const { json } = await execute(`/admin/manage/custom-fields/${field.id}`, {
+        method: "PUT",
         data: values,
         helpers,
       });

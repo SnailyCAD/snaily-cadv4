@@ -13,6 +13,9 @@ import { useModal } from "context/ModalContext";
 import { Table } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
+import { usePermission } from "hooks/usePermission";
 
 interface Props {
   customFields: CustomField[];
@@ -22,9 +25,25 @@ export default function ManageCustomFields({ customFields: data }: Props) {
   const [customFields, setCustomFields] = React.useState(data);
   const [tempField, setTempField] = React.useState<CustomField | null>(null);
 
-  const { openModal } = useModal();
+  const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
   const common = useTranslations("Common");
+
+  async function handleDelete() {
+    if (!tempField) return;
+
+    const { json } = await execute(`/admin/manage/custom-fields/${tempField.id}`, {
+      method: "DELETE",
+    });
+
+    if (typeof json === "boolean" && json) {
+      setCustomFields((p) => p.filter((v) => v.id !== tempField.id));
+      setTempField(null);
+      closeModal(ModalIds.AlertDeleteCustomField);
+    }
+  }
 
   function handleEditClick(field: CustomField) {
     setTempField(field);
@@ -44,7 +63,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ManageCustomFields],
+        permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
       }}
     >
       <Title>{t("MANAGE_CUSTOM_FIELDS")}</Title>
@@ -85,12 +104,34 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           columns={[
             { Header: common("name"), accessor: "name" },
             { Header: "category", accessor: "category" },
-            { Header: common("actions"), accessor: "actions" },
+            hasPermissions([Permissions.ViewCustomFields], true)
+              ? { Header: common("actions"), accessor: "actions" }
+              : null,
           ]}
         />
       )}
 
-      <ManageCustomFieldModal onClose={() => setTempField(null)} field={tempField} />
+      <ManageCustomFieldModal
+        onUpdate={(oldField, newField) => {
+          setCustomFields((prev) => {
+            const idx = prev.indexOf(oldField);
+            prev[idx] = newField;
+            return prev;
+          });
+          setTempField(null);
+        }}
+        onCreate={(newField) => setCustomFields((p) => [newField, ...p])}
+        onClose={() => setTempField(null)}
+        field={tempField}
+      />
+      <AlertModal
+        id={ModalIds.AlertDeleteCustomField}
+        title={t("deleteCustomField")}
+        description={t("alert_deleteCustomField")}
+        onDeleteClick={handleDelete}
+        onClose={() => setTempField(null)}
+        state={state}
+      />
     </AdminLayout>
   );
 }
