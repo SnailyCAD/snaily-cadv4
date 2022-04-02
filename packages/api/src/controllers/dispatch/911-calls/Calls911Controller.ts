@@ -1,5 +1,5 @@
 import { Controller } from "@tsed/di";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -59,6 +59,7 @@ export class Calls911Controller {
   }
 
   @Get("/")
+  @Description("Get all 911 calls")
   async get911Calls(@QueryParams("includeEnded") includeEnded: boolean) {
     const calls = await prisma.call911.findMany({
       include: callInclude,
@@ -69,6 +70,21 @@ export class Calls911Controller {
     });
 
     return calls.map(this.officerOrDeputyToUnit);
+  }
+
+  @Get("/:id")
+  @Description("Get an incident by its id")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
+  async getIncidentById(@PathParams("id") id: string) {
+    const call = await prisma.call911.findUnique({
+      where: { id },
+      include: callInclude,
+    });
+
+    return this.officerOrDeputyToUnit(call);
   }
 
   @Post("/")

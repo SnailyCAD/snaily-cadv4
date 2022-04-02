@@ -24,7 +24,7 @@ export const _leoProperties = {
   whitelistStatus: { include: { department: { include: { value: true } } } },
   user: { select: userProperties },
   assignedUnit: { where: { call911: { ended: false } } },
-  LeoIncident: { select: { id: true } },
+  LeoIncidentInvolvedOfficers: { select: { id: true } },
   rank: true,
 };
 
