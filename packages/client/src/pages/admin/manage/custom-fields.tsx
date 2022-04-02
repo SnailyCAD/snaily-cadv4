@@ -12,6 +12,7 @@ import { Button } from "components/Button";
 import { useModal } from "context/ModalContext";
 import { Table } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
+import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";
 
 interface Props {
   customFields: CustomField[];
@@ -52,11 +53,12 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CUSTOM_FIELDS")}</h1>
 
         <div>
-          <Button>{t("createCustomField")}</Button>
+          <Button onClick={() => openModal(ModalIds.ManageCustomField)}>
+            {t("createCustomField")}
+          </Button>
         </div>
       </header>
 
-      {/* todo */}
       {customFields.length <= 0 ? (
         <p>{t("noCustomFields")}</p>
       ) : (
@@ -87,6 +89,8 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           ]}
         />
       )}
+
+      <ManageCustomFieldModal field={tempField} />
     </AdminLayout>
   );
 }
