@@ -952,6 +952,20 @@ model DLExam {
   updatedAt    DateTime                      @default(now()) @updatedAt
 }
 
+/// custom fields
+model CustomField {
+  id       String              @id @default(uuid())
+  name     String
+  value    String?
+  category CustomFieldCategory
+}
+
+enum CustomFieldCategory {
+  CITIZEN
+  WEAPON
+  VEHICLE
+}
+
 enum DLExamPassType {
   PASSED
   FAILED

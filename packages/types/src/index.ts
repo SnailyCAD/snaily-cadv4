@@ -948,6 +948,13 @@ export interface DLExam {
   categories?: DriversLicenseCategoryValue[];
 }
 
+export interface CustomField {
+  id: string;
+  name: string;
+  value: string | null;
+  category: CustomFieldCategory;
+}
+
 /**
  * Enums
  */
@@ -1107,4 +1114,10 @@ export enum DLExamStatus {
   IN_PROGRESS = "IN_PROGRESS",
   PASSED = "PASSED",
   FAILED = "FAILED",
+}
+
+export enum CustomFieldCategory {
+  CITIZEN = "CITIZEN",
+  WEAPON = "WEAPON",
+  VEHICLE = "VEHICLE",
 }
