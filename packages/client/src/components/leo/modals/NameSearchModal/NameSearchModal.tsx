@@ -327,6 +327,10 @@ export function NameSearchModal() {
                         {formatCitizenAddress(currentResult)}
                       </Infofield>
 
+                      <Infofield label={cT("phoneNumber")}>
+                        {currentResult.phoneNumber || common("none")}
+                      </Infofield>
+
                       <ManageOccupationModal isLeo occupation={currentResult.occupation} />
                     </div>
                   </div>
