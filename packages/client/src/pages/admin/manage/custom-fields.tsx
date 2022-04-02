@@ -90,7 +90,7 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         />
       )}
 
-      <ManageCustomFieldModal field={tempField} />
+      <ManageCustomFieldModal onClose={() => setTempField(null)} field={tempField} />
     </AdminLayout>
   );
 }

@@ -11,21 +11,29 @@ import { CustomField, CustomFieldCategory } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
+import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
 
 interface Props {
   field: CustomField | null;
+  onClose?(): void;
+  onUpdate?(old: CustomField, newField: CustomField): void;
+  onCreate?(newField: CustomField): void;
 }
-const CUSTOM_FIELDS_SCHEMA = {};
 
 const CATEGORIES = Object.values(CustomFieldCategory).map((v) => ({
   label: v.toLowerCase(),
   value: v,
 }));
 
-export function ManageCustomFieldModal({ field }: Props) {
+export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
+
+  function handleClose() {
+    onClose?.();
+    closeModal(ModalIds.ManageCustomField);
+  }
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -40,7 +48,7 @@ export function ManageCustomFieldModal({ field }: Props) {
 
       if (json?.id) {
         closeModal(ModalIds.ManageCustomField);
-        onUpdate(field, json);
+        onUpdate?.(field, json);
       }
     } else {
       const { json } = await execute("/admin/manage/custom-fields", {
@@ -51,7 +59,7 @@ export function ManageCustomFieldModal({ field }: Props) {
 
       if (json?.id) {
         closeModal(ModalIds.ManageCustomField);
-        onCreate(json);
+        onCreate?.(json);
       }
     }
   }
@@ -66,7 +74,7 @@ export function ManageCustomFieldModal({ field }: Props) {
     <Modal
       className="w-[600px]"
       title={"ToDO"}
-      onClose={() => closeModal(ModalIds.ManageCustomField)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageCustomField)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -76,7 +84,7 @@ export function ManageCustomFieldModal({ field }: Props) {
               <Input autoFocus name="name" onChange={handleChange} value={values.name} />
             </FormField>
 
-            <FormField label="Category">
+            <FormField errorMessage={errors.category} label="Category">
               <Select
                 values={CATEGORIES}
                 name="category"
@@ -86,11 +94,7 @@ export function ManageCustomFieldModal({ field }: Props) {
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.ManageCustomField)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">

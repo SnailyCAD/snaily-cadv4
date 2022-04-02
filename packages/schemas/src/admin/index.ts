@@ -74,3 +74,9 @@ export const UPDATE_USER_SCHEMA = z.object({
 });
 
 export const PERMISSIONS_SCHEMA = z.record(z.string());
+
+const CUSTOM_FIELD_CATEGORY = /CITIZEN|WEAPON|VEHICLE/;
+export const CUSTOM_FIELDS_SCHEMA = z.object({
+  name: z.string().min(2),
+  category: z.string().regex(CUSTOM_FIELD_CATEGORY),
+});
