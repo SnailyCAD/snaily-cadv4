@@ -1,4 +1,4 @@
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { DiscordRole, Rank, User, WhitelistStatus } from "@prisma/client";
 import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
@@ -22,7 +22,15 @@ export async function updateMemberRoles(
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
-    include: { roles: true, leoRoles: true, emsFdRoles: true },
+    include: {
+      roles: true,
+      leoRoles: true,
+      emsFdRoles: true,
+      dispatchRoles: true,
+      towRoles: true,
+      taxiRoles: true,
+      leoSupervisorRoles: true,
+    },
   });
 
   if (!discordRoles) return;
@@ -34,23 +42,20 @@ export async function updateMemberRoles(
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
-  const leoRoles = discordRoles.leoRoles.map((role) => ({
-    roleId: role.id,
-    method: createMethod(user.isLeo),
-  }));
-
-  const emsFdRoles = discordRoles.emsFdRoles.map((role) => ({
-    roleId: role.id,
-    method: createMethod(user.isEmsFd),
-  }));
+  const leoRoles = makeRolesArr(discordRoles.leoRoles, user.isLeo);
+  const leoSupervisorRoles = makeRolesArr(discordRoles.leoSupervisorRoles, user.isSupervisor);
+  const emsFdRoles = makeRolesArr(discordRoles.emsFdRoles, user.isEmsFd);
+  const dispatchRoles = makeRolesArr(discordRoles.dispatchRoles, user.isDispatch);
+  const towRoles = makeRolesArr(discordRoles.towRoles, user.isTow);
+  const taxiRoles = makeRolesArr(discordRoles.taxiRoles, user.isTaxi);
 
   const data = [
     ...leoRoles,
     ...emsFdRoles,
-    { roleId: discordRoles.leoSupervisorRoleId, method: createMethod(user.isSupervisor) },
-    { roleId: discordRoles.dispatchRoleId, method: createMethod(user.isDispatch) },
-    { roleId: discordRoles.towRoleId, method: createMethod(user.isTow) },
-    { roleId: discordRoles.taxiRoleId, method: createMethod(user.isTaxi) },
+    ...leoSupervisorRoles,
+    ...dispatchRoles,
+    ...towRoles,
+    ...taxiRoles,
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
     {
       roleId: discordRoles.whitelistedRoleId,
@@ -63,6 +68,13 @@ export async function updateMemberRoles(
       await addOrRemoveRole(user.discordId!, d.roleId, d.method);
     }),
   );
+}
+
+function makeRolesArr(roles: DiscordRole[], isTrue: boolean) {
+  return roles.map((role) => ({
+    roleId: role.id,
+    method: createMethod(isTrue),
+  }));
 }
 
 async function addOrRemoveRole(discordId: string, roleId: string | null, method: "put" | "delete") {
