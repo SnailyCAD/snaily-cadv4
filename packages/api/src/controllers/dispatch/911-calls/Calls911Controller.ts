@@ -472,10 +472,11 @@ export class Calls911Controller {
         const assignmentCount = await prisma.assignedUnit.count({
           where: {
             [types[type]]: unit.id,
+            call911: { ended: false },
           },
         });
 
-        if (assignmentCount > maxAssignmentsToCalls) {
+        if (assignmentCount >= maxAssignmentsToCalls) {
           // skip this officer
           return;
         }
