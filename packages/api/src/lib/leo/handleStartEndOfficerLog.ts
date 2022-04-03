@@ -1,5 +1,6 @@
 import { Officer, ShouldDoType } from "@prisma/client";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { prisma } from "lib/prisma";
 import type { Socket } from "services/SocketService";
 
@@ -35,29 +36,10 @@ export async function handleStartEndOfficerLog(options: Options) {
       });
     }
   } else if (options.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-    const calls = await prisma.call911.findMany({
-      where: {
-        assignedUnits: { some: { officerId: options.officer.id } },
-      },
-      include: {
-        assignedUnits: callInclude.assignedUnits,
-      },
-    });
-
-    calls.forEach((call) => {
-      /**
-       * remove officer from assigned units then emit via socket
-       */
-      const assignedUnits = call.assignedUnits.filter((v) => v.officerId !== options.officer.id);
-      options.socket.emitUpdate911Call({ ...call, assignedUnits });
-    });
-
-    // unassign officer from call
-    await prisma.assignedUnit.deleteMany({
-      where: {
-        officerId: options.officer.id,
-      },
-    });
+    await Promise.all([
+      handleUnassignFromCalls(options),
+      handleUnassignFromActiveIncident(options),
+    ]);
 
     /**
      * end the officer-log.
@@ -73,4 +55,50 @@ export async function handleStartEndOfficerLog(options: Options) {
       });
     }
   }
+}
+
+async function handleUnassignFromCalls(options: Pick<Options, "officer" | "socket">) {
+  const calls = await prisma.call911.findMany({
+    where: {
+      assignedUnits: { some: { officerId: options.officer.id } },
+    },
+    include: {
+      assignedUnits: callInclude.assignedUnits,
+    },
+  });
+
+  calls.forEach((call) => {
+    /**
+     * remove officer from assigned units then emit via socket
+     */
+    const assignedUnits = call.assignedUnits.filter((v) => v.officerId !== options.officer.id);
+    options.socket.emitUpdate911Call({ ...call, assignedUnits });
+  });
+
+  // unassign officer from call
+  await prisma.assignedUnit.deleteMany({
+    where: {
+      officerId: options.officer.id,
+    },
+  });
+}
+
+async function handleUnassignFromActiveIncident(options: Pick<Options, "officer" | "socket">) {
+  const officer = await prisma.officer.findUnique({
+    where: { id: options.officer.id },
+    select: { id: true, activeIncidentId: true },
+  });
+
+  if (!officer?.activeIncidentId) return;
+  const incident = await prisma.leoIncident.findUnique({
+    where: { id: officer.activeIncidentId },
+    include: incidentInclude,
+  });
+  if (!incident) return;
+
+  /**
+   * remove officer from involved officers then emit via socket
+   */
+  const officersInvolved = incident.officersInvolved.filter((v) => v.id !== options.officer.id);
+  options.socket.emitUpdateActiveIncident({ ...incident, officersInvolved });
 }
