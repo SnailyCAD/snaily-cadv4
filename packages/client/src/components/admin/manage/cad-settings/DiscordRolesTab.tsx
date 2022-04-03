@@ -55,6 +55,10 @@ export function DiscordRolesTab() {
         ...values,
         leoRoles: values.leoRoles.map((v) => v.value),
         emsFdRoles: values.emsFdRoles.map((v) => v.value),
+        dispatchRoles: values.dispatchRoles.map((v) => v.value),
+        towRoles: values.towRoles.map((v) => v.value),
+        taxiRoles: values.taxiRoles.map((v) => v.value),
+        leoSupervisorRoles: values.leoSupervisorRoles.map((v) => v.value),
       },
     });
 
