@@ -59,8 +59,10 @@ model MiscCadSettings {
   maxPlateLength            Int      @default(8)
   maxBusinessesPerCitizen   Int?
   maxDivisionsPerOfficer    Int?
-  // max units a user can create with a department
+  /// max units a user can create with a department
   maxDepartmentsEachPerUser Int?
+  maxAssignmentsToIncidents Int?
+  maxAssignmentsToCalls     Int?
   callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitTemplate        String?  @default("1A-{callsign1}") @db.Text
   pairedUnitSymbol          String?  @default("A") @db.VarChar(255)

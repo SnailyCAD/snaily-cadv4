@@ -61,6 +61,8 @@ export interface MiscCadSettings {
   maxBusinessesPerCitizen: number | null;
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
+  maxAssignmentsToIncidents: number | null;
+  maxAssignmentsToCalls: number | null;
   callsignTemplate: string;
   pairedUnitTemplate: string | null;
   signal100Enabled: boolean;
