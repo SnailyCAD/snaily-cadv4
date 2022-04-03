@@ -4,7 +4,7 @@ import { Get, Post } from "@tsed/schema";
 import { RESTGetAPIGuildRolesResult, Routes } from "discord-api-types/v10";
 import { IsAuth } from "middlewares/IsAuth";
 import { prisma } from "lib/prisma";
-import type { cad, DiscordRole, DiscordRoles } from "@prisma/client";
+import type { cad, DiscordRole } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_SETTINGS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
@@ -86,10 +86,6 @@ export class DiscordSettingsController {
 
     const createUpdateData = {
       guildId,
-      dispatchRoleId: data.dispatchRoleId ?? null,
-      leoSupervisorRoleId: data.leoSupervisorRoleId ?? null,
-      towRoleId: data.towRoleId ?? null,
-      taxiRoleId: data.taxiRoleId ?? null,
       adminRoleId: data.adminRoleId ?? null,
       whitelistedRoleId: data.whitelistedRoleId ?? null,
     };
@@ -98,11 +94,54 @@ export class DiscordSettingsController {
       where: { id: String(cad.discordRolesId) },
       update: createUpdateData,
       create: createUpdateData,
-      include: { leoRoles: true, emsFdRoles: true },
+      include: {
+        leoRoles: true,
+        emsFdRoles: true,
+        leoSupervisorRoles: true,
+        towRoles: true,
+        taxiRoles: true,
+        dispatchRoles: true,
+      },
     });
 
-    await this.updateLeoRoles(discordRoles, (data.leoRoles as string[] | null) ?? []);
-    await this.updateEmsFdRoles(discordRoles, (data.emsFdRoles as string[] | null) ?? []);
+    await Promise.all([
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.leoRoles,
+        newRoles: (data.leoRoles as string[] | null) ?? [],
+        type: "leoRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.emsFdRoles,
+        newRoles: (data.emsFdRoles as string[] | null) ?? [],
+        type: "emsFdRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.leoSupervisorRoles,
+        newRoles: (data.leoSupervisorRoles as string[] | null) ?? [],
+        type: "leoSupervisorRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.towRoles,
+        newRoles: (data.towRoles as string[] | null) ?? [],
+        type: "towRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.dispatchRoles,
+        newRoles: (data.dispatchRoles as string[] | null) ?? [],
+        type: "dispatchRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.taxiRoles,
+        newRoles: (data.taxiRoles as string[] | null) ?? [],
+        type: "taxiRoles",
+      }),
+    ]);
 
     const updated = await prisma.cad.update({
       where: { id: cad.id },
@@ -119,35 +158,32 @@ export class DiscordSettingsController {
     );
   }
 
-  protected async updateLeoRoles(
-    discordRoles: DiscordRoles & { leoRoles: DiscordRole[] },
-    newRoles: string[],
-  ) {
+  protected async updateRoles(options: UpdateRolesOptions) {
     const disconnectConnectArr = manyToManyHelper(
-      discordRoles.leoRoles.map((v) => v.id),
-      newRoles,
+      options.discordRoles.map((v) => v.id),
+      options.newRoles,
     );
 
     await prisma.$transaction(
       disconnectConnectArr.map((v) =>
-        prisma.discordRoles.update({ where: { id: discordRoles.id }, data: { leoRoles: v } }),
+        prisma.discordRoles.update({
+          where: { id: options.discordRoleId },
+          data: { [options.type]: v },
+        }),
       ),
     );
   }
+}
 
-  protected async updateEmsFdRoles(
-    discordRoles: DiscordRoles & { emsFdRoles: DiscordRole[] },
-    newRoles: string[],
-  ) {
-    const disconnectConnectArr = manyToManyHelper(
-      discordRoles.emsFdRoles.map((v) => v.id),
-      newRoles,
-    );
-
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.discordRoles.update({ where: { id: discordRoles.id }, data: { emsFdRoles: v } }),
-      ),
-    );
-  }
+interface UpdateRolesOptions {
+  discordRoleId: string;
+  discordRoles: DiscordRole[];
+  newRoles: string[];
+  type:
+    | "leoRoles"
+    | "emsFdRoles"
+    | "leoSupervisorRoles"
+    | "dispatchRoles"
+    | "towRoles"
+    | "taxiRoles";
 }

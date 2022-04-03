@@ -36,10 +36,10 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
 export const DISCORD_SETTINGS_SCHEMA = z.object({
   leoRoles: z.array(z.any()).nullable().optional(),
   emsFdRoles: z.array(z.any()).nullable().optional(),
-  leoSupervisorRoleId: z.string().nullable().optional(),
-  dispatchRoleId: z.string().nullable().optional(),
-  towRoleId: z.string().nullable().optional(),
-  taxiRoleId: z.string().nullable().optional(),
+  leoSupervisorRoles: z.array(z.any()).nullable().optional(),
+  dispatchRoles: z.array(z.any()).nullable().optional(),
+  towRoles: z.array(z.any()).nullable().optional(),
+  taxiRoles: z.array(z.any()).nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
 });

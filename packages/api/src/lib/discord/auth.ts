@@ -1,4 +1,4 @@
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { DiscordRole, Rank, User, WhitelistStatus } from "@prisma/client";
 import { Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
 import { getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
@@ -14,7 +14,15 @@ export async function updateMemberRolesLogin(
 
   const discordRoles = await prisma.discordRoles.findUnique({
     where: { id: String(discordRolesId) },
-    include: { roles: true, leoRoles: true, emsFdRoles: true },
+    include: {
+      roles: true,
+      leoRoles: true,
+      emsFdRoles: true,
+      dispatchRoles: true,
+      towRoles: true,
+      taxiRoles: true,
+      leoSupervisorRoles: true,
+    },
   });
 
   if (!discordRoles) return;
@@ -28,23 +36,20 @@ export async function updateMemberRolesLogin(
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
-  const isLeo = hasRole(
-    discordRoles.leoRoles.map((v) => v.id),
-    discordMember.roles,
-  );
-
-  const isEmsFd = hasRole(
-    discordRoles.emsFdRoles.map((v) => v.id),
-    discordMember.roles,
-  );
+  const isLeo = hasRoleArr(discordRoles.leoRoles, discordMember.roles);
+  const isEmsFd = hasRoleArr(discordRoles.emsFdRoles, discordMember.roles);
+  const isDispatch = hasRoleArr(discordRoles.dispatchRoles, discordMember.roles);
+  const isTow = hasRoleArr(discordRoles.towRoles, discordMember.roles);
+  const isTaxi = hasRoleArr(discordRoles.taxiRoles, discordMember.roles);
+  const isSupervisor = hasRoleArr(discordRoles.leoSupervisorRoles, discordMember.roles);
 
   const updateData = {
     isLeo: discordRoles.leoRoles.length <= 0 ? undefined : isLeo,
     isEmsFd: discordRoles.emsFdRoles.length <= 0 ? undefined : isEmsFd,
-    isSupervisor: hasRole(discordRoles.leoSupervisorRoleId, discordMember.roles),
-    isDispatch: hasRole(discordRoles.dispatchRoleId, discordMember.roles),
-    isTow: hasRole(discordRoles.towRoleId, discordMember.roles),
-    isTaxi: hasRole(discordRoles.taxiRoleId, discordMember.roles),
+    isSupervisor: discordRoles.leoSupervisorRoles.length <= 0 ? undefined : isSupervisor,
+    isDispatch: discordRoles.dispatchRoles.length <= 0 ? undefined : isDispatch,
+    isTow: discordRoles.towRoles.length <= 0 ? undefined : isTow,
+    isTaxi: discordRoles.taxiRoles.length <= 0 ? undefined : isTaxi,
     rank:
       user.rank !== Rank.OWNER
         ? hasRole(discordRoles.adminRoleId, discordMember.roles)
@@ -65,10 +70,13 @@ export async function updateMemberRolesLogin(
   return updatedUser;
 }
 
-function hasRole(roleId: string | string[] | null, roleIds: string[]) {
-  if (!roleId) return undefined;
+function hasRoleArr(roles: DiscordRole[], roleIds: string[]) {
+  return roles.some((role) => roleIds.includes(role.id));
+}
 
-  return roleIds.some((v) => (typeof roleId === "string" ? v === roleId : roleId.includes(v)));
+function hasRole(roleId: string | null, roleIds: string[]) {
+  if (!roleId) return undefined;
+  return roleIds.includes(roleId);
 }
 
 function makeWhitelistStatus(cadWhitelisted: boolean, hasRole: boolean | undefined) {
