@@ -47,6 +47,21 @@ export class IncidentController {
     return { incidents, officers };
   }
 
+  @Get("/:id")
+  @Description("Get an incident by its id")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
+  async getIncidentById(@PathParams("id") id: string) {
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id },
+      include: incidentInclude,
+    });
+
+    return incident;
+  }
+
   @UseBefore(ActiveOfficer)
   @Post("/")
   @UsePermissions({
