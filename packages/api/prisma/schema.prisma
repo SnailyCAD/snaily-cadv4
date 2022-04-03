@@ -954,10 +954,11 @@ model DLExam {
 
 /// custom fields
 model CustomField {
-  id       String              @id @default(uuid())
-  name     String
-  category CustomFieldCategory
-  values   CustomFieldValue[]
+  id              String              @id @default(uuid())
+  name            String
+  citizenEditable Boolean             @default(false)
+  category        CustomFieldCategory
+  values          CustomFieldValue[]
 }
 
 model CustomFieldValue {

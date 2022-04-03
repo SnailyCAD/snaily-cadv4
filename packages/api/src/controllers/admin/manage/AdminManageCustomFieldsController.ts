@@ -1,14 +1,16 @@
 import { CustomFieldCategory, Rank } from "@prisma/client";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
-import { BodyParams, PathParams } from "@tsed/common";
+import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
+import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/manage/custom-fields")
+@UseBeforeEach(IsAuth)
 export class AdminManageCustomFieldsController {
   @Get("/")
   @UsePermissions({
@@ -32,6 +34,7 @@ export class AdminManageCustomFieldsController {
       data: {
         category: data.category as CustomFieldCategory,
         name: data.name,
+        citizenEditable: data.citizenEditable,
       },
     });
 
@@ -59,6 +62,7 @@ export class AdminManageCustomFieldsController {
       data: {
         category: data.category as CustomFieldCategory,
         name: data.name,
+        citizenEditable: data.citizenEditable,
       },
     });
 

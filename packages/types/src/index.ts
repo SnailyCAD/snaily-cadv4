@@ -952,6 +952,7 @@ export interface CustomField {
   id: string;
   name: string;
   value: string | null;
+  citizenEditable: boolean;
   category: CustomFieldCategory;
 }
 

@@ -12,6 +12,7 @@ import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_FIELDS_SCHEMA } from "@snailycad/schemas";
+import { Toggle } from "components/form/Toggle";
 
 interface Props {
   field: CustomField | null;
@@ -67,6 +68,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
   const INITIAL_VALUES = {
     name: field?.name ?? "",
     category: field?.category ?? "",
+    citizenEditable: field?.citizenEditable ?? false,
   };
 
   const validate = handleValidate(CUSTOM_FIELDS_SCHEMA);
@@ -90,6 +92,14 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
                 name="category"
                 onChange={handleChange}
                 value={values.category}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.citizenEditable} label="Citizen Editable">
+              <Toggle
+                name="citizenEditable"
+                onClick={handleChange}
+                toggled={values.citizenEditable}
               />
             </FormField>
 
