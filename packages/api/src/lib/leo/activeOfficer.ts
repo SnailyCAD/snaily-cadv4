@@ -24,7 +24,7 @@ export const _leoProperties = {
   whitelistStatus: { include: { department: { include: { value: true } } } },
   user: { select: userProperties },
   assignedUnit: { where: { call911: { ended: false } } },
-  LeoIncidentInvolvedOfficers: { select: { id: true } },
+  LeoIncidentInvolvedOfficers: { select: { id: true }, where: { isActive: true } },
   rank: true,
 };
 
@@ -87,7 +87,7 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
         ],
       },
     },
-    include: unitProperties,
+    include: leoProperties,
   });
 
   const activeOfficerOrCombinedUnit = combinedUnit ?? officer;
