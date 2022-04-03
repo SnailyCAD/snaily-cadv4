@@ -208,15 +208,14 @@ export class IncidentController {
   ) {
     await Promise.all(
       (data.involvedOfficers ?? []).map(async (id: string) => {
-        const count = await prisma.officer.count({
+        const count = await prisma.leoIncident.count({
           where: {
-            LeoIncident: { some: { id: { not: incidentId } } },
+            officersInvolved: { some: { id } },
+            isActive: true,
           },
         });
 
-        console.log({ count, maxAssignmentsToIncidents });
-
-        if (count > maxAssignmentsToIncidents) {
+        if (count >= maxAssignmentsToIncidents) {
           return;
         }
 
