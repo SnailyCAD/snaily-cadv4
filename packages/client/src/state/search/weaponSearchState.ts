@@ -1,9 +1,18 @@
-import type { Citizen, Weapon, ValueType, Value } from "@snailycad/types";
+import type {
+  Citizen,
+  Weapon,
+  ValueType,
+  Value,
+  CustomField,
+  CustomFieldValue,
+} from "@snailycad/types";
 import create from "zustand";
 
-interface WeaponSearchResult extends Weapon {
+export interface WeaponSearchResult extends Weapon {
   citizen: Citizen;
   registrationStatus: Value<ValueType.LICENSE>;
+  allCustomFields: CustomField[];
+  customFields: CustomFieldValue[];
 }
 
 interface WeaponSearchState {

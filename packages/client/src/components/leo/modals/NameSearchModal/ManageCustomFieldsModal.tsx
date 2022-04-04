@@ -19,7 +19,13 @@ interface Props {
   onUpdate(newResults: any): void;
 }
 
-export function ManageCustomFieldsModal({ url, category, allCustomFields, customFields }: Props) {
+export function ManageCustomFieldsModal({
+  url,
+  category,
+  allCustomFields,
+  customFields,
+  onUpdate,
+}: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -32,6 +38,7 @@ export function ManageCustomFieldsModal({ url, category, allCustomFields, custom
     });
 
     if (json.id) {
+      onUpdate(json);
       closeModal(ModalIds.ManageCitizenCustomFields);
     }
   }

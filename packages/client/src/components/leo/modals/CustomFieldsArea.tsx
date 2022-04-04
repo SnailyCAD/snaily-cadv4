@@ -4,10 +4,11 @@ import { useModal } from "context/ModalContext";
 import { useTranslations } from "next-intl";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { WeaponSearchResult } from "state/search/weaponSearchState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  currentResult: NameSearchResult | VehicleSearchResult;
+  currentResult: NameSearchResult | VehicleSearchResult | WeaponSearchResult;
   isLeo: boolean;
 }
 

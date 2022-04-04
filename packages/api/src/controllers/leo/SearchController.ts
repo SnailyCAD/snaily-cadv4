@@ -117,6 +117,7 @@ export class SearchController {
         citizen: true,
         model: { include: { value: true } },
         registrationStatus: true,
+        customFields: { include: { field: true } },
       },
     });
 
@@ -124,7 +125,7 @@ export class SearchController {
       throw new NotFound("weaponNotFound");
     }
 
-    return weapon;
+    return appendCustomFields(weapon, CustomFieldCategory.WEAPON);
   }
 
   @Post("/vehicle")
