@@ -208,7 +208,7 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async updateVehicleCustomFields(
-    @BodyParams("fields") fields: unknown[],
+    @BodyParams("fields") fields: unknown,
     @PathParams("vehicleId") vehicleId: string,
   ) {
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -239,7 +239,7 @@ export class SearchActionsController {
     permissions: [Permissions.Leo],
   })
   async updateWeaponCustomFields(
-    @BodyParams("fields") fields: unknown[],
+    @BodyParams("fields") fields: unknown,
     @PathParams("weaponId") weaponId: string,
   ) {
     const weapon = await prisma.weapon.findUnique({

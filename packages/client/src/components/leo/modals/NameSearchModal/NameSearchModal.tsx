@@ -8,7 +8,7 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RecordType } from "@snailycad/types";
+import { CustomFieldCategory, Citizen, RecordType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
@@ -30,6 +30,7 @@ import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesM
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
+import { CustomFieldsArea } from "../CustomFieldsArea";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -371,34 +372,7 @@ export function NameSearchModal() {
                       ) : null}
                     </div>
 
-                    {currentResult.allCustomFields.length <= 0 ? null : (
-                      <div className="mt-4">
-                        <h4 className="font-semibold text-lg text-neutral-700 dark:text-gray-300/75">
-                          {t("otherFields")}
-                        </h4>
-
-                        {currentResult.customFields.length <= 0 ? (
-                          <p>{common("none")}</p>
-                        ) : (
-                          currentResult.customFields.map((v) => (
-                            <Infofield label={v.field.name} key={v.id}>
-                              {v.value || "—"}
-                            </Infofield>
-                          ))
-                        )}
-
-                        {isLeo ? (
-                          <Button
-                            small
-                            type="button"
-                            className="mt-2"
-                            onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}
-                          >
-                            {t("manageCustomFields")}
-                          </Button>
-                        ) : null}
-                      </div>
-                    )}
+                    <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                   </div>
                 </div>
 
@@ -481,9 +455,11 @@ export function NameSearchModal() {
               <>
                 <ManageCitizenFlagsModal />
                 <ManageCustomFieldsModal
+                  category={CustomFieldCategory.CITIZEN}
                   url={`/search/actions/custom-fields/citizen/${currentResult.id}`}
                   allCustomFields={currentResult.allCustomFields}
                   customFields={currentResult.customFields}
+                  onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
                 />
                 <ManageLicensesModal
                   allowRemoval={false}

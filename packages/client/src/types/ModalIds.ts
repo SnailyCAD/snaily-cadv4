@@ -56,6 +56,7 @@ export const enum ModalIds {
   LinkCallToIncident = "LinkCallToIncidentModal",
   ManageSeizedItems = "ManageSeizedItemsModal",
   ManageDLExam = "ManageDLExamModal",
+  ManageCitizenCustomFields = "ManageCitizenCustomFieldsModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
@@ -99,5 +100,4 @@ export const enum ModalIds {
   AlertUseOldPermissions = "AlertUseOldPermissionsModal",
   AlertDeleteDLExam = "AlertDeleteDLExamModal",
   AlertDeleteCustomField = "AlertDeleteCustomFieldModal",
-  ManageCitizenCustomFields = "ManageCitizenCustomFieldsModal",
 }

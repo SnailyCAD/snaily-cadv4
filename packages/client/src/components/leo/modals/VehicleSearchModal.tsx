@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type { RegisteredVehicle } from "@snailycad/types";
+import { CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
@@ -22,6 +22,8 @@ import { Pencil } from "react-bootstrap-icons";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
+import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
+import { CustomFieldsArea } from "./CustomFieldsArea";
 
 export function VehicleSearchModal() {
   const { currentResult, setCurrentResult } = useVehicleSearch();
@@ -239,6 +241,8 @@ export function VehicleSearchModal() {
                       {common(yesOrNoText(currentResult.reportedStolen))}
                     </Infofield>
                   </li>
+
+                  <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                 </ul>
 
                 <TruckLogsTable result={currentResult} />
@@ -288,6 +292,16 @@ export function VehicleSearchModal() {
                 </Button>
               </div>
             </footer>
+
+            {currentResult ? (
+              <ManageCustomFieldsModal
+                onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+                category={CustomFieldCategory.VEHICLE}
+                url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
+                allCustomFields={currentResult.allCustomFields}
+                customFields={currentResult.customFields}
+              />
+            ) : null}
           </Form>
         )}
       </Formik>

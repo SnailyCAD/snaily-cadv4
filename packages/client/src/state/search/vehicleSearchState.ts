@@ -5,6 +5,8 @@ import type {
   Value,
   TruckLog,
   Business,
+  CustomField,
+  CustomFieldValue,
 } from "@snailycad/types";
 import create from "zustand";
 
@@ -13,6 +15,8 @@ export interface VehicleSearchResult extends RegisteredVehicle {
   registrationStatus: Value<ValueType.LICENSE>;
   TruckLog: TruckLog[];
   Business: Business[];
+  allCustomFields: CustomField[];
+  customFields: CustomFieldValue[];
 }
 
 interface VehicleSearchState {

@@ -5,6 +5,7 @@ import { validateSchema } from "./validateSchema";
 export async function validateCustomFields(body: unknown) {
   const data = validateSchema(LEO_CUSTOM_FIELDS_SCHEMA, body);
 
+  console.log({ data });
   const createdFields = [];
   for (const fieldName in data) {
     const fieldData = data[fieldName];
@@ -25,8 +26,6 @@ export async function validateCustomFields(body: unknown) {
       value: fieldData.value ?? null,
       fieldId: customField.id,
     };
-
-    console.log({ createUpdateData });
 
     const created = await prisma.customFieldValue.upsert({
       where: {
