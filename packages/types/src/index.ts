@@ -661,6 +661,7 @@ export interface LeoIncident {
   id: string;
   caseNumber: number;
   description: string | null;
+  postal: string | null;
   descriptionData: DescriptionData | null;
   creator?: Officer | null;
   creatorId: string | null;

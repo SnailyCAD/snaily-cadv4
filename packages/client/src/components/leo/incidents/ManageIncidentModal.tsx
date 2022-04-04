@@ -25,6 +25,7 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
+import { Input } from "components/form/inputs/Input";
 
 interface Props {
   incident?: FullIncident | null;
@@ -109,6 +110,7 @@ export function ManageIncidentModal({
   const validate = handleValidate(LEO_INCIDENT_SCHEMA);
   const INITIAL_VALUES = {
     description: incident?.description ?? "",
+    postal: incident?.postal ?? "",
     descriptionData: dataToSlate(incident),
     involvedOfficers:
       incident?.officersInvolved.map((v) => ({
@@ -177,25 +179,30 @@ export function ManageIncidentModal({
                 </FormField>
               </FormRow>
 
-              <FormField
-                className="mt-1"
-                optional
-                errorMessage={errors.situationCodeId}
-                label={t("situationCode")}
-              >
-                <Select
-                  isClearable
-                  values={codes10.values
-                    .filter((v) => v.type === StatusValueType.SITUATION_CODE)
-                    .map((v) => ({
-                      label: v.value.value,
-                      value: v.id,
-                    }))}
-                  onChange={handleChange}
-                  name="situationCodeId"
-                  value={values.situationCodeId}
-                />
-              </FormField>
+              <FormRow className="mt-1">
+                <FormField
+                  optional
+                  errorMessage={errors.situationCodeId}
+                  label={t("situationCode")}
+                >
+                  <Select
+                    isClearable
+                    values={codes10.values
+                      .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                      .map((v) => ({
+                        label: v.value.value,
+                        value: v.id,
+                      }))}
+                    onChange={handleChange}
+                    name="situationCodeId"
+                    value={values.situationCodeId}
+                  />
+                </FormField>
+
+                <FormField errorMessage={errors.postal} label={t("postal")}>
+                  <Input name="postal" value={values.postal} onChange={handleChange} />
+                </FormField>
+              </FormRow>
 
               <FormField errorMessage={errors.description} label={common("description")}>
                 <Editor
