@@ -64,3 +64,11 @@ export const DL_EXAM_SCHEMA = z.object({
   categories: z.array(z.any()),
   license: z.string(),
 });
+
+export const LEO_CUSTOM_FIELDS_SCHEMA = z.record(
+  z.object({
+    fieldId: z.string().min(2),
+    valueId: z.string().nullable().optional(),
+    value: z.string().nullable().optional(),
+  }),
+);

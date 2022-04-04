@@ -13,6 +13,8 @@ export enum Permissions {
   ViewCitizenLogs = "ViewCitizenLogs",
   ViewDLExams = "ViewDLExams",
   ManageDLExams = "ManageDLExams",
+  ViewCustomFields = "ViewCustomFields",
+  ManageCustomFields = "ManageCustomFields",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",
@@ -53,6 +55,7 @@ export enum Permissions {
   ImportRegisteredVehicles = "ImportRegisteredVehicles",
   ImportRegisteredWeapons = "ImportRegisteredWeapons",
 
+  // values
   ManageValueLicense = "ManageValueLicense",
   ManageValueGender = "ManageValueGender",
   ManageValueEthnicity = "ManageValueEthnicity",

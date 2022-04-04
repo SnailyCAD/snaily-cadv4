@@ -251,6 +251,7 @@ model Citizen {
   dateOfDead           DateTime?
   occupation           String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")
+  customFields         CustomFieldValue[]
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   medicalRecords       MedicalRecord[]
@@ -296,24 +297,27 @@ model RegisteredVehicle {
   taxStatus            VehicleTaxStatus?
   reportedStolen       Boolean                  @default(false)
   impounded            Boolean                  @default(false)
-  TruckLog             TruckLog[]
-  ImpoundedVehicle     ImpoundedVehicle[]
-  Business             Business[]               @relation("registeredBusinessVehicles")
+  customFields         CustomFieldValue[]
+
+  TruckLog         TruckLog[]
+  ImpoundedVehicle ImpoundedVehicle[]
+  Business         Business[]         @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
-  id                   String      @id @default(cuid())
-  user                 User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String             @id @default(cuid())
+  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String?
-  citizen              Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @default(now()) @updatedAt
-  serialNumber         String      @unique @db.VarChar(255)
-  registrationStatus   Value       @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @default(now()) @updatedAt
+  serialNumber         String             @unique @db.VarChar(255)
+  registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  model                WeaponValue @relation("weaponModelToValue", fields: [modelId], references: [id])
+  model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
+  customFields         CustomFieldValue[]
 }
 
 model MedicalRecord {
@@ -960,6 +964,31 @@ model DLExam {
   status       DLExamStatus                  @default(IN_PROGRESS)
   createdAt    DateTime                      @default(now())
   updatedAt    DateTime                      @default(now()) @updatedAt
+}
+
+/// custom fields
+model CustomField {
+  id              String              @id @default(uuid())
+  name            String
+  citizenEditable Boolean             @default(false)
+  category        CustomFieldCategory
+  values          CustomFieldValue[]
+}
+
+model CustomFieldValue {
+  id                 String              @id @default(uuid())
+  value              String?
+  field              CustomField         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId            String
+  Citizens           Citizen[]
+  RegisteredVehicles RegisteredVehicle[]
+  Weapons            Weapon[]
+}
+
+enum CustomFieldCategory {
+  CITIZEN
+  WEAPON
+  VEHICLE
 }
 
 enum DLExamPassType {

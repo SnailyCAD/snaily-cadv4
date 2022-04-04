@@ -946,6 +946,29 @@ export interface DLExam {
 }
 
 /**
+ * Model CustomField
+ *
+ */
+export interface CustomField {
+  id: string;
+  name: string;
+  value: string | null;
+  citizenEditable: boolean;
+  category: CustomFieldCategory;
+}
+
+/**
+ * Model DLExam
+ *
+ */
+export interface CustomFieldValue {
+  id: string;
+  value: string | null;
+  field: CustomField;
+  fieldId: string;
+}
+
+/**
  * Enums
  */
 
@@ -1104,4 +1127,10 @@ export enum DLExamStatus {
   IN_PROGRESS = "IN_PROGRESS",
   PASSED = "PASSED",
   FAILED = "FAILED",
+}
+
+export enum CustomFieldCategory {
+  CITIZEN = "CITIZEN",
+  WEAPON = "WEAPON",
+  VEHICLE = "VEHICLE",
 }

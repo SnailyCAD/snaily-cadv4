@@ -8,7 +8,7 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RecordType } from "@snailycad/types";
+import { CustomFieldCategory, Citizen, RecordType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
@@ -29,6 +29,8 @@ import dynamic from "next/dynamic";
 import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
+import { CustomFieldsArea } from "../CustomFieldsArea";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -88,7 +90,7 @@ export function NameSearchModal() {
   async function handleLicensesSubmit(values: any) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/leo/licenses/${currentResult.id}`, {
+    const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
       method: "PUT",
       data: {
         ...values,
@@ -369,6 +371,8 @@ export function NameSearchModal() {
                         </Button>
                       ) : null}
                     </div>
+
+                    <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                   </div>
                 </div>
 
@@ -447,9 +451,16 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal />
             <WeaponSearchModal />
-            <ManageCitizenFlagsModal />
             {currentResult ? (
               <>
+                <ManageCitizenFlagsModal />
+                <ManageCustomFieldsModal
+                  category={CustomFieldCategory.CITIZEN}
+                  url={`/search/actions/custom-fields/citizen/${currentResult.id}`}
+                  allCustomFields={currentResult.allCustomFields}
+                  customFields={currentResult.customFields}
+                  onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+                />
                 <ManageLicensesModal
                   allowRemoval={false}
                   state={state}

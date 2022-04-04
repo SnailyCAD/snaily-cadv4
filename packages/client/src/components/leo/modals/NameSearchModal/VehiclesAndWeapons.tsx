@@ -34,7 +34,8 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   function handleWeaponClick(weapon: Weapon) {
     if (!currentResult) return;
 
-    setWeaponResult({ ...weapon, citizen: currentResult });
+    // todo: set correct data for `allCustomFields` and `customFields`
+    setWeaponResult({ ...weapon, allCustomFields: [], customFields: [], citizen: currentResult });
     openModal(ModalIds.WeaponSearch);
   }
 

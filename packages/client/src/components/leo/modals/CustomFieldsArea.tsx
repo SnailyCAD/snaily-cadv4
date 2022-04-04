@@ -1,0 +1,48 @@
+import { Button } from "components/Button";
+import { Infofield } from "components/shared/Infofield";
+import { useModal } from "context/ModalContext";
+import { useTranslations } from "next-intl";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { WeaponSearchResult } from "state/search/weaponSearchState";
+import { ModalIds } from "types/ModalIds";
+
+interface Props {
+  currentResult: NameSearchResult | VehicleSearchResult | WeaponSearchResult;
+  isLeo: boolean;
+}
+
+export function CustomFieldsArea({ currentResult, isLeo }: Props) {
+  const { openModal } = useModal();
+  const t = useTranslations("Leo");
+  const common = useTranslations("Common");
+
+  return currentResult.allCustomFields.length <= 0 ? null : (
+    <li className="mt-4 list-none">
+      <h4 className="font-semibold text-lg text-neutral-700 dark:text-gray-300/75">
+        {t("otherFields")}
+      </h4>
+
+      {currentResult.customFields.length <= 0 ? (
+        <p>{common("none")}</p>
+      ) : (
+        currentResult.customFields.map((v) => (
+          <Infofield label={v.field.name} key={v.id}>
+            {v.value || "—"}
+          </Infofield>
+        ))
+      )}
+
+      {isLeo ? (
+        <Button
+          small
+          type="button"
+          className="mt-2"
+          onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}
+        >
+          {t("manageCustomFields")}
+        </Button>
+      ) : null}
+    </li>
+  );
+}

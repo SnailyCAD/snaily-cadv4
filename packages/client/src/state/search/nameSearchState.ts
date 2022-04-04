@@ -5,6 +5,8 @@ import type {
   Weapon,
   Officer,
   Record,
+  CustomFieldValue,
+  CustomField,
 } from "@snailycad/types";
 import create from "zustand";
 
@@ -13,6 +15,8 @@ export interface NameSearchResult extends Citizen {
   weapons: Weapon[];
   Record: Record[];
   warrants: (Warrant & { officer: Officer })[];
+  customFields: CustomFieldValue[];
+  allCustomFields: CustomField[];
 }
 
 interface NameSearchState {
