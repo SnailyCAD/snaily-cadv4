@@ -182,6 +182,7 @@ function ActiveCallsInner() {
                   rowProps: {
                     className: isUnitAssigned ? "bg-gray-200 dark:bg-[#333639]" : undefined,
                   },
+                  caseNumber: call.caseNumber,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
                   location: call.location,
                   description:
@@ -248,6 +249,7 @@ function ActiveCallsInner() {
                 };
               })}
             columns={[
+              { Header: t("caseNumber"), accessor: "caseNumber" },
               { Header: t("caller"), accessor: "name" },
               { Header: t("location"), accessor: "location" },
               { Header: common("description"), accessor: "description" },
