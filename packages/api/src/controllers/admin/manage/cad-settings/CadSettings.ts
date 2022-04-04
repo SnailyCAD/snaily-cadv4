@@ -123,6 +123,8 @@ export class ManageCitizensController {
         authScreenHeaderImageId: data.authScreenHeaderImageId,
         maxOfficersPerUser: data.maxOfficersPerUser,
         maxDepartmentsEachPerUser: data.maxDepartmentsEachPerUser,
+        maxAssignmentsToCalls: data.maxAssignmentsToCalls,
+        maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
       },
     });
 

@@ -36,7 +36,17 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   discordRolesId: true,
   discordRoles:
     user?.rank === Rank.OWNER
-      ? { include: { roles: true, leoRoles: true, emsFdRoles: true } }
+      ? {
+          include: {
+            roles: true,
+            leoRoles: true,
+            emsFdRoles: true,
+            dispatchRoles: true,
+            leoSupervisorRoles: true,
+            taxiRoles: true,
+            towRoles: true,
+          },
+        }
       : true,
 });
 

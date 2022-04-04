@@ -91,6 +91,8 @@ export function MiscFeatures() {
     maxPlateLength: miscSettings.maxPlateLength,
     maxDivisionsPerOfficer: miscSettings.maxDivisionsPerOfficer ?? Infinity,
     maxDepartmentsEachPerUser: miscSettings.maxDepartmentsEachPerUser ?? Infinity,
+    maxAssignmentsToIncidents: miscSettings.maxAssignmentsToIncidents ?? Infinity,
+    maxAssignmentsToCalls: miscSettings.maxAssignmentsToCalls ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
     callsignTemplate: miscSettings.callsignTemplate ?? "",
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
@@ -205,6 +207,36 @@ export function MiscFeatures() {
                 name="maxDivisionsPerOfficer"
                 type="number"
                 value={values.maxDivisionsPerOfficer}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max assignments to incidents per officer"
+              action="short-input"
+              description="The maximum amount of how many incidents an officer can be assigned to.  (Default: Infinity)"
+              errorMessage={errors.maxAssignmentsToIncidents}
+            >
+              <Input
+                name="maxAssignmentsToIncidents"
+                type="number"
+                value={values.maxAssignmentsToIncidents}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max assignments to calls per unit"
+              action="short-input"
+              description="The maximum amount of how many calls a unit can be assigned to. (Default: Infinity)"
+              errorMessage={errors.maxAssignmentsToCalls}
+            >
+              <Input
+                name="maxAssignmentsToCalls"
+                type="number"
+                value={values.maxAssignmentsToCalls}
                 onChange={handleChange}
                 min={1}
               />

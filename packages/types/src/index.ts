@@ -61,6 +61,8 @@ export interface MiscCadSettings {
   maxBusinessesPerCitizen: number | null;
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
+  maxAssignmentsToIncidents: number | null;
+  maxAssignmentsToCalls: number | null;
   callsignTemplate: string;
   pairedUnitTemplate: string | null;
   signal100Enabled: boolean;
@@ -103,15 +105,10 @@ export interface DiscordRoles {
   guildId: string;
   leoRoles?: DiscordRole[];
   emsFdRoles?: DiscordRole[];
-  leoSupervisorRoleId: string | null;
-  leoSupervisorRole: DiscordRole | null;
-  emsFdRole: DiscordRole | null;
-  dispatchRoleId: string | null;
-  dispatchRole: DiscordRole | null;
-  towRoleId: string | null;
-  towRole: DiscordRole | null;
-  taxiRoleId: string | null;
-  taxiRole: DiscordRole | null;
+  dispatchRoles?: DiscordRole[];
+  leoSupervisorRoles?: DiscordRole[];
+  towRoles?: DiscordRole[];
+  taxiRoles?: DiscordRole[];
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;

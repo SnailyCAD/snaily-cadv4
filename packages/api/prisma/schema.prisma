@@ -59,8 +59,10 @@ model MiscCadSettings {
   maxPlateLength            Int      @default(8)
   maxBusinessesPerCitizen   Int?
   maxDivisionsPerOfficer    Int?
-  // max units a user can create with a department
+  /// max units a user can create with a department
   maxDepartmentsEachPerUser Int?
+  maxAssignmentsToIncidents Int?
+  maxAssignmentsToCalls     Int?
   callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitTemplate        String?  @default("1A-{callsign1}") @db.Text
   pairedUnitSymbol          String?  @default("A") @db.VarChar(255)
@@ -105,15 +107,19 @@ model DiscordRoles {
   leoRoles            DiscordRole[] @relation("leoRoles")
   leoSupervisorRole   DiscordRole?  @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
   leoSupervisorRoleId String?
+  leoSupervisorRoles  DiscordRole[] @relation("leoSupervisorRoles")
   emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
   emsFdRoleId         String?
   emsFdRoles          DiscordRole[] @relation("emsFdRoles")
   dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
   dispatchRoleId      String?
+  dispatchRoles       DiscordRole[] @relation("dispatchRoles")
   towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
   towRoleId           String?
+  towRoles            DiscordRole[] @relation("towRoles")
   taxiRole            DiscordRole?  @relation("taxiRole", fields: [taxiRoleId], references: [id])
   taxiRoleId          String?
+  taxiRoles           DiscordRole[] @relation("taxiRoles")
   adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
   adminRoleId         String?
   whitelistedRoleId   String?
@@ -124,20 +130,24 @@ model DiscordRoles {
 }
 
 model DiscordRole {
-  id                 String         @id @unique
-  name               String
-  discordRoles       DiscordRoles   @relation(fields: [discordRolesId], references: [id])
-  discordRolesId     String
-  leoRoles           DiscordRoles[] @relation("leoRole")
-  leoRolesArr        DiscordRoles[] @relation("leoRoles")
-  emsFdRoles         DiscordRoles[] @relation("emsFdRole")
-  emsFdRolesArr      DiscordRoles[] @relation("emsFdRoles")
-  dispatchRoles      DiscordRoles[] @relation("dispatchRole")
-  towRoles           DiscordRoles[] @relation("towRole")
-  taxiRoles          DiscordRoles[] @relation("taxiRole")
-  leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
-  adminRoles         DiscordRoles[] @relation("adminRole")
-  whitelistedRoles   DiscordRoles[] @relation("whitelistedRole")
+  id                    String         @id @unique
+  name                  String
+  discordRoles          DiscordRoles   @relation(fields: [discordRolesId], references: [id])
+  discordRolesId        String
+  leoRoles              DiscordRoles[] @relation("leoRole")
+  leoRolesArr           DiscordRoles[] @relation("leoRoles")
+  emsFdRoles            DiscordRoles[] @relation("emsFdRole")
+  emsFdRolesArr         DiscordRoles[] @relation("emsFdRoles")
+  dispatchRoles         DiscordRoles[] @relation("dispatchRole")
+  towRoles              DiscordRoles[] @relation("towRole")
+  taxiRoles             DiscordRoles[] @relation("taxiRole")
+  leoSupervisorRoles    DiscordRoles[] @relation("leoSupervisorRole")
+  adminRoles            DiscordRoles[] @relation("adminRole")
+  whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
+  dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
+  leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
+  taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
+  towRolesArr           DiscordRoles[] @relation("towRoles")
 }
 
 model User {
