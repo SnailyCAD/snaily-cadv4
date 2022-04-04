@@ -18,7 +18,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
   const common = useTranslations("Common");
 
   return currentResult.allCustomFields.length <= 0 ? null : (
-    <li className="mt-4">
+    <li className="mt-4 list-none">
       <h4 className="font-semibold text-lg text-neutral-700 dark:text-gray-300/75">
         {t("otherFields")}
       </h4>
