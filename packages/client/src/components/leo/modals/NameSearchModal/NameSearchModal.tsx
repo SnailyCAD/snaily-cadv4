@@ -8,7 +8,7 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RecordType } from "@snailycad/types";
+import { Citizen, CustomFieldCategory, RecordType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
 import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
@@ -480,7 +480,11 @@ export function NameSearchModal() {
             {currentResult ? (
               <>
                 <ManageCitizenFlagsModal />
-                <ManageCustomFieldsModal />
+                <ManageCustomFieldsModal
+                  url={`/search/actions/custom-fields/${CustomFieldCategory.CITIZEN}/${currentResult.id}`}
+                  allCustomFields={currentResult.allCustomFields}
+                  customFields={currentResult.customFields}
+                />
                 <ManageLicensesModal
                   allowRemoval={false}
                   state={state}
