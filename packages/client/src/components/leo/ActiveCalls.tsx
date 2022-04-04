@@ -70,6 +70,7 @@ function ActiveCallsInner() {
   useListener(
     SocketEvents.Create911Call,
     (data) => {
+      if (!data) return;
       if (calls.some((v) => v.id === data.id)) return;
 
       setCalls([data, ...calls]);
@@ -79,7 +80,8 @@ function ActiveCallsInner() {
 
   useListener(
     SocketEvents.End911Call,
-    (data: Call911) => {
+    (data: Call911 | undefined) => {
+      if (!data) return;
       setCalls(calls.filter((v) => v.id !== data.id));
     },
     [calls, setCalls],
@@ -88,6 +90,8 @@ function ActiveCallsInner() {
   useListener(
     SocketEvents.Update911Call,
     (call) => {
+      if (!call) return;
+
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
