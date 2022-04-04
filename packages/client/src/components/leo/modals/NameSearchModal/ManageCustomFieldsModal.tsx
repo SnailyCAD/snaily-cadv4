@@ -13,7 +13,7 @@ import { classNames } from "lib/classNames";
 import type { CustomField, CustomFieldCategory, CustomFieldValue } from "@snailycad/types";
 
 interface Props {
-  url: `/search/actions/custom-fields/${CustomFieldCategory}/${string}`;
+  url: `/search/actions/custom-fields/${Lowercase<CustomFieldCategory>}/${string}`;
   allCustomFields: CustomField[];
   customFields: CustomFieldValue[];
 }

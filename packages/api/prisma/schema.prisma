@@ -297,24 +297,27 @@ model RegisteredVehicle {
   taxStatus            VehicleTaxStatus?
   reportedStolen       Boolean                  @default(false)
   impounded            Boolean                  @default(false)
-  TruckLog             TruckLog[]
-  ImpoundedVehicle     ImpoundedVehicle[]
-  Business             Business[]               @relation("registeredBusinessVehicles")
+  customFields         CustomFieldValue[]
+
+  TruckLog         TruckLog[]
+  ImpoundedVehicle ImpoundedVehicle[]
+  Business         Business[]         @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
-  id                   String      @id @default(cuid())
-  user                 User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String             @id @default(cuid())
+  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String?
-  citizen              Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @default(now()) @updatedAt
-  serialNumber         String      @unique @db.VarChar(255)
-  registrationStatus   Value       @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @default(now()) @updatedAt
+  serialNumber         String             @unique @db.VarChar(255)
+  registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  model                WeaponValue @relation("weaponModelToValue", fields: [modelId], references: [id])
+  model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
+  customFields         CustomFieldValue[]
 }
 
 model MedicalRecord {
@@ -973,11 +976,13 @@ model CustomField {
 }
 
 model CustomFieldValue {
-  id      String      @id @default(uuid())
-  value   String?
-  field   CustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
-  fieldId String
-  Citizen Citizen[]
+  id                 String              @id @default(uuid())
+  value              String?
+  field              CustomField         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId            String
+  Citizens           Citizen[]
+  RegisteredVehicles RegisteredVehicle[]
+  Weapons            Weapon[]
 }
 
 enum CustomFieldCategory {

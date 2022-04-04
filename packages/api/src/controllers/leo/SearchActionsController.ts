@@ -1,9 +1,5 @@
 import { Controller } from "@tsed/di";
-import {
-  LICENSE_SCHEMA,
-  LEO_VEHICLE_LICENSE_SCHEMA,
-  LEO_CUSTOM_FIELDS_SCHEMA,
-} from "@snailycad/schemas";
+import { LICENSE_SCHEMA, LEO_VEHICLE_LICENSE_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -15,7 +11,8 @@ import { UseBeforeEach } from "@tsed/common";
 import { Description, Put } from "@tsed/schema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateSchema } from "lib/validateSchema";
-import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { manyToManyHelper } from "utils/manyToMany";
+import { validateCustomFields } from "lib/custom-fields";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -174,7 +171,7 @@ export class SearchActionsController {
     return updated;
   }
 
-  @Put("/custom-fields/:citizenId")
+  @Put("/custom-fields/citizen/:citizenId")
   @UsePermissions({
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
@@ -183,64 +180,87 @@ export class SearchActionsController {
     @BodyParams("fields") fields: unknown,
     @PathParams("citizenId") citizenId: string,
   ) {
-    const data = validateSchema(LEO_CUSTOM_FIELDS_SCHEMA, fields);
-
-    console.log({ data });
-
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },
-      select: { id: true, flags: true },
+      select: { id: true },
     });
 
     if (!citizen) {
       throw new NotFound("notFound");
     }
 
-    const createdFields = [];
-    for (const fieldName in data) {
-      const fieldData = data[fieldName];
-
-      if (!fieldData) {
-        continue;
-      }
-
-      const customField = await prisma.customField.findUnique({
-        where: { id: fieldData?.fieldId },
-      });
-
-      if (!customField) {
-        continue;
-      }
-
-      const createUpdateData = {
-        value: fieldData.value ?? null,
-        fieldId: customField.id,
-      };
-
-      const created = await prisma.customFieldValue.upsert({
-        where: {
-          id: String(fieldData.valueId),
-        },
-        create: createUpdateData,
-        update: createUpdateData,
-        include: { field: true },
-      });
-
-      createdFields.push(created);
-    }
-
-    const updated = getLastOfArray(
-      await prisma.$transaction(
-        createdFields.map((field) =>
-          prisma.citizen.update({
-            where: { id: citizen.id },
-            data: { customFields: { connect: { id: field.id } } },
-            include: { customFields: { include: { field: true } } },
-          }),
-        ),
+    const createdFields = await validateCustomFields(fields);
+    await prisma.$transaction(
+      createdFields.map((field) =>
+        prisma.citizen.update({
+          where: { id: citizen.id },
+          data: { customFields: { connect: { id: field.id } } },
+        }),
       ),
     );
 
-    return updated;
+    return { id: citizen.id, customFields: createdFields };
+  }
+
+  @Put("/custom-fields/vehicle/:vehicleId")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
+  async updateVehicleCustomFields(
+    @BodyParams("fields") fields: unknown[],
+    @PathParams("vehicleId") vehicleId: string,
+  ) {
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicleId },
+      select: { id: true },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("notFound");
+    }
+
+    const createdFields = await validateCustomFields(fields);
+    await prisma.$transaction(
+      createdFields.map((field) =>
+        prisma.registeredVehicle.update({
+          where: { id: vehicle.id },
+          data: { customFields: { connect: { id: field.id } } },
+        }),
+      ),
+    );
+
+    return { id: vehicle.id, customFields: createdFields };
+  }
+
+  @Put("/custom-fields/weapon/:weaponId")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
+  async updateWeaponCustomFields(
+    @BodyParams("fields") fields: unknown[],
+    @PathParams("weaponId") weaponId: string,
+  ) {
+    const weapon = await prisma.weapon.findUnique({
+      where: { id: weaponId },
+      select: { id: true },
+    });
+
+    if (!weapon) {
+      throw new NotFound("notFound");
+    }
+
+    const createdFields = await validateCustomFields(fields);
+    await prisma.$transaction(
+      createdFields.map((field) =>
+        prisma.weapon.update({
+          where: { id: weapon.id },
+          data: { customFields: { connect: { id: field.id } } },
+        }),
+      ),
+    );
+
+    return { id: weapon.id, customFields: createdFields };
   }
 }
