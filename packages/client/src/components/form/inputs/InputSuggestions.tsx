@@ -27,7 +27,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     () => {
       onSearch(localValue);
     },
-    300,
+    150,
     [localValue],
   );
 
