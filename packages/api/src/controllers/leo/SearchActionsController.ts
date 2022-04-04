@@ -90,6 +90,10 @@ export class SearchActionsController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
       },
+      include: {
+        registrationStatus: true,
+        insuranceStatus: true,
+      },
     });
 
     return updated;
