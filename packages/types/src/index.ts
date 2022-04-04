@@ -945,12 +945,27 @@ export interface DLExam {
   categories?: DriversLicenseCategoryValue[];
 }
 
+/**
+ * Model CustomField
+ *
+ */
 export interface CustomField {
   id: string;
   name: string;
   value: string | null;
   citizenEditable: boolean;
   category: CustomFieldCategory;
+}
+
+/**
+ * Model DLExam
+ *
+ */
+export interface CustomFieldValue {
+  id: string;
+  value: string | null;
+  field: CustomField;
+  fieldId: string;
 }
 
 /**

@@ -55,6 +55,7 @@ export enum Permissions {
   ImportRegisteredVehicles = "ImportRegisteredVehicles",
   ImportRegisteredWeapons = "ImportRegisteredWeapons",
 
+  // values
   ManageValueLicense = "ManageValueLicense",
   ManageValueGender = "ManageValueGender",
   ManageValueEthnicity = "ManageValueEthnicity",

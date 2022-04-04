@@ -29,6 +29,7 @@ import dynamic from "next/dynamic";
 import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -88,7 +89,7 @@ export function NameSearchModal() {
   async function handleLicensesSubmit(values: any) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/leo/licenses/${currentResult.id}`, {
+    const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
       method: "PUT",
       data: {
         ...values,
@@ -369,6 +370,35 @@ export function NameSearchModal() {
                         </Button>
                       ) : null}
                     </div>
+
+                    {currentResult.allCustomFields.length <= 0 ? null : (
+                      <div className="mt-4">
+                        <h4 className="font-semibold text-lg text-neutral-700 dark:text-gray-300/75">
+                          {t("otherFields")}
+                        </h4>
+
+                        {currentResult.customFields.length <= 0 ? (
+                          <p>{common("none")}</p>
+                        ) : (
+                          currentResult.customFields.map((v) => (
+                            <Infofield label={v.field.name} key={v.id}>
+                              {v.value ?? "—"}
+                            </Infofield>
+                          ))
+                        )}
+
+                        {isLeo ? (
+                          <Button
+                            small
+                            type="button"
+                            className="mt-2"
+                            onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}
+                          >
+                            {t("manageCustomFields")}
+                          </Button>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -447,9 +477,10 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal />
             <WeaponSearchModal />
-            <ManageCitizenFlagsModal />
             {currentResult ? (
               <>
+                <ManageCitizenFlagsModal />
+                <ManageCustomFieldsModal />
                 <ManageLicensesModal
                   allowRemoval={false}
                   state={state}

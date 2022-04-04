@@ -12,6 +12,7 @@ export const citizenSearchInclude = {
   ...citizenInclude,
   businesses: true,
   medicalRecords: true,
+  customFields: { include: { field: true } },
   warrants: { include: { officer: { include: leoProperties } } },
   Record: {
     include: {
@@ -89,6 +90,15 @@ export class SearchController {
         },
         include: citizenSearchInclude,
       });
+    }
+
+    const allCustomFields = await prisma.customField.findMany();
+
+    if (citizen.length > 0) {
+      for (const cit of citizen) {
+        // @ts-expect-error ignore
+        cit.allCustomFields = allCustomFields;
+      }
     }
 
     return citizen;

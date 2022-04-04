@@ -23,7 +23,7 @@ export function ManageVehicleFlagsModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/leo/vehicle-flags/${currentResult.id}`, {
+    const { json } = await execute(`/search/actions/vehicle-flags/${currentResult.id}`, {
       method: "PUT",
       data: { flags: values.flags.map((v) => v.value) },
     });

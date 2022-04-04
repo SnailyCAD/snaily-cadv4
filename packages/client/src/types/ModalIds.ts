@@ -99,4 +99,5 @@ export const enum ModalIds {
   AlertUseOldPermissions = "AlertUseOldPermissionsModal",
   AlertDeleteDLExam = "AlertDeleteDLExamModal",
   AlertDeleteCustomField = "AlertDeleteCustomFieldModal",
+  ManageCitizenCustomFields = "ManageCitizenCustomFieldsModal",
 }
