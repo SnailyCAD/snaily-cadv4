@@ -7,8 +7,16 @@ import { Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
-import type { DiscordRoles } from "@snailycad/types";
+import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
+
+function makeRoleValues(roles?: DiscordRole[]) {
+  if (!roles) return [];
+  return roles.map((v) => ({
+    label: v.name,
+    value: v.id,
+  }));
+}
 
 export function DiscordRolesTab() {
   const [roles, setRoles] = React.useState<any[]>([]);
@@ -22,20 +30,12 @@ export function DiscordRolesTab() {
   );
 
   const INITIAL_VALUES = {
-    leoRoles:
-      discordRoles.leoRoles?.map((v) => ({
-        label: v.name,
-        value: v.id,
-      })) ?? [],
-    emsFdRoles:
-      discordRoles.emsFdRoles?.map((v) => ({
-        label: v.name,
-        value: v.id,
-      })) ?? [],
-    dispatchRoleId: discordRoles.dispatchRoleId,
-    leoSupervisorRoleId: discordRoles.leoSupervisorRoleId,
-    towRoleId: discordRoles.towRoleId,
-    taxiRoleId: discordRoles.taxiRoleId,
+    leoRoles: makeRoleValues(discordRoles.leoRoles),
+    emsFdRoles: makeRoleValues(discordRoles.emsFdRoles),
+    dispatchRoles: makeRoleValues(discordRoles.dispatchRoles),
+    leoSupervisorRoles: makeRoleValues(discordRoles.leoSupervisorRoles),
+    towRoles: makeRoleValues(discordRoles.towRoles),
+    taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
   };
@@ -55,6 +55,10 @@ export function DiscordRolesTab() {
         ...values,
         leoRoles: values.leoRoles.map((v) => v.value),
         emsFdRoles: values.emsFdRoles.map((v) => v.value),
+        dispatchRoles: values.dispatchRoles.map((v) => v.value),
+        towRoles: values.towRoles.map((v) => v.value),
+        taxiRoles: values.taxiRoles.map((v) => v.value),
+        leoSupervisorRoles: values.leoSupervisorRoles.map((v) => v.value),
       },
     });
 
@@ -128,17 +132,18 @@ export function DiscordRolesTab() {
 
             <SettingsFormField
               description="The Discord role that represents the LEO Supervisor permission"
-              errorMessage={errors.leoSupervisorRoleId}
+              errorMessage={errors.leoSupervisorRoles as string}
               label="LEO Supervisor Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.leoSupervisorRoleId}
-                name="leoSupervisorRoleId"
+                value={values.leoSupervisorRoles}
+                name="leoSupervisorRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>
@@ -163,51 +168,54 @@ export function DiscordRolesTab() {
 
             <SettingsFormField
               description="The Discord role that represents the Dispatch permission"
-              errorMessage={errors.dispatchRoleId}
+              errorMessage={errors.dispatchRoles as string}
               label="Dispatch Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.dispatchRoleId}
-                name="dispatchRoleId"
+                value={values.dispatchRoles}
+                name="dispatchRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>
 
             <SettingsFormField
               description="The Discord role that represents the Tow permission"
-              errorMessage={errors.towRoleId}
+              errorMessage={errors.towRoles as string}
               label="Tow Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.towRoleId}
-                name="towRoleId"
+                value={values.towRoles}
+                name="towRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>
 
             <SettingsFormField
               description="The Discord role that represents the Taxi permission"
-              errorMessage={errors.taxiRoleId}
+              errorMessage={errors.taxiRoles as string}
               label="Taxi Role"
             >
               <Select
                 isClearable
+                isMulti
                 values={roles.map((role) => ({
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.taxiRoleId}
-                name="taxiRoleId"
+                value={values.taxiRoles}
+                name="taxiRoles"
                 onChange={handleChange}
               />
             </SettingsFormField>

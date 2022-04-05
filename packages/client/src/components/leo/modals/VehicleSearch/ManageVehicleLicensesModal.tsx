@@ -26,7 +26,7 @@ export function ManageVehicleLicensesModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/leo/vehicle-licenses/${currentResult.id}`, {
+    const { json } = await execute(`/search/actions/vehicle-licenses/${currentResult.id}`, {
       method: "PUT",
       data: values,
     });

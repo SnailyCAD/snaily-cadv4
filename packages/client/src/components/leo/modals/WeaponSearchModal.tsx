@@ -11,6 +11,10 @@ import { useTranslations } from "use-intl";
 import { Input } from "components/form/inputs/Input";
 import { Infofield } from "components/shared/Infofield";
 import { useWeaponSearch } from "state/search/weaponSearchState";
+import { CustomFieldsArea } from "./CustomFieldsArea";
+import { useRouter } from "next/router";
+import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
+import { CustomFieldCategory } from "@snailycad/types";
 
 export function WeaponSearchModal() {
   const { isOpen, openModal, closeModal } = useModal();
@@ -19,6 +23,8 @@ export function WeaponSearchModal() {
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const { currentResult, setCurrentResult } = useWeaponSearch();
+  const router = useRouter();
+  const isLeo = router.pathname === "/officer";
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.WeaponSearch)) {
@@ -99,6 +105,8 @@ export function WeaponSearchModal() {
                       </Button>
                     </Infofield>
                   </li>
+
+                  <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                 </ul>
               </div>
             )}
@@ -123,6 +131,16 @@ export function WeaponSearchModal() {
           </Form>
         )}
       </Formik>
+
+      {currentResult ? (
+        <ManageCustomFieldsModal
+          category={CustomFieldCategory.WEAPON}
+          url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
+          allCustomFields={currentResult.allCustomFields}
+          customFields={currentResult.customFields}
+          onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+        />
+      ) : null}
     </Modal>
   );
 }

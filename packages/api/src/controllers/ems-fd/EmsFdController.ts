@@ -15,6 +15,7 @@ import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -58,16 +59,12 @@ export class EmsFdController {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
-    const departmentCount = await prisma.emsFdDeputy.count({
-      where: { userId: user.id, departmentId: data.department },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "emsFdDeputy",
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -132,16 +129,13 @@ export class EmsFdController {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
-    const departmentCount = await prisma.emsFdDeputy.count({
-      where: { userId: user.id, departmentId: data.department, NOT: { id: deputy.id } },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "emsFdDeputy",
+      unitId: deputy.id,
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {

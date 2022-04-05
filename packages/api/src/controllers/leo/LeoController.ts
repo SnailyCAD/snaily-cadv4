@@ -7,11 +7,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import {
-  CREATE_OFFICER_SCHEMA,
-  LICENSE_SCHEMA,
-  LEO_VEHICLE_LICENSE_SCHEMA,
-} from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -21,23 +17,15 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
-import { citizenInclude } from "controllers/citizen/CitizenController";
-import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { validateImgurURL } from "utils/image";
-import {
-  Officer,
-  ShouldDoType,
-  User,
-  MiscCadSettings,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
-} from "@prisma/client";
+import { Officer, ShouldDoType, User, MiscCadSettings } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -52,14 +40,13 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getUserOfficers(@Context() ctx: Context) {
+  async getUserOfficers(@Context("user") user: User) {
     const officers = await prisma.officer.findMany({
-      where: {
-        userId: ctx.get("user").id,
-      },
+      where: { userId: user.id },
       include: leoProperties,
     });
 
+    // todo: remove this
     const citizens = await prisma.citizen.findMany({
       select: {
         name: true,
@@ -95,6 +82,12 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions, cad);
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "officer",
+    });
 
     const officerCount = await prisma.officer.count({
       where: { userId: user.id },
@@ -105,17 +98,6 @@ export class LeoController {
       officerCount >= cad.miscCadSettings.maxOfficersPerUser
     ) {
       throw new BadRequest("maxLimitOfficersPerUserReached");
-    }
-
-    const departmentCount = await prisma.officer.count({
-      where: { userId: user.id, departmentId: data.department },
-    });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
     }
 
     const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
@@ -180,17 +162,13 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
-
-    const departmentCount = await prisma.officer.count({
-      where: { userId: user.id, departmentId: data.department, NOT: { id: officer.id } },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "officer",
+      unitId: officer.id,
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -453,160 +431,6 @@ export class LeoController {
 
     this.socket.emitUpdateOfficerStatus();
     this.socket.emitPanicButtonLeo(officer, panicType);
-  }
-
-  @Put("/licenses/:citizenId")
-  @Description("Update the licenses for a citizen by their id")
-  @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
-  })
-  async updateCitizenLicenses(
-    @BodyParams() body: unknown,
-    @PathParams("citizenId") citizenId: string,
-  ) {
-    const data = validateSchema(LICENSE_SCHEMA, body);
-
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: citizenId,
-      },
-      include: { dlCategory: true },
-    });
-
-    if (!citizen) {
-      throw new NotFound("notFound");
-    }
-
-    await updateCitizenLicenseCategories(citizen, data);
-
-    const updated = await prisma.citizen.update({
-      where: {
-        id: citizen.id,
-      },
-      data: {
-        driversLicenseId: data.driversLicense,
-        pilotLicenseId: data.pilotLicense,
-        weaponLicenseId: data.weaponLicense,
-        waterLicenseId: data.waterLicense,
-      },
-      include: citizenInclude,
-    });
-
-    return updated;
-  }
-
-  @Put("/vehicle-licenses/:vehicleId")
-  @Description("Update the licenses of a vehicle by its id")
-  @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
-  })
-  async updateVehicleLicenses(
-    @BodyParams() body: unknown,
-    @PathParams("vehicleId") vehicleId: string,
-  ) {
-    const data = validateSchema(LEO_VEHICLE_LICENSE_SCHEMA, body);
-
-    const vehicle = await prisma.registeredVehicle.findUnique({
-      where: {
-        id: vehicleId,
-      },
-    });
-
-    if (!vehicle) {
-      throw new NotFound("notFound");
-    }
-
-    const updated = await prisma.registeredVehicle.update({
-      where: {
-        id: vehicle.id,
-      },
-      data: {
-        registrationStatusId: data.registrationStatus,
-        insuranceStatusId: data.insuranceStatus,
-        taxStatus: data.taxStatus as VehicleTaxStatus | null,
-        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
-      },
-    });
-
-    return updated;
-  }
-
-  @Put("/vehicle-flags/:vehicleId")
-  @Description("Update the vehicle flags by its id")
-  @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
-  })
-  async updateVehicleFlags(
-    @BodyParams("flags") flags: string[],
-    @PathParams("vehicleId") vehicleId: string,
-  ) {
-    const vehicle = await prisma.registeredVehicle.findUnique({
-      where: { id: vehicleId },
-      select: { id: true, flags: true },
-    });
-
-    if (!vehicle) {
-      throw new NotFound("notFound");
-    }
-
-    const disconnectConnectArr = manyToManyHelper(
-      vehicle.flags.map((v) => v.id),
-      flags,
-    );
-
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.registeredVehicle.update({ where: { id: vehicle.id }, data: { flags: v } }),
-      ),
-    );
-
-    const updated = await prisma.registeredVehicle.findUnique({
-      where: { id: vehicle.id },
-      select: { id: true, flags: true },
-    });
-
-    return updated;
-  }
-
-  @Put("/citizen-flags/:citizenId")
-  @Description("Update the citizens flags by their id")
-  @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
-  })
-  async updateCitizenFlags(
-    @BodyParams("flags") flags: string[],
-    @PathParams("citizenId") citizenId: string,
-  ) {
-    const citizen = await prisma.citizen.findUnique({
-      where: { id: citizenId },
-      select: { id: true, flags: true },
-    });
-
-    if (!citizen) {
-      throw new NotFound("notFound");
-    }
-
-    const disconnectConnectArr = manyToManyHelper(
-      citizen.flags.map((v) => v.id),
-      flags,
-    );
-
-    await prisma.$transaction(
-      disconnectConnectArr.map((v) =>
-        prisma.citizen.update({ where: { id: citizen.id }, data: { flags: v } }),
-      ),
-    );
-
-    const updated = await prisma.citizen.findUnique({
-      where: { id: citizen.id },
-      select: { id: true, flags: true },
-    });
-
-    return updated;
   }
 
   @Get("/impounded-vehicles")

@@ -68,13 +68,19 @@ export function FormField({
     ...checkboxProps,
   });
 
+  function handleLabelClick() {
+    if (!child.props.disabled) {
+      setMenuOpen((v) => !v);
+    }
+  }
+
   return (
     <div ref={ref} className={classNames("flex flex-col mb-3", className)}>
       <div
         className={classNames("flex", checkbox ? "flex-row items-center" : "flex-col", className)}
       >
         {!checkbox ? (
-          <label onClick={() => setMenuOpen((v) => !v)} {...labelProps} className={labelClassnames}>
+          <label onClick={handleLabelClick} {...labelProps} className={labelClassnames}>
             {label} {optional ? <span className="text-sm italic">({optionalText})</span> : null}
           </label>
         ) : null}

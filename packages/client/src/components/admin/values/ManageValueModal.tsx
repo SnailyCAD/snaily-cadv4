@@ -45,8 +45,8 @@ interface Props {
   type: ValueType;
   value: AnyValue | null;
   clType?: DriversLicenseCategoryType | null;
-  onCreate: (newValue: AnyValue) => void;
-  onUpdate: (oldValue: AnyValue, newValue: AnyValue) => void;
+  onCreate(newValue: AnyValue): void;
+  onUpdate(oldValue: AnyValue, newValue: AnyValue): void;
 }
 
 const BUSINESS_VALUES = [

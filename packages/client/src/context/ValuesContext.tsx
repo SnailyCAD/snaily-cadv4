@@ -12,10 +12,10 @@ import {
   type VehicleValue,
 } from "@snailycad/types";
 
-type ContextValue<T extends ValueType, Custom = Value<T>> = {
+interface ContextValue<T extends ValueType, Custom = Value<T>> {
   type: ValueType;
   values: Custom extends undefined ? Value<T>[] : Custom[];
-};
+}
 
 interface Context {
   license: ContextValue<ValueType.LICENSE>;

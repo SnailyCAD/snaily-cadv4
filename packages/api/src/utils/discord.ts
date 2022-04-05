@@ -1,6 +1,6 @@
 import { prisma } from "lib/prisma";
 
-export function encode(obj: { [key: string]: unknown }) {
+export function encode(obj: Record<string, unknown>) {
   let string = "";
 
   for (const [key, value] of Object.entries(obj)) {

@@ -12,6 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type { MiscCadSettings } from "@snailycad/types";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -47,6 +48,21 @@ export class IncidentController {
     return { incidents, officers };
   }
 
+  @Get("/:id")
+  @Description("Get an incident by its id")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
+  async getIncidentById(@PathParams("id") id: string) {
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id },
+      include: incidentInclude,
+    });
+
+    return incident;
+  }
+
   @UseBefore(ActiveOfficer)
   @Post("/")
   @UsePermissions({
@@ -55,10 +71,12 @@ export class IncidentController {
   })
   async createIncident(
     @BodyParams() body: unknown,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @Context("activeOfficer") officer: Officer | null,
   ) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
     const officerId = officer?.id ?? null;
+    const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.leoIncident.create({
       data: {
@@ -70,10 +88,11 @@ export class IncidentController {
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
         situationCodeId: data.situationCodeId ?? null,
+        postal: data.postal ?? null,
       },
     });
 
-    await this.connectOfficersInvolved(incident.id, data);
+    await this.connectOfficersInvolved(incident.id, data, maxAssignmentsToIncidents);
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -98,8 +117,13 @@ export class IncidentController {
     permissions: [Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
-  async updateIncident(@BodyParams() body: unknown, @PathParams("id") incidentId: string) {
+  async updateIncident(
+    @BodyParams() body: unknown,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @PathParams("id") incidentId: string,
+  ) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
+    const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },
@@ -135,11 +159,12 @@ export class IncidentController {
         injuriesOrFatalities: data.injuriesOrFatalities,
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
+        postal: data.postal ?? null,
         situationCodeId: data.situationCodeId ?? null,
       },
     });
 
-    await this.connectOfficersInvolved(incident.id, data);
+    await this.connectOfficersInvolved(incident.id, data, maxAssignmentsToIncidents);
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -181,9 +206,21 @@ export class IncidentController {
   protected async connectOfficersInvolved(
     incidentId: string,
     data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "involvedOfficers" | "isActive">,
+    maxAssignmentsToIncidents: number,
   ) {
-    await prisma.$transaction(
-      (data.involvedOfficers ?? []).map((id: string) => {
+    await Promise.all(
+      (data.involvedOfficers ?? []).map(async (id: string) => {
+        const count = await prisma.leoIncident.count({
+          where: {
+            officersInvolved: { some: { id } },
+            isActive: true,
+          },
+        });
+
+        if (count >= maxAssignmentsToIncidents) {
+          return;
+        }
+
         return prisma.leoIncident.update({
           where: { id: incidentId },
           data: {

@@ -20,7 +20,7 @@ export interface SelectValue<Value = string> {
 
 interface Props<Value extends SelectValue = SelectValue<any>>
   extends Exclude<SelectProps, "options"> {
-  onChange: (event: any) => void;
+  onChange(event: any): void;
   value: Value | Value[] | string | null;
   values: Value[];
   errorMessage?: string;

@@ -42,6 +42,7 @@ export const SELECT_OFFICER_SCHEMA = z.object({
 export const LEO_INCIDENT_SCHEMA = z.object({
   description: z.string().nullable().optional(),
   descriptionData: z.any().nullable().optional(),
+  postal: z.string().nullable().optional(),
   firearmsInvolved: z.boolean(),
   injuriesOrFatalities: z.boolean(),
   arrestsMade: z.boolean(),
@@ -56,3 +57,19 @@ export const LEO_VEHICLE_LICENSE_SCHEMA = VEHICLE_SCHEMA.pick({
   registrationStatus: true,
   taxStatus: true,
 });
+
+export const DL_EXAM_SCHEMA = z.object({
+  citizenId: z.string().min(2),
+  practiceExam: z.string().nullable(),
+  theoryExam: z.string().nullable(),
+  categories: z.array(z.any()),
+  license: z.string(),
+});
+
+export const LEO_CUSTOM_FIELDS_SCHEMA = z.record(
+  z.object({
+    fieldId: z.string().min(2),
+    valueId: z.string().nullable().optional(),
+    value: z.string().nullable().optional(),
+  }),
+);

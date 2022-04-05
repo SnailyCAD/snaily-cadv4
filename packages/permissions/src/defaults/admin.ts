@@ -18,6 +18,8 @@ export const defaultManagementPermissions = [
   Permissions.ManageExpungementRequests,
   Permissions.ViewNameChangeRequests,
   Permissions.ManageNameChangeRequests,
+  Permissions.ViewCustomFields,
+  Permissions.ManageCustomFields,
 ];
 
 export const defaultImportPermissions = [

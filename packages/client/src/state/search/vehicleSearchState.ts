@@ -5,6 +5,8 @@ import type {
   Value,
   TruckLog,
   Business,
+  CustomField,
+  CustomFieldValue,
 } from "@snailycad/types";
 import create from "zustand";
 
@@ -13,11 +15,13 @@ export interface VehicleSearchResult extends RegisteredVehicle {
   registrationStatus: Value<ValueType.LICENSE>;
   TruckLog: TruckLog[];
   Business: Business[];
+  allCustomFields: CustomField[];
+  customFields: CustomFieldValue[];
 }
 
 interface VehicleSearchState {
   currentResult: VehicleSearchResult | null | undefined;
-  setCurrentResult: (v: VehicleSearchResult | null | undefined) => void;
+  setCurrentResult(v: VehicleSearchResult | null | undefined): void;
 }
 
 export const useVehicleSearch = create<VehicleSearchState>((set) => ({

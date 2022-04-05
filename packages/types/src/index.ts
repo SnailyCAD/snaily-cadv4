@@ -61,6 +61,8 @@ export interface MiscCadSettings {
   maxBusinessesPerCitizen: number | null;
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
+  maxAssignmentsToIncidents: number | null;
+  maxAssignmentsToCalls: number | null;
   callsignTemplate: string;
   pairedUnitTemplate: string | null;
   signal100Enabled: boolean;
@@ -98,36 +100,31 @@ export interface ApiToken {
  * Model DiscordRoles
  *
  */
-export type DiscordRoles = {
+export interface DiscordRoles {
   id: string;
   guildId: string;
   leoRoles?: DiscordRole[];
   emsFdRoles?: DiscordRole[];
-  leoSupervisorRoleId: string | null;
-  leoSupervisorRole: DiscordRole | null;
-  emsFdRole: DiscordRole | null;
-  dispatchRoleId: string | null;
-  dispatchRole: DiscordRole | null;
-  towRoleId: string | null;
-  towRole: DiscordRole | null;
-  taxiRoleId: string | null;
-  taxiRole: DiscordRole | null;
+  dispatchRoles?: DiscordRole[];
+  leoSupervisorRoles?: DiscordRole[];
+  towRoles?: DiscordRole[];
+  taxiRoles?: DiscordRole[];
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
-};
+}
 
 /**
  * Model DiscordRole
  *
  */
-export type DiscordRole = {
+export interface DiscordRole {
   id: string;
   name: string;
   discordRolesId: string;
-};
+}
 
 /**
  * Model User
@@ -368,13 +365,13 @@ export interface Violation {
  * Model SeizedItem
  *
  */
-export type SeizedItem = {
+export interface SeizedItem {
   id: string;
   violationId: string;
   item: string;
   quantity: number;
   illegal: boolean;
-};
+}
 
 /**
  * Model DivisionValue
@@ -664,6 +661,7 @@ export interface LeoIncident {
   id: string;
   caseNumber: number;
   description: string | null;
+  postal: string | null;
   descriptionData: DescriptionData | null;
   creator?: Officer | null;
   creatorId: string | null;
@@ -931,6 +929,47 @@ export interface TruckLog {
 }
 
 /**
+ * Model DLExam
+ *
+ */
+export interface DLExam {
+  id: string;
+  citizen: Citizen;
+  citizenId: string;
+  theoryExam: DLExamPassType | null;
+  practiceExam: DLExamPassType | null;
+  status: DLExamStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  licenseId: string;
+  license: Value<ValueType.LICENSE>;
+  categories?: DriversLicenseCategoryValue[];
+}
+
+/**
+ * Model CustomField
+ *
+ */
+export interface CustomField {
+  id: string;
+  name: string;
+  value: string | null;
+  citizenEditable: boolean;
+  category: CustomFieldCategory;
+}
+
+/**
+ * Model DLExam
+ *
+ */
+export interface CustomFieldValue {
+  id: string;
+  value: string | null;
+  field: CustomField;
+  fieldId: string;
+}
+
+/**
  * Enums
  */
 
@@ -954,6 +993,7 @@ export enum Feature {
   ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
   RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
+  DL_EXAMS = "DL_EXAMS",
 }
 
 export enum Rank {
@@ -1077,4 +1117,21 @@ export enum VehicleInspectionStatus {
 export enum VehicleTaxStatus {
   TAXED = "TAXED",
   UNTAXED = "UNTAXED",
+}
+
+export enum DLExamPassType {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum DLExamStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum CustomFieldCategory {
+  CITIZEN = "CITIZEN",
+  WEAPON = "WEAPON",
+  VEHICLE = "VEHICLE",
 }

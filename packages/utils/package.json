@@ -1,14 +1,31 @@
 {
   "name": "@snailycad/utils",
-  "version": "1.0.0-beta.77",
+  "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./callsign": "./dist/callsign.js",
-    "./typeguards": "./dist/typeguards.js",
-    "./version": "./dist/version.js",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./callsign": {
+      "require": "./dist/callsign.js",
+      "import": "./dist/callsign.mjs"
+    },
+    "./typeguards": {
+      "require": "./dist/typeguards.js",
+      "import": "./dist/typeguards.mjs"
+    },
+    "./version": {
+      "require": "./dist/version.js",
+      "import": "./dist/version.mjs"
+    },
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist"
+  ],
   "typesVersions": {
     "*": {
       "callsign": [
@@ -29,13 +46,13 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@snailycad/types": "1.0.0-beta.77",
+    "@snailycad/types": "1.0.0-beta.79",
     "c8": "^7.11.0",
     "tslib": "^2.3.1",
-    "tsup": "^5.12.1",
+    "tsup": "^5.12.2",
     "typescript": "^4.6.3",
-    "vite": "^2.8.6",
-    "vitest": "^0.7.11"
+    "vite": "^2.9.1",
+    "vitest": "^0.8.1"
   },
   "tsup": {
     "entry": [
@@ -46,6 +63,9 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
-    "minify": true
+    "format": [
+      "cjs",
+      "esm"
+    ]
   }
 }

@@ -7,11 +7,13 @@ import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { CustomFieldCategory } from "@prisma/client";
 
 export const citizenSearchInclude = {
   ...citizenInclude,
   businesses: true,
   medicalRecords: true,
+  customFields: { include: { field: true } },
   warrants: { include: { officer: { include: leoProperties } } },
   Record: {
     include: {
@@ -91,7 +93,7 @@ export class SearchController {
       });
     }
 
-    return citizen;
+    return appendCustomFields(citizen, CustomFieldCategory.CITIZEN);
   }
 
   @Post("/weapon")
@@ -115,6 +117,7 @@ export class SearchController {
         citizen: true,
         model: { include: { value: true } },
         registrationStatus: true,
+        customFields: { include: { field: true } },
       },
     });
 
@@ -122,7 +125,7 @@ export class SearchController {
       throw new NotFound("weaponNotFound");
     }
 
-    return weapon;
+    return appendCustomFields(weapon, CustomFieldCategory.WEAPON);
   }
 
   @Post("/vehicle")
@@ -155,13 +158,14 @@ export class SearchController {
         Business: true,
         citizen: includeCitizenInfo ? { include: { warrants: true } } : true,
         flags: true,
+        customFields: { include: { field: true } },
       },
     };
 
     if (includeMany) {
       const vehicles = await prisma.registeredVehicle.findMany(data);
 
-      return vehicles;
+      return appendCustomFields(vehicles, CustomFieldCategory.VEHICLE);
     }
 
     const vehicle = await prisma.registeredVehicle.findFirst(data);
@@ -170,6 +174,24 @@ export class SearchController {
       throw new NotFound("vehicleNotFound");
     }
 
-    return vehicle;
+    return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
   }
+}
+
+async function appendCustomFields(item: any, category: CustomFieldCategory) {
+  const allCustomFields = await prisma.customField.findMany({
+    where: { category },
+  });
+
+  if (Array.isArray(item)) {
+    if (item.length > 0) {
+      for (const cit of item) {
+        cit.allCustomFields = allCustomFields;
+      }
+    }
+  } else {
+    item.allCustomFields = allCustomFields;
+  }
+
+  return item;
 }

@@ -4,7 +4,7 @@ import { SocketEvents } from "@snailycad/config";
 import type { LeoIncident, Call911, TowCall, Bolo, Call911Event, TaxiCall } from "@prisma/client";
 import type { IncidentEvent } from "@snailycad/types";
 
-type FullIncident = LeoIncident & { events?: IncidentEvent[] };
+type FullIncident = LeoIncident & { officersInvolved: any[]; events?: IncidentEvent[] };
 
 @SocketService("/")
 export class Socket {
@@ -27,7 +27,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.CreateActiveIncident, incident);
   }
 
-  async emitUpdate911Call(call: Call911 & { [key: string]: any }) {
+  async emitUpdate911Call(call: Call911 & Record<string, any>) {
     this.io.sockets.emit(SocketEvents.Update911Call, call);
   }
 

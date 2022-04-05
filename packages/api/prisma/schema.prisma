@@ -27,7 +27,7 @@ model cad {
   liveMapSocketURl        String?                @db.VarChar(255)
   logoId                  String?
   registrationCode        String?
-  features                 CadFeature[]
+  features                CadFeature[]
   disabledFeatures        Feature[]
   miscCadSettings         MiscCadSettings?       @relation(fields: [miscCadSettingsId], references: [id])
   miscCadSettingsId       String?
@@ -59,8 +59,10 @@ model MiscCadSettings {
   maxPlateLength            Int      @default(8)
   maxBusinessesPerCitizen   Int?
   maxDivisionsPerOfficer    Int?
-  // max units a user can create with a department
+  /// max units a user can create with a department
   maxDepartmentsEachPerUser Int?
+  maxAssignmentsToIncidents Int?
+  maxAssignmentsToCalls     Int?
   callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
   pairedUnitTemplate        String?  @default("1A-{callsign1}") @db.Text
   pairedUnitSymbol          String?  @default("A") @db.VarChar(255)
@@ -105,15 +107,19 @@ model DiscordRoles {
   leoRoles            DiscordRole[] @relation("leoRoles")
   leoSupervisorRole   DiscordRole?  @relation("leoSupervisorRole", fields: [leoSupervisorRoleId], references: [id])
   leoSupervisorRoleId String?
+  leoSupervisorRoles  DiscordRole[] @relation("leoSupervisorRoles")
   emsFdRole           DiscordRole?  @relation("emsFdRole", fields: [emsFdRoleId], references: [id])
   emsFdRoleId         String?
   emsFdRoles          DiscordRole[] @relation("emsFdRoles")
   dispatchRole        DiscordRole?  @relation("dispatchRole", fields: [dispatchRoleId], references: [id])
   dispatchRoleId      String?
+  dispatchRoles       DiscordRole[] @relation("dispatchRoles")
   towRole             DiscordRole?  @relation("towRole", fields: [towRoleId], references: [id])
   towRoleId           String?
+  towRoles            DiscordRole[] @relation("towRoles")
   taxiRole            DiscordRole?  @relation("taxiRole", fields: [taxiRoleId], references: [id])
   taxiRoleId          String?
+  taxiRoles           DiscordRole[] @relation("taxiRoles")
   adminRole           DiscordRole?  @relation("adminRole", fields: [adminRoleId], references: [id])
   adminRoleId         String?
   whitelistedRoleId   String?
@@ -124,20 +130,24 @@ model DiscordRoles {
 }
 
 model DiscordRole {
-  id                 String         @id @unique
-  name               String
-  discordRoles       DiscordRoles   @relation(fields: [discordRolesId], references: [id])
-  discordRolesId     String
-  leoRoles           DiscordRoles[] @relation("leoRole")
-  leoRolesArr        DiscordRoles[] @relation("leoRoles")
-  emsFdRoles         DiscordRoles[] @relation("emsFdRole")
-  emsFdRolesArr      DiscordRoles[] @relation("emsFdRoles")
-  dispatchRoles      DiscordRoles[] @relation("dispatchRole")
-  towRoles           DiscordRoles[] @relation("towRole")
-  taxiRoles          DiscordRoles[] @relation("taxiRole")
-  leoSupervisorRoles DiscordRoles[] @relation("leoSupervisorRole")
-  adminRoles         DiscordRoles[] @relation("adminRole")
-  whitelistedRoles   DiscordRoles[] @relation("whitelistedRole")
+  id                    String         @id @unique
+  name                  String
+  discordRoles          DiscordRoles   @relation(fields: [discordRolesId], references: [id])
+  discordRolesId        String
+  leoRoles              DiscordRoles[] @relation("leoRole")
+  leoRolesArr           DiscordRoles[] @relation("leoRoles")
+  emsFdRoles            DiscordRoles[] @relation("emsFdRole")
+  emsFdRolesArr         DiscordRoles[] @relation("emsFdRoles")
+  dispatchRoles         DiscordRoles[] @relation("dispatchRole")
+  towRoles              DiscordRoles[] @relation("towRole")
+  taxiRoles             DiscordRoles[] @relation("taxiRole")
+  leoSupervisorRoles    DiscordRoles[] @relation("leoSupervisorRole")
+  adminRoles            DiscordRoles[] @relation("adminRole")
+  whitelistedRoles      DiscordRoles[] @relation("whitelistedRole")
+  dispatchRolesArr      DiscordRoles[] @relation("dispatchRoles")
+  leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
+  taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
+  towRolesArr           DiscordRoles[] @relation("towRoles")
 }
 
 model User {
@@ -241,6 +251,7 @@ model Citizen {
   dateOfDead           DateTime?
   occupation           String?                       @db.Text
   flags                Value[]                       @relation("citizenFlags")
+  customFields         CustomFieldValue[]
   vehicles             RegisteredVehicle[]
   weapons              Weapon[]
   medicalRecords       MedicalRecord[]
@@ -261,6 +272,7 @@ model Citizen {
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
+  DLExam               DLExam[]
 }
 
 model RegisteredVehicle {
@@ -285,24 +297,27 @@ model RegisteredVehicle {
   taxStatus            VehicleTaxStatus?
   reportedStolen       Boolean                  @default(false)
   impounded            Boolean                  @default(false)
-  TruckLog             TruckLog[]
-  ImpoundedVehicle     ImpoundedVehicle[]
-  Business             Business[]               @relation("registeredBusinessVehicles")
+  customFields         CustomFieldValue[]
+
+  TruckLog         TruckLog[]
+  ImpoundedVehicle ImpoundedVehicle[]
+  Business         Business[]         @relation("registeredBusinessVehicles")
 }
 
 model Weapon {
-  id                   String      @id @default(cuid())
-  user                 User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String             @id @default(cuid())
+  user                 User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId               String?
-  citizen              Citizen     @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizen              Citizen            @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId            String
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @default(now()) @updatedAt
-  serialNumber         String      @unique @db.VarChar(255)
-  registrationStatus   Value       @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @default(now()) @updatedAt
+  serialNumber         String             @unique @db.VarChar(255)
+  registrationStatus   Value              @relation("weaponRegistrationStatusToValue", fields: [registrationStatusId], references: [id])
   registrationStatusId String
-  model                WeaponValue @relation("weaponModelToValue", fields: [modelId], references: [id])
+  model                WeaponValue        @relation("weaponModelToValue", fields: [modelId], references: [id])
   modelId              String
+  customFields         CustomFieldValue[]
 }
 
 model MedicalRecord {
@@ -360,6 +375,7 @@ model Value {
   insuranceStatusToValue          RegisteredVehicle[]           @relation("insuranceStatusToValue")
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
   citizenFlags                    Citizen[]                     @relation("citizenFlags")
+  DLExam                          DLExam[]                      @relation("dlExamToLicense")
 }
 
 model PenalCode {
@@ -458,6 +474,7 @@ model DriversLicenseCategoryValue {
   value    Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
   type     DriversLicenseCategoryType
   citizens Citizen[]                  @relation("dlCategoryToDLCategory")
+  DLExam   DLExam[]
 }
 
 model VehicleValue {
@@ -695,6 +712,7 @@ model LeoIncident {
   caseNumber           Int             @default(autoincrement())
   description          String?         @db.Text
   descriptionData      Json?
+  postal               String?
   // when null, it is the dispatcher
   creator              Officer?        @relation(fields: [creatorId], references: [id])
   creatorId            String?
@@ -934,6 +952,57 @@ model TruckLog {
   updatedAt DateTime           @default(now()) @updatedAt
 }
 
+// DL Exams
+model DLExam {
+  id           String                        @id @default(uuid())
+  citizen      Citizen                       @relation(fields: [citizenId], references: [id])
+  citizenId    String
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  license      Value                         @relation("dlExamToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[]
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+}
+
+/// custom fields
+model CustomField {
+  id              String              @id @default(uuid())
+  name            String
+  citizenEditable Boolean             @default(false)
+  category        CustomFieldCategory
+  values          CustomFieldValue[]
+}
+
+model CustomFieldValue {
+  id                 String              @id @default(uuid())
+  value              String?
+  field              CustomField         @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  fieldId            String
+  Citizens           Citizen[]
+  RegisteredVehicles RegisteredVehicle[]
+  Weapons            Weapon[]
+}
+
+enum CustomFieldCategory {
+  CITIZEN
+  WEAPON
+  VEHICLE
+}
+
+enum DLExamPassType {
+  PASSED
+  FAILED
+}
+
+enum DLExamStatus {
+  IN_PROGRESS
+  PASSED
+  FAILED
+}
+
 enum StatusViewMode {
   FULL_ROW_COLOR
   DOT_COLOR
@@ -1085,4 +1154,5 @@ enum Feature {
   ALLOW_REGULAR_LOGIN
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
+  DL_EXAMS
 }

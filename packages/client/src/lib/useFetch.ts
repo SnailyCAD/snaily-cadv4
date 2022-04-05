@@ -19,10 +19,10 @@ type Options<Helpers extends object = object> = AxiosRequestConfig & {
   helpers?: FormikHelpers<Helpers>;
 };
 
-type Return<Data> = {
+interface Return<Data> {
   json: Data;
   error: null | ErrorMessage | (string & {});
-};
+}
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);

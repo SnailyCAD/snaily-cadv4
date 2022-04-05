@@ -1,18 +1,34 @@
 {
   "name": "@snailycad/schemas",
-  "version": "1.0.0-beta.77",
+  "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./dist/*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "tslib": "^2.3.1",
-    "tsup": "^5.12.1",
+    "tsup": "^5.12.2",
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "zod": "^3.14.2"
+    "zod": "^3.14.3"
   },
   "tsup": {
     "entry": [
@@ -23,6 +39,10 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
-    "minify": true
+    "minify": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
   }
 }

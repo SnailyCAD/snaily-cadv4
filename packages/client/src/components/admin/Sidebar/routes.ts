@@ -44,6 +44,10 @@ export const managementRoutes: SidebarRoute[] = [
     permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
     hidden: ({ COURTHOUSE }) => !COURTHOUSE,
   },
+  {
+    type: "CUSTOM_FIELDS",
+    permissions: [Permissions.ManageCustomFields],
+  },
 ];
 
 export const valueRoutes: SidebarRoute[] = [

@@ -15,7 +15,9 @@ type Rank = "ADMIN" | "OWNER" | "USER";
 type UserPicks = "isLeo" | "isDispatch" | "isEmsFd" | "isSupervisor" | "isTaxi" | "isTow";
 type User = Pick<_User, UserPicks> & { rank: Rank };
 
-type Route = { route: string };
+interface Route {
+  route: string;
+}
 export type PermissionRoute = [Method[] | "*", Route, (user: User) => boolean];
 
 export const PERMISSION_ROUTES: PermissionRoute[] = [

@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { CadFeature, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -22,6 +22,10 @@ export class LicensesController {
   ) {
     const data = validateSchema(LICENSE_SCHEMA, body);
     const user = ctx.get("user") as User;
+    const cad = ctx.get("cad") as { features?: CadFeature[] };
+
+    const isDLExamEnabled =
+      cad.features?.some((v) => v.feature === Feature.DL_EXAMS && v.isEnabled) ?? false;
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -39,7 +43,7 @@ export class LicensesController {
         id: citizen.id,
       },
       data: {
-        driversLicenseId: data.driversLicense,
+        driversLicenseId: isDLExamEnabled ? undefined : data.driversLicense,
         pilotLicenseId: data.pilotLicense,
         weaponLicenseId: data.weaponLicense,
         waterLicenseId: data.waterLicense,

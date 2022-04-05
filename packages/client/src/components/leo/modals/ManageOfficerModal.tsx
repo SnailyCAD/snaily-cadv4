@@ -22,8 +22,8 @@ import type { Officer } from "@snailycad/types";
 
 interface Props {
   officer: Officer | null;
-  onCreate?: (officer: Officer) => void;
-  onUpdate?: (old: Officer, newO: Officer) => void;
+  onCreate?(officer: Officer): void;
+  onUpdate?(old: Officer, newO: Officer): void;
   onClose?(): void;
 }
 
@@ -66,6 +66,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute(`/leo/${officer.id}`, {
         method: "PUT",
         data,
+        helpers,
       });
 
       officerId = json?.id;
@@ -77,6 +78,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute("/leo", {
         method: "POST",
         data,
+        helpers,
       });
 
       officerId = json.id;

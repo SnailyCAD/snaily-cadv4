@@ -89,18 +89,16 @@ export function ActiveBolos() {
       </div>
 
       {/* timeout: wait for modal to close */}
-      <>
-        <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 80)} bolo={tempBolo} />
+      <ManageBoloModal onClose={() => setTimeout(() => setTempBolo(null), 80)} bolo={tempBolo} />
 
-        <AlertModal
-          title={t("deleteBolo")}
-          onDeleteClick={handleDeleteBolo}
-          description={t("alert_deleteBolo")}
-          id={ModalIds.AlertDeleteBolo}
-          onClose={() => setTempBolo(null)}
-          state={state}
-        />
-      </>
+      <AlertModal
+        title={t("deleteBolo")}
+        onDeleteClick={handleDeleteBolo}
+        description={t("alert_deleteBolo")}
+        id={ModalIds.AlertDeleteBolo}
+        onClose={() => setTempBolo(null)}
+        state={state}
+      />
     </div>
   );
 }

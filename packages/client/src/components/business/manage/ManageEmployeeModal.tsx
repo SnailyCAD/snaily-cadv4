@@ -17,7 +17,7 @@ import { useValues } from "context/ValuesContext";
 import { EmployeeAsEnum } from "@snailycad/types";
 
 interface Props {
-  onUpdate: (old: FullEmployee, newPost: FullEmployee) => void;
+  onUpdate(old: FullEmployee, newPost: FullEmployee): void;
   onClose?(): void;
   employee: FullEmployee | null;
 }

@@ -10,8 +10,8 @@ import { useLeoState } from "state/leoState";
 interface BoloItemProps {
   idx: number;
   bolo: Bolo;
-  handleEdit: (bolo: Bolo) => void;
-  handleDelete: (bolo: Bolo) => void;
+  handleEdit(bolo: Bolo): void;
+  handleDelete(bolo: Bolo): void;
 }
 
 export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {

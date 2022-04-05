@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/client",
-  "version": "1.0.0-beta.77",
+  "version": "1.0.0-beta.79",
   "scripts": {
     "dev": "rimraf .env && next dev",
     "build": "yarn validate && yarn next-build",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@casper124578/use-socket.io": "4.0.0",
-    "@casper124578/useful": "^1.5.3",
+    "@casper124578/useful": "^1.5.5",
     "@headlessui/react": "^1.5.0",
     "@radix-ui/react-accordion": "^0.1.6",
     "@radix-ui/react-context-menu": "^0.1.6",
@@ -30,19 +30,19 @@
     "@react-aria/interactions": "^3.8.3",
     "@react-aria/label": "^3.2.4",
     "@react-aria/ssr": "^3.1.2",
-    "@snailycad/config": "1.0.0-beta.77",
-    "@snailycad/permissions": "1.0.0-beta.77",
-    "@snailycad/schemas": "1.0.0-beta.77",
-    "@snailycad/types": "1.0.0-beta.77",
-    "@snailycad/utils": "1.0.0-beta.77",
+    "@snailycad/config": "1.0.0-beta.79",
+    "@snailycad/permissions": "1.0.0-beta.79",
+    "@snailycad/schemas": "1.0.0-beta.79",
+    "@snailycad/types": "1.0.0-beta.79",
+    "@snailycad/utils": "1.0.0-beta.79",
     "axios": "^0.26.1",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",
     "hex-color-regex": "^1.1.0",
     "is-hotkey": "^0.2.0",
     "leaflet": "^1.7.1",
-    "next": "^12.1.0",
-    "next-intl": "2.4.1",
+    "next": "^12.1.4",
+    "next-intl": "2.5.0",
     "nookies": "^2.5.2",
     "pretty-bytes": "^6.0.0",
     "react": "^17.0.2",
@@ -63,9 +63,9 @@
     "slate-react": "^0.76.0",
     "socket.io-client": "^4.4.1",
     "sortablejs": "^1.15.0",
-    "type-fest": "^2.12.1",
+    "type-fest": "^2.12.2",
     "uuid": "^8.3.2",
-    "zod": "^3.14.2",
+    "zod": "^3.14.3",
     "zustand": "^3.7.1"
   },
   "devDependencies": {
@@ -78,10 +78,10 @@
     "autoprefixer": "^10.4.4",
     "postcss": "^8.4.12",
     "rimraf": "^3.0.2",
-    "sass": "^1.49.9",
+    "sass": "^1.49.10",
     "tailwindcss": "^3.0.23",
     "typescript": "^4.6.3",
-    "vite": "^2.8.6",
-    "vitest": "^0.7.11"
+    "vite": "^2.9.1",
+    "vitest": "^0.8.1"
   }
 }

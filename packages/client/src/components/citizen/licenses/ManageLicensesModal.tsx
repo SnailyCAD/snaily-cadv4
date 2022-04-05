@@ -27,7 +27,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, DL_EXAMS } = useFeatureEnabled();
 
   const validate = handleValidate(LICENSE_SCHEMA);
   const INITIAL_VALUES = {
@@ -71,40 +71,42 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, values, errors, isValid, handleChange }) => (
           <form onSubmit={handleSubmit}>
-            <FormRow>
-              <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
-                <Select
-                  isClearable={allowRemoval}
-                  values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
-                    (license) => ({
-                      label: license.value,
-                      value: license.id,
-                    }),
-                  )}
-                  value={values.driversLicense}
-                  name="driversLicense"
-                  onChange={handleChange}
-                />
-              </FormField>
+            {DL_EXAMS ? null : (
+              <FormRow>
+                <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
+                  <Select
+                    isClearable={allowRemoval}
+                    values={filterLicenseTypes(license.values, ValueLicenseType.LICENSE).map(
+                      (license) => ({
+                        label: license.value,
+                        value: license.id,
+                      }),
+                    )}
+                    value={values.driversLicense}
+                    name="driversLicense"
+                    onChange={handleChange}
+                  />
+                </FormField>
 
-              <FormField
-                errorMessage={errors.driversLicenseCategory as string}
-                label={t("driversLicenseCategory")}
-              >
-                <Select
-                  isMulti
-                  values={driverslicenseCategory.values
-                    .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
-                    .map((category) => ({
-                      label: category.value.value,
-                      value: category.id,
-                    }))}
-                  value={values.driversLicenseCategory}
-                  name="driversLicenseCategory"
-                  onChange={handleChange}
-                />
-              </FormField>
-            </FormRow>
+                <FormField
+                  errorMessage={errors.driversLicenseCategory as string}
+                  label={t("driversLicenseCategory")}
+                >
+                  <Select
+                    isMulti
+                    values={driverslicenseCategory.values
+                      .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
+                      .map((category) => ({
+                        label: category.value.value,
+                        value: category.id,
+                      }))}
+                    value={values.driversLicenseCategory}
+                    name="driversLicenseCategory"
+                    onChange={handleChange}
+                  />
+                </FormField>
+              </FormRow>
+            )}
 
             <FormRow>
               <FormField errorMessage={errors.pilotLicense} label={t("pilotLicense")}>

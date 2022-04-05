@@ -31,6 +31,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow citizens to create truck logs and track their progress.",
   },
+  DL_EXAMS: {
+    name: "Driver's License Exams",
+    description:
+      "When enabled, this will require citizens to enter a driving licenses exam to get a driver's license.",
+  },
   AOP: {
     name: "Area Of Play",
     // eslint-disable-next-line quotes

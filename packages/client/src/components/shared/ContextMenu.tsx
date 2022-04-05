@@ -30,7 +30,7 @@ export function ContextMenu({ items, canBeOpened = true, asChild, children }: Pr
   }
 
   if (!canBeOpened) {
-    return <>{children}</>;
+    return children as JSX.Element;
   }
 
   return (

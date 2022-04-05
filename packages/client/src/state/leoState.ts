@@ -5,10 +5,10 @@ export type ActiveOfficer = Officer | CombinedLeoUnit;
 
 interface LeoState {
   activeOfficer: ActiveOfficer | null;
-  setActiveOfficer: (officer: ActiveOfficer | null) => void;
+  setActiveOfficer(officer: ActiveOfficer | null): void;
 
   officers: Officer[];
-  setOfficers: (officers: Officer[]) => void;
+  setOfficers(officers: Officer[]): void;
 }
 
 export const useLeoState = create<LeoState>((set) => ({

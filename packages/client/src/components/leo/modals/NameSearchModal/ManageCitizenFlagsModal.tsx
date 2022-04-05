@@ -23,7 +23,7 @@ export function ManageCitizenFlagsModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/leo/citizen-flags/${currentResult.id}`, {
+    const { json } = await execute(`/search/actions/citizen-flags/${currentResult.id}`, {
       method: "PUT",
       data: { flags: values.flags.map((v) => v.value) },
     });

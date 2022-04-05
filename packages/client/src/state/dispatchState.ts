@@ -15,28 +15,28 @@ export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Cal
 
 interface DispatchState {
   calls: Full911Call[];
-  setCalls: (calls: Full911Call[]) => void;
+  setCalls(calls: Full911Call[]): void;
 
   bolos: Bolo[];
-  setBolos: (bolos: Bolo[]) => void;
+  setBolos(bolos: Bolo[]): void;
 
   activeOfficers: (Officer | CombinedLeoUnit)[];
-  setActiveOfficers: (officers: (Officer | CombinedLeoUnit)[]) => void;
+  setActiveOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
 
   activeDeputies: EmsFdDeputy[];
-  setActiveDeputies: (deputies: EmsFdDeputy[]) => void;
+  setActiveDeputies(deputies: EmsFdDeputy[]): void;
 
   allOfficers: Officer[];
-  setAllOfficers: (officers: Officer[]) => void;
+  setAllOfficers(officers: Officer[]): void;
 
   allDeputies: EmsFdDeputy[];
-  setAllDeputies: (deputies: EmsFdDeputy[]) => void;
+  setAllDeputies(deputies: EmsFdDeputy[]): void;
 
   activeDispatchers: ActiveDispatchers[];
-  setActiveDispatchers: (dispatchers: ActiveDispatchers[]) => void;
+  setActiveDispatchers(dispatchers: ActiveDispatchers[]): void;
 
   activeIncidents: FullIncident[];
-  setActiveIncidents: (incidents: FullIncident[]) => void;
+  setActiveIncidents(incidents: FullIncident[]): void;
 }
 
 export const useDispatchState = create<DispatchState>((set) => ({

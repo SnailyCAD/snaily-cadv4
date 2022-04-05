@@ -68,11 +68,19 @@ export function ManagePermissionsModal({ user }: Props) {
     }
   }
 
-  function handleToggleAll(group: typeof groups[number], values: any, setValues: any) {
+  function handleToggleAll(
+    group: typeof groups[number],
+    values: Record<string, any>,
+    setValues: any,
+  ) {
     const shouldSetFalse = group.permissions.every((v) => v === values[v]);
 
     if (shouldSetFalse) {
-      setValues({});
+      const filtered = Object.values(values)
+        .filter((v) => !group.permissions.includes(v))
+        .reduce((ac, cv) => ({ ...ac, [cv]: cv }), {});
+
+      setValues({ ...filtered });
     } else {
       const obj = group.permissions.reduce(
         (ac, cv) => ({
@@ -82,7 +90,7 @@ export function ManagePermissionsModal({ user }: Props) {
         {},
       );
 
-      setValues(obj);
+      setValues({ ...values, ...obj });
     }
   }
 
