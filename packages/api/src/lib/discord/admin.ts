@@ -1,4 +1,5 @@
 import { DiscordRole, Rank, User, WhitelistStatus } from "@prisma/client";
+import { defaultPermissions, hasPermission, Permissions } from "@snailycad/permissions";
 import { RESTGetAPIGuildMemberResult, Routes } from "discord-api-types/v10";
 import { BOT_TOKEN, getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
@@ -12,7 +13,8 @@ type UserProperties =
   | "isTow"
   | "isTaxi"
   | "discordId"
-  | "whitelistStatus";
+  | "whitelistStatus"
+  | "permissions";
 
 export async function updateMemberRoles(
   user: Pick<User, UserProperties>,
@@ -42,12 +44,47 @@ export async function updateMemberRoles(
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
-  const leoRoles = makeRolesArr(discordRoles.leoRoles, user.isLeo);
+  const leoRoles = makeRolesArr(
+    discordRoles.leoRoles,
+    hasPermissionWithFallback({
+      permissionsToCheck: defaultPermissions.defaultLeoPermissions,
+      fallback: user.isLeo,
+      userPermissions: user.permissions,
+    }),
+  );
   const leoSupervisorRoles = makeRolesArr(discordRoles.leoSupervisorRoles, user.isSupervisor);
-  const emsFdRoles = makeRolesArr(discordRoles.emsFdRoles, user.isEmsFd);
-  const dispatchRoles = makeRolesArr(discordRoles.dispatchRoles, user.isDispatch);
-  const towRoles = makeRolesArr(discordRoles.towRoles, user.isTow);
-  const taxiRoles = makeRolesArr(discordRoles.taxiRoles, user.isTaxi);
+  const emsFdRoles = makeRolesArr(
+    discordRoles.emsFdRoles,
+    hasPermissionWithFallback({
+      permissionsToCheck: defaultPermissions.defaultEmsFdPermissions,
+      fallback: user.isEmsFd,
+      userPermissions: user.permissions,
+    }),
+  );
+  const dispatchRoles = makeRolesArr(
+    discordRoles.dispatchRoles,
+    hasPermissionWithFallback({
+      permissionsToCheck: defaultPermissions.defaultDispatchPermissions,
+      fallback: user.isDispatch,
+      userPermissions: user.permissions,
+    }),
+  );
+  const towRoles = makeRolesArr(
+    discordRoles.towRoles,
+    hasPermissionWithFallback({
+      permissionsToCheck: defaultPermissions.defaultTowPermissions,
+      fallback: user.isTow,
+      userPermissions: user.permissions,
+    }),
+  );
+  const taxiRoles = makeRolesArr(
+    discordRoles.taxiRoles,
+    hasPermissionWithFallback({
+      permissionsToCheck: defaultPermissions.defaultTaxiPermissions,
+      fallback: user.isTaxi,
+      userPermissions: user.permissions,
+    }),
+  );
 
   const data = [
     ...leoRoles,
@@ -56,7 +93,16 @@ export async function updateMemberRoles(
     ...dispatchRoles,
     ...towRoles,
     ...taxiRoles,
-    { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
+    {
+      roleId: discordRoles.adminRoleId,
+      method: createMethod(
+        hasPermissionWithFallback({
+          permissionsToCheck: defaultPermissions.allDefaultAdminPermissions,
+          fallback: user.rank === Rank.ADMIN,
+          userPermissions: user.permissions,
+        }),
+      ),
+    },
     {
       roleId: discordRoles.whitelistedRoleId,
       method: createMethod(user.whitelistStatus === WhitelistStatus.ACCEPTED),
@@ -90,4 +136,14 @@ async function addOrRemoveRole(discordId: string, roleId: string | null, method:
 
 function createMethod(truthy: boolean): "put" | "delete" {
   return truthy ? "put" : "delete";
+}
+
+function hasPermissionWithFallback(options: {
+  userPermissions: string[];
+  permissionsToCheck: Permissions[];
+  fallback: boolean;
+}) {
+  if (!options.permissionsToCheck.length) return options.fallback;
+
+  return hasPermission(options.userPermissions, options.permissionsToCheck);
 }
