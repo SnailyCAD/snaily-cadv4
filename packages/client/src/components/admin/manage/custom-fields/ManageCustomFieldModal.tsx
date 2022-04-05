@@ -30,6 +30,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
+  const t = useTranslations("Management");
 
   function handleClose() {
     onClose?.();
@@ -75,14 +76,14 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
   return (
     <Modal
       className="w-[600px]"
-      title={"ToDO"}
+      title={field ? t("editCustomField") : t("createCustomField")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageCustomField)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, handleChange, values, errors }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.name} label="Name">
+            <FormField errorMessage={errors.name} label={common("name")}>
               <Input autoFocus name="name" onChange={handleChange} value={values.name} />
             </FormField>
 
