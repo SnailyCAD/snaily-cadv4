@@ -712,6 +712,7 @@ model LeoIncident {
   caseNumber           Int             @default(autoincrement())
   description          String?         @db.Text
   descriptionData      Json?
+  postal               String?
   // when null, it is the dispatcher
   creator              Officer?        @relation(fields: [creatorId], references: [id])
   creatorId            String?
