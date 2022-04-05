@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 import { expect, test } from "vitest";
 import { getCADVersion } from "../src/version";
 
