@@ -58,6 +58,7 @@ interface Props {
   calls: Full911Call[];
   bolos: Bolo[];
   activeIncidents: FullIncident[];
+  allOfficers: Officer[];
 }
 
 export default function OfficerDashboard({
@@ -66,10 +67,10 @@ export default function OfficerDashboard({
   calls,
   activeOfficer,
   activeIncidents,
+  allOfficers,
 }: Props) {
   const state = useLeoState();
-  const { setCalls, setBolos, setActiveOfficers, activeOfficers, setActiveIncidents } =
-    useDispatchState();
+  const dispatchState = useDispatchState();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
   const { unit, audio, PanicButton } = usePanicButton();
@@ -78,10 +79,11 @@ export default function OfficerDashboard({
   React.useEffect(() => {
     state.setActiveOfficer(activeOfficer);
     state.setOfficers(officers);
-    setActiveIncidents(activeIncidents);
+    dispatchState.setActiveIncidents(activeIncidents);
+    dispatchState.setAllOfficers(allOfficers);
 
-    setCalls(calls);
-    setBolos(bolos);
+    dispatchState.setCalls(calls);
+    dispatchState.setBolos(bolos);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bolos, calls, officers, activeOfficer]);
 
@@ -101,8 +103,8 @@ export default function OfficerDashboard({
         </div>
 
         <StatusesArea
-          setUnits={setActiveOfficers}
-          units={activeOfficers}
+          setUnits={dispatchState.setActiveOfficers}
+          units={dispatchState.activeOfficers}
           activeUnit={state.activeOfficer}
           setActiveUnit={state.setActiveOfficer}
         />
@@ -138,22 +140,29 @@ export default function OfficerDashboard({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ officers, citizens }, activeOfficer, values, calls, bolos, { activeIncidents }] =
-    await requestAll(req, [
-      ["/leo", { officers: [], citizens: [] }],
-      ["/leo/active-officer", null],
-      [
-        "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag",
-        [],
-      ],
-      ["/911-calls", []],
-      ["/bolos", []],
-      ["/dispatch", { activeIncidents: [] }],
-    ]);
+  const [
+    { officers, citizens },
+    activeOfficer,
+    values,
+    calls,
+    bolos,
+    { officers: allOfficers, activeIncidents },
+  ] = await requestAll(req, [
+    ["/leo", { officers: [], citizens: [] }],
+    ["/leo/active-officer", null],
+    [
+      "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag",
+      [],
+    ],
+    ["/911-calls", []],
+    ["/bolos", []],
+    ["/dispatch", { officers: [], activeIncidents: [] }],
+  ]);
 
   return {
     props: {
       session: await getSessionUser(req),
+      allOfficers,
       activeOfficer,
       officers,
       calls,

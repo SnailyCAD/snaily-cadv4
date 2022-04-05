@@ -23,9 +23,16 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
 
+  // allow users to press "Enter + Ctrl" or "Enter + Cmd" to send an event
+  function handleCtrlEnter(event: React.KeyboardEvent<HTMLTextAreaElement>, submitForm: any) {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      submitForm();
+    }
+  }
+
   return (
     <Formik onSubmit={onSubmit} initialValues={{ description: event?.description ?? "" }}>
-      {({ handleChange, values, errors }) => (
+      {({ handleChange, submitForm, values, errors }) => (
         <Form className="absolute bottom-0 w-full">
           <FormField errorMessage={errors.description} label={common("description")}>
             <Textarea
@@ -33,6 +40,7 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
               name="description"
               value={values.description}
               onChange={handleChange}
+              onKeyDown={(e) => handleCtrlEnter(e, submitForm)}
             />
           </FormField>
 

@@ -56,6 +56,7 @@ export function ManageIncidentModal({
   const isLeoIncidents = router.pathname === "/officer/incidents";
   const creator = isDispatch || !incident?.creator ? null : incident.creator;
   const areEventsReadonly = !isDispatch || isLeoIncidents;
+  const areFieldsDisabled = !isDispatch && !isLeoIncidents;
 
   const { state, execute } = useFetch();
   const { allOfficers, activeOfficers } = useDispatchState();
@@ -134,82 +135,92 @@ export function ManageIncidentModal({
       <div className={classNames(incident && "flex flex-col md:flex-row min-h-[450px] gap-3")}>
         <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
           {({ handleChange, setFieldValue, errors, values, isValid }) => (
-            <Form className="w-full">
-              <FormField
-                errorMessage={errors.involvedOfficers as string}
-                label={t("involvedOfficers")}
-              >
-                <Select
-                  isMulti
-                  value={values.involvedOfficers}
-                  name="involvedOfficers"
-                  onChange={handleChange}
-                  values={officersForSelect
-                    .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
-
-                    .map((v) => ({
-                      label: makeLabel(v.id),
-                      value: v.id,
-                    }))}
-                />
-              </FormField>
-
-              <FormRow>
-                <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
-                  <Toggle
-                    toggled={values.firearmsInvolved}
-                    name="firearmsInvolved"
-                    onClick={handleChange}
-                  />
-                </FormField>
-
+            <Form className="w-full flex flex-col justify-between">
+              <div>
                 <FormField
-                  errorMessage={errors.injuriesOrFatalities}
-                  label={t("injuriesOrFatalities")}
-                >
-                  <Toggle
-                    toggled={values.injuriesOrFatalities}
-                    name="injuriesOrFatalities"
-                    onClick={handleChange}
-                  />
-                </FormField>
-
-                <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
-                  <Toggle toggled={values.arrestsMade} name="arrestsMade" onClick={handleChange} />
-                </FormField>
-              </FormRow>
-
-              <FormRow className="mt-1">
-                <FormField
-                  optional
-                  errorMessage={errors.situationCodeId}
-                  label={t("situationCode")}
+                  errorMessage={errors.involvedOfficers as string}
+                  label={t("involvedOfficers")}
                 >
                   <Select
-                    isClearable
-                    values={codes10.values
-                      .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                    disabled={areFieldsDisabled}
+                    isMulti
+                    value={values.involvedOfficers}
+                    name="involvedOfficers"
+                    onChange={handleChange}
+                    values={officersForSelect
+                      .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
                       .map((v) => ({
-                        label: v.value.value,
+                        label: makeLabel(v.id),
                         value: v.id,
                       }))}
-                    onChange={handleChange}
-                    name="situationCodeId"
-                    value={values.situationCodeId}
                   />
                 </FormField>
-
-                <FormField errorMessage={errors.postal} label={t("postal")}>
-                  <Input name="postal" value={values.postal} onChange={handleChange} />
+                <FormRow>
+                  <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      toggled={values.firearmsInvolved}
+                      name="firearmsInvolved"
+                      onClick={handleChange}
+                    />
+                  </FormField>
+                  <FormField
+                    errorMessage={errors.injuriesOrFatalities}
+                    label={t("injuriesOrFatalities")}
+                  >
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      toggled={values.injuriesOrFatalities}
+                      name="injuriesOrFatalities"
+                      onClick={handleChange}
+                    />
+                  </FormField>
+                  <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
+                    <Toggle
+                      disabled={areFieldsDisabled}
+                      toggled={values.arrestsMade}
+                      name="arrestsMade"
+                      onClick={handleChange}
+                    />
+                  </FormField>
+                </FormRow>
+                <FormRow className="mt-1">
+                  <FormField
+                    optional
+                    errorMessage={errors.situationCodeId}
+                    label={t("situationCode")}
+                  >
+                    <Select
+                      disabled={areFieldsDisabled}
+                      isClearable
+                      values={codes10.values
+                        .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                        .map((v) => ({
+                          label: v.value.value,
+                          value: v.id,
+                        }))}
+                      onChange={handleChange}
+                      name="situationCodeId"
+                      value={values.situationCodeId}
+                    />
+                  </FormField>
+                  <FormField errorMessage={errors.postal} label={t("postal")}>
+                    <Input
+                      disabled={areFieldsDisabled}
+                      name="postal"
+                      value={values.postal}
+                      onChange={handleChange}
+                    />
+                  </FormField>
+                </FormRow>
+                <FormField errorMessage={errors.description} label={common("description")}>
+                  <Editor
+                    isReadonly={areFieldsDisabled}
+                    value={values.descriptionData}
+                    onChange={(v) => setFieldValue("descriptionData", v)}
+                  />
                 </FormField>
-              </FormRow>
-
-              <FormField errorMessage={errors.description} label={common("description")}>
-                <Editor
-                  value={values.descriptionData}
-                  onChange={(v) => setFieldValue("descriptionData", v)}
-                />
-              </FormField>
+              </div>
 
               <footer className="flex justify-end mt-5">
                 <Button type="reset" onClick={handleClose} variant="cancel">
@@ -217,7 +228,7 @@ export function ManageIncidentModal({
                 </Button>
                 <Button
                   className="flex items-center"
-                  disabled={!isValid || state === "loading"}
+                  disabled={areFieldsDisabled || !isValid || state === "loading"}
                   type="submit"
                 >
                   {state === "loading" ? <Loader className="mr-2" /> : null}

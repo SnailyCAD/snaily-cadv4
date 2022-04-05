@@ -40,14 +40,13 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getUserOfficers(@Context() ctx: Context) {
+  async getUserOfficers(@Context("user") user: User) {
     const officers = await prisma.officer.findMany({
-      where: {
-        userId: ctx.get("user").id,
-      },
+      where: { userId: user.id },
       include: leoProperties,
     });
 
+    // todo: remove this
     const citizens = await prisma.citizen.findMany({
       select: {
         name: true,

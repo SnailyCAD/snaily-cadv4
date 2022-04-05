@@ -95,34 +95,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-next@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@casper124578/eslint-config-next@npm:4.1.0"
+"@casper124578/eslint-config-next@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@casper124578/eslint-config-next@npm:4.2.0"
   dependencies:
     eslint-config-next: ^12.1.2
   peerDependencies:
-    eslint: ">=7.4.0"
+    eslint: ">=7"
     next: ">=12.1.0"
-  checksum: 77cf5d08d65dcf28f63e37eb7fbe2a27de24602862e1cf6939592e39f5078196338dec0640d1037c9bf19a2f53924d075fa3e8d832b91b9efc481a28b00e3a9d
+  checksum: 6bdcb7ee94679b9628a0d4db97ea58af0f5cf9cededfab25a353d999dbbc48ef2b51aa90c097b435211135eb5702c3fa5548f6aa2283033ccd9f9365b65bed52
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config-react@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@casper124578/eslint-config-react@npm:4.1.0"
+"@casper124578/eslint-config-react@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@casper124578/eslint-config-react@npm:4.2.0"
   dependencies:
     eslint-plugin-jsx-a11y: ^6.5.1
     eslint-plugin-react: ^7.29.4
     eslint-plugin-react-hooks: ^4.4.0
   peerDependencies:
-    eslint: ">=7.4.0"
-  checksum: edc013521f36a78852004b44c217b3913377f7ab148713324b09fdc5bbda1ee9c62e2c136868f92ccde90ddbe94138f8c0d25fbd172aa95a74989b16c1249dea
+    eslint: ">=7"
+  checksum: 4feea1609072383e7693241509ad3d85db5176dac65c275e33474f6578459a766b6e6bad7c652524e12da1bcdbb1f1de2229be8227d26799e3864888c684d663
   languageName: node
   linkType: hard
 
-"@casper124578/eslint-config@npm:4.1.0":
-  version: 4.1.0
-  resolution: "@casper124578/eslint-config@npm:4.1.0"
+"@casper124578/eslint-config@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@casper124578/eslint-config@npm:4.2.0"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^5.17.0
     "@typescript-eslint/parser": ^5.17.0
@@ -130,11 +130,11 @@ __metadata:
     eslint-plugin-json: ^3.1.0
     eslint-plugin-prettier: ^4.0.0
     eslint-plugin-promise: ^6.0.0
-    eslint-plugin-unicorn: 41.0.1
+    eslint-plugin-unicorn: 42.0.0
   peerDependencies:
-    eslint: ">=7.4.0"
+    eslint: ">=7"
     prettier: ">=2.5.0"
-  checksum: f5d1bb452d956bc094ec7bc08ddc664ca502e97a03af86eaaf9192964dc4e75d0e43d4a61fd5af19301512d27a82858a17c0db0dcd6dadeb2b683cab1a91783a
+  checksum: ff9809093e01808d5aa6ecfe53e0fdb5d59538c67f0c1778394fd3680f040288bd70c248d1bb673cb6ddc95a9fcfbc3007338f9a7a5f23bad52abc2395098d9c
   languageName: node
   linkType: hard
 
@@ -3931,9 +3931,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "concurrently@npm:7.0.0"
+"concurrently@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "concurrently@npm:7.1.0"
   dependencies:
     chalk: ^4.1.0
     date-fns: ^2.16.1
@@ -3945,7 +3945,7 @@ __metadata:
     yargs: ^16.2.0
   bin:
     concurrently: dist/bin/concurrently.js
-  checksum: 1be78f24bf814f097adaf2e61a37563eb73f12272bbeda90e3e616a23525f793268e22a3c6aedf34e5bad44459f7c30ee053c617905416ba11ce2bee55f089a5
+  checksum: 723996afc73af7ea914a03726c75b63be6ce83f0825b0bc54de0568ba89490e217ca88523f251fe1e5c30ee2780572dce830b530ef35e435e64c1f94cfd4e4af
   languageName: node
   linkType: hard
 
@@ -5342,9 +5342,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-unicorn@npm:41.0.1":
-  version: 41.0.1
-  resolution: "eslint-plugin-unicorn@npm:41.0.1"
+"eslint-plugin-unicorn@npm:42.0.0":
+  version: 42.0.0
+  resolution: "eslint-plugin-unicorn@npm:42.0.0"
   dependencies:
     "@babel/helper-validator-identifier": ^7.15.7
     ci-info: ^3.3.0
@@ -5362,7 +5362,7 @@ __metadata:
     strip-indent: ^3.0.0
   peerDependencies:
     eslint: ">=8.8.0"
-  checksum: 90c9dd93b57ec2cdd650168364b4e2220e2c72c1ffc8ea43cd1be2dabadc7821ec5077656f44fa4622e284caa39ca497058e1dbe609f530d392bdb2da3d73b70
+  checksum: 03757cbf417d39691fe04048ac9352585162a4dd68c2f26f5bc0956409625c7c4841487f0fa623e0d6dd5ff9cc3e758b74e4d170e3b0a877bbd0114995310058
   languageName: node
   linkType: hard
 
@@ -9420,12 +9420,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.6.1":
-  version: 2.6.1
-  resolution: "prettier@npm:2.6.1"
+"prettier@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "prettier@npm:2.6.2"
   bin:
     prettier: bin-prettier.js
-  checksum: 78be1f8a3ddfad7c3d8a854b6c8941a3bb1ddfca4225c38d778e0fe1029a55368f71b3bbefff82c689015fbb4d391ec44add957f01308ad2725e01a7c1f37cb6
+  checksum: 48d08dde8e9fb1f5bccdd205baa7f192e9fc8bc98f86e1b97d919de804e28c806b0e6cc685e4a88211aa7987fa9668f30baae19580d87ced3ed0f2ec6572106f
   languageName: node
   linkType: hard
 
@@ -10660,17 +10660,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snailycad@workspace:."
   dependencies:
-    "@casper124578/eslint-config": 4.1.0
-    "@casper124578/eslint-config-next": 4.1.0
-    "@casper124578/eslint-config-react": 4.1.0
+    "@casper124578/eslint-config": 4.2.0
+    "@casper124578/eslint-config-next": 4.2.0
+    "@casper124578/eslint-config-react": 4.2.0
     "@typescript-eslint/eslint-plugin": latest
     colorette: 2.0.16
-    concurrently: ^7.0.0
+    concurrently: ^7.1.0
     copy: ^0.3.2
     dotenv: ^16.0.0
     eslint: ^8.12.0
     husky: ^7.0.4
-    prettier: ^2.6.1
+    prettier: ^2.6.2
     pretty-quick: ^3.1.3
     turbo: ^1.1.10
   languageName: unknown
