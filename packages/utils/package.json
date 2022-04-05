@@ -2,12 +2,26 @@
   "name": "@snailycad/utils",
   "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./callsign": "./dist/callsign.js",
-    "./typeguards": "./dist/typeguards.js",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./callsign": {
+      "require": "./dist/callsign.js",
+      "import": "./dist/callsign.mjs"
+    },
+    "./typeguards": {
+      "require": "./dist/typeguards.js",
+      "import": "./dist/typeguards.mjs"
+    },
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist"
+  ],
   "typesVersions": {
     "*": {
       "callsign": [
@@ -42,6 +56,9 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
-    "minify": true
+    "format": [
+      "cjs",
+      "esm"
+    ]
   }
 }
