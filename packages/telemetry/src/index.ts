@@ -5,8 +5,8 @@ import { execSync } from "node:child_process";
 import { get, set } from "./cache";
 import { getCADVersion } from "@snailycad/utils/version";
 
-const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === "true";
-const REPORT_URL = "https://snailycad-telementry.caspertheghost.workers.dev/";
+// const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === "true";
+const REPORT_URL = "https://snailycad-telemetry.caspertheghost.workers.dev/";
 
 interface ErrorReport {
   name: string;
@@ -14,8 +14,8 @@ interface ErrorReport {
   stack?: string;
 }
 
-export async function report(errorReport: ErrorReport) {
-  if (!TELEMETRY_ENABLED) return;
+export async function sendErrorReport(errorReport: ErrorReport) {
+  // if (!TELEMETRY_ENABLED) return;
 
   const [yarn, node, npm, cadVersion] = await Promise.all([
     getBinaryVersions("yarn"),
@@ -31,8 +31,8 @@ export async function report(errorReport: ErrorReport) {
     cadVersion,
     platform: os.platform(),
     os: os.platform(),
-    stack: errorReport.stack ?? null,
-    message: errorReport.message || null,
+    stack: `\`\`\`${errorReport.stack || null}\`\`\``,
+    message: `\`\`\`${errorReport.message || null}\`\`\``,
     name: errorReport.name || "Unknown Error",
   };
 

@@ -18,6 +18,7 @@ import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { IsEnabled } from "middlewares/IsEnabled";
+import { sendErrorReport } from "@snailycad/telemetry";
 
 const rootDir = __dirname;
 
@@ -88,7 +89,11 @@ export class ErrorFilter implements ExceptionFilterMethods {
       catch: true,
     });
 
-    // TODO: report error here
+    sendErrorReport({
+      name: error.name,
+      message: error.message,
+      stack: `${JSON.stringify(error.errors, null, 4)} \n\n\n ${JSON.stringify(error, null, 4)}`,
+    });
 
     response
       .setHeaders(headers)
