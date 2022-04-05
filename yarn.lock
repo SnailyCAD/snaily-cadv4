@@ -1386,7 +1386,7 @@ __metadata:
     "@tsed/common": ^6.107.5
     "@tsed/core": ^6.107.5
     "@tsed/di": ^6.107.5
-    "@tsed/exceptions": ^6.107.5
+    "@tsed/exceptions": ^6.110.1
     "@tsed/json-mapper": ^6.107.5
     "@tsed/platform-express": ^6.107.5
     "@tsed/schema": ^6.107.5
@@ -1870,7 +1870,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tsed/exceptions@npm:6.110.1, @tsed/exceptions@npm:^6.107.5":
+"@tsed/exceptions@npm:6.110.1, @tsed/exceptions@npm:^6.110.1":
   version: 6.110.1
   resolution: "@tsed/exceptions@npm:6.110.1"
   dependencies:
