@@ -3,6 +3,7 @@
   "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
   "scripts": {
+    "copy-env": "node ../../scripts/copy-env.mjs --telemetry",
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },

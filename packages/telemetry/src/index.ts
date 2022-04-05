@@ -5,7 +5,7 @@ import { execSync } from "node:child_process";
 import { get, set } from "./cache";
 import { getCADVersion } from "@snailycad/utils/version";
 
-// const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === "true";
+const TELEMETRY_ENABLED = process.env.TELEMETRY_ENABLED === "true";
 const REPORT_URL = "https://snailycad-telemetry.caspertheghost.workers.dev/";
 
 interface ErrorReport {
@@ -15,7 +15,7 @@ interface ErrorReport {
 }
 
 export async function sendErrorReport(errorReport: ErrorReport) {
-  // if (!TELEMETRY_ENABLED) return;
+  if (!TELEMETRY_ENABLED) return;
 
   const [yarn, node, npm, cadVersion] = await Promise.all([
     getBinaryVersions("yarn"),
