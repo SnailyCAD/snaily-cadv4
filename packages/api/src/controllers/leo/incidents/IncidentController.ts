@@ -88,6 +88,7 @@ export class IncidentController {
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
         situationCodeId: data.situationCodeId ?? null,
+        postal: data.postal ?? null,
       },
     });
 
@@ -158,6 +159,7 @@ export class IncidentController {
         injuriesOrFatalities: data.injuriesOrFatalities,
         descriptionData: data.descriptionData,
         isActive: data.isActive ?? false,
+        postal: data.postal ?? null,
         situationCodeId: data.situationCodeId ?? null,
       },
     });
