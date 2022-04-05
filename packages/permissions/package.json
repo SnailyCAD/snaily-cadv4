@@ -2,6 +2,22 @@
   "name": "@snailycad/permissions",
   "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./permissions": {
+      "require": "./dist/permissions.js",
+      "import": "./dist/permissions.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -26,12 +42,11 @@
     "bundle": false,
     "platform": "node",
     "target": "node16",
-    "silent": true
-  },
-  "exports": {
-    ".": "./dist/index.js",
-    "./permissions": "./dist/permissions.js",
-    "./package.json": "./package.json"
+    "silent": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
   },
   "typesVersions": {
     "*": {

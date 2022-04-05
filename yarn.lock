@@ -1537,7 +1537,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.0.0-beta.79, @snailycad/types@workspace:packages/types":
+"@snailycad/types@npm:1.0.0-beta.79":
+  version: 1.0.0-beta.79
+  resolution: "@snailycad/types@npm:1.0.0-beta.79"
+  dependencies:
+    type-fest: ^2.12.2
+    zod: ^3.14.3
+  checksum: 053951a512a799f076e89fe680993279aaebd321bddc62d5858600eea4deed839336f6fe5eebbdf0df78e67f870f31deb842e2316a523644cc6e8c29ab34cbf8
+  languageName: node
+  linkType: hard
+
+"@snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:

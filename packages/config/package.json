@@ -2,6 +2,18 @@
   "name": "@snailycad/config",
   "version": "1.0.0-beta.79",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
@@ -25,6 +37,10 @@
     "bundle": false,
     "platform": "node",
     "target": "node16",
-    "silent": true
+    "silent": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
   }
 }
