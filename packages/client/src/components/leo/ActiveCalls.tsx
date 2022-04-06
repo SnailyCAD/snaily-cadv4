@@ -3,7 +3,6 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
-import { useAuth } from "context/AuthContext";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import type { AssignedUnit, Call911 } from "@snailycad/types";
@@ -27,6 +26,8 @@ import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { isUnitCombined } from "@snailycad/utils";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -34,15 +35,16 @@ const DescriptionModal = dynamic(
 
 function ActiveCallsInner() {
   const { hasActiveDispatchers } = useActiveDispatchers();
+
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
+  const { hasPermissions } = usePermission();
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { user } = useAuth();
   const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
+
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
@@ -52,6 +54,11 @@ function ActiveCallsInner() {
   const { setShowFilters, showFilters, search } = useCallsFilters();
   const handleFilter = useActiveCallsFilters();
 
+  const hasDispatchPermissions = hasPermissions(
+    defaultPermissions.defaultDispatchPermissions,
+    (u) => u.isDispatch,
+  );
+  const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const unit =
     router.pathname === "/officer"
       ? activeOfficer
