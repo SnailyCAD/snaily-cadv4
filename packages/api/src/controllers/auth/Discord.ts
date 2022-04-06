@@ -195,11 +195,10 @@ export class DiscordAuth {
   @Description("Remove Discord OAuth2 from from authenticated user")
   async removeDiscordAuth(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features: CadFeature[] },
+    @Context("cad") cad: cad & { features?: CadFeature[] },
   ) {
-    const regularAuthEnabled = cad.features.some(
-      (v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled,
-    );
+    const regularAuthEnabled =
+      cad.features?.some((v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled) ?? true;
     if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginDisabled");
     }

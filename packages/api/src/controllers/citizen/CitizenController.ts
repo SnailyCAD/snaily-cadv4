@@ -96,11 +96,12 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    const cad = ctx.get("cad") as cad & { features: CadFeature[] };
+    const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
 
-    const allowDeletion = cad.features.some(
-      (v) => v.feature === Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN && v.isEnabled,
-    );
+    const allowDeletion =
+      cad.features?.some(
+        (v) => v.feature === Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN && v.isEnabled,
+      ) ?? true;
 
     if (!allowDeletion) {
       throw new Forbidden("onlyAdminsCanDeleteCitizens");
@@ -128,7 +129,7 @@ export class CitizenController {
 
   @Post("/")
   async createCitizen(
-    @Context("cad") cad: cad & { features: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
   ) {
@@ -148,9 +149,9 @@ export class CitizenController {
       }
     }
 
-    const allowDuplicateCitizenNames = features.some(
-      (v) => v.feature === Feature.ALLOW_DUPLICATE_CITIZEN_NAMES && v.isEnabled,
-    );
+    const allowDuplicateCitizenNames =
+      features?.some((v) => v.feature === Feature.ALLOW_DUPLICATE_CITIZEN_NAMES && v.isEnabled) ??
+      true;
 
     if (!allowDuplicateCitizenNames) {
       const existing = await prisma.citizen.findFirst({
