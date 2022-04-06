@@ -9,6 +9,7 @@ import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citize
 import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
+import { manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -39,6 +40,8 @@ export class ImportCitizensController {
             weaponLicenseId: data.weaponLicenseId ?? null,
             driversLicenseId: data.driversLicenseId ?? null,
             pilotLicenseId: data.pilotLicenseId ?? null,
+            postal: data.postal ?? null,
+            phoneNumber: data.phoneNumber ?? null,
           },
           include: { gender: true, ethnicity: true },
         });
@@ -49,6 +52,16 @@ export class ImportCitizensController {
 
         if (data.weapons) {
           await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
+        }
+
+        if (data.flags) {
+          const disconnectConnectArr = manyToManyHelper([], data.flags);
+
+          await prisma.$transaction(
+            disconnectConnectArr.map((v) =>
+              prisma.citizen.update({ where: { id: citizen.id }, data: { flags: v } }),
+            ),
+          );
         }
 
         const licenseData = {

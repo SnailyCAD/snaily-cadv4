@@ -21,6 +21,9 @@ export const IMPORT_CITIZENS_SCHEMA = z.object({
   pilotLicenseCategoryIds: z.array(z.string()).nullable().optional(),
   waterLicenseCategoryIds: z.array(z.string()).nullable().optional(),
   firearmLicenseCategoryIds: z.array(z.string()).nullable().optional(),
+  flags: z.array(z.string()).nullable().optional(),
+  postal: z.string().nullable().optional(),
+  phoneNumber: z.string().nullable().optional(),
   vehicles: z
     .array(VEHICLE_SCHEMA.omit({ ownerId: true }))
     .optional()
