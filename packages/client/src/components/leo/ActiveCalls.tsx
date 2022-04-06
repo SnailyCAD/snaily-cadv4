@@ -130,17 +130,41 @@ function ActiveCallsInner() {
   }
 
   async function handleAssignToCall(call: Full911Call) {
-    await execute(`/911-calls/assign/${call.id}`, {
+    const { json } = await execute(`/911-calls/assign/${call.id}`, {
       method: "POST",
       data: { unit: unit?.id },
     });
+
+    if (json.id) {
+      const callsMapped = calls.map((call) => {
+        if (call.id === json.id) {
+          return { ...call, ...json };
+        }
+
+        return call;
+      });
+
+      setCalls(callsMapped);
+    }
   }
 
   async function handleUnassignFromCall(call: Full911Call) {
-    await execute(`/911-calls/unassign/${call.id}`, {
+    const { json } = await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
       data: { unit: unit?.id },
     });
+
+    if (json.id) {
+      const callsMapped = calls.map((call) => {
+        if (call.id === json.id) {
+          return { ...call, ...json };
+        }
+
+        return call;
+      });
+
+      setCalls(callsMapped);
+    }
   }
 
   if (!CALLS_911) {
