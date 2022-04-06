@@ -11,7 +11,7 @@ import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser, userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { updateMemberRolesLogin } from "lib/discord/auth";
-import { getCADVersion } from "src/main";
+import { getCADVersion } from "@snailycad/utils/version";
 import { allPermissions } from "@snailycad/permissions";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
