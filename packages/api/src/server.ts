@@ -43,7 +43,7 @@ const rootDir = __dirname;
   middlewares: [
     cookieParser(),
     compress(),
-    json(),
+    json({ limit: "500kb" }),
     cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
     IsEnabled,
   ],
