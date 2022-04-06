@@ -298,8 +298,8 @@ export function VehicleSearchModal() {
                 onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
                 category={CustomFieldCategory.VEHICLE}
                 url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
-                allCustomFields={currentResult.allCustomFields}
-                customFields={currentResult.customFields}
+                allCustomFields={currentResult.allCustomFields ?? []}
+                customFields={currentResult.customFields ?? []}
               />
             ) : null}
           </Form>
