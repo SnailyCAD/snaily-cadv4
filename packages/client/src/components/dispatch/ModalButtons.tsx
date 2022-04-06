@@ -55,7 +55,7 @@ export function DispatchModalButtons() {
   const { execute } = useFetch();
   const { signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
-  const { activeDispatchers, hasActiveDispatchers } = useActiveDispatchers();
+  const { activeDispatchers, hasActiveDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
 
   const isActive = activeDispatchers.some((v) => v.userId === user?.id);
@@ -63,10 +63,18 @@ export function DispatchModalButtons() {
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
 
-    await execute("/dispatch/dispatchers-state", {
+    const { json } = await execute("/dispatch/dispatchers-state", {
       method: "POST",
       data: { value: newState },
     });
+
+    if (json.dispatcher && newState) {
+      setActiveDispatchers([...activeDispatchers, json.dispatcher]);
+    } else {
+      setActiveDispatchers(activeDispatchers.filter((v) => v.userId !== user?.id));
+    }
+
+    console.log({ json });
   }
 
   async function handleSignal100() {

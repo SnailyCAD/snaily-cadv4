@@ -17,7 +17,6 @@ export function useActiveDispatchers() {
 
     if (json && "activeDispatchers" in json) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
-      dispatchState.setActiveDispatchers(json.activeDispatchers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [execute, dispatchState.setActiveDispatchers]);
@@ -35,5 +34,6 @@ export function useActiveDispatchers() {
     activeDispatchers: dispatchState.activeDispatchers,
     state,
     hasActiveDispatchers: ACTIVE_DISPATCHERS ? dispatchState.activeDispatchers.length >= 1 : true,
+    setActiveDispatchers: dispatchState.setActiveDispatchers,
   };
 }

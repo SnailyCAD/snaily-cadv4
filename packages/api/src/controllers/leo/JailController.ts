@@ -77,11 +77,11 @@ export class LeoController {
     }
 
     if (!citizen.arrested) {
-      throw new ExtendedBadRequest({ releasedBy: "citizenNotArrested" });
+      throw new ExtendedBadRequest({ releasedById: "citizenNotArrested" });
     }
 
     const type = data.type as ReleaseType;
-    const releasedBy = data.releasedBy;
+    const releasedById = data.releasedById;
     const recordId = data.recordId;
 
     const record = await prisma.record.findFirst({
@@ -98,7 +98,7 @@ export class LeoController {
     const release = await prisma.recordRelease.create({
       data: {
         type,
-        citizenId: type === ReleaseType.BAIL_POSTED ? releasedBy : null,
+        citizenId: type === ReleaseType.BAIL_POSTED ? releasedById : null,
       },
     });
 

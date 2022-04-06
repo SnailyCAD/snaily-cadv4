@@ -67,10 +67,10 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context() ctx: Context) {
+  async getCitizens(@Context("user") user: User) {
     const citizens = await prisma.citizen.findMany({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
     });
 
@@ -78,11 +78,11 @@ export class CitizenController {
   }
 
   @Get("/:id")
-  async getCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
+  async getCitizen(@Context("user") user: User, @PathParams("id") citizenId: string) {
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       include: citizenInclude,
     });
