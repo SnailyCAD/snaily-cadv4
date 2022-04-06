@@ -12,6 +12,7 @@ export const defaultLeoPermissions = [
   Permissions.ManageCallHistory,
   Permissions.ViewDLExams,
   Permissions.ManageDLExams,
+  Permissions.ManageDMV,
 ];
 
 export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
