@@ -10,7 +10,6 @@ import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
-import { useAuth } from "context/AuthContext";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
 import { useListener } from "@casper124578/use-socket.io";
@@ -26,6 +25,8 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { toastMessage } from "lib/toastMessage";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
 
 interface Props {
   call: Full911Call | null;
@@ -40,11 +41,16 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { state, execute } = useFetch();
   const { setCalls, calls } = useDispatchState();
   const router = useRouter();
-  const { user } = useAuth();
-  const isDispatch = router.pathname.startsWith("/dispatch") && user?.isDispatch;
+  const { hasPermissions } = usePermission();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
   const { department, division, codes10 } = useValues();
+
+  const hasDispatchPermissions = hasPermissions(
+    defaultPermissions.defaultDispatchPermissions,
+    (u) => u.isDispatch,
+  );
+  const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
   const isCitizen = router.pathname.includes("/citizen");
 
