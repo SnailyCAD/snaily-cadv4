@@ -148,7 +148,7 @@ export class DispatchController {
         where: { id: dispatcher.id },
       });
 
-      return null;
+      dispatcher = null;
     }
 
     this.socket.emitActiveDispatchers();
