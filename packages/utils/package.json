@@ -17,6 +17,10 @@
       "require": "./dist/typeguards.js",
       "import": "./dist/typeguards.mjs"
     },
+    "./version": {
+      "require": "./dist/version.js",
+      "import": "./dist/version.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -29,6 +33,9 @@
       ],
       "typeguards": [
         "dist/typeguards.d.ts"
+      ],
+      "version": [
+        "dist/version.d.ts"
       ]
     }
   },

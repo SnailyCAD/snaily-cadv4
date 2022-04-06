@@ -35,14 +35,16 @@ function addPortToClientPackageJson() {
 const [, , ...args] = process.argv;
 const copyToClient = hasArg("--client");
 const copyToApi = hasArg("--api");
+const copyToTelemetry = hasArg("--telemetry");
 
 let ENV_FILE_PATH = join(process.cwd(), ".env");
 
 if (
   ENV_FILE_PATH.endsWith("/packages/client/.env") ||
-  ENV_FILE_PATH.endsWith("/packages/api/.env")
+  ENV_FILE_PATH.endsWith("/packages/api/.env") ||
+  ENV_FILE_PATH.endsWith("/packages/telemetry/.env")
 ) {
-  ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api)\//, "");
+  ENV_FILE_PATH = ENV_FILE_PATH.replace(/packages\/(client|api|telemetry)\//, "");
 }
 
 /**
@@ -58,13 +60,15 @@ async function copyEnv(distDir) {
 
       const isClient = distDir.endsWith("client");
       const isApi = distDir.endsWith("api");
-      const type = isClient ? "client" : isApi ? "api" : "Unknown";
+      const type = isClient ? "client" : isApi ? "api" : null;
 
       if (isClient) {
         addPortToClientPackageJson();
       }
 
-      console.log(`✅ copied .env — ${type}`);
+      if (type) {
+        console.log(`✅ copied .env — ${type}`);
+      }
     });
   } catch (e) {
     console.log({ e });
@@ -79,6 +83,11 @@ if (copyToClient) {
 if (copyToApi) {
   const API_PACKAGE_PATH = join(process.cwd(), "packages", "api");
   copyEnv(API_PACKAGE_PATH);
+}
+
+if (copyToTelemetry) {
+  const TL_PACKAGE_PATH = join(process.cwd(), "packages", "telemetry");
+  copyEnv(TL_PACKAGE_PATH);
 }
 
 function hasArg(arg) {

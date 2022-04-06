@@ -1,13 +1,24 @@
 import "@tsed/swagger";
 import "@tsed/socketio";
+import "@tsed/platform-express";
 import { join } from "node:path";
 import process from "node:process";
-import { Configuration, Inject, PlatformApplication, Response } from "@tsed/common";
+import {
+  Configuration,
+  Inject,
+  PlatformApplication,
+  PlatformContext,
+  Response,
+  ResponseErrorObject,
+} from "@tsed/common";
+import { Catch, ExceptionFilterMethods } from "@tsed/platform-exceptions";
+import type { Exception } from "@tsed/exceptions";
 import { json } from "express";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { IsEnabled } from "middlewares/IsEnabled";
+import { sendErrorReport } from "@snailycad/telemetry";
 
 const rootDir = __dirname;
 
@@ -29,6 +40,13 @@ const rootDir = __dirname;
       },
     ],
   },
+  middlewares: [
+    cookieParser(),
+    compress(),
+    json(),
+    cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
+    IsEnabled,
+  ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {
     cors: {
@@ -45,15 +63,6 @@ export class Server {
   settings!: Configuration;
 
   public $beforeRoutesInit() {
-    this.app
-      .use(cookieParser())
-      .use(compress())
-      .use(json())
-      .use(
-        cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
-      )
-      .use(IsEnabled);
-
     if (process.env.EXPERIMENTAL_SECURE_CONTEXT) {
       const app = this.app.callback();
       app.set("trust proxy", 1);
@@ -65,5 +74,54 @@ export class Server {
         .status(200)
         .send("<html><head><title>SnailyCAD API</title></head><body>200 Success</body></html>");
     });
+  }
+}
+
+@Catch(Error)
+export class ErrorFilter implements ExceptionFilterMethods {
+  catch(exception: Exception, ctx: PlatformContext) {
+    const { response, logger } = ctx;
+    const error = this.mapError(exception);
+    const headers = this.getHeaders(exception);
+
+    logger.error({
+      error,
+      catch: true,
+    });
+
+    sendErrorReport({
+      name: error.name,
+      message: error.message,
+      stack: `${JSON.stringify(error.errors, null, 4)} \n\n\n ${JSON.stringify(error, null, 4)}`,
+    });
+
+    response
+      .setHeaders(headers)
+      .status(error.status || 500)
+      .body(error);
+  }
+
+  mapError(error: any) {
+    return {
+      name: error.origin?.name || error.name,
+      message: error.message,
+      status: error.status || 500,
+      errors: this.getErrors(error),
+    };
+  }
+
+  protected getErrors(error: any) {
+    return [error, error.origin].filter(Boolean).reduce((errs, { errors }: ResponseErrorObject) => {
+      return [...errs, ...(errors || [])];
+    }, []);
+  }
+
+  protected getHeaders(error: any) {
+    return [error, error.origin].filter(Boolean).reduce((obj, { headers }: ResponseErrorObject) => {
+      return {
+        ...obj,
+        ...(headers || {}),
+      };
+    }, {});
   }
 }
