@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/telemetry",
-  "version": "1.0.0-beta.79",
+  "version": "1.0.0-beta.80",
   "main": "./dist/index.js",
   "scripts": {
     "copy-env": "node ../../scripts/copy-env.mjs --telemetry",
@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@snailycad/utils": "1.0.0-beta.79",
+    "@snailycad/utils": "1.0.0-beta.80",
     "axios": "^0.26.1"
   },
   "devDependencies": {
