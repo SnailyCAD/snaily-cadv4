@@ -2,6 +2,8 @@
   "name": "@snailycad/telemetry",
   "version": "1.0.0-beta.81",
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "copy-env": "node ../../scripts/copy-env.mjs --telemetry",
     "build": "tsup",
@@ -26,6 +28,10 @@
     "platform": "node",
     "target": "node16",
     "silent": true,
-    "minify": true
+    "minify": true,
+    "format": [
+      "cjs",
+      "esm"
+    ]
   }
 }
