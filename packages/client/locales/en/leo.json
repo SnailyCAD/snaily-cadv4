@@ -58,7 +58,7 @@
     "arrestReports": "Arrest Reports",
     "nameNotFound": "Could not find a citizen with that name",
     "createWarrant": "Create Warrant",
-    "citizenDead": "WARNING: This citizen dead on {date}",
+    "citizenDead": "WARNING: This citizen died on {date}",
     "hasWarrants": "WARNING: This citizen has active warrants!",
     "rank": "Rank",
     "officerLogs": "Officer Logs",
