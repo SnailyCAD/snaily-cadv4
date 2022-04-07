@@ -52,7 +52,7 @@ export function AllUnitsTab({ units }: Props) {
 
   return (
     <TabsContent value="allUnits">
-      {hasManagePermissions ? (
+      {hasManagePermissions && units.length >= 1 ? (
         <Button
           disabled={tableSelect.selectedRows.length <= 0}
           onClick={setSelectedUnitsOffDuty}
@@ -62,67 +62,75 @@ export function AllUnitsTab({ units }: Props) {
         </Button>
       ) : null}
 
-      <Table
-        disabledColumnId={["dropdown"]}
-        data={units.map((unit) => {
-          const departmentStatus = isUnitOfficer(unit) ? unit.whitelistStatus?.status : null;
-          const departmentStatusFormatted = departmentStatus ? departmentStatus.toLowerCase() : "—";
+      {units.length <= 0 ? (
+        <p>{t("Management.noUnits")}</p>
+      ) : (
+        <Table
+          disabledColumnId={["dropdown"]}
+          data={units.map((unit) => {
+            const departmentStatus = isUnitOfficer(unit) ? unit.whitelistStatus?.status : null;
+            const departmentStatusFormatted = departmentStatus
+              ? departmentStatus.toLowerCase()
+              : "—";
 
-          return {
-            dropdown: (
-              <input
-                checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
-                onChange={() => tableSelect.handleCheckboxChange(unit)}
-                type="checkbox"
-              />
-            ),
-            unit: LABELS[unit.type],
-            name: makeUnitName(unit),
-            callsign: generateCallsign(unit),
-            badgeNumber: unit.badgeNumber,
-            department: formatOfficerDepartment(unit) ?? common("none"),
-            departmentStatus: <Status state={departmentStatus}>{departmentStatusFormatted}</Status>,
-            division: formatUnitDivisions(unit),
-            rank: unit.rank?.value ?? common("none"),
-            status: unit.status?.value.value ?? common("none"),
-            suspended: common(yesOrNoText(unit.suspended)),
-            actions: (
-              <Link href={`/admin/manage/units/${unit.id}`}>
-                <a>
-                  <Button small variant="success">
-                    {common("manage")}
-                  </Button>
-                </a>
-              </Link>
-            ),
-          };
-        })}
-        columns={[
-          hasManagePermissions
-            ? {
-                Header: (
-                  <IndeterminateCheckbox
-                    onChange={tableSelect.handleAllCheckboxes}
-                    checked={tableSelect.isTopCheckboxChecked}
-                    indeterminate={tableSelect.isIntermediate}
-                  />
-                ),
-                accessor: "dropdown",
-              }
-            : null,
-          { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
-          { Header: common("name"), accessor: "name" },
-          { Header: t("Leo.callsign"), accessor: "callsign" },
-          { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
-          { Header: t("Leo.department"), accessor: "department" },
-          { Header: t("Leo.division"), accessor: "division" },
-          { Header: t("Leo.rank"), accessor: "rank" },
-          { Header: t("Leo.status"), accessor: "status" },
-          { Header: t("Leo.suspended"), accessor: "suspended" },
-          { Header: t("Leo.status"), accessor: "departmentStatus" },
-          hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
-        ]}
-      />
+            return {
+              dropdown: (
+                <input
+                  checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
+                  onChange={() => tableSelect.handleCheckboxChange(unit)}
+                  type="checkbox"
+                />
+              ),
+              unit: LABELS[unit.type],
+              name: makeUnitName(unit),
+              callsign: generateCallsign(unit),
+              badgeNumber: unit.badgeNumber,
+              department: formatOfficerDepartment(unit) ?? common("none"),
+              departmentStatus: (
+                <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
+              ),
+              division: formatUnitDivisions(unit),
+              rank: unit.rank?.value ?? common("none"),
+              status: unit.status?.value.value ?? common("none"),
+              suspended: common(yesOrNoText(unit.suspended)),
+              actions: (
+                <Link href={`/admin/manage/units/${unit.id}`}>
+                  <a>
+                    <Button small variant="success">
+                      {common("manage")}
+                    </Button>
+                  </a>
+                </Link>
+              ),
+            };
+          })}
+          columns={[
+            hasManagePermissions
+              ? {
+                  Header: (
+                    <IndeterminateCheckbox
+                      onChange={tableSelect.handleAllCheckboxes}
+                      checked={tableSelect.isTopCheckboxChecked}
+                      indeterminate={tableSelect.isIntermediate}
+                    />
+                  ),
+                  accessor: "dropdown",
+                }
+              : null,
+            { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
+            { Header: common("name"), accessor: "name" },
+            { Header: t("Leo.callsign"), accessor: "callsign" },
+            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            { Header: t("Leo.department"), accessor: "department" },
+            { Header: t("Leo.division"), accessor: "division" },
+            { Header: t("Leo.rank"), accessor: "rank" },
+            { Header: t("Leo.status"), accessor: "status" },
+            { Header: t("Leo.suspended"), accessor: "suspended" },
+            { Header: t("Leo.status"), accessor: "departmentStatus" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+          ]}
+        />
+      )}
     </TabsContent>
   );
 }
