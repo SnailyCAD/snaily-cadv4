@@ -19,6 +19,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { IsEnabled } from "middlewares/IsEnabled";
 import { sendErrorReport } from "@snailycad/telemetry";
+import { checkForUpdates } from "utils/checkForUpdates";
 
 const rootDir = __dirname;
 
@@ -74,6 +75,10 @@ export class Server {
         .status(200)
         .send("<html><head><title>SnailyCAD API</title></head><body>200 Success</body></html>");
     });
+  }
+
+  public $afterInit() {
+    checkForUpdates();
   }
 }
 
