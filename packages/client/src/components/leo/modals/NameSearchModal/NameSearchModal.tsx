@@ -457,8 +457,8 @@ export function NameSearchModal() {
                 <ManageCustomFieldsModal
                   category={CustomFieldCategory.CITIZEN}
                   url={`/search/actions/custom-fields/citizen/${currentResult.id}`}
-                  allCustomFields={currentResult.allCustomFields}
-                  customFields={currentResult.customFields}
+                  allCustomFields={currentResult.allCustomFields ?? []}
+                  customFields={currentResult.customFields ?? []}
                   onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
                 />
                 <ManageLicensesModal

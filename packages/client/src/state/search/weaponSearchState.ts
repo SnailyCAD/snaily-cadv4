@@ -11,8 +11,8 @@ import create from "zustand";
 export interface WeaponSearchResult extends Weapon {
   citizen: Citizen;
   registrationStatus: Value<ValueType.LICENSE>;
-  allCustomFields: CustomField[];
-  customFields: CustomFieldValue[];
+  allCustomFields?: CustomField[];
+  customFields?: CustomFieldValue[];
 }
 
 interface WeaponSearchState {

@@ -136,8 +136,8 @@ export function WeaponSearchModal() {
         <ManageCustomFieldsModal
           category={CustomFieldCategory.WEAPON}
           url={`/search/actions/custom-fields/weapon/${currentResult.id}`}
-          allCustomFields={currentResult.allCustomFields}
-          customFields={currentResult.customFields}
+          allCustomFields={currentResult.allCustomFields ?? []}
+          customFields={currentResult.customFields ?? []}
           onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
         />
       ) : null}

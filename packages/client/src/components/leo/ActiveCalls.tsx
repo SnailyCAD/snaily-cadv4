@@ -5,7 +5,7 @@ import { Button } from "components/Button";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import type { AssignedUnit, Call911 } from "@snailycad/types";
+import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -65,6 +65,8 @@ function ActiveCallsInner() {
       : router.pathname === "/ems-fd"
       ? activeDeputy
       : null;
+
+  const isUnitActive = unit?.status && unit.status.shouldDo !== ShouldDoType.SET_OFF_DUTY;
 
   const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit?.id === unit?.id);
@@ -222,7 +224,7 @@ function ActiveCallsInner() {
                       </span>
                     ) : (
                       <Button
-                        disabled={isDispatch ? false : !unit}
+                        disabled={isDispatch ? false : !isUnitActive}
                         small
                         onClick={() => handleViewDescription(call)}
                       >
@@ -236,7 +238,7 @@ function ActiveCallsInner() {
                   actions: (
                     <>
                       <Button
-                        disabled={isDispatch ? !hasActiveDispatchers : !unit}
+                        disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
                         small
                         variant="success"
                         onClick={() => handleManageClick(call)}
@@ -247,7 +249,7 @@ function ActiveCallsInner() {
                       {isDispatch ? null : isUnitAssigned ? (
                         <Button
                           className="ml-2"
-                          disabled={!unit}
+                          disabled={!isUnitActive}
                           small
                           onClick={() => handleUnassignFromCall(call)}
                         >
@@ -256,7 +258,7 @@ function ActiveCallsInner() {
                       ) : (
                         <Button
                           className="ml-2"
-                          disabled={!unit}
+                          disabled={!isUnitActive}
                           small
                           onClick={() => handleAssignToCall(call)}
                         >
@@ -266,7 +268,7 @@ function ActiveCallsInner() {
 
                       {TOW ? (
                         <Button
-                          disabled={!hasActiveDispatchers || (!isDispatch && !unit)}
+                          disabled={!hasActiveDispatchers || (!isDispatch && !isUnitActive)}
                           small
                           className="ml-2"
                           onClick={() => handleCallTow(call)}

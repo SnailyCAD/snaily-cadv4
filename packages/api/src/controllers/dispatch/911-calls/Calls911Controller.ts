@@ -266,8 +266,8 @@ export class Calls911Controller {
 
   @Delete("/:id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
