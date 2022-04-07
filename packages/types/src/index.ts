@@ -247,6 +247,7 @@ export interface RegisteredVehicle {
   reportedStolen: boolean;
   impounded: boolean;
   flags?: Value<ValueType.VEHICLE_FLAG>[];
+  dmvStatus: WhitelistStatus | null;
 }
 
 /**
@@ -994,6 +995,7 @@ export enum Feature {
   RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
   DL_EXAMS = "DL_EXAMS",
+  DMV = "DMV",
 }
 
 export enum Rank {

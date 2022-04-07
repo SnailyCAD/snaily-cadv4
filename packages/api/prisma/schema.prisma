@@ -298,6 +298,7 @@ model RegisteredVehicle {
   reportedStolen       Boolean                  @default(false)
   impounded            Boolean                  @default(false)
   customFields         CustomFieldValue[]
+  dmvStatus            WhitelistStatus?
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
@@ -1155,4 +1156,5 @@ enum Feature {
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
   DL_EXAMS
+  DMV
 }

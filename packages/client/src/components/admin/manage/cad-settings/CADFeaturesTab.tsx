@@ -128,6 +128,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When disabled, this will only allow administrators to delete citizens. Users who created a citizen will not be able to delete them themselves.",
   },
+  DMV: {
+    name: "Department of Motor Vehicles (DMV)",
+    description:
+      "When enabled, vehicles must first be approved by the Department of Motor Vehicles within the CAD.",
+  },
 };
 
 export function CADFeaturesTab() {

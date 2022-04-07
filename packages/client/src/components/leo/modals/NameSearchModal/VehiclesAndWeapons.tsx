@@ -9,6 +9,7 @@ import { useModal } from "context/ModalContext";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 import { useWeaponSearch } from "state/search/weaponSearchState";
+import { Status } from "components/shared/Status";
 
 interface Props {
   vehicles: RegisteredVehicle[];
@@ -18,7 +19,7 @@ interface Props {
 export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
   const t = useTranslations();
   const common = useTranslations("Common");
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, DMV } = useFeatureEnabled();
   const { currentResult } = useNameSearch();
   const { openModal } = useModal();
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
@@ -63,6 +64,9 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
               vinNumber: vehicle.vinNumber,
+              dmvStatus: (
+                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
             }))}
             columns={[
@@ -71,6 +75,7 @@ export function VehiclesAndWeaponsSection({ vehicles, weapons }: Props) {
               { Header: t("Vehicles.color"), accessor: "color" },
               { Header: t("Vehicles.registrationStatus"), accessor: "registrationStatus" },
               { Header: t("Vehicles.vinNumber"), accessor: "vinNumber" },
+              DMV ? { Header: t("Vehicles.dmvStatus"), accessor: "dmvStatus" } : null,
               { Header: common("createdAt"), accessor: "createdAt" },
             ]}
           />

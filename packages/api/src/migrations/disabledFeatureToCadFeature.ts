@@ -6,6 +6,7 @@ const FEATURES: Feature[] = Object.values(Feature);
 const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DL_EXAMS: { isEnabled: false },
+  DMV: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {

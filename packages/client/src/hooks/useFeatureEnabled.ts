@@ -5,6 +5,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
   DL_EXAMS: { isEnabled: false },
+  DMV: { isEnabled: false },
 };
 
 export function useFeatureEnabled() {
