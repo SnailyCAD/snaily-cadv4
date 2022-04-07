@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { RegisteredVehicle } from "@snailycad/types";
+import { RegisteredVehicle, WhitelistStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
@@ -53,7 +53,7 @@ export default function Dmv({ data }: Props) {
       <h1 className="mb-3 text-3xl font-semibold">{t("dmv")}</h1>
 
       {pendingVehicles.length <= 0 ? (
-        <p className="mt-5">{t("noVehiclesInDmv")}</p>
+        <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (
         <Table
           defaultSort={{ columnId: "createdAt", descending: true }}
@@ -74,7 +74,7 @@ export default function Dmv({ data }: Props) {
                 <>
                   <Button
                     onClick={() => handleAcceptOrDecline(vehicle.id, "ACCEPT")}
-                    disabled={state === "loading"}
+                    disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="success"
                     small
                   >
@@ -82,7 +82,7 @@ export default function Dmv({ data }: Props) {
                   </Button>
                   <Button
                     onClick={() => handleAcceptOrDecline(vehicle.id, "DECLINE")}
-                    disabled={state === "loading"}
+                    disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="danger"
                     className="ml-2"
                     small
