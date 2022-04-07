@@ -18,8 +18,10 @@ interface Props {
   data: RegisteredVehicle[];
 }
 
-export default function Dmv({ data: pendingVehicles }: Props) {
+export default function Dmv({ data }: Props) {
+  const [pendingVehicles, setPendingVehicles] = React.useState(data);
   const t = useTranslations("Leo");
+  const vT = useTranslations("Vehicles");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
 
@@ -30,7 +32,11 @@ export default function Dmv({ data: pendingVehicles }: Props) {
     });
 
     if (json) {
-      console.log({ json });
+      const copy = [...pendingVehicles];
+      const idx = copy.findIndex((v) => v.id === id);
+      copy[idx] = json;
+
+      setPendingVehicles(copy);
     }
   }
 
@@ -88,13 +94,13 @@ export default function Dmv({ data: pendingVehicles }: Props) {
             };
           })}
           columns={[
-            { Header: t("plate"), accessor: "plate" },
-            { Header: t("model"), accessor: "model" },
-            { Header: t("color"), accessor: "color" },
-            { Header: t("registrationStatus"), accessor: "registrationStatus" },
-            { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
-            { Header: t("vinNumber"), accessor: "vinNumber" },
-            { Header: t("dmvStatus"), accessor: "dmvStatus" },
+            { Header: vT("plate"), accessor: "plate" },
+            { Header: vT("model"), accessor: "model" },
+            { Header: vT("color"), accessor: "color" },
+            { Header: vT("registrationStatus"), accessor: "registrationStatus" },
+            { Header: vT("insuranceStatus"), accessor: "insuranceStatus" },
+            { Header: vT("vinNumber"), accessor: "vinNumber" },
+            { Header: vT("dmvStatus"), accessor: "dmvStatus" },
             { Header: common("createdAt"), accessor: "createdAt" },
             { Header: common("actions"), accessor: "actions" },
           ]}
@@ -112,7 +118,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req),
       data: dmvData,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "citizen", "common"], locale)),
       },
     },
   };
