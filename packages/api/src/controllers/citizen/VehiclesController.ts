@@ -5,6 +5,7 @@ import {
   Feature,
   VehicleInspectionStatus,
   VehicleTaxStatus,
+  WhitelistStatus,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
@@ -57,6 +58,9 @@ export class VehiclesController {
     const isCustomEnabled = cad?.features.some(
       (v) => v.feature === Feature.CUSTOM_TEXTFIELD_VALUES && v.isEnabled,
     );
+
+    const isDmvEnabled =
+      cad?.features.some((v) => v.feature === Feature.DMV && v.isEnabled) ?? false;
     let modelId = data.model;
 
     if (isCustomEnabled) {
@@ -87,6 +91,7 @@ export class VehiclesController {
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+        dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
       include: {
         model: { include: { value: true } },

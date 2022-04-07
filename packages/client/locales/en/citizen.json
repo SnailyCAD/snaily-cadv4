@@ -66,6 +66,7 @@
     "failed": "Failed",
     "vehicleImpounded": "This vehicle is impounded",
     "successVehicleRegistered": "Successfully registered a vehicle with plate: {plate}",
+    "dmvStatus": "DMV Status",
     "alert_deleteVehicle": "Are you sure you want to delete this vehicle? This action cannot be undone."
   },
   "Weapons": {
