@@ -167,6 +167,8 @@
     "license": "License",
     "otherFields": "Other Fields",
     "manageCustomFields": "Manage other fields",
+    "dmv": "Department of Motor Vehicles",
+    "noVehiclesInDmv": "There are no vehicles in the dmv.",
     "alert_deleteDLExam": "Are you sure you want to delete this driver's license exam? This action cannot be undone.",
     "vehicleImpoundLocation": "The provided vehicle ({plate}) will be impounded at {impoundLocation}. You will be able to view this vehicle on the impound lot page.",
     "alert_endIncident": "Are you sure you want to end this incident. It can still be viewed by officers.",

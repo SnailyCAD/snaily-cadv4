@@ -48,7 +48,12 @@ export function OfficerDropdown() {
     {
       name: t("callHistory"),
       href: "/officer/call-history",
-      show: hasPermissions([Permissions.ViewCallHistory], true),
+      show: hasPermissions([Permissions.ViewCallHistory, Permissions.ManageCallHistory], true),
+    },
+    {
+      name: t("dmv"),
+      href: "/officer/dmv",
+      show: hasPermissions([Permissions.ManageDMV], true),
     },
     {
       name: t("manageUnits"),
