@@ -113,5 +113,11 @@
     "ADD": "Add vehicle flag",
     "DELETE": "Delete vehicle flag",
     "EDIT": "Edit vehicle flag"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Manage Civilian flags",
+    "ADD": "Add civilian flag",
+    "DELETE": "Delete civilian flag",
+    "EDIT": "Edit civilian flag"
   }
 }

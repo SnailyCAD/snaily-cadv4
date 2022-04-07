@@ -45,7 +45,10 @@
     "hide": "Hide",
     "show": "Show",
     "filters": "Filters",
-    "openInSearch": "Open in search"
+    "openInSearch": "Open in search",
+    "goBack": "Go back",
+    "success": "Success",
+    "currency": "£"
   },
   "Nav": {
     "citizen": "Civilian",
@@ -75,7 +78,9 @@
     "register": "Register",
     "callHistory": "Call History",
     "citizenLogs": "Civilian Logs",
-    "courthouse": "Magistrates"
+    "courthouse": "Magistrates",
+    "dlExams": "DVLA Tests",
+    "dmv": "Driver and Vehicle Licensing Agency"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -87,7 +92,7 @@
     "userAlreadyExists": "A user with that username already exists.",
     "notFound": "The requested item was not found.",
     "plateAlreadyInUse": "That registration is already being used on a vehicle.",
-    "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/jpg are supported",
+    "invalidImageType": "Only types image/png, image/jpeg, image/jpg and image/gif are supported",
     "userBanned": "This account is banned from this CAD.",
     "userDeleted": "This account has been deleted from this CAD.",
     "alreadyInThisBusiness": "You are already an employee at this business.",
@@ -121,6 +126,7 @@
     "maxDepartmentsReachedPerUser": "You've reached the max set of units with this force. Please choose a different force or try again later.",
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
     "Invalid Permissions": "You don't have permissions to access this API Route.",
-    "alreadyPendingNameChange": "This civilian already has a pending name change request."
+    "alreadyPendingNameChange": "This civilian already has a pending name change request.",
+    "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name."
   }
 }
