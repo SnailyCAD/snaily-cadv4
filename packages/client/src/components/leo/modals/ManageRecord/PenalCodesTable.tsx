@@ -11,6 +11,8 @@ interface Props {
 export function PenalCodesTable({ penalCodes }: Props) {
   const { values } = useFormikContext<any>();
   const t = useTranslations("Leo");
+  const common = useTranslations("Common");
+  const currency = common("currency");
 
   if (penalCodes.length <= 0) {
     return <p className="mb-3">{t("noPenalCodesSelected")}</p>;
@@ -49,7 +51,8 @@ export function PenalCodesTable({ penalCodes }: Props) {
         </span>
 
         <span className="ml-2">
-          <span className="font-semibold select-none">{t("fines")}: </span> ${totalFines || 0}
+          <span className="font-semibold select-none">{t("fines")}: </span> {currency}
+          {totalFines || 0}
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
@@ -58,7 +61,8 @@ export function PenalCodesTable({ penalCodes }: Props) {
         </span>
         <span>{"/"}</span>
         <span className="ml-2">
-          <span className="font-semibold select-none">{t("bail")}: </span> ${totalBail || 0}
+          <span className="font-semibold select-none">{t("bail")}: </span> {currency}
+          {totalBail || 0}
         </span>
       </p>
     </div>
