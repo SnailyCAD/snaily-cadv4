@@ -27,6 +27,8 @@ import { isUnitCombined } from "@snailycad/utils";
 import { toastMessage } from "lib/toastMessage";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
+import { useLeoState } from "state/leoState";
+import { useEmsFdState } from "state/emsFdState";
 
 interface Props {
   call: Full911Call | null;
@@ -45,14 +47,22 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
   const { department, division, codes10 } = useValues();
+  const { activeOfficer } = useLeoState();
+  const { activeDeputy } = useEmsFdState();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
     (u) => u.isDispatch,
   );
+
+  const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
-  const isDisabled = !router.pathname.includes("/citizen") && !isDispatch;
   const isCitizen = router.pathname.includes("/citizen");
+  const isEventsDisabled = isCitizen;
+  const isDisabled = !isCitizen && !isDispatch;
+  const isEndDisabled = isDispatch
+    ? false
+    : !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id);
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
@@ -149,7 +159,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   }
 
   async function handleDelete() {
-    if (!call || isDisabled) return;
+    if (!call || isEndDisabled) return;
 
     const { json } = await execute(`/911-calls/${call.id}`, {
       method: "DELETE",
@@ -369,7 +379,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
                     onClick={() => openModal(ModalIds.AlertEnd911Call)}
                     type="button"
                     variant="danger"
-                    disabled={isDisabled}
+                    disabled={isEndDisabled}
                   >
                     {t("endCall")}
                   </Button>
@@ -394,7 +404,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
           )}
         </Formik>
 
-        {call ? <CallEventsArea disabled={isDisabled} call={call} /> : null}
+        {call ? <CallEventsArea disabled={isEventsDisabled} call={call} /> : null}
       </div>
 
       {call ? (
