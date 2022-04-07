@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
@@ -17,7 +18,7 @@ import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { Call911Event, EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CREATE_911_CALL } from "@snailycad/schemas";
@@ -58,7 +59,6 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const isCitizen = router.pathname.includes("/citizen");
-  const isEventsDisabled = isCitizen;
   const isDisabled = !isCitizen && !isDispatch;
   const isEndDisabled = isDispatch
     ? false
@@ -67,10 +67,9 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
-  useListener(
-    SocketEvents.AddCallEvent,
-    (event) => {
-      if (!call) return;
+  const handleAddEvent = React.useCallback(
+    (event: Call911Event | null) => {
+      if (!event?.id || !call) return;
 
       setCall?.({
         ...call,
@@ -87,15 +86,17 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
         }),
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [call, calls, setCalls],
   );
 
-  useListener(
-    SocketEvents.UpdateCallEvent,
-    (event) => {
-      if (!call) return;
+  const handleUpdateEvent = React.useCallback(
+    (event: Call911Event | null) => {
+      if (!event?.id || !call) return;
 
       function update(c: Full911Call) {
+        if (!event?.id || !call) return c;
+
         if (c.id === call?.id) {
           return {
             ...c,
@@ -127,7 +128,24 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
         }),
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [call, calls, setCalls],
+  );
+
+  useListener(
+    SocketEvents.AddCallEvent,
+    (e) => {
+      handleAddEvent(e);
+    },
+    [handleAddEvent],
+  );
+
+  useListener(
+    SocketEvents.UpdateCallEvent,
+    (e) => {
+      handleUpdateEvent(e);
+    },
+    [handleUpdateEvent],
   );
 
   useListener(
@@ -404,7 +422,14 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
           )}
         </Formik>
 
-        {call ? <CallEventsArea disabled={isEventsDisabled} call={call} /> : null}
+        {call ? (
+          <CallEventsArea
+            onCreate={handleAddEvent}
+            onUpdate={handleUpdateEvent}
+            disabled={isEndDisabled}
+            call={call}
+          />
+        ) : null}
       </div>
 
       {call ? (

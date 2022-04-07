@@ -20,8 +20,8 @@ export class Calls911Controller {
 
   @Post("/:callId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(CREATE_911_CALL_EVENT, body);
@@ -48,8 +48,8 @@ export class Calls911Controller {
 
   @Put("/:callId/:eventId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async updateCallEvent(
     @PathParams("callId") callId: string,
@@ -93,8 +93,8 @@ export class Calls911Controller {
 
   @Delete("/:callId/:eventId")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async deleteCallEvent(
     @PathParams("callId") callId: string,
