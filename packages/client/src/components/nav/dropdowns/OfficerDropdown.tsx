@@ -12,7 +12,7 @@ export function OfficerDropdown() {
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
   const { hasPermissions } = usePermission();
-  const { DL_EXAMS } = useFeatureEnabled();
+  const { DL_EXAMS, DMV } = useFeatureEnabled();
 
   const items = [
     {
@@ -53,7 +53,7 @@ export function OfficerDropdown() {
     {
       name: t("dmv"),
       href: "/officer/dmv",
-      show: hasPermissions([Permissions.ManageDMV], true),
+      show: DMV && hasPermissions([Permissions.ManageDMV], true),
     },
     {
       name: t("manageUnits"),
