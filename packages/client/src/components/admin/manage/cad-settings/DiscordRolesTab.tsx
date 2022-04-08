@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
 import { Formik, useFormikContext } from "formik";
@@ -41,7 +41,13 @@ export function DiscordRolesTab() {
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
-    adminRolePermissions: [],
+    adminRolePermissions: [] as SelectValue[],
+    leoRolePermissions: [] as SelectValue[],
+    leoSupervisorRolePermissions: [] as SelectValue[],
+    emsFdRolePermissions: [] as SelectValue[],
+    dispatchRolePermissions: [] as SelectValue[],
+    towRolePermissions: [] as SelectValue[],
+    taxiRolePermissions: [] as SelectValue[],
   };
 
   async function refreshRoles() {
@@ -63,6 +69,13 @@ export function DiscordRolesTab() {
         towRoles: values.towRoles.map((v) => v.value),
         taxiRoles: values.taxiRoles.map((v) => v.value),
         leoSupervisorRoles: values.leoSupervisorRoles.map((v) => v.value),
+        adminRolePermissions: values.adminRolePermissions.map((v) => v.value),
+        leoRolePermissions: values.leoRolePermissions.map((v) => v.value),
+        leoSupervisorRolePermissions: values.leoSupervisorRolePermissions.map((v) => v.value),
+        emsFdRolePermissions: values.emsFdRolePermissions.map((v) => v.value),
+        dispatchRolePermissions: values.dispatchRolePermissions.map((v) => v.value),
+        towRolePermissions: values.towRolePermissions.map((v) => v.value),
+        taxiRolePermissions: values.taxiRolePermissions.map((v) => v.value),
       },
     });
 
