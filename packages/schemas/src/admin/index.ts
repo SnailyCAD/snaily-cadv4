@@ -42,6 +42,14 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   taxiRoles: z.array(z.any()).nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
+
+  adminRolePermissions: z.array(z.string()).nullable().optional(),
+  leoRolePermissions: z.array(z.string()).nullable().optional(),
+  leoSupervisorRolePermissions: z.array(z.string()).nullable().optional(),
+  emsFdRolePermissions: z.array(z.string()).nullable().optional(),
+  dispatchRolePermissions: z.array(z.string()).nullable().optional(),
+  towRolePermissions: z.array(z.string()).nullable().optional(),
+  taxiRolePermissions: z.array(z.string()).nullable().optional(),
 });
 
 export const DISCORD_WEBHOOKS_SCHEMA = z.object({

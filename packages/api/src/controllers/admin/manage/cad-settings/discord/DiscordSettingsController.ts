@@ -76,7 +76,18 @@ export class DiscordSettingsController {
 
     const rolesBody = Array.isArray(roles) ? roles : [];
 
-    Object.values(data).map((roleId) => {
+    const rolesToCheck = {
+      leoRoles: data.leoRoles,
+      emsFdRoles: data.emsFdRoles,
+      leoSupervisorRoles: data.leoSupervisorRoles,
+      dispatchRoles: data.dispatchRoles,
+      towRoles: data.towRoles,
+      taxiRoles: data.taxiRoles,
+      adminRoleId: data.adminRoleId,
+      whitelistedRoleId: data.whitelistedRoleId,
+    };
+
+    Object.values(rolesToCheck).map((roleId) => {
       if (Array.isArray(roleId) && roleId.length <= 0) return;
 
       if (roleId && !this.doesRoleExist(rolesBody, roleId)) {
@@ -88,6 +99,13 @@ export class DiscordSettingsController {
       guildId,
       adminRoleId: data.adminRoleId ?? null,
       whitelistedRoleId: data.whitelistedRoleId ?? null,
+      adminRolePermissions: data.adminRolePermissions ?? [],
+      leoRolePermissions: data.leoRolePermissions ?? [],
+      leoSupervisorRolePermissions: data.leoSupervisorRolePermissions ?? [],
+      emsFdRolePermissions: data.emsFdRolePermissions ?? [],
+      dispatchRolePermissions: data.dispatchRolePermissions ?? [],
+      towRolePermissions: data.towRolePermissions ?? [],
+      taxiRolePermissions: data.taxiRolePermissions ?? [],
     };
 
     const discordRoles = await prisma.discordRoles.upsert({
