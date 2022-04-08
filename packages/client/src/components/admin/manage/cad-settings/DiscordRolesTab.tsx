@@ -3,12 +3,15 @@ import { Button } from "components/Button";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { FormField } from "components/form/FormField";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
+import { formatPermissionName } from "../users/ManagePermissionsModal";
 
 function makeRoleValues(roles?: DiscordRole[]) {
   if (!roles) return [];
@@ -38,6 +41,7 @@ export function DiscordRolesTab() {
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
+    adminRolePermissions: [],
   };
 
   async function refreshRoles() {
@@ -110,6 +114,11 @@ export function DiscordRolesTab() {
                 name="adminRoleId"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="adminRolePermissions"
+                permissions={defaultPermissions.allDefaultAdminPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -127,6 +136,11 @@ export function DiscordRolesTab() {
                 value={values.leoRoles}
                 name="leoRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="leoRolePermissions"
+                permissions={defaultPermissions.defaultLeoPermissions}
               />
             </SettingsFormField>
 
@@ -146,6 +160,11 @@ export function DiscordRolesTab() {
                 name="leoSupervisorRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="leoSupervisorRolePermissions"
+                permissions={defaultPermissions.defaultLeoPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -163,6 +182,11 @@ export function DiscordRolesTab() {
                 value={values.emsFdRoles}
                 name="emsFdRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="emsFdRolePermissions"
+                permissions={defaultPermissions.defaultEmsFdPermissions}
               />
             </SettingsFormField>
 
@@ -182,6 +206,11 @@ export function DiscordRolesTab() {
                 name="dispatchRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="dispatchRolePermissions"
+                permissions={defaultPermissions.defaultDispatchPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -200,6 +229,11 @@ export function DiscordRolesTab() {
                 name="towRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="towRolePermissions"
+                permissions={defaultPermissions.defaultTowPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -217,6 +251,11 @@ export function DiscordRolesTab() {
                 value={values.taxiRoles}
                 name="taxiRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="taxiRolePermissions"
+                permissions={defaultPermissions.defaultTaxiPermissions}
               />
             </SettingsFormField>
 
@@ -245,5 +284,31 @@ export function DiscordRolesTab() {
         )}
       </Formik>
     </TabsContent>
+  );
+}
+
+function SelectPermissionsField({
+  name,
+  permissions,
+}: {
+  name: string;
+  permissions: Permissions[];
+}) {
+  const { values, errors, handleChange } = useFormikContext<any>();
+
+  return (
+    <FormField errorMessage={errors[name] as string} className="mt-2" label="Permissions">
+      <Select
+        closeMenuOnSelect={false}
+        name={name}
+        onChange={handleChange}
+        isMulti
+        value={values[name]}
+        values={permissions.map((v) => ({
+          label: formatPermissionName(v),
+          value: v,
+        }))}
+      />
+    </FormField>
   );
 }
