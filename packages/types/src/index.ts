@@ -114,6 +114,14 @@ export interface DiscordRoles {
   whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
+
+  adminRolePermissions: Permissions[];
+  leoRolePermissions: Permissions[];
+  leoSupervisorRolePermissions: Permissions[];
+  emsFdRolePermissions: Permissions[];
+  dispatchRolePermissions: Permissions[];
+  towRolePermissions: Permissions[];
+  taxiRolePermissions: Permissions[];
 }
 
 /**

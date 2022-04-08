@@ -2,12 +2,13 @@ import { DiscordRole, Rank, User, WhitelistStatus } from "@prisma/client";
 import { Routes, type RESTGetAPIGuildMemberResult } from "discord-api-types/v10";
 import { getRest, GUILD_ID } from "lib/discord/config";
 import { prisma } from "lib/prisma";
+import { merge } from "utils/manyToMany";
 
 /**
  * fetch the roles from the wanting to authenticate user and append the respective permissions to the user
  */
 export async function updateMemberRolesLogin(
-  user: Pick<User, "id" | "rank" | "discordId" | "whitelistStatus">,
+  user: Pick<User, "id" | "rank" | "discordId" | "whitelistStatus" | "permissions">,
   discordRolesId: string | null,
 ) {
   if (!GUILD_ID || !discordRolesId || !user.discordId) return;
@@ -43,7 +44,39 @@ export async function updateMemberRolesLogin(
   const isTaxi = hasRoleArr(discordRoles.taxiRoles, discordMember.roles);
   const isSupervisor = hasRoleArr(discordRoles.leoSupervisorRoles, discordMember.roles);
 
+  const permissions = {
+    isLeo: discordRoles.leoRolePermissions,
+    isSupervisor: discordRoles.leoSupervisorRolePermissions,
+    isEmsFd: discordRoles.emsFdRolePermissions,
+    isDispatch: discordRoles.dispatchRolePermissions,
+    isTow: discordRoles.towRolePermissions,
+    isTaxi: discordRoles.taxiRolePermissions,
+  };
+
+  const userTruthyArr = [
+    ["isLeo", isLeo],
+    ["isSupervisor", isSupervisor],
+    ["isEmsFd", isEmsFd],
+    ["isDispatch", isDispatch],
+    ["isTow", isTow],
+    ["isTaxi", isTaxi],
+    ["isSupervisor", isSupervisor],
+  ] as const;
+
+  const permissionsToGive = [];
+  for (const [name, isTruthy] of userTruthyArr) {
+    const perms = permissions[name];
+    if (isTruthy) {
+      permissionsToGive.push(...perms);
+    } else {
+      user.permissions = user.permissions.filter((v) => perms.includes(v));
+    }
+  }
+
+  const mergedPermissions = merge(user.permissions, permissionsToGive);
+
   const updateData = {
+    permissions: user.rank === Rank.OWNER ? [] : mergedPermissions,
     isLeo: discordRoles.leoRoles.length <= 0 ? undefined : isLeo,
     isEmsFd: discordRoles.emsFdRoles.length <= 0 ? undefined : isEmsFd,
     isSupervisor: discordRoles.leoSupervisorRoles.length <= 0 ? undefined : isSupervisor,

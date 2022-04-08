@@ -125,6 +125,14 @@ model DiscordRoles {
   whitelistedRoleId   String?
   whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
 
+  adminRolePermissions         String[]
+  leoRolePermissions           String[]
+  leoSupervisorRolePermissions String[]
+  emsFdRolePermissions         String[]
+  dispatchRolePermissions      String[]
+  towRolePermissions           String[]
+  taxiRolePermissions          String[]
+
   roles DiscordRole[]
   cad   cad[]
 }
