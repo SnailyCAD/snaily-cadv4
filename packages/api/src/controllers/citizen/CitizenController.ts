@@ -17,6 +17,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
+import { isFeatureEnabled } from "lib/cad";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -98,10 +99,11 @@ export class CitizenController {
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
     const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
 
-    const allowDeletion =
-      cad.features?.some(
-        (v) => v.feature === Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN && v.isEnabled,
-      ) ?? true;
+    const allowDeletion = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN,
+      defaultReturn: true,
+    });
 
     if (!allowDeletion) {
       throw new Forbidden("onlyAdminsCanDeleteCitizens");
@@ -135,7 +137,6 @@ export class CitizenController {
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
-    const features = cad.features;
     const miscSettings = cad.miscCadSettings;
     if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
@@ -149,9 +150,11 @@ export class CitizenController {
       }
     }
 
-    const allowDuplicateCitizenNames =
-      features?.some((v) => v.feature === Feature.ALLOW_DUPLICATE_CITIZEN_NAMES && v.isEnabled) ??
-      true;
+    const allowDuplicateCitizenNames = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_DUPLICATE_CITIZEN_NAMES,
+      defaultReturn: true,
+    });
 
     if (!allowDuplicateCitizenNames) {
       const existing = await prisma.citizen.findFirst({

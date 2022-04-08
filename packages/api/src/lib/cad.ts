@@ -1,4 +1,4 @@
-import type { AutoSetUserProperties, cad } from "@prisma/client";
+import type { AutoSetUserProperties, cad, CadFeature, Feature } from "@prisma/client";
 import { prisma } from "./prisma";
 
 interface Options {
@@ -47,4 +47,17 @@ export async function findOrCreateCAD({ ownerId }: Options) {
   }
 
   return cad as cad & { autoSetUserProperties: AutoSetUserProperties | null };
+}
+
+interface EnabledOptions {
+  features?: CadFeature[];
+  feature: Feature;
+  defaultReturn: boolean;
+}
+
+export function isFeatureEnabled({ features, feature, defaultReturn }: EnabledOptions) {
+  const feat = features?.find((v) => v.feature === feature && v.isEnabled);
+  if (!feat) return defaultReturn;
+
+  return !!feat;
 }
