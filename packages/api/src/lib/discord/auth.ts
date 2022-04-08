@@ -43,6 +43,7 @@ export async function updateMemberRolesLogin(
   const isTow = hasRoleArr(discordRoles.towRoles, discordMember.roles);
   const isTaxi = hasRoleArr(discordRoles.taxiRoles, discordMember.roles);
   const isSupervisor = hasRoleArr(discordRoles.leoSupervisorRoles, discordMember.roles);
+  const isAdmin = hasRole(discordRoles.adminRoleId, discordMember.roles);
 
   const permissions = {
     isLeo: discordRoles.leoRolePermissions,
@@ -51,6 +52,7 @@ export async function updateMemberRolesLogin(
     isDispatch: discordRoles.dispatchRolePermissions,
     isTow: discordRoles.towRolePermissions,
     isTaxi: discordRoles.taxiRolePermissions,
+    isAdmin: discordRoles.adminRolePermissions,
   };
 
   const userTruthyArr = [
@@ -61,6 +63,7 @@ export async function updateMemberRolesLogin(
     ["isTow", isTow],
     ["isTaxi", isTaxi],
     ["isSupervisor", isSupervisor],
+    ["isAdmin", isAdmin],
   ] as const;
 
   const permissionsToGive = [];
