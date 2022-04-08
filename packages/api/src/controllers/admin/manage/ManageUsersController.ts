@@ -75,7 +75,11 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserPermissionsById(
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+    @Context("cad") cad: { discordRolesId: string | null },
+  ) {
     const data = validateSchema(PERMISSIONS_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -96,6 +100,10 @@ export class ManageUsersController {
       data: { permissions },
       select: userProperties,
     });
+
+    if (updated.discordId) {
+      await updateMemberRoles(updated, cad.discordRolesId);
+    }
 
     return updated;
   }
