@@ -9,7 +9,7 @@ import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { LeoIncident, Officer } from "@snailycad/types";
+import type { EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -26,6 +26,7 @@ import { isUnitCombined } from "@snailycad/utils";
 interface Props {
   incidents: LeoIncident[];
   officers: Officer[];
+  deputies: EmsFdDeputy[];
   activeOfficer: Officer | null;
 }
 
@@ -41,14 +42,19 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-export default function LeoIncidents({ officers, activeOfficer, incidents: data }: Props) {
+export default function LeoIncidents({
+  officers,
+  deputies,
+  activeOfficer,
+  incidents: data,
+}: Props) {
   const [incidents, setIncidents] = React.useState(data);
   const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
-  const { setAllOfficers } = useDispatchState();
+  const dispatchState = useDispatchState();
   const { setActiveOfficer } = useLeoState();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
@@ -98,9 +104,11 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
   }
 
   React.useEffect(() => {
-    setAllOfficers(officers);
+    dispatchState.setAllOfficers(officers);
+    dispatchState.setAllDeputies(deputies);
     setActiveOfficer(activeOfficer);
-  }, [setAllOfficers, setActiveOfficer, activeOfficer, officers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setActiveOfficer, activeOfficer, deputies, officers]);
 
   return (
     <Layout
@@ -242,8 +250,9 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   // todo: fetch all ems/fd deputies here too
-  const [{ incidents, officers }, activeOfficer, values] = await requestAll(req, [
-    ["/incidents", { officers: [], incidents: [] }],
+  const [{ incidents, officers, deputies }, activeOfficer, values] = await requestAll(req, [
+    ["/incidents", { incidents: [] }],
+    ["/dispatch", { deputies: [], officers: [] }],
     ["/leo/active-officer", null],
     ["/admin/values/codes_10", []],
   ]);
@@ -254,6 +263,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       incidents,
       activeOfficer,
       officers,
+      deputies,
       values,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], locale)),

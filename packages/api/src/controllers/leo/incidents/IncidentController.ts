@@ -43,13 +43,7 @@ export class IncidentController {
       include: incidentInclude,
     });
 
-    const officers = await prisma.officer.findMany({
-      include: leoProperties,
-    });
-
-    const correctedIncidents = incidents.map(officerOrDeputyToUnit);
-
-    return { incidents: correctedIncidents, officers };
+    return { incidents: incidents.map(officerOrDeputyToUnit) };
   }
 
   @Get("/:id")
