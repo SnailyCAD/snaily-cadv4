@@ -10,12 +10,11 @@ import { useRouter } from "next/router";
 import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useAuth } from "context/AuthContext";
-import { CombinedLeoUnit, StatusViewMode, Officer } from "@snailycad/types";
+import { CombinedLeoUnit, StatusViewMode, Officer, LeoIncident } from "@snailycad/types";
 import { Filter } from "react-bootstrap-icons";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { FullIncident } from "src/pages/officer/incidents";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
@@ -44,14 +43,14 @@ export function ActiveOfficers() {
   const isDispatch = router.pathname === "/dispatch";
 
   const [tempUnit, setTempUnit] = React.useState<ActiveOfficer | CombinedLeoUnit | null>(null);
-  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+  const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
 
   function handleEditClick(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.ManageUnit);
   }
 
-  function handleIncidentOpen(incident: FullIncident) {
+  function handleIncidentOpen(incident: LeoIncident) {
     setTempIncident(incident);
     openModal(ModalIds.ManageIncident);
   }
@@ -130,7 +129,7 @@ export function ActiveOfficers() {
                         handleIncidentOpen({
                           ...activeIncident,
                           isActive: true,
-                        } as FullIncident)
+                        } as LeoIncident)
                       }
                     >
                       #{activeIncident.caseNumber}

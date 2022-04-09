@@ -17,21 +17,20 @@ import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
-import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { CombinedLeoUnit, EmsFdDeputy, StatusValueType } from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { Input } from "components/form/inputs/Input";
 
 interface Props {
-  incident?: FullIncident | null;
+  incident?: LeoIncident | null;
   onClose?(): void;
-  onCreate?(incident: FullIncident): void;
-  onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
+  onCreate?(incident: LeoIncident): void;
+  onUpdate?(oldIncident: LeoIncident, incident: LeoIncident): void;
 }
 
 export function ManageIncidentModal({
