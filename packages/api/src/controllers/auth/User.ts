@@ -50,6 +50,8 @@ export class AccountController {
       const updateCreateData = {
         panicButton: soundSettings.panicButton,
         signal100: soundSettings.signal100,
+        addedToCall: soundSettings.addedToCall,
+        stopRoleplay: soundSettings.stopRoleplay,
       };
 
       const updated = await prisma.userSoundSettings.upsert({

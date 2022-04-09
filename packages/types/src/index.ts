@@ -186,6 +186,8 @@ export interface UserSoundSettings {
   id: string;
   panicButton: boolean;
   signal100: boolean;
+  addedToCall: boolean;
+  stopRoleplay: boolean;
 }
 
 /**

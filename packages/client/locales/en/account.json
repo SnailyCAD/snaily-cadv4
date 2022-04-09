@@ -30,7 +30,9 @@
     "tableAlignment": "Table Actions Alignment",
     "sounds": "Sounds",
     "panicButton": "Panic Button",
-    "signal100": "Signal 100"
+    "signal100": "Signal 100",
+    "stopRoleplay": "Stop roleplay",
+    "addedToCall": "Added to call"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"
