@@ -1,19 +1,19 @@
 import { Controller, UseBefore, UseBeforeEach } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { NotFound, InternalServerError } from "@tsed/exceptions";
+import { NotFound, InternalServerError, BadRequest } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import type { Officer } from "@prisma/client";
+import { Officer, ShouldDoType } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { MiscCadSettings } from "@snailycad/types";
-import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { assignedUnitsInclude, findUnit } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const incidentInclude = {
@@ -134,26 +134,25 @@ export class IncidentController {
 
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },
-      include: { officersInvolved: true },
+      include: { unitsInvolved: true },
     });
 
     if (!incident) {
       throw new NotFound("notFound");
     }
 
-    await Promise.all(
-      incident.officersInvolved.map(async (officer) => {
-        await prisma.officer.update({
-          where: { id: officer.id },
-          data: { activeIncidentId: null },
-        });
+    await prisma.$transaction(
+      incident.unitsInvolved.map(({ id }) => prisma.incidentInvolvedUnit.delete({ where: { id } })),
+    );
 
-        await prisma.leoIncident.update({
-          where: { id: incidentId },
-          data: {
-            officersInvolved: { disconnect: { id: officer.id } },
-          },
-        });
+    await Promise.all(
+      incident.unitsInvolved.map(async (unit) => {
+        if (unit.officerId) {
+          await prisma.officer.update({
+            where: { id: unit.officerId },
+            data: { activeIncidentId: null },
+          });
+        }
       }),
     );
 
@@ -214,34 +213,65 @@ export class IncidentController {
 
   protected async connectOfficersInvolved(
     incidentId: string,
-    data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "involvedOfficers" | "isActive">,
+    data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
     maxAssignmentsToIncidents: number,
   ) {
     await Promise.all(
-      (data.involvedOfficers ?? []).map(async (id: string) => {
-        const count = await prisma.leoIncident.count({
+      (data.unitsInvolved ?? []).map(async (id: string) => {
+        const { unit, type } = await findUnit(
+          id,
+          {
+            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+          },
+          true,
+        );
+
+        if (!unit) {
+          throw new BadRequest("unitOffDuty");
+        }
+
+        const types = {
+          combined: "combinedLeoId",
+          leo: "officerId",
+          "ems-fd": "emsFdDeputyId",
+        };
+
+        const assignmentCount = await prisma.incidentInvolvedUnit.count({
           where: {
-            officersInvolved: { some: { id } },
-            isActive: true,
+            [types[type]]: unit.id,
+            incident: { isActive: true },
           },
         });
 
-        if (count >= maxAssignmentsToIncidents) {
+        if (assignmentCount >= maxAssignmentsToIncidents) {
+          // skip this officer
           return;
         }
 
-        return prisma.leoIncident.update({
+        const existing = await prisma.incidentInvolvedUnit.count({
+          where: {
+            [types[type]]: unit.id,
+            incidentId,
+          },
+        });
+
+        if (existing >= 1) {
+          return;
+        }
+
+        const involvedUnit = await prisma.incidentInvolvedUnit.create({
+          data: {
+            incidentId,
+            [types[type]]: unit.id,
+          },
+        });
+
+        // todo: set activeIncident
+
+        await prisma.leoIncident.update({
           where: { id: incidentId },
           data: {
-            officersInvolved: {
-              connect: { id },
-              update: data.isActive
-                ? {
-                    where: { id },
-                    data: { activeIncidentId: incidentId },
-                  }
-                : undefined,
-            },
+            unitsInvolved: { connect: { id: involvedUnit.id } },
           },
         });
       }),

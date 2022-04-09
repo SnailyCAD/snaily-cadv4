@@ -789,6 +789,7 @@ export interface IncidentInvolvedUnit {
   createdAt: Date;
   updatedAt: Date;
   leoIncidentId: string | null;
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 }
 
 /**

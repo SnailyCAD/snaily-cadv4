@@ -116,16 +116,16 @@ export function ManageIncidentModal({
     description: incident?.description ?? "",
     postal: incident?.postal ?? "",
     descriptionData: dataToSlate(incident),
-    unitsInvolved:
-      incident?.unitsInvolved.map((v) => ({
-        label: makeLabel(v.id),
-        value: v.id,
-      })) ?? ([] as SelectValue[]),
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
     isActive: isDispatch ? true : incident?.isActive ?? false,
     situationCodeId: incident?.situationCodeId ?? null,
+    unitsInvolved:
+      incident?.unitsInvolved.map((unit) => ({
+        label: makeLabel(unit.unit.id),
+        value: unit.unit.id,
+      })) ?? ([] as SelectValue[]),
   };
 
   return (
