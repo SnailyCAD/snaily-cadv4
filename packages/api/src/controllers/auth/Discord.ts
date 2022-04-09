@@ -21,6 +21,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { Description } from "@tsed/schema";
+import { isFeatureEnabled } from "lib/cad";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -195,11 +196,14 @@ export class DiscordAuth {
   @Description("Remove Discord OAuth2 from from authenticated user")
   async removeDiscordAuth(
     @Context("user") user: User,
-    @Context("cad") cad: cad & { features: CadFeature[] },
+    @Context("cad") cad: cad & { features?: CadFeature[] },
   ) {
-    const regularAuthEnabled = cad.features.some(
-      (v) => v.feature === Feature.ALLOW_REGULAR_LOGIN && v.isEnabled,
-    );
+    const regularAuthEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_REGULAR_LOGIN,
+      defaultReturn: true,
+    });
+
     if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginDisabled");
     }

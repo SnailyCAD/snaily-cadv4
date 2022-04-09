@@ -15,8 +15,8 @@ export interface VehicleSearchResult extends RegisteredVehicle {
   registrationStatus: Value<ValueType.LICENSE>;
   TruckLog: TruckLog[];
   Business: Business[];
-  allCustomFields: CustomField[];
-  customFields: CustomFieldValue[];
+  allCustomFields?: CustomField[];
+  customFields?: CustomFieldValue[];
 }
 
 interface VehicleSearchState {

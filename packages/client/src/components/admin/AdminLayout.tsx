@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function AdminLayout({ children, className, permissions }: Props) {
-  const { Component, roleplayStopped } = useRoleplayStopped();
+  const { Component, audio, roleplayStopped } = useRoleplayStopped();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
 
   if (forbidden) {
@@ -29,7 +29,7 @@ export function AdminLayout({ children, className, permissions }: Props) {
           <AdminSidebar />
 
           <div className="ml-6 px-4 py-5 admin-dashboard-responsive">
-            {roleplayStopped ? <Component /> : null}
+            {roleplayStopped ? <Component audio={audio} /> : null}
             {children}
           </div>
         </div>

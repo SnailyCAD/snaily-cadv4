@@ -9,6 +9,7 @@ import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -24,8 +25,11 @@ export class LicensesController {
     const user = ctx.get("user") as User;
     const cad = ctx.get("cad") as { features?: CadFeature[] };
 
-    const isDLExamEnabled =
-      cad.features?.some((v) => v.feature === Feature.DL_EXAMS && v.isEnabled) ?? false;
+    const isDLExamEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.DL_EXAMS,
+      defaultReturn: false,
+    });
 
     const citizen = await prisma.citizen.findUnique({
       where: {

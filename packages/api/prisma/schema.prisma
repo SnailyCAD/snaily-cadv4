@@ -125,6 +125,14 @@ model DiscordRoles {
   whitelistedRoleId   String?
   whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
 
+  adminRolePermissions         String[]
+  leoRolePermissions           String[]
+  leoSupervisorRolePermissions String[]
+  emsFdRolePermissions         String[]
+  dispatchRolePermissions      String[]
+  towRolePermissions           String[]
+  taxiRolePermissions          String[]
+
   roles DiscordRole[]
   cad   cad[]
 }
@@ -201,10 +209,12 @@ model User {
 }
 
 model UserSoundSettings {
-  id          String  @id @default(uuid())
-  panicButton Boolean @default(true)
-  signal100   Boolean @default(true)
-  User        User[]
+  id           String  @id @default(uuid())
+  panicButton  Boolean @default(true)
+  signal100    Boolean @default(true)
+  addedToCall  Boolean @default(false)
+  stopRoleplay Boolean @default(false)
+  User         User[]
 }
 
 model User2FA {
@@ -298,6 +308,7 @@ model RegisteredVehicle {
   reportedStolen       Boolean                  @default(false)
   impounded            Boolean                  @default(false)
   customFields         CustomFieldValue[]
+  dmvStatus            WhitelistStatus?
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
@@ -1156,4 +1167,5 @@ enum Feature {
   RADIO_CHANNEL_MANAGEMENT
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN
   DL_EXAMS
+  DMV
 }

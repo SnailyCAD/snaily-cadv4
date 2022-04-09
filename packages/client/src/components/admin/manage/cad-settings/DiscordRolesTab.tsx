@@ -1,14 +1,17 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import type { DiscordRole, DiscordRoles } from "@snailycad/types";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { FormField } from "components/form/FormField";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
+import { formatPermissionName } from "../users/ManagePermissionsModal";
 
 function makeRoleValues(roles?: DiscordRole[]) {
   if (!roles) return [];
@@ -38,6 +41,13 @@ export function DiscordRolesTab() {
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
+    adminRolePermissions: makeValue(discordRoles.adminRolePermissions),
+    leoRolePermissions: makeValue(discordRoles.leoRolePermissions),
+    leoSupervisorRolePermissions: makeValue(discordRoles.leoSupervisorRolePermissions),
+    emsFdRolePermissions: makeValue(discordRoles.emsFdRolePermissions),
+    dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions),
+    towRolePermissions: makeValue(discordRoles.towRolePermissions),
+    taxiRolePermissions: makeValue(discordRoles.taxiRolePermissions),
   };
 
   async function refreshRoles() {
@@ -59,6 +69,13 @@ export function DiscordRolesTab() {
         towRoles: values.towRoles.map((v) => v.value),
         taxiRoles: values.taxiRoles.map((v) => v.value),
         leoSupervisorRoles: values.leoSupervisorRoles.map((v) => v.value),
+        adminRolePermissions: values.adminRolePermissions.map((v) => v.value),
+        leoRolePermissions: values.leoRolePermissions.map((v) => v.value),
+        leoSupervisorRolePermissions: values.leoSupervisorRolePermissions.map((v) => v.value),
+        emsFdRolePermissions: values.emsFdRolePermissions.map((v) => v.value),
+        dispatchRolePermissions: values.dispatchRolePermissions.map((v) => v.value),
+        towRolePermissions: values.towRolePermissions.map((v) => v.value),
+        taxiRolePermissions: values.taxiRolePermissions.map((v) => v.value),
       },
     });
 
@@ -110,6 +127,11 @@ export function DiscordRolesTab() {
                 name="adminRoleId"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="adminRolePermissions"
+                permissions={defaultPermissions.allDefaultAdminPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -127,6 +149,11 @@ export function DiscordRolesTab() {
                 value={values.leoRoles}
                 name="leoRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="leoRolePermissions"
+                permissions={defaultPermissions.defaultLeoPermissions}
               />
             </SettingsFormField>
 
@@ -146,6 +173,11 @@ export function DiscordRolesTab() {
                 name="leoSupervisorRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="leoSupervisorRolePermissions"
+                permissions={defaultPermissions.defaultLeoPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -163,6 +195,11 @@ export function DiscordRolesTab() {
                 value={values.emsFdRoles}
                 name="emsFdRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="emsFdRolePermissions"
+                permissions={defaultPermissions.defaultEmsFdPermissions}
               />
             </SettingsFormField>
 
@@ -182,6 +219,11 @@ export function DiscordRolesTab() {
                 name="dispatchRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="dispatchRolePermissions"
+                permissions={defaultPermissions.defaultDispatchPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -200,6 +242,11 @@ export function DiscordRolesTab() {
                 name="towRoles"
                 onChange={handleChange}
               />
+
+              <SelectPermissionsField
+                name="towRolePermissions"
+                permissions={defaultPermissions.defaultTowPermissions}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -217,6 +264,11 @@ export function DiscordRolesTab() {
                 value={values.taxiRoles}
                 name="taxiRoles"
                 onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="taxiRolePermissions"
+                permissions={defaultPermissions.defaultTaxiPermissions}
               />
             </SettingsFormField>
 
@@ -245,5 +297,36 @@ export function DiscordRolesTab() {
         )}
       </Formik>
     </TabsContent>
+  );
+}
+
+function makeValue(permissions: Permissions[] | undefined) {
+  if (!permissions || !Array.isArray(permissions)) return [] as SelectValue[];
+  return permissions.map((v) => ({ value: formatPermissionName(v), label: v }));
+}
+
+function SelectPermissionsField({
+  name,
+  permissions,
+}: {
+  name: string;
+  permissions: Permissions[];
+}) {
+  const { values, errors, handleChange } = useFormikContext<any>();
+
+  return (
+    <FormField errorMessage={errors[name] as string} className="mt-2" label="Permissions">
+      <Select
+        closeMenuOnSelect={false}
+        name={name}
+        onChange={handleChange}
+        isMulti
+        value={values[name]}
+        values={permissions.map((v) => ({
+          label: formatPermissionName(v),
+          value: v,
+        }))}
+      />
+    </FormField>
   );
 }

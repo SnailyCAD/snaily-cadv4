@@ -17,7 +17,10 @@ export function TableItemForm({ penalCode }: Props) {
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-  const warningNotApplicableDisabled = !penalCode.warningNotApplicableId;
+  const jailTimeDisabled = !penalCode.warningNotApplicable?.prisonTerm;
+  const warningNotApplicableDisabled = !penalCode.warningNotApplicableId || jailTimeDisabled;
+  const finesDisabled =
+    !penalCode.warningNotApplicable?.fines && !penalCode.warningApplicable?.fines;
 
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
@@ -68,6 +71,7 @@ export function TableItemForm({ penalCode }: Props) {
         <div className="flex items-center">
           <FormField className="mb-0" label={t("fines")} checkbox>
             <Input
+              disabled={finesDisabled}
               onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
               checked={currentValue.fine?.enabled ?? false}
               name="fine.enabled"

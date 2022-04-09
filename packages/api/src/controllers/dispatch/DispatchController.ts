@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import { cad, CadFeature, Feature, User } from "@prisma/client";
+import type { cad, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
@@ -14,6 +14,7 @@ import { findUnit } from "./911-calls/Calls911Controller";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { userProperties } from "lib/auth/user";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -123,21 +124,12 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad") as cad & { features: CadFeature[] };
-    const user = ctx.get("user") as User;
+  async setActiveDispatchersState(@Context("user") user: User, @BodyParams() body: any) {
     const value = Boolean(body.value);
-
-    const activeDispatchersEnabled = cad.features.some(
-      (v) => v.feature === Feature.ACTIVE_DISPATCHERS && v.isEnabled,
-    );
-
-    if (!activeDispatchersEnabled) {
-      throw new BadRequest("featureDisabled");
-    }
 
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
+      include: { user: { select: userProperties } },
     });
 
     if (value) {
@@ -145,15 +137,18 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
+          include: { user: { select: userProperties } },
         }));
     } else {
       if (!dispatcher) {
         return;
       }
 
-      dispatcher = await prisma.activeDispatchers.delete({
+      await prisma.activeDispatchers.delete({
         where: { id: dispatcher.id },
       });
+
+      dispatcher = null;
     }
 
     this.socket.emitActiveDispatchers();

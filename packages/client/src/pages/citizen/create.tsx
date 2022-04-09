@@ -36,6 +36,12 @@ export default function CreateCitizen() {
         pilotLicenseCategory: Array.isArray(data.pilotLicenseCategory)
           ? (data.pilotLicenseCategory as SelectValue[]).map((v) => v.value)
           : data.pilotLicenseCategory,
+        waterLicenseCategory: Array.isArray(data.waterLicenseCategory)
+          ? (data.waterLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.waterLicenseCategory,
+        firearmLicenseCategory: Array.isArray(data.firearmLicenseCategory)
+          ? (data.firearmLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.firearmLicenseCategory,
       },
     });
 

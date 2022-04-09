@@ -87,7 +87,7 @@ export function RegisterVehicleModal({
       if (json?.id) {
         toastMessage({
           title: common("success"),
-          message: tVehicle("successVehicleRegistered", { plate: values.plate }),
+          message: tVehicle("successVehicleRegistered", { plate: values.plate.toUpperCase() }),
           icon: "success",
         });
         onCreate?.(json);

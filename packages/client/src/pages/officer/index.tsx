@@ -141,14 +141,14 @@ export default function OfficerDashboard({
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const [
-    { officers, citizens },
+    { officers },
     activeOfficer,
     values,
     calls,
     bolos,
     { officers: allOfficers, activeIncidents },
   ] = await requestAll(req, [
-    ["/leo", { officers: [], citizens: [] }],
+    ["/leo", { officers: [] }],
     ["/leo/active-officer", null],
     [
       "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag",
@@ -168,7 +168,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       calls,
       bolos,
       values,
-      citizens,
       activeIncidents,
       messages: {
         ...(await getTranslations(

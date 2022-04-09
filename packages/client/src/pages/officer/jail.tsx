@@ -22,7 +22,7 @@ interface Props {
   data: (Citizen & { Record: Record[] })[];
 }
 
-export default function Jail({ data: citizens }: Props) {
+export default function Jail({ data: jailedCitizens }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -57,12 +57,12 @@ export default function Jail({ data: citizens }: Props) {
 
       <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>
 
-      {citizens.length <= 0 ? (
+      {jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
           defaultSort={{ columnId: "createdAt", descending: true }}
-          data={citizens.map((item) => {
+          data={jailedCitizens.map((item) => {
             const [record] = item.Record.sort((a, b) =>
               compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
             ).filter((v) => v.type === "ARREST_REPORT");
@@ -117,16 +117,12 @@ export default function Jail({ data: citizens }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [jailData, { citizens }] = await requestAll(req, [
-    ["/leo/jail", []],
-    ["/leo", [{ citizens: [] }]],
-  ]);
+  const [jailData] = await requestAll(req, [["/leo/jail", []]]);
 
   return {
     props: {
       session: await getSessionUser(req),
       data: jailData,
-      citizens,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
       },

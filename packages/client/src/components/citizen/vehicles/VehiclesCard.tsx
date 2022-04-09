@@ -9,12 +9,15 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
+import { Status } from "components/shared/Status";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Vehicles");
   const { state, execute } = useFetch();
+  const { DMV } = useFeatureEnabled();
 
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
@@ -74,6 +77,9 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               registrationStatus: vehicle.registrationStatus.value,
               insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
+              dmvStatus: (
+                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               actions: (
                 <>
@@ -104,6 +110,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               { Header: t("registrationStatus"), accessor: "registrationStatus" },
               { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
               { Header: t("vinNumber"), accessor: "vinNumber" },
+              DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
               { Header: common("createdAt"), accessor: "createdAt" },
               { Header: common("actions"), accessor: "actions" },
             ]}

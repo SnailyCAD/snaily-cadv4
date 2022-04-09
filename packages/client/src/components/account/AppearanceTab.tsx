@@ -35,7 +35,12 @@ export function AppearanceTab() {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    soundSettings: user.soundSettings ?? { panicButton: true, signal100: true },
+    soundSettings: user.soundSettings ?? {
+      panicButton: true,
+      signal100: true,
+      addedToCall: false,
+      stopRoleplay: false,
+    },
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -99,6 +104,22 @@ export function AppearanceTab() {
                   toggled={values.soundSettings.signal100}
                   onClick={handleChange}
                   name="soundSettings.signal100"
+                />
+              </FormField>
+
+              <FormField label={t("addedToCall")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.addedToCall}
+                  onClick={handleChange}
+                  name="soundSettings.addedToCall"
+                />
+              </FormField>
+
+              <FormField label={t("stopRoleplay")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.stopRoleplay}
+                  onClick={handleChange}
+                  name="soundSettings.stopRoleplay"
                 />
               </FormField>
             </div>

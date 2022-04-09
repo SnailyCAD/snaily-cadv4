@@ -114,6 +114,14 @@ export interface DiscordRoles {
   whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
+
+  adminRolePermissions: Permissions[];
+  leoRolePermissions: Permissions[];
+  leoSupervisorRolePermissions: Permissions[];
+  emsFdRolePermissions: Permissions[];
+  dispatchRolePermissions: Permissions[];
+  towRolePermissions: Permissions[];
+  taxiRolePermissions: Permissions[];
 }
 
 /**
@@ -178,6 +186,8 @@ export interface UserSoundSettings {
   id: string;
   panicButton: boolean;
   signal100: boolean;
+  addedToCall: boolean;
+  stopRoleplay: boolean;
 }
 
 /**
@@ -247,6 +257,7 @@ export interface RegisteredVehicle {
   reportedStolen: boolean;
   impounded: boolean;
   flags?: Value<ValueType.VEHICLE_FLAG>[];
+  dmvStatus: WhitelistStatus | null;
 }
 
 /**
@@ -995,6 +1006,7 @@ export enum Feature {
   RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
   ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
   DL_EXAMS = "DL_EXAMS",
+  DMV = "DMV",
 }
 
 export enum Rank {

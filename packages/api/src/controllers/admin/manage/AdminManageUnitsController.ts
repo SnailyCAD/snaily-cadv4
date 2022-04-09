@@ -18,8 +18,8 @@ import { manyToManyHelper } from "utils/manyToMany";
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
 type Action = typeof ACTIONS[number];
 
-const TYPES = ["ACCEPT", "DECLINE"] as const;
-type Type = typeof TYPES[number];
+export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
+export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/units")
@@ -196,13 +196,13 @@ export class AdminManageUnitsController {
   async acceptOrDeclineUnit(
     @PathParams("officerId") officerId: string,
     @BodyParams("action") action: Action | null,
-    @BodyParams("type") type: Type | null,
+    @BodyParams("type") type: AcceptDeclineType | null,
   ) {
     if (action && !ACTIONS.includes(action)) {
       throw new ExtendedBadRequest({ action: "Invalid Action" });
     }
 
-    if (!type || !TYPES.includes(type)) {
+    if (!type || !ACCEPT_DECLINE_TYPES.includes(type)) {
       throw new BadRequest("invalidType");
     }
 

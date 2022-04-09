@@ -24,6 +24,7 @@ import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicense
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldsArea } from "./CustomFieldsArea";
+import { Status } from "components/shared/Status";
 
 export function VehicleSearchModal() {
   const { currentResult, setCurrentResult } = useVehicleSearch();
@@ -34,7 +35,7 @@ export function VehicleSearchModal() {
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-  const { BUSINESS } = useFeatureEnabled();
+  const { BUSINESS, DMV } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
   const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
@@ -228,6 +229,15 @@ export function VehicleSearchModal() {
                       {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
                     </Infofield>
                   </li>
+                  {DMV ? (
+                    <li>
+                      <Infofield label={vT("dmvStatus")}>
+                        <Status state={currentResult.dmvStatus}>
+                          {currentResult.dmvStatus?.toLowerCase()}
+                        </Status>
+                      </Infofield>
+                    </li>
+                  ) : null}
                   <li>
                     <Infofield
                       childrenProps={{
@@ -298,8 +308,8 @@ export function VehicleSearchModal() {
                 onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
                 category={CustomFieldCategory.VEHICLE}
                 url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
-                allCustomFields={currentResult.allCustomFields}
-                customFields={currentResult.customFields}
+                allCustomFields={currentResult.allCustomFields ?? []}
+                customFields={currentResult.customFields ?? []}
               />
             ) : null}
           </Form>

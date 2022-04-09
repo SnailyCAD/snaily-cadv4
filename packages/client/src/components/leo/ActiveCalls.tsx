@@ -3,10 +3,9 @@ import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
-import { useAuth } from "context/AuthContext";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import type { AssignedUnit, Call911 } from "@snailycad/types";
+import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
@@ -27,22 +26,35 @@ import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
 import { isUnitCombined } from "@snailycad/utils";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
+import { useAudio } from "react-use";
+import { useAuth } from "context/AuthContext";
 
+const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 function ActiveCallsInner() {
+  const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
+
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
+  const { hasPermissions } = usePermission();
   const { calls, setCalls } = useDispatchState();
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { user } = useAuth();
   const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch" && user?.isDispatch;
+
+  const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
+  const [audio, , controls] = useAudio({
+    autoPlay: false,
+    src: ADDED_TO_CALL_SRC,
+  });
+
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
@@ -52,12 +64,19 @@ function ActiveCallsInner() {
   const { setShowFilters, showFilters, search } = useCallsFilters();
   const handleFilter = useActiveCallsFilters();
 
+  const hasDispatchPermissions = hasPermissions(
+    defaultPermissions.defaultDispatchPermissions,
+    (u) => u.isDispatch,
+  );
+  const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const unit =
     router.pathname === "/officer"
       ? activeOfficer
       : router.pathname === "/ems-fd"
       ? activeDeputy
       : null;
+
+  const isUnitActive = unit?.status && unit.status.shouldDo !== ShouldDoType.SET_OFF_DUTY;
 
   const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit?.id === unit?.id);
@@ -89,12 +108,23 @@ function ActiveCallsInner() {
 
   useListener(
     SocketEvents.Update911Call,
-    (call) => {
+    (call: Full911Call | undefined) => {
       if (!call) return;
 
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
+            const wasAssignedToCall =
+              !v.assignedUnits.some((u) => u.unit.id === unit?.id) &&
+              call.assignedUnits.some((v) => v.unit.id === unit?.id);
+
+            if (wasAssignedToCall && shouldPlayAddedToCallSound) {
+              controls.volume(0.3);
+              controls.play();
+            } else {
+              controls.pause();
+            }
+
             setTempCall({ ...v, ...call });
             return { ...v, ...call };
           }
@@ -103,7 +133,7 @@ function ActiveCallsInner() {
         }),
       );
     },
-    [calls, setCalls],
+    [calls, unit, controls, shouldPlayAddedToCallSound, setCalls],
   );
 
   function handleManageClick(call: Full911Call) {
@@ -123,17 +153,41 @@ function ActiveCallsInner() {
   }
 
   async function handleAssignToCall(call: Full911Call) {
-    await execute(`/911-calls/assign/${call.id}`, {
+    const { json } = await execute(`/911-calls/assign/${call.id}`, {
       method: "POST",
       data: { unit: unit?.id },
     });
+
+    if (json.id) {
+      const callsMapped = calls.map((call) => {
+        if (call.id === json.id) {
+          return { ...call, ...json };
+        }
+
+        return call;
+      });
+
+      setCalls(callsMapped);
+    }
   }
 
   async function handleUnassignFromCall(call: Full911Call) {
-    await execute(`/911-calls/unassign/${call.id}`, {
+    const { json } = await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
       data: { unit: unit?.id },
     });
+
+    if (json.id) {
+      const callsMapped = calls.map((call) => {
+        if (call.id === json.id) {
+          return { ...call, ...json };
+        }
+
+        return call;
+      });
+
+      setCalls(callsMapped);
+    }
   }
 
   if (!CALLS_911) {
@@ -142,6 +196,7 @@ function ActiveCallsInner() {
 
   return (
     <div className="overflow-hidden rounded-md card">
+      {audio}
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 
@@ -192,7 +247,7 @@ function ActiveCallsInner() {
                       </span>
                     ) : (
                       <Button
-                        disabled={isDispatch ? false : !unit}
+                        disabled={isDispatch ? false : !isUnitActive}
                         small
                         onClick={() => handleViewDescription(call)}
                       >
@@ -206,7 +261,7 @@ function ActiveCallsInner() {
                   actions: (
                     <>
                       <Button
-                        disabled={isDispatch ? !hasActiveDispatchers : !unit}
+                        disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
                         small
                         variant="success"
                         onClick={() => handleManageClick(call)}
@@ -217,7 +272,7 @@ function ActiveCallsInner() {
                       {isDispatch ? null : isUnitAssigned ? (
                         <Button
                           className="ml-2"
-                          disabled={!unit}
+                          disabled={!isUnitActive}
                           small
                           onClick={() => handleUnassignFromCall(call)}
                         >
@@ -226,7 +281,7 @@ function ActiveCallsInner() {
                       ) : (
                         <Button
                           className="ml-2"
-                          disabled={!unit}
+                          disabled={!isUnitActive}
                           small
                           onClick={() => handleAssignToCall(call)}
                         >
@@ -236,7 +291,7 @@ function ActiveCallsInner() {
 
                       {TOW ? (
                         <Button
-                          disabled={!hasActiveDispatchers || (!isDispatch && !unit)}
+                          disabled={!hasActiveDispatchers || (!isDispatch && !isUnitActive)}
                           small
                           className="ml-2"
                           onClick={() => handleCallTow(call)}

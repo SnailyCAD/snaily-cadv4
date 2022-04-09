@@ -48,7 +48,15 @@ export function ManageAOPModal() {
               <Input autoFocus name="aop" onChange={handleChange} value={values.aop} required />
             </FormField>
 
-            <footer className="flex justify-end">
+            <footer className="flex justify-end gap-2">
+              <Button
+                variant="cancel"
+                onClick={() => closeModal(ModalIds.ManageAOP)}
+                className="flex items-center"
+                type="reset"
+              >
+                {common("cancel")}
+              </Button>
               <Button
                 className="flex items-center"
                 disabled={!isValid || state === "loading"}

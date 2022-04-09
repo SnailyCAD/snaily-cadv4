@@ -55,7 +55,7 @@ export function DispatchModalButtons() {
   const { execute } = useFetch();
   const { signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
-  const { activeDispatchers, hasActiveDispatchers } = useActiveDispatchers();
+  const { activeDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
 
   const isActive = activeDispatchers.some((v) => v.userId === user?.id);
@@ -63,10 +63,16 @@ export function DispatchModalButtons() {
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
 
-    await execute("/dispatch/dispatchers-state", {
+    const { json } = await execute("/dispatch/dispatchers-state", {
       method: "POST",
       data: { value: newState },
     });
+
+    if (json.dispatcher && newState) {
+      setActiveDispatchers([...activeDispatchers, json.dispatcher]);
+    } else {
+      setActiveDispatchers(activeDispatchers.filter((v) => v.userId !== user?.id));
+    }
   }
 
   async function handleSignal100() {
@@ -82,7 +88,7 @@ export function DispatchModalButtons() {
         (button, idx) =>
           (button.isEnabled?.(features) ?? true) && (
             <Button
-              disabled={!hasActiveDispatchers}
+              disabled={!isActive}
               id={button.nameKey[1]}
               key={idx}
               title={t(button.nameKey.join("."))}
@@ -93,7 +99,7 @@ export function DispatchModalButtons() {
           ),
       )}
 
-      <Button disabled={!hasActiveDispatchers} onClick={handleSignal100} id="signal100">
+      <Button disabled={!isActive} onClick={handleSignal100} id="signal100">
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 

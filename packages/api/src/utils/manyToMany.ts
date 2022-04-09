@@ -45,11 +45,10 @@ function getAccessor<
   return typeof v === "string" ? (v as unknown as Accessor) : v[accessor];
 }
 
-function merge<T extends string | object, Accessor extends T extends string ? never : keyof T>(
-  arr1: T[],
-  arr2: T[],
-  accessor?: Accessor,
-) {
+export function merge<
+  T extends string | object,
+  Accessor extends T extends string ? never : keyof T,
+>(arr1: T[], arr2: T[], accessor?: Accessor) {
   const set = new Set();
   const fullArr = [...arr1, ...arr2];
 

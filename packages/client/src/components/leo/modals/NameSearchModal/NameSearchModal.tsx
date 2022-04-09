@@ -306,8 +306,10 @@ export function NameSearchModal() {
                       ) : null}
 
                       <Infofield label={cT("dateOfBirth")}>
-                        <FullDate onlyDate>{currentResult.dateOfBirth}</FullDate>({cT("age")}:{" "}
-                        {calculateAge(currentResult.dateOfBirth)})
+                        <FullDate isDateOfBirth onlyDate>
+                          {currentResult.dateOfBirth}
+                        </FullDate>
+                        ({cT("age")}: {calculateAge(currentResult.dateOfBirth)})
                       </Infofield>
 
                       <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
@@ -457,8 +459,8 @@ export function NameSearchModal() {
                 <ManageCustomFieldsModal
                   category={CustomFieldCategory.CITIZEN}
                   url={`/search/actions/custom-fields/citizen/${currentResult.id}`}
-                  allCustomFields={currentResult.allCustomFields}
-                  customFields={currentResult.customFields}
+                  allCustomFields={currentResult.allCustomFields ?? []}
+                  customFields={currentResult.customFields ?? []}
                   onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
                 />
                 <ManageLicensesModal

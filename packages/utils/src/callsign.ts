@@ -3,6 +3,12 @@ import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 type P = "callsign" | "callsign2" | "department" | "citizenId";
 type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;
 
+/**
+ * given a unit and a template, generate a callsign for the unit
+ * @param {Unit} unit - The unit object
+ * @param {string | null} template - The template to use for the callsign.
+ * @returns the generated callsign
+ */
 export function generateCallsign(unit: Unit, template: string | null) {
   const isCombined = !("citizenId" in unit) || "officers" in unit;
 

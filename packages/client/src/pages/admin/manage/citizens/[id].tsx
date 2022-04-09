@@ -11,6 +11,7 @@ import useFetch from "lib/useFetch";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
+import type { SelectValue } from "components/form/Select";
 
 interface Props {
   citizen: Citizen & { user: User };
@@ -32,8 +33,22 @@ export default function ManageCitizens({ citizen }: Props) {
   }) {
     const { json } = await execute(`/admin/manage/citizens/${citizen.id}`, {
       method: "PUT",
-      data,
       helpers,
+      data: {
+        ...data,
+        driversLicenseCategory: Array.isArray(data.driversLicenseCategory)
+          ? (data.driversLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.driversLicenseCategory,
+        pilotLicenseCategory: Array.isArray(data.pilotLicenseCategory)
+          ? (data.pilotLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.pilotLicenseCategory,
+        waterLicenseCategory: Array.isArray(data.waterLicenseCategory)
+          ? (data.waterLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.waterLicenseCategory,
+        firearmLicenseCategory: Array.isArray(data.firearmLicenseCategory)
+          ? (data.firearmLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.firearmLicenseCategory,
+      },
     });
 
     if (formData) {
