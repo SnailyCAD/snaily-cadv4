@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
 import { Formik, useFormikContext } from "formik";
@@ -300,7 +300,8 @@ export function DiscordRolesTab() {
   );
 }
 
-function makeValue(permissions: Permissions[]) {
+function makeValue(permissions: Permissions[] | undefined) {
+  if (!permissions || !Array.isArray(permissions)) return [] as SelectValue[];
   return permissions.map((v) => ({ value: formatPermissionName(v), label: v }));
 }
 
