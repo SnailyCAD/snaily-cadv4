@@ -89,6 +89,7 @@ export function ActiveIncidents() {
             variant={null}
             className="dark:bg-gray-2 dark:hover:bg-dark-bg bg-gray-500 hover:bg-gray-600 text-white"
             onClick={handleCreateIncident}
+            disabled={!hasActiveDispatchers}
           >
             {t("createIncident")}
           </Button>
