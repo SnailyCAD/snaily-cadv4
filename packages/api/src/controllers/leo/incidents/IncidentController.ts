@@ -13,8 +13,9 @@ import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { MiscCadSettings } from "@snailycad/types";
-import { assignedUnitsInclude, findUnit } from "controllers/dispatch/911-calls/Calls911Controller";
+import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { findUnit } from "lib/leo/findUnit";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -217,13 +218,9 @@ export class IncidentController {
   ) {
     await Promise.all(
       (data.unitsInvolved ?? []).map(async (id: string) => {
-        const { unit, type } = await findUnit(
-          id,
-          {
-            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-          },
-          true,
-        );
+        const { unit, type } = await findUnit(id, {
+          NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        });
 
         if (!unit) {
           throw new BadRequest("unitOffDuty");
