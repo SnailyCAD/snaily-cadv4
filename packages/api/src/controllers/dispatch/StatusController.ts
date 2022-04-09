@@ -249,7 +249,6 @@ function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  // todo: fix type
   const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
   const officerName = isNotCombined
     ? `${unit.badgeNumber} - ${callsign} ${unitName}`

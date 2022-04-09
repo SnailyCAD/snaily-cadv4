@@ -136,7 +136,6 @@ export class DiscordWebhooksController {
         .catch(() => null)) as RESTGetAPIWebhookResult | null;
 
       if (prevWebhookData?.id) {
-        // todo: update Discord webhook?
         return prevWebhookData.id;
       }
     }

@@ -13,7 +13,6 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   callsign2: z.string().min(1).max(255),
   rank: z.string().max(255).nullable(),
   badgeNumber: z.number().min(1),
-  division: z.string().min(2).max(255).optional(),
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
   image: z.any().or(z.string()).optional(),
 });

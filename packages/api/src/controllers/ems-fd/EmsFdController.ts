@@ -1,7 +1,7 @@
 import process from "node:process";
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -46,7 +46,7 @@ export class EmsFdController {
     @Context("user") user: User,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
+    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const division = await prisma.divisionValue.findFirst({
       where: {
@@ -105,7 +105,7 @@ export class EmsFdController {
     @Context("user") user: User,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
+    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {

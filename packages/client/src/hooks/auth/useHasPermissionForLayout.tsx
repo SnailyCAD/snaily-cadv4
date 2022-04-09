@@ -6,7 +6,6 @@ import { Loader } from "components/Loader";
 
 export function useHasPermissionForLayout(permissions: LayoutProps["permissions"]) {
   const [forbidden, setForbidden] = React.useState(false);
-  // todo: create hook to remove duplicate code
 
   const { hasPermissions } = usePermission();
   const router = useRouter();

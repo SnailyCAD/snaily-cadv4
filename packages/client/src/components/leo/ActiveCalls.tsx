@@ -322,10 +322,17 @@ export function ActiveCalls() {
 
       <DispatchCallTowModal call={tempCall} />
       {tempCall?.descriptionData ? (
-        <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
+        <DescriptionModal
+          onClose={() => setTimeout(() => setTempCall(null), 120)}
+          value={tempCall.descriptionData}
+        />
       ) : null}
 
-      <Manage911CallModal setCall={setTempCall} onClose={() => setTempCall(null)} call={tempCall} />
+      <Manage911CallModal
+        setCall={setTempCall}
+        onClose={() => setTimeout(() => setTempCall(null), 120)}
+        call={tempCall}
+      />
     </div>
   );
 }

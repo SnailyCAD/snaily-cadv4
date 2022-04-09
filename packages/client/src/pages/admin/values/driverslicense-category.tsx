@@ -38,7 +38,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   const [tempValue, setTempValue] = React.useState<{
     value: DriversLicenseCategoryValue | null;
     type: DriversLicenseCategoryType | null;
-  }>({} as any);
+  } | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -85,7 +85,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }
 
   async function handleDelete() {
-    if (!tempValue.value || !tempValue.type) return;
+    if (!tempValue?.value || !tempValue.type) return;
 
     try {
       const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
@@ -149,7 +149,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
               <Button
                 onClick={() => {
                   openModal(ModalIds.ManageValue);
-                  setTempValue((p) => ({ ...p, type }));
+                  setTempValue((p) => p && { ...p, type });
                 }}
               >
                 {typeT("ADD")}
@@ -174,7 +174,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
       <AlertModal
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
-          value: tempValue.value?.value.value ?? "",
+          value: tempValue?.value?.value.value ?? "",
           span: (children) => {
             return <span className="font-semibold">{children}</span>;
           },
@@ -184,8 +184,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         state={state}
         onClose={() => {
           // wait for animation to play out
-          // todo: remove "as any"
-          setTimeout(() => setTempValue({} as any), 100);
+          setTimeout(() => setTempValue(null), 100);
         }}
       />
 
@@ -201,8 +200,8 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
             return p;
           });
         }}
-        clType={tempValue.type}
-        value={tempValue.value}
+        clType={tempValue?.type}
+        value={tempValue?.value ?? null}
         type={type}
       />
     </AdminLayout>
