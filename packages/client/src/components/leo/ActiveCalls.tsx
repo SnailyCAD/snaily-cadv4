@@ -20,7 +20,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { CallsFilters, useActiveCallsFilters } from "./calls/CallsFilters";
-import { CallsFiltersProvider, useCallsFilters } from "context/CallsFiltersContext";
+import { useCallsFilters } from "state/callsFiltersState";
 import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
@@ -36,7 +36,7 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-function ActiveCallsInner() {
+export function ActiveCalls() {
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
@@ -125,7 +125,10 @@ function ActiveCallsInner() {
               controls.pause();
             }
 
-            setTempCall({ ...v, ...call });
+            if (tempCall?.id === call.id) {
+              setTempCall({ ...v, ...call });
+            }
+
             return { ...v, ...call };
           }
 
@@ -207,7 +210,7 @@ function ActiveCallsInner() {
               "px-1.5 hover:bg-gray-500 dark:hover:bg-dark-bg group",
               showFilters && "dark:!bg-dark-bg !bg-gray-500",
             )}
-            onClick={() => setShowFilters((o) => !o)}
+            onClick={() => setShowFilters(!showFilters)}
             title={t("callFilters")}
           >
             <Filter
@@ -324,13 +327,5 @@ function ActiveCallsInner() {
 
       <Manage911CallModal setCall={setTempCall} onClose={() => setTempCall(null)} call={tempCall} />
     </div>
-  );
-}
-
-export function ActiveCalls() {
-  return (
-    <CallsFiltersProvider>
-      <ActiveCallsInner />
-    </CallsFiltersProvider>
   );
 }
