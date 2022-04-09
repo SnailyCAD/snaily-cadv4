@@ -7,7 +7,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import { unitProperties, leoProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
+import { unitProperties, combinedUnitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import {
   ShouldDoType,
@@ -30,13 +30,13 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const assignedUnitsInclude = {
   include: {
-    officer: { include: leoProperties },
+    officer: { include: _leoProperties },
     deputy: { include: unitProperties },
     combinedUnit: {
       include: {
         status: { include: { value: true } },
         officers: {
-          include: leoProperties,
+          include: _leoProperties,
         },
       },
     },
@@ -48,8 +48,8 @@ export const callInclude = {
   assignedUnits: assignedUnitsInclude,
   events: true,
   incidents: true,
-  departments: { include: leoProperties.department.include },
-  divisions: { include: leoProperties.division.include },
+  departments: { include: _leoProperties.department.include },
+  divisions: { include: _leoProperties.division.include },
   situationCode: { include: { value: true } },
 };
 

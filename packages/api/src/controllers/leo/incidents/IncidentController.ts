@@ -18,7 +18,6 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
-  officersInvolved: { include: leoProperties },
   events: true,
   situationCode: { include: { value: true } },
   unitsInvolved: assignedUnitsInclude,
@@ -97,7 +96,7 @@ export class IncidentController {
       },
     });
 
-    await this.connectOfficersInvolved(incident.id, data, maxAssignmentsToIncidents);
+    await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -141,9 +140,13 @@ export class IncidentController {
       throw new NotFound("notFound");
     }
 
-    await prisma.$transaction(
-      incident.unitsInvolved.map(({ id }) => prisma.incidentInvolvedUnit.delete({ where: { id } })),
-    );
+    if (data.isActive) {
+      await prisma.$transaction(
+        incident.unitsInvolved.map(({ id }) =>
+          prisma.incidentInvolvedUnit.delete({ where: { id } }),
+        ),
+      );
+    }
 
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
@@ -170,7 +173,9 @@ export class IncidentController {
       },
     });
 
-    await this.connectOfficersInvolved(incident.id, data, maxAssignmentsToIncidents);
+    if (data.isActive) {
+      await this.connectUnitsInvolved(incident.id, data, maxAssignmentsToIncidents);
+    }
 
     const updated = await prisma.leoIncident.findUnique({
       where: { id: incident.id },
@@ -211,7 +216,7 @@ export class IncidentController {
     return true;
   }
 
-  protected async connectOfficersInvolved(
+  protected async connectUnitsInvolved(
     incidentId: string,
     data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
     maxAssignmentsToIncidents: number,

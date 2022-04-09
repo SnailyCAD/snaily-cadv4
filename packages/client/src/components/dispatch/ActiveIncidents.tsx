@@ -4,7 +4,6 @@ import { Button } from "components/Button";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
-import type { FullIncident } from "src/pages/officer/incidents";
 import { makeUnitName, yesOrNoText } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
@@ -16,14 +15,13 @@ import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { isUnitCombined } from "@snailycad/utils";
+import type { LeoIncident } from "@snailycad/types";
 
 export function ActiveIncidents() {
   /**
    * undefined = hide modal. It will otherwise open 2 modals, 1 with the incorrect data.
    */
-  const [tempIncident, setTempIncident] = React.useState<FullIncident | null | undefined>(
-    undefined,
-  );
+  const [tempIncident, setTempIncident] = React.useState<LeoIncident | null | undefined>(undefined);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -58,17 +56,17 @@ export function ActiveIncidents() {
     }
   }
 
-  function handleViewDescription(incident: FullIncident) {
+  function handleViewDescription(incident: LeoIncident) {
     setTempIncident(incident);
     openModal(ModalIds.Description);
   }
 
-  function onEditClick(incident: FullIncident) {
+  function onEditClick(incident: LeoIncident) {
     openModal(ModalIds.ManageIncident);
     setTempIncident(incident);
   }
 
-  function onEndClick(incident: FullIncident) {
+  function onEndClick(incident: LeoIncident) {
     openModal(ModalIds.AlertDeleteIncident);
     setTempIncident(incident);
   }
@@ -106,6 +104,9 @@ export function ActiveIncidents() {
             .map((incident) => {
               return {
                 caseNumber: `#${incident.caseNumber}`,
+                unitsInvolved:
+                  incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
+                createdAt: <FullDate>{incident.createdAt}</FullDate>,
                 firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
                 arrestsMade: common(yesOrNoText(incident.arrestsMade)),
@@ -121,9 +122,7 @@ export function ActiveIncidents() {
                     )}
                   </span>
                 ),
-                unitsInvolved:
-                  incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
-                createdAt: <FullDate>{incident.createdAt}</FullDate>,
+
                 actions: (
                   <>
                     <Button
