@@ -13,12 +13,15 @@ import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { MiscCadSettings } from "@snailycad/types";
+import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
   officersInvolved: { include: leoProperties },
   events: true,
   situationCode: { include: { value: true } },
+  unitsInvolved: assignedUnitsInclude,
 };
 
 @Controller("/incidents")
@@ -45,7 +48,9 @@ export class IncidentController {
       include: leoProperties,
     });
 
-    return { incidents, officers };
+    const correctedIncidents = incidents.map(officerOrDeputyToUnit);
+
+    return { incidents: correctedIncidents, officers };
   }
 
   @Get("/:id")
@@ -60,7 +65,7 @@ export class IncidentController {
       include: incidentInclude,
     });
 
-    return incident;
+    return officerOrDeputyToUnit(incident);
   }
 
   @UseBefore(ActiveOfficer)
@@ -103,12 +108,14 @@ export class IncidentController {
       throw new InternalServerError("Unable to find created incident");
     }
 
+    const corrected = officerOrDeputyToUnit(updated);
+
     if (updated.isActive) {
-      this.socket.emitCreateActiveIncident(updated);
+      this.socket.emitCreateActiveIncident(corrected);
       this.socket.emitUpdateOfficerStatus();
     }
 
-    return updated;
+    return corrected;
   }
 
   @UseBefore(ActiveOfficer)
@@ -175,10 +182,12 @@ export class IncidentController {
       throw new InternalServerError("Unable to find created incident");
     }
 
-    this.socket.emitUpdateActiveIncident(updated);
+    const corrected = officerOrDeputyToUnit(updated);
+
+    this.socket.emitUpdateActiveIncident(corrected);
     this.socket.emitUpdateOfficerStatus();
 
-    return updated;
+    return corrected;
   }
 
   @Delete("/:id")

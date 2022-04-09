@@ -15,6 +15,7 @@ import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModa
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { isUnitCombined } from "@snailycad/utils";
 
 export function ActiveIncidents() {
   /**
@@ -31,6 +32,12 @@ export function ActiveIncidents() {
   const { openModal, closeModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
+
+  function makeAssignedUnit(unit: any) {
+    return isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
+      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+  }
 
   async function handleDismissIncident() {
     if (!tempIncident) return;
@@ -105,6 +112,8 @@ export function ActiveIncidents() {
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
             .map((incident) => {
+              console.log({ incident });
+
               return {
                 caseNumber: `#${incident.caseNumber}`,
                 involvedOfficers: involvedOfficers(incident),
@@ -123,6 +132,8 @@ export function ActiveIncidents() {
                     )}
                   </span>
                 ),
+                unitsInvolved:
+                  incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
                 createdAt: <FullDate>{incident.createdAt}</FullDate>,
                 actions: (
                   <>
@@ -150,7 +161,7 @@ export function ActiveIncidents() {
             })}
           columns={[
             { Header: t("caseNumber"), accessor: "caseNumber" },
-            { Header: t("involvedOfficers"), accessor: "involvedOfficers" },
+            { Header: t("unitsInvolved"), accessor: "unitsInvolved" },
             { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
             { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
             { Header: t("arrestsMade"), accessor: "arrestsMade" },

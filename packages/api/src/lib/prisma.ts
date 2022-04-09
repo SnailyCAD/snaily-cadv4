@@ -3,6 +3,7 @@ import { divisionToDivisions } from "migrations/divisionToDivisions";
 import { pairedSymbolToTemplate } from "migrations/pairedSymbolToTemplate";
 import { xToXArrAll } from "migrations/xToXArr";
 import { disabledFeatureToCadFeature } from "migrations/disabledFeatureToCadFeature";
+import { officersToUnitsInvolved } from "migrations/officersToUnitsInvolved";
 
 export const prisma = new PrismaClient({
   errorFormat: "colorless",
@@ -15,6 +16,7 @@ async function handleMigrations() {
     pairedSymbolToTemplate(),
     xToXArrAll(),
     disabledFeatureToCadFeature(),
+    officersToUnitsInvolved(),
   ]);
 }
 

@@ -19,14 +19,16 @@ import {
   User,
   StatusValue,
   MiscCadSettings,
+  Call911,
 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
-import type { cad, Call911 } from "@snailycad/types";
+import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
-const assignedUnitsInclude = {
+export const assignedUnitsInclude = {
   include: {
     officer: { include: leoProperties },
     deputy: { include: unitProperties },
@@ -70,7 +72,7 @@ export class Calls911Controller {
       where: includeEnded ? undefined : { ended: false },
     });
 
-    return calls.map(this.officerOrDeputyToUnit);
+    return calls.map(officerOrDeputyToUnit);
   }
 
   @Get("/:id")
@@ -85,7 +87,7 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    return this.officerOrDeputyToUnit(call);
+    return officerOrDeputyToUnit(call);
   }
 
   @Post("/")
@@ -129,7 +131,7 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    const returnData = this.officerOrDeputyToUnit(updated);
+    const returnData = officerOrDeputyToUnit(updated);
 
     try {
       const data = this.createWebhookData(returnData);
@@ -238,9 +240,9 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
+    this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
 
-    return this.officerOrDeputyToUnit(updated);
+    return officerOrDeputyToUnit(updated);
   }
 
   @Delete("/purge")
@@ -392,24 +394,9 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    this.socket.emitUpdate911Call(this.officerOrDeputyToUnit(updated));
+    this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
 
-    return this.officerOrDeputyToUnit(updated);
-  }
-
-  protected officerOrDeputyToUnit(call: any & { assignedUnits: any[] }) {
-    return {
-      ...call,
-      assignedUnits: (call.assignedUnits ?? [])
-        ?.map((v: any) => ({
-          ...v,
-          officer: undefined,
-          deputy: undefined,
-
-          unit: v.officer ?? v.deputy ?? v.combinedUnit,
-        }))
-        .filter((v: any) => v.unit?.id),
-    };
+    return officerOrDeputyToUnit(updated);
   }
 
   protected async linkOrUnlinkCallDepartmentsAndDivisions({
