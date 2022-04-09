@@ -99,6 +99,6 @@ async function handleUnassignFromActiveIncident(options: Pick<Options, "officer"
   /**
    * remove officer from involved officers then emit via socket
    */
-  const officersInvolved = incident.officersInvolved.filter((v) => v.id !== options.officer.id);
-  options.socket.emitUpdateActiveIncident({ ...incident, officersInvolved });
+  const unitsInvolved = incident.unitsInvolved.filter((v) => v.id !== options.officer.id);
+  options.socket.emitUpdateActiveIncident({ ...incident, unitsInvolved });
 }

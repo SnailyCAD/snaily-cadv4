@@ -18,9 +18,8 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import type { ActiveDispatchers, Bolo, EmsFdDeputy, Officer } from "@snailycad/types";
+import type { ActiveDispatchers, Bolo, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { FullIncident } from "../officer/incidents";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "context/ModalContext";
 import { Permissions } from "@snailycad/permissions";
@@ -57,7 +56,7 @@ interface Props {
   activeDeputies: EmsFdDeputy[];
   activeOfficers: Officer[];
   activeDispatchers: ActiveDispatchers[];
-  activeIncidents: FullIncident[];
+  activeIncidents: LeoIncident[];
 }
 
 export default function OfficerDashboard(props: Props) {

@@ -15,6 +15,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/user";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -66,7 +67,9 @@ export class DispatchController {
       include: incidentInclude,
     });
 
-    return { deputies, officers, activeIncidents, activeDispatchers };
+    const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
+
+    return { deputies, officers, activeIncidents: correctedIncidents, activeDispatchers };
   }
 
   @Post("/aop")

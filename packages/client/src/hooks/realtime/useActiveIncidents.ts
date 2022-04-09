@@ -1,6 +1,6 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
-import type { FullIncident } from "src/pages/officer/incidents";
+import type { LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 
 export function useActiveIncidents() {
@@ -8,7 +8,7 @@ export function useActiveIncidents() {
 
   useListener(
     { eventName: SocketEvents.UpdateActiveIncident, checkHasListeners: true },
-    (incident: FullIncident) => {
+    (incident: LeoIncident) => {
       if (incident.isActive) {
         setActiveIncidents(
           activeIncidents.map((inc) => {
@@ -27,7 +27,7 @@ export function useActiveIncidents() {
 
   useListener(
     { eventName: SocketEvents.CreateActiveIncident, checkHasListeners: true },
-    (incident: FullIncident) => {
+    (incident: LeoIncident) => {
       const alreadyExists = activeIncidents.some((v) => v.id === incident.id);
 
       if (!alreadyExists && incident.isActive) {

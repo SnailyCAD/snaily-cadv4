@@ -685,6 +685,7 @@ export interface LeoIncident {
   situationCode: StatusValue | null;
   situationCodeId: string | null;
   events?: IncidentEvent[];
+  unitsInvolved: IncidentInvolvedUnit[];
 }
 
 /**
@@ -772,6 +773,22 @@ export interface AssignedUnit {
   call911Id: string | null;
   createdAt: Date;
   updatedAt: Date;
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+}
+
+/**
+ * Model IncidentInvolvedUnit
+ *
+ */
+export interface IncidentInvolvedUnit {
+  id: string;
+  officerId: string | null;
+  emsFdDeputyId: string | null;
+  combinedLeoId: string | null;
+  incidentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  leoIncidentId: string | null;
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 }
 

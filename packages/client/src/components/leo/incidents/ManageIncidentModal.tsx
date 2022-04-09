@@ -17,21 +17,20 @@ import { Toggle } from "components/form/Toggle";
 import { FormRow } from "components/form/FormRow";
 import { useLeoState } from "state/leoState";
 import { useRouter } from "next/router";
-import type { FullIncident } from "src/pages/officer/incidents";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { IncidentEventsArea } from "./IncidentEventsArea";
 import { classNames } from "lib/classNames";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
-import { StatusValueType } from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, LeoIncident, StatusValueType } from "@snailycad/types";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
 import { Input } from "components/form/inputs/Input";
 
 interface Props {
-  incident?: FullIncident | null;
+  incident?: LeoIncident | null;
   onClose?(): void;
-  onCreate?(incident: FullIncident): void;
-  onUpdate?(oldIncident: FullIncident, incident: FullIncident): void;
+  onCreate?(incident: LeoIncident): void;
+  onUpdate?(oldIncident: LeoIncident, incident: LeoIncident): void;
 }
 
 export function ManageIncidentModal({
@@ -59,8 +58,11 @@ export function ManageIncidentModal({
   const areFieldsDisabled = !isDispatch && !isLeoIncidents;
 
   const { state, execute } = useFetch();
-  const { allOfficers, activeOfficers } = useDispatchState();
-  const officersForSelect = isDispatch ? activeOfficers : allOfficers;
+  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
+
+  const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
+  const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
+  const unitsForSelect = isDispatch ? activeUnits : allUnits;
 
   function handleClose() {
     closeModal(ModalIds.ManageIncident);
@@ -68,7 +70,7 @@ export function ManageIncidentModal({
   }
 
   function makeLabel(value: string) {
-    const unit = allOfficers.find((v) => v.id === value);
+    const unit = allUnits.find((v) => v.id === value) ?? activeUnits.find((v) => v.id === value);
 
     if (unit && isUnitCombined(unit)) {
       return generateCallsign(unit, "pairedUnitTemplate");
@@ -80,7 +82,7 @@ export function ManageIncidentModal({
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const data = {
       ...values,
-      involvedOfficers: values.involvedOfficers.map((v) => v.value),
+      unitsInvolved: values.unitsInvolved.map((v) => v.value),
     };
 
     let id = "";
@@ -113,16 +115,16 @@ export function ManageIncidentModal({
     description: incident?.description ?? "",
     postal: incident?.postal ?? "",
     descriptionData: dataToSlate(incident),
-    involvedOfficers:
-      incident?.officersInvolved.map((v) => ({
-        label: makeLabel(v.id),
-        value: v.id,
-      })) ?? ([] as SelectValue[]),
     firearmsInvolved: incident?.firearmsInvolved ?? false,
     injuriesOrFatalities: incident?.injuriesOrFatalities ?? false,
     arrestsMade: incident?.arrestsMade ?? false,
     isActive: isDispatch ? true : incident?.isActive ?? false,
     situationCodeId: incident?.situationCodeId ?? null,
+    unitsInvolved:
+      incident?.unitsInvolved.map((unit) => ({
+        label: makeLabel(unit.unit.id),
+        value: unit.unit.id,
+      })) ?? ([] as SelectValue[]),
   };
 
   return (
@@ -137,21 +139,18 @@ export function ManageIncidentModal({
           {({ handleChange, setFieldValue, errors, values, isValid }) => (
             <Form className="w-full flex flex-col justify-between">
               <div>
-                <FormField
-                  errorMessage={errors.involvedOfficers as string}
-                  label={t("involvedOfficers")}
-                >
+                <FormField errorMessage={errors.unitsInvolved as string} label={t("unitsInvolved")}>
                   <Select
                     disabled={areFieldsDisabled}
                     isMulti
-                    value={values.involvedOfficers}
-                    name="involvedOfficers"
+                    value={values.unitsInvolved}
+                    name="unitsInvolved"
                     onChange={handleChange}
-                    values={officersForSelect
+                    values={unitsForSelect
                       .filter((v) => (creator ? v.id !== activeOfficer?.id : true))
-                      .map((v) => ({
-                        label: makeLabel(v.id),
-                        value: v.id,
+                      .map((unit) => ({
+                        label: makeLabel(unit.id),
+                        value: unit.id,
                       }))}
                   />
                 </FormField>

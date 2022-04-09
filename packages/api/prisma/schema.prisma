@@ -633,42 +633,43 @@ model EmployeeValue {
 
 // leo
 model Officer {
-  id                          String              @id @default(cuid())
-  department                  DepartmentValue?    @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  id                          String                 @id @default(cuid())
+  department                  DepartmentValue?       @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId                String?
-  callsign                    String              @db.VarChar(255)
-  callsign2                   String              @db.VarChar(255)
+  callsign                    String                 @db.VarChar(255)
+  callsign2                   String                 @db.VarChar(255)
   // `division` is deprecated. Use `divisions` instead.
-  division                    DivisionValue?      @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  division                    DivisionValue?         @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String?
-  divisions                   DivisionValue[]     @relation("officerDivisionsToDivision")
-  rank                        Value?              @relation("officerRankToValue", fields: [rankId], references: [id])
+  divisions                   DivisionValue[]        @relation("officerDivisionsToDivision")
+  rank                        Value?                 @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
-  status                      StatusValue?        @relation("officerStatusToValue", fields: [statusId], references: [id])
+  status                      StatusValue?           @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
-  suspended                   Boolean             @default(false)
+  suspended                   Boolean                @default(false)
   badgeNumber                 Int?
-  imageId                     String?             @db.VarChar(255)
-  citizen                     Citizen             @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  imageId                     String?                @db.VarChar(255)
+  citizen                     Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
-  createdAt                   DateTime            @default(now())
-  updatedAt                   DateTime            @default(now()) @updatedAt
-  whitelistStatus             LeoWhitelistStatus? @relation(fields: [whitelistStatusId], references: [id])
+  createdAt                   DateTime               @default(now())
+  updatedAt                   DateTime               @default(now()) @updatedAt
+  whitelistStatus             LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId           String?
   radioChannelId              String?
-  bolos                       Bolo[]              @relation("bolosToOfficer")
+  bolos                       Bolo[]                 @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
-  activeIncident              LeoIncident?        @relation("activeIncident", fields: [activeIncidentId], references: [id])
+  activeIncident              LeoIncident?           @relation("activeIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId            String?
   LeoIncident                 LeoIncident[]
-  LeoIncidentInvolvedOfficers LeoIncident[]       @relation("involvedOfficers")
-  combinedLeoUnit             CombinedLeoUnit?    @relation(fields: [combinedLeoUnitId], references: [id])
+  LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
+  IncidentInvolvedUnit        IncidentInvolvedUnit[]
 }
 
 model LeoWhitelistStatus {
@@ -719,26 +720,27 @@ model ImpoundedVehicle {
 }
 
 model LeoIncident {
-  id                   String          @id @default(uuid())
-  caseNumber           Int             @default(autoincrement())
-  description          String?         @db.Text
+  id                   String                 @id @default(uuid())
+  caseNumber           Int                    @default(autoincrement())
+  description          String?                @db.Text
   descriptionData      Json?
   postal               String?
   // when null, it is the dispatcher
-  creator              Officer?        @relation(fields: [creatorId], references: [id])
+  creator              Officer?               @relation(fields: [creatorId], references: [id])
   creatorId            String?
-  officersInvolved     Officer[]       @relation("involvedOfficers")
-  firearmsInvolved     Boolean         @default(false)
-  injuriesOrFatalities Boolean         @default(false)
-  arrestsMade          Boolean         @default(false)
-  isActive             Boolean         @default(false)
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @default(now()) @updatedAt
-  situationCode        StatusValue?    @relation(fields: [situationCodeId], references: [id])
+  officersInvolved     Officer[]              @relation("involvedOfficers")
+  unitsInvolved        IncidentInvolvedUnit[] @relation("unitsInvolved")
+  firearmsInvolved     Boolean                @default(false)
+  injuriesOrFatalities Boolean                @default(false)
+  arrestsMade          Boolean                @default(false)
+  isActive             Boolean                @default(false)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  situationCode        StatusValue?           @relation(fields: [situationCodeId], references: [id])
   situationCodeId      String?
   events               IncidentEvent[]
   calls                Call911[]
-  Officer              Officer[]       @relation("activeIncident")
+  Officer              Officer[]              @relation("activeIncident")
 }
 
 model IncidentEvent {
@@ -751,15 +753,16 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id             String         @id @default(uuid())
-  officers       Officer[]
-  callsign       String
-  callsign2      String?
-  incremental    Int?
-  radioChannelId String?
-  status         StatusValue?   @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId       String?
-  AssignedUnit   AssignedUnit[]
+  id                   String                 @id @default(uuid())
+  officers             Officer[]
+  callsign             String
+  callsign2            String?
+  incremental          Int?
+  radioChannelId       String?
+  status               StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId             String?
+  AssignedUnit         AssignedUnit[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
 
 // dispatching
@@ -813,6 +816,20 @@ model AssignedUnit {
   combinedLeoId String?
   call911       Call911?         @relation(fields: [call911Id], references: [id], onDelete: Cascade)
   call911Id     String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now()) @updatedAt
+}
+
+model IncidentInvolvedUnit {
+  id            String           @id @default(uuid())
+  officer       Officer?         @relation(fields: [officerId], references: [id])
+  officerId     String?
+  deputy        EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
+  emsFdDeputyId String?
+  combinedUnit  CombinedLeoUnit? @relation(fields: [combinedLeoId], references: [id])
+  combinedLeoId String?
+  incident      LeoIncident?     @relation("unitsInvolved", fields: [incidentId], references: [id], onDelete: Cascade)
+  incidentId    String?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now()) @updatedAt
 }
@@ -925,28 +942,29 @@ model NameChangeRequest {
 
 // ems-fd
 model EmsFdDeputy {
-  id             String          @id @default(cuid())
-  department     DepartmentValue @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId   String
-  callsign       String          @db.VarChar(255)
-  callsign2      String          @db.VarChar(255)
-  division       DivisionValue   @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId     String
-  rank           Value?          @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId         String?
-  status         StatusValue?    @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId       String?
-  suspended      Boolean         @default(false)
-  badgeNumber    Int?
-  imageId        String?         @db.VarChar(255)
-  citizen        Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId      String
-  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @default(now()) @updatedAt
-  radioChannelId String?
-  AssignedUnit   AssignedUnit[]
+  id                   String                 @id @default(cuid())
+  department           DepartmentValue        @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId         String
+  callsign             String                 @db.VarChar(255)
+  callsign2            String                 @db.VarChar(255)
+  division             DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId           String
+  rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId               String?
+  status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId             String?
+  suspended            Boolean                @default(false)
+  badgeNumber          Int?
+  imageId              String?                @db.VarChar(255)
+  citizen              Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId            String
+  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId               String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @default(now()) @updatedAt
+  radioChannelId       String?
+  AssignedUnit         AssignedUnit[]
+  IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
 
 // truck logs

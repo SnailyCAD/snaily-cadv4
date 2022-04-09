@@ -4,7 +4,7 @@ import { SocketEvents } from "@snailycad/config";
 import type { LeoIncident, Call911, TowCall, Bolo, Call911Event, TaxiCall } from "@prisma/client";
 import type { IncidentEvent } from "@snailycad/types";
 
-type FullIncident = LeoIncident & { officersInvolved: any[]; events?: IncidentEvent[] };
+type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 
 @SocketService("/")
 export class Socket {

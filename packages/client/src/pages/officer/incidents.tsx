@@ -9,7 +9,7 @@ import { useModal } from "context/ModalContext";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { LeoIncident, Officer } from "@snailycad/types";
+import type { EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -21,12 +21,12 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
-
-export type FullIncident = LeoIncident & { officersInvolved: Officer[] };
+import { isUnitCombined } from "@snailycad/utils";
 
 interface Props {
-  incidents: FullIncident[];
+  incidents: LeoIncident[];
   officers: Officer[];
+  deputies: EmsFdDeputy[];
   activeOfficer: Officer | null;
 }
 
@@ -42,14 +42,19 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-export default function LeoIncidents({ officers, activeOfficer, incidents: data }: Props) {
+export default function LeoIncidents({
+  officers,
+  deputies,
+  activeOfficer,
+  incidents: data,
+}: Props) {
   const [incidents, setIncidents] = React.useState(data);
-  const [tempIncident, setTempIncident] = React.useState<FullIncident | null>(null);
+  const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
-  const { setAllOfficers } = useDispatchState();
+  const dispatchState = useDispatchState();
   const { setActiveOfficer } = useLeoState();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
@@ -60,19 +65,25 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
 
   const isOfficerOnDuty = activeOfficer && activeOfficer.status?.shouldDo !== "SET_OFF_DUTY";
 
-  function handleViewDescription(incident: FullIncident) {
+  function handleViewDescription(incident: LeoIncident) {
     setTempIncident(incident);
     openModal(ModalIds.Description);
   }
 
-  function onDeleteClick(incident: FullIncident) {
+  function onDeleteClick(incident: LeoIncident) {
     openModal(ModalIds.AlertDeleteIncident);
     setTempIncident(incident);
   }
 
-  function onEditClick(incident: FullIncident) {
+  function onEditClick(incident: LeoIncident) {
     openModal(ModalIds.ManageIncident);
     setTempIncident(incident);
+  }
+
+  function makeAssignedUnit(unit: any) {
+    return isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
+      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
 
   async function handleDelete() {
@@ -93,17 +104,11 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
   }
 
   React.useEffect(() => {
-    setAllOfficers(officers);
+    dispatchState.setAllOfficers(officers);
+    dispatchState.setAllDeputies(deputies);
     setActiveOfficer(activeOfficer);
-  }, [setAllOfficers, setActiveOfficer, activeOfficer, officers]);
-
-  function involvedOfficers(incident: FullIncident) {
-    return incident.officersInvolved.length <= 0 ? (
-      <span>{common("none")}</span>
-    ) : (
-      incident.officersInvolved.map((o) => `${generateCallsign(o)} ${makeUnitName(o)}`).join(", ")
-    );
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setActiveOfficer, activeOfficer, deputies, officers]);
 
   return (
     <Layout
@@ -151,7 +156,8 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
                 {incident.creator ? makeUnitName(incident.creator) : t("dispatch")}
               </span>
             ),
-            involvedOfficers: involvedOfficers(incident),
+            unitsInvolved:
+              incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
             firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
             injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
             arrestsMade: common(yesOrNoText(incident.arrestsMade)),
@@ -193,7 +199,7 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
           columns={[
             { Header: t("caseNumber"), accessor: "caseNumber" },
             { Header: t("officer"), accessor: "officer" },
-            { Header: t("involvedOfficers"), accessor: "involvedOfficers" },
+            { Header: t("unitsInvolved"), accessor: "unitsInvolved" },
             { Header: t("firearmsInvolved"), accessor: "firearmsInvolved" },
             { Header: t("injuriesOrFatalities"), accessor: "injuriesOrFatalities" },
             { Header: t("arrestsMade"), accessor: "arrestsMade" },
@@ -243,8 +249,9 @@ export default function LeoIncidents({ officers, activeOfficer, incidents: data 
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [{ incidents, officers }, activeOfficer, values] = await requestAll(req, [
-    ["/incidents", { officers: [], incidents: [] }],
+  const [{ incidents }, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
+    ["/incidents", { incidents: [] }],
+    ["/dispatch", { deputies: [], officers: [] }],
     ["/leo/active-officer", null],
     ["/admin/values/codes_10", []],
   ]);
@@ -255,6 +262,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       incidents,
       activeOfficer,
       officers,
+      deputies,
       values,
       messages: {
         ...(await getTranslations(["leo", "calls", "common"], locale)),

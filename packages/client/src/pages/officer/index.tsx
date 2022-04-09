@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { Bolo, Officer, RecordType } from "@snailycad/types";
+import { Bolo, LeoIncident, Officer, RecordType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -19,7 +19,6 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import type { FullIncident } from "./incidents";
 import { useModal } from "context/ModalContext";
 import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
@@ -57,7 +56,7 @@ interface Props {
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: Bolo[];
-  activeIncidents: FullIncident[];
+  activeIncidents: LeoIncident[];
   allOfficers: Officer[];
 }
 

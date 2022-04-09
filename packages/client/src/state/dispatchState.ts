@@ -7,9 +7,9 @@ import type {
   CombinedLeoUnit,
   Officer,
   EmsFdDeputy,
+  LeoIncident,
 } from "@snailycad/types";
 import create from "zustand";
-import type { FullIncident } from "src/pages/officer/incidents";
 
 export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
 
@@ -35,8 +35,8 @@ interface DispatchState {
   activeDispatchers: ActiveDispatchers[];
   setActiveDispatchers(dispatchers: ActiveDispatchers[]): void;
 
-  activeIncidents: FullIncident[];
-  setActiveIncidents(incidents: FullIncident[]): void;
+  activeIncidents: LeoIncident[];
+  setActiveIncidents(incidents: LeoIncident[]): void;
 }
 
 export const useDispatchState = create<DispatchState>((set) => ({
