@@ -356,10 +356,16 @@ export class Calls911Controller {
       throw new NotFound("callNotFound");
     }
 
+    const types = {
+      combined: "combinedLeoId",
+      leo: "officerId",
+      "ems-fd": "emsFdDeputyId",
+    };
+
     const existing = await prisma.assignedUnit.findFirst({
       where: {
         call911Id: callId,
-        [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+        [types[type]]: unit.id,
       },
     });
 
@@ -371,7 +377,7 @@ export class Calls911Controller {
       await prisma.assignedUnit.create({
         data: {
           call911Id: callId,
-          [type === "leo" ? "officerId" : "emsFdDeputyId"]: unit.id,
+          [types[type]]: unit.id,
         },
       });
     } else {
