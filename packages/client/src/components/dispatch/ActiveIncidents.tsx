@@ -46,7 +46,7 @@ export function ActiveIncidents() {
       method: "PUT",
       data: {
         ...tempIncident,
-        involvedOfficers: tempIncident.officersInvolved.map((v) => v.id),
+        unitsInvolved: tempIncident.unitsInvolved.map((v) => v.id),
         isActive: false,
       },
     });
@@ -78,14 +78,6 @@ export function ActiveIncidents() {
     setTempIncident(null);
   }
 
-  function involvedOfficers(incident: FullIncident) {
-    return (incident.officersInvolved?.length ?? 0) <= 0 ? (
-      <span>{common("none")}</span>
-    ) : (
-      incident.officersInvolved.map((o) => `${generateCallsign(o)} ${makeUnitName(o)}`).join(", ")
-    );
-  }
-
   return (
     <div className="mt-3 overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
@@ -112,11 +104,8 @@ export function ActiveIncidents() {
           data={activeIncidents
             .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
             .map((incident) => {
-              console.log({ incident });
-
               return {
                 caseNumber: `#${incident.caseNumber}`,
-                involvedOfficers: involvedOfficers(incident),
                 firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
                 arrestsMade: common(yesOrNoText(incident.arrestsMade)),
