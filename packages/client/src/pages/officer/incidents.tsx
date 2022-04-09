@@ -249,8 +249,7 @@ export default function LeoIncidents({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  // todo: fetch all ems/fd deputies here too
-  const [{ incidents, officers, deputies }, activeOfficer, values] = await requestAll(req, [
+  const [{ incidents }, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
     ["/incidents", { incidents: [] }],
     ["/dispatch", { deputies: [], officers: [] }],
     ["/leo/active-officer", null],
