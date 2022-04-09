@@ -28,12 +28,16 @@ import { classNames } from "lib/classNames";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
+import { useAudio } from "react-use";
+import { useAuth } from "context/AuthContext";
 
+const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 function ActiveCallsInner() {
+  const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
@@ -44,6 +48,12 @@ function ActiveCallsInner() {
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
   const router = useRouter();
+
+  const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
+  const [audio, , controls] = useAudio({
+    autoPlay: false,
+    src: ADDED_TO_CALL_SRC,
+  });
 
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
@@ -98,12 +108,23 @@ function ActiveCallsInner() {
 
   useListener(
     SocketEvents.Update911Call,
-    (call) => {
+    (call: Full911Call | undefined) => {
       if (!call) return;
 
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
+            const wasAssignedToCall =
+              !v.assignedUnits.some((u) => u.unit.id === unit?.id) &&
+              call.assignedUnits.some((v) => v.unit.id === unit?.id);
+
+            if (wasAssignedToCall && shouldPlayAddedToCallSound) {
+              controls.volume(0.3);
+              controls.play();
+            } else {
+              controls.pause();
+            }
+
             setTempCall({ ...v, ...call });
             return { ...v, ...call };
           }
@@ -112,7 +133,7 @@ function ActiveCallsInner() {
         }),
       );
     },
-    [calls, setCalls],
+    [calls, unit, controls, shouldPlayAddedToCallSound, setCalls],
   );
 
   function handleManageClick(call: Full911Call) {
@@ -175,6 +196,7 @@ function ActiveCallsInner() {
 
   return (
     <div className="overflow-hidden rounded-md card">
+      {audio}
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 

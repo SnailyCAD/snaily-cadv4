@@ -209,10 +209,12 @@ model User {
 }
 
 model UserSoundSettings {
-  id          String  @id @default(uuid())
-  panicButton Boolean @default(true)
-  signal100   Boolean @default(true)
-  User        User[]
+  id           String  @id @default(uuid())
+  panicButton  Boolean @default(true)
+  signal100    Boolean @default(true)
+  addedToCall  Boolean @default(false)
+  stopRoleplay Boolean @default(false)
+  User         User[]
 }
 
 model User2FA {

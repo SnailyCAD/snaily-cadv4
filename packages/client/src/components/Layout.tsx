@@ -19,7 +19,7 @@ export function Layout({
   className = "",
   permissions,
 }: LayoutProps) {
-  const { Component, roleplayStopped } = useRoleplayStopped();
+  const { Component, audio, roleplayStopped } = useRoleplayStopped();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
 
   if (forbidden) {
@@ -31,7 +31,7 @@ export function Layout({
       <Nav maxWidth={navMaxWidth} />
 
       <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
-        {roleplayStopped && !hideAlerts ? <Component /> : null}
+        {roleplayStopped && !hideAlerts ? <Component audio={audio} /> : null}
 
         {children}
       </main>
