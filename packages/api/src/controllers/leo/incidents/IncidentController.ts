@@ -266,7 +266,12 @@ export class IncidentController {
           },
         });
 
-        // todo: set activeIncident
+        if (type === "leo") {
+          await prisma.officer.update({
+            where: { id: unit.id },
+            data: { activeIncidentId: incidentId },
+          });
+        }
 
         await prisma.leoIncident.update({
           where: { id: incidentId },
