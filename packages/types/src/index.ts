@@ -730,6 +730,7 @@ export interface ActiveDispatchers {
  */
 export interface Call911 {
   id: string;
+  caseNumber: number;
   createdAt: Date;
   updatedAt: Date;
   positionId: string | null;
