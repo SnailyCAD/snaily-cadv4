@@ -10,12 +10,12 @@ import type { cad, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
-import { findUnit } from "./911-calls/Calls911Controller";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/user";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { findUnit } from "lib/leo/findUnit";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -166,7 +166,7 @@ export class DispatchController {
   })
   async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
-    const { unit, type } = await findUnit(unitId, undefined, true);
+    const { unit, type } = await findUnit(unitId);
 
     if (!unit) {
       throw new ExtendedNotFound({ radioChannel: "Unit not found" });

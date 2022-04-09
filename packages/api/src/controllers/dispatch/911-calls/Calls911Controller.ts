@@ -7,17 +7,13 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import { unitProperties, combinedUnitProperties, _leoProperties } from "lib/leo/activeOfficer";
+import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
 import {
   ShouldDoType,
-  CombinedLeoUnit,
-  Officer,
-  EmsFdDeputy,
   DepartmentValue,
   DivisionValue,
   User,
-  StatusValue,
   MiscCadSettings,
   Call911,
 } from "@prisma/client";
@@ -27,6 +23,7 @@ import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { findUnit } from "lib/leo/findUnit";
 
 export const assignedUnitsInclude = {
   include: {
@@ -346,7 +343,7 @@ export class Calls911Controller {
       throw new BadRequest("unitIsRequired");
     }
 
-    const { unit, type } = await findUnit(rawUnit, undefined, true);
+    const { unit, type } = await findUnit(rawUnit);
     if (!unit) {
       throw new NotFound("unitNotFound");
     }
@@ -438,13 +435,9 @@ export class Calls911Controller {
   ) {
     await Promise.all(
       units.map(async (id) => {
-        const { unit, type } = await findUnit(
-          id,
-          {
-            NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-          },
-          true,
-        );
+        const { unit, type } = await findUnit(id, {
+          NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+        });
 
         if (!unit) {
           throw new BadRequest("unitOffDuty");
@@ -539,42 +532,4 @@ export class Calls911Controller {
       ],
     };
   }
-}
-
-export async function findUnit(
-  id: string,
-  extraFind?: any,
-  searchCombined?: false,
-): Promise<{ unit: Officer | EmsFdDeputy | null; type: "leo" | "ems-fd" }>;
-export async function findUnit(
-  id: string,
-  extraFind?: any,
-  searchCombined?: true,
-): Promise<{
-  unit: Officer | EmsFdDeputy | (CombinedLeoUnit & { status: StatusValue }) | null;
-  type: "leo" | "ems-fd" | "combined";
-}>;
-export async function findUnit(id: string, extraFind?: any, searchCombined?: boolean) {
-  let type: "leo" | "ems-fd" = "leo";
-  let unit: any = await prisma.officer.findFirst({
-    where: { id, ...extraFind },
-  });
-
-  if (!unit) {
-    type = "ems-fd";
-    unit = await prisma.emsFdDeputy.findFirst({ where: { id, ...extraFind } });
-  }
-
-  if (searchCombined && !unit) {
-    unit = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        id,
-      },
-      include: combinedUnitProperties,
-    });
-
-    return { type: "combined", unit: unit ?? null };
-  }
-
-  return { type, unit: unit ?? null };
 }
