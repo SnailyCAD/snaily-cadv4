@@ -100,7 +100,11 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 name: `${citizen.name} ${citizen.surname}`,
-                dateOfBirth: <FullDate onlyDate>{citizen.dateOfBirth}</FullDate>,
+                dateOfBirth: (
+                  <FullDate isDateOfBirth onlyDate>
+                    {citizen.dateOfBirth}
+                  </FullDate>
+                ),
                 gender: citizen.gender.value,
                 ethnicity: citizen.ethnicity.value,
                 hairColor: citizen.hairColor,
