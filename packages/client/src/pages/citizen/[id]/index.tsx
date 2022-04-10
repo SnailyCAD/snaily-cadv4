@@ -16,7 +16,7 @@ import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
-import { RecordsArea } from "components/leo/modals/NameSearchModal/RecordsArea";
+// import { RecordsArea } from "components/leo/modals/NameSearchModal/tabs/RecordsArea";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
@@ -26,6 +26,7 @@ import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
+import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -152,7 +153,8 @@ export default function CitizenId() {
       <div className="mt-3 space-y-3">
         <VehiclesCard vehicles={citizen.vehicles} />
         <WeaponsCard weapons={citizen.weapons} />
-        <RecordsArea records={citizen.Record} />
+        {/* <RecordsArea records={citizen.Record} /> */}
+        <RecordsTab records={citizen.Record} isCitizen />
       </div>
 
       <CitizenImageModal citizen={citizen} />

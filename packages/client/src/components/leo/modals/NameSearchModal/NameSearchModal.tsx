@@ -11,8 +11,8 @@ import { useTranslations } from "use-intl";
 import { CustomFieldCategory, Citizen, RecordType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
-import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
-import { RecordsArea } from "./RecordsArea";
+// import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
+import { NameSearchTabsContainer } from "./tabs/TabsContainer";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
@@ -39,11 +39,6 @@ const VehicleSearchModal = dynamic(
 const WeaponSearchModal = dynamic(
   async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
 );
-
-const enum Toggled {
-  VEHICLES = 0,
-  RECORDS = 1,
-}
 
 function AutoSubmit() {
   const { getPayload } = useModal();
@@ -74,7 +69,6 @@ export function NameSearchModal() {
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
-  const [toggled, setToggled] = React.useState<Toggled | null>(null);
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
 
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
@@ -82,7 +76,6 @@ export function NameSearchModal() {
   React.useEffect(() => {
     if (!isOpen(ModalIds.NameSearch)) {
       setResults(null);
-      setToggled(null);
       setCurrentResult(null);
     }
   }, [isOpen, setCurrentResult, setResults]);
@@ -128,14 +121,6 @@ export function NameSearchModal() {
       setResults(Array.isArray(json) ? json : [json]);
     } else {
       setResults(false);
-    }
-  }
-
-  function handleToggle(toggle: Toggled) {
-    if (toggle === toggled) {
-      setToggled(null);
-    } else {
-      setToggled(toggle);
     }
   }
 
@@ -379,33 +364,7 @@ export function NameSearchModal() {
                 </div>
 
                 <div className="mt-5">
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleToggle(Toggled.VEHICLES)}
-                      type="button"
-                      className="w-full"
-                    >
-                      {t("toggleVehiclesWeapons")}
-                    </Button>
-                    <Button
-                      onClick={() => handleToggle(Toggled.RECORDS)}
-                      type="button"
-                      className="w-full"
-                    >
-                      {t("toggleRecords")}
-                    </Button>
-                  </div>
-
-                  {toggled === Toggled.VEHICLES ? (
-                    <VehiclesAndWeaponsSection
-                      vehicles={currentResult.vehicles}
-                      weapons={currentResult.weapons}
-                    />
-                  ) : null}
-
-                  {toggled === Toggled.RECORDS ? (
-                    <RecordsArea warrants={currentResult.warrants} records={currentResult.Record} />
-                  ) : null}
+                  <NameSearchTabsContainer />
                 </div>
               </div>
             ) : null}

@@ -1,6 +1,7 @@
+import * as React from "react";
 import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
-import { Officer, Record, RecordType, Warrant } from "@snailycad/types";
+import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
@@ -11,36 +12,33 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";
-import { Select } from "components/form/Select";
-import { ManageRecordModal } from "../ManageRecordModal";
+import { ManageRecordModal } from "../../ManageRecordModal";
 import { FullDate } from "components/shared/FullDate";
 import { HoverCard } from "components/shared/HoverCard";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import { TabsContent } from "components/shared/TabList";
 
-interface Props {
-  records: Record[];
-  warrants?: (Warrant & { officer: Officer })[];
-}
-
-export function RecordsArea({ warrants, records }: Props) {
+export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
-  const router = useRouter();
   const { state, execute } = useFetch();
-  const isCitizen = router.pathname.startsWith("/citizen");
   const { getPayload, closeModal } = useModal();
   const { currentResult, setCurrentResult } = useNameSearch();
 
   const tempItem = getPayload<Record>(ModalIds.AlertDeleteRecord);
   const tempEditRecord = getPayload<Record>(ModalIds.ManageRecord);
 
+  if (!currentResult && !isCitizen) {
+    return null;
+  }
+
   const tickets = records.filter((v) => v.type === RecordType.TICKET);
   const writtenWarnings = records.filter((v) => v.type === RecordType.WRITTEN_WARNING);
   const arrestReports = records.filter((v) => v.type === RecordType.ARREST_REPORT);
 
-  const data: [string, string, Record[]][] = [
-    [t("Leo.tickets"), t("Leo.noTicketsCitizen"), tickets],
-    [t("Leo.writtenWarnings"), t("Leo.noWrittenWarnings"), writtenWarnings],
-    [t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
+  const data: [string, string, string, Record[]][] = [
+    ["tickets", t("Leo.tickets"), t("Leo.noTicketsCitizen"), tickets],
+    ["writtenWarnings", t("Leo.writtenWarnings"), t("Leo.noWrittenWarnings"), writtenWarnings],
+    ["arrestReports", t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
   ];
 
   async function handleDelete() {
@@ -62,37 +60,33 @@ export function RecordsArea({ warrants, records }: Props) {
     }
   }
 
+  const ContentWrapper = isCitizen ? DivWrapper : React.Fragment;
+
   return (
-    <div className={isCitizen ? "bg-gray-200/60 p-4 dark:bg-gray-2 rounded-md" : ""}>
-      {isCitizen ? (
-        <header className="flex items-center justify-between mb-3">
-          <h1 className="text-2xl font-semibold">{t("Leo.records")}</h1>
-        </header>
-      ) : null}
+    <ContentWrapper>
+      {data.map(([value, title, noValuesText, data]) =>
+        isCitizen ? (
+          <React.Fragment key={value}>
+            <h3 className="text-xl font-semibold">{title}</h3>
 
-      {data.map(([title, noValuesText, data]) => (
-        <section className="my-2 mb-5" key={title} id={title}>
-          <h3 className="text-xl font-semibold">{title}</h3>
+            {data.length <= 0 ? (
+              <p className="text-gray-400 my-2">{noValuesText}</p>
+            ) : (
+              <RecordsTable data={data} />
+            )}
+          </React.Fragment>
+        ) : (
+          <TabsContent value={value} className="mt-3" key={value}>
+            <h3 className="text-xl font-semibold">{title}</h3>
 
-          {data.length <= 0 ? (
-            <p className="text-gray-400 my-2">{noValuesText}</p>
-          ) : (
-            <RecordsTable data={data} />
-          )}
-        </section>
-      ))}
-
-      {warrants ? (
-        <section className="my-2 mb-5">
-          <h3 className="text-xl font-semibold">{t("Leo.warrants")}</h3>
-
-          {warrants.length <= 0 ? (
-            <p className="text-gray-400 my-2">{t("Leo.noWarrants")}</p>
-          ) : (
-            <WarrantsTable data={warrants} />
-          )}
-        </section>
-      ) : null}
+            {data.length <= 0 ? (
+              <p className="text-gray-400 my-2">{noValuesText}</p>
+            ) : (
+              <RecordsTable data={data} />
+            )}
+          </TabsContent>
+        ),
+      )}
 
       <AlertModal
         id={ModalIds.AlertDeleteRecord}
@@ -101,6 +95,7 @@ export function RecordsArea({ warrants, records }: Props) {
         title={t("Leo.deleteRecord")}
         state={state}
       />
+
       {tempEditRecord ? (
         <ManageRecordModal
           onUpdate={(data) => {
@@ -119,7 +114,7 @@ export function RecordsArea({ warrants, records }: Props) {
           isEdit
         />
       ) : null}
-    </div>
+    </ContentWrapper>
   );
 }
 
@@ -171,7 +166,7 @@ function RecordsTable({ data }: { data: Record[] }) {
             }),
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
-            description: record.notes,
+            notes: record.notes || common("none"),
             createdAt: <FullDate>{record.createdAt}</FullDate>,
             actions: isCitizen ? null : (
               <>
@@ -200,7 +195,7 @@ function RecordsTable({ data }: { data: Record[] }) {
           { Header: t("Leo.violations"), accessor: "violations" },
           { Header: t("Leo.postal"), accessor: "postal" },
           { Header: t("Leo.officer"), accessor: "officer" },
-          { Header: common("description"), accessor: "description" },
+          { Header: t("Leo.notes"), accessor: "notes" },
           { Header: common("createdAt"), accessor: "createdAt" },
           isCitizen ? null : { Header: common("actions"), accessor: "actions" },
         ]}
@@ -209,112 +204,14 @@ function RecordsTable({ data }: { data: Record[] }) {
   );
 }
 
-const values = [
-  { label: "Inactive", value: "inactive" },
-  { label: "Active", value: "active" },
-];
-
-function WarrantsTable({ data }: { data: (Warrant & { officer: Officer })[] }) {
-  const common = useTranslations("Common");
-  const { openModal, closeModal, getPayload } = useModal();
-  const t = useTranslations();
-  const { generateCallsign } = useGenerateCallsign();
-  const { state, execute } = useFetch();
-  const { currentResult, setCurrentResult } = useNameSearch();
-
-  async function handleDelete() {
-    const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
-    if (!warrant) return;
-
-    const { json } = await execute(`/records/${warrant.id}`, {
-      data: { type: "WARRANT" },
-      method: "DELETE",
-    });
-
-    if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
-        });
-      }
-
-      closeModal(ModalIds.AlertRevokeWarrant);
-    }
-  }
-
-  function handleDeleteClick(warrant: Warrant) {
-    openModal(ModalIds.AlertRevokeWarrant, warrant);
-  }
-
-  async function handleChange(value: string, warrant: Warrant) {
-    const { json } = await execute(`/records/warrant/${warrant.id}`, {
-      data: { status: value.toUpperCase(), type: "WARRANT" },
-      method: "PUT",
-    });
-
-    if (json && currentResult) {
-      setCurrentResult({
-        ...currentResult,
-        warrants: currentResult.warrants.map((v) => {
-          if (v.id === warrant.id) {
-            return { ...v, ...json };
-          }
-
-          return v;
-        }),
-      });
-    }
-  }
+function DivWrapper({ children }: any) {
+  const t = useTranslations("Leo");
 
   return (
-    <div>
-      <Table
-        data={data
-          .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
-          .map((warrant) => {
-            const value = values.find((v) => v.value === warrant.status.toLowerCase());
+    <div className="p-4 card">
+      <h1 className="text-3xl font-semibold mb-5">{t("records")}</h1>
 
-            return {
-              officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
-              description: warrant.description,
-              createdAt: <FullDate>{warrant.createdAt}</FullDate>,
-              actions: (
-                <div className="flex gap-2">
-                  <Select
-                    onChange={(e) => handleChange(e.target.value, warrant)}
-                    className="w-40"
-                    values={values}
-                    value={value ?? null}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => handleDeleteClick(warrant)}
-                    small
-                    variant="danger"
-                  >
-                    {t("Leo.revoke")}
-                  </Button>
-                </div>
-              ),
-            };
-          })}
-        columns={[
-          { Header: t("Leo.officer"), accessor: "officer" },
-          { Header: common("description"), accessor: "description" },
-          { Header: common("createdAt"), accessor: "createdAt" },
-          { Header: common("actions"), accessor: "actions" },
-        ]}
-      />
-
-      <AlertModal
-        id={ModalIds.AlertRevokeWarrant}
-        onDeleteClick={handleDelete}
-        description={t("Leo.alert_revokeWarrant")}
-        title={t("Leo.revokeWarrant")}
-        deleteText={t("Leo.revoke")}
-        state={state}
-      />
+      {children}
     </div>
   );
 }
