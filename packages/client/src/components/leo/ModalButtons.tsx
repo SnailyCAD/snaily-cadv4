@@ -29,6 +29,10 @@ const buttons: MButton[] = [
     modalId: ModalIds.WeaponSearch,
   },
   {
+    nameKey: ["Leo", "customFieldSearch"],
+    modalId: ModalIds.CustomFieldSearch,
+  },
+  {
     nameKey: ["Leo", "createWrittenWarning"],
     modalId: ModalIds.CreateWrittenWarning,
   },

@@ -8,6 +8,8 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { CustomFieldCategory } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
+import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 
 export const citizenSearchInclude = {
   ...citizenInclude,
@@ -29,6 +31,24 @@ export const citizenSearchInclude = {
     },
   },
   dlCategory: { include: { value: true } },
+};
+
+const vehiclesInclude = {
+  model: { include: { value: true } },
+  registrationStatus: true,
+  insuranceStatus: true,
+  TruckLog: true,
+  Business: true,
+  citizen: { include: { warrants: true } },
+  flags: true,
+  customFields: { include: { field: true } },
+};
+
+const weaponsInclude = {
+  citizen: true,
+  model: { include: { value: true } },
+  registrationStatus: true,
+  customFields: { include: { field: true } },
 };
 
 @Controller("/search")
@@ -113,12 +133,7 @@ export class SearchController {
           startsWith: serialNumber,
         },
       },
-      include: {
-        citizen: true,
-        model: { include: { value: true } },
-        registrationStatus: true,
-        customFields: { include: { field: true } },
-      },
+      include: weaponsInclude,
     });
 
     if (!weapon) {
@@ -137,7 +152,6 @@ export class SearchController {
   async searchVehicle(
     @BodyParams("plateOrVin") plateOrVin: string,
     @QueryParams("includeMany") includeMany: boolean,
-    @QueryParams("includeCitizenInfo") includeCitizenInfo?: boolean,
   ) {
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
@@ -150,16 +164,7 @@ export class SearchController {
           { vinNumber: { startsWith: plateOrVin } },
         ],
       },
-      include: {
-        model: { include: { value: true } },
-        registrationStatus: true,
-        insuranceStatus: true,
-        TruckLog: true,
-        Business: true,
-        citizen: includeCitizenInfo ? { include: { warrants: true } } : true,
-        flags: true,
-        customFields: { include: { field: true } },
-      },
+      include: vehiclesInclude,
     };
 
     if (includeMany) {
@@ -175,6 +180,46 @@ export class SearchController {
     }
 
     return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
+  }
+
+  @Post("/custom-field")
+  @Description("Search a citizen, vehicle or weapon via a custom field")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async customFieldSearch(@BodyParams() body: unknown) {
+    const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
+
+    const customField = await prisma.customField.findUnique({
+      where: { id: data.customFieldId },
+    });
+
+    const _results = await prisma.customFieldValue.findMany({
+      where: { fieldId: data.customFieldId, value: { mode: "insensitive", equals: data.query } },
+      include: {
+        Citizens: { include: citizenSearchInclude },
+        RegisteredVehicles: { include: vehiclesInclude },
+        Weapons: { include: weaponsInclude },
+        field: true,
+      },
+    });
+
+    const results = _results
+      .map((value) => {
+        const category = value.field.category;
+
+        if (category === CustomFieldCategory.CITIZEN) {
+          return value.Citizens;
+        } else if (category === CustomFieldCategory.VEHICLE) {
+          return value.RegisteredVehicles;
+        }
+
+        return value.Weapons;
+      })
+      .flat(1);
+
+    return { field: customField, results };
   }
 }
 

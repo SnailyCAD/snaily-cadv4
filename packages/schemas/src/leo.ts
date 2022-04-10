@@ -72,3 +72,8 @@ export const LEO_CUSTOM_FIELDS_SCHEMA = z.record(
     value: z.string().nullable().optional(),
   }),
 );
+
+export const CUSTOM_FIELD_SEARCH_SCHEMA = z.object({
+  customFieldId: z.string().min(1),
+  query: z.string().min(1),
+});
