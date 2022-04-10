@@ -9,6 +9,7 @@ import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import { incidentInclude } from "./IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
@@ -46,10 +47,12 @@ export class IncidentController {
       },
     });
 
-    this.socket.emitUpdateActiveIncident({
+    const correctedIncident = officerOrDeputyToUnit({
       ...incident,
       events: [...incident.events, event],
     });
+
+    this.socket.emitUpdateActiveIncident(correctedIncident);
 
     return event;
   }
@@ -103,10 +106,11 @@ export class IncidentController {
       return event;
     });
 
-    this.socket.emitUpdateActiveIncident({
+    const correctedIncident = officerOrDeputyToUnit({
       ...incident,
       events: updatedEvents,
     });
+    this.socket.emitUpdateActiveIncident(correctedIncident);
 
     return updatedEvent;
   }
@@ -149,7 +153,8 @@ export class IncidentController {
 
     const updatedEvents = incident.events.filter((v) => v.id !== event.id);
 
-    this.socket.emitUpdateActiveIncident({ ...incident, events: updatedEvents });
+    const correctedIncident = officerOrDeputyToUnit({ ...incident, events: updatedEvents });
+    this.socket.emitUpdateActiveIncident(correctedIncident);
 
     return true;
   }
