@@ -78,7 +78,7 @@ export function CustomFieldSearch() {
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.customFieldId} label={"Custom Field"}>
+            <FormField errorMessage={errors.customFieldId} label={t("customField")}>
               <Select
                 disabled={state === "loading"}
                 onChange={handleChange}
@@ -91,7 +91,7 @@ export function CustomFieldSearch() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.query} label={"Query"}>
+            <FormField errorMessage={errors.query} label={t("query")}>
               <Input
                 disabled={state === "loading"}
                 onChange={handleChange}
