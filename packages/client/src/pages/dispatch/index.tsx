@@ -48,6 +48,11 @@ const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
 });
 
+const CustomFieldSearch = dynamic(async () => {
+  return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+    .CustomFieldSearch;
+});
+
 interface Props {
   calls: Full911Call[];
   bolos: Bolo[];
@@ -129,6 +134,7 @@ export default function OfficerDashboard(props: Props) {
       )}
       <AddressSearchModal />
       <NameSearchModal />
+      <CustomFieldSearch />
     </Layout>
   );
 }

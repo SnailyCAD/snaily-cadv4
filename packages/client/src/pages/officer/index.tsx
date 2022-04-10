@@ -51,6 +51,11 @@ const CreateWarrantModal = dynamic(async () => {
   return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
 });
 
+const CustomFieldSearch = dynamic(async () => {
+  return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+    .CustomFieldSearch;
+});
+
 interface Props {
   officers: Officer[];
   activeOfficer: ActiveOfficer | null;
@@ -128,6 +133,7 @@ export default function OfficerDashboard({
       )}
       <NameSearchModal />
       <CreateWarrantModal />
+      <CustomFieldSearch />
 
       <div>
         <CreateTicketModal type={RecordType.TICKET} />

@@ -29,10 +29,13 @@ const buttons: MButton[] = [
     modalId: ModalIds.WeaponSearch,
     isEnabled: ({ WEAPON_REGISTRATION }) => WEAPON_REGISTRATION,
   },
-
   {
     nameKey: ["Leo", "addressSearch"],
     modalId: ModalIds.AddressSearch,
+  },
+  {
+    nameKey: ["Leo", "customFieldSearch"],
+    modalId: ModalIds.CustomFieldSearch,
   },
   {
     nameKey: ["Leo", "createBolo"],
