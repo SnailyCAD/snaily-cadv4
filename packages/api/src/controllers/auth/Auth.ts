@@ -30,9 +30,9 @@ export class AuthController {
   async login(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        username: data.username,
+        username: { mode: "insensitive", equals: data.username },
       },
     });
 
