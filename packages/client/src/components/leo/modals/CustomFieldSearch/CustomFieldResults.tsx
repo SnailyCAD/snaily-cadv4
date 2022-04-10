@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CustomFieldCategory } from "@snailycad/types";
 import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
@@ -13,15 +14,19 @@ interface Props {
   results: CustomFieldResults;
 }
 
+const components = {
+  [CustomFieldCategory.CITIZEN]: CitizenResults,
+  [CustomFieldCategory.VEHICLE]: VehicleResults,
+  [CustomFieldCategory.WEAPON]: WeaponResults,
+} as const;
+
 export function CustomFieldResults({ results }: Props) {
   const t = useTranslations("Leo");
-  const components = {
-    [CustomFieldCategory.CITIZEN]: CitizenResults,
-    [CustomFieldCategory.VEHICLE]: VehicleResults,
-    [CustomFieldCategory.WEAPON]: WeaponResults,
-  } as const;
 
-  const Component = components[results.field.category];
+  const Component = React.useMemo(
+    () => components[results.field.category],
+    [results.field.category],
+  );
 
   if (results.results.length <= 0) {
     return (
@@ -43,8 +48,6 @@ function CitizenResults({ results }: any) {
   const { setCurrentResult } = useNameSearch();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-
-  console.log({ results });
 
   const citizens = results as NameSearchResult[];
 
