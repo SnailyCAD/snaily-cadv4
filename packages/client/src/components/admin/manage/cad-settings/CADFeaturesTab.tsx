@@ -102,7 +102,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
   ACTIVE_DISPATCHERS: {
     name: "Active Dispatchers",
     description:
-      "When enabled, curtain buttons on the LEO and EMS/FD dashboard will become disabled when there is an active dispatcher.",
+      "When enabled, certain buttons on the LEO and EMS/FD dashboard will become disabled when there is an active dispatcher.",
   },
   ALLOW_CITIZEN_UPDATE_LICENSE: {
     name: "Allow citizens to update licenses",

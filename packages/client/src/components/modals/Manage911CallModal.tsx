@@ -30,6 +30,7 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {
   call: Full911Call | null;
@@ -50,6 +51,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const { department, division, codes10 } = useValues();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -59,10 +61,12 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
   const isCitizen = router.pathname.includes("/citizen");
-  const isDisabled = !isCitizen && !isDispatch;
+  const isDisabled = hasActiveDispatchers ? !isCitizen && !isDispatch : isCitizen;
   const isEndDisabled = isDispatch
     ? false
-    : !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id);
+    : hasActiveDispatchers
+    ? !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id)
+    : false;
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];

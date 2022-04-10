@@ -143,8 +143,8 @@ export class Calls911Controller {
 
   @Put("/:id")
   @UsePermissions({
-    fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.EmsFd, Permissions.Leo],
   })
   async update911Call(
     @PathParams("id") id: string,
