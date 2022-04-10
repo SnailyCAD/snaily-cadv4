@@ -15,8 +15,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
-    "typecheck": "tsc --noEmit"
+    "build": "yarn tsup",
+    "typecheck": "yarn tsc --noEmit"
   },
   "dependencies": {
     "type-fest": "^2.12.2",

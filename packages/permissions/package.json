@@ -19,10 +19,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "typecheck": "tsc --noEmit",
-    "test:watch": "vitest --watch",
-    "test": "vitest run"
+    "build": "yarn tsup",
+    "typecheck": "yarn tsc --noEmit",
+    "test:watch": "yarn vitest --watch",
+    "test": "yarn vitest run"
   },
   "devDependencies": {
     "tsup": "^5.12.4",

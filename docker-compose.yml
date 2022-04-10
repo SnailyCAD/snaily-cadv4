@@ -33,10 +33,6 @@ services:
     networks:
       - cad_web
 
-volumes:
-  redis-data:
-  redis-conf:
-
 networks:
   cad_web:
     external: true

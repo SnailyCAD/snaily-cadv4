@@ -19,7 +19,7 @@ services:
 
     user: node
     image: node:16
-    command: "yarn workspace @snailycad/api start:docker"
+    command: "yarn workspace @snailycad/api start"
     ports:
       - "8080:8080"
     expose:
@@ -59,10 +59,6 @@ services:
     networks:
       - cad_web
     restart: unless-stopped
-
-volumes:
-  redis-data:
-  redis-conf:
 
 networks:
   cad_web:

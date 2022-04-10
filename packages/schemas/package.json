@@ -19,8 +19,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "typecheck": "tsc --noEmit"
+    "build": "yarn tsup",
+    "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
     "tslib": "^2.3.1",

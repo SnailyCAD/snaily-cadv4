@@ -1410,6 +1410,7 @@ __metadata:
     cors: 2.8.5
     discord-api-types: 0.31.0
     esbuild: ^0.14.34
+    esbuild-linux-64: ^0.14.34
     esbuild-register: ^3.3.2
     express: 4.17.3
     glob: ^7.2.0
@@ -5023,9 +5024,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-linux-64@npm:0.14.34":
+"esbuild-linux-64@npm:0.14.34, esbuild-linux-64@npm:^0.14.34":
   version: 0.14.34
   resolution: "esbuild-linux-64@npm:0.14.34"
+  checksum: c5d806eb545bf9cd0b50408d998d7cf54945176a76a59b16f8a9793b516832ba187b360d66293c1145fd18e2db05214bc866f6b726c0ebf7c468d4b238a362ba
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard

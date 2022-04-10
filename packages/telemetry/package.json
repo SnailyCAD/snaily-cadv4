@@ -6,8 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "copy-env": "node ../../scripts/copy-env.mjs --telemetry",
-    "build": "tsup",
-    "typecheck": "tsc --noEmit"
+    "build": "yarn tsup",
+    "typecheck": "yarn tsc --noEmit"
   },
   "dependencies": {
     "@snailycad/utils": "1.0.0-beta.83",
