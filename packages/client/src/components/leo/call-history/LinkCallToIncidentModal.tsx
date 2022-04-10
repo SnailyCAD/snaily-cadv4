@@ -57,6 +57,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
           <Form>
             <FormField errorMessage={errors.incidentIds as string} label={t("caseNumber")}>
               <Select
+                closeMenuOnSelect={false}
                 isMulti
                 values={incidents.map((incident) => ({
                   value: incident.id,
