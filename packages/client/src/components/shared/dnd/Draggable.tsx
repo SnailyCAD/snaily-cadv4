@@ -18,7 +18,7 @@ export function Draggable({ canDrag, type, item, children }: Props) {
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     }),
-    [item, type],
+    [item, canDrag, type],
   );
 
   return (

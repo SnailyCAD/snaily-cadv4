@@ -9,7 +9,7 @@ import { Infofield } from "components/shared/Infofield";
 import { DriversLicenseCategoryType } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 
-const types = ["driversLicense", "pilotLicense", "weaponLicense", "waterLicense"] as const;
+const types = ["driversLicense", "pilotLicense", "waterLicense", "weaponLicense"] as const;
 
 export function LicensesCard() {
   const { openModal, closeModal } = useModal();

@@ -61,7 +61,7 @@ export function MedicalRecords(props: { medicalRecords: MedicalRecord[] }) {
             data={medicalRecords.map((record) => ({
               diseases: record.type,
               bloodGroup: record.bloodGroup?.value ?? common("none"),
-              description: record.description,
+              description: record.description || common("none"),
               actions: (
                 <>
                   <Button onClick={() => handleEditClick(record)} small variant="success">

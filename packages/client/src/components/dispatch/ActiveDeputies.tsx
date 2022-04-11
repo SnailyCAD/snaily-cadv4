@@ -109,7 +109,7 @@ export function ActiveDeputies() {
                     <ContextMenu canBeOpened={isDispatch} asChild items={codesMapped}>
                       <span>
                         <Draggable
-                          canDrag={isDispatch}
+                          canDrag={hasActiveDispatchers && isDispatch}
                           item={deputy}
                           type={DndActions.MoveUnitTo911Call}
                         >

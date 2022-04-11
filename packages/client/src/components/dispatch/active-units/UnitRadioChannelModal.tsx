@@ -14,6 +14,7 @@ import { useDispatchState } from "state/dispatchState";
 import { handleValidate } from "lib/handleValidate";
 import { UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {
   unit: Officer | EmsFdDeputy | CombinedLeoUnit;
@@ -26,6 +27,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const dispatchState = useDispatchState();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -88,6 +90,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
             variant={null}
             className="dark:bg-dark-bg bg-gray-500 hover:bg-gray-600 px-1.5"
             onClick={() => setIsOpen(true)}
+            disabled={!hasActiveDispatchers}
           >
             <Pencil aria-label={t("manageRadioChannel")} className="fill-current text-white" />
           </Button>

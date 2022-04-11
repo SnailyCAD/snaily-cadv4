@@ -270,7 +270,7 @@ export function ActiveCalls() {
                       accepts={[DndActions.MoveUnitTo911Call]}
                       onDrop={(item) => handleDrop(call, item)}
                       canDrop={(item) =>
-                        isDispatch && !call.assignedUnits.some((v) => v.unit.id === item.id)
+                        isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)
                       }
                     >
                       {call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none")}

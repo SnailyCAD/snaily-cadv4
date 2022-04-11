@@ -21,9 +21,7 @@ interface Props {
 export function SearchMedicalRecordModal({ onClose }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
-  const common = useTranslations("Common");
-  const t = useTranslations("MedicalRecords");
-  const ems = useTranslations("Ems");
+  const t = useTranslations();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
@@ -57,7 +55,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   }
 
   function handleFoundName(data: SearchResult | null) {
-    if (!data?.id || data.medicalRecords.length <= 0) {
+    if (!data?.id) {
       return setResults(false);
     }
 
@@ -76,7 +74,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
   return (
     <Modal
-      title={ems("searchMedicalRecord")}
+      title={t("Ems.searchMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.SearchMedicalRecord)}
       className="w-[750px]"
@@ -84,7 +82,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleSubmit, setFieldValue, handleChange, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            <FormField errorMessage={errors.name} label={t("citizen")}>
+            <FormField errorMessage={errors.name} label={t("MedicalRecords.citizen")}>
               <InputSuggestions
                 onSuggestionClick={(suggestion: SearchResult) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
@@ -120,16 +118,30 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               />
             </FormField>
 
-            {typeof results === "boolean" && !results ? (
-              <p>{ems("citizenNoMedicalRecords")}</p>
+            {typeof results !== "boolean" && results && results.medicalRecords.length <= 0 ? (
+              <div className="flex items-center justify-between my-5">
+                <p>{t("Ems.citizenNoMedicalRecords")}</p>
+                <Button
+                  small
+                  variant={results.dead ? "success" : "danger"}
+                  type="button"
+                  onClick={handleDeclare}
+                  disabled={state === "loading"}
+                  className="mt-2"
+                >
+                  {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
+                </Button>
+              </div>
             ) : null}
 
-            {typeof results !== "boolean" && results !== null ? (
+            {typeof results === "boolean" && !results ? <p>{t("Errors.citizenNotFound")}</p> : null}
+
+            {typeof results !== "boolean" && results && results.medicalRecords.length >= 1 ? (
               <Table
                 data={results.medicalRecords.map((record) => ({
                   type: record.type,
-                  bloodGroup: record.bloodGroup?.value ?? common("none"),
-                  description: record.description,
+                  bloodGroup: record.bloodGroup?.value ?? t("Common.none"),
+                  description: record.description || t("Common.none"),
                   actions: (
                     <Button
                       small
@@ -138,15 +150,15 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                       onClick={handleDeclare}
                       disabled={state === "loading"}
                     >
-                      {results.dead ? ems("declareAlive") : ems("declareDead")}
+                      {results.dead ? t("Ems.declareAlive") : t("Ems.declareDead")}
                     </Button>
                   ),
                 }))}
                 columns={[
-                  { Header: t("diseases"), accessor: "type" },
-                  { Header: t("bloodGroup"), accessor: "bloodGroup" },
-                  { Header: common("description"), accessor: "description" },
-                  { Header: common("actions"), accessor: "actions" },
+                  { Header: t("MedicalRecords.diseases"), accessor: "type" },
+                  { Header: t("MedicalRecords.bloodGroup"), accessor: "bloodGroup" },
+                  { Header: t("Common.description"), accessor: "description" },
+                  { Header: t("Common.actions"), accessor: "actions" },
                 ]}
               />
             ) : null}
@@ -157,7 +169,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 onClick={() => closeModal(ModalIds.SearchMedicalRecord)}
                 variant="cancel"
               >
-                {common("cancel")}
+                {t("Common.cancel")}
               </Button>
               <Button
                 className="flex items-center"
@@ -165,7 +177,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("search")}
+                {t("Common.search")}
               </Button>
             </footer>
           </form>
