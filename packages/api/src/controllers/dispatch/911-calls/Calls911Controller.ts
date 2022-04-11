@@ -528,11 +528,6 @@ export class Calls911Controller {
               value: caller,
               inline: true,
             },
-            {
-              name: "Location",
-              value: location,
-              inline: true,
-            },
           ],
         },
       ],
