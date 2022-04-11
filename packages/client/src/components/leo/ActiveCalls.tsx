@@ -83,10 +83,11 @@ export function ActiveCalls() {
   const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
-  const makeAssignedUnit = (unit: AssignedUnit) =>
-    isUnitCombined(unit.unit)
+  function makeAssignedUnit(unit: AssignedUnit) {
+    return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+  }
 
   useListener(
     SocketEvents.Create911Call,
@@ -117,8 +118,8 @@ export function ActiveCalls() {
         calls.map((v) => {
           if (v.id === call.id) {
             const wasAssignedToCall =
-              !v.assignedUnits.some((u) => u.unit.id === unit?.id) &&
-              call.assignedUnits.some((v) => v.unit.id === unit?.id);
+              !v.assignedUnits.some((u) => u.unit?.id === unit?.id) &&
+              call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
             if (wasAssignedToCall && shouldPlayAddedToCallSound) {
               controls.volume(0.3);

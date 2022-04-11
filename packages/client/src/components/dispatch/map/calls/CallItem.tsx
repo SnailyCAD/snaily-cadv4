@@ -35,6 +35,10 @@ export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemPr
   const assignedUnits = React.useMemo(() => {
     return call.assignedUnits.map((c, i) => {
       const comma = i !== call.assignedUnits.length - 1 ? ", " : " ";
+      if (!c.unit) {
+        return null;
+      }
+
       return (
         <span key={c.id}>
           {makeUnitName(c.unit)} {generateCallsign(c.unit)}
