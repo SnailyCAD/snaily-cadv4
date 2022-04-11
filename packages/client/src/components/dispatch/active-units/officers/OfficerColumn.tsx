@@ -96,7 +96,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       ]}
     >
       <span>
-        <Draggable type={DndActions.MoveUnitTo911Call} item={officer}>
+        <Draggable canDrag={isDispatch} type={DndActions.MoveUnitTo911Call} item={officer}>
           <span
             className="flex items-center capitalize cursor-default"
             // * 9 to fix overlapping issues with next table column

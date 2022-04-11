@@ -108,7 +108,11 @@ export function ActiveDeputies() {
                   deputy: (
                     <ContextMenu canBeOpened={isDispatch} asChild items={codesMapped}>
                       <span>
-                        <Draggable item={deputy} type={DndActions.MoveUnitTo911Call}>
+                        <Draggable
+                          canDrag={isDispatch}
+                          item={deputy}
+                          type={DndActions.MoveUnitTo911Call}
+                        >
                           <span // * 9 to fix overlapping issues with next table column
                             style={{ minWidth: nameAndCallsign.length * 9 }}
                             className="capitalize cursor-default"

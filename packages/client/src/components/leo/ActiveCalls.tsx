@@ -269,7 +269,9 @@ export function ActiveCalls() {
                     <Droppable
                       accepts={[DndActions.MoveUnitTo911Call]}
                       onDrop={(item) => handleDrop(call, item)}
-                      canDrop={(item) => !call.assignedUnits.some((v) => v.unit.id === item.id)}
+                      canDrop={(item) =>
+                        isDispatch && !call.assignedUnits.some((v) => v.unit.id === item.id)
+                      }
                     >
                       {call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none")}
                     </Droppable>
