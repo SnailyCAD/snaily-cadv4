@@ -11,6 +11,9 @@ import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
 import { findUrl } from "lib/fetch";
 
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 export default function App({ Component, router, pageProps }: AppProps) {
   const { hostname, protocol, port } = new URL(findUrl());
   const url = `${protocol}//${hostname}:${port}`;
@@ -27,7 +30,9 @@ export default function App({ Component, router, pageProps }: AppProps) {
             <ModalProvider>
               <ValuesProvider initialData={pageProps}>
                 <CitizenProvider initialData={pageProps}>
-                  <Component {...pageProps} />
+                  <DndProvider backend={HTML5Backend}>
+                    <Component {...pageProps} />
+                  </DndProvider>
                   <Toaster position="top-right" />
                 </CitizenProvider>
               </ValuesProvider>

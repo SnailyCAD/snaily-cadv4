@@ -24,6 +24,8 @@ import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
+import { Draggable } from "components/shared/dnd/Draggable";
+import { DndActions } from "types/DndActions";
 
 export function ActiveDeputies() {
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
@@ -105,18 +107,22 @@ export function ActiveDeputies() {
                   name: nameAndCallsign,
                   deputy: (
                     <ContextMenu canBeOpened={isDispatch} asChild items={codesMapped}>
-                      <span // * 9 to fix overlapping issues with next table column
-                        style={{ minWidth: nameAndCallsign.length * 9 }}
-                        className="capitalize cursor-default"
-                      >
-                        {deputy.imageId ? (
-                          <img
-                            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                            draggable={false}
-                            src={makeImageUrl("units", deputy.imageId)}
-                          />
-                        ) : null}
-                        {nameAndCallsign}
+                      <span>
+                        <Draggable item={deputy} type={DndActions.MoveUnitTo911Call}>
+                          <span // * 9 to fix overlapping issues with next table column
+                            style={{ minWidth: nameAndCallsign.length * 9 }}
+                            className="capitalize cursor-default"
+                          >
+                            {deputy.imageId ? (
+                              <img
+                                className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                                draggable={false}
+                                src={makeImageUrl("units", deputy.imageId)}
+                              />
+                            ) : null}
+                            {nameAndCallsign}
+                          </span>
+                        </Draggable>
                       </span>
                     </ContextMenu>
                   ),

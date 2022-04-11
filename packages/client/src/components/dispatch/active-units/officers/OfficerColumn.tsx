@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import { Draggable } from "components/shared/dnd/Draggable";
+import { DndActions } from "types/DndActions";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -93,34 +95,36 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
         ...dispatchCodes,
       ]}
     >
-      <span
-        className="flex items-center capitalize cursor-default"
-        // * 9 to fix overlapping issues with next table column
-        style={{ minWidth: nameAndCallsign.length * 9 }}
-      >
-        {isUnitOfficer(officer) && officer.imageId ? (
-          <img
-            className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-            draggable={false}
-            src={makeImageUrl("units", officer.imageId)}
-          />
-        ) : null}
-        {isUnitCombined(officer) ? (
-          <div className="flex items-center">
-            {generateCallsign(officer, "pairedUnitTemplate")}
-            <span className="mx-4">
-              <ArrowRight />
-            </span>
-            {officer.officers.map((officer) => (
-              <React.Fragment key={officer.id}>
-                {generateCallsign(officer)} {makeUnitName(officer)} <br />
-              </React.Fragment>
-            ))}
-          </div>
-        ) : (
-          nameAndCallsign
-        )}
-      </span>
+      <Draggable type={DndActions.MoveUnitTo911Call} item={officer}>
+        <span
+          className="flex items-center capitalize cursor-default"
+          // * 9 to fix overlapping issues with next table column
+          style={{ minWidth: nameAndCallsign.length * 9 }}
+        >
+          {isUnitOfficer(officer) && officer.imageId ? (
+            <img
+              className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+              draggable={false}
+              src={makeImageUrl("units", officer.imageId)}
+            />
+          ) : null}
+          {isUnitCombined(officer) ? (
+            <div className="flex items-center">
+              {generateCallsign(officer, "pairedUnitTemplate")}
+              <span className="mx-4">
+                <ArrowRight />
+              </span>
+              {officer.officers.map((officer) => (
+                <React.Fragment key={officer.id}>
+                  {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                </React.Fragment>
+              ))}
+            </div>
+          ) : (
+            nameAndCallsign
+          )}
+        </span>
+      </Draggable>
     </ContextMenu>
   );
 }

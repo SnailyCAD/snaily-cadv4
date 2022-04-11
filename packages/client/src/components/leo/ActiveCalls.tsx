@@ -30,6 +30,8 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
+import { Droppable } from "components/shared/dnd/Droppable";
+import { DndActions } from "types/DndActions";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
 const DescriptionModal = dynamic(
@@ -155,10 +157,10 @@ export function ActiveCalls() {
     openModal(ModalIds.ManageTowCall, { call911Id: call.id });
   }
 
-  async function handleAssignToCall(call: Full911Call) {
+  async function handleAssignToCall(call: Full911Call, unitId = unit?.id) {
     const { json } = await execute(`/911-calls/assign/${call.id}`, {
       method: "POST",
-      data: { unit: unit?.id },
+      data: { unit: unitId },
     });
 
     if (json.id) {
@@ -172,6 +174,10 @@ export function ActiveCalls() {
 
       setCalls(callsMapped);
     }
+  }
+
+  async function handleDrop(call: Full911Call, item: { id: string }) {
+    handleAssignToCall(call, item.id);
   }
 
   async function handleUnassignFromCall(call: Full911Call) {
@@ -259,8 +265,15 @@ export function ActiveCalls() {
                     ),
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
-                  assignedUnits:
-                    call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none"),
+                  assignedUnits: (
+                    <Droppable
+                      accepts={[DndActions.MoveUnitTo911Call]}
+                      onDrop={(item) => handleDrop(call, item)}
+                      canDrop={(item) => !call.assignedUnits.some((v) => v.unit.id === item.id)}
+                    >
+                      {call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none")}
+                    </Droppable>
+                  ),
                   actions: (
                     <>
                       <Button
