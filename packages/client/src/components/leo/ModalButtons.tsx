@@ -1,7 +1,7 @@
 import { Button } from "components/Button";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType } from "@snailycad/types";
+import { Feature, ShouldDoType } from "@snailycad/types";
 import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
@@ -9,10 +9,12 @@ import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { isUnitCombined } from "@snailycad/utils";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface MButton {
   nameKey: [string, string];
   modalId: ModalIds;
+  isEnabled?(features: Record<Feature | "hasActiveDispatchers", boolean>): boolean;
 }
 
 const buttons: MButton[] = [
@@ -27,6 +29,12 @@ const buttons: MButton[] = [
   {
     nameKey: ["Leo", "weaponSearch"],
     modalId: ModalIds.WeaponSearch,
+    isEnabled: ({ WEAPON_REGISTRATION }) => WEAPON_REGISTRATION,
+  },
+  {
+    nameKey: ["Calls", "create911Call"],
+    modalId: ModalIds.Manage911Call,
+    isEnabled: ({ hasActiveDispatchers }) => !hasActiveDispatchers,
   },
   {
     nameKey: ["Leo", "customFieldSearch"],
@@ -63,7 +71,8 @@ export function ModalButtons() {
   const { openModal } = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
+  const features = useFeatureEnabled();
+  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const { execute } = useFetch();
 
@@ -97,20 +106,21 @@ export function ModalButtons() {
       ) : null}
 
       <ul className="mt-2 modal-buttons-grid">
-        {buttons.map((button, idx) =>
-          button.nameKey[1] === "weaponSearch" && !WEAPON_REGISTRATION ? null : (
-            <Button
-              id={button.nameKey[1]}
-              key={idx}
-              disabled={isButtonDisabled}
-              title={
-                isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))
-              }
-              onClick={() => openModal(button.modalId)}
-            >
-              {t(button.nameKey.join("."))}
-            </Button>
-          ),
+        {buttons.map(
+          (button, idx) =>
+            (button.isEnabled?.({ ...features, hasActiveDispatchers }) ?? true) && (
+              <Button
+                id={button.nameKey[1]}
+                key={idx}
+                disabled={isButtonDisabled}
+                title={
+                  isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))
+                }
+                onClick={() => openModal(button.modalId)}
+              >
+                {t(button.nameKey.join("."))}
+              </Button>
+            ),
         )}
 
         <Button

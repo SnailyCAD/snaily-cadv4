@@ -13,7 +13,7 @@ export function hasPermission(
   userPermissions: readonly (string | Permissions)[],
   toCheck: readonly Permissions[],
 ) {
-  if (userPermissions.length <= 0) {
+  if (userPermissions.length <= 0 || !Array.isArray(toCheck)) {
     return false;
   }
 
