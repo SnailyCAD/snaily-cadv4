@@ -1,6 +1,6 @@
 import { Button } from "components/Button";
 import { Infofield } from "components/shared/Infofield";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";

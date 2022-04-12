@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 
 export function TwoFactorAuthArea() {
   const { openModal } = useModal();

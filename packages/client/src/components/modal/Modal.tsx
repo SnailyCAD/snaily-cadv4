@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "react-bootstrap-icons";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 
 export interface ModalProps {
   modalStyles?: React.CSSProperties;

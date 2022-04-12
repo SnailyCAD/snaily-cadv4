@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import type { BleeterPost, User } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";

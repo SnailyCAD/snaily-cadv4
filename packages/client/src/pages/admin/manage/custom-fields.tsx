@@ -9,7 +9,7 @@ import { requestAll, yesOrNoText } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Table } from "components/shared/Table";
 import { ModalIds } from "types/ModalIds";
 import { ManageCustomFieldModal } from "components/admin/manage/custom-fields/ManageCustomFieldModal";

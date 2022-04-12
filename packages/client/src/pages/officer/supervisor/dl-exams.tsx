@@ -15,7 +15,7 @@ import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "@snailycad/permissions";
 import { Status } from "components/shared/Status";
 import { ManageDLExamModal } from "components/leo/dl-exams/ManageDLExamModal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";

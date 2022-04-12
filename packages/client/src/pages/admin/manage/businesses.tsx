@@ -6,7 +6,7 @@ import { Modal } from "components/modal/Modal";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { type Business, type Citizen, type User, WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";

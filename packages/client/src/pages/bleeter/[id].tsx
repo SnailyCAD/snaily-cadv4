@@ -9,7 +9,7 @@ import type { GetServerSideProps } from "next";
 import type { BleeterPost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";

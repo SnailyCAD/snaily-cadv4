@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button } from "components/Button";
 import { TabsContent } from "components/shared/TabList";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";

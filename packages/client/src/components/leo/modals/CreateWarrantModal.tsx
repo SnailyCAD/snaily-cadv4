@@ -7,7 +7,7 @@ import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { Citizen } from "@snailycad/types";

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import { useTranslations } from "use-intl";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import { ModalIds } from "types/ModalIds";
 import { FormField } from "components/form/FormField";

@@ -1,7 +1,7 @@
 import * as React from "react";
 import type { User } from "@snailycad/types";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import {

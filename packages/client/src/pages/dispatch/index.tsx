@@ -21,7 +21,7 @@ import { Title } from "components/shared/Title";
 import type { ActiveDispatchers, Bolo, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 
 const NotepadModal = dynamic(async () => {

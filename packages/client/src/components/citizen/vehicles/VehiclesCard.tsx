@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";

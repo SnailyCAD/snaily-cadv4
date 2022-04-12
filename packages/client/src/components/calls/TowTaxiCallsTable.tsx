@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
 import { useTranslations } from "next-intl";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { usePermission, Permissions } from "hooks/usePermission";

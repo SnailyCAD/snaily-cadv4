@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import type { ActiveOfficer } from "state/leoState";
 import { ManageUnitModal } from "./modals/ManageUnit";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { useRouter } from "next/router";
