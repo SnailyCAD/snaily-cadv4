@@ -177,9 +177,9 @@ export class VehiclesController {
     });
 
     const dmvStatus = isDmvEnabled
-      ? data.reApplyForDmv
+      ? data.reApplyForDmv && vehicle.dmvStatus === WhitelistStatus.DECLINED
         ? WhitelistStatus.PENDING
-        : undefined
+        : undefined // undefined = will not update the database entry
       : null;
 
     const updated = await prisma.registeredVehicle.update({
