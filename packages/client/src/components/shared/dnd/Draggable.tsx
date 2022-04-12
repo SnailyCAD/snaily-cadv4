@@ -14,7 +14,6 @@ export function Draggable({ canDrag, type, item, children }: Props) {
       type,
       item,
       canDrag,
-      options: { dropEffect: "copy" },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),

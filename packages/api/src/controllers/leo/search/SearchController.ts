@@ -25,7 +25,12 @@ export const citizenSearchInclude = {
       seizedItems: true,
       violations: {
         include: {
-          penalCode: true,
+          penalCode: {
+            include: {
+              warningApplicable: true,
+              warningNotApplicable: true,
+            },
+          },
         },
       },
     },
@@ -131,6 +136,7 @@ export class SearchController {
       where: {
         serialNumber: {
           startsWith: serialNumber,
+          mode: "insensitive",
         },
       },
       include: weaponsInclude,
@@ -161,7 +167,7 @@ export class SearchController {
       where: {
         OR: [
           { plate: { startsWith: plateOrVin.toUpperCase() } },
-          { vinNumber: { startsWith: plateOrVin } },
+          { vinNumber: { startsWith: plateOrVin.toUpperCase() } },
         ],
       },
       include: vehiclesInclude,

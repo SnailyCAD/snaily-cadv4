@@ -22,6 +22,8 @@ export function TableItemForm({ penalCode }: Props) {
   const finesDisabled =
     !penalCode.warningNotApplicable?.fines && !penalCode.warningApplicable?.fines;
 
+  console.log({ penalCode });
+
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
     string,
