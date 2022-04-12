@@ -10,7 +10,7 @@ import { requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";

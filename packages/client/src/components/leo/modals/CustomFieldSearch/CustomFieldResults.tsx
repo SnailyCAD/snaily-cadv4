@@ -2,7 +2,7 @@ import * as React from "react";
 import { CustomFieldCategory } from "@snailycad/types";
 import { Button } from "components/Button";
 import { Table } from "components/shared/Table";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";

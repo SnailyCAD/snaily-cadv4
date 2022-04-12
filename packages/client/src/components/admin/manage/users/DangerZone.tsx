@@ -4,7 +4,7 @@ import useFetch from "lib/useFetch";
 import type { User } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 import { useTranslations } from "use-intl";

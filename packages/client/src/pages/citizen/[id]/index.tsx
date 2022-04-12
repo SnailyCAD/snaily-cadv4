@@ -6,7 +6,7 @@ import { PersonFill } from "react-bootstrap-icons";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";

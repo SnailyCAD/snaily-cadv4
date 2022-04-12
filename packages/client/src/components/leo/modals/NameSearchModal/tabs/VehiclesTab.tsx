@@ -5,7 +5,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 

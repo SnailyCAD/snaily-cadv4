@@ -42,7 +42,7 @@ export function getPermissions(
   const permissions: Record<string, boolean> = {};
 
   allPermissions.forEach((name) => {
-    permissions[name] = hasPermission(userPermissions, [name as Permissions]);
+    permissions[name] = hasPermission(userPermissions, [name]);
   });
 
   return permissions;

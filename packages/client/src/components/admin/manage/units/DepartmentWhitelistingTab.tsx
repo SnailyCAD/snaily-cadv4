@@ -16,7 +16,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
 import { useRouter } from "next/router";

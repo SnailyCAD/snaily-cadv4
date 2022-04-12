@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Call911Event, IncidentEvent } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useHoverDirty } from "react-use";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

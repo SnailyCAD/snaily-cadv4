@@ -1,5 +1,5 @@
 import { AlertModal } from "components/modal/AlertModal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useBolos } from "hooks/realtime/useBolos";
 import useFetch from "lib/useFetch";
 import * as React from "react";

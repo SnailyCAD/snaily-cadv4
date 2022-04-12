@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Modal } from "../Modal";

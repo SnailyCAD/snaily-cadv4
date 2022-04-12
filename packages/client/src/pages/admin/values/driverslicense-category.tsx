@@ -4,7 +4,7 @@ import { Button } from "components/Button";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
   DriversLicenseCategoryValue,

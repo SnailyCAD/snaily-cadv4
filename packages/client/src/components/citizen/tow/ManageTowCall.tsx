@@ -9,7 +9,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";

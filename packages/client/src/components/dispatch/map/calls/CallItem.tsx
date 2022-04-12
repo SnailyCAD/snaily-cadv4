@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { ModalIds } from "types/ModalIds";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { CaretDownFill } from "react-bootstrap-icons";
 import type { Full911Call } from "state/dispatchState";
 import type { MapCallProps } from "./ActiveMapCalls";

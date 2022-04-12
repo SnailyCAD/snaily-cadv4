@@ -2,7 +2,7 @@ import { Button } from "components/Button";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { Feature, ShouldDoType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";

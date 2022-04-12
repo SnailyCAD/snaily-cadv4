@@ -7,7 +7,7 @@ import { Select } from "components/form/Select";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";

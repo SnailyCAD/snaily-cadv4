@@ -1,7 +1,7 @@
 import { Table } from "components/shared/Table";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 

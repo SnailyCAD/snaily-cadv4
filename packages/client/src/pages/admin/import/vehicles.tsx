@@ -14,7 +14,7 @@ import { Input } from "components/form/inputs/Input";
 import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 
 interface Props {

@@ -1,7 +1,7 @@
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { useBusinessState } from "state/businessState";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
