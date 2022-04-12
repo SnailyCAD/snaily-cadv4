@@ -1,7 +1,7 @@
 import type { Feature } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 
-export type Args<T> = Record<Feature | "hasActiveDispatchers", boolean> & T;
+export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & T;
 export interface ModalButton<T = unknown> {
   (args: Args<T>): {
     nameKey: [string, string];
@@ -25,6 +25,11 @@ export const weaponSearchBtn: ModalButton = ({ WEAPON_REGISTRATION }) => ({
   modalId: ModalIds.WeaponSearch,
   nameKey: ["Leo", "weaponSearch"],
   isEnabled: WEAPON_REGISTRATION,
+});
+
+export const addressSearchBtn: ModalButton = () => ({
+  modalId: ModalIds.AddressSearch,
+  nameKey: ["Leo", "addressSearch"],
 });
 
 export const customFieldSearchBtn: ModalButton = () => ({
@@ -62,8 +67,8 @@ export const notepadBtn: ModalButton = () => ({
   nameKey: ["Leo", "notepad"],
 });
 
-export const create911CallBtn: ModalButton = ({ hasActiveDispatchers }) => ({
+export const create911CallBtn: ModalButton = ({ isDispatch, hasActiveDispatchers }) => ({
   modalId: ModalIds.Manage911Call,
   nameKey: ["Calls", "create911Call"],
-  isEnabled: !hasActiveDispatchers,
+  isEnabled: isDispatch ? true : !hasActiveDispatchers,
 });

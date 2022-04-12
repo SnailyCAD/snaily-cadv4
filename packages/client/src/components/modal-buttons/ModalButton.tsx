@@ -4,7 +4,8 @@ import type { ModalButton, Args } from "./buttons";
 import { Button } from "components/Button";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
+import { useRouter } from "next/router";
 
 type ButtonProps = Pick<JSX.IntrinsicElements["button"], "name" | "type" | "title" | "disabled">;
 interface Props extends ButtonProps {
@@ -16,8 +17,10 @@ export function ModalButton({ button: buttonFn, ...buttonProps }: Props) {
   const features = useFeatureEnabled();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { openModal } = useModal();
+  const router = useRouter();
 
-  const btnArgs = { features, hasActiveDispatchers };
+  const isDispatch = router.pathname === "/dispatch";
+  const btnArgs = { features, hasActiveDispatchers, isDispatch };
   const button = buttonFn(btnArgs as Args<any>);
   const isEnabled = button.isEnabled ?? true;
 
