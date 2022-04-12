@@ -40,8 +40,12 @@ export default function TowLogs(props: Props) {
 
   function handleViewDescription(call: TowCall) {
     setTempCall(call);
+    console.log({ call });
+
     openModal(ModalIds.Description, call);
   }
+
+  console.log({ tempCall });
 
   function assignedUnit(call: TowCall) {
     return call.assignedUnit ? (
@@ -98,7 +102,7 @@ export default function TowLogs(props: Props) {
         />
       )}
 
-      {tempCall?.descriptionData ? (
+      {tempCall ? (
         <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
     </Layout>
