@@ -5,9 +5,13 @@ import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
+let ran = false;
 export function useActiveDispatchers() {
   const { state, execute } = useFetch();
-  const dispatchState = useDispatchState();
+  const dispatchState = useDispatchState((s) => ({
+    setActiveDispatchers: s.setActiveDispatchers,
+    activeDispatchers: s.activeDispatchers,
+  }));
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   const getActiveDispatchers = React.useCallback(async () => {
@@ -15,16 +19,20 @@ export function useActiveDispatchers() {
       noToast: true,
     });
 
+    console.log({ json });
+
     if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [execute, dispatchState.setActiveDispatchers]);
+  }, []);
 
   React.useEffect(() => {
-    getActiveDispatchers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!ran) {
+      getActiveDispatchers();
+      ran = true;
+    }
+  }, [getActiveDispatchers]);
 
   useListener({ eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true }, () => {
     getActiveDispatchers();
