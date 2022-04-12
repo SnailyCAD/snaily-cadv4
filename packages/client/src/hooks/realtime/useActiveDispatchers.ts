@@ -19,8 +19,6 @@ export function useActiveDispatchers() {
       noToast: true,
     });
 
-    console.log({ json });
-
     if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
     }
