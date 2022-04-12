@@ -23,7 +23,7 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { usePermission, Permissions } from "hooks/usePermission";
 import dynamic from "next/dynamic";
 import { SettingsFormField } from "components/form/SettingsFormField";

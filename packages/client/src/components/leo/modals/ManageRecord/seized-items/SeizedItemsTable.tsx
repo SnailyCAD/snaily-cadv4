@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Table } from "components/shared/Table";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useFormikContext } from "formik";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";

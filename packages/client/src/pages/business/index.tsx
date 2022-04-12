@@ -7,7 +7,7 @@ import type { Business } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { Button } from "components/Button";
 import { useTranslations } from "use-intl";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { BusinessCard } from "components/business/BusinessCard";
 import dynamic from "next/dynamic";

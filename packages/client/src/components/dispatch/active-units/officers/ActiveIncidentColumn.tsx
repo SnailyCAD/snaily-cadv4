@@ -3,7 +3,7 @@ import type { LeoIncident } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 
 interface Props {

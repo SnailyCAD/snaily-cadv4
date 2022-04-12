@@ -1,7 +1,7 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";

@@ -10,7 +10,7 @@ import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";

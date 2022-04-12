@@ -6,7 +6,7 @@ import { Modal } from "components/modal/Modal";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { CustomField, CustomFieldCategory } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";

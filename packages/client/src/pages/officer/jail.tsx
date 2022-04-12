@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { Record, Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";

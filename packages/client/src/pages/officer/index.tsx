@@ -19,7 +19,7 @@ import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
 

@@ -3,7 +3,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";

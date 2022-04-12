@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";

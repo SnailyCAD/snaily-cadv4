@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";

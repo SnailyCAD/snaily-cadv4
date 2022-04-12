@@ -8,7 +8,7 @@ import { makeUnitName, yesOrNoText } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";

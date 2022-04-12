@@ -2,7 +2,7 @@ import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Citizen, ReleaseType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";

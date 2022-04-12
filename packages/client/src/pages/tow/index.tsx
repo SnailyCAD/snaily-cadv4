@@ -8,7 +8,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";

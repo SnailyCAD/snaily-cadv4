@@ -7,7 +7,7 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";

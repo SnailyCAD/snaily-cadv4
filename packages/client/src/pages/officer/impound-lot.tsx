@@ -7,7 +7,7 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import type { ImpoundedVehicle } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";

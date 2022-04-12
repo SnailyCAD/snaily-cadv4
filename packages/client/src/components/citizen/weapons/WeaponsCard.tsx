@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button } from "components/Button";
 import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { RegisterWeaponModal } from "./RegisterWeaponModal";
 import { useTranslations } from "use-intl";
 import { AlertModal } from "components/modal/AlertModal";

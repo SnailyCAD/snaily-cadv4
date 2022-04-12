@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
 import { Input } from "components/form/inputs/Input";

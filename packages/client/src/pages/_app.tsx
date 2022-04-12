@@ -4,7 +4,6 @@ import { SSRProvider } from "@react-aria/ssr";
 import { Toaster } from "react-hot-toast";
 import { NextIntlProvider } from "next-intl";
 import { AuthProvider } from "context/AuthContext";
-import { ModalProvider } from "context/ModalContext";
 import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
@@ -27,16 +26,14 @@ export default function App({ Component, router, pageProps }: AppProps) {
             locale={router.locale ?? "en"}
             messages={pageProps.messages}
           >
-            <ModalProvider>
-              <ValuesProvider initialData={pageProps}>
-                <CitizenProvider initialData={pageProps}>
-                  <DndProvider backend={HTML5Backend}>
-                    <Component {...pageProps} />
-                  </DndProvider>
-                  <Toaster position="top-right" />
-                </CitizenProvider>
-              </ValuesProvider>
-            </ModalProvider>
+            <ValuesProvider initialData={pageProps}>
+              <CitizenProvider initialData={pageProps}>
+                <DndProvider backend={HTML5Backend}>
+                  <Component {...pageProps} />
+                </DndProvider>
+                <Toaster position="top-right" />
+              </CitizenProvider>
+            </ValuesProvider>
           </NextIntlProvider>
         </AuthProvider>
       </SocketProvider>

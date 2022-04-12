@@ -9,7 +9,7 @@ import { isUnitCombined, isUnitOfficer } from "@snailycad/utils";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import { ArrowRight } from "react-bootstrap-icons";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";

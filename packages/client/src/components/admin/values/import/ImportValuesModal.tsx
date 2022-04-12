@@ -6,7 +6,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import type { ValueType } from "@snailycad/types";

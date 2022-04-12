@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import type { MedicalRecord } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
