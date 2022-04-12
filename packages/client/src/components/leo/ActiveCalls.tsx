@@ -33,7 +33,8 @@ import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 
-const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
+// const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
+const ADDED_TO_CALL_SRC = "/sounds/panic-button.mp3";
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
@@ -91,13 +92,22 @@ export function ActiveCalls() {
 
   useListener(
     SocketEvents.Create911Call,
-    (data) => {
-      if (!data) return;
-      if (calls.some((v) => v.id === data.id)) return;
+    (call: Full911Call | null) => {
+      if (!call) return;
+      if (calls.some((v) => v.id === call.id)) return;
 
-      setCalls([data, ...calls]);
+      const wasAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
+
+      if (wasAssignedToCall && shouldPlayAddedToCallSound) {
+        controls.volume(0.3);
+        controls.play();
+      } else {
+        controls.pause();
+      }
+
+      setCalls([call, ...calls]);
     },
-    [calls, setCalls],
+    [calls, setCalls, shouldPlayAddedToCallSound, controls, unit?.id],
   );
 
   useListener(
@@ -139,7 +149,7 @@ export function ActiveCalls() {
         }),
       );
     },
-    [calls, unit, controls, shouldPlayAddedToCallSound, setCalls],
+    [calls, unit?.id, controls, shouldPlayAddedToCallSound, setCalls],
   );
 
   function handleManageClick(call: Full911Call) {
