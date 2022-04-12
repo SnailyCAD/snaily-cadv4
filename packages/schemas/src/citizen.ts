@@ -41,6 +41,7 @@ export const VEHICLE_SCHEMA = z.object({
   reportedStolen: z.boolean().optional(),
   businessId: z.string().max(255).optional().nullable(),
   employeeId: z.string().max(255).optional().nullable(),
+  reApplyForDmv: z.boolean().nullable().optional(),
 });
 
 export const DELETE_VEHICLE_SCHEMA = z.object({

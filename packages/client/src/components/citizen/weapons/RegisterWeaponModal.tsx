@@ -177,11 +177,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.RegisterWeapon)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button

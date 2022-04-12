@@ -133,9 +133,10 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
           <Table
             disabledColumnId={["checkbox"]}
             filter={search}
-            defaultSort={{ columnId: "createdAt", descending: true }}
+            defaultSort={{ columnId: "createdAt", descending: false }}
             data={calls.map((call) => {
               const caseNumbers = (call.incidents ?? []).map((i) => `#${i.caseNumber}`).join(", ");
+
               return {
                 checkbox: (
                   <input

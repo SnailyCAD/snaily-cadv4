@@ -135,6 +135,7 @@ export class VehiclesController {
   @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
+    @Context("cad") cad: any,
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -169,6 +170,18 @@ export class VehiclesController {
       canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
     }
 
+    const isDmvEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.DMV,
+      defaultReturn: false,
+    });
+
+    const dmvStatus = isDmvEnabled
+      ? data.reApplyForDmv
+        ? WhitelistStatus.PENDING
+        : undefined
+      : null;
+
     const updated = await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
@@ -182,6 +195,7 @@ export class VehiclesController {
         insuranceStatusId: data.insuranceStatus,
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+        dmvStatus,
       },
       include: {
         model: { include: { value: true } },

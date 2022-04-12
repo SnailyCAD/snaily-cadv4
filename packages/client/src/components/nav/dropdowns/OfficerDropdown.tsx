@@ -56,11 +56,6 @@ export function OfficerDropdown() {
       show: DMV && hasPermissions([Permissions.ManageDMV], true),
     },
     {
-      name: t("manageUnits"),
-      href: "/admin/manage/units",
-      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
-    },
-    {
       name: t("citizenLogs"),
       href: "/officer/supervisor/citizen-logs",
       show: hasPermissions([Permissions.ViewCitizenLogs], (u) => u.isSupervisor),
@@ -71,6 +66,11 @@ export function OfficerDropdown() {
       show:
         DL_EXAMS &&
         hasPermissions([Permissions.ViewDLExams, Permissions.ManageDLExams], (u) => u.isSupervisor),
+    },
+    {
+      name: t("manageUnits"),
+      href: "/admin/manage/units",
+      show: hasPermissions([Permissions.ManageUnits, Permissions.ViewUnits], (u) => u.isSupervisor),
     },
   ];
 
