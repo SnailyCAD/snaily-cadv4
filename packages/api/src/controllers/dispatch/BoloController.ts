@@ -10,7 +10,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import type { BoloType } from "@prisma/client";
+import { BoloType } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/bolos")
@@ -167,14 +167,29 @@ export class BoloController {
       },
     });
 
-    const bolo = await prisma.bolo.create({
-      data: {
-        description: "stolen",
-        type: "VEHICLE",
-        color: color || null,
-        model: vehicle?.model?.value?.value ?? null,
-        plate: plate || null,
-      },
+    let existingId = "";
+    if (plate) {
+      const existing = await prisma.bolo.findFirst({
+        where: { plate, type: BoloType.VEHICLE, description: "stolen" },
+      });
+
+      if (existing) {
+        existingId = existing.id;
+      }
+    }
+
+    const data = {
+      description: "stolen",
+      type: BoloType.VEHICLE,
+      color: color || null,
+      model: vehicle?.model?.value?.value ?? null,
+      plate: plate || null,
+    };
+
+    const bolo = await prisma.bolo.upsert({
+      where: { id: existingId },
+      create: data,
+      update: data,
     });
 
     this.socket.emitCreateBolo(bolo);
