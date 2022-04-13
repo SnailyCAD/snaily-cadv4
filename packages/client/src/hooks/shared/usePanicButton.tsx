@@ -25,6 +25,7 @@ export function usePanicButton() {
     (officer: Officer) => {
       setUnit(officer);
       controls.volume(0.3);
+      controls.seek(0);
       shouldPlayPanicButtonSound && controls.play();
     },
     [shouldPlayPanicButtonSound, controls],

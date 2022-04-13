@@ -25,6 +25,7 @@ export function useRoleplayStopped() {
 
       if (!value) {
         controls.volume(0.3);
+        controls.seek(0);
         shouldPlayRoleplayStoppedSound && controls.play();
       } else {
         controls.pause();

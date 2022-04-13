@@ -26,6 +26,7 @@ export function useSignal100() {
       setSign100(value);
       if (value) {
         controls.volume(0.3);
+        controls.seek(0);
         shouldPlaySignal100 && controls.play();
       } else {
         controls.pause();
