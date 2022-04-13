@@ -31,6 +31,11 @@ export function OfficerDropdown() {
       show: hasPermissions([Permissions.Leo], true),
     },
     {
+      name: t("penalCodes"),
+      href: "/officer/penal-codes",
+      show: hasPermissions([Permissions.Leo], true),
+    },
+    {
       name: t("incidents"),
       href: "/officer/incidents",
       show: hasPermissions([Permissions.ManageIncidents, Permissions.ViewIncidents], true),
