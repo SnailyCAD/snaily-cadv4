@@ -192,7 +192,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       </header>
 
       <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
+        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
       </FormField>
 
       {values.length <= 0 ? (

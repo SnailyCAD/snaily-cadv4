@@ -10,22 +10,23 @@ export function usePermission() {
   function _hasPermission(
     permissionsToCheck: Permissions[],
     fallback: PermissionsFallback | boolean,
+    userToCheck: User | null = user,
   ) {
-    if (!user) return false;
-    if (user.rank === Rank.OWNER) {
-      user.permissions = allPermissions;
+    if (!userToCheck) return false;
+    if (userToCheck.rank === Rank.OWNER) {
+      userToCheck.permissions = allPermissions;
     }
 
-    if (!user.permissions?.length) {
-      return typeof fallback === "boolean" ? fallback : fallback(user);
+    if (!userToCheck.permissions?.length) {
+      return typeof fallback === "boolean" ? fallback : fallback(userToCheck);
     }
 
-    return hasPermission(user.permissions, permissionsToCheck);
+    return hasPermission(userToCheck.permissions, permissionsToCheck);
   }
 
-  function _getPermissions() {
-    if (!user) return false;
-    return getPermissions(user.permissions ?? []);
+  function _getPermissions(userToCheck: User | null = user) {
+    if (!userToCheck) return false;
+    return getPermissions(userToCheck.permissions ?? []);
   }
 
   return { hasPermissions: _hasPermission, getPermissions: _getPermissions };
