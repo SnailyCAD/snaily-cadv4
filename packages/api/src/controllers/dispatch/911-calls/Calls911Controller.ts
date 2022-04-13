@@ -24,6 +24,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getInactivityFilter } from "lib/leo/utils";
 
 export const assignedUnitsInclude = {
   include: {
@@ -60,13 +61,21 @@ export class Calls911Controller {
 
   @Get("/")
   @Description("Get all 911 calls")
-  async get911Calls(@QueryParams("includeEnded") includeEnded: boolean) {
+  async get911Calls(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @QueryParams("includeEnded") includeEnded: boolean,
+  ) {
+    const inactivityFilter = getInactivityFilter(cad);
+    if (inactivityFilter) {
+      this.endInactiveCalls(inactivityFilter.updatedAt);
+    }
+
     const calls = await prisma.call911.findMany({
       include: callInclude,
       orderBy: {
         createdAt: "desc",
       },
-      where: includeEnded ? undefined : { ended: false },
+      where: includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) },
     });
 
     return calls.map(officerOrDeputyToUnit);
@@ -432,6 +441,15 @@ export class Calls911Controller {
         });
       }),
     );
+  }
+
+  protected async endInactiveCalls(updatedAt: Date) {
+    await prisma.call911.updateMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+      data: {
+        ended: true,
+      },
+    });
   }
 
   protected async assignUnitsToCall(

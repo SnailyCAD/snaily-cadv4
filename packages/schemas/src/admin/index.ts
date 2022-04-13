@@ -31,6 +31,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxOfficersPerUser: z.number().nullable(),
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
+  inactivityTimeout: z.number().optional().nullable(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({
