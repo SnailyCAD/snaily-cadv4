@@ -16,6 +16,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/user";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getInactivityFilter } from "lib/leo/utils";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -62,22 +63,13 @@ export class DispatchController {
       },
     });
 
-    const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
-    let filter = {};
-
-    if (inactivityTimeout) {
-      const milliseconds = inactivityTimeout * (1000 * 60);
-      const updatedAt = new Date(new Date().getTime() - milliseconds);
-
-      filter = {
-        updatedAt: { gte: updatedAt },
-      };
-
-      this.endInactiveIncidents(updatedAt);
+    const inactivityFilter = getInactivityFilter(cad);
+    if (inactivityFilter) {
+      this.endInactiveIncidents(inactivityFilter.updatedAt);
     }
 
     const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true, ...filter },
+      where: { isActive: true, ...(inactivityFilter?.filter ?? {}) },
       include: incidentInclude,
     });
 

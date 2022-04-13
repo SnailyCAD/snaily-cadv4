@@ -24,6 +24,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getInactivityFilter } from "lib/leo/utils";
 
 export const assignedUnitsInclude = {
   include: {
@@ -64,18 +65,9 @@ export class Calls911Controller {
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
     @QueryParams("includeEnded") includeEnded: boolean,
   ) {
-    const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
-    let filter = {};
-
-    if (inactivityTimeout) {
-      const milliseconds = inactivityTimeout * (1000 * 60);
-      const updatedAt = new Date(new Date().getTime() - milliseconds);
-
-      filter = {
-        updatedAt: { gte: updatedAt },
-      };
-
-      this.endInactiveCalls(updatedAt);
+    const inactivityFilter = getInactivityFilter(cad);
+    if (inactivityFilter) {
+      this.endInactiveCalls(inactivityFilter.updatedAt);
     }
 
     const calls = await prisma.call911.findMany({
@@ -83,7 +75,7 @@ export class Calls911Controller {
       orderBy: {
         createdAt: "desc",
       },
-      where: includeEnded ? undefined : { ended: false, ...filter },
+      where: includeEnded ? undefined : { ended: false, ...(inactivityFilter?.filter ?? {}) },
     });
 
     return calls.map(officerOrDeputyToUnit);
