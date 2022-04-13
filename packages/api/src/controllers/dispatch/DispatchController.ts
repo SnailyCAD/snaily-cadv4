@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, User } from "@prisma/client";
+import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
@@ -30,7 +30,7 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
-  async getDispatchData() {
+  async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
     const includeData = {
       include: {
         department: { include: { value: true } },
@@ -62,8 +62,22 @@ export class DispatchController {
       },
     });
 
+    const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
+    let filter = {};
+
+    if (inactivityTimeout) {
+      const milliseconds = inactivityTimeout * (1000 * 60);
+      const updatedAt = new Date(new Date().getTime() - milliseconds);
+
+      filter = {
+        updatedAt: { gte: updatedAt },
+      };
+
+      this.endInactiveIncidents(updatedAt);
+    }
+
     const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true },
+      where: { isActive: true, ...filter },
       include: incidentInclude,
     });
 
@@ -197,5 +211,14 @@ export class DispatchController {
     }
 
     return updated;
+  }
+
+  protected async endInactiveIncidents(updatedAt: Date) {
+    await prisma.leoIncident.updateMany({
+      where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
+      data: {
+        isActive: false,
+      },
+    });
   }
 }
