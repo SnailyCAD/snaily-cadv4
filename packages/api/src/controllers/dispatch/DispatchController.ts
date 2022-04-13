@@ -206,11 +206,29 @@ export class DispatchController {
   }
 
   protected async endInactiveIncidents(updatedAt: Date) {
-    await prisma.leoIncident.updateMany({
+    const incidents = await prisma.leoIncident.findMany({
       where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
-      data: {
-        isActive: false,
-      },
+      include: { unitsInvolved: true },
     });
+
+    await Promise.all(
+      incidents.map(async (incident) => {
+        const officers = incident.unitsInvolved.filter((v) => v.officerId);
+
+        await prisma.leoIncident.update({
+          where: { id: incident.id },
+          data: { isActive: false },
+        });
+
+        await prisma.$transaction(
+          officers.map((unit) =>
+            prisma.officer.update({
+              where: { id: unit.officerId! },
+              data: { activeIncidentId: null },
+            }),
+          ),
+        );
+      }),
+    );
   }
 }
