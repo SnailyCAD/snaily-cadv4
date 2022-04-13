@@ -136,9 +136,10 @@ export function MiscFeatures() {
             </SettingsFormField>
 
             <SettingsFormField
+              optional
               action="short-input"
               label="Inactivity Timeout"
-              description="Calls/incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes."
+              description="Calls/incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
               errorMessage={errors.inactivityTimeout}
             >
               <Input
