@@ -22,8 +22,8 @@ export function Draggable({ canDrag, type, item, children }: Props) {
   );
 
   return (
-    <span ref={drag} style={{ opacity }}>
+    <div ref={drag} style={{ opacity }}>
       {children}
-    </span>
+    </div>
   );
 }

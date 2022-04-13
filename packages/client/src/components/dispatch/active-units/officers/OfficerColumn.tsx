@@ -106,7 +106,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
           item={officer}
         >
           <span
-            className="flex items-center capitalize cursor-default"
+            className="flex items-center capitalize cursor-grab"
             // * 9 to fix overlapping issues with next table column
             style={{ minWidth: nameAndCallsign.length * 9 }}
           >
