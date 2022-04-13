@@ -21,16 +21,33 @@ export function DepartmentFields() {
 
   return (
     <>
-      <FormField optional label="Callsign Symbol">
-        <Input name="callsign" onChange={handleChange} value={values.callsign} />
-      </FormField>
-
       <FormField label="Type">
         <Select values={DEPARTMENT_TYPES} name="type" onChange={handleChange} value={values.type} />
       </FormField>
 
+      <FormField optional label="Callsign Symbol">
+        <Input name="callsign" onChange={handleChange} value={values.callsign} />
+      </FormField>
+
       {values.type === DepartmentType.LEO ? (
         <>
+          <FormField
+            optional
+            errorMessage={errors.defaultOfficerRank as string}
+            label="Default Officer Rank"
+          >
+            <Select
+              isClearable
+              onChange={handleChange}
+              name="defaultOfficerRank"
+              value={values.defaultOfficerRank}
+              values={officerRank.values.map((v) => ({
+                label: v.value,
+                value: v.id,
+              }))}
+            />
+          </FormField>
+
           <FormField errorMessage={errors.whitelisted as string} checkbox label="Whitelisted">
             <Toggle
               name="whitelisted"
@@ -62,24 +79,6 @@ export function DepartmentFields() {
               When a department is whitelisted, you can set 1 department as default. This department
               will be given to the officer when they are awaiting access or when they were declined.
             </p>
-
-            {values.isDefaultDepartment ? (
-              <FormField
-                className="mt-2"
-                errorMessage={errors.defaultOfficerRank as string}
-                label="Officer Rank for default department"
-              >
-                <Select
-                  onChange={handleChange}
-                  name="defaultOfficerRank"
-                  value={values.defaultOfficerRank}
-                  values={officerRank.values.map((v) => ({
-                    label: v.value,
-                    value: v.id,
-                  }))}
-                />
-              </FormField>
-            ) : null}
           </div>
         </>
       ) : null}
