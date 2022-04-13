@@ -80,7 +80,8 @@
     "citizenLogs": "Citizen Logs",
     "courthouse": "Courthouse",
     "dlExams": "Driver License Exams",
-    "dmv": "Department of Motor Vehicles"
+    "dmv": "Department of Motor Vehicles",
+    "penalCodes": "Penal Codes"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
