@@ -91,7 +91,7 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
-    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       null,
     );
@@ -101,7 +101,11 @@ export class LeoController {
         callsign: data.callsign,
         callsign2: data.callsign2,
         userId: user.id,
-        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
+        rankId:
+          (defaultDepartment
+            ? defaultDepartment.defaultOfficerRankId
+            : department.defaultOfficerRankId) || undefined,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
@@ -172,7 +176,7 @@ export class LeoController {
       throw new NotFound("citizenNotFound");
     }
 
-    const { defaultDepartmentId, whitelistStatusId } = await handleWhitelistStatus(
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       officer,
     );
@@ -198,7 +202,11 @@ export class LeoController {
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
-        departmentId: defaultDepartmentId ? defaultDepartmentId : data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
+        rankId:
+          (defaultDepartment
+            ? defaultDepartment.defaultOfficerRankId
+            : department.defaultOfficerRankId) || undefined,
         whitelistStatusId,
       },
       include: leoProperties,
