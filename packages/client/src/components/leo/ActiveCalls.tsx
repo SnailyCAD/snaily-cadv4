@@ -99,6 +99,7 @@ export function ActiveCalls() {
       const wasAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
       if (wasAssignedToCall && shouldPlayAddedToCallSound) {
+        controls.seek(0);
         controls.volume(0.3);
         controls.play();
       } else {
@@ -124,20 +125,24 @@ export function ActiveCalls() {
     (call: Full911Call | undefined) => {
       if (!call) return;
 
+      const prevCall = calls.find((v) => v.id === call.id);
+      if (prevCall) {
+        const wasAssignedToCall =
+          !prevCall.assignedUnits.some((u) => u.unit?.id === unit?.id) &&
+          call.assignedUnits.some((v) => v.unit?.id === unit?.id);
+
+        if (wasAssignedToCall && shouldPlayAddedToCallSound) {
+          controls.seek(0);
+          controls.volume(0.3);
+          controls.play();
+        } else {
+          controls.pause();
+        }
+      }
+
       setCalls(
         calls.map((v) => {
           if (v.id === call.id) {
-            const wasAssignedToCall =
-              !v.assignedUnits.some((u) => u.unit?.id === unit?.id) &&
-              call.assignedUnits.some((v) => v.unit?.id === unit?.id);
-
-            if (wasAssignedToCall && shouldPlayAddedToCallSound) {
-              controls.volume(0.3);
-              controls.play();
-            } else {
-              controls.pause();
-            }
-
             if (tempCall?.id === call.id) {
               setTempCall({ ...v, ...call });
             }
