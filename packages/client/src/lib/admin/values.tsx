@@ -80,6 +80,7 @@ export function useTableDataOfType(type: ValueType) {
           type: DEPARTMENT_LABELS[v.type],
           whitelisted: common(yesOrNoText(v.whitelisted)),
           isDefaultDepartment: common(yesOrNoText(v.isDefaultDepartment)),
+          defaultOfficerRank: v.defaultOfficerRank?.value ?? common("none"),
         };
       }
       case "DIVISION": {
@@ -135,6 +136,7 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: common("type"), accessor: "type" },
         { Header: t("whitelisted"), accessor: "whitelisted" },
         { Header: t("isDefaultDepartment"), accessor: "isDefaultDepartment" },
+        { Header: t("defaultOfficerRank"), accessor: "defaultOfficerRank" },
       ];
     }
     case "DIVISION": {

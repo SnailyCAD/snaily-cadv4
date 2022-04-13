@@ -410,6 +410,7 @@ export interface DepartmentValue {
   isDefaultDepartment: boolean;
   type: DepartmentType;
   defaultOfficerRankId: string | null;
+  defaultOfficerRank: Value<ValueType.OFFICER_RANK> | null;
 }
 
 /**

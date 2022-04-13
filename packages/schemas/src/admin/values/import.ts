@@ -62,6 +62,7 @@ export const DEPARTMENT_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DEPARTMENT_TYPE_REGEX).max(255),
   isDefaultDepartment: z.boolean().optional(),
   whitelisted: z.boolean().optional(),
+  defaultOfficerRankId: z.string().nullable().optional(),
 });
 
 export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);

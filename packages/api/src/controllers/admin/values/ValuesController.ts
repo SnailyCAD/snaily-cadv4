@@ -16,7 +16,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   BUSINESS_ROLE: { name: "employeeValue" },
   CODES_10: { name: "statusValue", include: { departments: { include: { value: true } } } },
   DRIVERSLICENSE_CATEGORY: { name: "driversLicenseCategoryValue" },
-  DEPARTMENT: { name: "departmentValue" },
+  DEPARTMENT: { name: "departmentValue", include: { defaultOfficerRank: true } },
   DIVISION: {
     name: "divisionValue",
     include: { department: { include: { value: true } } },

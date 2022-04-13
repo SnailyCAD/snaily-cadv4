@@ -33,14 +33,14 @@ export function DepartmentFields() {
         <>
           <FormField
             optional
-            errorMessage={errors.defaultOfficerRank as string}
+            errorMessage={errors.defaultOfficerRankId as string}
             label="Default Officer Rank"
           >
             <Select
               isClearable
               onChange={handleChange}
-              name="defaultOfficerRank"
-              value={values.defaultOfficerRank}
+              name="defaultOfficerRankId"
+              value={values.defaultOfficerRankId}
               values={officerRank.values.map((v) => ({
                 label: v.value,
                 value: v.id,
