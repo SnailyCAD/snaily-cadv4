@@ -409,6 +409,7 @@ export interface DepartmentValue {
   whitelisted: boolean;
   isDefaultDepartment: boolean;
   type: DepartmentType;
+  defaultOfficerRankId: string | null;
 }
 
 /**

@@ -123,6 +123,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const INITIAL_VALUES = {
     value: value ? getValueStrFromValue(value) : "",
 
+    defaultOfficerRank: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",

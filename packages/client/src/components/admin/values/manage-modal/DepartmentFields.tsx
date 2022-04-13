@@ -4,6 +4,7 @@ import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import { Toggle } from "components/form/Toggle";
 import { DepartmentType } from "@snailycad/types";
+import { useValues } from "context/ValuesContext";
 
 export const DEPARTMENT_LABELS = {
   [DepartmentType.LEO]: "LEO",
@@ -16,6 +17,7 @@ const DEPARTMENT_TYPES = Object.values(DepartmentType).map((v) => ({
 
 export function DepartmentFields() {
   const { values, errors, setFieldValue, handleChange } = useFormikContext<any>();
+  const { officerRank } = useValues();
 
   return (
     <>
@@ -60,6 +62,24 @@ export function DepartmentFields() {
               When a department is whitelisted, you can set 1 department as default. This department
               will be given to the officer when they are awaiting access or when they were declined.
             </p>
+
+            {values.isDefaultDepartment ? (
+              <FormField
+                className="mt-2"
+                errorMessage={errors.defaultOfficerRank as string}
+                label="Officer Rank for default department"
+              >
+                <Select
+                  onChange={handleChange}
+                  name="defaultOfficerRank"
+                  value={values.defaultOfficerRank}
+                  values={officerRank.values.map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
+                />
+              </FormField>
+            ) : null}
           </div>
         </>
       ) : null}
