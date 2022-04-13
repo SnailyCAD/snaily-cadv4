@@ -73,6 +73,7 @@ model MiscCadSettings {
   authScreenHeaderImageId   String?
   call911WebhookId          String?
   statusesWebhookId         String?
+  inactivityTimeout         Int?
 
   cad cad[]
 }

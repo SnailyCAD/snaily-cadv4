@@ -60,13 +60,30 @@ export class Calls911Controller {
 
   @Get("/")
   @Description("Get all 911 calls")
-  async get911Calls(@QueryParams("includeEnded") includeEnded: boolean) {
+  async get911Calls(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
+    @QueryParams("includeEnded") includeEnded: boolean,
+  ) {
+    const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
+    let filter = {};
+
+    if (inactivityTimeout) {
+      const milliseconds = inactivityTimeout * (1000 * 60);
+      const updatedAt = new Date(new Date().getTime() - milliseconds);
+
+      filter = {
+        updatedAt: { gte: updatedAt },
+      };
+
+      this.endInactiveCalls(updatedAt);
+    }
+
     const calls = await prisma.call911.findMany({
       include: callInclude,
       orderBy: {
         createdAt: "desc",
       },
-      where: includeEnded ? undefined : { ended: false },
+      where: includeEnded ? undefined : { ended: false, ...filter },
     });
 
     return calls.map(officerOrDeputyToUnit);
@@ -432,6 +449,15 @@ export class Calls911Controller {
         });
       }),
     );
+  }
+
+  protected async endInactiveCalls(updatedAt: Date) {
+    await prisma.call911.updateMany({
+      where: { updatedAt: { not: { gte: updatedAt } } },
+      data: {
+        ended: true,
+      },
+    });
   }
 
   protected async assignUnitsToCall(
