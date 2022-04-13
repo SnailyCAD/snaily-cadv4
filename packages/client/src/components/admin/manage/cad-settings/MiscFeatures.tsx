@@ -97,6 +97,7 @@ export function MiscFeatures() {
     callsignTemplate: miscSettings.callsignTemplate ?? "",
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
+    inactivityTimeout: miscSettings.inactivityTimeout ?? "",
   };
 
   return (
@@ -131,6 +132,22 @@ export function MiscFeatures() {
                 value={values.liveMapURL}
                 onChange={handleChange}
                 placeholder="ws://my-host:my-port"
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              optional
+              action="short-input"
+              label="Inactivity Timeout"
+              description="Calls/incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+              errorMessage={errors.inactivityTimeout}
+            >
+              <Input
+                type="number"
+                name="inactivityTimeout"
+                value={values.inactivityTimeout}
+                onChange={handleChange}
+                placeholder="120"
               />
             </SettingsFormField>
 

@@ -19,7 +19,6 @@ export interface cad {
   taxiWhitelisted: boolean;
   businessWhitelisted: boolean;
   maxPlateLength: number;
-  liveMapSocketURl: string | null;
   logoId: string | null;
   registrationCode: string | null;
   features: CadFeature[];
@@ -72,6 +71,7 @@ export interface MiscCadSettings {
   authScreenHeaderImageId: string | null;
   statusesWebhookId: string | null;
   call911WebhookId: string | null;
+  inactivityTimeout: number | null;
 }
 
 /**

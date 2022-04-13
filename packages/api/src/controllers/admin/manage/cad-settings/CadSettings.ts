@@ -125,6 +125,7 @@ export class ManageCitizensController {
         maxDepartmentsEachPerUser: data.maxDepartmentsEachPerUser,
         maxAssignmentsToCalls: data.maxAssignmentsToCalls,
         maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
+        inactivityTimeout: data.inactivityTimeout || null,
       },
     });
 

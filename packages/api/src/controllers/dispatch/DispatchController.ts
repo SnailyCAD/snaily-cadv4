@@ -6,7 +6,7 @@ import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
-import type { cad, User } from "@prisma/client";
+import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
@@ -16,6 +16,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { userProperties } from "lib/auth/user";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getInactivityFilter } from "lib/leo/utils";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -30,7 +31,7 @@ export class DispatchController {
     fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
-  async getDispatchData() {
+  async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
     const includeData = {
       include: {
         department: { include: { value: true } },
@@ -62,8 +63,13 @@ export class DispatchController {
       },
     });
 
+    const inactivityFilter = getInactivityFilter(cad);
+    if (inactivityFilter) {
+      this.endInactiveIncidents(inactivityFilter.updatedAt);
+    }
+
     const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true },
+      where: { isActive: true, ...(inactivityFilter?.filter ?? {}) },
       include: incidentInclude,
     });
 
@@ -197,5 +203,32 @@ export class DispatchController {
     }
 
     return updated;
+  }
+
+  protected async endInactiveIncidents(updatedAt: Date) {
+    const incidents = await prisma.leoIncident.findMany({
+      where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
+      include: { unitsInvolved: true },
+    });
+
+    await Promise.all(
+      incidents.map(async (incident) => {
+        const officers = incident.unitsInvolved.filter((v) => v.officerId);
+
+        await prisma.leoIncident.update({
+          where: { id: incident.id },
+          data: { isActive: false },
+        });
+
+        await prisma.$transaction(
+          officers.map((unit) =>
+            prisma.officer.update({
+              where: { id: unit.officerId! },
+              data: { activeIncidentId: null },
+            }),
+          ),
+        );
+      }),
+    );
   }
 }

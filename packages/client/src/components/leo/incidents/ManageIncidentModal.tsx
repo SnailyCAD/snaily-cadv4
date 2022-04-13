@@ -122,8 +122,8 @@ export function ManageIncidentModal({
     situationCodeId: incident?.situationCodeId ?? null,
     unitsInvolved:
       incident?.unitsInvolved.map((unit) => ({
-        label: makeLabel(unit.unit.id),
-        value: unit.unit.id,
+        label: makeLabel(unit.unit?.id),
+        value: unit.unit?.id,
       })) ?? ([] as SelectValue[]),
   };
 
