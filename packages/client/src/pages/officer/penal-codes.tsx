@@ -45,11 +45,11 @@ export default function PenalCodesPage() {
         <p className="mt-5">{t("noPenalCodes")}</p>
       ) : (
         <>
-          <FormField label={common("search")} className="my-2">
+          <FormField label={common("search")} className="mt-2">
             <Input onChange={(e) => setSearch(e.target.value)} value={search} />
           </FormField>
 
-          <ul className="flex flex-col mt-5">
+          <ul className="flex flex-col mt-3">
             {filtered.map((penalCode) => (
               <li className="card p-4" key={penalCode.id}>
                 <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
