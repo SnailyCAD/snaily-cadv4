@@ -17,6 +17,7 @@ import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { defaultPermissions } from "@snailycad/permissions";
 
 interface Props {
   users: User[];
@@ -65,31 +66,57 @@ export default function ManageUsers({ users: data }: Props) {
         <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
           <Table
             filter={search}
-            data={users.map((user) => ({
-              username: user.username,
-              rank: user.rank,
-              isLeo: common(yesOrNoText(user.isLeo)),
-              isSupervisor: common(yesOrNoText(user.isSupervisor)),
-              isEmsFd: common(yesOrNoText(user.isEmsFd)),
-              isDispatch: common(yesOrNoText(user.isDispatch)),
-              whitelistStatus: (
-                <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
-              ),
-              actions: (
-                <Link href={`/admin/manage/users/${user.id}`}>
-                  <a>
-                    <Button small>{common("manage")}</Button>
-                  </a>
-                </Link>
-              ),
-            }))}
+            data={users.map((user) => {
+              const hasAdminPermissions = hasPermissions(
+                defaultPermissions.allDefaultAdminPermissions,
+                user.rank !== Rank.USER,
+                user,
+              );
+
+              const hasLeoPermissions = hasPermissions(
+                defaultPermissions.defaultLeoPermissions,
+                user.isLeo,
+                user,
+              );
+
+              const hasDispatchPermissions = hasPermissions(
+                defaultPermissions.defaultDispatchPermissions,
+                user.isLeo,
+                user,
+              );
+
+              const hasEmsFdPermissions = hasPermissions(
+                defaultPermissions.defaultEmsFdPermissions,
+                user.isLeo,
+                user,
+              );
+
+              return {
+                username: user.username,
+                rank: user.rank,
+                isAdmin: common(yesOrNoText(hasAdminPermissions)),
+                isLeo: common(yesOrNoText(hasLeoPermissions)),
+                isEmsFd: common(yesOrNoText(hasEmsFdPermissions)),
+                isDispatch: common(yesOrNoText(hasDispatchPermissions)),
+                whitelistStatus: (
+                  <Status state={user.whitelistStatus}>{user.whitelistStatus.toLowerCase()}</Status>
+                ),
+                actions: (
+                  <Link href={`/admin/manage/users/${user.id}`}>
+                    <a>
+                      <Button small>{common("manage")}</Button>
+                    </a>
+                  </Link>
+                ),
+              };
+            })}
             columns={[
               { Header: "Username", accessor: "username" },
               { Header: "Rank", accessor: "rank" },
-              { Header: "LEO Access", accessor: "isLeo" },
-              { Header: "LEO Supervisor", accessor: "isSupervisor" },
-              { Header: "EMS/FD Access", accessor: "isEmsFd" },
-              { Header: "Dispatch Access", accessor: "isDispatch" },
+              { Header: "Admin Permissions", accessor: "isAdmin" },
+              { Header: "LEO Permissions", accessor: "isLeo" },
+              { Header: "EMS/FD Permissions", accessor: "isEmsFd" },
+              { Header: "Dispatch Permissions", accessor: "isDispatch" },
               cad?.whitelisted ? { Header: "Whitelist Status", accessor: "whitelistStatus" } : null,
               hasPermissions(
                 [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],

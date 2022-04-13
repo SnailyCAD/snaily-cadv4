@@ -64,6 +64,7 @@ export function ManagePermissionsModal({ user }: Props) {
     });
 
     if (json.id) {
+      closeModal(ModalIds.ManagePermissions);
       user.permissions = json.permissions;
     }
   }
