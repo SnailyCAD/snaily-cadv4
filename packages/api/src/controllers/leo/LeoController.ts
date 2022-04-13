@@ -192,6 +192,12 @@ export class LeoController {
       ),
     );
 
+    const rank = officer.rankId
+      ? undefined
+      : (defaultDepartment
+          ? defaultDepartment.defaultOfficerRankId
+          : department.defaultOfficerRankId) || undefined;
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -203,10 +209,7 @@ export class LeoController {
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
-        rankId:
-          (defaultDepartment
-            ? defaultDepartment.defaultOfficerRankId
-            : department.defaultOfficerRankId) || undefined,
+        rankId: rank,
         whitelistStatusId,
       },
       include: leoProperties,
