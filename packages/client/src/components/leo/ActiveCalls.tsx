@@ -33,8 +33,8 @@ import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 
-// const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
-const ADDED_TO_CALL_SRC = "/sounds/panic-button.mp3";
+const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
+
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
