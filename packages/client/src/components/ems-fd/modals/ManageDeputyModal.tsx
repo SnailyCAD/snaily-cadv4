@@ -18,6 +18,7 @@ import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import type { EmsFdDeputy } from "@snailycad/types";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   deputy: EmsFdDeputy | null;
@@ -32,6 +33,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const { citizens } = useCitizen();
   const { state, execute } = useFetch();
@@ -104,7 +106,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
-    badgeNumber: deputy?.badgeNumber ?? "",
+    badgeNumber: BADGE_NUMBERS ? deputy?.badgeNumber ?? "" : 123,
     image: undefined,
   };
 
@@ -135,23 +137,25 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               />
             </FormField>
 
-            <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
-              <Input
-                type="number"
-                value={values.badgeNumber}
-                name="badgeNumber"
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: {
-                      ...e.target,
-                      id: "badgeNumber",
-                      value: e.target.valueAsNumber,
-                    },
-                  })
-                }
-              />
-            </FormField>
+            {BADGE_NUMBERS ? (
+              <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
+                <Input
+                  type="number"
+                  value={values.badgeNumber}
+                  name="badgeNumber"
+                  onChange={(e) =>
+                    handleChange({
+                      ...e,
+                      target: {
+                        ...e.target,
+                        id: "badgeNumber",
+                        value: e.target.valueAsNumber,
+                      },
+                    })
+                  }
+                />
+              </FormField>
+            ) : null}
 
             <FormRow>
               <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>

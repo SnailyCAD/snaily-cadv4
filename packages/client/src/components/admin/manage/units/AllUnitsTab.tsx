@@ -12,6 +12,7 @@ import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Status } from "components/shared/Status";
 import { isUnitOfficer } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   units: Unit[];
@@ -27,6 +28,7 @@ export function AllUnitsTab({ units }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const router = useRouter();
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   async function setSelectedUnitsOffDuty() {
     if (tableSelect.selectedRows.length <= 0) return;
@@ -120,7 +122,7 @@ export function AllUnitsTab({ units }: Props) {
             { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
             { Header: common("name"), accessor: "name" },
             { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },

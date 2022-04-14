@@ -56,8 +56,8 @@ interface EnabledOptions {
 }
 
 export function isFeatureEnabled({ features, feature, defaultReturn }: EnabledOptions) {
-  const feat = features?.find((v) => v.feature === feature && v.isEnabled);
+  const feat = features?.find((v) => v.feature === feature);
   if (!feat) return defaultReturn;
 
-  return !!feat;
+  return feat.isEnabled;
 }

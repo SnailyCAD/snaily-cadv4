@@ -133,6 +133,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, vehicles must first be approved by the Department of Motor Vehicles within the CAD.",
   },
+  BADGE_NUMBERS: {
+    name: "Badge numbers",
+    description: "When enabled, this will require officers to enter a badge number.",
+  },
 };
 
 export function CADFeaturesTab() {
