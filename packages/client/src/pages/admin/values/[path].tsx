@@ -300,7 +300,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_");
 
-  const [values] = await requestAll(req, [[`/admin/values/${path}?paths=department`, []]]);
+  const pathsRecord: any = {
+    department: "officer_rank",
+    division: "department",
+  };
+
+  const paths = pathsRecord[path];
+  const pathsStr = paths ? `?paths=${paths}` : "";
+
+  const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
 
   return {
     props: {

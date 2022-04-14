@@ -388,6 +388,7 @@ model Value {
   waterLicenseToValue             Citizen[]                     @relation("waterLicenseToValue")
   citizenFlags                    Citizen[]                     @relation("citizenFlags")
   DLExam                          DLExam[]                      @relation("dlExamToLicense")
+  DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
 }
 
 model PenalCode {
@@ -464,20 +465,22 @@ model DivisionValue {
 }
 
 model DepartmentValue {
-  id                  String               @id @default(cuid())
-  value               Value                @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  valueId             String
-  callsign            String?
-  whitelisted         Boolean              @default(false)
-  isDefaultDepartment Boolean              @default(false)
-  type                DepartmentType       @default(LEO)
-  EmsFdDeputy         EmsFdDeputy[]        @relation("emsFdDepartmentToDepartment")
-  Officer             Officer[]            @relation("officerDepartmentToDepartment")
-  division            DivisionValue[]      @relation("divisionDepartmentToValue")
-  LeoWhitelistStatus  LeoWhitelistStatus[]
-  Call911             Call911[]
-  StatusValue         StatusValue?         @relation(fields: [statusValueId], references: [id])
-  statusValueId       String?
+  id                   String               @id @default(cuid())
+  value                Value                @relation("departmentToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  valueId              String
+  callsign             String?
+  whitelisted          Boolean              @default(false)
+  isDefaultDepartment  Boolean              @default(false)
+  type                 DepartmentType       @default(LEO)
+  EmsFdDeputy          EmsFdDeputy[]        @relation("emsFdDepartmentToDepartment")
+  Officer              Officer[]            @relation("officerDepartmentToDepartment")
+  division             DivisionValue[]      @relation("divisionDepartmentToValue")
+  LeoWhitelistStatus   LeoWhitelistStatus[]
+  Call911              Call911[]
+  StatusValue          StatusValue?         @relation(fields: [statusValueId], references: [id])
+  statusValueId        String?
+  defaultOfficerRank   Value?               @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
+  defaultOfficerRankId String?
 }
 
 model DriversLicenseCategoryValue {

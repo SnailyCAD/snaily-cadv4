@@ -231,6 +231,7 @@ export class AdminManageUnitsController {
         where: { id: officerId },
         data: {
           departmentId: officer.whitelistStatus.departmentId,
+          rankId: officer.whitelistStatus.department.defaultOfficerRankId ?? undefined,
         },
         include: leoProperties,
       });

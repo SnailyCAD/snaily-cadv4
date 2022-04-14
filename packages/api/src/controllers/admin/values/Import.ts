@@ -158,8 +158,12 @@ export const typeHandlers = {
             value: item.value,
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             whitelisted: item.whitelisted ?? false,
+            defaultOfficerRank:
+              item.defaultOfficerRankId && item.type === "LEO"
+                ? { connect: { id: item.defaultOfficerRankId } }
+                : undefined,
           }),
-          include: { value: true },
+          include: { value: true, defaultOfficerRank: true },
         });
       }),
     );
