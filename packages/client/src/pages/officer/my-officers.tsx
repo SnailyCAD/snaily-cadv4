@@ -19,6 +19,7 @@ import { HoverCard } from "components/shared/HoverCard";
 import { Info } from "react-bootstrap-icons";
 import { Status } from "components/shared/Status";
 import { Permissions } from "@snailycad/permissions";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -36,6 +37,7 @@ export default function MyOfficers({ officers: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [officers, setOfficers] = React.useState(data);
   const [tempOfficer, setTempOfficer] = React.useState<Officer | null>(null);
@@ -149,7 +151,7 @@ export default function MyOfficers({ officers: data }: Props) {
           columns={[
             { Header: t("officer"), accessor: "officer" },
             { Header: t("callsign"), accessor: "callsign" },
-            { Header: t("badgeNumber"), accessor: "badgeNumber" },
+            BADGE_NUMBERS ? { Header: t("badgeNumber"), accessor: "badgeNumber" } : null,
             { Header: t("department"), accessor: "department" },
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },

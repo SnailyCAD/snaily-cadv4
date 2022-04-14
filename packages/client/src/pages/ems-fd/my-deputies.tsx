@@ -16,6 +16,7 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -33,6 +34,7 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [deputies, setDeputies] = React.useState(data);
   const [tempDeputy, setTempDeputy] = React.useState<EmsFdDeputy | null>(null);
@@ -112,7 +114,7 @@ export default function MyDeputies({ deputies: data }: Props) {
           columns={[
             { Header: t("Ems.deputy"), accessor: "deputy" },
             { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },

@@ -18,7 +18,7 @@ import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
-import { Officer, ShouldDoType, User, MiscCadSettings } from "@prisma/client";
+import { Officer, ShouldDoType, User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
@@ -26,6 +26,7 @@ import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -57,7 +58,7 @@ export class LeoController {
   async createOfficer(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
@@ -91,6 +92,12 @@ export class LeoController {
       throw new BadRequest("maxLimitOfficersPerUserReached");
     }
 
+    const isBadgeNumbersEnabled = isFeatureEnabled({
+      feature: Feature.BADGE_NUMBERS,
+      defaultReturn: true,
+      features: cad.features,
+    });
+
     const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
       data.department,
       null,
@@ -106,7 +113,7 @@ export class LeoController {
           (defaultDepartment
             ? defaultDepartment.defaultOfficerRankId
             : department.defaultOfficerRankId) || undefined,
-        badgeNumber: data.badgeNumber,
+        badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         whitelistStatusId,
@@ -140,7 +147,7 @@ export class LeoController {
     @PathParams("id") officerId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { features: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
@@ -192,6 +199,12 @@ export class LeoController {
       ),
     );
 
+    const isBadgeNumbersEnabled = isFeatureEnabled({
+      feature: Feature.BADGE_NUMBERS,
+      defaultReturn: true,
+      features: cad.features,
+    });
+
     const rank = officer.rankId
       ? undefined
       : (defaultDepartment
@@ -205,7 +218,7 @@ export class LeoController {
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
-        badgeNumber: data.badgeNumber,
+        badgeNumber: isBadgeNumbersEnabled ? data.badgeNumber : undefined,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
