@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
@@ -15,9 +15,12 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
       isDispatch = true;
     }
   } else {
-    const hasEmsFdPermissions = !user.permissions.length
-      ? user.isEmsFd
-      : hasPermission(user.permissions, [Permissions.EmsFd]);
+    const hasEmsFdPermissions =
+      user.rank === Rank.OWNER
+        ? true
+        : !user.permissions.length
+        ? user.isEmsFd
+        : hasPermission(user.permissions, [Permissions.EmsFd]);
 
     if (!hasEmsFdPermissions) {
       throw new Forbidden("Invalid Permissions");
