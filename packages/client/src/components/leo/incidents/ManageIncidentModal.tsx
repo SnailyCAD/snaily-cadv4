@@ -50,15 +50,14 @@ export function ManageIncidentModal({
   const { activeOfficer } = useLeoState();
   const { codes10 } = useValues();
   const router = useRouter();
+  const { state, execute } = useFetch();
+  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
 
   const isDispatch = router.pathname.includes("/dispatch");
   const isLeoIncidents = router.pathname === "/officer/incidents";
   const creator = isDispatch || !incident?.creator ? null : incident.creator;
   const areEventsReadonly = !isDispatch || isLeoIncidents;
   const areFieldsDisabled = !isDispatch && !isLeoIncidents;
-
-  const { state, execute } = useFetch();
-  const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const activeUnits = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];

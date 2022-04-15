@@ -172,6 +172,7 @@ export function ActiveIncidents() {
         <ManageIncidentModal
           onCreate={(incident) => {
             setActiveIncidents([incident, ...activeIncidents]);
+            setTempIncident(undefined);
           }}
           onUpdate={(old, incident) => {
             if (incident.isActive) {
