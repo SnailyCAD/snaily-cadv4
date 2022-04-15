@@ -32,11 +32,7 @@ export default function Courthouse(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("courthouse")}</Title>
-
-      <header className="mb-5">
-        <h1 className="text-3xl font-semibold">{t("courthouse")}</h1>
-      </header>
+      <Title className="mb-3">{t("courthouse")}</Title>
 
       <TabList
         tabs={[

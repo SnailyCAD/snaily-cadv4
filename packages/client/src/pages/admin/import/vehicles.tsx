@@ -37,11 +37,9 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
         permissions: [Permissions.ImportRegisteredVehicles],
       }}
     >
-      <Title>{t("IMPORT_VEHICLES")}</Title>
-
       <header>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
+          <Title className="!mb-0">{t("IMPORT_VEHICLES")}</Title>
 
           <div>
             <Button onClick={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>

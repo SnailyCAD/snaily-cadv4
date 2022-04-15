@@ -106,8 +106,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
     >
       <Title>{leo("callHistory")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
-
       {calls.length <= 0 ? (
         <p className="mt-5">{"No calls ended yet."}</p>
       ) : (

@@ -65,7 +65,7 @@ export default function Account() {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("account")}</Title>
+      <Title renderLayoutTitle={false}>{t("account")}</Title>
 
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
@@ -77,7 +77,7 @@ export default function Account() {
                   .filter(([k]) => k !== "cad")
                   .map(([key, value]) => {
                     return (
-                      <p key={key}>
+                      <p className="overflow-auto" key={key}>
                         <span className="font-semibold capitalize">{key}: </span> {String(value)}
                       </p>
                     );

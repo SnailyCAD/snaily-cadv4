@@ -68,10 +68,6 @@ export default function TowLogs(props: Props) {
     >
       <Title>{t("towLogs")}</Title>
 
-      <header className="flex items-center justify-between mb-5">
-        <h1 className="text-3xl font-semibold">{t("towLogs")}</h1>
-      </header>
-
       {calls.length <= 0 ? (
         <p className="mt-5">{t("noTowCalls")}</p>
       ) : (

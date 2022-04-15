@@ -52,7 +52,7 @@ export default function MapPage(props: any) {
           crossOrigin=""
         />
       </Head>
-      <Title>Dispatch Live Map</Title>
+      <Title renderLayoutTitle={false}>Dispatch Live Map</Title>
 
       <Layout
         permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.LiveMap] }}

@@ -43,10 +43,6 @@ export default function CitizenLogs({ logs: data }: Props) {
     >
       <Title>{t("citizenLogs")}</Title>
 
-      <header className="flex items-center justify-between">
-        <h1 className="mb-3 text-3xl font-semibold">{t("citizenLogs")}</h1>
-      </header>
-
       {logs.length <= 0 ? (
         <p className="mt-5">{t("noCitizenLogs")}</p>
       ) : (

@@ -44,10 +44,8 @@ export default function MyOfficersLogs({ logs: data }: Props) {
       permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
       className="dark:text-white"
     >
-      <Title>{t("myOfficerLogs")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("myOfficerLogs")}</h1>
+        <Title className="!mb-0">{t("myOfficerLogs")}</Title>
 
         <div className="flex">
           <div className="ml-3 w-52">

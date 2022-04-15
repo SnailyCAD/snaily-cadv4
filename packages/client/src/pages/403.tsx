@@ -8,8 +8,6 @@ export default function FourOhFour() {
   return (
     <Layout className="dark:text-white">
       <Title>Forbidden.</Title>
-
-      <h1 className="text-2xl font-semibold">Forbidden.</h1>
     </Layout>
   );
 }

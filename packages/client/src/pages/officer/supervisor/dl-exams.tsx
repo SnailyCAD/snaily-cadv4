@@ -67,10 +67,8 @@ export default function CitizenLogs({ exams: data }: Props) {
       }}
       className="dark:text-white"
     >
-      <Title>{t("DLExams")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="mb-3 text-3xl font-semibold">{t("DLExams")}</h1>
+        <Title className="!mb-0">{t("DLExams")}</Title>
 
         {hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor) ? (
           <div>

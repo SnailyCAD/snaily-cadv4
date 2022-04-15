@@ -66,10 +66,8 @@ export default function Tow(props: Props) {
       }}
       className="dark:text-white"
     >
-      <Title>{t("tow")}</Title>
-
       <header className="flex items-center justify-between mb-5">
-        <h1 className="text-3xl font-semibold">{t("tow")}</h1>
+        <Title className="!mb-0">{t("tow")}</Title>
 
         <Button onClick={onCreateClick}>{t("createTowCall")}</Button>
       </header>

@@ -57,10 +57,8 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("truckLogs")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("truckLogs")}</h1>
+        <Title>{t("truckLogs")}</Title>
 
         <Button onClick={() => openModal(ModalIds.ManageTruckLog)}>{t("createTruckLog")}</Button>
       </header>

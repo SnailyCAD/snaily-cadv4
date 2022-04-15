@@ -83,8 +83,6 @@ export default function SupervisorPanelPage({ unit }: Props) {
         {common("manage")} {makeUnitName(unit)}
       </Title>
 
-      <h1 className="mb-3 text-2xl font-semibold capitalize">{makeUnitName(unit)}</h1>
-
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form>

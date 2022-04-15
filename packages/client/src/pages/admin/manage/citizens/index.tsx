@@ -35,8 +35,6 @@ export default function ManageCitizens({ citizens: data }: Props) {
     >
       <Title>{t("MANAGE_CITIZENS")}</Title>
 
-      <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CITIZENS")}</h1>
-
       <AllCitizensTab setCitizens={setCitizens} citizens={citizens} />
     </AdminLayout>
   );

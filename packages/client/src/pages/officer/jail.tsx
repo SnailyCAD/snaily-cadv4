@@ -55,8 +55,6 @@ export default function Jail({ data: jailedCitizens }: Props) {
     >
       <Title>{t("jail")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>
-
       {jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (

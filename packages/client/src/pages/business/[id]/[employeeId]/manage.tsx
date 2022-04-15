@@ -75,14 +75,10 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>
-        {currentBusiness.name} - {common("manage")}
-      </Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">
+        <Title className="!mb-0">
           {currentBusiness.name} - {common("manage")}
-        </h1>
+        </Title>
 
         <div>
           <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}`}>
