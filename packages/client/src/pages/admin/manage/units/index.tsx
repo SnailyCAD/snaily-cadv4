@@ -52,8 +52,6 @@ export default function SupervisorPanelPage({ units }: Props) {
     >
       <Title>{t("Management.MANAGE_UNITS")}</Title>
 
-      <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
-
       <TabList tabs={TABS}>
         <AllUnitsTab units={units} />
         <DepartmentWhitelistingTab pendingOfficers={pendingOfficers} />

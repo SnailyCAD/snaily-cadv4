@@ -56,8 +56,6 @@ export default function ManageUsers({ users: data }: Props) {
     >
       <Title>{t("MANAGE_USERS")}</Title>
 
-      <h1 className="mb-4 text-3xl font-semibold">{t("MANAGE_USERS")}</h1>
-
       <FormField label={common("search")} className="my-2">
         <Input placeholder="john doe" onChange={(e) => setSearch(e.target.value)} value={search} />
       </FormField>

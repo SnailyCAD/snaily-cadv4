@@ -52,8 +52,6 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
     >
       <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
 
-      <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>
-
       {pendingRequests.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
       ) : (

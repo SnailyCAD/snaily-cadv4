@@ -37,10 +37,6 @@ export default function PenalCodesPage() {
     >
       <Title>{t("penalCodes")}</Title>
 
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("penalCodes")}</h1>
-      </header>
-
       {penalCode.values.length <= 0 ? (
         <p className="mt-5">{t("noPenalCodes")}</p>
       ) : (

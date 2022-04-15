@@ -56,7 +56,7 @@ export default function TempPassword() {
 
   return (
     <>
-      <Title>{t("changePassword")}</Title>
+      <Title renderLayoutTitle={false}>{t("changePassword")}</Title>
 
       <main className="flex flex-col items-center justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

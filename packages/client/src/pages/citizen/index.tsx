@@ -45,7 +45,7 @@ export default function CitizenPage({ citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("citizens")}</Title>
+      <Title renderLayoutTitle={false}>{t("citizens")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">
         {t("citizens")}

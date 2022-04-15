@@ -62,10 +62,8 @@ export default function Taxi(props: Props) {
       }}
       className="dark:text-white"
     >
-      <Title>{t("taxi")}</Title>
-
       <header className="flex items-center justify-between mb-5">
-        <h1 className="text-3xl font-semibold">{t("taxi")}</h1>
+        <Title>{t("taxi")}</Title>
 
         <Button onClick={onCreateClick}>{t("createTaxiCall")}</Button>
       </header>

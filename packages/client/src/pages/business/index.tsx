@@ -42,10 +42,8 @@ export default function BusinessPage(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("businesses")}</Title>
-
       <header className="flex items-center justify-between mb-3">
-        <h1 className="text-3xl font-semibold">{t("businesses")}</h1>
+        <Title className="!mb-0">{t("businesses")}</Title>
 
         <div>
           <Button onClick={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>

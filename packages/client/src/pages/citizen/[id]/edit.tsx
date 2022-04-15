@@ -53,11 +53,9 @@ export default function EditCitizen() {
 
   return (
     <Layout className="dark:text-white">
-      <Title>
+      <Title className="mb-3">
         {t("editCitizen")} - {citizen.name} {citizen.surname}
       </Title>
-
-      <h1 className="mb-3 text-3xl font-semibold">{t("editCitizen")}</h1>
 
       <ManageCitizenForm citizen={citizen} onSubmit={onSubmit} state={state} />
     </Layout>

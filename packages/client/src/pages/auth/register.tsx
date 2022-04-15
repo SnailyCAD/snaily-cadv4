@@ -74,7 +74,7 @@ export default function Register({ cad }: Props) {
   if (!ALLOW_REGULAR_LOGIN) {
     return (
       <div className="fixed inset-0 grid bg-transparent place-items-center">
-        <Title>{t("login")}</Title>
+        <Title renderLayoutTitle={false}>{t("login")}</Title>
 
         <span aria-label="loading...">
           <Loader className="w-14 h-14 border-[3px]" />
@@ -85,7 +85,7 @@ export default function Register({ cad }: Props) {
 
   return (
     <>
-      <Title>{t("register")}</Title>
+      <Title renderLayoutTitle={false}>{t("register")}</Title>
 
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />

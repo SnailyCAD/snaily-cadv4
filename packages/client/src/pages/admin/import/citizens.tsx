@@ -23,11 +23,9 @@ export default function ImportCitizensPage() {
         permissions: [Permissions.ImportCitizens],
       }}
     >
-      <Title>{t("IMPORT_CITIZENS")}</Title>
-
       <header>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{t("IMPORT_CITIZENS")}</h1>
+          <Title className="!mb-0">{t("IMPORT_CITIZENS")}</Title>
 
           <div className="min-w-fit w-fit">
             <Button onClick={() => openModal(ModalIds.ImportCitizens)}>Import via file</Button>

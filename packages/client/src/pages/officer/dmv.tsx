@@ -50,8 +50,6 @@ export default function Dmv({ data }: Props) {
     >
       <Title>{t("dmv")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("dmv")}</h1>
-
       {pendingVehicles.length <= 0 ? (
         <p className="mt-5">{t("noVehiclesPendingApprovalInDmv")}</p>
       ) : (

@@ -37,11 +37,9 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
         permissions: [Permissions.ImportRegisteredWeapons],
       }}
     >
-      <Title>{t("IMPORT_WEAPONS")}</Title>
-
       <header>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{t("IMPORT_WEAPONS")}</h1>
+          <Title className="!mb-0">{t("IMPORT_WEAPONS")}</Title>
 
           <div>
             <Button onClick={() => openModal(ModalIds.ImportWeapons)}>{t("importViaFile")}</Button>

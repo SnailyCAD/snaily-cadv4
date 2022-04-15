@@ -52,10 +52,8 @@ export default function BleetPost({ post }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{post.title}</Title>
-
       <header className="flex items-center justify-between pb-2 border-b-2">
-        <h1 className="text-3xl font-semibold">{post.title}</h1>
+        <Title className="!mb-0">{post.title}</Title>
 
         <div>
           {user?.id === post.userId ? (

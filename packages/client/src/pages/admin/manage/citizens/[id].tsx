@@ -75,10 +75,6 @@ export default function ManageCitizens({ citizen }: Props) {
         {common("manage")} {citizen.name} {citizen.surname}
       </Title>
 
-      <h1 className="text-3xl font-semibold">
-        {common("manage")} {citizen.name} {citizen.surname}
-      </h1>
-
       <div className="mt-5">
         <ManageCitizenForm
           allowEditingName

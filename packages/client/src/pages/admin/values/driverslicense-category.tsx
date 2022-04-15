@@ -121,13 +121,11 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         permissions: [Permissions.ManageValueDLCategory],
       }}
     >
-      <Title>{typeT("MANAGE")}</Title>
-
       <header className="flex flex-col">
-        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
-        <h6 className="text-lg font-semibold">
+        <Title className="!mb-0">{typeT("MANAGE")}</Title>
+        <h2 className="text-lg font-semibold">
           {t("totalItems")}: <span className="font-normal">{values.length}</span>
-        </h6>
+        </h2>
       </header>
 
       <FormField label={common("search")} className="my-2">

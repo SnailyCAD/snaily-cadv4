@@ -66,10 +66,8 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
       }}
     >
-      <Title>{t("MANAGE_CUSTOM_FIELDS")}</Title>
-
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold mb-3">{t("MANAGE_CUSTOM_FIELDS")}</h1>
+      <header className="flex items-center justify-between mb-5">
+        <Title className="!mb-0">{t("MANAGE_CUSTOM_FIELDS")}</Title>
 
         <div>
           <Button onClick={() => openModal(ModalIds.ManageCustomField)}>

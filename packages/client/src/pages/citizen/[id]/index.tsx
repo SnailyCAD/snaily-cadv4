@@ -74,7 +74,7 @@ export default function CitizenId() {
 
   return (
     <Layout className="dark:text-white">
-      <Title>
+      <Title renderLayoutTitle={false}>
         {citizen.name} {citizen.surname}
       </Title>
 

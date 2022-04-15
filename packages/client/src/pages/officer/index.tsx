@@ -96,7 +96,7 @@ export default function OfficerDashboard({
       permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
       className="dark:text-white"
     >
-      <Title>{t("officer")}</Title>
+      <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
       {signal100Enabled ? <Component audio={signal100Audio} /> : null}
       {unit ? <PanicButton audio={audio} unit={unit} /> : null}

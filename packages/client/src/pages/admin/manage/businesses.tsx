@@ -106,8 +106,6 @@ export default function ManageBusinesses({ businesses: data }: Props) {
     >
       <Title>{t("MANAGE_BUSINESSES")}</Title>
 
-      <h1 className="text-3xl font-semibold mb-5">{t("MANAGE_BUSINESSES")}</h1>
-
       <TabList tabs={TABS}>
         <TabsContent aria-label={t("allBusinesses")} value="allBusinesses">
           <h2 className="text-2xl font-semibold mb-2">{t("allBusinesses")}</h2>

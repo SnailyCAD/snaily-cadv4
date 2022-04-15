@@ -99,10 +99,8 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{currentBusiness.name}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{currentBusiness.name}</h1>
+        <Title className="!mb-0">{currentBusiness.name}</Title>
 
         <div>
           {currentEmployee.canCreatePosts ? (

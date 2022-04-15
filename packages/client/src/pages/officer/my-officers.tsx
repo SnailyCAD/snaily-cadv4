@@ -69,10 +69,8 @@ export default function MyOfficers({ officers: data }: Props) {
       permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
       className="dark:text-white"
     >
-      <Title>{t("myOfficers")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("myOfficers")}</h1>
+        <Title className="!mb-0">{t("myOfficers")}</Title>
 
         <Button onClick={() => openModal(ModalIds.ManageOfficer)}>{t("createOfficer")}</Button>
       </header>

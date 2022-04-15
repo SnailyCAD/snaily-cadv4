@@ -185,10 +185,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
         permissions: [Permissions.ManageValuePenalCode],
       }}
     >
-      <Title>{typeT("MANAGE")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
+        <Title className="!mb-0">{typeT("MANAGE")}</Title>
 
         <div className="flex gap-2">
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>

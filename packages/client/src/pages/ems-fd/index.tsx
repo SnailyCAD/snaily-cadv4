@@ -61,7 +61,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
       permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
       className="dark:text-white"
     >
-      <Title>{t("Ems.emsFd")}</Title>
+      <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
       {signal100Enabled ? <Component audio={audio} /> : null}
 

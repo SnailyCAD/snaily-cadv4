@@ -118,10 +118,8 @@ export default function LeoIncidents({
       }}
       className="dark:text-white"
     >
-      <Title>{t("incidents")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("incidents")}</h1>
+        <Title className="!mb-0">{t("incidents")}</Title>
 
         {hasPermissions([Permissions.ManageIncidents], true) ? (
           <Button

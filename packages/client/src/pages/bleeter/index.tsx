@@ -27,10 +27,8 @@ export default function Bleeter({ posts }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("bleeter")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("bleeter")}</h1>
+        <Title className="!mb-0">{t("bleeter")}</Title>
 
         <Button onClick={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
       </header>

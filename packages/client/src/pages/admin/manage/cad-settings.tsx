@@ -123,8 +123,6 @@ export default function CadSettings() {
     <AdminLayout>
       <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("MANAGE_CAD_SETTINGS")}</h1>
-
       <TabList tabs={SETTINGS_TABS}>
         <TabsContent value="GENERAL_SETTINGS">
           <h2 className="text-2xl font-semibold">General Settings</h2>

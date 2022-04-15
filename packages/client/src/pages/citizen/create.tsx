@@ -63,8 +63,6 @@ export default function CreateCitizen() {
     <Layout className="dark:text-white">
       <Title>{t("createCitizen")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("createCitizen")}</h1>
-
       <ManageCitizenForm onSubmit={onSubmit} citizen={null} state={state} showLicenseFields />
     </Layout>
   );

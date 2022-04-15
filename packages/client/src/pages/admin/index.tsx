@@ -45,8 +45,6 @@ export default function Admin({ counts }: { counts: Counts | null }) {
     >
       <Title>{t("adminDashboard")}</Title>
 
-      <h1 className="text-3xl font-semibold dark:text-white">{t("adminDashboard")}</h1>
-
       <Group name="Users">
         <Item count={counts.activeUsers} name="active" />
         <Item count={counts.pendingUsers} name="pending" />

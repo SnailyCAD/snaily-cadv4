@@ -60,8 +60,6 @@ export default function ImpoundLot({ vehicles: data }: Props) {
     >
       <Title>{t("impoundLot")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>
-
       {vehicles.length <= 0 ? (
         <p className="mt-5">{t("noImpoundedVehicles")}</p>
       ) : (
