@@ -234,6 +234,7 @@ export function ActiveCalls() {
             )}
             onClick={() => setShowFilters(!showFilters)}
             title={t("callFilters")}
+            disabled={calls.length <= 0}
           >
             <Filter
               className={classNames("group-hover:fill-white", showFilters && "text-white")}
