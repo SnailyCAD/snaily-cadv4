@@ -30,9 +30,7 @@ export const _leoProperties = {
 
 export const leoProperties = {
   ..._leoProperties,
-  activeIncident: {
-    include: { unitsInvolved: { include: { officer: { include: _leoProperties } } }, events: true },
-  },
+  activeIncident: { include: { events: true } },
 };
 
 export const combinedUnitProperties = {

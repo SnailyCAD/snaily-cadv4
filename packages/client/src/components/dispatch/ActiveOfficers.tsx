@@ -24,9 +24,11 @@ import { MergeUnitModal } from "./active-units/MergeUnitModal";
 import { OfficerColumn } from "./active-units/officers/OfficerColumn";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
+  const { activeIncidents } = useActiveIncidents();
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -86,7 +88,9 @@ export function ActiveOfficers() {
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
                 const color = officer.status?.color;
-                const activeIncident = isUnitOfficer(officer) ? officer.activeIncident : null;
+                const activeIncidentId = isUnitOfficer(officer) ? officer.activeIncidentId : null;
+                const activeIncident =
+                  activeIncidents.find((v) => v.id === activeIncidentId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
