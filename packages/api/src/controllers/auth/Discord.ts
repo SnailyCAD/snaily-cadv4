@@ -177,16 +177,18 @@ export class DiscordAuth {
     }
 
     function validateUser(user: User) {
-      if (user.banned) {
-        return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
-      }
+      if (user.rank !== Rank.OWNER) {
+        if (user.banned) {
+          return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+        }
 
-      if (user.rank !== Rank.OWNER && user.whitelistStatus === WhitelistStatus.PENDING) {
-        return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
-      }
+        if (user.whitelistStatus === WhitelistStatus.PENDING) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+        }
 
-      if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-        return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+        if (user.whitelistStatus === WhitelistStatus.DECLINED) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+        }
       }
     }
   }
