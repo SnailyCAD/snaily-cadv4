@@ -8,7 +8,7 @@ import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/user";
-import { cad, CadFeature, Feature, WhitelistStatus, type User } from "@prisma/client";
+import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import {
   AUTH_TOKEN_EXPIRES_MS,
   AUTH_TOKEN_EXPIRES_S,
@@ -181,7 +181,7 @@ export class DiscordAuth {
         return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
       }
 
-      if (user.whitelistStatus === WhitelistStatus.PENDING) {
+      if (user.rank !== Rank.OWNER && user.whitelistStatus === WhitelistStatus.PENDING) {
         return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
       }
 
