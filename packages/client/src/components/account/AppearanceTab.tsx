@@ -40,6 +40,7 @@ export function AppearanceTab() {
       signal100: true,
       addedToCall: false,
       stopRoleplay: false,
+      statusUpdate: false,
     },
   };
 
@@ -120,6 +121,14 @@ export function AppearanceTab() {
                   toggled={values.soundSettings.stopRoleplay}
                   onClick={handleChange}
                   name="soundSettings.stopRoleplay"
+                />
+              </FormField>
+
+              <FormField label={t("statusUpdate")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.statusUpdate}
+                  onClick={handleChange}
+                  name="soundSettings.statusUpdate"
                 />
               </FormField>
             </div>
