@@ -8,7 +8,10 @@ import { getRest } from "lib/discord/config";
 
 export async function sendDiscordWebhook(
   miscCadSettings: MiscCadSettings | null,
-  type: keyof Pick<MiscCadSettings, "call911WebhookId" | "statusesWebhookId">,
+  type: keyof Pick<
+    MiscCadSettings,
+    "call911WebhookId" | "statusesWebhookId" | "boloWebhookId" | "panicButtonWebhookId"
+  >,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
 ) {
   const id = miscCadSettings?.[type];
