@@ -10,6 +10,8 @@ import {
   CombinedLeoUnit,
   Value,
   WhitelistStatus,
+  CadFeature,
+  Feature,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -28,6 +30,7 @@ import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -53,7 +56,7 @@ export class StatusController {
     @Context("user") user: User,
     @BodyParams() body: unknown,
     @Req() req: Req,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
@@ -124,7 +127,7 @@ export class StatusController {
 
         if (cad.miscCadSettings.panicButtonWebhookId && officer) {
           try {
-            const embed = createPanicButtonEmbed(cad.miscCadSettings, officer);
+            const embed = createPanicButtonEmbed(cad, officer);
             await sendDiscordWebhook(cad.miscCadSettings, "panicButtonWebhookId", embed);
           } catch (error) {
             console.log("[cad_panicButton]: Could not send Discord webhook.", error);
@@ -228,7 +231,7 @@ export class StatusController {
     }
 
     try {
-      const data = createWebhookData(cad.miscCadSettings, updatedUnit);
+      const data = createWebhookData(cad, updatedUnit);
       await sendDiscordWebhook(cad.miscCadSettings, "statusesWebhookId", data);
     } catch (error) {
       console.log("Could not send Discord webhook.", error);
@@ -253,15 +256,23 @@ export type Unit = { status: V<StatusValue> | null } & (
   | CombinedLeoUnit
 );
 
-function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
+function createWebhookData(
+  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+  unit: Unit,
+) {
+  const isBadgeNumberEnabled = isFeatureEnabled({
+    defaultReturn: true,
+    feature: Feature.BADGE_NUMBERS,
+    features: cad.features,
+  });
+
   const isNotCombined = "citizenId" in unit;
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
-  const officerName = isNotCombined
-    ? `${unit.badgeNumber} - ${callsign} ${unitName}`
-    : `${callsign}`;
+  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
+  const badgeNumber = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumber} - ` : "";
+  const officerName = isNotCombined ? `${badgeNumber}${callsign} ${unitName}` : `${callsign}`;
 
   return {
     embeds: [
@@ -281,13 +292,19 @@ function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
 }
 
 function createPanicButtonEmbed(
-  miscCadSettings: MiscCadSettings,
+  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   unit: Officer & { citizen: Pick<Citizen, "name" | "surname"> },
 ) {
+  const isBadgeNumberEnabled = isFeatureEnabled({
+    defaultReturn: true,
+    feature: Feature.BADGE_NUMBERS,
+    features: cad.features,
+  });
+
   const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
-  const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
-  // todo: see #628
-  const officerName = `${unit.badgeNumber} - ${callsign} ${unitName}`;
+  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
+  const badgeNumber = isBadgeNumberEnabled ? `${unit.badgeNumber} - ` : "";
+  const officerName = `${badgeNumber}${callsign} ${unitName}`;
 
   return {
     embeds: [
