@@ -128,6 +128,8 @@
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
     "Invalid Permissions": "You don't have permissions to access this API Route.",
     "alreadyPendingNameChange": "This citizen already has a pending name change request.",
-    "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name."
+    "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name.",
+    "socketError": "Socket connection error",
+    "socketErrorInfo": "Connection to the API has been disconnected. Please re-connect to the internet or reload the browser window."
   }
 }
