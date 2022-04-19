@@ -20,6 +20,12 @@ body:
       description: "For example: Ubuntu, Windows, etc"
     validations:
       required: true
+  - type: input
+    attributes:
+      label: What version of SnailyCAD are you currently using?
+      description: "For example: 1.0.0-beta.88"
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Describe the Bug
