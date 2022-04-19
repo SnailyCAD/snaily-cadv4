@@ -71,6 +71,8 @@ export interface MiscCadSettings {
   authScreenHeaderImageId: string | null;
   statusesWebhookId: string | null;
   call911WebhookId: string | null;
+  panicButtonWebhookId: string | null;
+  boloWebhookId: string | null;
   inactivityTimeout: number | null;
 }
 

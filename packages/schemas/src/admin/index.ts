@@ -56,6 +56,8 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
 export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   call911WebhookId: z.string().nullable().optional(),
   statusesWebhookId: z.string().nullable().optional(),
+  panicButtonWebhookId: z.string().nullable().optional(),
+  boloWebhookId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({
