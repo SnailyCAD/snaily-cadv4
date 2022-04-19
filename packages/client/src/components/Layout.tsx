@@ -3,6 +3,7 @@ import type { Permissions, PermissionsFallback } from "hooks/usePermission";
 import { useRoleplayStopped } from "hooks/global/useRoleplayStopped";
 import { Nav } from "./nav/Nav";
 import { useHasPermissionForLayout } from "hooks/auth/useHasPermissionForLayout";
+import { useSocketError } from "hooks/global/useSocketError";
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export function Layout({
   permissions,
 }: LayoutProps) {
   const { Component, audio, roleplayStopped } = useRoleplayStopped();
+  const { SocketErrorComponent, showError } = useSocketError();
   const { forbidden, Loader } = useHasPermissionForLayout(permissions);
 
   if (forbidden) {
@@ -32,6 +34,7 @@ export function Layout({
 
       <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
         {roleplayStopped && !hideAlerts ? <Component audio={audio} /> : null}
+        {showError ? <SocketErrorComponent /> : null}
 
         {children}
       </main>
