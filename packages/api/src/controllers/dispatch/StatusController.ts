@@ -121,6 +121,15 @@ export class StatusController {
         code.shouldDo === ShouldDoType.PANIC_BUTTON
       ) {
         this.socket.emitPanicButtonLeo(officer, "ON");
+
+        if (cad.miscCadSettings.panicButtonWebhookId && officer) {
+          try {
+            const embed = createPanicButtonEmbed(cad.miscCadSettings, officer);
+            await sendDiscordWebhook(cad.miscCadSettings, "panicButtonWebhookId", embed);
+          } catch (error) {
+            console.log("[cad_panicButton]: Could not send Discord webhook.", error);
+          }
+        }
       }
     }
 
@@ -266,6 +275,25 @@ function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
             inline: true,
           },
         ],
+      },
+    ],
+  };
+}
+
+function createPanicButtonEmbed(
+  miscCadSettings: MiscCadSettings,
+  unit: Officer & { citizen: Pick<Citizen, "name" | "surname"> },
+) {
+  const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
+  const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
+  // todo: see #628
+  const officerName = `${unit.badgeNumber} - ${callsign} ${unitName}`;
+
+  return {
+    embeds: [
+      {
+        title: "Panic Button",
+        description: `Unit **${officerName}** has pressed the panic button`,
       },
     ],
   };

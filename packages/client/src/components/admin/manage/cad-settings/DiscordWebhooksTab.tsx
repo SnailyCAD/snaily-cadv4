@@ -106,7 +106,7 @@ export function DiscordWebhooksTab() {
             <SettingsFormField
               description="The Discord channel where panic button triggers will be sent to."
               errorMessage={errors.panicButtonWebhookId}
-              label="Status updates channel"
+              label="Panic button channel"
             >
               <Select
                 isClearable
@@ -123,7 +123,7 @@ export function DiscordWebhooksTab() {
             <SettingsFormField
               description="The Discord channel where new BOLO's will be sent to."
               errorMessage={errors.boloWebhookId}
-              label="Status updates channel"
+              label="BOLO's channel"
             >
               <Select
                 isClearable

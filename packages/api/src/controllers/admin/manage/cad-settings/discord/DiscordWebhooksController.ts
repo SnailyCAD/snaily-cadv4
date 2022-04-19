@@ -95,6 +95,16 @@ export class DiscordWebhooksController {
         cad.miscCadSettings.call911WebhookId,
         name,
       ),
+      panicButtonWebhookId: await this.makeWebhookForChannel(
+        data.panicButtonWebhookId,
+        cad.miscCadSettings.panicButtonWebhookId,
+        name,
+      ),
+      boloWebhookId: await this.makeWebhookForChannel(
+        data.boloWebhookId,
+        cad.miscCadSettings.boloWebhookId,
+        name,
+      ),
     };
 
     const miscCadSettings = await prisma.miscCadSettings.upsert({
