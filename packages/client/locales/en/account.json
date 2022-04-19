@@ -32,7 +32,8 @@
     "panicButton": "Panic Button",
     "signal100": "Signal 100",
     "stopRoleplay": "Stop roleplay",
-    "addedToCall": "Added to call"
+    "addedToCall": "Added to call",
+    "statusUpdate": "Status Update"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

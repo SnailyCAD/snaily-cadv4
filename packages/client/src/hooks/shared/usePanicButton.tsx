@@ -9,7 +9,7 @@ import { isUnitCombined } from "@snailycad/utils";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 
-const PANIC_BUTTON_SRC = "/sounds/panic-button.mp3";
+const PANIC_BUTTON_SRC = "/sounds/panic-button.mp3" as const;
 export function usePanicButton() {
   const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
   const { user } = useAuth();

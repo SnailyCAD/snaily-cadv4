@@ -215,6 +215,7 @@ model UserSoundSettings {
   signal100    Boolean @default(true)
   addedToCall  Boolean @default(false)
   stopRoleplay Boolean @default(false)
+  statusUpdate Boolean @default(false)
   User         User[]
 }
 
