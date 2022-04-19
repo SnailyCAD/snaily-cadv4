@@ -190,6 +190,7 @@ export interface UserSoundSettings {
   signal100: boolean;
   addedToCall: boolean;
   stopRoleplay: boolean;
+  statusUpdate: boolean;
 }
 
 /**
