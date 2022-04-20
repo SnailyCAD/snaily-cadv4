@@ -157,6 +157,7 @@ export const typeHandlers = {
             callsign: item.callsign,
             value: item.value,
             isDefaultDepartment: item.isDefaultDepartment ?? false,
+            isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
             defaultOfficerRank:
               item.defaultOfficerRankId && item.type === "LEO"

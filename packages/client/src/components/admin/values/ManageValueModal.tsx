@@ -123,7 +123,6 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const INITIAL_VALUES = {
     value: value ? getValueStrFromValue(value) : "",
 
-    defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
@@ -137,7 +136,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
         : [],
 
     departmentId: value && isDivisionValue(value) ? value.departmentId : "",
+    isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
+    defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
     isDefaultDepartment: value && isDepartmentValue(value) ? value.isDefaultDepartment : false,
     callsign:
       value && (isDepartmentValue(value) || isDivisionValue(value)) ? value.callsign ?? "" : "",

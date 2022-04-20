@@ -485,6 +485,7 @@ model DepartmentValue {
   statusValueId        String?
   defaultOfficerRank   Value?               @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
   defaultOfficerRankId String?
+  isConfidential       Boolean              @default(false)
 }
 
 model DriversLicenseCategoryValue {

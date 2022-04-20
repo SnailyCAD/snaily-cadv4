@@ -7,11 +7,12 @@ import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { CustomFieldCategory } from "@prisma/client";
+import { Citizen, CustomFieldCategory, DepartmentValue, Officer } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 
 export const citizenSearchInclude = {
+  officers: { select: { department: { select: { isConfidential: true } } } },
   ...citizenInclude,
   businesses: true,
   medicalRecords: true,
@@ -118,7 +119,7 @@ export class SearchController {
       });
     }
 
-    return appendCustomFields(citizen, CustomFieldCategory.CITIZEN);
+    return appendConfidential(await appendCustomFields(citizen, CustomFieldCategory.CITIZEN));
   }
 
   @Post("/weapon")
@@ -227,6 +228,28 @@ export class SearchController {
 
     return { field: customField, results };
   }
+}
+
+function appendConfidential(
+  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue })[] })[],
+) {
+  const _citizens = [];
+
+  for (const citizen of citizens) {
+    const isConfidential = citizen.officers.some((v) => !!v.isConfidential);
+
+    if (isConfidential) {
+      _citizens.push({
+        name: citizen.name,
+        surname: citizen.surname,
+        isConfidential: true,
+      });
+    } else {
+      _citizens.push(citizen);
+    }
+  }
+
+  return _citizens;
 }
 
 async function appendCustomFields(item: any, category: CustomFieldCategory) {
