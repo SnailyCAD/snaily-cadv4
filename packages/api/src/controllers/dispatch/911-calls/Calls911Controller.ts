@@ -135,17 +135,17 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    const returnData = officerOrDeputyToUnit(updated);
+    const normalizedCall = officerOrDeputyToUnit(updated);
 
     try {
-      const data = this.createWebhookData(returnData);
+      const data = this.createWebhookData(normalizedCall);
       await sendDiscordWebhook(cad.miscCadSettings, "call911WebhookId", data);
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }
 
-    this.socket.emit911Call(returnData);
-    return returnData;
+    this.socket.emit911Call(normalizedCall);
+    return normalizedCall;
   }
 
   @Put("/:id")
@@ -242,9 +242,10 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
+    const normalizedCall = officerOrDeputyToUnit(updated);
+    this.socket.emitUpdate911Call(normalizedCall);
 
-    return officerOrDeputyToUnit(updated);
+    return officerOrDeputyToUnit(normalizedCall);
   }
 
   @Delete("/purge")
