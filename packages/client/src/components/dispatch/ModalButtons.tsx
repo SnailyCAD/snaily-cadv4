@@ -26,8 +26,9 @@ export function DispatchModalButtons() {
   const features = useFeatureEnabled();
   const { activeDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
+  const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
-  const isActive = activeDispatchers.some((v) => v.userId === user?.id);
+  const isActive = ACTIVE_DISPATCHERS ? activeDispatchers.some((v) => v.userId === user?.id) : true;
 
   async function handleStateChangeDispatcher() {
     const newState = !isActive;
