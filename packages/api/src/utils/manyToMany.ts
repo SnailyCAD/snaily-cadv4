@@ -1,14 +1,19 @@
 type DisconnectOrConnect<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
-> = { disconnect: { id: T[Accessor] | Accessor } } | { connect: { id: T[Accessor] | Accessor } };
+> = { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } };
+
+interface ManyToManyOptions<Accessor> {
+  accessor?: Accessor;
+}
 
 export function manyToManyHelper<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
->(currentArr: T[], incomingArr: T[], accessor?: Accessor) {
+>(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<Accessor>) {
   const connectDisconnectArr: DisconnectOrConnect<T, Accessor>[] = [];
   const arr = merge(currentArr, incomingArr);
+  const accessor = options?.accessor;
 
   for (const item of arr) {
     const existsInCurrent = currentArr.some(

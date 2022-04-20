@@ -9,6 +9,8 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { callInclude } from "./Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/911-calls/events")
 @UseBeforeEach(IsAuth)
@@ -28,6 +30,7 @@ export class Calls911Controller {
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
+      include: callInclude,
     });
 
     if (!call) {
@@ -41,7 +44,12 @@ export class Calls911Controller {
       },
     });
 
-    this.socket.emitAddCallEvent(event);
+    const normalizedCall = officerOrDeputyToUnit({
+      ...call,
+      events: [...call.events, event],
+    });
+
+    this.socket.emitUpdate911Call(normalizedCall);
 
     return event;
   }
@@ -60,6 +68,7 @@ export class Calls911Controller {
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
+      include: callInclude,
     });
 
     if (!call) {
@@ -77,7 +86,7 @@ export class Calls911Controller {
       throw new NotFound("eventNotFound");
     }
 
-    const updated = await prisma.call911Event.update({
+    const updatedEvent = await prisma.call911Event.update({
       where: {
         id: event.id,
       },
@@ -86,9 +95,21 @@ export class Calls911Controller {
       },
     });
 
-    this.socket.emitUpdateCallEvent(updated);
+    const updatedEvents = call.events.map((event) => {
+      if (event.id === updatedEvent.id) {
+        return updatedEvent;
+      }
+      return event;
+    });
 
-    return updated;
+    const normalizedCall = officerOrDeputyToUnit({
+      ...call,
+      events: updatedEvents,
+    });
+
+    this.socket.emitUpdate911Call(normalizedCall);
+
+    return updatedEvent;
   }
 
   @Delete("/:callId/:eventId")
@@ -102,6 +123,7 @@ export class Calls911Controller {
   ) {
     const call = await prisma.call911.findUnique({
       where: { id: callId },
+      include: callInclude,
     });
 
     if (!call) {
@@ -120,12 +142,13 @@ export class Calls911Controller {
     }
 
     await prisma.call911Event.delete({
-      where: {
-        id: event.id,
-      },
+      where: { id: event.id },
     });
 
-    this.socket.emitDeleteCallEvent(event);
+    const updatedEvents = call.events.filter((v) => v.id !== event.id);
+    const normalizedCall = officerOrDeputyToUnit({ ...call, events: updatedEvents });
+
+    this.socket.emitUpdate911Call(normalizedCall);
 
     return true;
   }

@@ -164,7 +164,9 @@ export class DLExamsController {
 
     if (!citizen) return;
 
-    const connectDisconnectArr = manyToManyHelper(citizen.dlCategory, exam.categories, "id");
+    const connectDisconnectArr = manyToManyHelper(citizen.dlCategory, exam.categories, {
+      accessor: "id",
+    });
 
     await prisma.$transaction([
       prisma.citizen.update({

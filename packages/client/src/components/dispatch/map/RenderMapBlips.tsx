@@ -102,7 +102,7 @@ function generateMarkerTypes() {
   };
 
   for (const blipName in blipTypes) {
-    const blip = blipTypes[blipName];
+    const blip = blipTypes[blipName]!;
 
     if (!blip.id) {
       current.id = current.id + 1;

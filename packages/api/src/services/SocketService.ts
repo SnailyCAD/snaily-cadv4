@@ -1,7 +1,7 @@
 import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
-import type { LeoIncident, Call911, TowCall, Bolo, Call911Event, TaxiCall } from "@prisma/client";
+import type { LeoIncident, Call911, TowCall, Bolo, TaxiCall } from "@prisma/client";
 import type { IncidentEvent } from "@snailycad/types";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
@@ -81,18 +81,6 @@ export class Socket {
 
   emitUserDeleted(userId: string) {
     this.io.sockets.emit(SocketEvents.UserDeleted, userId);
-  }
-
-  emitAddCallEvent(event: Call911Event) {
-    this.io.sockets.emit(SocketEvents.AddCallEvent, event);
-  }
-
-  emitUpdateCallEvent(event: Call911Event) {
-    this.io.sockets.emit(SocketEvents.UpdateCallEvent, event);
-  }
-
-  emitDeleteCallEvent(event: Call911Event) {
-    this.io.sockets.emit(SocketEvents.DeleteCallEvent, event);
   }
 
   emitCreateTaxiCall(call: TaxiCall) {

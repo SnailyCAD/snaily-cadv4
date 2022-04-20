@@ -70,7 +70,7 @@ export async function updateMemberRolesLogin(
   for (const [name, isTruthy] of userTruthyArr) {
     const perms = permissions[name];
     if (isTruthy) {
-      permissionsToGive.push(...perms);
+      perms.length && permissionsToGive.push(...perms);
     } else {
       user.permissions = user.permissions.filter((v) => perms.includes(v));
     }

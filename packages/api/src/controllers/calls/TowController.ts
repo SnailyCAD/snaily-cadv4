@@ -17,6 +17,8 @@ import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -120,6 +122,13 @@ export class TowController {
       });
 
       if (data.call911Id) {
+        const call = await prisma.call911.findUnique({
+          where: { id: data.call911Id },
+          include: callInclude,
+        });
+
+        if (!call) return;
+
         const event = await prisma.call911Event.create({
           data: {
             description: "Created a tow call",
@@ -127,7 +136,12 @@ export class TowController {
           },
         });
 
-        this.socket.emitAddCallEvent(event);
+        const normalizedCall = officerOrDeputyToUnit({
+          ...call,
+          events: [...call.events, event],
+        });
+
+        this.socket.emitUpdate911Call(normalizedCall);
       }
     }
 
