@@ -42,6 +42,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
       onCreate?.(json);
     }
 
+    setTempEvent(null);
     helpers.resetForm();
   }
 

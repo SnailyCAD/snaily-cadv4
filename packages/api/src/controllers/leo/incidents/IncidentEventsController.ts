@@ -47,12 +47,12 @@ export class IncidentController {
       },
     });
 
-    const correctedIncident = officerOrDeputyToUnit({
+    const normalizedIncident = officerOrDeputyToUnit({
       ...incident,
       events: [...incident.events, event],
     });
 
-    this.socket.emitUpdateActiveIncident(correctedIncident);
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return event;
   }
@@ -106,11 +106,11 @@ export class IncidentController {
       return event;
     });
 
-    const correctedIncident = officerOrDeputyToUnit({
+    const normalizedIncident = officerOrDeputyToUnit({
       ...incident,
       events: updatedEvents,
     });
-    this.socket.emitUpdateActiveIncident(correctedIncident);
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return updatedEvent;
   }
@@ -153,8 +153,8 @@ export class IncidentController {
 
     const updatedEvents = incident.events.filter((v) => v.id !== event.id);
 
-    const correctedIncident = officerOrDeputyToUnit({ ...incident, events: updatedEvents });
-    this.socket.emitUpdateActiveIncident(correctedIncident);
+    const normalizedIncident = officerOrDeputyToUnit({ ...incident, events: updatedEvents });
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return true;
   }

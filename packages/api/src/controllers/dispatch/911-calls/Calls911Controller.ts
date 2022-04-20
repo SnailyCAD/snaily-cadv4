@@ -9,14 +9,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import {
-  ShouldDoType,
-  DepartmentValue,
-  DivisionValue,
-  User,
-  MiscCadSettings,
-  Call911,
-} from "@prisma/client";
+import type { User, MiscCadSettings, Call911 } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -25,6 +18,8 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
+import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
+import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
 
 export const assignedUnitsInclude = {
   include: {
@@ -121,19 +116,22 @@ export class Calls911Controller {
       include: callInclude,
     });
 
-    const units = (data.assignedUnits ?? []) as string[];
-    await this.assignUnitsToCall(call.id, units, maxAssignmentsToCalls);
-    await this.linkOrUnlinkCallDepartmentsAndDivisions({
-      type: "connect",
+    const unitIds = (data.assignedUnits ?? []) as string[];
+    await assignUnitsToCall({
+      callId: call.id,
+      maxAssignmentsToCalls,
+      socket: this.socket,
+      unitIds,
+    });
+
+    await linkOrUnlinkCallDepartmentsAndDivisions({
       departments: (data.departments ?? []) as string[],
       divisions: (data.divisions ?? []) as string[],
-      callId: call.id,
+      call,
     });
 
     const updated = await prisma.call911.findUnique({
-      where: {
-        id: call.id,
-      },
+      where: { id: call.id },
       include: callInclude,
     });
 
@@ -188,13 +186,6 @@ export class Calls911Controller {
       }),
     );
 
-    await this.linkOrUnlinkCallDepartmentsAndDivisions({
-      type: "disconnect",
-      departments: (data.departments ?? []) as string[],
-      divisions: (data.divisions ?? []) as string[],
-      callId: call.id,
-    });
-
     const positionData = data.position ?? null;
     const shouldRemovePosition = data.position === null;
 
@@ -230,13 +221,18 @@ export class Calls911Controller {
       },
     });
 
-    const units = (data.assignedUnits ?? []) as string[];
-    await this.assignUnitsToCall(call.id, units, maxAssignmentsToCalls);
-    await this.linkOrUnlinkCallDepartmentsAndDivisions({
-      type: "connect",
+    const unitIds = (data.assignedUnits ?? []) as string[];
+    await assignUnitsToCall({
+      callId: call.id,
+      maxAssignmentsToCalls,
+      socket: this.socket,
+      unitIds,
+    });
+
+    await linkOrUnlinkCallDepartmentsAndDivisions({
       departments: (data.departments ?? []) as string[],
       divisions: (data.divisions ?? []) as string[],
-      callId: call.id,
+      call,
     });
 
     const updated = await prisma.call911.findUnique({
@@ -411,38 +407,6 @@ export class Calls911Controller {
     return officerOrDeputyToUnit(updated);
   }
 
-  protected async linkOrUnlinkCallDepartmentsAndDivisions({
-    type,
-    callId,
-    departments,
-    divisions,
-  }: {
-    type: "disconnect" | "connect";
-    callId: string;
-    departments: (DepartmentValue["id"] | DepartmentValue)[];
-    divisions: (DivisionValue["id"] | DivisionValue)[];
-  }) {
-    await Promise.all(
-      departments.map(async (dep) => {
-        const id = typeof dep === "string" ? dep : dep.id;
-        await prisma.call911.update({
-          where: { id: callId },
-          data: { departments: { [type]: { id } } },
-        });
-      }),
-    );
-
-    await Promise.all(
-      divisions.map(async (division) => {
-        const id = typeof division === "string" ? division : division.id;
-        await prisma.call911.update({
-          where: { id: callId },
-          data: { divisions: { [type]: { id } } },
-        });
-      }),
-    );
-  }
-
   protected async endInactiveCalls(updatedAt: Date) {
     await prisma.call911.updateMany({
       where: { updatedAt: { not: { gte: updatedAt } } },
@@ -450,77 +414,6 @@ export class Calls911Controller {
         ended: true,
       },
     });
-  }
-
-  protected async assignUnitsToCall(
-    callId: string,
-    units: string[],
-    maxAssignmentsToCalls: number,
-  ) {
-    await Promise.all(
-      units.map(async (id) => {
-        const { unit, type } = await findUnit(id, {
-          NOT: { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
-        });
-
-        if (!unit) {
-          throw new BadRequest("unitOffDuty");
-        }
-
-        const types = {
-          combined: "combinedLeoId",
-          leo: "officerId",
-          "ems-fd": "emsFdDeputyId",
-        };
-
-        const assignmentCount = await prisma.assignedUnit.count({
-          where: {
-            [types[type]]: unit.id,
-            call911: { ended: false },
-          },
-        });
-
-        if (assignmentCount >= maxAssignmentsToCalls) {
-          // skip this officer
-          return;
-        }
-
-        const status = await prisma.statusValue.findFirst({
-          where: { shouldDo: "SET_ASSIGNED" },
-        });
-
-        if (status) {
-          const t =
-            type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
-          // @ts-expect-error ignore
-          await prisma[t].update({
-            where: { id: unit.id },
-            data: { statusId: status.id },
-          });
-
-          this.socket.emitUpdateOfficerStatus();
-          this.socket.emitUpdateDeputyStatus();
-        }
-
-        const assignedUnit = await prisma.assignedUnit.create({
-          data: {
-            call911Id: callId,
-            [types[type]]: unit.id,
-          },
-        });
-
-        await prisma.call911.update({
-          where: {
-            id: callId,
-          },
-          data: {
-            assignedUnits: {
-              connect: { id: assignedUnit.id },
-            },
-          },
-        });
-      }),
-    );
   }
 
   // creates the webhook structure that will get sent to Discord.

@@ -22,6 +22,13 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
 }: Props<T>) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useEffect(() => {
+    if (event && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [event]);
 
   // allow users to press "Enter + Ctrl" or "Enter + Cmd" to send an event
   function handleCtrlEnter(event: React.KeyboardEvent<HTMLTextAreaElement>, submitForm: any) {
@@ -41,6 +48,7 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
               value={values.description}
               onChange={handleChange}
               onKeyDown={(e) => handleCtrlEnter(e, submitForm)}
+              ref={inputRef}
             />
           </FormField>
 

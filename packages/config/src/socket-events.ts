@@ -23,10 +23,6 @@ export enum SocketEvents {
   UserBanned = "UserBanned",
   UserDeleted = "UserDeleted",
 
-  AddCallEvent = "AddCallEvent",
-  UpdateCallEvent = "UpdateCallEvent",
-  DeleteCallEvent = "DeleteCallEvent",
-
   Signal100 = "Signal100",
 
   PANIC_BUTTON_ON = "PANIC_BUTTON_ON",

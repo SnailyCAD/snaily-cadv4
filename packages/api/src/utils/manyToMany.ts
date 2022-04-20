@@ -1,14 +1,28 @@
 type DisconnectOrConnect<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
-> = { disconnect: { id: T[Accessor] | Accessor } } | { connect: { id: T[Accessor] | Accessor } };
+  DisconnectType extends "disconnect" | "delete" = "disconnect",
+> =
+  | (DisconnectType extends "disconnect"
+      ? { disconnect?: { id: T[Accessor] | Accessor } }
+      : { delete?: { id: T[Accessor] | Accessor } })
+  | { connect?: { id: T[Accessor] | Accessor } };
+
+type IDisconnectType = "disconnect" | "delete";
+interface ManyToManyOptions<DisconnectType extends IDisconnectType, Accessor> {
+  disconnectType?: DisconnectType;
+  accessor?: Accessor;
+}
 
 export function manyToManyHelper<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
->(currentArr: T[], incomingArr: T[], accessor?: Accessor) {
-  const connectDisconnectArr: DisconnectOrConnect<T, Accessor>[] = [];
+  DisconnectType extends "disconnect" | "delete" = "disconnect",
+>(currentArr: T[], incomingArr: T[], options?: ManyToManyOptions<DisconnectType, Accessor>) {
+  const connectDisconnectArr: DisconnectOrConnect<T, Accessor, DisconnectType>[] = [];
   const arr = merge(currentArr, incomingArr);
+  const accessor = options?.accessor;
+  const disconnectType = options?.disconnectType ?? "disconnect";
 
   for (const item of arr) {
     const existsInCurrent = currentArr.some(
@@ -28,7 +42,7 @@ export function manyToManyHelper<
 
     if (existsInCurrent && !existsInIncoming) {
       connectDisconnectArr.push({
-        disconnect: { id: getAccessor(item, accessor) },
+        [disconnectType]: { id: getAccessor(item, accessor) },
       });
       continue;
     }

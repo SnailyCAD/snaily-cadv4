@@ -1,11 +1,11 @@
 import { expect, test } from "vitest";
-import { getLastOfArray, manyToManyHelper } from "../src/utils/manyToMany";
+import { getLastOfArray, merge, manyToManyHelper } from "../src/utils/manyToMany";
 
 test("Should return correct many-to-many array ({id: Number}) for Prisma -> addition ", () => {
   const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];
   const newArr = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
-  expect(manyToManyHelper(currentArr, newArr, "id")).toMatchObject([
+  expect(manyToManyHelper(currentArr, newArr, { accessor: "id" })).toMatchObject([
     {
       connect: {
         id: 4,
@@ -14,11 +14,11 @@ test("Should return correct many-to-many array ({id: Number}) for Prisma -> addi
   ]);
 });
 
-test("Should return correct many-to-many array ({id: Number}) for Prisma -> deletion", () => {
+test("Should return correct many-to-many array ({id: Number}) for Prisma -> disconnect", () => {
   const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];
   const newArr = [{ id: 1 }, { id: 2 }];
 
-  expect(manyToManyHelper(currentArr, newArr, "id")).toMatchObject([
+  expect(manyToManyHelper(currentArr, newArr, { accessor: "id" })).toMatchObject([
     {
       disconnect: {
         id: 3,
@@ -27,11 +27,11 @@ test("Should return correct many-to-many array ({id: Number}) for Prisma -> dele
   ]);
 });
 
-test("Should return correct many-to-many array ({id: Number}) for Prisma -> addition & deletion", () => {
+test("Should return correct many-to-many array ({id: Number}) for Prisma -> addition & disconnect", () => {
   const currentArr = [{ id: 1 }, { id: 2 }, { id: 3 }];
   const newArr = [{ id: 1 }, { id: 2 }, { id: 4 }];
 
-  expect(manyToManyHelper(currentArr, newArr, "id")).toMatchInlineSnapshot(`
+  expect(manyToManyHelper(currentArr, newArr, { accessor: "id" })).toMatchInlineSnapshot(`
     [
       {
         "disconnect": {
@@ -47,7 +47,7 @@ test("Should return correct many-to-many array ({id: Number}) for Prisma -> addi
   `);
 });
 
-test("Should return correct many-to-many array (id: String) for Prisma -> addition & deletion", () => {
+test("Should return correct many-to-many array (id: String) for Prisma -> addition & disconnect", () => {
   const currentArr = ["a", "b", "c"];
   const newArr = ["a", "b", "d"];
 
@@ -65,6 +65,47 @@ test("Should return correct many-to-many array (id: String) for Prisma -> additi
       },
     ]
   `);
+});
+
+test("Should return correct many-to-many array (id: String) for Prisma -> addition & delete", () => {
+  const currentArr = ["a", "b", "c"];
+  const newArr = ["a", "b", "d"];
+
+  const result = manyToManyHelper(currentArr, newArr, { disconnectType: "delete" });
+  expect(result).toMatchInlineSnapshot(`
+    [
+      {
+        "delete": {
+          "id": "c",
+        },
+      },
+      {
+        "connect": {
+          "id": "d",
+        },
+      },
+    ]
+  `);
+});
+
+test("Should merge 2 arrays -> 1 unique array without accessor", () => {
+  const arr1 = ["A", "B", "C", "F"];
+  const arr2 = ["A", "C", "D", "E"];
+
+  expect(merge(arr1, arr2)).toMatchObject(["A", "B", "C", "F", "D", "E"]);
+});
+
+test("Should merge 2 arrays -> 1 unique array with accessor", () => {
+  const arr1 = [{ id: "A" }, { id: "B" }, { id: "C" }];
+  const arr2 = [{ id: "C" }, { id: "D" }, { id: "F" }];
+
+  expect(merge(arr1, arr2, "id")).toMatchObject([
+    { id: "A" },
+    { id: "B" },
+    { id: "C" },
+    { id: "D" },
+    { id: "F" },
+  ]);
 });
 
 test("Should get last item of an array -> []", () => {

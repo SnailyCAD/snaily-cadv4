@@ -13,8 +13,6 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
-import { useListener } from "@casper124578/use-socket.io";
-import { SocketEvents } from "@snailycad/config";
 import { CallEventsArea } from "./911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
@@ -133,45 +131,6 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [call, calls, setCalls],
-  );
-
-  useListener(
-    SocketEvents.AddCallEvent,
-    (e) => {
-      handleAddEvent(e);
-    },
-    [handleAddEvent],
-  );
-
-  useListener(
-    SocketEvents.UpdateCallEvent,
-    (e) => {
-      handleUpdateEvent(e);
-    },
-    [handleUpdateEvent],
-  );
-
-  useListener(
-    SocketEvents.DeleteCallEvent,
-    (event) => {
-      if (!call) return;
-
-      setCall?.((p) => ({
-        ...(p ?? call),
-        events: (p ?? call).events.filter((v) => v.id !== event.id),
-      }));
-
-      setCalls(
-        calls.map((c) => {
-          if (c.id === call.id) {
-            return { ...c, events: c.events.filter((v) => v.id !== event.id) };
-          }
-
-          return c;
-        }),
-      );
-    },
     [call, calls, setCalls],
   );
 
