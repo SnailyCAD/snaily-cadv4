@@ -73,19 +73,15 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       return reasonRef.current.focus();
     }
 
-    try {
-      const { json } = await execute(`/admin/manage/businesses/${tempValue.id}`, {
-        method: "DELETE",
-        data: { reason },
-      });
+    const { json } = await execute(`/admin/manage/businesses/${tempValue.id}`, {
+      method: "DELETE",
+      data: { reason },
+    });
 
-      if (json) {
-        setBusinesses((p) => p.filter((v) => v.id !== tempValue.id));
-        setTempValue(null);
-        closeModal(ModalIds.AlertDeleteBusiness);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setBusinesses((p) => p.filter((v) => v.id !== tempValue.id));
+      setTempValue(null);
+      closeModal(ModalIds.AlertDeleteBusiness);
     }
   }
 

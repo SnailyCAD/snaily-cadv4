@@ -33,7 +33,8 @@ import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
 
-const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3";
+const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
+const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -53,9 +54,16 @@ export function ActiveCalls() {
   const router = useRouter();
 
   const shouldPlayAddedToCallSound = user?.soundSettings?.addedToCall ?? false;
-  const [audio, , controls] = useAudio({
+  const shouldPlayIncomingCallSound = user?.soundSettings?.incomingCall ?? false;
+
+  const [addedToCallAudio, , addedToCallControls] = useAudio({
     autoPlay: false,
     src: ADDED_TO_CALL_SRC,
+  });
+
+  const [incomingCallAudio, , incomingCallControls] = useAudio({
+    autoPlay: false,
+    src: INCOMING_CALL_SRC,
   });
 
   const { openModal } = useModal();
@@ -98,17 +106,29 @@ export function ActiveCalls() {
 
       const wasAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
+      if (shouldPlayIncomingCallSound) {
+        incomingCallControls.seek(0);
+        incomingCallControls.volume(0.3);
+        incomingCallControls.play();
+      }
+
       if (wasAssignedToCall && shouldPlayAddedToCallSound) {
-        controls.seek(0);
-        controls.volume(0.3);
-        controls.play();
-      } else {
-        controls.pause();
+        addedToCallControls.seek(0);
+        addedToCallControls.volume(0.3);
+        addedToCallControls.play();
       }
 
       setCalls([call, ...calls]);
     },
-    [calls, setCalls, shouldPlayAddedToCallSound, controls, unit?.id],
+    [
+      calls,
+      setCalls,
+      shouldPlayAddedToCallSound,
+      shouldPlayIncomingCallSound,
+      addedToCallControls,
+      incomingCallControls,
+      unit?.id,
+    ],
   );
 
   useListener(
@@ -132,11 +152,11 @@ export function ActiveCalls() {
           call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
         if (wasAssignedToCall && shouldPlayAddedToCallSound) {
-          controls.seek(0);
-          controls.volume(0.3);
-          controls.play();
+          addedToCallControls.seek(0);
+          addedToCallControls.volume(0.3);
+          addedToCallControls.play();
         } else {
-          controls.pause();
+          addedToCallControls.pause();
         }
       }
 
@@ -154,7 +174,7 @@ export function ActiveCalls() {
         }),
       );
     },
-    [calls, unit?.id, controls, shouldPlayAddedToCallSound, setCalls],
+    [calls, unit?.id, addedToCallControls, shouldPlayAddedToCallSound, setCalls],
   );
 
   function handleManageClick(call: Full911Call) {
@@ -221,7 +241,8 @@ export function ActiveCalls() {
 
   return (
     <div className="overflow-hidden rounded-md card">
-      {audio}
+      {addedToCallAudio}
+      {incomingCallAudio}
       <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 

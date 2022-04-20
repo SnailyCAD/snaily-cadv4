@@ -87,18 +87,14 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   async function handleDelete() {
     if (!tempValue?.value || !tempValue.type) return;
 
-    try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
-        method: "DELETE",
-      });
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
+      method: "DELETE",
+    });
 
-      if (json) {
-        setValues((p) => p.filter((v) => v.id !== tempValue.value?.id));
-        setTempValue({ value: null, type: null });
-        closeModal(ModalIds.AlertDeleteValue);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setValues((p) => p.filter((v) => v.id !== tempValue.value?.id));
+      setTempValue({ value: null, type: null });
+      closeModal(ModalIds.AlertDeleteValue);
     }
   }
 

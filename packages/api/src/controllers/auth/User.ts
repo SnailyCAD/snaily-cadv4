@@ -53,6 +53,7 @@ export class AccountController {
         addedToCall: soundSettings.addedToCall,
         stopRoleplay: soundSettings.stopRoleplay,
         statusUpdate: soundSettings.statusUpdate,
+        incomingCall: soundSettings.incomingCall,
       };
 
       const updated = await prisma.userSoundSettings.upsert({

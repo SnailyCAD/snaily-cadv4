@@ -33,7 +33,8 @@
     "signal100": "Signal 100",
     "stopRoleplay": "Stop roleplay",
     "addedToCall": "Added to call",
-    "statusUpdate": "Status Update"
+    "statusUpdate": "Status Update",
+    "incomingCall": "Incoming Call"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

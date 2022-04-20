@@ -15,7 +15,7 @@ export function getRest(): REST {
   cacheREST ??= new REST({ version: DISCORD_API_VERSION }).setToken(BOT_TOKEN);
 
   if (process.env.NODE_ENV === "development") {
-    cacheREST.on("restDebug", console.log);
+    cacheREST.on("restDebug", console.info);
   }
 
   return cacheREST;

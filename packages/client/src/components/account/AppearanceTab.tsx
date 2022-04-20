@@ -41,6 +41,7 @@ export function AppearanceTab() {
       addedToCall: false,
       stopRoleplay: false,
       statusUpdate: false,
+      incomingCall: false,
     },
   };
 
@@ -129,6 +130,14 @@ export function AppearanceTab() {
                   toggled={values.soundSettings.statusUpdate}
                   onClick={handleChange}
                   name="soundSettings.statusUpdate"
+                />
+              </FormField>
+
+              <FormField label={t("incomingCall")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.incomingCall}
+                  onClick={handleChange}
+                  name="soundSettings.incomingCall"
                 />
               </FormField>
             </div>

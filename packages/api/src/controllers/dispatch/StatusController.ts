@@ -130,7 +130,7 @@ export class StatusController {
             const embed = createPanicButtonEmbed(cad, officer);
             await sendDiscordWebhook(cad.miscCadSettings, "panicButtonWebhookId", embed);
           } catch (error) {
-            console.log("[cad_panicButton]: Could not send Discord webhook.", error);
+            console.error("[cad_panicButton]: Could not send Discord webhook.", error);
           }
         }
       }
@@ -234,7 +234,7 @@ export class StatusController {
       const data = createWebhookData(cad, updatedUnit);
       await sendDiscordWebhook(cad.miscCadSettings, "statusesWebhookId", data);
     } catch (error) {
-      console.log("Could not send Discord webhook.", error);
+      console.error("Could not send Discord webhook.", error);
     }
 
     if (["leo", "combined"].includes(type)) {

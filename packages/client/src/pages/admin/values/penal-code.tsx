@@ -151,18 +151,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDelete() {
     if (!tempValue) return;
 
-    try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
-        method: "DELETE",
-      });
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+      method: "DELETE",
+    });
 
-      if (json) {
-        setValues((p) => p.filter((v) => v.id !== tempValue.id));
-        setTempValue(null);
-        closeModal(ModalIds.AlertDeleteValue);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setValues((p) => p.filter((v) => v.id !== tempValue.id));
+      setTempValue(null);
+      closeModal(ModalIds.AlertDeleteValue);
     }
   }
 

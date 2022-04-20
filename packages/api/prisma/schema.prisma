@@ -218,6 +218,7 @@ model UserSoundSettings {
   addedToCall  Boolean @default(false)
   stopRoleplay Boolean @default(false)
   statusUpdate Boolean @default(false)
+  incomingCall Boolean @default(false)
   User         User[]
 }
 
