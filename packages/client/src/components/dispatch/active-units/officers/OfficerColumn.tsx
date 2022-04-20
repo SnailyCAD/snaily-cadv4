@@ -18,6 +18,7 @@ import { makeUnitName } from "lib/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { classNames } from "lib/classNames";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -66,6 +67,8 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       isUnitOfficer(officer) &&
       isUnitOfficer(activeOfficer));
 
+  const canDrag = hasActiveDispatchers && isDispatch;
+
   async function handleMerge(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.MergeUnit);
@@ -100,13 +103,12 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       ]}
     >
       <span>
-        <Draggable
-          canDrag={hasActiveDispatchers && isDispatch}
-          type={DndActions.MoveUnitTo911Call}
-          item={officer}
-        >
+        <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911Call} item={officer}>
           <span
-            className="flex items-center capitalize cursor-grab"
+            className={classNames(
+              "flex items-center capitalize",
+              canDrag ? "cursor-grab" : "cursor-default",
+            )}
             // * 9 to fix overlapping issues with next table column
             style={{ minWidth: nameAndCallsign.length * 9 }}
           >
