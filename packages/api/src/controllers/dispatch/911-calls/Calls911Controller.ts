@@ -143,7 +143,7 @@ export class Calls911Controller {
       const data = this.createWebhookData(returnData);
       await sendDiscordWebhook(cad.miscCadSettings, "call911WebhookId", data);
     } catch (error) {
-      console.log("Could not send Discord webhook.", error);
+      console.error("Could not send Discord webhook.", error);
     }
 
     this.socket.emit911Call(returnData);

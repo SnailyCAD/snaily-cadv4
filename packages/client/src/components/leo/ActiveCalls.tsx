@@ -106,8 +106,6 @@ export function ActiveCalls() {
 
       const wasAssignedToCall = call.assignedUnits.some((v) => v.unit?.id === unit?.id);
 
-      console.log({ shouldPlayIncomingCallSound });
-
       if (shouldPlayIncomingCallSound) {
         incomingCallControls.seek(0);
         incomingCallControls.volume(0.3);
