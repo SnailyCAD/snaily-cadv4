@@ -17,6 +17,7 @@ export interface NameSearchResult extends Citizen {
   warrants: (Warrant & { officer: Officer })[];
   customFields?: CustomFieldValue[];
   allCustomFields?: CustomField[];
+  isConfidential?: boolean;
 }
 
 interface NameSearchState {

@@ -140,6 +140,7 @@ export function NameSearchModal() {
   }
 
   const hasWarrants =
+    !currentResult?.isConfidential &&
     (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
 
   const INITIAL_VALUES = {
@@ -227,146 +228,152 @@ export function NameSearchModal() {
             ) : null}
 
             {typeof results !== "boolean" && currentResult ? (
-              <div className="mt-3">
-                <header className="flex justify-between mb-5">
-                  <h3 className="text-2xl font-semibold">{t("results")}</h3>
+              currentResult.isConfidential ? (
+                <p className="my-5 px-2">{t("citizenIsConfidential")}</p>
+              ) : (
+                <div className="mt-3">
+                  <header className="flex justify-between mb-5">
+                    <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                  <div>
-                    <Button
-                      className="flex items-center justify-between gap-2"
-                      type="button"
-                      onClick={() => setCurrentResult(null)}
-                    >
-                      <ArrowLeft />
-                      {t("viewAllResults")}
-                    </Button>
-                  </div>
-                </header>
-
-                {currentResult?.dead && currentResult?.dateOfDead ? (
-                  <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
-                    {t("citizenDead", {
-                      date: format(
-                        new Date(currentResult.dateOfDead ?? new Date()),
-                        "MMMM do yyyy",
-                      ),
-                    })}
-                  </div>
-                ) : null}
-
-                {hasWarrants ? (
-                  <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
-                    {t("hasWarrants")}
-                  </div>
-                ) : null}
-
-                <div className="flex">
-                  <div className="mr-2 min-w-[100px]">
-                    {currentResult.imageId ? (
-                      <button
-                        type="button"
-                        onClick={() => openModal(ModalIds.CitizenImage)}
-                        className="cursor-pointer"
-                      >
-                        <img
-                          className="rounded-full w-[100px] h-[100px] object-cover"
-                          draggable={false}
-                          src={makeImageUrl("citizens", currentResult.imageId)}
-                        />
-                      </button>
-                    ) : (
-                      <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <div className="flex flex-col">
-                      <Infofield label={cT("fullName")}>
-                        {currentResult.name} {currentResult.surname}
-                      </Infofield>
-
-                      {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
-                        <Infofield label={cT("socialSecurityNumber")}>
-                          {currentResult.socialSecurityNumber}
-                        </Infofield>
-                      ) : null}
-
-                      <Infofield label={cT("dateOfBirth")}>
-                        <FullDate isDateOfBirth onlyDate>
-                          {currentResult.dateOfBirth}
-                        </FullDate>
-                        ({cT("age")}: {calculateAge(currentResult.dateOfBirth)})
-                      </Infofield>
-
-                      <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
-                      <Infofield label={cT("ethnicity")}>{currentResult.ethnicity.value}</Infofield>
-                      <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
-                      <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
-                    </div>
-
-                    <div className="flex flex-col">
-                      <Infofield label={cT("weight")}>
-                        {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
-                      </Infofield>
-
-                      <Infofield label={cT("height")}>
-                        {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
-                      </Infofield>
-
-                      <Infofield label={cT("address")}>
-                        {formatCitizenAddress(currentResult)}
-                      </Infofield>
-
-                      <Infofield label={cT("phoneNumber")}>
-                        {currentResult.phoneNumber || common("none")}
-                      </Infofield>
-
-                      <ManageOccupationModal isLeo occupation={currentResult.occupation} />
-                    </div>
-                  </div>
-
-                  <div className="w-full">
                     <div>
-                      <ul className="flex flex-col">
-                        <CitizenLicenses citizen={currentResult} />
-                      </ul>
+                      <Button
+                        className="flex items-center justify-between gap-2"
+                        type="button"
+                        onClick={() => setCurrentResult(null)}
+                      >
+                        <ArrowLeft />
+                        {t("viewAllResults")}
+                      </Button>
+                    </div>
+                  </header>
 
-                      {isLeo ? (
-                        <Button
-                          small
+                  {currentResult?.dead && currentResult?.dateOfDead ? (
+                    <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenDead", {
+                        date: format(
+                          new Date(currentResult.dateOfDead ?? new Date()),
+                          "MMMM do yyyy",
+                        ),
+                      })}
+                    </div>
+                  ) : null}
+
+                  {hasWarrants ? (
+                    <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
+                      {t("hasWarrants")}
+                    </div>
+                  ) : null}
+
+                  <div className="flex">
+                    <div className="mr-2 min-w-[100px]">
+                      {currentResult.imageId ? (
+                        <button
                           type="button"
-                          className="mt-2"
-                          onClick={() => openModal(ModalIds.ManageLicenses)}
+                          onClick={() => openModal(ModalIds.CitizenImage)}
+                          className="cursor-pointer"
                         >
-                          {t("editLicenses")}
-                        </Button>
-                      ) : null}
+                          <img
+                            className="rounded-full w-[100px] h-[100px] object-cover"
+                            draggable={false}
+                            src={makeImageUrl("citizens", currentResult.imageId)}
+                          />
+                        </button>
+                      ) : (
+                        <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <div className="flex flex-col">
+                        <Infofield label={cT("fullName")}>
+                          {currentResult.name} {currentResult.surname}
+                        </Infofield>
+
+                        {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
+                          <Infofield label={cT("socialSecurityNumber")}>
+                            {currentResult.socialSecurityNumber}
+                          </Infofield>
+                        ) : null}
+
+                        <Infofield label={cT("dateOfBirth")}>
+                          <FullDate isDateOfBirth onlyDate>
+                            {currentResult.dateOfBirth}
+                          </FullDate>
+                          ({cT("age")}: {calculateAge(currentResult.dateOfBirth)})
+                        </Infofield>
+
+                        <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
+                        <Infofield label={cT("ethnicity")}>
+                          {currentResult.ethnicity.value}
+                        </Infofield>
+                        <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
+                        <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <Infofield label={cT("weight")}>
+                          {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
+                        </Infofield>
+
+                        <Infofield label={cT("height")}>
+                          {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
+                        </Infofield>
+
+                        <Infofield label={cT("address")}>
+                          {formatCitizenAddress(currentResult)}
+                        </Infofield>
+
+                        <Infofield label={cT("phoneNumber")}>
+                          {currentResult.phoneNumber || common("none")}
+                        </Infofield>
+
+                        <ManageOccupationModal isLeo occupation={currentResult.occupation} />
+                      </div>
                     </div>
 
-                    <div className="mt-4">
-                      <Infofield label={vT("flags")}>
-                        {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
-                      </Infofield>
+                    <div className="w-full">
+                      <div>
+                        <ul className="flex flex-col">
+                          <CitizenLicenses citizen={currentResult} />
+                        </ul>
 
-                      {isLeo ? (
-                        <Button
-                          small
-                          type="button"
-                          className="mt-2"
-                          onClick={() => openModal(ModalIds.ManageCitizenFlags)}
-                        >
-                          {t("manageCitizenFlags")}
-                        </Button>
-                      ) : null}
+                        {isLeo ? (
+                          <Button
+                            small
+                            type="button"
+                            className="mt-2"
+                            onClick={() => openModal(ModalIds.ManageLicenses)}
+                          >
+                            {t("editLicenses")}
+                          </Button>
+                        ) : null}
+                      </div>
+
+                      <div className="mt-4">
+                        <Infofield label={vT("flags")}>
+                          {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
+                        </Infofield>
+
+                        {isLeo ? (
+                          <Button
+                            small
+                            type="button"
+                            className="mt-2"
+                            onClick={() => openModal(ModalIds.ManageCitizenFlags)}
+                          >
+                            {t("manageCitizenFlags")}
+                          </Button>
+                        ) : null}
+                      </div>
+
+                      <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                     </div>
+                  </div>
 
-                    <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
+                  <div className="mt-5">
+                    <NameSearchTabsContainer />
                   </div>
                 </div>
-
-                <div className="mt-5">
-                  <NameSearchTabsContainer />
-                </div>
-              </div>
+              )
             ) : null}
 
             <footer
@@ -412,7 +419,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
-            {currentResult ? (
+            {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />
                 <ManageCustomFieldsModal

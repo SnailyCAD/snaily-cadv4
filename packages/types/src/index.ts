@@ -415,6 +415,7 @@ export interface DepartmentValue {
   type: DepartmentType;
   defaultOfficerRankId: string | null;
   defaultOfficerRank: Value<ValueType.OFFICER_RANK> | null;
+  isConfidential: boolean;
 }
 
 /**

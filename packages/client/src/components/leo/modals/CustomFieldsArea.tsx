@@ -17,6 +17,10 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
 
+  if ("isConfidential" in currentResult && currentResult.isConfidential) {
+    return null;
+  }
+
   if (!currentResult.allCustomFields || !currentResult.customFields) {
     return null;
   }

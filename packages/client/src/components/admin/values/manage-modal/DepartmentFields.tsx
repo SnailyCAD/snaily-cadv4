@@ -80,6 +80,25 @@ export function DepartmentFields() {
               will be given to the officer when they are awaiting access or when they were declined.
             </p>
           </div>
+
+          <div className="flex flex-col mt-3">
+            <FormField
+              errorMessage={errors.isConfidential as string}
+              checkbox
+              label="Is Confidential"
+            >
+              <Toggle
+                name="isConfidential"
+                toggled={values.isConfidential}
+                onClick={handleChange}
+              />
+            </FormField>
+
+            <p className="text-base italic">
+              When a department is confidential, other officers will not be able to view information
+              of other officers within this department.
+            </p>
+          </div>
         </>
       ) : null}
     </>
