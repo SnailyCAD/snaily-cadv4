@@ -229,7 +229,7 @@ export function NameSearchModal() {
 
             {typeof results !== "boolean" && currentResult ? (
               currentResult.isConfidential ? (
-                <p>{t("citizenIsConfidential")}</p>
+                <p className="my-5 px-2">{t("citizenIsConfidential")}</p>
               ) : (
                 <div className="mt-3">
                   <header className="flex justify-between mb-5">
