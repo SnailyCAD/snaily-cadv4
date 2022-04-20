@@ -176,6 +176,7 @@
     "penalCodes": "Penal Codes",
     "noPenalCodes": "There have been no penal codes created yet.",
     "noVehiclesPendingApprovalInDmv": "There are no vehicles pending approval in the dmv.",
+    "citizenIsConfidential": "This citizen is within a confidential department, therefor it's information cannot be searched.",
     "alert_deleteDLExam": "Are you sure you want to delete this driver's license exam? This action cannot be undone.",
     "vehicleImpoundLocation": "The provided vehicle ({plate}) will be impounded at {impoundLocation}. You will be able to view this vehicle on the impound lot page.",
     "alert_endIncident": "Are you sure you want to end this incident. It can still be viewed by officers.",
