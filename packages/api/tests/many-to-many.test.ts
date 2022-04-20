@@ -67,27 +67,6 @@ test("Should return correct many-to-many array (id: String) for Prisma -> additi
   `);
 });
 
-test("Should return correct many-to-many array (id: String) for Prisma -> addition & delete", () => {
-  const currentArr = ["a", "b", "c"];
-  const newArr = ["a", "b", "d"];
-
-  const result = manyToManyHelper(currentArr, newArr, { disconnectType: "delete" });
-  expect(result).toMatchInlineSnapshot(`
-    [
-      {
-        "delete": {
-          "id": "c",
-        },
-      },
-      {
-        "connect": {
-          "id": "d",
-        },
-      },
-    ]
-  `);
-});
-
 test("Should merge 2 arrays -> 1 unique array without accessor", () => {
   const arr1 = ["A", "B", "C", "F"];
   const arr2 = ["A", "C", "D", "E"];
