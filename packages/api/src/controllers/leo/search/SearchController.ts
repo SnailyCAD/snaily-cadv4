@@ -238,8 +238,6 @@ function appendConfidential(
   for (const citizen of citizens) {
     const isConfidential = citizen.officers.some((v) => v.department.isConfidential);
 
-    console.log({ isConfidential });
-
     if (isConfidential) {
       _citizens.push({
         name: citizen.name,
