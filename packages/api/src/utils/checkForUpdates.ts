@@ -8,6 +8,7 @@ async function fetchLatestVersion(): Promise<string | null> {
       "https://raw.githubusercontent.com/SnailyCAD/snaily-cadv4/main/package.json",
       {
         headers: {
+          "cache-control": "no-cache",
           accept: "application/json",
         },
       },

@@ -16,7 +16,11 @@ import { useRouter } from "next/router";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldCategory } from "@snailycad/types";
 
-export function WeaponSearchModal() {
+interface Props {
+  id?: ModalIds.WeaponSearch | ModalIds.WeaponSearchWithinName;
+}
+
+export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
   const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const wT = useTranslations("Weapons");
@@ -27,10 +31,10 @@ export function WeaponSearchModal() {
   const isLeo = router.pathname === "/officer";
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.WeaponSearch)) {
+    if (!isOpen(id)) {
       setCurrentResult(undefined);
     }
-  }, [isOpen, setCurrentResult]);
+  }, [id, isOpen, setCurrentResult]);
 
   function handleNameClick() {
     if (!currentResult) return;
@@ -38,7 +42,7 @@ export function WeaponSearchModal() {
     openModal(ModalIds.NameSearch, {
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
-    closeModal(ModalIds.WeaponSearch);
+    closeModal(ModalIds.WeaponSearchWithinName);
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
@@ -62,8 +66,8 @@ export function WeaponSearchModal() {
   return (
     <Modal
       title={t("weaponSearch")}
-      onClose={() => closeModal(ModalIds.WeaponSearch)}
-      isOpen={isOpen(ModalIds.WeaponSearch)}
+      onClose={() => closeModal(id)}
+      isOpen={isOpen(id)}
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -112,11 +116,7 @@ export function WeaponSearchModal() {
             )}
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.WeaponSearch)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

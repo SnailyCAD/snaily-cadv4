@@ -128,7 +128,7 @@ export default function OfficerDashboard({
       {isOpen(ModalIds.NameSearch) ? null : (
         <>
           <WeaponSearchModal />
-          <VehicleSearchModal />
+          <VehicleSearchModal id={ModalIds.VehicleSearch} />
         </>
       )}
       <NameSearchModal />

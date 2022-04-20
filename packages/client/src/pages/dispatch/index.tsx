@@ -128,8 +128,8 @@ export default function OfficerDashboard(props: Props) {
       {/* name search have their own vehicle/weapon search modal */}
       {isOpen(ModalIds.NameSearch) ? null : (
         <>
-          <WeaponSearchModal />
-          <VehicleSearchModal />
+          <WeaponSearchModal id={ModalIds.WeaponSearch} />
+          <VehicleSearchModal id={ModalIds.VehicleSearch} />
         </>
       )}
       <AddressSearchModal />

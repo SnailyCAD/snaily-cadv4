@@ -23,7 +23,7 @@ export function NameSearchVehiclesTab() {
     if (!currentResult) return;
 
     setVehicleResult({ ...vehicle, citizen: currentResult });
-    openModal(ModalIds.VehicleSearch);
+    openModal(ModalIds.VehicleSearchWithinName);
   }
 
   if (!currentResult) {

@@ -410,8 +410,8 @@ export function NameSearchModal() {
             </footer>
 
             <AutoSubmit />
-            <VehicleSearchModal />
-            <WeaponSearchModal />
+            <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
+            <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
             {currentResult ? (
               <>
                 <ManageCitizenFlagsModal />

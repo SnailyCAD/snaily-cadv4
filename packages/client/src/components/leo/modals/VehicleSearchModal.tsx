@@ -26,7 +26,11 @@ import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsMod
 import { CustomFieldsArea } from "./CustomFieldsArea";
 import { Status } from "components/shared/Status";
 
-export function VehicleSearchModal() {
+interface Props {
+  id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
+}
+
+export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { currentResult, setCurrentResult } = useVehicleSearch();
   const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
 
@@ -41,10 +45,10 @@ export function VehicleSearchModal() {
   const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.VehicleSearch)) {
+    if (!isOpen(id)) {
       setCurrentResult(undefined);
     }
-  }, [isOpen, setCurrentResult]);
+  }, [id, isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/vehicle", {
@@ -66,7 +70,7 @@ export function VehicleSearchModal() {
     openModal(ModalIds.NameSearch, {
       name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
     });
-    closeModal(ModalIds.VehicleSearch);
+    closeModal(ModalIds.VehicleSearchWithinName);
   }
 
   function handleEditVehicleFlags() {
@@ -106,8 +110,8 @@ export function VehicleSearchModal() {
   return (
     <Modal
       title={t("plateSearch")}
-      onClose={() => closeModal(ModalIds.VehicleSearch)}
-      isOpen={isOpen(ModalIds.VehicleSearch)}
+      onClose={() => closeModal(id)}
+      isOpen={isOpen(id)}
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -285,11 +289,7 @@ export function VehicleSearchModal() {
               </div>
 
               <div className="flex">
-                <Button
-                  type="reset"
-                  onClick={() => closeModal(ModalIds.VehicleSearch)}
-                  variant="cancel"
-                >
+                <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

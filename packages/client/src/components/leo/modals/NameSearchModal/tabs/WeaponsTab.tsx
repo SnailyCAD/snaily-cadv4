@@ -20,8 +20,8 @@ export function NameSearchWeaponsTab() {
     if (!currentResult) return;
 
     // todo: set correct data for `allCustomFields` and `customFields`
-    setWeaponResult({ ...weapon, allCustomFields: [], customFields: [], citizen: currentResult });
-    openModal(ModalIds.WeaponSearch);
+    setWeaponResult({ allCustomFields: [], customFields: [], ...weapon, citizen: currentResult });
+    openModal(ModalIds.WeaponSearchWithinName);
   }
 
   if (!currentResult) {
