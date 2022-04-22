@@ -3,7 +3,6 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { getUnitDepartment, makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
 import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
@@ -15,14 +14,16 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import type { OfficerLog } from "@snailycad/types";
+import { Rank, EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
+import { isUnitOfficer } from "@snailycad/utils";
+import { Permissions } from "@snailycad/permissions";
 
-type Unit = (FullOfficer & { logs: OfficerLog[] }) | FullDeputy;
+type Unit = (Officer & { logs: OfficerLog[] }) | EmsFdDeputy;
 
 interface Props {
   unit: Unit | null;
@@ -58,12 +59,12 @@ export default function SupervisorPanelPage({ unit }: Props) {
     return null;
   }
 
-  const divisions = ("divisions" in unit && unit.divisions) || [];
+  const divisions = isUnitOfficer(unit) ? unit.divisions : [];
   const INITIAL_VALUES = {
     status: unit.statusId,
     department: getUnitDepartment(unit)?.id ?? "",
     division: "divisionId" in unit ? unit.divisionId : "",
-    divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
+    divisions: divisions.map((v) => ({ value: v.id, label: v.value.value })),
     callsign: unit.callsign,
     callsign2: unit.callsign2,
     rank: unit.rankId,
@@ -72,12 +73,15 @@ export default function SupervisorPanelPage({ unit }: Props) {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageUnits],
+      }}
+    >
       <Title>
         {common("manage")} {makeUnitName(unit)}
       </Title>
-
-      <h1 className="mb-3 text-2xl font-semibold capitalize">{makeUnitName(unit)}</h1>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
@@ -108,7 +112,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
             </FormField>
 
             <FormField label={t("division")}>
-              {"divisions" in unit ? (
+              {isUnitOfficer(unit) ? (
                 <Select
                   isMulti
                   value={values.divisions}

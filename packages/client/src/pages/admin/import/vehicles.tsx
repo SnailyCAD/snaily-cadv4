@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import type { RegisteredVehicle } from "@snailycad/types";
+import { Rank, type RegisteredVehicle } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -14,7 +14,8 @@ import { Input } from "components/form/inputs/Input";
 import { Button } from "components/Button";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   vehicles: RegisteredVehicle[];
@@ -30,12 +31,15 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
   const { openModal } = useModal();
 
   return (
-    <AdminLayout>
-      <Title>{t("IMPORT_VEHICLES")}</Title>
-
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ImportRegisteredVehicles],
+      }}
+    >
       <header>
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">{t("IMPORT_VEHICLES")}</h1>
+          <Title className="!mb-0">{t("IMPORT_VEHICLES")}</Title>
 
           <div>
             <Button onClick={() => openModal(ModalIds.ImportVehicles)}>{t("importViaFile")}</Button>

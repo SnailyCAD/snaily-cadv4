@@ -1,6 +1,5 @@
 import process from "node:process";
-import { Rank, User } from ".prisma/client";
-import { cad, WhitelistStatus } from "@prisma/client";
+import { Rank, User, CadFeature, WhitelistStatus } from "@prisma/client";
 import {
   API_TOKEN_HEADER,
   DISABLED_API_TOKEN_ROUTES,
@@ -12,6 +11,8 @@ import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { getSessionUser, userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { updateMemberRolesLogin } from "lib/discord/auth";
+import { getCADVersion } from "@snailycad/utils/version";
+import { allPermissions } from "@snailycad/permissions";
 
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
@@ -22,7 +23,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   taxiWhitelisted: true,
   whitelisted: true,
   businessWhitelisted: true,
-  disabledFeatures: true,
+  features: true,
   autoSetUserProperties: true,
   liveMapSocketURl: user?.rank === Rank.OWNER,
   registrationCode: user?.rank === Rank.OWNER,
@@ -33,7 +34,20 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   miscCadSettingsId: true,
   logoId: true,
   discordRolesId: true,
-  discordRoles: user?.rank === Rank.OWNER ? { include: { roles: true } } : true,
+  discordRoles:
+    user?.rank === Rank.OWNER
+      ? {
+          include: {
+            roles: true,
+            leoRoles: true,
+            emsFdRoles: true,
+            dispatchRoles: true,
+            leoSupervisorRoles: true,
+            taxiRoles: true,
+            towRoles: true,
+          },
+        }
+      : true,
 });
 
 @Middleware()
@@ -72,6 +86,7 @@ export class IsAuth implements MiddlewareMethods {
         isSupervisor: true,
         username: "Dispatch",
         whitelistStatus: WhitelistStatus.ACCEPTED,
+        permissions: allPermissions,
       };
       ctx.set("user", fakeUser);
     } else {
@@ -139,20 +154,22 @@ export class IsAuth implements MiddlewareMethods {
       }
     }
 
-    ctx.set("cad", setDiscordAUth(cad));
+    ctx.set("cad", { ...setDiscordAUth(cad), version: await getCADVersion() });
   }
 }
 
-export function setDiscordAUth<T extends Pick<cad, "disabledFeatures"> | null = cad>(cad: T) {
+export function setDiscordAUth(cad: { features?: CadFeature[] } | null) {
   const hasDiscordTokens = process.env["DISCORD_CLIENT_ID"] && process.env["DISCORD_CLIENT_SECRET"];
-  const isEnabled = !cad?.disabledFeatures.includes("DISCORD_AUTH");
+  const isEnabled = !cad?.features?.some((v) => v.isEnabled && v.feature === "DISCORD_AUTH");
+
+  const notEnabled = { isEnabled: false, feature: "DISCORD_AUTH" } as CadFeature;
 
   if (!cad && !hasDiscordTokens) {
-    return { disabledFeatures: ["DISCORD_AUTH"] };
+    return { features: [notEnabled] };
   }
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, disabledFeatures: [...(cad?.disabledFeatures ?? []), "DISCORD_AUTH"] };
+    return { ...cad, features: [...(cad?.features ?? []), notEnabled] };
   }
 
   return cad;
@@ -183,31 +200,12 @@ function hasPermissionForReq(req: Req, user: User) {
   const url = req.originalUrl.toLowerCase();
   const requestMethod = req.method.toUpperCase() as Method;
 
-  const [route] = PERMISSION_ROUTES.filter(([m, r]) => {
-    if (typeof r === "object" && "strict" in r) {
-      const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
+  const [route] = PERMISSION_ROUTES.filter(([m, route]) => {
+    const urlWithBackslash = url.at(-1) === "/" ? url : `${url}/`;
+    const isMethodTrue = m === "*" ? true : m.includes(requestMethod);
 
-      const isTrue = r.route === urlWithBackslash || r.route === url;
-      return isTrue;
-    }
-
-    if (typeof r === "string") {
-      const isTrue = r.startsWith(url) || url.startsWith(r);
-
-      if (m === "*") {
-        return isTrue;
-      }
-
-      return m.includes(requestMethod) && isTrue;
-    }
-
-    const isTrue = r.test(url) || url.match(r);
-
-    if (m === "*") {
-      return isTrue;
-    }
-
-    return m.includes(requestMethod) && isTrue;
+    const isTrue = (route.route === urlWithBackslash || route.route === url) && isMethodTrue;
+    return isTrue;
   });
 
   if (route) {

@@ -1,9 +1,27 @@
 import { PathParams, QueryParams, Middleware, MiddlewareMethods } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
-import { ValueType } from ".prisma/client";
 
 // penal code groups are only allowed for /position
-const validPaths = [...Object.keys(ValueType).map((v) => v.toLowerCase()), "penal_code_group"];
+// todo: un-hard code these
+const validPaths = [
+  "license",
+  "gender",
+  "ethnicity",
+  "vehicle",
+  "weapon",
+  "blood_group",
+  "business_role",
+  "codes_10",
+  "penal_code",
+  "department",
+  "officer_rank",
+  "division",
+  "driverslicense_category",
+  "impound_lot",
+  "vehicle_flag",
+  "citizen_flag",
+  "penal_code_group",
+];
 
 @Middleware()
 export class IsValidPath implements MiddlewareMethods {
@@ -13,7 +31,7 @@ export class IsValidPath implements MiddlewareMethods {
 
     for (const path of paths) {
       if (!validPaths.includes(path)) {
-        throw new BadRequest(`Invalid Path. Valid paths: ${validPaths.join(", ")}`);
+        throw new BadRequest(`Invalid Path: ${path}. Valid paths: ${validPaths.join(", ")}`);
       }
     }
   }

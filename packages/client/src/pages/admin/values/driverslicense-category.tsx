@@ -4,10 +4,11 @@ import { Button } from "components/Button";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
   DriversLicenseCategoryValue,
+  Rank,
   ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -21,6 +22,7 @@ import { handleFilter } from "./[path]";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
+import { Permissions } from "@snailycad/permissions";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -36,7 +38,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   const [tempValue, setTempValue] = React.useState<{
     value: DriversLicenseCategoryValue | null;
     type: DriversLicenseCategoryType | null;
-  }>({} as any);
+  } | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -83,20 +85,16 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }
 
   async function handleDelete() {
-    if (!tempValue.value || !tempValue.type) return;
+    if (!tempValue?.value || !tempValue.type) return;
 
-    try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
-        method: "DELETE",
-      });
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.value.id}`, {
+      method: "DELETE",
+    });
 
-      if (json) {
-        setValues((p) => p.filter((v) => v.id !== tempValue.value?.id));
-        setTempValue({ value: null, type: null });
-        closeModal(ModalIds.AlertDeleteValue);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setValues((p) => p.filter((v) => v.id !== tempValue.value?.id));
+      setTempValue({ value: null, type: null });
+      closeModal(ModalIds.AlertDeleteValue);
     }
   }
 
@@ -113,14 +111,17 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout>
-      <Title>{typeT("MANAGE")}</Title>
-
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageValueDLCategory],
+      }}
+    >
       <header className="flex flex-col">
-        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
-        <h6 className="text-lg font-semibold">
+        <Title className="!mb-0">{typeT("MANAGE")}</Title>
+        <h2 className="text-lg font-semibold">
           {t("totalItems")}: <span className="font-normal">{values.length}</span>
-        </h6>
+        </h2>
       </header>
 
       <FormField label={common("search")} className="my-2">
@@ -142,7 +143,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
               <Button
                 onClick={() => {
                   openModal(ModalIds.ManageValue);
-                  setTempValue((p) => ({ ...p, type }));
+                  setTempValue((p) => p && { ...p, type });
                 }}
               >
                 {typeT("ADD")}
@@ -167,7 +168,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
       <AlertModal
         id={ModalIds.AlertDeleteValue}
         description={t.rich("alert_deleteValue", {
-          value: tempValue.value?.value.value ?? "",
+          value: tempValue?.value?.value.value ?? "",
           span: (children) => {
             return <span className="font-semibold">{children}</span>;
           },
@@ -177,8 +178,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
         state={state}
         onClose={() => {
           // wait for animation to play out
-          // todo: remove "as any"
-          setTimeout(() => setTempValue({} as any), 100);
+          setTimeout(() => setTempValue(null), 100);
         }}
       />
 
@@ -194,8 +194,8 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
             return p;
           });
         }}
-        clType={tempValue.type}
-        value={tempValue.value}
+        clType={tempValue?.type}
+        value={tempValue?.value ?? null}
         type={type}
       />
     </AdminLayout>

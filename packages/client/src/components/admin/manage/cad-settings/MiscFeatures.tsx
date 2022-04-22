@@ -91,10 +91,13 @@ export function MiscFeatures() {
     maxPlateLength: miscSettings.maxPlateLength,
     maxDivisionsPerOfficer: miscSettings.maxDivisionsPerOfficer ?? Infinity,
     maxDepartmentsEachPerUser: miscSettings.maxDepartmentsEachPerUser ?? Infinity,
+    maxAssignmentsToIncidents: miscSettings.maxAssignmentsToIncidents ?? Infinity,
+    maxAssignmentsToCalls: miscSettings.maxAssignmentsToCalls ?? Infinity,
     maxOfficersPerUser: miscSettings.maxOfficersPerUser ?? Infinity,
     callsignTemplate: miscSettings.callsignTemplate ?? "",
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
+    inactivityTimeout: miscSettings.inactivityTimeout ?? "",
   };
 
   return (
@@ -129,6 +132,22 @@ export function MiscFeatures() {
                 value={values.liveMapURL}
                 onChange={handleChange}
                 placeholder="ws://my-host:my-port"
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              optional
+              action="short-input"
+              label="Inactivity Timeout"
+              description="Calls/incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+              errorMessage={errors.inactivityTimeout}
+            >
+              <Input
+                type="number"
+                name="inactivityTimeout"
+                value={values.inactivityTimeout}
+                onChange={handleChange}
+                placeholder="120"
               />
             </SettingsFormField>
 
@@ -205,6 +224,36 @@ export function MiscFeatures() {
                 name="maxDivisionsPerOfficer"
                 type="number"
                 value={values.maxDivisionsPerOfficer}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max assignments to incidents per officer"
+              action="short-input"
+              description="The maximum amount of how many incidents an officer can be assigned to.  (Default: Infinity)"
+              errorMessage={errors.maxAssignmentsToIncidents}
+            >
+              <Input
+                name="maxAssignmentsToIncidents"
+                type="number"
+                value={values.maxAssignmentsToIncidents}
+                onChange={handleChange}
+                min={1}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              label="Max assignments to calls per unit"
+              action="short-input"
+              description="The maximum amount of how many calls a unit can be assigned to. (Default: Infinity)"
+              errorMessage={errors.maxAssignmentsToCalls}
+            >
+              <Input
+                name="maxAssignmentsToCalls"
+                type="number"
+                value={values.maxAssignmentsToCalls}
                 onChange={handleChange}
                 min={1}
               />

@@ -3,10 +3,10 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 
 interface Options {
-  penalCodeId: string;
-  fine: number | null;
-  jailTime: number | null;
-  bail: number | null;
+  penalCodeId?: string;
+  fine?: number | null;
+  jailTime?: number | null;
+  bail?: number | null;
   ticketId: string;
 }
 
@@ -18,6 +18,10 @@ type Return = Options & {
 };
 
 export async function validateRecordData(item: Options): Promise<Return> {
+  if (!item.penalCodeId) {
+    return handleBadRequest(new BadRequest("no penalCodeId provided"), item.ticketId);
+  }
+
   /** validate the penalCode data */
   const penalCode = await prisma.penalCode.findUnique({
     where: { id: item.penalCodeId },

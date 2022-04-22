@@ -3,7 +3,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { SeizedItem } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
@@ -11,7 +11,7 @@ import { Toggle } from "components/form/Toggle";
 
 interface Props {
   item?: SeizedItem | null;
-  onClose?: () => void;
+  onClose?(): void;
 }
 
 export function ManageSeizedItemsModal({ item, onClose }: Props) {

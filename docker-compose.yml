@@ -17,7 +17,7 @@ services:
     container_name: "snaily-cad-api"
 
     user: node
-    image: node:16-alpine
+    image: node:16
     command: "yarn workspace @snailycad/api dev"
     ports:
       - "8080:8080"
@@ -32,10 +32,6 @@ services:
       - postgres
     networks:
       - cad_web
-
-volumes:
-  redis-data:
-  redis-conf:
 
 networks:
   cad_web:

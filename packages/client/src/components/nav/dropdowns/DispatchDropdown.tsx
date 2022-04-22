@@ -4,16 +4,19 @@ import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export function DispatchDropdown() {
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const { hasPermissions } = usePermission();
 
   return (
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/dispatch") && "font-semibold")}
           variant="transparent"
         >
@@ -25,7 +28,10 @@ export function DispatchDropdown() {
       }
     >
       <Dropdown.LinkItem href="/dispatch">{t("dashboard")}</Dropdown.LinkItem>
-      <Dropdown.LinkItem href="/dispatch/map">{t("liveMap")}</Dropdown.LinkItem>
+
+      {hasPermissions([Permissions.LiveMap], true) ? (
+        <Dropdown.LinkItem href="/dispatch/map">{t("liveMap")}</Dropdown.LinkItem>
+      ) : null}
     </Dropdown>
   );
 }

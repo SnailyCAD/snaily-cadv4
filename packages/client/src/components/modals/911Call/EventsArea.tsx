@@ -11,9 +11,11 @@ import { UpdateEventForm } from "../events/UpdateEventForm";
 interface Props {
   call: Full911Call;
   disabled?: boolean;
+  onUpdate?(event: Call911Event): void;
+  onCreate?(event: Call911Event): void;
 }
 
-export function CallEventsArea({ disabled, call }: Props) {
+export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -23,17 +25,24 @@ export function CallEventsArea({ disabled, call }: Props) {
     if (!call) return;
 
     if (tempEvent) {
-      await execute(`/911-calls/events/${call.id}/${tempEvent.id}`, {
+      const { json } = await execute(`/911-calls/events/${call.id}/${tempEvent.id}`, {
         method: "PUT",
         data: values,
       });
+
+      if (json.id) {
+        onUpdate?.(json);
+      }
     } else {
-      await execute(`/911-calls/events/${call.id}`, {
+      const { json } = await execute(`/911-calls/events/${call.id}`, {
         method: "POST",
         data: values,
       });
+
+      onCreate?.(json);
     }
 
+    setTempEvent(null);
     helpers.resetForm();
   }
 

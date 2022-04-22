@@ -13,6 +13,8 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { EmployeesTab } from "components/business/manage/EmployeesTab";
+import Link from "next/link";
+import { Button } from "components/Button";
 
 interface Props {
   employee: FullEmployee | null;
@@ -73,14 +75,16 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>
-        {currentBusiness.name} - {common("manage")}
-      </Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">
+        <Title className="!mb-0">
           {currentBusiness.name} - {common("manage")}
-        </h1>
+        </Title>
+
+        <div>
+          <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}`}>
+            <Button>{common("goBack")}</Button>
+          </Link>
+        </div>
       </header>
 
       <div className="mt-3">

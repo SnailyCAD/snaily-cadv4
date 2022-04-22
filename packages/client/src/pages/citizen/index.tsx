@@ -8,9 +8,9 @@ import type { Citizen } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { requestAll } from "lib/utils";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
@@ -45,7 +45,7 @@ export default function CitizenPage({ citizens }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("citizens")}</Title>
+      <Title renderLayoutTitle={false}>{t("citizens")}</Title>
 
       <h1 className="mb-3 text-3xl font-semibold">
         {t("citizens")}
@@ -54,8 +54,8 @@ export default function CitizenPage({ citizens }: Props) {
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
         <Link href="/citizen/create">
-          <a>
-            <Button className="w-full text-left">{t("createCitizen")}</Button>
+          <a className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default}`}>
+            {t("createCitizen")}
           </a>
         </Link>
         <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
@@ -125,13 +125,11 @@ export default function CitizenPage({ citizens }: Props) {
                 </p>
               </div>
 
-              <div>
-                <Link href={`/citizen/${citizen.id}`}>
-                  <a>
-                    <Button>{t("viewCitizen")}</Button>
-                  </a>
-                </Link>
-              </div>
+              <Link href={`/citizen/${citizen.id}`}>
+                <a className={`rounded-md transition-all p-1 px-3 ${buttonVariants.default}`}>
+                  {t("viewCitizen")}
+                </a>
+              </Link>
             </li>
           ))
         )}
@@ -157,7 +155,7 @@ export default function CitizenPage({ citizens }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const [data, values] = await requestAll(req, [
     ["/citizen", []],
-    ["/admin/values/weapon?paths=license,vehicle", []],
+    ["/admin/values/license", []],
   ]);
 
   return {

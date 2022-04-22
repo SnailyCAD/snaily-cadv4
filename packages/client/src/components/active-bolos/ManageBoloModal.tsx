@@ -4,15 +4,15 @@ import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
-import { BoloType, Citizen, RegisteredVehicle } from "@snailycad/types";
+import { Bolo, BoloType, Citizen, RegisteredVehicle } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { CREATE_BOLO_SCHEMA } from "@snailycad/schemas";
-import { FullBolo, useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatchState";
 import { Person, PersonFill, ThreeDots } from "react-bootstrap-icons";
 import { FormRow } from "components/form/FormRow";
 import { classNames } from "lib/classNames";
@@ -22,7 +22,7 @@ import { useSSRSafeId } from "@react-aria/ssr";
 
 interface Props {
   onClose?(): void;
-  bolo: FullBolo | null;
+  bolo: Bolo | null;
 }
 
 export function ManageBoloModal({ onClose, bolo }: Props) {

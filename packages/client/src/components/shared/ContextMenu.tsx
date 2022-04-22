@@ -2,7 +2,7 @@ import * as Menu from "@radix-ui/react-context-menu";
 import type * as React from "react";
 import { v4 } from "uuid";
 import { classNames } from "lib/classNames";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 
 interface Props {
   items: (ContextItem | boolean)[];
@@ -21,16 +21,16 @@ export interface ContextItem extends ButtonProps {
   component?: keyof typeof components;
 }
 
-export function ContextMenu({ items, canBeOpened = true, asChild = false, children }: Props) {
+export function ContextMenu({ items, canBeOpened = true, asChild, children }: Props) {
   const { canBeClosed, setCanBeClosed } = useModal();
 
-  function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function handleClick(item: ContextItem, e: React.MouseEvent<HTMLButtonElement>) {
     item.onClick?.(e);
     setCanBeClosed(true);
   }
 
   if (!canBeOpened) {
-    return <>{children}</>;
+    return children as JSX.Element;
   }
 
   return (

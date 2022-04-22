@@ -7,19 +7,8 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useModal } from "context/ModalContext";
-import {
-  type DepartmentValue,
-  type DivisionValue,
-  type DriversLicenseCategoryValue,
-  type EmployeeValue,
-  type PenalCode,
-  type PenalCodeGroup,
-  type StatusValue,
-  type Value,
-  type VehicleValue,
-  ValueType,
-} from "@snailycad/types";
+import { useModal } from "state/modalState";
+import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -34,6 +23,8 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
+import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
+import { valueRoutes } from "components/admin/Sidebar/routes";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -43,27 +34,19 @@ const ImportValuesModal = dynamic(async () => {
   return (await import("components/admin/values/import/ImportValuesModal")).ImportValuesModal;
 });
 
-export type TValue =
-  | Value<ValueType>
-  | EmployeeValue
-  | StatusValue
-  | DivisionValue
-  | DepartmentValue
-  | DriversLicenseCategoryValue
-  | VehicleValue;
-
 interface Props {
-  pathValues: { type: ValueType; values: TValue[] };
+  pathValues: { type: ValueType; values: AnyValue[] };
 }
 
 export default function ValuePath({ pathValues: { type, values: data } }: Props) {
-  const [values, setValues] = React.useState<TValue[]>(data);
+  const [values, setValues] = React.useState<AnyValue[]>(data);
   const router = useRouter();
   const path = (router.query.path as string).toUpperCase().replace("-", "_");
   const tableSelect = useTableSelect(values);
+  const routeData = valueRoutes.find((v) => v.type === type);
 
   const [search, setSearch] = React.useState("");
-  const [tempValue, setTempValue] = React.useState<TValue | null>(null);
+  const [tempValue, setTempValue] = React.useState<AnyValue | null>(null);
   const { state, execute } = useFetch();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -93,7 +76,7 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     ];
   }, [extraTableHeaders, common, tableSelect]);
 
-  async function setList(list: TValue[]) {
+  async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(values, list)) return;
 
     setValues((p) =>
@@ -122,12 +105,12 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
     });
   }
 
-  function handleDeleteClick(value: TValue) {
+  function handleDeleteClick(value: AnyValue) {
     setTempValue(value);
     openModal(ModalIds.AlertDeleteValue);
   }
 
-  function handleEditClick(value: TValue) {
+  function handleEditClick(value: AnyValue) {
     setTempValue(value);
     openModal(ModalIds.ManageValue);
   }
@@ -135,18 +118,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   async function handleDelete() {
     if (!tempValue) return;
 
-    try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
-        method: "DELETE",
-      });
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+      method: "DELETE",
+    });
 
-      if (json) {
-        setValues((p) => p.filter((v) => v.id !== tempValue.id));
-        setTempValue(null);
-        closeModal(ModalIds.AlertDeleteValue);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setValues((p) => p.filter((v) => v.id !== tempValue.id));
+      setTempValue(null);
+      closeModal(ModalIds.AlertDeleteValue);
     }
   }
 
@@ -186,25 +165,28 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
   }
 
   return (
-    <AdminLayout>
-      <Title>{typeT("MANAGE")}</Title>
-
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: routeData?.permissions ?? [],
+      }}
+    >
       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
-          <h6 className="text-lg font-semibold">
+          <Title className="!mb-0">{typeT("MANAGE")}</Title>
+          <h2 className="text-lg font-semibold">
             {t("totalItems")}: <span className="font-normal">{values.length}</span>
-          </h6>
+          </h2>
         </div>
 
         <div className="flex gap-2">
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
-          <OptionsDropdown values={values} />
+          <OptionsDropdown type={type} values={values} />
         </div>
       </header>
 
       <FormField label={common("search")} className="my-2">
-        <Input onChange={(e) => setSearch(e.target.value)} value={search} className="" />
+        <Input onChange={(e) => setSearch(e.target.value)} value={search} />
       </FormField>
 
       {values.length <= 0 ? (
@@ -312,7 +294,15 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
   const path = (query.path as string).replace("-", "_");
 
-  const [values] = await requestAll(req, [[`/admin/values/${path}?paths=department`, []]]);
+  const pathsRecord: any = {
+    department: "officer_rank",
+    division: "department",
+  };
+
+  const paths = pathsRecord[path];
+  const pathsStr = paths ? `?paths=${paths}` : "";
+
+  const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
 
   return {
     props: {
@@ -326,7 +316,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   };
 };
 
-export function sortValues(values: TValue[]): any[] {
+export function sortValues(values: AnyValue[]): any[] {
   return values.sort((a, b) => {
     const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
     const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);
@@ -337,8 +327,8 @@ export function sortValues(values: TValue[]): any[] {
   });
 }
 
-export function findCreatedAtAndPosition(value: TValue) {
-  if ("position" in value) {
+export function findCreatedAtAndPosition(value: AnyValue) {
+  if (isBaseValue(value)) {
     return {
       createdAt: new Date(value.createdAt),
       position: value.position,
@@ -351,28 +341,30 @@ export function findCreatedAtAndPosition(value: TValue) {
   };
 }
 
-export function handleFilter(value: TValue, search: string) {
+export function handleFilter(value: AnyValue, search: string) {
   if (!search) return true;
-  const str = "createdAt" in value ? value.value : value.value.value;
+  const str = isBaseValue(value) ? value.value : value.value.value;
 
   if (str.toLowerCase().includes(search.toLowerCase())) return true;
   return false;
 }
 
-export function getValueStrFromValue(value: TValue) {
-  return "createdAt" in value ? value.value : value.value.value;
+export function getValueStrFromValue(value: AnyValue) {
+  const isBase = isBaseValue(value);
+  return isBase ? value.value : value.value.value;
 }
 
-export function getCreatedAtFromValue(value: TValue) {
-  return "createdAt" in value ? value.createdAt : value.value.createdAt;
+export function getCreatedAtFromValue(value: AnyValue) {
+  const isBase = isBaseValue(value);
+  return isBase ? value.createdAt : value.value.createdAt;
 }
 
 /**
  * only update db if the list was actually moved.
  */
 export function hasTableDataChanged(
-  prevList: (TValue | PenalCode | PenalCodeGroup)[],
-  newList: (TValue | PenalCode | PenalCodeGroup)[],
+  prevList: (AnyValue | PenalCode | PenalCodeGroup)[],
+  newList: (AnyValue | PenalCode | PenalCodeGroup)[],
 ) {
   let wasMoved = false;
 

@@ -6,31 +6,31 @@ import {
   Officer,
   StatusValue,
   EmsFdDeputy,
-} from ".prisma/client";
+  Citizen,
+  CombinedLeoUnit,
+  Value,
+  WhitelistStatus,
+  CadFeature,
+  Feature,
+} from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
-import { Req, UseBeforeEach, UseBefore } from "@tsed/common";
+import { Req, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Description, Post, Put } from "@tsed/schema";
+import { Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { callInclude, findUnit } from "./911-calls/Calls911Controller";
-import { leoProperties, unitProperties } from "lib/officer";
+import { callInclude } from "./911-calls/Calls911Controller";
+import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
-import { IsAuth } from "middlewares/index";
-import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import {
-  Citizen,
-  CombinedLeoUnit,
-  DepartmentValue,
-  DivisionValue,
-  Value,
-  WhitelistStatus,
-} from "@prisma/client";
-import { generateCallsign } from "@snailycad/utils";
+import { IsAuth } from "middlewares/IsAuth";
+import { generateCallsign } from "@snailycad/utils/callsign";
 import { validateSchema } from "lib/validateSchema";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { findUnit } from "lib/leo/findUnit";
+import { isFeatureEnabled } from "lib/cad";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -42,12 +42,21 @@ export class StatusController {
 
   @Put("/:unitId")
   @Description("Update the status of a unit by its id.")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
+    permissions: [
+      Permissions.Dispatch,
+      Permissions.Leo,
+      Permissions.EmsFd,
+      Permissions.ManageUnits,
+    ],
+  })
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
     @Context("user") user: User,
     @BodyParams() body: unknown,
     @Req() req: Req,
-    @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(UPDATE_OFFICER_STATUS_SCHEMA, body);
     const bodyStatusId = data.status;
@@ -55,11 +64,7 @@ export class StatusController {
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch = isFromDispatch && user.isDispatch;
 
-    const { type, unit } = await findUnit(
-      unitId,
-      { userId: isDispatch ? undefined : user.id },
-      true,
-    );
+    const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 
     if (!unit) {
       throw new NotFound("unitNotFound");
@@ -97,12 +102,17 @@ export class StatusController {
     if (type === "leo") {
       const officer = await prisma.officer.findUnique({
         where: { id: unit.id },
-        include: {
-          status: { select: { shouldDo: true } },
-          department: true,
-          whitelistStatus: leoProperties.whitelistStatus,
-        },
+        include: leoProperties,
       });
+
+      const isOfficerDisabled = officer?.whitelistStatus
+        ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
+          !officer.department?.isDefaultDepartment
+        : false;
+
+      if (isOfficerDisabled) {
+        throw new BadRequest("cannotUseThisOfficer");
+      }
 
       if (
         officer?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
@@ -114,15 +124,15 @@ export class StatusController {
         code.shouldDo === ShouldDoType.PANIC_BUTTON
       ) {
         this.socket.emitPanicButtonLeo(officer, "ON");
-      }
 
-      const isOfficerDisabled = officer?.whitelistStatus
-        ? officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
-          !officer.department?.isDefaultDepartment
-        : false;
-
-      if (isOfficerDisabled) {
-        throw new BadRequest("cannotUseThisOfficer");
+        if (cad.miscCadSettings.panicButtonWebhookId && officer) {
+          try {
+            const embed = createPanicButtonEmbed(cad, officer);
+            await sendDiscordWebhook(cad.miscCadSettings, "panicButtonWebhookId", embed);
+          } catch (error) {
+            console.error("[cad_panicButton]: Could not send Discord webhook.", error);
+          }
+        }
       }
     }
 
@@ -178,7 +188,7 @@ export class StatusController {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
         data: { statusId },
-        include: { status: { include: { value: true } }, officers: { include: leoProperties } },
+        include: combinedUnitProperties,
       });
     }
 
@@ -221,10 +231,10 @@ export class StatusController {
     }
 
     try {
-      const data = createWebhookData(cad.miscCadSettings, updatedUnit);
+      const data = createWebhookData(cad, updatedUnit);
       await sendDiscordWebhook(cad.miscCadSettings, "statusesWebhookId", data);
     } catch (error) {
-      console.log("Could not send Discord webhook.", error);
+      console.error("Could not send Discord webhook.", error);
     }
 
     if (["leo", "combined"].includes(type)) {
@@ -235,135 +245,34 @@ export class StatusController {
 
     return updatedUnit;
   }
-
-  @UseBefore(ActiveOfficer)
-  @Post("/merge")
-  @Description("Merge officers by the activeOfficer and an officerId into a combinedLeoUnit")
-  async mergeOfficers(
-    @BodyParams("id") id: string,
-    @Context("activeOfficer") activeOfficer: Officer,
-  ) {
-    if (id === activeOfficer.id) {
-      throw new BadRequest("officerAlreadyMerged");
-    }
-
-    const existing = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        OR: [
-          {
-            officers: { some: { id } },
-          },
-          {
-            officers: { some: { id: activeOfficer.id } },
-          },
-          {
-            id,
-          },
-          {
-            id: activeOfficer.id,
-          },
-        ],
-      },
-    });
-
-    if (existing) {
-      throw new BadRequest("officerAlreadyMerged");
-    }
-
-    const status = await prisma.statusValue.findFirst({
-      where: { shouldDo: ShouldDoType.SET_ON_DUTY },
-      select: { id: true },
-    });
-
-    const unit = await prisma.combinedLeoUnit.create({
-      data: {
-        statusId: status?.id ?? null,
-        callsign: activeOfficer.callsign,
-      },
-    });
-
-    const [, updated] = await Promise.all(
-      [id, activeOfficer.id].map(async (idd) => {
-        await prisma.officer.update({
-          where: { id: idd },
-          data: { statusId: null },
-        });
-
-        return prisma.combinedLeoUnit.update({
-          where: {
-            id: unit.id,
-          },
-          data: {
-            officers: { connect: { id: idd } },
-          },
-        });
-      }),
-    );
-
-    this.socket.emitUpdateOfficerStatus();
-
-    return updated;
-  }
-
-  @Post("/unmerge/:id")
-  @Description("Unmerge officers by the combinedUnitId")
-  async unmergeOfficers(@PathParams("id") unitId: string) {
-    const unit = await prisma.combinedLeoUnit.findFirst({
-      where: {
-        id: unitId,
-      },
-      include: {
-        officers: { select: { id: true } },
-      },
-    });
-
-    if (!unit) {
-      throw new NotFound("notFound");
-    }
-
-    await Promise.all(
-      unit.officers.map(async ({ id }) => {
-        await prisma.officer.update({
-          where: { id },
-          data: { statusId: unit.statusId },
-        });
-      }),
-    );
-
-    await prisma.assignedUnit.deleteMany({
-      where: { combinedLeoId: unitId },
-    });
-
-    await prisma.combinedLeoUnit.delete({
-      where: { id: unitId },
-    });
-
-    this.socket.emitUpdateOfficerStatus();
-  }
 }
 
 type V<T> = T & { value: Value };
 
 export type Unit = { status: V<StatusValue> | null } & (
   | ((Officer | EmsFdDeputy) & {
-      department: V<DepartmentValue>;
-      division: V<DivisionValue>;
       citizen: Pick<Citizen, "name" | "surname">;
-      status: V<StatusValue> | null;
     })
   | CombinedLeoUnit
 );
 
-function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
+function createWebhookData(
+  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+  unit: Unit,
+) {
+  const isBadgeNumberEnabled = isFeatureEnabled({
+    defaultReturn: true,
+    feature: Feature.BADGE_NUMBERS,
+    features: cad.features,
+  });
+
   const isNotCombined = "citizenId" in unit;
 
   const status = unit.status?.value.value ?? "Off-duty";
   const unitName = isNotCombined ? `${unit.citizen.name} ${unit.citizen.surname}` : "";
-  // todo: fix type
-  const callsign = generateCallsign(unit as any, miscCadSettings.callsignTemplate);
-  const officerName = isNotCombined
-    ? `${unit.badgeNumber} - ${callsign} ${unitName}`
-    : `${callsign}`;
+  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
+  const badgeNumber = isBadgeNumberEnabled && isNotCombined ? `${unit.badgeNumber} - ` : "";
+  const officerName = isNotCombined ? `${badgeNumber}${callsign} ${unitName}` : `${callsign}`;
 
   return {
     embeds: [
@@ -377,6 +286,31 @@ function createWebhookData(miscCadSettings: MiscCadSettings, unit: Unit) {
             inline: true,
           },
         ],
+      },
+    ],
+  };
+}
+
+function createPanicButtonEmbed(
+  cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
+  unit: Officer & { citizen: Pick<Citizen, "name" | "surname"> },
+) {
+  const isBadgeNumberEnabled = isFeatureEnabled({
+    defaultReturn: true,
+    feature: Feature.BADGE_NUMBERS,
+    features: cad.features,
+  });
+
+  const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
+  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
+  const badgeNumber = isBadgeNumberEnabled ? `${unit.badgeNumber} - ` : "";
+  const officerName = `${badgeNumber}${callsign} ${unitName}`;
+
+  return {
+    embeds: [
+      {
+        title: "Panic Button",
+        description: `Unit **${officerName}** has pressed the panic button`,
       },
     ],
   };

@@ -29,8 +29,6 @@ export default function FourOhFour() {
   return (
     <Layout className="dark:text-white">
       <Title>Page not found.</Title>
-
-      <h1 className="text-2xl font-semibold">Page not found.</h1>
     </Layout>
   );
 }

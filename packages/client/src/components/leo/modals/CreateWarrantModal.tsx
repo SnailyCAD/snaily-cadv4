@@ -7,12 +7,13 @@ import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { Citizen } from "@snailycad/types";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
+import { toastMessage } from "lib/toastMessage";
 
 export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
@@ -28,11 +29,16 @@ export function CreateWarrantModal() {
     const { json } = await execute("/records/create-warrant", {
       method: "POST",
       data: values,
+      helpers,
     });
 
     if (json.id) {
-      // todo: alert success
-      helpers.resetForm();
+      toastMessage({
+        title: common("success"),
+        message: t("successCreateWarrant", { citizen: values.citizenName }),
+        icon: "success",
+      });
+
       closeModal(ModalIds.CreateWarrant);
     }
   }
@@ -54,7 +60,7 @@ export function CreateWarrantModal() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenName} label="Name">
+            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
               <InputSuggestions
                 inputProps={{
                   value: values.citizenName,

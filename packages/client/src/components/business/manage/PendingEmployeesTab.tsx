@@ -2,8 +2,9 @@ import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FullEmployee, useBusinessState } from "state/businessState";
-import { EmployeeAsEnum, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
+import { Table } from "components/shared/Table";
 
 export function PendingEmployeesTab() {
   const { state, execute } = useFetch();
@@ -48,20 +49,16 @@ export function PendingEmployeesTab() {
         {employees.length <= 0 ? (
           <p>{t("noPendingEmployees")}</p>
         ) : (
-          employees.map((employee) => (
-            <li className="flex items-baseline justify-between p-4 card" key={employee.id}>
-              <div>
-                <span className="text-xl font-semibold">
-                  {employee.citizen.surname} {employee.citizen.name}
-                </span>
-              </div>
-
-              {employee.role.as !== EmployeeAsEnum.OWNER ? (
+          <Table
+            data={employees.map((employee) => ({
+              citizen: `${employee.citizen.surname} ${employee.citizen.name}`,
+              actions: (
                 <div>
                   <Button
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "accept")}
                     variant="success"
+                    small
                   >
                     {common("accept")}
                   </Button>
@@ -69,14 +66,19 @@ export function PendingEmployeesTab() {
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "decline")}
                     className="ml-2"
+                    small
                     variant="danger"
                   >
                     {common("decline")}
                   </Button>
                 </div>
-              ) : null}
-            </li>
-          ))
+              ),
+            }))}
+            columns={[
+              { Header: common("citizen"), accessor: "citizen" },
+              { Header: common("actions"), accessor: "actions" },
+            ]}
+          />
         )}
       </ul>
     </TabsContent>

@@ -9,20 +9,22 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, ValueLicenseType, Weapon } from "@snailycad/types";
+import { Citizen, ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
+import { toastMessage } from "lib/toastMessage";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   weapon: Weapon | null;
   citizens: Citizen[];
-  onCreate?: (newV: Weapon) => void;
-  onUpdate?: (old: Weapon, newV: Weapon) => void;
+  onCreate?(newV: Weapon): void;
+  onUpdate?(old: Weapon, newV: Weapon): void;
   onClose?(): void;
 }
 
@@ -30,7 +32,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
-  const { DISALLOW_TEXTFIELD_SELECTION } = useFeatureEnabled();
+  const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
@@ -64,6 +66,11 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       });
 
       if (json?.id) {
+        toastMessage({
+          title: common("success"),
+          message: tWeapon("successWeaponRegistered"),
+          icon: "success",
+        });
         onCreate?.(json);
       }
     }
@@ -71,6 +78,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
 
   const INITIAL_VALUES = {
     model: weapon?.modelId ?? "",
+    modelName: weapon?.model.value.value ?? "",
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
     serialNumber: weapon?.serialNumber ?? "",
@@ -84,21 +92,9 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
-            {DISALLOW_TEXTFIELD_SELECTION ? (
-              <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <Select
-                  values={weapons.values.map((weapon) => ({
-                    label: weapon.value.value,
-                    value: weapon.id,
-                  }))}
-                  value={values.model}
-                  name="model"
-                  onChange={handleChange}
-                />
-              </FormField>
-            ) : (
+            {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
                   list="weaponModelsList"
@@ -112,6 +108,32 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                     <span key={weapon.id}>{weapon.value.value}</span>
                   ))}
                 </datalist>
+              </FormField>
+            ) : (
+              <FormField errorMessage={errors.model} label={tVehicle("model")}>
+                <InputSuggestions
+                  onSuggestionClick={(suggestion: WeaponValue) => {
+                    setValues({
+                      ...values,
+                      modelName: suggestion.value.value,
+                      model: suggestion.id,
+                    });
+                  }}
+                  Component={({ suggestion }: { suggestion: WeaponValue }) => (
+                    <p className="w-full text-left">{suggestion.value.value}</p>
+                  )}
+                  options={{
+                    apiPath: (value) => `/admin/values/weapon/search?query=${value}`,
+                    method: "GET",
+                    minLength: 2,
+                  }}
+                  inputProps={{
+                    value: values.modelName,
+                    name: "modelName",
+                    onChange: handleChange,
+                    errorMessage: errors.model,
+                  }}
+                />
               </FormField>
             )}
 
@@ -155,11 +177,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
             </FormField>
 
             <footer className="flex justify-end mt-5">
-              <Button
-                type="reset"
-                onClick={() => closeModal(ModalIds.RegisterWeapon)}
-                variant="cancel"
-              >
+              <Button type="reset" onClick={handleClose} variant="cancel">
                 Cancel
               </Button>
               <Button

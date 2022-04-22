@@ -4,12 +4,13 @@ import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { useAuth } from "context/AuthContext";
+import { toastMessage } from "lib/toastMessage";
 
 enum Steps {
   EnterPassword = 0,
@@ -56,6 +57,11 @@ export function Manage2FAModal() {
         if (typeof json === "boolean" && json) {
           setUser({ ...user!, twoFactorEnabled: false });
           closeModal(ModalIds.Manage2FA);
+          toastMessage({
+            title: common("success"),
+            message: t("disable2faSuccess"),
+            icon: "success",
+          });
         }
 
         return;
@@ -86,6 +92,11 @@ export function Manage2FAModal() {
 
       if (typeof json === "boolean" && json) {
         setUser({ ...user!, twoFactorEnabled: true });
+        toastMessage({
+          title: common("success"),
+          message: t("enable2faSuccess"),
+          icon: "success",
+        });
         reset();
       }
     }
@@ -105,7 +116,7 @@ export function Manage2FAModal() {
   return (
     <Modal
       onClose={onCancel}
-      title={t("2fa")}
+      title={shouldDisable ? t("disable2FA") : t("enable2FA")}
       isOpen={isOpen(ModalIds.Manage2FA)}
       className="w-[500px]"
     >
@@ -167,7 +178,11 @@ export function Manage2FAModal() {
                 variant={shouldDisable ? "danger" : "default"}
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {shouldDisable ? "Disable" : currentStep === Steps.VerifyCode ? "Verify" : "Next"}
+                {shouldDisable
+                  ? t("disable")
+                  : currentStep === Steps.VerifyCode
+                  ? t("verify")
+                  : t("next")}
               </Button>
             </footer>
           </Form>

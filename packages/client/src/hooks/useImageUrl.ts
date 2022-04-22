@@ -1,13 +1,9 @@
-import * as React from "react";
 import { findUrl } from "lib/fetch";
 import { IMGUR_REGEX } from "@snailycad/config";
+import { useMounted } from "@casper124578/useful";
 
 export function useImageUrl() {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useMounted();
 
   function makeImageUrl(
     type: "citizens" | "users" | "bleeter" | "units" | "cad",

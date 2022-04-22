@@ -8,15 +8,20 @@ import type { RESTPostOAuth2AccessTokenResult, APIUser } from "discord-api-types
 import { encode } from "utils/discord";
 import { prisma } from "lib/prisma";
 import { getSessionUser } from "lib/auth/user";
-import { cad, Feature, WhitelistStatus, type User } from "@prisma/client";
-import { AUTH_TOKEN_EXPIRES_MS, AUTH_TOKEN_EXPIRES_S } from "./Auth";
+import { cad, CadFeature, Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
+import {
+  AUTH_TOKEN_EXPIRES_MS,
+  AUTH_TOKEN_EXPIRES_S,
+  getDefaultPermissionsForNewUser,
+} from "./Auth";
 import { signJWT } from "utils/jwt";
 import { setCookie } from "utils/setCookie";
 import { Cookie } from "@snailycad/config";
-import { IsAuth } from "middlewares/index";
-import { DISCORD_API_URL } from "lib/discord";
+import { IsAuth } from "middlewares/IsAuth";
+import { DISCORD_API_URL } from "lib/discord/config";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { Description } from "@tsed/schema";
+import { isFeatureEnabled } from "lib/cad";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const DISCORD_CLIENT_ID = process.env["DISCORD_CLIENT_ID"];
@@ -41,7 +46,7 @@ export class DiscordAuth {
     url.searchParams.append("response_type", "code");
     url.searchParams.append("scope", encodeURIComponent("identify"));
 
-    return res.redirect(301, url.toString());
+    return res.redirect(url.toString());
   }
 
   @Get("/callback")
@@ -58,9 +63,9 @@ export class DiscordAuth {
     }
 
     const data = await getDiscordData(code);
-    const authUser: User | null = await getSessionUser(req, false);
+    const authUser = await getSessionUser(req, false);
 
-    if (!data) {
+    if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
     }
 
@@ -73,7 +78,7 @@ export class DiscordAuth {
       where: { discordId: data.id },
     });
 
-    const cad = await prisma.cad.findFirst();
+    const cad = await prisma.cad.findFirst({ include: { autoSetUserProperties: true } });
     const discordRolesId = cad?.discordRolesId ?? null;
 
     /**
@@ -116,6 +121,8 @@ export class DiscordAuth {
           username: data.username,
           password: "",
           discordId: data.id,
+          permissions: getDefaultPermissionsForNewUser(cad),
+          whitelistStatus: cad?.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
         },
       });
 
@@ -170,16 +177,18 @@ export class DiscordAuth {
     }
 
     function validateUser(user: User) {
-      if (user.banned) {
-        return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
-      }
+      if (user.rank !== Rank.OWNER) {
+        if (user.banned) {
+          return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+        }
 
-      if (user.whitelistStatus === WhitelistStatus.PENDING) {
-        return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
-      }
+        if (user.whitelistStatus === WhitelistStatus.PENDING) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+        }
 
-      if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-        return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+        if (user.whitelistStatus === WhitelistStatus.DECLINED) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+        }
       }
     }
   }
@@ -187,9 +196,17 @@ export class DiscordAuth {
   @Delete("/")
   @UseBefore(IsAuth)
   @Description("Remove Discord OAuth2 from from authenticated user")
-  async removeDiscordAuth(@Context("user") user: User, @Context("cad") cad: cad) {
-    const features = cad.disabledFeatures;
-    if (features.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+  async removeDiscordAuth(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
+    const regularAuthEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_REGULAR_LOGIN,
+      defaultReturn: true,
+    });
+
+    if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginDisabled");
     }
 

@@ -10,17 +10,23 @@ import { prisma } from "lib/prisma";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
+import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
 export class RecordsController {
   @Post("/create-warrant")
   @Description("Create a new warrant")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
 
@@ -55,6 +61,10 @@ export class RecordsController {
 
   @Put("/warrant/:id")
   @Description("Update a warrant by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateWarrant(@BodyParams() body: unknown, @PathParams("id") warrantId: string) {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
@@ -78,6 +88,10 @@ export class RecordsController {
 
   @Post("/")
   @Description("Create a new ticket, written warning or arrest report")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -88,7 +102,7 @@ export class RecordsController {
     });
 
     if (!citizen || `${citizen.name} ${citizen.surname}` !== data.citizenName) {
-      throw new NotFound("citizenNotFound");
+      throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
 
     const ticket = await prisma.record.create({
@@ -115,39 +129,32 @@ export class RecordsController {
     const seizedItems: SeizedItem[] = [];
 
     await Promise.all(
-      data.violations.map(
-        async (rawItem: {
-          penalCodeId: string;
-          fine: number | null;
-          jailTime: number | null;
-          bail: number | null;
-        }) => {
-          const item = await validateRecordData({
-            ...rawItem,
-            ticketId: ticket.id,
-          });
+      data.violations.map(async (rawItem) => {
+        const item = await validateRecordData({
+          ...rawItem,
+          ticketId: ticket.id,
+        });
 
-          const violation = await prisma.violation.create({
-            data: {
-              fine: item.fine,
-              bail: item.bail,
-              jailTime: item.jailTime,
-              penalCode: {
-                connect: {
-                  id: item.penalCodeId,
-                },
-              },
-              records: {
-                connect: {
-                  id: ticket.id,
-                },
+        const violation = await prisma.violation.create({
+          data: {
+            fine: item.fine,
+            bail: item.bail,
+            jailTime: item.jailTime,
+            penalCode: {
+              connect: {
+                id: item.penalCodeId,
               },
             },
-          });
+            records: {
+              connect: {
+                id: ticket.id,
+              },
+            },
+          },
+        });
 
-          violations.push(violation);
-        },
-      ),
+        violations.push(violation);
+      }),
     );
 
     await Promise.all(
@@ -177,6 +184,10 @@ export class RecordsController {
 
   @Put("/record/:id")
   @Description("Update a ticket, written warning or arrest report by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
@@ -190,7 +201,7 @@ export class RecordsController {
     }
 
     const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData(v)),
+      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: record.id })),
     );
 
     await unlinkViolations(record.violations);
@@ -205,12 +216,9 @@ export class RecordsController {
       include: { officer: { include: leoProperties } },
     });
 
-    const violations: Violation[] = [];
-    const seizedItems: SeizedItem[] = [];
-
-    await Promise.all(
-      validatedViolations.map(async (item) => {
-        const created = await prisma.violation.create({
+    const violations = await prisma.$transaction(
+      validatedViolations.map((item) => {
+        return prisma.violation.create({
           data: {
             fine: item.fine,
             bail: item.bail,
@@ -224,14 +232,12 @@ export class RecordsController {
           },
           include: { penalCode: true },
         });
-
-        violations.push(created);
       }),
     );
 
-    await Promise.all(
-      (data.seizedItems ?? []).map(async (item) => {
-        const seizedItem = await prisma.seizedItem.create({
+    const seizedItems = await prisma.$transaction(
+      (data.seizedItems ?? []).map((item) => {
+        return prisma.seizedItem.create({
           data: {
             item: item.item,
             illegal: item.illegal ?? false,
@@ -239,8 +245,6 @@ export class RecordsController {
             recordId: updated.id,
           },
         });
-
-        seizedItems.push(seizedItem);
       }),
     );
 
@@ -249,6 +253,10 @@ export class RecordsController {
 
   @Delete("/:id")
   @Description("Delete a ticket, written warning or arrest report by its id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async deleteRecord(
     @PathParams("id") id: string,
     @BodyParams("type") type: "WARRANT" | (string & {}),

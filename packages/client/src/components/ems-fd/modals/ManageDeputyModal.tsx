@@ -1,28 +1,29 @@
 import * as React from "react";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_DEPUTY_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { FullDeputy } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
+import type { EmsFdDeputy } from "@snailycad/types";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  deputy: FullDeputy | null;
-  onCreate?: (officer: FullDeputy) => void;
-  onUpdate?: (old: FullDeputy, newO: FullDeputy) => void;
+  deputy: EmsFdDeputy | null;
+  onCreate?(officer: EmsFdDeputy): void;
+  onUpdate?(old: EmsFdDeputy, newO: EmsFdDeputy): void;
   onClose?(): void;
 }
 
@@ -32,6 +33,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const { citizens } = useCitizen();
   const { state, execute } = useFetch();
@@ -96,7 +98,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     }
   }
 
-  const validate = handleValidate(CREATE_OFFICER_SCHEMA);
+  const validate = handleValidate(EMS_FD_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: deputy?.citizenId ?? "",
     department: deputy?.departmentId ?? "",
@@ -104,10 +106,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
     callsign: deputy?.callsign ?? "",
     callsign2: deputy?.callsign2 ?? "",
     division: deputy?.divisionId ?? "",
-    // simple fix. EMS/FD shares the same zod schema
-    // todo: create separate schemas
-    divisions: ["xxx"],
-    badgeNumber: deputy?.badgeNumber ?? "",
+    badgeNumber: BADGE_NUMBERS ? deputy?.badgeNumber ?? "" : 123,
     image: undefined,
   };
 
@@ -138,30 +137,32 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               />
             </FormField>
 
-            <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
-              <Input
-                type="number"
-                value={values.badgeNumber}
-                name="badgeNumber"
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: {
-                      ...e.target,
-                      id: "badgeNumber",
-                      value: e.target.valueAsNumber,
-                    },
-                  })
-                }
-              />
-            </FormField>
+            {BADGE_NUMBERS ? (
+              <FormField errorMessage={errors.badgeNumber} label={t("Leo.badgeNumber")}>
+                <Input
+                  type="number"
+                  value={values.badgeNumber}
+                  name="badgeNumber"
+                  onChange={(e) =>
+                    handleChange({
+                      ...e,
+                      target: {
+                        ...e.target,
+                        id: "badgeNumber",
+                        value: e.target.valueAsNumber,
+                      },
+                    })
+                  }
+                />
+              </FormField>
+            ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+              <FormField errorMessage={errors.callsign} label={t("Leo.callsign1")}>
                 <Input value={values.callsign} name="callsign" onChange={handleChange} />
               </FormField>
 
-              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+              <FormField errorMessage={errors.callsign2} label={t("Leo.callsign2")}>
                 <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
               </FormField>
             </FormRow>

@@ -1,0 +1,271 @@
+import { Controller, UseBeforeEach } from "@tsed/common";
+import { Description, Header, Post } from "@tsed/schema";
+import { NotFound } from "@tsed/exceptions";
+import { BodyParams, QueryParams } from "@tsed/platform-params";
+import { prisma } from "lib/prisma";
+import { IsAuth } from "middlewares/IsAuth";
+import { leoProperties } from "lib/leo/activeOfficer";
+import { citizenInclude } from "controllers/citizen/CitizenController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { Citizen, CustomFieldCategory, DepartmentValue, Officer } from "@prisma/client";
+import { validateSchema } from "lib/validateSchema";
+import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
+
+export const citizenSearchInclude = {
+  officers: { select: { department: { select: { isConfidential: true } } } },
+  ...citizenInclude,
+  businesses: true,
+  medicalRecords: true,
+  customFields: { include: { field: true } },
+  warrants: { include: { officer: { include: leoProperties } } },
+  Record: {
+    include: {
+      officer: {
+        include: leoProperties,
+      },
+      seizedItems: true,
+      violations: {
+        include: {
+          penalCode: {
+            include: {
+              warningApplicable: true,
+              warningNotApplicable: true,
+            },
+          },
+        },
+      },
+    },
+  },
+  dlCategory: { include: { value: true } },
+};
+
+const vehiclesInclude = {
+  model: { include: { value: true } },
+  registrationStatus: true,
+  insuranceStatus: true,
+  TruckLog: true,
+  Business: true,
+  citizen: { include: { warrants: true } },
+  flags: true,
+  customFields: { include: { field: true } },
+};
+
+const weaponsInclude = {
+  citizen: true,
+  model: { include: { value: true } },
+  registrationStatus: true,
+  customFields: { include: { field: true } },
+};
+
+@Controller("/search")
+@UseBeforeEach(IsAuth)
+@Header("content-type", "application/json")
+export class SearchController {
+  @Post("/name")
+  @Description("Search citizens by their name, surname or fullname")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async searchName(@BodyParams("name") fullName: string) {
+    const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
+
+    if ((!name || name.length <= 3) && !surname) {
+      return [];
+    }
+
+    let citizen = await prisma.citizen.findMany({
+      where: {
+        name: { contains: name, mode: "insensitive" },
+        surname: { contains: surname, mode: "insensitive" },
+      },
+      include: citizenSearchInclude,
+    });
+
+    if (citizen.length <= 0) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          socialSecurityNumber: name,
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (citizen.length <= 0) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          name: { contains: surname, mode: "insensitive" },
+          surname: { contains: name, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (citizen.length <= 0 && (!name || !surname)) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          name: { startsWith: name, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    if (citizen.length <= 0 && (!name || !surname)) {
+      citizen = await prisma.citizen.findMany({
+        where: {
+          surname: { startsWith: name, mode: "insensitive" },
+        },
+        include: citizenSearchInclude,
+      });
+    }
+
+    return appendConfidential(await appendCustomFields(citizen, CustomFieldCategory.CITIZEN));
+  }
+
+  @Post("/weapon")
+  @Description("Search weapons by their serialNumber")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async searchWeapon(@BodyParams("serialNumber") serialNumber: string) {
+    if (!serialNumber || serialNumber.length < 3) {
+      return null;
+    }
+
+    const weapon = await prisma.weapon.findFirst({
+      where: {
+        serialNumber: {
+          startsWith: serialNumber,
+          mode: "insensitive",
+        },
+      },
+      include: weaponsInclude,
+    });
+
+    if (!weapon) {
+      throw new NotFound("weaponNotFound");
+    }
+
+    return appendCustomFields(weapon, CustomFieldCategory.WEAPON);
+  }
+
+  @Post("/vehicle")
+  @Description("Search vehicles by their plate or vinNumber")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async searchVehicle(
+    @BodyParams("plateOrVin") plateOrVin: string,
+    @QueryParams("includeMany") includeMany: boolean,
+  ) {
+    if (!plateOrVin || plateOrVin.length < 3) {
+      return null;
+    }
+
+    const data = {
+      where: {
+        OR: [
+          { plate: { startsWith: plateOrVin.toUpperCase() } },
+          { vinNumber: { startsWith: plateOrVin.toUpperCase() } },
+        ],
+      },
+      include: vehiclesInclude,
+    };
+
+    if (includeMany) {
+      const vehicles = await prisma.registeredVehicle.findMany(data);
+
+      return appendCustomFields(vehicles, CustomFieldCategory.VEHICLE);
+    }
+
+    const vehicle = await prisma.registeredVehicle.findFirst(data);
+
+    if (!vehicle) {
+      throw new NotFound("vehicleNotFound");
+    }
+
+    return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
+  }
+
+  @Post("/custom-field")
+  @Description("Search a citizen, vehicle or weapon via a custom field")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.isDispatch,
+    permissions: [Permissions.Leo, Permissions.Dispatch],
+  })
+  async customFieldSearch(@BodyParams() body: unknown) {
+    const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
+
+    const customField = await prisma.customField.findUnique({
+      where: { id: data.customFieldId },
+    });
+
+    const _results = await prisma.customFieldValue.findMany({
+      where: { fieldId: data.customFieldId, value: { mode: "insensitive", equals: data.query } },
+      include: {
+        Citizens: { include: citizenSearchInclude },
+        RegisteredVehicles: { include: vehiclesInclude },
+        Weapons: { include: weaponsInclude },
+        field: true,
+      },
+    });
+
+    const results = _results
+      .map((value) => {
+        const category = value.field.category;
+
+        if (category === CustomFieldCategory.CITIZEN) {
+          return value.Citizens;
+        } else if (category === CustomFieldCategory.VEHICLE) {
+          return value.RegisteredVehicles;
+        }
+
+        return value.Weapons;
+      })
+      .flat(1);
+
+    return { field: customField, results };
+  }
+}
+
+function appendConfidential(
+  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue })[] })[],
+) {
+  const _citizens = [];
+
+  for (const citizen of citizens) {
+    const isConfidential = citizen.officers.some((v) => v.department.isConfidential);
+
+    if (isConfidential) {
+      _citizens.push({
+        name: citizen.name,
+        surname: citizen.surname,
+        isConfidential: true,
+      });
+    } else {
+      _citizens.push(citizen);
+    }
+  }
+
+  return _citizens;
+}
+
+async function appendCustomFields(item: any, category: CustomFieldCategory) {
+  const allCustomFields = await prisma.customField.findMany({
+    where: { category },
+  });
+
+  if (Array.isArray(item)) {
+    if (item.length > 0) {
+      for (const cit of item) {
+        cit.allCustomFields = allCustomFields;
+      }
+    }
+  } else {
+    item.allCustomFields = allCustomFields;
+  }
+
+  return item;
+}

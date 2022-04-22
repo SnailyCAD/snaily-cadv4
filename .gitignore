@@ -26,3 +26,4 @@ packages/client/public/favicon.png
 
 .husky/_
 .turbo
+packages/**/coverage

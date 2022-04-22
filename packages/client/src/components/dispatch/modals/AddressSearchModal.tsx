@@ -3,15 +3,15 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Input } from "components/form/inputs/Input";
 import type { Citizen } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { formatCitizenAddress } from "lib/utils";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 export function AddressSearchModal() {
   const { isOpen, closeModal, openModal } = useModal();
@@ -36,6 +36,7 @@ export function AddressSearchModal() {
     const { json } = await execute("/search/address", {
       method: "POST",
       data: values,
+      noToast: true,
     });
 
     if (Array.isArray(json)) {
@@ -57,10 +58,30 @@ export function AddressSearchModal() {
       className="w-[800px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, errors, values, isValid }) => (
+        {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.address} label={t("enterAddress")}>
-              <Input value={values.address} name="address" onChange={handleChange} />
+              <InputSuggestions
+                onSuggestionClick={(suggestion: AddressSearchResult[0]) => {
+                  setFieldValue("address", suggestion.address);
+                  setResults([suggestion]);
+                }}
+                Component={({ suggestion }: { suggestion: Citizen }) => (
+                  <div className="flex items-center">
+                    {suggestion.address} ({suggestion.name} {suggestion.surname})
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/address",
+                  method: "POST",
+                  dataKey: "address",
+                }}
+                inputProps={{
+                  value: values.address,
+                  name: "address",
+                  onChange: handleChange,
+                }}
+              />
             </FormField>
 
             {typeof results === "boolean" ? <p>{t("noResults")}</p> : null}
@@ -74,12 +95,7 @@ export function AddressSearchModal() {
                     citizen: `${result.name} ${result.surname}`,
                     fullAddress: formatCitizenAddress(result),
                     actions: (
-                      <Button
-                        type="button"
-                        onClick={() => handleOpen(result)}
-                        small
-                        variant="success"
-                      >
+                      <Button type="button" onClick={() => handleOpen(result)} small>
                         {t("viewInNameSearch")}
                       </Button>
                     ),

@@ -10,10 +10,7 @@ import { useTranslations } from "next-intl";
 interface Props<T extends IncidentEvent | Call911Event> {
   event: T | null;
   setEvent: React.Dispatch<React.SetStateAction<T | null>>;
-  onSubmit: (
-    values: { description: string },
-    helpers: FormikHelpers<{ description: string }>,
-  ) => void;
+  onSubmit(values: { description: string }, helpers: FormikHelpers<{ description: string }>): void;
   state: "loading" | "error" | null;
 }
 
@@ -25,10 +22,24 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
 }: Props<T>) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useEffect(() => {
+    if (event && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [event]);
+
+  // allow users to press "Enter + Ctrl" or "Enter + Cmd" to send an event
+  function handleCtrlEnter(event: React.KeyboardEvent<HTMLTextAreaElement>, submitForm: any) {
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      submitForm();
+    }
+  }
 
   return (
     <Formik onSubmit={onSubmit} initialValues={{ description: event?.description ?? "" }}>
-      {({ handleChange, values, errors }) => (
+      {({ handleChange, submitForm, values, errors }) => (
         <Form className="absolute bottom-0 w-full">
           <FormField errorMessage={errors.description} label={common("description")}>
             <Textarea
@@ -36,6 +47,8 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
               name="description"
               value={values.description}
               onChange={handleChange}
+              onKeyDown={(e) => handleCtrlEnter(e, submitForm)}
+              ref={inputRef}
             />
           </FormField>
 

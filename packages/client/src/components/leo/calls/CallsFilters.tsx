@@ -4,7 +4,7 @@ import { makeUnitName } from "lib/utils";
 import { FormField } from "components/form/FormField";
 import { useTranslations } from "next-intl";
 import { Input } from "components/form/inputs/Input";
-import { useCallsFilters } from "context/CallsFiltersContext";
+import { useCallsFilters } from "state/callsFiltersState";
 import { Select, SelectValue } from "components/form/Select";
 
 interface Props {

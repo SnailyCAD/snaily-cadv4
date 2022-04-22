@@ -8,13 +8,14 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth, setDiscordAUth } from "middlewares/index";
+import { IsAuth, setDiscordAUth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, Feature } from "@prisma/client";
+import { getCADVersion } from "@snailycad/utils/version";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -25,17 +26,18 @@ export class ManageCitizensController {
 
   @Get("/")
   async getCadSettings() {
+    const version = await getCADVersion();
     const cad = await prisma.cad.findFirst({
       select: {
         name: true,
         areaOfPlay: true,
         registrationCode: true,
-        disabledFeatures: true,
         miscCadSettings: true,
+        features: true,
       },
     });
 
-    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode };
+    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode, version };
   }
 
   @UseBefore(IsAuth)
@@ -56,6 +58,7 @@ export class ManageCitizensController {
         whitelisted: data.whitelisted,
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
+        logoId: data.image,
         miscCadSettings: {
           update: {
             roleplayEnabled: data.roleplayEnabled,
@@ -72,16 +75,26 @@ export class ManageCitizensController {
 
   @UseBefore(IsAuth)
   @Put("/features")
-  async updateDisabledFeatures(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateCadFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
 
-    const updated = await prisma.cad.update({
-      where: {
-        id: ctx.get("cad").id,
-      },
-      data: {
-        disabledFeatures: data.features as Feature[],
-      },
+    for (const feature of data.features) {
+      const createUpdateData = {
+        isEnabled: feature.isEnabled,
+        feature: feature.feature as Feature,
+        cadId: cad.id,
+      };
+
+      await prisma.cadFeature.upsert({
+        where: { feature: feature.feature as Feature },
+        create: createUpdateData,
+        update: createUpdateData,
+      });
+    }
+
+    const updated = prisma.cad.findUnique({
+      where: { id: cad.id },
+      include: { features: true },
     });
 
     return updated;
@@ -110,6 +123,9 @@ export class ManageCitizensController {
         authScreenHeaderImageId: data.authScreenHeaderImageId,
         maxOfficersPerUser: data.maxOfficersPerUser,
         maxDepartmentsEachPerUser: data.maxDepartmentsEachPerUser,
+        maxAssignmentsToCalls: data.maxAssignmentsToCalls,
+        maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
+        inactivityTimeout: data.inactivityTimeout || null,
       },
     });
 

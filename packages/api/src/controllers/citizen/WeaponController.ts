@@ -1,11 +1,11 @@
-import type { User } from ".prisma/client";
-import { Feature } from "@prisma/client";
+import { User, CadFeature, Feature } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Post, Delete, Put, Description } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/user";
+import { isFeatureEnabled } from "lib/cad";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -19,7 +19,7 @@ export class WeaponController {
   async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(WEAPON_SCHEMA, body);
     const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { disabledFeatures: Feature[] } | null;
+    const cad = ctx.get("cad") as { features: CadFeature[] } | null;
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -29,7 +29,12 @@ export class WeaponController {
 
     canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
-    const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
+    const isCustomEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.CUSTOM_TEXTFIELD_VALUES,
+      defaultReturn: false,
+    });
+
     let modelId = data.model;
 
     if (isCustomEnabled) {

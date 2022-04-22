@@ -3,34 +3,42 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { Citizen, RecordType } from "@snailycad/types";
+import { CustomFieldCategory, Citizen, RecordType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
-import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
-import { RecordsArea } from "./RecordsArea";
-import { NameSearchResult, useNameSearch } from "state/nameSearchState";
+// import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
+import { NameSearchTabsContainer } from "./tabs/TabsContainer";
+import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
 import { useRouter } from "next/router";
 import { ArrowLeft, PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
-import { EditCitizenLicenses } from "./EditCitizenLicensesModal";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
+import dynamic from "next/dynamic";
+import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
+import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
+import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
+import { CustomFieldsArea } from "../CustomFieldsArea";
 
-const enum Toggled {
-  VEHICLES = 0,
-  RECORDS = 1,
-}
+const VehicleSearchModal = dynamic(
+  async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
+);
+
+const WeaponSearchModal = dynamic(
+  async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
+);
 
 function AutoSubmit() {
   const { getPayload } = useModal();
@@ -51,6 +59,7 @@ export function NameSearchModal() {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const cT = useTranslations("Citizen");
+  const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -60,7 +69,6 @@ export function NameSearchModal() {
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
-  const [toggled, setToggled] = React.useState<Toggled | null>(null);
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
 
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
@@ -68,10 +76,29 @@ export function NameSearchModal() {
   React.useEffect(() => {
     if (!isOpen(ModalIds.NameSearch)) {
       setResults(null);
-      setToggled(null);
       setCurrentResult(null);
     }
   }, [isOpen, setCurrentResult, setResults]);
+
+  async function handleLicensesSubmit(values: any) {
+    if (!currentResult) return;
+
+    const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
+      method: "PUT",
+      data: {
+        ...values,
+        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value),
+      },
+    });
+
+    if (json) {
+      setCurrentResult({ ...currentResult, ...json });
+      closeModal(ModalIds.ManageLicenses);
+    }
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/name", {
@@ -97,14 +124,6 @@ export function NameSearchModal() {
     }
   }
 
-  function handleToggle(toggle: Toggled) {
-    if (toggle === toggled) {
-      setToggled(null);
-    } else {
-      setToggled(toggle);
-    }
-  }
-
   function handleOpenCreateRecord(type: RecordType) {
     if (!currentResult) return;
 
@@ -121,7 +140,9 @@ export function NameSearchModal() {
   }
 
   const hasWarrants =
+    !currentResult?.isConfidential &&
     (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
+
   const INITIAL_VALUES = {
     name: payloadName ?? "",
   };
@@ -207,142 +228,152 @@ export function NameSearchModal() {
             ) : null}
 
             {typeof results !== "boolean" && currentResult ? (
-              <div className="mt-3">
-                <header className="flex justify-between mb-5">
-                  <h3 className="text-2xl font-semibold">{t("results")}</h3>
+              currentResult.isConfidential ? (
+                <p className="my-5 px-2">{t("citizenIsConfidential")}</p>
+              ) : (
+                <div className="mt-3">
+                  <header className="flex justify-between mb-5">
+                    <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                  <div>
-                    <Button
-                      className="flex items-center justify-between gap-2"
-                      type="button"
-                      onClick={() => setCurrentResult(null)}
-                    >
-                      <ArrowLeft />
-                      {t("viewAllResults")}
-                    </Button>
-                  </div>
-                </header>
+                    <div>
+                      <Button
+                        className="flex items-center justify-between gap-2"
+                        type="button"
+                        onClick={() => setCurrentResult(null)}
+                      >
+                        <ArrowLeft />
+                        {t("viewAllResults")}
+                      </Button>
+                    </div>
+                  </header>
 
-                {currentResult?.dead && currentResult?.dateOfDead ? (
-                  <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
-                    {t("citizenDead", {
-                      date: format(
-                        new Date(currentResult.dateOfDead ?? new Date()),
-                        "MMMM do yyyy",
-                      ),
-                    })}
-                  </div>
-                ) : null}
+                  {currentResult?.dead && currentResult?.dateOfDead ? (
+                    <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenDead", {
+                        date: format(
+                          new Date(currentResult.dateOfDead ?? new Date()),
+                          "MMMM do yyyy",
+                        ),
+                      })}
+                    </div>
+                  ) : null}
 
-                {hasWarrants ? (
-                  <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
-                    {t("hasWarrants")}
-                  </div>
-                ) : null}
+                  {hasWarrants ? (
+                    <div className="p-2 my-2 font-semibold bg-red-700 rounded-md">
+                      {t("hasWarrants")}
+                    </div>
+                  ) : null}
 
-                <div className="flex">
-                  <div className="mr-2 min-w-[100px]">
-                    {currentResult.imageId ? (
-                      <img
-                        className="rounded-full w-[100px] h-[100px] object-cover"
-                        draggable={false}
-                        src={makeImageUrl("citizens", currentResult.imageId)}
-                      />
-                    ) : (
-                      <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
-                    )}
-                  </div>
-                  <div className="w-full">
-                    <div className="flex flex-col">
-                      <Infofield label={cT("fullName")}>
-                        {currentResult.name} {currentResult.surname}
-                      </Infofield>
-
-                      {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
-                        <Infofield label={cT("socialSecurityNumber")}>
-                          {currentResult.socialSecurityNumber}
+                  <div className="flex">
+                    <div className="mr-2 min-w-[100px]">
+                      {currentResult.imageId ? (
+                        <button
+                          type="button"
+                          onClick={() => openModal(ModalIds.CitizenImage)}
+                          className="cursor-pointer"
+                        >
+                          <img
+                            className="rounded-full w-[100px] h-[100px] object-cover"
+                            draggable={false}
+                            src={makeImageUrl("citizens", currentResult.imageId)}
+                          />
+                        </button>
+                      ) : (
+                        <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
+                      )}
+                    </div>
+                    <div className="w-full">
+                      <div className="flex flex-col">
+                        <Infofield label={cT("fullName")}>
+                          {currentResult.name} {currentResult.surname}
                         </Infofield>
-                      ) : null}
 
-                      <Infofield label={cT("dateOfBirth")}>
-                        <FullDate onlyDate>{currentResult.dateOfBirth}</FullDate>({cT("age")}:{" "}
-                        {calculateAge(currentResult.dateOfBirth)})
-                      </Infofield>
+                        {SOCIAL_SECURITY_NUMBERS && currentResult.socialSecurityNumber ? (
+                          <Infofield label={cT("socialSecurityNumber")}>
+                            {currentResult.socialSecurityNumber}
+                          </Infofield>
+                        ) : null}
 
-                      <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
-                      <Infofield label={cT("ethnicity")}>{currentResult.ethnicity.value}</Infofield>
-                      <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
-                      <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
+                        <Infofield label={cT("dateOfBirth")}>
+                          <FullDate isDateOfBirth onlyDate>
+                            {currentResult.dateOfBirth}
+                          </FullDate>
+                          ({cT("age")}: {calculateAge(currentResult.dateOfBirth)})
+                        </Infofield>
+
+                        <Infofield label={cT("gender")}>{currentResult.gender.value}</Infofield>
+                        <Infofield label={cT("ethnicity")}>
+                          {currentResult.ethnicity.value}
+                        </Infofield>
+                        <Infofield label={cT("hairColor")}>{currentResult.hairColor}</Infofield>
+                        <Infofield label={cT("eyeColor")}>{currentResult.eyeColor}</Infofield>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <Infofield label={cT("weight")}>
+                          {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
+                        </Infofield>
+
+                        <Infofield label={cT("height")}>
+                          {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
+                        </Infofield>
+
+                        <Infofield label={cT("address")}>
+                          {formatCitizenAddress(currentResult)}
+                        </Infofield>
+
+                        <Infofield label={cT("phoneNumber")}>
+                          {currentResult.phoneNumber || common("none")}
+                        </Infofield>
+
+                        <ManageOccupationModal isLeo occupation={currentResult.occupation} />
+                      </div>
                     </div>
 
-                    <div className="flex flex-col">
-                      <Infofield label={cT("weight")}>
-                        {currentResult.weight} {cad?.miscCadSettings?.weightPrefix}
-                      </Infofield>
+                    <div className="w-full">
+                      <div>
+                        <ul className="flex flex-col">
+                          <CitizenLicenses citizen={currentResult} />
+                        </ul>
 
-                      <Infofield label={cT("height")}>
-                        {currentResult.height} {cad?.miscCadSettings?.heightPrefix}
-                      </Infofield>
+                        {isLeo ? (
+                          <Button
+                            small
+                            type="button"
+                            className="mt-2"
+                            onClick={() => openModal(ModalIds.ManageLicenses)}
+                          >
+                            {t("editLicenses")}
+                          </Button>
+                        ) : null}
+                      </div>
 
-                      <Infofield label={cT("address")}>
-                        {formatCitizenAddress(currentResult)}
-                      </Infofield>
+                      <div className="mt-4">
+                        <Infofield label={vT("flags")}>
+                          {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
+                        </Infofield>
 
-                      <ManageOccupationModal isLeo occupation={currentResult.occupation} />
+                        {isLeo ? (
+                          <Button
+                            small
+                            type="button"
+                            className="mt-2"
+                            onClick={() => openModal(ModalIds.ManageCitizenFlags)}
+                          >
+                            {t("manageCitizenFlags")}
+                          </Button>
+                        ) : null}
+                      </div>
+
+                      <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                     </div>
                   </div>
 
-                  <div className="w-full">
-                    <ul className="flex flex-col">
-                      <CitizenLicenses citizen={currentResult} />
-                    </ul>
-
-                    <Button
-                      small
-                      type="button"
-                      className="mt-2"
-                      onClick={() => openModal(ModalIds.EditCitizenLicenses)}
-                    >
-                      {t("editLicenses")}
-                    </Button>
+                  <div className="mt-5">
+                    <NameSearchTabsContainer />
                   </div>
                 </div>
-
-                <div className="mt-5">
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleToggle(Toggled.VEHICLES)}
-                      type="button"
-                      className="w-full"
-                    >
-                      {t("toggleVehiclesWeapons")}
-                    </Button>
-                    <Button
-                      onClick={() => handleToggle(Toggled.RECORDS)}
-                      type="button"
-                      className="w-full"
-                    >
-                      {t("toggleRecords")}
-                    </Button>
-                  </div>
-
-                  <>
-                    {toggled === Toggled.VEHICLES ? (
-                      <VehiclesAndWeaponsSection
-                        vehicles={currentResult.vehicles}
-                        weapons={currentResult.weapons}
-                      />
-                    ) : null}
-
-                    {toggled === Toggled.RECORDS ? (
-                      <RecordsArea
-                        warrants={currentResult.warrants}
-                        records={currentResult.Record}
-                      />
-                    ) : null}
-                  </>
-                </div>
-              </div>
+              )
             ) : null}
 
             <footer
@@ -386,7 +417,27 @@ export function NameSearchModal() {
             </footer>
 
             <AutoSubmit />
-            <EditCitizenLicenses />
+            <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
+            <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
+            {currentResult && !currentResult.isConfidential ? (
+              <>
+                <ManageCitizenFlagsModal />
+                <ManageCustomFieldsModal
+                  category={CustomFieldCategory.CITIZEN}
+                  url={`/search/actions/custom-fields/citizen/${currentResult.id}`}
+                  allCustomFields={currentResult.allCustomFields ?? []}
+                  customFields={currentResult.customFields ?? []}
+                  onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+                />
+                <ManageLicensesModal
+                  allowRemoval={false}
+                  state={state}
+                  onSubmit={handleLicensesSubmit}
+                  citizen={currentResult}
+                />
+                <CitizenImageModal citizen={currentResult} />
+              </>
+            ) : null}
           </Form>
         )}
       </Formik>

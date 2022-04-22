@@ -14,6 +14,7 @@ export function EmsFdDropdown() {
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/ems-fd") && "font-semibold")}
           variant="transparent"
         >

@@ -5,14 +5,18 @@ import { BadRequest } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { Socket } from "services/SocketService";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { IsAuth } from "middlewares/index";
-import type { cad } from ".prisma/client";
-import { Feature, User } from "@prisma/client";
+import { IsAuth } from "middlewares/IsAuth";
+import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
-import { leoProperties, unitProperties } from "lib/officer";
-import { findUnit } from "./911-calls/Calls911Controller";
+import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
+import { incidentInclude } from "controllers/leo/incidents/IncidentController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { userProperties } from "lib/auth/user";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { findUnit } from "lib/leo/findUnit";
+import { getInactivityFilter } from "lib/leo/utils";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -23,7 +27,11 @@ export class DispatchController {
   }
 
   @Get("/")
-  async getDispatchData() {
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isEmsFd || u.isLeo,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
+  async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
     const includeData = {
       include: {
         department: { include: { value: true } },
@@ -55,20 +63,27 @@ export class DispatchController {
       },
     });
 
+    const inactivityFilter = getInactivityFilter(cad);
+    if (inactivityFilter) {
+      this.endInactiveIncidents(inactivityFilter.updatedAt);
+    }
+
     const activeIncidents = await prisma.leoIncident.findMany({
-      where: { isActive: true },
-      include: {
-        creator: { include: leoProperties },
-        officersInvolved: { include: leoProperties },
-        events: true,
-      },
+      where: { isActive: true, ...(inactivityFilter?.filter ?? {}) },
+      include: incidentInclude,
     });
 
-    return { deputies, officers, activeIncidents, activeDispatchers };
+    const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
+
+    return { deputies, officers, activeIncidents: correctedIncidents, activeDispatchers };
   }
 
   @Post("/aop")
   @Description("Update the AOP in the CAD")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async updateAreaOfPlay(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_AOP_SCHEMA, body);
 
@@ -89,6 +104,10 @@ export class DispatchController {
 
   @Post("/signal-100")
   @Description("Enable or disable signal 100")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async setSignal100(@Context("cad") cad: cad, @BodyParams("value") value: boolean) {
     if (typeof value !== "boolean") {
       throw new BadRequest("body.valueIsRequired");
@@ -110,17 +129,16 @@ export class DispatchController {
 
   @Post("/dispatchers-state")
   @Description("Set a dispatcher active or inactive")
-  async setActiveDispatchersState(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad") as cad;
-    const user = ctx.get("user") as User;
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async setActiveDispatchersState(@Context("user") user: User, @BodyParams() body: any) {
     const value = Boolean(body.value);
-
-    if (cad.disabledFeatures.includes(Feature.ACTIVE_DISPATCHERS)) {
-      throw new BadRequest("featureDisabled");
-    }
 
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
+      include: { user: { select: userProperties } },
     });
 
     if (value) {
@@ -128,15 +146,18 @@ export class DispatchController {
         dispatcher ??
         (await prisma.activeDispatchers.create({
           data: { userId: user.id },
+          include: { user: { select: userProperties } },
         }));
     } else {
       if (!dispatcher) {
         return;
       }
 
-      dispatcher = await prisma.activeDispatchers.delete({
+      await prisma.activeDispatchers.delete({
         where: { id: dispatcher.id },
       });
+
+      dispatcher = null;
     }
 
     this.socket.emitActiveDispatchers();
@@ -145,6 +166,10 @@ export class DispatchController {
   }
 
   @Put("/radio-channel/:unitId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
   async updateRadioChannel(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_RADIO_CHANNEL_SCHEMA, body);
     const { unit, type } = await findUnit(unitId);
@@ -153,8 +178,14 @@ export class DispatchController {
       throw new ExtendedNotFound({ radioChannel: "Unit not found" });
     }
 
-    const name = type === "leo" ? "officer" : "emsFdDeputy";
-    const include = type === "leo" ? leoProperties : unitProperties;
+    const includesData = {
+      leo: { name: "officer", include: leoProperties },
+      "ems-fd": { name: "emsFdDeputy", include: unitProperties },
+      combined: { name: "combinedLeoUnit", include: combinedUnitProperties },
+    };
+
+    const name = includesData[type].name;
+    const include = includesData[type].include;
 
     // @ts-expect-error the provided properties are the same for both models.
     const updated = await prisma[name].update({
@@ -165,12 +196,39 @@ export class DispatchController {
       include,
     });
 
-    if (type === "leo") {
+    if (["leo", "combined"].includes(type)) {
       this.socket.emitUpdateOfficerStatus();
     } else {
       this.socket.emitUpdateDeputyStatus();
     }
 
     return updated;
+  }
+
+  protected async endInactiveIncidents(updatedAt: Date) {
+    const incidents = await prisma.leoIncident.findMany({
+      where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
+      include: { unitsInvolved: true },
+    });
+
+    await Promise.all(
+      incidents.map(async (incident) => {
+        const officers = incident.unitsInvolved.filter((v) => v.officerId);
+
+        await prisma.leoIncident.update({
+          where: { id: incident.id },
+          data: { isActive: false },
+        });
+
+        await prisma.$transaction(
+          officers.map((unit) =>
+            prisma.officer.update({
+              where: { id: unit.officerId! },
+              data: { activeIncidentId: null },
+            }),
+          ),
+        );
+      }),
+    );
   }
 }

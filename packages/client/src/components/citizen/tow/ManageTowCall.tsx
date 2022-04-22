@@ -9,12 +9,12 @@ import { AlertModal } from "components/modal/AlertModal";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
+import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import type { TaxiCall, TowCall } from "@snailycad/types";
 import { useTranslations } from "use-intl";
@@ -23,11 +23,12 @@ type CallData = Pick<TowCall, keyof TaxiCall> | TaxiCall;
 interface Props {
   call: CallData | null;
   isTow?: boolean;
-  onUpdate?: (old: CallData, newC: CallData) => void;
-  onDelete?: (call: CallData) => void;
+  onUpdate?(old: CallData, newC: CallData): void;
+  onDelete?(call: CallData): void;
+  onClose?(): void;
 }
 
-export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props) {
+export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { isOpen, closeModal, openModal } = useModal();
@@ -77,12 +78,20 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
       });
 
       if (json.id) {
-        // todo: add translation
-        toast.success("Created.");
+        toastMessage({
+          title: common("success"),
+          message: t(isTow ? "towCallCreated" : "taxiCallCreated"),
+          icon: "success",
+        });
       }
     }
 
+    handleClose();
+  }
+
+  function handleClose() {
     closeModal(ModalIds.ManageTowCall);
+    onClose?.();
   }
 
   const INITIAL_VALUES = {
@@ -97,7 +106,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.ManageTowCall)}
+      onClose={handleClose}
       title={title}
       isOpen={isOpen(ModalIds.ManageTowCall)}
       className="w-[700px]"
@@ -149,11 +158,7 @@ export function ManageCallModal({ onDelete, onUpdate, isTow: tow, call }: Props)
                 </Button>
               ) : null}
               <div className="flex items-center">
-                <Button
-                  type="reset"
-                  onClick={() => closeModal(ModalIds.ManageTowCall)}
-                  variant="cancel"
-                >
+                <Button type="reset" onClick={handleClose} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button

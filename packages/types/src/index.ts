@@ -1,5 +1,6 @@
 /* eslint-disable capitalized-comments */
 import type { JsonArray } from "type-fest";
+import type { Permissions } from "@snailycad/permissions";
 
 type DescriptionData = JsonArray;
 
@@ -13,17 +14,14 @@ export interface cad {
   ownerId: string;
   areaOfPlay: string | null;
   steamApiKey: string | null;
-  /** @deprecated */
-  discordWebhookURL: string | null;
   whitelisted: boolean;
   towWhitelisted: boolean;
   taxiWhitelisted: boolean;
   businessWhitelisted: boolean;
   maxPlateLength: number;
-  liveMapSocketURl: string | null;
   logoId: string | null;
   registrationCode: string | null;
-  disabledFeatures: Feature[];
+  features: CadFeature[];
   miscCadSettingsId: string | null;
   miscCadSettings: MiscCadSettings | null;
   apiTokenId: string | null;
@@ -34,6 +32,18 @@ export interface cad {
   autoSetUserProperties: AutoSetUserProperties | null;
   discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
+  version: string | null;
+}
+
+/**
+ * Model MiscCadSettings
+ *
+ */
+
+export interface CadFeature {
+  id: string;
+  feature: Feature;
+  isEnabled: boolean;
 }
 
 /**
@@ -50,6 +60,8 @@ export interface MiscCadSettings {
   maxBusinessesPerCitizen: number | null;
   maxDivisionsPerOfficer: number | null;
   maxDepartmentsEachPerUser: number | null;
+  maxAssignmentsToIncidents: number | null;
+  maxAssignmentsToCalls: number | null;
   callsignTemplate: string;
   pairedUnitTemplate: string | null;
   signal100Enabled: boolean;
@@ -59,6 +71,9 @@ export interface MiscCadSettings {
   authScreenHeaderImageId: string | null;
   statusesWebhookId: string | null;
   call911WebhookId: string | null;
+  panicButtonWebhookId: string | null;
+  boloWebhookId: string | null;
+  inactivityTimeout: number | null;
 }
 
 /**
@@ -87,37 +102,39 @@ export interface ApiToken {
  * Model DiscordRoles
  *
  */
-export type DiscordRoles = {
+export interface DiscordRoles {
   id: string;
   guildId: string;
-  leoRoleId: string | null;
-  leoRole: DiscordRole | null;
-  leoSupervisorRoleId: string | null;
-  leoSupervisorRole: DiscordRole | null;
-  emsFdRoleId: string | null;
-  emsFdRole: DiscordRole | null;
-  dispatchRoleId: string | null;
-  dispatchRole: DiscordRole | null;
-  towRoleId: string | null;
-  towRole: DiscordRole | null;
-  taxiRoleId: string | null;
-  taxiRole: DiscordRole | null;
+  leoRoles?: DiscordRole[];
+  emsFdRoles?: DiscordRole[];
+  dispatchRoles?: DiscordRole[];
+  leoSupervisorRoles?: DiscordRole[];
+  towRoles?: DiscordRole[];
+  taxiRoles?: DiscordRole[];
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
-};
+
+  adminRolePermissions: Permissions[];
+  leoRolePermissions: Permissions[];
+  leoSupervisorRolePermissions: Permissions[];
+  emsFdRolePermissions: Permissions[];
+  dispatchRolePermissions: Permissions[];
+  towRolePermissions: Permissions[];
+  taxiRolePermissions: Permissions[];
+}
 
 /**
  * Model DiscordRole
  *
  */
-export type DiscordRole = {
+export interface DiscordRole {
   id: string;
   name: string;
   discordRolesId: string;
-};
+}
 
 /**
  * Model User
@@ -148,6 +165,9 @@ export interface User {
   discordId: string | null;
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
+  permissions: Permissions[] | null;
+  soundSettingsId: string | null;
+  soundSettings?: UserSoundSettings | null;
 }
 
 /**
@@ -158,6 +178,20 @@ export interface User2FA {
   id: string;
   secret: string;
   userId: string;
+}
+
+/**
+ * Model UserSoundSettings
+ *
+ */
+export interface UserSoundSettings {
+  id: string;
+  panicButton: boolean;
+  signal100: boolean;
+  addedToCall: boolean;
+  stopRoleplay: boolean;
+  statusUpdate: boolean;
+  incomingCall: boolean;
 }
 
 /**
@@ -187,8 +221,8 @@ export interface Citizen {
   weaponLicense: Value<ValueType.LICENSE> | null;
   pilotLicenseId: string | null;
   pilotLicense: Value<ValueType.LICENSE> | null;
-  ccwId: string | null;
-  ccw: Value<ValueType.LICENSE> | null;
+  waterLicenseId: string | null;
+  waterLicense: Value<ValueType.LICENSE> | null;
   imageId: string | null;
   note: string | null;
   dead: boolean | null;
@@ -199,6 +233,7 @@ export interface Citizen {
   createdAt: Date;
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
+  flags?: Value<ValueType.CITIZEN_FLAG>[];
 }
 
 /**
@@ -219,9 +254,14 @@ export interface RegisteredVehicle {
   updatedAt: Date;
   registrationStatusId: string;
   registrationStatus: Value<ValueType.LICENSE>;
-  insuranceStatus: string;
+  insuranceStatus: Value<ValueType.LICENSE> | null;
+  insuranceStatusId: string | null;
+  inspectionStatus: VehicleInspectionStatus | null;
+  taxStatus: VehicleTaxStatus | null;
   reportedStolen: boolean;
   impounded: boolean;
+  flags?: Value<ValueType.VEHICLE_FLAG>[];
+  dmvStatus: WhitelistStatus | null;
 }
 
 /**
@@ -340,13 +380,13 @@ export interface Violation {
  * Model SeizedItem
  *
  */
-export type SeizedItem = {
+export interface SeizedItem {
   id: string;
   violationId: string;
   item: string;
   quantity: number;
   illegal: boolean;
-};
+}
 
 /**
  * Model DivisionValue
@@ -373,6 +413,9 @@ export interface DepartmentValue {
   whitelisted: boolean;
   isDefaultDepartment: boolean;
   type: DepartmentType;
+  defaultOfficerRankId: string | null;
+  defaultOfficerRank: Value<ValueType.OFFICER_RANK> | null;
+  isConfidential: boolean;
 }
 
 /**
@@ -451,6 +494,7 @@ export interface TowCall {
   deliveryAddressId: string | null;
   plate: string | null;
   model: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
@@ -472,6 +516,7 @@ export interface TaxiCall {
   assignedUnit: Citizen | null;
   location: string;
   postal: string | null;
+  name: string | null;
   description: string | null;
   descriptionData: DescriptionData | null;
   creatorId: string | null;
@@ -548,7 +593,7 @@ export interface EmployeeValue {
 export interface Officer {
   id: string;
   departmentId: string | null;
-  department: DepartmentValue;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
   divisions: DivisionValue[];
@@ -565,6 +610,7 @@ export interface Officer {
   createdAt: Date;
   updatedAt: Date;
   whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
@@ -633,6 +679,7 @@ export interface LeoIncident {
   id: string;
   caseNumber: number;
   description: string | null;
+  postal: string | null;
   descriptionData: DescriptionData | null;
   creator?: Officer | null;
   creatorId: string | null;
@@ -642,7 +689,10 @@ export interface LeoIncident {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean | null;
+  situationCode: StatusValue | null;
+  situationCodeId: string | null;
   events?: IncidentEvent[];
+  unitsInvolved: IncidentInvolvedUnit[];
 }
 
 /**
@@ -666,6 +716,8 @@ export interface CombinedLeoUnit {
   callsign: string;
   statusId: string | null;
   status: StatusValue | null;
+  radioChannelId: string | null;
+  incremental: number | null;
   officers: Officer[];
 }
 
@@ -686,6 +738,7 @@ export interface ActiveDispatchers {
  */
 export interface Call911 {
   id: string;
+  caseNumber: number;
   createdAt: Date;
   updatedAt: Date;
   positionId: string | null;
@@ -701,6 +754,8 @@ export interface Call911 {
   situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
+  incidents?: LeoIncident[];
+  viaDispatch: boolean | null;
 }
 
 /**
@@ -725,6 +780,22 @@ export interface AssignedUnit {
   call911Id: string | null;
   createdAt: Date;
   updatedAt: Date;
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy;
+}
+
+/**
+ * Model IncidentInvolvedUnit
+ *
+ */
+export interface IncidentInvolvedUnit {
+  id: string;
+  officerId: string | null;
+  emsFdDeputyId: string | null;
+  combinedLeoId: string | null;
+  incidentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  leoIncidentId: string | null;
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
 }
 
@@ -755,6 +826,7 @@ export interface Bolo {
   color: string | null;
   name: string | null;
   officerId: string | null;
+  officer: Officer | null;
 }
 
 /**
@@ -882,8 +954,10 @@ export interface EmsFdDeputy {
 export interface TruckLog {
   id: string;
   citizenId: string | null;
+  citizen: Citizen;
   userId: string;
   vehicleId: string | null;
+  vehicle: RegisteredVehicle | null;
   startedAt: string;
   endedAt: string;
   createdAt: Date;
@@ -891,11 +965,49 @@ export interface TruckLog {
 }
 
 /**
+ * Model DLExam
+ *
+ */
+export interface DLExam {
+  id: string;
+  citizen: Citizen;
+  citizenId: string;
+  theoryExam: DLExamPassType | null;
+  practiceExam: DLExamPassType | null;
+  status: DLExamStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  licenseId: string;
+  license: Value<ValueType.LICENSE>;
+  categories?: DriversLicenseCategoryValue[];
+}
+
+/**
+ * Model CustomField
+ *
+ */
+export interface CustomField {
+  id: string;
+  name: string;
+  value: string | null;
+  citizenEditable: boolean;
+  category: CustomFieldCategory;
+}
+
+/**
+ * Model DLExam
+ *
+ */
+export interface CustomFieldValue {
+  id: string;
+  value: string | null;
+  field: CustomField;
+  fieldId: string;
+}
+
+/**
  * Enums
  */
-
-// Based on
-// https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
 export enum Feature {
   BLEETER = "BLEETER",
@@ -910,12 +1022,16 @@ export enum Feature {
   CALLS_911 = "CALLS_911",
   WEAPON_REGISTRATION = "WEAPON_REGISTRATION",
   SOCIAL_SECURITY_NUMBERS = "SOCIAL_SECURITY_NUMBERS",
-  DISALLOW_TEXTFIELD_SELECTION = "DISALLOW_TEXTFIELD_SELECTION",
+  CUSTOM_TEXTFIELD_VALUES = "CUSTOM_TEXTFIELD_VALUES",
   ACTIVE_DISPATCHERS = "ACTIVE_DISPATCHERS",
   ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
   ALLOW_REGULAR_LOGIN = "ALLOW_REGULAR_LOGIN",
   ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
   RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
+  ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
+  DL_EXAMS = "DL_EXAMS",
+  DMV = "DMV",
+  BADGE_NUMBERS = "BADGE_NUMBERS",
 }
 
 export enum Rank {
@@ -956,11 +1072,14 @@ export enum ValueType {
   DIVISION = "DIVISION",
   DRIVERSLICENSE_CATEGORY = "DRIVERSLICENSE_CATEGORY",
   IMPOUND_LOT = "IMPOUND_LOT",
+  VEHICLE_FLAG = "VEHICLE_FLAG",
+  CITIZEN_FLAG = "CITIZEN_FLAG",
 }
 
 export enum ValueLicenseType {
   LICENSE = "LICENSE",
   REGISTRATION_STATUS = "REGISTRATION_STATUS",
+  INSURANCE_STATUS = "INSURANCE_STATUS",
 }
 
 export enum DepartmentType {
@@ -972,6 +1091,7 @@ export enum DriversLicenseCategoryType {
   AUTOMOTIVE = "AUTOMOTIVE",
   AVIATION = "AVIATION",
   WATER = "WATER",
+  FIREARM = "FIREARM",
 }
 
 export enum EmployeeAsEnum {
@@ -1025,4 +1145,31 @@ export enum ExpungementRequestStatus {
 export enum WarrantStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
+}
+
+export enum VehicleInspectionStatus {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum VehicleTaxStatus {
+  TAXED = "TAXED",
+  UNTAXED = "UNTAXED",
+}
+
+export enum DLExamPassType {
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum DLExamStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+}
+
+export enum CustomFieldCategory {
+  CITIZEN = "CITIZEN",
+  WEAPON = "WEAPON",
+  VEHICLE = "VEHICLE",
 }

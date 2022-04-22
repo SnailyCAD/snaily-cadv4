@@ -18,6 +18,8 @@ export function DiscordWebhooksTab() {
   const INITIAL_VALUES = {
     call911WebhookId: cad?.miscCadSettings?.call911WebhookId ?? null,
     statusesWebhookId: cad?.miscCadSettings?.statusesWebhookId ?? null,
+    panicButtonWebhookId: cad?.miscCadSettings?.panicButtonWebhookId ?? null,
+    boloWebhookId: cad?.miscCadSettings?.boloWebhookId ?? null,
   };
 
   React.useEffect(() => {
@@ -68,7 +70,6 @@ export function DiscordWebhooksTab() {
           <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
             <SettingsFormField
               action="input"
-              // eslint-disable-next-line quotes
               description="The Discord channel where 911 calls will be sent to."
               errorMessage={errors.call911WebhookId}
               label="911 calls channel"
@@ -98,6 +99,40 @@ export function DiscordWebhooksTab() {
                 }))}
                 value={values.statusesWebhookId}
                 name="statusesWebhookId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="The Discord channel where panic button triggers will be sent to."
+              errorMessage={errors.panicButtonWebhookId}
+              label="Panic button channel"
+            >
+              <Select
+                isClearable
+                values={channels.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.panicButtonWebhookId}
+                name="panicButtonWebhookId"
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="The Discord channel where new BOLO's will be sent to."
+              errorMessage={errors.boloWebhookId}
+              label="BOLO's channel"
+            >
+              <Select
+                isClearable
+                values={channels.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.boloWebhookId}
+                name="boloWebhookId"
                 onChange={handleChange}
               />
             </SettingsFormField>

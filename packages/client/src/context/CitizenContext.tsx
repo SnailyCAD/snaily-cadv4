@@ -1,12 +1,11 @@
 import * as React from "react";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
-import type { Citizen, MedicalRecord, RegisteredVehicle, Weapon } from "@snailycad/types";
+import type { Citizen, MedicalRecord, Record, RegisteredVehicle, Weapon } from "@snailycad/types";
 
 export type CitizenWithVehAndWep = Citizen & {
   weapons: Weapon[];
   vehicles: RegisteredVehicle[];
   medicalRecords: MedicalRecord[];
-  Record: FullRecord[];
+  Record: Record[];
 };
 
 interface Context<CitizenNull extends boolean = true> {
@@ -57,7 +56,7 @@ export function useCitizen(citizenNull = true): Context<boolean> {
   citizenNull;
   const context = React.useContext(CitizenContext);
   if (typeof context === "undefined") {
-    throw new Error("`useCitizen` must be used within an `CitizenProvider`");
+    throw new TypeError("`useCitizen` must be used within an `CitizenProvider`");
   }
 
   return context;

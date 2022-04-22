@@ -12,13 +12,14 @@ services:
       - cad_web
     volumes:
       - ./.data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   api:
     container_name: "snaily-cad-api"
 
     user: node
-    image: node:16-alpine
-    command: "yarn workspace @snailycad/api start:docker"
+    image: node:16
+    command: "yarn workspace @snailycad/api start"
     ports:
       - "8080:8080"
     expose:
@@ -34,12 +35,13 @@ services:
       NODE_ENV: production
     networks:
       - cad_web
+    restart: unless-stopped
 
   client:
     container_name: "snaily-cad-client"
 
     user: node
-    image: node:16-alpine
+    image: node:16
     command: "yarn workspace @snailycad/client start"
     ports:
       - "3000:3000"
@@ -56,10 +58,7 @@ services:
       - api
     networks:
       - cad_web
-
-volumes:
-  redis-data:
-  redis-conf:
+    restart: unless-stopped
 
 networks:
   cad_web:

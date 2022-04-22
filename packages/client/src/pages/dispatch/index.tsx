@@ -6,13 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import {
-  Full911Call,
-  FullBolo,
-  FullDeputy,
-  FullOfficer,
-  useDispatchState,
-} from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -24,9 +18,11 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import type { ActiveDispatchers } from "@snailycad/types";
+import type { ActiveDispatchers, Bolo, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import type { FullIncident } from "../officer/incidents";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
+import { Permissions } from "@snailycad/permissions";
 
 const NotepadModal = dynamic(async () => {
   return (await import("components/modals/NotepadModal")).NotepadModal;
@@ -52,15 +48,20 @@ const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
 });
 
+const CustomFieldSearch = dynamic(async () => {
+  return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+    .CustomFieldSearch;
+});
+
 interface Props {
   calls: Full911Call[];
-  bolos: FullBolo[];
-  officers: FullOfficer[];
-  deputies: FullDeputy[];
-  activeDeputies: FullDeputy[];
-  activeOfficers: FullOfficer[];
+  bolos: Bolo[];
+  officers: Officer[];
+  deputies: EmsFdDeputy[];
+  activeDeputies: EmsFdDeputy[];
+  activeOfficers: Officer[];
   activeDispatchers: ActiveDispatchers[];
-  activeIncidents: FullIncident[];
+  activeIncidents: LeoIncident[];
 }
 
 export default function OfficerDashboard(props: Props) {
@@ -68,9 +69,10 @@ export default function OfficerDashboard(props: Props) {
   const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component } = useSignal100();
-  const { unit, PanicButton } = usePanicButton();
+  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
+  const { unit, audio, PanicButton } = usePanicButton();
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
+  const { isOpen } = useModal();
 
   React.useEffect(() => {
     state.setCalls(props.calls);
@@ -85,11 +87,14 @@ export default function OfficerDashboard(props: Props) {
   }, [props]);
 
   return (
-    <Layout className="dark:text-white">
-      <Title>{t("dispatch")}</Title>
+    <Layout
+      permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.Dispatch] }}
+      className="dark:text-white"
+    >
+      <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
-      {signal100Enabled ? <Component /> : null}
-      {unit ? <PanicButton unit={unit} /> : null}
+      {signal100Enabled ? <Component audio={signal100Audio} /> : null}
+      {unit ? <PanicButton audio={audio} unit={unit} /> : null}
 
       <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
@@ -120,10 +125,16 @@ export default function OfficerDashboard(props: Props) {
       </div>
 
       <NotepadModal />
-      <WeaponSearchModal />
-      <VehicleSearchModal />
+      {/* name search have their own vehicle/weapon search modal */}
+      {isOpen(ModalIds.NameSearch) ? null : (
+        <>
+          <WeaponSearchModal id={ModalIds.WeaponSearch} />
+          <VehicleSearchModal id={ModalIds.VehicleSearch} />
+        </>
+      )}
       <AddressSearchModal />
       <NameSearchModal />
+      <CustomFieldSearch />
     </Layout>
   );
 }
@@ -137,7 +148,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     activeDeputies,
     activeOfficers,
   ] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division", []],
+    [
+      "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag",
+      [],
+    ],
     ["/911-calls", []],
     ["/bolos", []],
     ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],

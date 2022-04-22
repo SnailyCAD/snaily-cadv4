@@ -4,7 +4,7 @@ import { handleRequest } from "./fetch";
 import { useTranslations } from "use-intl";
 import Common from "../../locales/en/common.json";
 import type { FormikHelpers } from "formik";
-import { toastError } from "./error";
+import { toastMessage } from "./toastMessage";
 
 interface UseFetchOptions {
   overwriteState: State | null;
@@ -19,10 +19,10 @@ type Options<Helpers extends object = object> = AxiosRequestConfig & {
   helpers?: FormikHelpers<Helpers>;
 };
 
-type Return<Data> = {
+interface Return<Data> {
   json: Data;
   error: null | ErrorMessage | (string & {});
-};
+}
 
 export default function useFetch({ overwriteState }: UseFetchOptions = { overwriteState: null }) {
   const [state, setState] = React.useState<State | null>(null);
@@ -73,9 +73,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       }
 
       if (typeof options.noToast === "string" && options.noToast !== error && !hasAddedError) {
-        toastError({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: errorTitle });
       } else if (!options.noToast && !hasAddedError) {
-        toastError({ message: t(key), title: errorTitle });
+        toastMessage({ message: t(key), title: errorTitle });
       }
 
       setState("error");
@@ -107,9 +107,9 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
 
 function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {}) {
   const message = error.response?.data?.message ?? error.message;
-  const name = error.response?.data?.name as string | undefined;
+  const name = error.name;
 
-  if (name && ["NOT_FOUND", "Error"].includes(name)) {
+  if (name && !message && ["NOT_FOUND", "Error"].includes(name)) {
     return name;
   }
 
@@ -128,11 +128,11 @@ function parseErrorTitle(error: AxiosError) {
 }
 
 function isAxiosError(error: any): error is AxiosError {
-  return "response" in error && Object.entries(error.response).length !== 0;
+  return error instanceof Error || "response" in error;
 }
 
 function isErrorKey(key: string): key is ErrorMessage {
-  return Object.keys(Common.Errors).some((e) => e === key);
+  return Object.keys(Common.Errors).includes(key);
 }
 
 function getErrorObj(error: unknown) {

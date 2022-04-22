@@ -5,13 +5,19 @@ import glob from "glob";
 import { join } from "node:path";
 import { statSync } from "node:fs";
 import { UseBeforeEach } from "@tsed/common";
-import { IsAuth } from "middlewares/index";
-import { WhitelistStatus } from ".prisma/client";
+import { IsAuth } from "middlewares/IsAuth";
+import { Rank, WhitelistStatus } from "@prisma/client";
+import { UsePermissions } from "middlewares/UsePermissions";
+import { defaultPermissions } from "@snailycad/permissions";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
 export class AdminController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: defaultPermissions.allDefaultAdminPermissions,
+  })
   async getData() {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),

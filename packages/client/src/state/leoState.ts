@@ -1,15 +1,14 @@
-import type { CombinedLeoUnit } from "@snailycad/types";
+import type { CombinedLeoUnit, Officer } from "@snailycad/types";
 import create from "zustand";
-import type { FullOfficer } from "./dispatchState";
 
-export type ActiveOfficer = FullOfficer | CombinedLeoUnit;
+export type ActiveOfficer = Officer | CombinedLeoUnit;
 
 interface LeoState {
   activeOfficer: ActiveOfficer | null;
-  setActiveOfficer: (officer: ActiveOfficer | null) => void;
+  setActiveOfficer(officer: ActiveOfficer | null): void;
 
-  officers: FullOfficer[];
-  setOfficers: (officers: FullOfficer[]) => void;
+  officers: Officer[];
+  setOfficers(officers: Officer[]): void;
 }
 
 export const useLeoState = create<LeoState>((set) => ({

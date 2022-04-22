@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { canUseDiscordAuth } from "lib/utils";
 
 const AccountSettingsTab = dynamic(async () => {
@@ -42,7 +42,7 @@ export default function Account() {
 
   React.useEffect(() => {
     if (error && mounted) {
-      toastError({ message: error });
+      toastMessage({ message: error });
     }
   }, [error, mounted]);
 
@@ -65,7 +65,7 @@ export default function Account() {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("account")}</Title>
+      <Title renderLayoutTitle={false}>{t("account")}</Title>
 
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
@@ -77,7 +77,7 @@ export default function Account() {
                   .filter(([k]) => k !== "cad")
                   .map(([key, value]) => {
                     return (
-                      <p key={key}>
+                      <p className="overflow-auto" key={key}>
                         <span className="font-semibold capitalize">{key}: </span> {String(value)}
                       </p>
                     );
@@ -99,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     props: {
       session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["account", "common"], locale)),
+        ...(await getTranslations(["account", "auth", "common"], locale)),
       },
     },
   };

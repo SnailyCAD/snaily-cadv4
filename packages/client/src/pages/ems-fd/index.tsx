@@ -9,17 +9,19 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
-import { Full911Call, FullDeputy, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
+import type { EmsFdDeputy } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
-  deputies: FullDeputy[];
+  deputies: EmsFdDeputy[];
   calls: Full911Call[];
 }
 
@@ -40,7 +42,7 @@ const SearchMedicalRecordModal = dynamic(async () => {
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
-  const { signal100Enabled, Component } = useSignal100();
+  const { signal100Enabled, audio, Component } = useSignal100();
 
   const state = useEmsFdState();
   const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
@@ -55,10 +57,13 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const t = useTranslations();
 
   return (
-    <Layout className="dark:text-white">
-      <Title>{t("Ems.emsFd")}</Title>
+    <Layout
+      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
+      className="dark:text-white"
+    >
+      <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
-      {signal100Enabled ? <Component /> : null}
+      {signal100Enabled ? <Component audio={audio} /> : null}
 
       <UtilityPanel>
         <div className="px-4">
@@ -93,10 +98,10 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [values, calls, { deputies, citizens }, activeDeputy] = await requestAll(req, [
-    ["/admin/values/codes_10?paths=penal_code,impound_lot", []],
+  const [values, calls, { deputies }, activeDeputy] = await requestAll(req, [
+    ["/admin/values/codes_10?paths=penal_code,impound_lot,blood_group", []],
     ["/911-calls", []],
-    ["/ems-fd", { deputies: [], citizens: [] }],
+    ["/ems-fd", { deputies: [] }],
     ["/ems-fd/active-deputy", null],
   ]);
 
@@ -107,7 +112,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       deputies,
       calls,
       values,
-      citizens,
       messages: {
         ...(await getTranslations(["leo", "ems-fd", "citizen", "calls", "common"], locale)),
       },

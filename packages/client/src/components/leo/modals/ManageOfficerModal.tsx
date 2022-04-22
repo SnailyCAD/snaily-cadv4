@@ -7,23 +7,24 @@ import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { FullOfficer } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
+import type { Officer } from "@snailycad/types";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  officer: FullOfficer | null;
-  onCreate?: (officer: FullOfficer) => void;
-  onUpdate?: (old: FullOfficer, newO: FullOfficer) => void;
+  officer: Officer | null;
+  onCreate?(officer: Officer): void;
+  onUpdate?(old: Officer, newO: Officer): void;
   onClose?(): void;
 }
 
@@ -34,6 +35,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
   const t = useTranslations("Leo");
   const { citizens } = useCitizen();
   const formRef = React.useRef<HTMLFormElement>(null);
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -66,6 +68,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute(`/leo/${officer.id}`, {
         method: "PUT",
         data,
+        helpers,
       });
 
       officerId = json?.id;
@@ -77,6 +80,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       const { json } = await execute("/leo", {
         method: "POST",
         data,
+        helpers,
       });
 
       officerId = json.id;
@@ -106,7 +110,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     callsign: officer?.callsign ?? "",
     callsign2: officer?.callsign2 ?? "",
     divisions: officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
-    badgeNumber: officer?.badgeNumber ?? "",
+    badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
     image: undefined,
   };
@@ -136,35 +140,37 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               />
             </FormField>
 
-            <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
-              <Input
-                type="number"
-                value={values.badgeNumber}
-                name="badgeNumber"
-                onChange={(e) =>
-                  handleChange({
-                    ...e,
-                    target: {
-                      ...e.target,
-                      id: "badgeNumber",
-                      value: e.target.valueAsNumber,
-                    },
-                  })
-                }
-              />
-            </FormField>
+            {BADGE_NUMBERS ? (
+              <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
+                <Input
+                  type="number"
+                  value={values.badgeNumber}
+                  name="badgeNumber"
+                  onChange={(e) =>
+                    handleChange({
+                      ...e,
+                      target: {
+                        ...e.target,
+                        id: "badgeNumber",
+                        value: e.target.valueAsNumber,
+                      },
+                    })
+                  }
+                />
+              </FormField>
+            ) : null}
 
             <FormRow>
-              <FormField errorMessage={errors.callsign} label={"Callsign Symbol 1"}>
+              <FormField errorMessage={errors.callsign} label={t("callsign1")}>
                 <Input value={values.callsign} name="callsign" onChange={handleChange} />
               </FormField>
 
-              <FormField errorMessage={errors.callsign2} label={"Callsign Symbol 2"}>
+              <FormField errorMessage={errors.callsign2} label={t("callsign2")}>
                 <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
               </FormField>
             </FormRow>
 
-            <FormField errorMessage={errors.department} label={t("department")}>
+            <FormField errorMessage={errors.department as string} label={t("department")}>
               <Select
                 value={values.department}
                 name="department"

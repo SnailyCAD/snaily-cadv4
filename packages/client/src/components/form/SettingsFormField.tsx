@@ -32,7 +32,7 @@ export function SettingsFormField({
 }: Props) {
   const { labelProps, fieldProps, errorMessageProps } = useField({ label, errorMessage });
 
-  const [child] = Array.isArray(children) ? children : [children];
+  const [child, ...restChildren] = Array.isArray(children) ? children : [children];
 
   const isInput =
     ["__Input__", "__Textarea__"].includes(child?.type?.displayName) ||
@@ -72,7 +72,10 @@ export function SettingsFormField({
           ) : null}
         </header>
 
-        <div className={classNames("py-4", rightAreaStyles[action], borderColor)}>{element}</div>
+        <div className={classNames("py-4", rightAreaStyles[action], borderColor)}>
+          {element}
+          {restChildren}
+        </div>
       </div>
 
       {errorMessage ? (

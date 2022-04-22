@@ -3,17 +3,13 @@ import { Delete, Description, Post, Put } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
-import { leoProperties } from "lib/officer";
+import { IsAuth } from "middlewares/IsAuth";
 import { CREATE_911_CALL_EVENT } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
-
-export const incidentInclude = {
-  creator: { include: leoProperties },
-  officersInvolved: { include: leoProperties },
-  events: true,
-};
+import { incidentInclude } from "./IncidentController";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
@@ -24,6 +20,11 @@ export class IncidentController {
   }
 
   @Post("/:incidentId")
+  @Description("Create a new incident event.")
+  @UsePermissions({
+    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async createIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @BodyParams() body: unknown,
@@ -46,15 +47,22 @@ export class IncidentController {
       },
     });
 
-    this.socket.emitUpdateActiveIncident({
+    const normalizedIncident = officerOrDeputyToUnit({
       ...incident,
       events: [...incident.events, event],
     });
+
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return event;
   }
 
   @Put("/:incidentId/:eventId")
+  @Description("Update an incident event by the incident id and event id.")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async updateIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
@@ -98,16 +106,21 @@ export class IncidentController {
       return event;
     });
 
-    this.socket.emitUpdateActiveIncident({
+    const normalizedIncident = officerOrDeputyToUnit({
       ...incident,
       events: updatedEvents,
     });
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return updatedEvent;
   }
 
   @Delete("/:incidentId/:eventId")
   @Description("Delete an incident event by the incident id and event id")
+  @UsePermissions({
+    permissions: [Permissions.ManageIncidents],
+    fallback: (u) => u.isDispatch || u.isLeo,
+  })
   async deleteIncidentEvent(
     @PathParams("incidentId") incidentId: string,
     @PathParams("eventId") eventId: string,
@@ -140,7 +153,8 @@ export class IncidentController {
 
     const updatedEvents = incident.events.filter((v) => v.id !== event.id);
 
-    this.socket.emitUpdateActiveIncident({ ...incident, events: updatedEvents });
+    const normalizedIncident = officerOrDeputyToUnit({ ...incident, events: updatedEvents });
+    this.socket.emitUpdateActiveIncident(normalizedIncident);
 
     return true;
   }

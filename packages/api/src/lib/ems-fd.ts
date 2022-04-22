@@ -1,7 +1,8 @@
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
+import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { unitProperties } from "./officer";
+import { unitProperties } from "lib/leo/activeOfficer";
 import { prisma } from "./prisma";
 
 export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
@@ -14,9 +15,20 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
       isDispatch = true;
     }
   } else {
-    if (!user.isEmsFd) {
+    const hasEmsFdPermissions =
+      user.rank === Rank.OWNER
+        ? true
+        : !user.permissions.length
+        ? user.isEmsFd
+        : hasPermission(user.permissions, [Permissions.EmsFd]);
+
+    if (!hasEmsFdPermissions) {
       throw new Forbidden("Invalid Permissions");
     }
+  }
+
+  if (isDispatch) {
+    return null;
   }
 
   const deputy = await prisma.emsFdDeputy.findFirst({
@@ -33,11 +45,8 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
 
   if (!deputy) {
     ctx.delete("activeDeputy");
-  }
-
-  if (!isDispatch && !deputy) {
     throw new BadRequest("noActiveDeputy");
   }
 
-  return isDispatch ? null : deputy;
+  return deputy;
 }

@@ -4,11 +4,13 @@ import { useTranslations } from "next-intl";
 import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export function TowDropdown() {
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const { hasPermissions } = usePermission();
 
   return (
     <Dropdown
@@ -22,7 +24,9 @@ export function TowDropdown() {
       }
     >
       <Dropdown.LinkItem href="/tow">{t("dashboard")}</Dropdown.LinkItem>
-      <Dropdown.LinkItem href="/tow/logs">{t("towLogs")}</Dropdown.LinkItem>
+      {hasPermissions([Permissions.ViewTowLogs], true) ? (
+        <Dropdown.LinkItem href="/tow/logs">{t("towLogs")}</Dropdown.LinkItem>
+      ) : null}
     </Dropdown>
   );
 }

@@ -1,7 +1,7 @@
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { classNames } from "lib/classNames";
 import useFetch from "lib/useFetch";
@@ -10,6 +10,8 @@ import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
+import { useAudio } from "react-use";
+import { useAuth } from "context/AuthContext";
 
 interface Props<T extends ActiveOfficer | ActiveDeputy> {
   activeUnit: T | null;
@@ -18,6 +20,7 @@ interface Props<T extends ActiveOfficer | ActiveDeputy> {
   setUnits(units: T[]): void;
 }
 
+const STATUS_UPDATE_SRC = "/sounds/status-update.mp3" as const;
 export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   activeUnit,
   units,
@@ -27,11 +30,18 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
   const { codes10 } = useValues();
   const { openModal } = useModal();
   const { execute } = useFetch();
+  const { user } = useAuth();
   const router = useRouter();
   const isEmsFd = router.pathname.includes("/ems-fd");
   const modalId = isEmsFd ? ModalIds.SelectDeputy : ModalIds.SelectOfficer;
   const socketEvent = isEmsFd ? SocketEvents.UpdateEmsFdStatus : SocketEvents.UpdateOfficerStatus;
   const whatPagesType = isEmsFd ? WhatPages.EMS_FD : WhatPages.LEO;
+
+  const shouldPlayStatusUpdateSound = user?.soundSettings?.statusUpdate ?? false;
+  const [audio, , controls] = useAudio({
+    autoPlay: false,
+    src: STATUS_UPDATE_SRC,
+  });
 
   const isUnitOffDuty =
     !activeUnit ||
@@ -52,10 +62,16 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
     if (json.id) {
       setActiveUnit({ ...activeUnit, ...json });
+
+      if (shouldPlayStatusUpdateSound) {
+        controls.seek(0);
+        controls.play();
+      }
     }
 
-    if (error && error === "noActiveOfficer") {
+    if (error && ["noActiveOfficer", "noActiveDeputy"].includes(error)) {
       setActiveUnit(null);
+      controls.pause();
     }
   }
 
@@ -114,6 +130,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   return (
     <ul className="status-buttons-grid mt-2 px-4 py-2 bg-gray-300/50 dark:bg-gray-2 dark:border-t-[1.5px] dark:border-gray-3">
+      {audio}
       <li>
         <Button
           className={classNames("w-full min-w-[5em]", isOnDutyActive && "font-semibold")}

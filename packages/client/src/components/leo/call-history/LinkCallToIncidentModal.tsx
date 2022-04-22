@@ -1,48 +1,48 @@
 import { LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
+import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/router";
 import type { Full911Call } from "state/dispatchState";
 import { ModalIds } from "types/ModalIds";
 import type { LeoIncident } from "@snailycad/types";
 
 interface Props {
   call: Full911Call | null;
+  onSave(call: Full911Call): void;
   incidents: LeoIncident[];
 }
 
-export function LinkCallToIncidentModal({ incidents, call }: Props) {
+export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const router = useRouter();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!call) return;
 
     const { json } = await execute(`/911-calls/link-incident/${call.id}`, {
       method: "POST",
-      data: values,
+      data: { incidentIds: values.incidentIds.map((v) => v.value) },
     });
 
     if (json) {
       closeModal(ModalIds.LinkCallToIncident);
-      router.replace({ pathname: router.pathname, query: router.query });
+      onSave({ ...call, ...json });
     }
   }
 
   const validate = handleValidate(LINK_INCIDENT_TO_CALL);
+  const callIncidents = call?.incidents?.map((v) => ({ value: v.id, label: `#${v.caseNumber}` }));
   const INITIAL_VALUES = {
-    incidentId: "",
+    incidentIds: (callIncidents ?? []) as SelectValue[],
   };
 
   return (
@@ -55,15 +55,17 @@ export function LinkCallToIncidentModal({ incidents, call }: Props) {
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, errors, values }) => (
           <Form>
-            <FormField errorMessage={errors.incidentId} label={t("caseNumber")}>
+            <FormField errorMessage={errors.incidentIds as string} label={t("caseNumber")}>
               <Select
+                closeMenuOnSelect={false}
+                isMulti
                 values={incidents.map((incident) => ({
                   value: incident.id,
                   label: `#${incident.caseNumber}`,
                 }))}
-                value={values.incidentId}
+                value={values.incidentIds}
                 onChange={handleChange}
-                name="incidentId"
+                name="incidentIds"
               />
             </FormField>
 

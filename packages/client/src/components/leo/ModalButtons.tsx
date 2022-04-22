@@ -1,64 +1,32 @@
 import { Button } from "components/Button";
 import { useLeoState } from "state/leoState";
-import { ModalIds } from "types/ModalIds";
 import { ShouldDoType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
 import { useTranslations } from "use-intl";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { makeUnitName } from "lib/utils";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { isUnitCombined } from "@snailycad/utils";
+import * as modalButtons from "components/modal-buttons/buttons";
+import { ModalButton } from "components/modal-buttons/ModalButton";
 
-interface MButton {
-  nameKey: [string, string];
-  modalId: ModalIds;
-}
-
-const buttons: MButton[] = [
-  {
-    nameKey: ["Leo", "nameSearch"],
-    modalId: ModalIds.NameSearch,
-  },
-  {
-    nameKey: ["Leo", "plateSearch"],
-    modalId: ModalIds.VehicleSearch,
-  },
-  {
-    nameKey: ["Leo", "weaponSearch"],
-    modalId: ModalIds.WeaponSearch,
-  },
-  {
-    nameKey: ["Leo", "createWrittenWarning"],
-    modalId: ModalIds.CreateWrittenWarning,
-  },
-  {
-    nameKey: ["Leo", "createTicket"],
-    modalId: ModalIds.CreateTicket,
-  },
-  {
-    nameKey: ["Leo", "createArrestReport"],
-    modalId: ModalIds.CreateArrestReport,
-  },
-  {
-    nameKey: ["Leo", "createBolo"],
-    modalId: ModalIds.ManageBolo,
-  },
-  {
-    nameKey: ["Leo", "createWarrant"],
-    modalId: ModalIds.CreateWarrant,
-  },
-  {
-    nameKey: ["Leo", "notepad"],
-    modalId: ModalIds.Notepad,
-  },
+const buttons: modalButtons.ModalButton[] = [
+  modalButtons.nameSearchBtn,
+  modalButtons.plateSearchBtn,
+  modalButtons.weaponSearchBtn,
+  modalButtons.customFieldSearchBtn,
+  modalButtons.create911CallBtn,
+  modalButtons.createWrittenWarningBtn,
+  modalButtons.createTicketBtn,
+  modalButtons.createArrestReportBtn,
+  modalButtons.createBoloBtn,
+  modalButtons.createWarrantBtn,
+  modalButtons.notepadBtn,
 ];
 
 export function ModalButtons() {
   const { activeOfficer } = useLeoState();
-  const { openModal } = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
-  const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
   const { execute } = useFetch();
 
@@ -78,8 +46,8 @@ export function ModalButtons() {
 
   const name =
     !isButtonDisabled &&
-    ("officers" in activeOfficer
-      ? activeOfficer.callsign
+    (isUnitCombined(activeOfficer)
+      ? generateCallsign(activeOfficer, "pairedUnitTemplate")
       : `${generateCallsign(activeOfficer)} ${makeUnitName(activeOfficer)}`);
 
   return (
@@ -92,21 +60,16 @@ export function ModalButtons() {
       ) : null}
 
       <ul className="mt-2 modal-buttons-grid">
-        {buttons.map((button, idx) =>
-          button.nameKey[1] === "weaponSearch" && !WEAPON_REGISTRATION ? null : (
-            <Button
-              id={button.nameKey[1]}
-              key={idx}
+        {buttons.map((button, idx) => {
+          return (
+            <ModalButton
               disabled={isButtonDisabled}
-              title={
-                isButtonDisabled ? "Go on-duty before continuing" : t(button.nameKey.join("."))
-              }
-              onClick={() => openModal(button.modalId)}
-            >
-              {t(button.nameKey.join("."))}
-            </Button>
-          ),
-        )}
+              title={isButtonDisabled ? "Go on-duty before continuing" : undefined}
+              key={idx}
+              button={button}
+            />
+          );
+        })}
 
         <Button
           id="panicButton"

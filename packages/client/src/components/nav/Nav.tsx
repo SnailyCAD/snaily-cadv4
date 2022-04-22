@@ -1,9 +1,6 @@
 import * as React from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { PersonCircle } from "react-bootstrap-icons";
 import Link from "next/link";
 import { useAuth } from "src/context/AuthContext";
-import { logout } from "lib/auth";
 import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./dropdowns/CitizenDropdown";
@@ -15,7 +12,11 @@ import { DispatchDropdown } from "./dropdowns/DispatchDropdown";
 import { useTranslations } from "next-intl";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useViewport } from "@casper124578/useful/hooks/useViewport";
+import { AccountDropdown } from "./dropdowns/AccountDropdown";
 import Head from "next/head";
+import { usePermission } from "hooks/usePermission";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
+import { Rank } from "@snailycad/types";
 
 interface Props {
   maxWidth?: string;
@@ -23,12 +24,14 @@ interface Props {
 
 export function Nav({ maxWidth }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [showImage, setShowImage] = React.useState(true);
 
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();
   const router = useRouter();
   const t = useTranslations("Nav");
   const isActive = (route: string) => router.pathname.startsWith(route);
+  const { hasPermissions } = usePermission();
 
   const { makeImageUrl } = useImageUrl();
   const url = cad && makeImageUrl("cad", cad.logoId);
@@ -60,7 +63,7 @@ export function Nav({ maxWidth }: Props) {
                 href="/citizen"
                 className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
               >
-                {url ? (
+                {url && showImage ? (
                   <>
                     <Head>
                       <link rel="shortcut icon" href={url} />
@@ -71,6 +74,7 @@ export function Nav({ maxWidth }: Props) {
                       height={30}
                       className="max-h-[30px] min-w-[30px]"
                       src={url}
+                      onError={() => setShowImage(false)}
                     />
                   </>
                 ) : null}
@@ -88,15 +92,29 @@ export function Nav({ maxWidth }: Props) {
             >
               <CitizenDropdown />
 
-              {user?.isTow && TOW ? <TowDropdown /> : null}
+              {hasPermissions(
+                [Permissions.ViewTowCalls, Permissions.ManageTowCalls],
+                user?.isTow ?? false,
+              ) && TOW ? (
+                <TowDropdown />
+              ) : null}
 
-              {user?.isLeo ? <OfficerDropdown /> : null}
+              {hasPermissions(defaultPermissions.defaultLeoPermissions, user?.isLeo ?? false) ? (
+                <OfficerDropdown />
+              ) : null}
 
-              {user?.isEmsFd ? <EmsFdDropdown /> : null}
+              {hasPermissions([Permissions.EmsFd], user?.isEmsFd ?? false) ? (
+                <EmsFdDropdown />
+              ) : null}
 
-              {user?.isDispatch ? <DispatchDropdown /> : null}
+              {hasPermissions(
+                [Permissions.LiveMap, Permissions.Dispatch],
+                user?.isDispatch ?? false,
+              ) ? (
+                <DispatchDropdown />
+              ) : null}
 
-              {COURTHOUSE ? (
+              {user && COURTHOUSE ? (
                 <Link href="/courthouse">
                   <a
                     className={classNames(
@@ -109,7 +127,10 @@ export function Nav({ maxWidth }: Props) {
                 </Link>
               ) : null}
 
-              {user && user.rank !== "USER" ? (
+              {hasPermissions(
+                defaultPermissions.allDefaultAdminPermissions,
+                user?.rank !== Rank.USER,
+              ) ? (
                 <Link href="/admin">
                   <a
                     className={classNames(
@@ -125,96 +146,10 @@ export function Nav({ maxWidth }: Props) {
           </div>
 
           <div>
-            <NavDropdown />
+            <AccountDropdown />
           </div>
         </div>
       </div>
     </nav>
-  );
-}
-
-function NavDropdown() {
-  const { user, setUser } = useAuth();
-  const router = useRouter();
-  const t = useTranslations("Nav");
-
-  async function handleLogout() {
-    const success = await logout();
-    if (success) {
-      router.push("/auth/login");
-      setUser(null);
-    }
-  }
-
-  return (
-    <Menu as="div" className="relative z-50 inline-block text-left">
-      {({ open }) => (
-        <>
-          <Menu.Button
-            className={classNames(
-              "inline-flex justify-center w-full px-2 py-2 text-sm font-medium text-neutral-800 dark:text-white bg-transparent rounded-md transition-colors hover:bg-gray-200 dark:hover:bg-dark-bright focus:outline-none",
-              open && "bg-gray-200 dark:bg-dark-bright",
-            )}
-          >
-            <span className="mr-2.5"> {user ? user.username : null}</span>
-
-            <PersonCircle className="text-dark-bg dark:text-gray-300" width={20} height={20} />
-          </Menu.Button>
-          <Transition
-            as={React.Fragment}
-            enter="transition ease-out duration-100"
-            enterFrom="transform opacity-0 scale-95"
-            enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
-            leaveFrom="transform opacity-100 scale-100"
-            leaveTo="transform opacity-0 scale-95"
-          >
-            <Menu.Items className="absolute right-0 w-32 mt-1 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-xl dark:bg-dark-bright dark:divide-dark-bg focus:outline-none">
-              {user ? (
-                <>
-                  <div className="px-1 py-1">
-                    <Menu.Item>
-                      <Link href="/account">
-                        <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                          {t("account")}
-                        </a>
-                      </Link>
-                    </Menu.Item>
-                  </div>
-
-                  <div className="px-1 py-1">
-                    <Menu.Item>
-                      <button
-                        onClick={handleLogout}
-                        className="text-red-500 text-left hover:bg-red-500 hover:text-black group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all"
-                      >
-                        {t("logout")}
-                      </button>
-                    </Menu.Item>
-                  </div>
-                </>
-              ) : (
-                <div className="px-1 py-1 ">
-                  <Menu.Item>
-                    <Link href="/auth/login">
-                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        {t("login")}
-                      </a>
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link href="/auth/register">
-                      <a className="text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg group rounded-md items-center w-full px-3 py-1.5 text-sm transition-all">
-                        {t("register")}
-                      </a>
-                    </Link>
-                  </Menu.Item>
-                </div>
-              )}
-            </Menu.Items>
-          </Transition>
-        </>
-      )}
-    </Menu>
   );
 }

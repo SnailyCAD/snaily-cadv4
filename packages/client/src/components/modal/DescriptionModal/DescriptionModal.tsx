@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Modal } from "../Modal";
@@ -9,7 +9,7 @@ import type { Descendant } from "slate";
 import type { JsonArray } from "type-fest";
 
 interface Props {
-  value?: Descendant[] | JsonArray;
+  value?: Descendant[] | JsonArray | null;
   onClose?(): void;
 }
 

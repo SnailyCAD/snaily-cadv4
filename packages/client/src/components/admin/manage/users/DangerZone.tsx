@@ -4,7 +4,7 @@ import useFetch from "lib/useFetch";
 import type { User } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 import { useTranslations } from "use-intl";
@@ -34,7 +34,7 @@ export function DangerZone({ user }: Props) {
   }
 
   return (
-    <div className="p-3 mt-10 bg-gray-200 rounded-md dark:bg-gray-2">
+    <div className="p-4 mt-5 bg-gray-200 rounded-md dark:bg-gray-2">
       <h1 className="text-2xl font-semibold">Danger Zone</h1>
 
       <div className="flex mt-3">

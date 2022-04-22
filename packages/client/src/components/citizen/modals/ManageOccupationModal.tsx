@@ -5,7 +5,7 @@ import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
@@ -70,7 +70,7 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
           )}
           <span className="font-semibold">{t("occupation")}: </span>
         </span>
-        <span className="max-w-[400px]">{occupation ?? common("none")}</span>
+        <span className="max-w-[400px]">{occupation || common("none")}</span>
       </p>
 
       {isLeo ? null : (

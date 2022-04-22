@@ -4,17 +4,20 @@ import { Button } from "components/Button";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { RegisterVehicleModal } from "./RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
+import { Status } from "components/shared/Status";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Vehicles");
   const { state, execute } = useFetch();
+  const { DMV } = useFeatureEnabled();
 
   const [vehicles, setVehicles] = React.useState<RegisteredVehicle[]>(props.vehicles);
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
@@ -64,11 +67,19 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           <Table
             isWithinCard
             data={vehicles.map((vehicle) => ({
+              rowProps: {
+                title: vehicle.impounded ? t("vehicleImpounded") : undefined,
+                className: vehicle.impounded ? "opacity-50" : undefined,
+              },
               plate: vehicle.plate,
               model: vehicle.model.value.value,
               color: vehicle.color,
               registrationStatus: vehicle.registrationStatus.value,
+              insuranceStatus: vehicle.insuranceStatus?.value ?? common("none"),
               vinNumber: vehicle.vinNumber,
+              dmvStatus: (
+                <Status state={vehicle.dmvStatus}>{vehicle.dmvStatus?.toLowerCase()}</Status>
+              ),
               createdAt: <FullDate>{vehicle.createdAt}</FullDate>,
               actions: (
                 <>
@@ -97,7 +108,9 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
               { Header: t("model"), accessor: "model" },
               { Header: t("color"), accessor: "color" },
               { Header: t("registrationStatus"), accessor: "registrationStatus" },
+              { Header: t("insuranceStatus"), accessor: "insuranceStatus" },
               { Header: t("vinNumber"), accessor: "vinNumber" },
+              DMV ? { Header: t("dmvStatus"), accessor: "dmvStatus" } : null,
               { Header: common("createdAt"), accessor: "createdAt" },
               { Header: common("actions"), accessor: "actions" },
             ]}

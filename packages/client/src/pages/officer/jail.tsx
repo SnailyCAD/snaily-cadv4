@@ -6,27 +6,28 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { Record, Citizen, RecordRelease, ReleaseType } from "@snailycad/types";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
 import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
-  data: (Citizen & { Record: FullRecord[] })[];
+  data: (Citizen & { Record: Record[] })[];
 }
 
-export default function Jail({ data: citizens }: Props) {
+export default function Jail({ data: jailedCitizens }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
+  const { hasPermissions } = usePermission();
   const router = useRouter();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
@@ -45,17 +46,21 @@ export default function Jail({ data: citizens }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewJail, Permissions.ManageJail],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("jail")}</Title>
 
-      <h1 className="mb-3 text-3xl font-semibold">{t("jail")}</h1>
-
-      {citizens.length <= 0 ? (
+      {jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
           defaultSort={{ columnId: "createdAt", descending: true }}
-          data={citizens.map((item) => {
+          data={jailedCitizens.map((item) => {
             const [record] = item.Record.sort((a, b) =>
               compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
             ).filter((v) => v.type === "ARREST_REPORT");
@@ -98,7 +103,9 @@ export default function Jail({ data: citizens }: Props) {
             { Header: t("jailTime"), accessor: "jailTime" },
             { Header: t("status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasPermissions([Permissions.ManageJail], true)
+              ? { Header: common("actions"), accessor: "actions" }
+              : null,
           ]}
         />
       )}
@@ -108,16 +115,12 @@ export default function Jail({ data: citizens }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [jailData, { citizens }] = await requestAll(req, [
-    ["/leo/jail", []],
-    ["/leo", [{ citizens: [] }]],
-  ]);
+  const [jailData] = await requestAll(req, [["/leo/jail", []]]);
 
   return {
     props: {
       session: await getSessionUser(req),
       data: jailData,
-      citizens,
       messages: {
         ...(await getTranslations(["leo", "common"], locale)),
       },
@@ -125,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   };
 };
 
-function isReleased<T extends FullRecord = FullRecord>(
+function isReleased<T extends Record = Record>(
   record: T,
 ): record is T & { release: RecordRelease } {
   return record.releaseId !== null;

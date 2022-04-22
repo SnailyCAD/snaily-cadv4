@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { getSessionUser } from "lib/auth";
 import { cad as CAD, Rank, User } from "@snailycad/types";
 import { Loader } from "components/Loader";
-import { useIsFeatureEnabled } from "lib/utils";
+import { useIsRouteFeatureEnabled } from "hooks/auth/useIsRouteFeatureEnabled";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 
@@ -23,15 +23,7 @@ interface ProviderProps {
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
-  "/dispatch": (user) => user.isDispatch,
-  "/officer/supervisor": (user) => user.isLeo && user.isSupervisor,
-  "/officer": (user) => user.isLeo,
-  "/ems-fd": (user) => user.isEmsFd,
   "/admin/manage/cad-settings": (user) => user.rank === Rank.OWNER,
-  "/admin/manage/units": (user) => user.rank !== Rank.USER || user.isSupervisor,
-  "/admin": (user) => user.rank !== Rank.USER,
-  "/tow": (user) => user.isTow,
-  "/taxi": (user) => user.isTaxi,
 };
 
 const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
@@ -44,7 +36,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   const [isForbidden, setForbidden] = React.useState(false);
   const router = useRouter();
 
-  const isEnabled = useIsFeatureEnabled(cad ?? {});
+  const isEnabled = useIsRouteFeatureEnabled(cad ?? {});
 
   const handleGetUser = React.useCallback(async () => {
     getSessionUser()
@@ -120,7 +112,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   if (cad && !isEnabled) {
     return (
-      <main className="grid h-screen place-items-center">
+      <main className="grid h-screen place-items-center dark:text-white">
         <p>Feature is not enabled.</p>
       </main>
     );
@@ -132,7 +124,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 export function useAuth() {
   const context = React.useContext(AuthContext);
   if (typeof context === "undefined") {
-    throw new Error("`useAuth` must be used within an `AuthProvider`");
+    throw new TypeError("`useAuth` must be used within an `AuthProvider`");
   }
 
   return context;

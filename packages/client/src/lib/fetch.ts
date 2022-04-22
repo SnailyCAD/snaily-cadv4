@@ -3,7 +3,7 @@ import { serialize } from "cookie";
 import type { IncomingMessage } from "connect";
 import nookies from "nookies";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { IFRAME_COOKIE_NAME } from "src/pages/api/token";
+import { IFRAME_COOKIE_NAME } from "../pages/api/token";
 
 export type RequestData = Record<string, unknown>;
 
@@ -43,16 +43,10 @@ export async function handleRequest<T = any>(
       "Content-Type": "application/json",
       "is-from-dispatch": String(isDispatchUrl),
     },
-  }).catch((e) => {
-    return { ERROR: e };
-  });
+  }).catch((e) => e);
 
-  if ("ERROR" in res) {
-    if (options?.isSsr) {
-      throw makeReturn(res.ERROR);
-    }
-
-    return makeReturn(res.ERROR) as unknown as AxiosResponse<T>;
+  if (res instanceof Error) {
+    throw makeReturn(res);
   }
 
   return makeReturn(res) as unknown as AxiosResponse<T>;
@@ -70,11 +64,7 @@ export function findUrl() {
 }
 
 function makeReturn(v: any) {
-  return {
-    config: v.config ?? {},
-    data: v.response?.data ?? v.data ?? {},
-    status: v.status ?? null,
-    statusText: v.statusText ?? null,
-    response: v.response ?? {},
-  };
+  delete v.request;
+
+  return v;
 }

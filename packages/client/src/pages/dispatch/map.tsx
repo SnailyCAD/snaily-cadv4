@@ -9,6 +9,7 @@ import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
+import { Permissions } from "@snailycad/permissions";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -51,9 +52,13 @@ export default function MapPage(props: any) {
           crossOrigin=""
         />
       </Head>
-      <Title>Dispatch Live Map</Title>
+      <Title renderLayoutTitle={false}>Dispatch Live Map</Title>
 
-      <Layout navMaxWidth="none" className="relative !px-0 !pb-0 !mt-0 !max-w-none">
+      <Layout
+        permissions={{ fallback: (u) => u.isDispatch, permissions: [Permissions.LiveMap] }}
+        navMaxWidth="none"
+        className="relative !px-0 !pb-0 !mt-0 !max-w-none"
+      >
         <Map />
       </Layout>
     </>

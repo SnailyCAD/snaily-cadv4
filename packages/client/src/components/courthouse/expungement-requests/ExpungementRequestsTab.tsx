@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import { getTitles } from "./RequestExpungement";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 
@@ -78,7 +78,6 @@ export function ExpungementRequestsTab(props: Props) {
               tickets,
               status: <Status state={request.status}>{request.status.toLowerCase()}</Status>,
               createdAt: <FullDate>{request.createdAt}</FullDate>,
-              actions: <></>,
             };
           })}
           columns={[

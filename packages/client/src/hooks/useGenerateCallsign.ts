@@ -1,6 +1,6 @@
 import { useAuth } from "context/AuthContext";
 import type { CombinedLeoUnit, EmsFdDeputy, MiscCadSettings, Officer } from "@snailycad/types";
-import { generateCallsign } from "@snailycad/utils";
+import { generateCallsign } from "@snailycad/utils/callsign";
 
 type P = "callsign" | "callsign2" | "department" | "citizenId";
 type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;

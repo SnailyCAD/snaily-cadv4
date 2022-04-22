@@ -15,6 +15,8 @@
     "noActiveDeputies": "There are no active service members",
     "citizenNoMedicalRecords": "This civilian doesn't have any medical records.",
     "activeDeputy": "Active Service Member",
+    "declareDead": "Declare dead",
+    "declareAlive": "Declare alive",
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
   }
 }

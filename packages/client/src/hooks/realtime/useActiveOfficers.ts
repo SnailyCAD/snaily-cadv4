@@ -6,6 +6,7 @@ import { useDispatchState } from "state/dispatchState";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
 
+let ran = false;
 export function useActiveOfficers() {
   const { user } = useAuth();
   const { activeOfficers, setActiveOfficers } = useDispatchState();
@@ -29,12 +30,15 @@ export function useActiveOfficers() {
   }, [user?.id]);
 
   React.useEffect(() => {
-    getActiveOfficers();
+    if (!ran) {
+      getActiveOfficers();
+      ran = true;
+    }
   }, [getActiveOfficers]);
 
   useListener(SocketEvents.UpdateOfficerStatus, () => {
     getActiveOfficers();
   });
 
-  return { activeOfficers, state };
+  return { activeOfficers, setActiveOfficers, state };
 }

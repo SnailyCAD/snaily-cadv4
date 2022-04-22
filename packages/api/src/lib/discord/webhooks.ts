@@ -4,17 +4,20 @@ import {
   type RESTPostAPIWebhookWithTokenJSONBody,
   Routes,
 } from "discord-api-types/v10";
-import { getRest } from "lib/discord";
+import { getRest } from "lib/discord/config";
 
 export async function sendDiscordWebhook(
   miscCadSettings: MiscCadSettings | null,
-  type: keyof Pick<MiscCadSettings, "call911WebhookId" | "statusesWebhookId">,
+  type: keyof Pick<
+    MiscCadSettings,
+    "call911WebhookId" | "statusesWebhookId" | "boloWebhookId" | "panicButtonWebhookId"
+  >,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
 ) {
   const id = miscCadSettings?.[type];
-  const rest = getRest();
-
   if (!id) return;
+
+  const rest = getRest();
 
   const webhookData = (await rest
     .get(Routes.webhook(id))

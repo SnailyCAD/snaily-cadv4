@@ -1,11 +1,19 @@
-import type { MiscCadSettings, User } from ".prisma/client";
-import { Feature } from "@prisma/client";
+import {
+  MiscCadSettings,
+  User,
+  CadFeature,
+  Feature,
+  VehicleInspectionStatus,
+  VehicleTaxStatus,
+  WhitelistStatus,
+} from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/user";
+import { isFeatureEnabled } from "lib/cad";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -21,7 +29,7 @@ export class VehiclesController {
     const data = validateSchema(VEHICLE_SCHEMA, body);
     const user = ctx.get("user") as User;
     const cad = ctx.get("cad") as {
-      disabledFeatures: Feature[];
+      features: CadFeature[];
       miscCadSettings?: MiscCadSettings;
     } | null;
 
@@ -48,7 +56,12 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
 
-    const isCustomEnabled = cad?.disabledFeatures.includes(Feature.DISALLOW_TEXTFIELD_SELECTION);
+    const isCustomEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.CUSTOM_TEXTFIELD_VALUES,
+      defaultReturn: false,
+    });
+
     let modelId = data.model;
 
     if (isCustomEnabled) {
@@ -67,17 +80,25 @@ export class VehiclesController {
       modelId = newModel.id;
     }
 
+    const isDmvEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.DMV,
+      defaultReturn: false,
+    });
+
     const vehicle = await prisma.registeredVehicle.create({
       data: {
         plate: data.plate.toUpperCase(),
         color: data.color,
         citizenId: citizen.id,
         modelId,
-        registrationStatusId: data.registrationStatus as string,
-        // todo
-        insuranceStatus: "TEST",
+        registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || generateString(17),
         userId: user.id || undefined,
+        insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+        dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
       },
       include: {
         model: { include: { value: true } },
@@ -114,6 +135,7 @@ export class VehiclesController {
   @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
+    @Context("cad") cad: any,
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -148,6 +170,18 @@ export class VehiclesController {
       canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
     }
 
+    const isDmvEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.DMV,
+      defaultReturn: false,
+    });
+
+    const dmvStatus = isDmvEnabled
+      ? data.reApplyForDmv && vehicle.dmvStatus === WhitelistStatus.DECLINED
+        ? WhitelistStatus.PENDING
+        : undefined // undefined = will not update the database entry
+      : null;
+
     const updated = await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
@@ -155,9 +189,13 @@ export class VehiclesController {
       data: {
         modelId: data.model,
         color: data.color,
-        registrationStatusId: data.registrationStatus as string,
+        registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || vehicle.vinNumber,
         reportedStolen: data.reportedStolen ?? false,
+        insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+        dmvStatus,
       },
       include: {
         model: { include: { value: true } },
@@ -203,7 +241,13 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
+      const owner = await prisma.citizen.findUnique({
+        where: { id: vehicle.citizenId },
+      });
+
+      // registered vehicles may not have `userId`
+      // therefore we should use `citizen`
+      canManageInvariant(owner?.userId, user, new NotFound("notFound"));
     }
     await prisma.registeredVehicle.delete({
       where: {

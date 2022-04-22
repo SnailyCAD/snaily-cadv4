@@ -1,28 +1,35 @@
 import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Get, JsonRequestBody, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BadRequest, NotFound } from "@tsed/exceptions";
-import { CREATE_CITIZEN_SCHEMA, validate } from "@snailycad/schemas";
+import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
+import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { Feature, cad, MiscCadSettings } from ".prisma/client";
-import { leoProperties } from "lib/officer";
+import { leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
-import type { Citizen, DriversLicenseCategoryValue, User } from "@prisma/client";
+import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/user";
+import { validateSchema } from "lib/validateSchema";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
+import { isFeatureEnabled } from "lib/cad";
 
 export const citizenInclude = {
   user: { select: userProperties },
+  flags: true,
   vehicles: {
     include: {
+      flags: true,
       model: { include: { value: true } },
       registrationStatus: true,
+      insuranceStatus: true,
+      TruckLog: true,
+      Business: true,
     },
     where: {
       // hide business vehicles
@@ -40,8 +47,8 @@ export const citizenInclude = {
   gender: true,
   weaponLicense: true,
   driversLicense: true,
-  ccw: true,
   pilotLicense: true,
+  waterLicense: true,
   dlCategory: { include: { value: true } },
   Record: {
     include: {
@@ -61,10 +68,10 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context() ctx: Context) {
+  async getCitizens(@Context("user") user: User) {
     const citizens = await prisma.citizen.findMany({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
     });
 
@@ -72,11 +79,11 @@ export class CitizenController {
   }
 
   @Get("/:id")
-  async getCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
+  async getCitizen(@Context("user") user: User, @PathParams("id") citizenId: string) {
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
-        userId: ctx.get("user").id,
+        userId: user.id,
       },
       include: citizenInclude,
     });
@@ -90,6 +97,18 @@ export class CitizenController {
 
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
+    const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
+
+    const allowDeletion = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_CITIZEN_DELETION_BY_NON_ADMIN,
+      defaultReturn: true,
+    });
+
+    if (!allowDeletion) {
+      throw new Forbidden("onlyAdminsCanDeleteCitizens");
+    }
+
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
@@ -111,19 +130,18 @@ export class CitizenController {
   }
 
   @Post("/")
-  async createCitizen(@Context() ctx: Context, @BodyParams() body: JsonRequestBody) {
-    const error = validate(CREATE_CITIZEN_SCHEMA, body.toJSON(), true);
+  async createCitizen(
+    @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
+  ) {
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
-    if (error) {
-      return new BadRequest(error);
-    }
-
-    const disabledFeatures = (ctx.get("cad") as cad).disabledFeatures;
-    const miscSettings = ctx.get("cad")?.miscCadSettings as MiscCadSettings | null;
+    const miscSettings = cad.miscCadSettings;
     if (miscSettings?.maxCitizensPerUser) {
       const count = await prisma.citizen.count({
         where: {
-          userId: ctx.get("user").id,
+          userId: user.id,
         },
       });
 
@@ -132,38 +150,17 @@ export class CitizenController {
       }
     }
 
-    const {
-      address,
-      weight,
-      height,
-      hairColor,
-      eyeColor,
-      dateOfBirth,
-      ethnicity,
-      name,
-      surname,
-      gender,
-      driversLicense,
-      weaponLicense,
-      pilotLicense,
-      driversLicenseCategory,
-      pilotLicenseCategory,
-      ccw,
-      phoneNumber,
-      postal,
-      occupation,
-    } = body.toJSON() as {
-      [key: string]: any;
-      driversLicenseCategory: string[];
-      pilotLicenseCategory: string[];
-    };
+    const allowDuplicateCitizenNames = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.ALLOW_DUPLICATE_CITIZEN_NAMES,
+      defaultReturn: true,
+    });
 
-    const isEnabled = disabledFeatures.includes(Feature.ALLOW_DUPLICATE_CITIZEN_NAMES);
-    if (isEnabled) {
+    if (!allowDuplicateCitizenNames) {
       const existing = await prisma.citizen.findFirst({
         where: {
-          name,
-          surname,
+          name: data.name,
+          surname: data.surname,
         },
       });
 
@@ -172,61 +169,54 @@ export class CitizenController {
       }
     }
 
-    const date = new Date(dateOfBirth).getTime();
+    const date = new Date(data.dateOfBirth).getTime();
     const now = Date.now();
 
     if (date > now) {
       throw new ExtendedBadRequest({ dateOfBirth: "dateLargerThanNow" });
     }
 
+    const defaultLicenseValue = await prisma.value.findFirst({
+      where: { isDefault: true, type: ValueType.LICENSE },
+    });
+    const defaultLicenseValueId = defaultLicenseValue?.id ?? null;
+
     const citizen = await prisma.citizen.create({
       data: {
-        userId: ctx.get("user").id || undefined,
-        address,
-        postal: postal || null,
-        weight,
-        height,
-        hairColor,
-        dateOfBirth,
-        ethnicityId: ethnicity,
-        name,
-        surname,
-        genderId: gender,
-        eyeColor,
-        driversLicenseId: driversLicense || undefined,
-        weaponLicenseId: weaponLicense || undefined,
-        pilotLicenseId: pilotLicense || undefined,
-        ccwId: ccw || undefined,
-        phoneNumber: phoneNumber || null,
-        imageId: validateImgurURL(body.get("image")),
+        userId: user.id || undefined,
+        address: data.address,
+        postal: data.postal || null,
+        weight: data.weight,
+        height: data.height,
+        hairColor: data.hairColor,
+        dateOfBirth: data.dateOfBirth,
+        ethnicityId: data.ethnicity,
+        name: data.name,
+        surname: data.surname,
+        genderId: data.gender,
+        eyeColor: data.eyeColor,
+        driversLicenseId: data.driversLicense || defaultLicenseValueId,
+        weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
+        pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
+        waterLicenseId: data.waterLicense || defaultLicenseValueId,
+        phoneNumber: data.phoneNumber || null,
+        imageId: validateImgurURL(data.image),
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
-        occupation: occupation || null,
-      },
-      include: {
-        gender: true,
-        ethnicity: true,
-        weaponLicense: true,
-        driversLicense: true,
-        ccw: true,
-        pilotLicense: true,
+        occupation: data.occupation || null,
       },
     });
 
-    await linkDlCategories(citizen.id, driversLicenseCategory, pilotLicenseCategory);
-
+    await updateCitizenLicenseCategories(citizen, data);
     return citizen;
   }
 
   @Put("/:id")
   async updateCitizen(
     @PathParams("id") citizenId: string,
-    @Context() ctx: Context,
-    @BodyParams() body: JsonRequestBody,
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
   ) {
-    const error = validate(CREATE_CITIZEN_SCHEMA, body.toJSON(), true);
-    if (error) {
-      return new BadRequest(error);
-    }
+    const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -234,23 +224,9 @@ export class CitizenController {
       },
     });
 
-    canManageInvariant(citizen?.userId, ctx.get("user"), new NotFound("notFound"));
+    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
 
-    const {
-      address,
-      weight,
-      height,
-      hairColor,
-      eyeColor,
-      dateOfBirth,
-      ethnicity,
-      gender,
-      phoneNumber,
-      occupation,
-      postal,
-    } = body.toJSON();
-
-    const date = new Date(dateOfBirth).getTime();
+    const date = new Date(data.dateOfBirth).getTime();
     const now = Date.now();
 
     if (date > now) {
@@ -262,26 +238,23 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        address,
-        postal: postal || null,
-        weight,
-        height,
-        hairColor,
-        dateOfBirth,
-        ethnicityId: ethnicity,
-        genderId: gender,
-        eyeColor,
-        phoneNumber: phoneNumber || undefined,
-        occupation: occupation || undefined,
-        imageId: validateImgurURL(body.get("image")),
+        address: data.address,
+        postal: data.postal || null,
+        weight: data.weight,
+        height: data.height,
+        hairColor: data.hairColor,
+        dateOfBirth: data.dateOfBirth,
+        ethnicityId: data.ethnicity,
+        genderId: data.gender,
+        eyeColor: data.eyeColor,
+        phoneNumber: data.phoneNumber,
+        occupation: data.occupation,
+        imageId: validateImgurURL(data.image),
         socialSecurityNumber: !citizen.socialSecurityNumber
           ? generateString(9, { numbersOnly: true })
           : undefined,
       },
-      include: {
-        gender: true,
-        ethnicity: true,
-      },
+      include: { gender: true, ethnicity: true },
     });
 
     return updated;
@@ -327,50 +300,4 @@ export class CitizenController {
 
     return data;
   }
-}
-
-export async function linkDlCategories(
-  citizenId: string,
-  driversLicenseCategory: string[] = [],
-  pilotLicenseCategory: string[] = [],
-) {
-  await Promise.all(
-    [...driversLicenseCategory, ...pilotLicenseCategory].map(async (fullId) => {
-      const [id] = fullId.split("-");
-
-      await prisma.citizen.update({
-        where: {
-          id: citizenId,
-        },
-        data: {
-          dlCategory: {
-            connect: {
-              id,
-            },
-          },
-        },
-      });
-    }),
-  );
-}
-
-export async function unlinkDlCategories(
-  citizen: Citizen & { dlCategory: DriversLicenseCategoryValue[] },
-) {
-  await Promise.all([
-    citizen.dlCategory.map(async (v) => {
-      await prisma.citizen.update({
-        where: {
-          id: citizen.id,
-        },
-        data: {
-          dlCategory: {
-            disconnect: {
-              id: v.id,
-            },
-          },
-        },
-      });
-    }),
-  ]);
 }

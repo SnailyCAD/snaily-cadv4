@@ -10,11 +10,12 @@ import { requestAll } from "lib/utils";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import type { TowCall } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -39,6 +40,7 @@ export default function TowLogs(props: Props) {
 
   function handleViewDescription(call: TowCall) {
     setTempCall(call);
+
     openModal(ModalIds.Description, call);
   }
 
@@ -57,12 +59,11 @@ export default function TowLogs(props: Props) {
   }, [props.calls]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{ fallback: (u) => u.isTow, permissions: [Permissions.ViewTowLogs] }}
+      className="dark:text-white"
+    >
       <Title>{t("towLogs")}</Title>
-
-      <header className="flex items-center justify-between mb-5">
-        <h1 className="text-3xl font-semibold">{t("towLogs")}</h1>
-      </header>
 
       {calls.length <= 0 ? (
         <p className="mt-5">{t("noTowCalls")}</p>
@@ -94,7 +95,7 @@ export default function TowLogs(props: Props) {
         />
       )}
 
-      {tempCall?.descriptionData ? (
+      {tempCall ? (
         <DescriptionModal onClose={() => setTempCall(null)} value={tempCall.descriptionData} />
       ) : null}
     </Layout>

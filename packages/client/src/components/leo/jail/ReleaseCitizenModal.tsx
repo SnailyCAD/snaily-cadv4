@@ -2,14 +2,16 @@ import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import { Citizen, ReleaseType } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
 import { Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
-import { useCitizen } from "context/CitizenContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useImageUrl } from "hooks/useImageUrl";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   citizen: (Citizen & { recordId: string }) | null;
@@ -29,8 +31,9 @@ const TYPES = Object.keys(ReleaseType).map((key) => ({
 export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { makeImageUrl } = useImageUrl();
 
-  const { citizens } = useCitizen();
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
 
@@ -53,7 +56,8 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
 
   const INITIAL_VALUES = {
     type: "",
-    releasedBy: "",
+    releasedById: "",
+    releasedByName: "",
   };
 
   return (
@@ -61,27 +65,54 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
       title={t("release")}
       onClose={() => closeModal(ModalIds.AlertReleaseCitizen)}
       isOpen={isOpen(ModalIds.AlertReleaseCitizen)}
-      className="min-w-[750px]"
+      className="w-[650px]"
     >
       <p className="my-3">{t("releaseCitizen")}</p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.type} label={common("type")}>
               <Select values={TYPES} value={values.type} name="type" onChange={handleChange} />
             </FormField>
 
             {values.type === ReleaseType.BAIL_POSTED ? (
-              <FormField errorMessage={errors.releasedBy} label={t("bailPostedBy")}>
-                <Select
-                  values={citizens.map((citizen) => ({
-                    label: `${citizen.name} ${citizen.surname}`,
-                    value: citizen.id,
-                  }))}
-                  value={values.releasedBy}
-                  name="releasedBy"
-                  onChange={handleChange}
+              <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
+                <InputSuggestions
+                  onSuggestionClick={(suggestion: Citizen) => {
+                    setValues({
+                      ...values,
+                      releasedById: suggestion.id,
+                      releasedByName: `${suggestion.name} ${suggestion.surname}`,
+                    });
+                  }}
+                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                    <div className="flex items-center">
+                      {suggestion.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("citizens", suggestion.imageId)}
+                        />
+                      ) : null}
+                      <p>
+                        {suggestion.name} {suggestion.surname}{" "}
+                        {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                          <>(SSN: {suggestion.socialSecurityNumber})</>
+                        ) : null}
+                      </p>
+                    </div>
+                  )}
+                  options={{
+                    apiPath: "/search/name",
+                    method: "POST",
+                    dataKey: "name",
+                  }}
+                  inputProps={{
+                    value: values.releasedByName,
+                    name: "releasedByName",
+                    onChange: handleChange,
+                  }}
                 />
               </FormField>
             ) : null}

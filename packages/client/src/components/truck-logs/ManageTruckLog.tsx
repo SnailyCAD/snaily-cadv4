@@ -7,20 +7,19 @@ import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
-import type { FullTruckLog } from "src/pages/truck-logs";
 import { ModalIds } from "types/ModalIds";
-import type { RegisteredVehicle } from "@snailycad/types";
+import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 
 interface Props {
-  log: FullTruckLog | null;
+  log: TruckLog | null;
   registeredVehicles: RegisteredVehicle[];
-  onUpdate?: (old: FullTruckLog, newLog: FullTruckLog) => void;
-  onCreate?: (log: FullTruckLog) => void;
+  onUpdate?(old: TruckLog, newLog: TruckLog): void;
+  onCreate?(log: TruckLog): void;
   onClose?(): void;
 }
 

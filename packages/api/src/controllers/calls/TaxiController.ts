@@ -1,13 +1,21 @@
-import { Controller, BodyParams, Context, UseBefore, PathParams } from "@tsed/common";
+import {
+  Controller,
+  BodyParams,
+  Context,
+  UseBefore,
+  PathParams,
+  UseBeforeEach,
+} from "@tsed/common";
 import { Description, Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -16,6 +24,7 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/taxi")
+@UseBeforeEach(IsAuth)
 export class TaxiController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -24,6 +33,10 @@ export class TaxiController {
 
   @Get("/")
   @Description("Get all the taxi calls")
+  @UsePermissions({
+    permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
+    fallback: (u) => u.isTaxi,
+  })
   async getTaxiCalls() {
     const calls = await prisma.taxiCall.findMany({
       include: {
@@ -45,13 +58,15 @@ export class TaxiController {
   async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
-    const citizen = await prisma.citizen.findUnique({
-      where: {
-        id: data.creatorId!,
-      },
-    });
+    if (data.creatorId) {
+      const citizen = await prisma.citizen.findUnique({
+        where: {
+          id: data.creatorId!,
+        },
+      });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    }
 
     const call = await prisma.taxiCall.create({
       data: {
@@ -60,6 +75,7 @@ export class TaxiController {
         descriptionData: data.descriptionData,
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -79,6 +95,10 @@ export class TaxiController {
   @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a taxi call by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageTaxiCalls],
+    fallback: (u) => u.isTaxi,
+  })
   async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -112,6 +132,7 @@ export class TaxiController {
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -131,7 +152,11 @@ export class TaxiController {
   @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a taxi call by its id")
-  async deleteTowCall(@PathParams("id") callId: string) {
+  @UsePermissions({
+    permissions: [Permissions.ManageTaxiCalls],
+    fallback: (u) => u.isTaxi,
+  })
+  async endTaxiCall(@PathParams("id") callId: string) {
     const call = await prisma.taxiCall.findUnique({
       where: {
         id: callId,

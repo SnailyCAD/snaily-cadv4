@@ -7,6 +7,7 @@ import { Dropdown } from "components/Dropdown";
 import { Button } from "components/Button";
 import { classNames } from "lib/classNames";
 import { useAuth } from "context/AuthContext";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 export function CitizenDropdown() {
   const enabled = useFeatureEnabled();
@@ -14,10 +15,16 @@ export function CitizenDropdown() {
   const isActive = (route: string) => router.pathname.startsWith(route);
   const t = useTranslations("Nav");
   const { user } = useAuth();
+  const { hasPermissions } = usePermission();
 
   const items = [
     { name: t("citizens"), href: "/citizens" },
-    { name: t("taxi"), href: "/taxi", show: (u: User) => u.isTaxi },
+    {
+      name: t("taxi"),
+      href: "/taxi",
+      show: (u: User) =>
+        hasPermissions([Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls], u.isTaxi),
+    },
     { name: t("bleeter"), href: "/bleeter" },
     { name: t("truckLogs"), href: "/truck-logs" },
     { name: t("business"), href: "/business" },
@@ -31,6 +38,7 @@ export function CitizenDropdown() {
     <Dropdown
       trigger={
         <Button
+          role="listitem"
           className={classNames(isActive("/citizen") && "font-semibold")}
           variant="transparent"
         >

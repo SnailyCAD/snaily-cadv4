@@ -8,7 +8,7 @@ import type { GetServerSideProps } from "next";
 import type { BleeterPost, User } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
@@ -27,10 +27,8 @@ export default function Bleeter({ posts }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("bleeter")}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("bleeter")}</h1>
+        <Title className="!mb-0">{t("bleeter")}</Title>
 
         <Button onClick={() => openModal(ModalIds.ManageBleetModal)}>{t("createBleet")}</Button>
       </header>

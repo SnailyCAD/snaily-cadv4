@@ -2,7 +2,7 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -13,11 +13,11 @@ import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
 import { type FullBusiness, useBusinessState } from "state/businessState";
-import { toastError } from "lib/error";
+import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
-  onCreate: (business: FullBusiness) => void;
+  onCreate(business: FullBusiness): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {
@@ -46,7 +46,7 @@ export function JoinBusinessModal({ onCreate }: Props) {
       if (!json.business.whitelisted) {
         router.push(`/business/${json.businessId}/${json.id}`);
       } else {
-        toastError({ icon: null, message: t("businessIsWhitelisted") });
+        toastMessage({ icon: null, message: t("businessIsWhitelisted") });
       }
     }
   }

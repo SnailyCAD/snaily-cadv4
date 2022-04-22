@@ -8,12 +8,14 @@ export const enum ModalIds {
   CitizenImage = "CitizenImageModal",
 
   GiveTempPassword = "GiveTempPasswordModal",
+  ManagePermissions = "ManagePermissionsModal",
   ImportValues = "ImportValuesModal",
   ManagePenalCodeGroup = "AddPenalCodeGroupModal",
   ManageValue = "ManageValueModal",
   ImportCitizens = "ImportCitizensModal",
   ImportVehicles = "ImportVehiclesModal",
   ImportWeapons = "ImportWeaponsModal",
+  ManageCustomField = "ManageCustomFieldModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -34,9 +36,17 @@ export const enum ModalIds {
   SelectOfficer = "SelectOfficerModal",
   ManageBolo = "ManageBoloModal",
   Manage911Call = "Manage911CallModal",
+  MergeUnit = "MergeUnitModal",
 
+  ManageVehicleFlags = "ManageVehicleFlagsModal",
+  ManageCitizenFlags = "ManageCitizenFlagsModal",
+  ManageVehicleLicenses = "ManageVehicleLicensesModal",
   AddressSearch = "AddressSearchModal",
+
   NameSearch = "NameSearchModal",
+  VehicleSearchWithinName = "VehicleSearchWithinNameModal",
+  WeaponSearchWithinName = "WeaponSearchWithinNameModal",
+
   VehicleSearch = "VehicleSearchModal",
   WeaponSearch = "WeaponSearchModal",
   CreateWrittenWarning = "CreateWrittenWarningModal",
@@ -47,9 +57,11 @@ export const enum ModalIds {
   ManageUnit = "ManageUnitModal",
   CreateWarrant = "CreateWarrantModal",
   ManageIncident = "ManageIncidentModal",
-  EditCitizenLicenses = "EditCitizenLicensesModal",
   LinkCallToIncident = "LinkCallToIncidentModal",
   ManageSeizedItems = "ManageSeizedItemsModal",
+  ManageDLExam = "ManageDLExamModal",
+  ManageCitizenCustomFields = "ManageCitizenCustomFieldsModal",
+  CustomFieldSearch = "CustomFieldSearchModal",
 
   SearchMedicalRecord = "SearchMedicalRecordModal",
   CreateMedicalRecord = "CreateMedicalRecordModal",
@@ -90,4 +102,7 @@ export const enum ModalIds {
   AlertDeleteValue = "AlertDeleteValueModal",
   AlertDeleteSelectedValues = "AlertDeleteSelectedValuesModal",
   AlertDeclineOfficer = "AlertDeclineOfficerModal",
+  AlertUseOldPermissions = "AlertUseOldPermissionsModal",
+  AlertDeleteDLExam = "AlertDeleteDLExamModal",
+  AlertDeleteCustomField = "AlertDeleteCustomFieldModal",
 }

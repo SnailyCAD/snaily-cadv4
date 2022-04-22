@@ -2,34 +2,58 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { useTranslations } from "use-intl";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useGenerateCallsign } from "../useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
+import { isUnitCombined } from "@snailycad/utils";
+import { useAudio } from "react-use";
+import { useAuth } from "context/AuthContext";
 
+const PANIC_BUTTON_SRC = "/sounds/panic-button.mp3" as const;
 export function usePanicButton() {
-  const [unit, setUnit] = React.useState<FullDeputy | FullOfficer | null>(null);
-
-  useListener(SocketEvents.PANIC_BUTTON_ON, (officer: FullOfficer) => {
-    setUnit(officer);
+  const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
+  const { user } = useAuth();
+  const [audio, , controls] = useAudio({
+    autoPlay: false,
+    src: PANIC_BUTTON_SRC,
   });
 
-  useListener(SocketEvents.PANIC_BUTTON_OFF, () => {
-    setUnit(null);
-  });
+  const shouldPlayPanicButtonSound = user?.soundSettings?.panicButton ?? true;
 
-  return { unit, PanicButton: Component };
+  useListener(
+    SocketEvents.PANIC_BUTTON_ON,
+    (officer: Officer) => {
+      setUnit(officer);
+      controls.volume(0.3);
+      controls.seek(0);
+      shouldPlayPanicButtonSound && controls.play();
+    },
+    [shouldPlayPanicButtonSound, controls],
+  );
+
+  useListener(
+    SocketEvents.PANIC_BUTTON_OFF,
+    () => {
+      setUnit(null);
+      controls.pause();
+    },
+    [controls],
+  );
+
+  return { unit, audio, PanicButton: Component };
 }
 
-function Component({ unit }: { unit: FullOfficer | FullDeputy }) {
+function Component({ unit, audio }: { unit: Officer | EmsFdDeputy | CombinedLeoUnit; audio: any }) {
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
   const callsign = generateCallsign(
     unit,
-    "officers" in unit ? "pairedUnitTemplate" : "callsignTemplate",
+    isUnitCombined(unit) ? "pairedUnitTemplate" : "callsignTemplate",
   );
 
   return (
     <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
+      {audio}
       <p>
         {t.rich("panicButtonLeo", {
           officer: `${callsign} ${makeUnitName(unit)}`,

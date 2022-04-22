@@ -5,12 +5,12 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, LeoIncident } from "@snailycad/types";
+import type { AssignedUnit, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { Full911Call, FullDeputy, FullOfficer, useDispatchState } from "state/dispatchState";
+import { Full911Call, useDispatchState } from "state/dispatchState";
 import { Button } from "components/Button";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { LinkCallToIncidentModal } from "components/leo/call-history/LinkCallToIncidentModal";
 import { FormField } from "components/form/FormField";
@@ -24,22 +24,27 @@ import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { isUnitCombined } from "@snailycad/utils";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 interface Props {
-  data: (Full911Call & { incidents: LeoIncident[] })[];
+  data: Full911Call[];
   incidents: LeoIncident[];
-  officers: FullOfficer[];
-  deputies: FullDeputy[];
+  officers: Officer[];
+  deputies: EmsFdDeputy[];
 }
 
-export default function CallHistory({ data: calls, incidents, officers, deputies }: Props) {
+export default function CallHistory({ data, incidents, officers, deputies }: Props) {
+  const [calls, setCalls] = React.useState(data);
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
   const [search, setSearch] = React.useState("");
   const dispatchState = useDispatchState();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
 
   const { state, execute } = useFetch();
   const router = useRouter();
@@ -80,8 +85,8 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
   }
 
   function makeUnit(unit: AssignedUnit) {
-    return "officers" in unit.unit
-      ? unit.unit.callsign
+    return isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
   }
 
@@ -92,10 +97,14 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
   }, [officers, deputies]);
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewCallHistory, Permissions.ManageCallHistory],
+      }}
+      className="dark:text-white"
+    >
       <Title>{leo("callHistory")}</Title>
-
-      <h1 className="mb-3 text-3xl font-semibold">{leo("callHistory")}</h1>
 
       {calls.length <= 0 ? (
         <p className="mt-5">{"No calls ended yet."}</p>
@@ -105,14 +114,16 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
             <FormField label={common("search")} className="my-2">
               <div className="flex gap-2">
                 <Input onChange={(e) => setSearch(e.target.value)} value={search} />
-                <Button
-                  onClick={() => openModal(ModalIds.AlertPurgeCalls)}
-                  className="flex items-center gap-2 ml-2 min-w-fit"
-                  disabled={state === "loading" || tableSelect.selectedRows.length <= 0}
-                >
-                  {state === "loading" ? <Loader /> : null}
-                  {t("purgeSelected")}
-                </Button>
+                {hasManagePermissions ? (
+                  <Button
+                    onClick={() => openModal(ModalIds.AlertPurgeCalls)}
+                    className="flex items-center gap-2 ml-2 min-w-fit"
+                    disabled={state === "loading" || tableSelect.selectedRows.length <= 0}
+                  >
+                    {state === "loading" ? <Loader /> : null}
+                    {t("purgeSelected")}
+                  </Button>
+                ) : null}
               </div>
             </FormField>
           </div>
@@ -120,9 +131,10 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
           <Table
             disabledColumnId={["checkbox"]}
             filter={search}
-            defaultSort={{ columnId: "createdAt", descending: true }}
+            defaultSort={{ columnId: "createdAt", descending: false }}
             data={calls.map((call) => {
-              const caseNumbers = call.incidents.map((i) => `#${i.caseNumber}`).join(", ");
+              const caseNumbers = (call.incidents ?? []).map((i) => `#${i.caseNumber}`).join(", ");
+
               return {
                 checkbox: (
                   <input
@@ -148,9 +160,11 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
                 createdAt: <FullDate>{call.createdAt}</FullDate>,
                 actions: (
                   <>
-                    <Button onClick={() => handleLinkClick(call)} small>
-                      {leo("linkToIncident")}
-                    </Button>
+                    {hasManagePermissions ? (
+                      <Button onClick={() => handleLinkClick(call)} small>
+                        {leo("linkToIncident")}
+                      </Button>
+                    ) : null}
                     <Button className="ml-2" onClick={() => handleViewClick(call)} small>
                       {leo("viewCall")}
                     </Button>
@@ -159,16 +173,18 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
               };
             })}
             columns={[
-              {
-                Header: (
-                  <IndeterminateCheckbox
-                    onChange={tableSelect.handleAllCheckboxes}
-                    checked={tableSelect.isTopCheckboxChecked}
-                    indeterminate={tableSelect.isIntermediate}
-                  />
-                ),
-                accessor: "checkbox",
-              },
+              hasManagePermissions
+                ? {
+                    Header: (
+                      <IndeterminateCheckbox
+                        onChange={tableSelect.handleAllCheckboxes}
+                        checked={tableSelect.isTopCheckboxChecked}
+                        indeterminate={tableSelect.isIntermediate}
+                      />
+                    ),
+                    accessor: "checkbox",
+                  }
+                : null,
               { Header: t("caller"), accessor: "caller" },
               { Header: t("location"), accessor: "location" },
               { Header: t("postal"), accessor: "postal" },
@@ -182,7 +198,21 @@ export default function CallHistory({ data: calls, incidents, officers, deputies
         </>
       )}
 
-      <LinkCallToIncidentModal incidents={incidents} call={tempCall} />
+      <LinkCallToIncidentModal
+        onSave={(call) => {
+          setCalls((calls) =>
+            calls.map((c) => {
+              if (c.id === call.id) {
+                return call;
+              }
+
+              return c;
+            }),
+          );
+        }}
+        incidents={incidents}
+        call={tempCall}
+      />
       <AlertModal
         title={t("purgeSelectedCalls")}
         description={t.rich("alert_purgeSelectedCalls", {

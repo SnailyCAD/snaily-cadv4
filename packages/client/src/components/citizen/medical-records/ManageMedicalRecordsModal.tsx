@@ -6,7 +6,7 @@ import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
@@ -18,8 +18,8 @@ import { useValues } from "context/ValuesContext";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
-  onCreate?: (newV: MedicalRecord) => void;
-  onUpdate?: (old: MedicalRecord, newV: MedicalRecord) => void;
+  onCreate?(newV: MedicalRecord): void;
+  onUpdate?(old: MedicalRecord, newV: MedicalRecord): void;
   onClose?(): void;
 }
 

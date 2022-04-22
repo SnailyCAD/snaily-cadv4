@@ -7,7 +7,7 @@ import { Button } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
@@ -99,10 +99,8 @@ export default function BusinessId(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{currentBusiness.name}</Title>
-
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{currentBusiness.name}</h1>
+        <Title className="!mb-0">{currentBusiness.name}</Title>
 
         <div>
           {currentEmployee.canCreatePosts ? (

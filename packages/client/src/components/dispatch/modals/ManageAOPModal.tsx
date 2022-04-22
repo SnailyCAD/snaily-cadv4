@@ -4,7 +4,7 @@ import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useAuth } from "context/AuthContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -48,7 +48,15 @@ export function ManageAOPModal() {
               <Input autoFocus name="aop" onChange={handleChange} value={values.aop} required />
             </FormField>
 
-            <footer className="flex justify-end">
+            <footer className="flex justify-end gap-2">
+              <Button
+                variant="cancel"
+                onClick={() => closeModal(ModalIds.ManageAOP)}
+                className="flex items-center"
+                type="reset"
+              >
+                {common("cancel")}
+              </Button>
               <Button
                 className="flex items-center"
                 disabled={!isValid || state === "loading"}

@@ -4,7 +4,7 @@ import { FormikHelpers, useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import { FormField } from "../FormField";
 import { Input } from "./Input";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { CropImageModal } from "components/modal/CropImageModal";
 import { AllowedFileExtension, allowedFileExtensions, IMGUR_REGEX } from "@snailycad/config";
@@ -86,7 +86,8 @@ export function ImageSelectInput({ label, valueKey = "image", image, setImage }:
             type="button"
             variant="danger"
             onClick={() => {
-              setFieldValue(valueKey, "");
+              setFieldValue(valueKey, null);
+              setImage(null);
             }}
           >
             {common("delete")}

@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-const LICENSE_TYPE_REGEX = /LICENSE|REGISTRATION_STATUS/;
+const LICENSE_TYPE_REGEX = /LICENSE|INSURANCE_STATUS|REGISTRATION_STATUS/;
 export const BASE_VALUE_SCHEMA = z.object({
   value: z.string().min(1).max(255),
-  licenseType: z.string().max(255).regex(LICENSE_TYPE_REGEX).nullable().optional(),
+  licenseType: z.string().regex(LICENSE_TYPE_REGEX).nullable().optional(),
+  isDefault: z.boolean().nullable().optional(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 
@@ -18,13 +19,12 @@ export const HASH_SCHEMA_ARR = z.array(HASH_SCHEMA).min(1);
  */
 const SHOULD_DO_REGEX = /SET_OFF_DUTY|SET_ON_DUTY|SET_ASSIGNED|SET_STATUS|PANIC_BUTTON/;
 const TYPE_REGEX = /STATUS_CODE|SITUATION_CODE/;
-const WHAT_PAGES_REGEX = /LEO|EMS_FD|DISPATCH/;
 
 export const CODES_10_SCHEMA = BASE_VALUE_SCHEMA.extend({
   shouldDo: z.string().regex(SHOULD_DO_REGEX),
-  color: z.string().max(255).optional(),
+  color: z.string().max(255).nullable().optional(),
   type: z.string().regex(TYPE_REGEX).max(255),
-  whatPages: z.array(z.string().regex(WHAT_PAGES_REGEX)).max(3).nullable().optional(),
+  whatPages: z.array(z.any()).max(3).nullable().optional(),
   departments: z.array(z.any()).nullable().optional(),
 });
 
@@ -44,7 +44,7 @@ export const BUSINESS_ROLE_ARR = z.array(BUSINESS_ROLE_SCHEMA).min(1);
 /**
  * driverslicense_category
  */
-const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER/;
+const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER|FIREARM/;
 
 export const DLC_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DLC_TYPE_REGEX).max(255),
@@ -62,6 +62,8 @@ export const DEPARTMENT_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DEPARTMENT_TYPE_REGEX).max(255),
   isDefaultDepartment: z.boolean().optional(),
   whitelisted: z.boolean().optional(),
+  defaultOfficerRankId: z.string().nullable().optional(),
+  isConfidential: z.boolean().nullable().optional(),
 });
 
 export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);
@@ -86,7 +88,9 @@ export const PENAL_CODE_SCHEMA = z.object({
   description: z.string().nullable().optional(),
   groupId: z.string().nullable().optional(),
   warningApplicable: z.boolean().optional(),
-  fines: z.any().nullable().optional(),
+  warningNotApplicable: z.boolean().optional(),
+  warningFines: z.any().nullable().optional(),
+  warningNotFines: z.any().nullable().optional(),
   bail: z.any().nullable().optional(),
   prisonTerm: z.any().nullable().optional(),
 });

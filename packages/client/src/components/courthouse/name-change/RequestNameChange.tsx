@@ -8,7 +8,7 @@ import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
@@ -95,8 +95,7 @@ export function RequestNameChangeModal({ onCreate }: Props) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {/* {t("request")} */}
-                do
+                {t("request")}
               </Button>
             </footer>
           </Form>

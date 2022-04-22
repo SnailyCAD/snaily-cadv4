@@ -35,6 +35,14 @@ export function AppearanceTab() {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
+    soundSettings: user.soundSettings ?? {
+      panicButton: true,
+      signal100: true,
+      addedToCall: false,
+      stopRoleplay: false,
+      statusUpdate: false,
+      incomingCall: false,
+    },
   };
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
@@ -54,11 +62,11 @@ export function AppearanceTab() {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, values, errors }) => (
           <Form className="mt-3">
-            <FormField checkbox errorMessage={errors.isDarkTheme} label="Dark Theme">
+            <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
             </FormField>
 
-            <FormField errorMessage={errors.statusViewMode} label="Status View">
+            <FormField errorMessage={errors.statusViewMode} label={t("statusView")}>
               <Select
                 values={Object.values(StatusViewMode).map((v) => ({
                   value: v,
@@ -70,7 +78,7 @@ export function AppearanceTab() {
               />
             </FormField>
 
-            <FormField errorMessage={errors.tableActionsAlignment} label="Table Actions Alignment">
+            <FormField errorMessage={errors.tableActionsAlignment} label={t("tableAlignment")}>
               <Select
                 values={Object.values(TableActionsAlignment).map((v) => ({
                   value: v,
@@ -81,6 +89,58 @@ export function AppearanceTab() {
                 name="tableActionsAlignment"
               />
             </FormField>
+
+            <div className="mb-5">
+              <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
+
+              <FormField label={t("panicButton")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.panicButton}
+                  onClick={handleChange}
+                  name="soundSettings.panicButton"
+                />
+              </FormField>
+
+              <FormField label={t("signal100")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.signal100}
+                  onClick={handleChange}
+                  name="soundSettings.signal100"
+                />
+              </FormField>
+
+              <FormField label={t("addedToCall")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.addedToCall}
+                  onClick={handleChange}
+                  name="soundSettings.addedToCall"
+                />
+              </FormField>
+
+              <FormField label={t("stopRoleplay")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.stopRoleplay}
+                  onClick={handleChange}
+                  name="soundSettings.stopRoleplay"
+                />
+              </FormField>
+
+              <FormField label={t("statusUpdate")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.statusUpdate}
+                  onClick={handleChange}
+                  name="soundSettings.statusUpdate"
+                />
+              </FormField>
+
+              <FormField label={t("incomingCall")} checkbox>
+                <Toggle
+                  toggled={values.soundSettings.incomingCall}
+                  onClick={handleChange}
+                  name="soundSettings.incomingCall"
+                />
+              </FormField>
+            </div>
 
             <Button
               className="flex items-center gap-2"

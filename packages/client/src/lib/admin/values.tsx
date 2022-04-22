@@ -1,7 +1,6 @@
-import { LICENSE_LABELS } from "components/admin/values/ManageValueModal";
+import { LICENSE_LABELS } from "components/admin/values/manage-modal/LicenseFields";
 import { yesOrNoText } from "lib/utils";
 import { useTranslations } from "next-intl";
-import type { TValue } from "src/pages/admin/values/[path]";
 import {
   type StatusValue,
   StatusValueType,
@@ -19,6 +18,7 @@ import {
   WHAT_PAGES_LABELS,
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
+import { type AnyValue, isBaseValue } from "@snailycad/utils";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -40,9 +40,9 @@ export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
 
-  function get(value: TValue) {
+  function get(value: AnyValue) {
     // state mismatch prevention
-    const valueType = "createdAt" in value ? value.type : value.value.type;
+    const valueType = isBaseValue(value) ? value.type : value.value.type;
     if (valueType !== type) return;
 
     switch (type) {
@@ -80,6 +80,7 @@ export function useTableDataOfType(type: ValueType) {
           type: DEPARTMENT_LABELS[v.type],
           whitelisted: common(yesOrNoText(v.whitelisted)),
           isDefaultDepartment: common(yesOrNoText(v.isDefaultDepartment)),
+          defaultOfficerRank: v.defaultOfficerRank?.value ?? common("none"),
         };
       }
       case "DIVISION": {
@@ -103,6 +104,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
+          isDefault: common(yesOrNoText(v.isDefault)),
         };
       }
       default: {
@@ -134,6 +136,7 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: common("type"), accessor: "type" },
         { Header: t("whitelisted"), accessor: "whitelisted" },
         { Header: t("isDefaultDepartment"), accessor: "isDefaultDepartment" },
+        { Header: t("defaultOfficerRank"), accessor: "defaultOfficerRank" },
       ];
     }
     case "DIVISION": {
@@ -147,7 +150,10 @@ export function useTableHeadersOfType(type: ValueType) {
       return [{ Header: t("gameHash"), accessor: "gameHash" }];
     }
     case "LICENSE": {
-      return [{ Header: t("licenseType"), accessor: "licenseType" }];
+      return [
+        { Header: t("licenseType"), accessor: "licenseType" },
+        { Header: t("isDefault"), accessor: "isDefault" },
+      ];
     }
     default: {
       return [];

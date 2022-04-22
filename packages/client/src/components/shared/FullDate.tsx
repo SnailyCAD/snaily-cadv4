@@ -6,11 +6,17 @@ import { HoverCard } from "./HoverCard";
 interface Props extends HoverCardProps {
   children: Date | string | number;
   onlyDate?: boolean;
+  isDateOfBirth?: boolean;
 }
 
-export function FullDate({ children, onlyDate }: Props) {
+export function FullDate({ children, onlyDate, isDateOfBirth }: Props) {
   const hmsString = onlyDate ? "" : "HH:mm:ss";
-  const formatted = format(new Date(children), `EEEE, MMMM dd, yyyy ${hmsString}`);
+  let date = new Date(children).getTime();
+
+  if (isDateOfBirth) {
+    date = date + 5 * 60 * 60 * 1000;
+  }
+  const formatted = format(new Date(date), `EEEE, MMMM dd, yyyy ${hmsString}`);
 
   return (
     <HoverCard

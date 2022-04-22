@@ -9,7 +9,7 @@ import type { GetServerSideProps } from "next";
 import type { BleeterPost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
@@ -52,10 +52,8 @@ export default function BleetPost({ post }: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{post.title}</Title>
-
       <header className="flex items-center justify-between pb-2 border-b-2">
-        <h1 className="text-3xl font-semibold">{post.title}</h1>
+        <Title className="!mb-0">{post.title}</Title>
 
         <div>
           {user?.id === post.userId ? (

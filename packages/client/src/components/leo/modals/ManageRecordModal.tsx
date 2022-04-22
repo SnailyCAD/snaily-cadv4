@@ -5,29 +5,29 @@ import { Input } from "components/form/inputs/Input";
 import type { SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { Form, Formik } from "formik";
+import { Form, Formik, type FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, Record } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
-import type { FullRecord } from "./NameSearchModal/RecordsArea";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
+import { toastMessage } from "lib/toastMessage";
 
 interface Props {
-  record?: FullRecord | null;
+  record?: Record | null;
   type: RecordType;
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
   isEdit?: boolean;
-  onUpdate?(data: FullRecord): void;
+  onUpdate?(data: Record): void;
 }
 
 export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props) {
@@ -40,16 +40,19 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       isEdit,
       title: isEdit ? "editTicket" : "createTicket",
       id: id ?? ModalIds.CreateTicket,
+      success: "successCreateTicket",
     },
     [RecordType.ARREST_REPORT]: {
       isEdit,
       title: isEdit ? "editArrestReport" : "createArrestReport",
       id: id ?? ModalIds.CreateArrestReport,
+      success: "successCreateArrestReport",
     },
     [RecordType.WRITTEN_WARNING]: {
       isEdit,
       title: isEdit ? "editWrittenWarning" : "createWrittenWarning",
       id: id ?? ModalIds.CreateWrittenWarning,
+      success: "successCreateWarning",
     },
   };
 
@@ -63,7 +66,10 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
         )
       : penalCode.values;
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const requestData = {
       ...values,
       type,
@@ -75,10 +81,13 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       })),
     };
 
+    validateRecords(values.violations, helpers);
+
     if (record) {
       const { json } = await execute(`/records/record/${record.id}`, {
         method: "PUT",
         data: requestData,
+        helpers,
       });
 
       if (json.id) {
@@ -89,9 +98,16 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       const { json } = await execute("/records", {
         method: "POST",
         data: requestData,
+        helpers,
       });
 
       if (json.id) {
+        toastMessage({
+          title: common("success"),
+          message: t(data[type].success, { citizen: values.citizenName }),
+          icon: "success",
+        });
+
         closeModal(data[type].id);
       }
     }
@@ -178,7 +194,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
               <Input value={values.postal} name="postal" onChange={handleChange} />
             </FormField>
 
-            <FormField errorMessage={errors.violations as string} label={t("violations")}>
+            <FormField label={t("violations")}>
               <SelectPenalCode
                 penalCodes={penalCodes}
                 value={values.violations}
@@ -211,4 +227,27 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
       </Formik>
     </Modal>
   );
+}
+
+function validateRecords(data: any[], helpers: FormikHelpers<any>) {
+  data.forEach(({ value }) => {
+    const isFinesEnabled = value.fine?.enabled;
+    const fine = value.fine?.value;
+    check(isFinesEnabled, fine, value.id, "fine");
+
+    const isJailTimeEnabled = value.jailTime?.enabled;
+    const jailTime = value.jailTime?.value;
+    check(isJailTimeEnabled, jailTime, value.id, "jailTime");
+  });
+
+  function check(enabled: boolean, value: unknown, id: string, fieldName: "fine" | "jailTime") {
+    if (enabled && !value) {
+      throw helpers.setFieldError(
+        `violations[${id}].${fieldName}`,
+        "You must enter a value if field is enabled",
+      );
+    }
+  }
+
+  return true;
 }

@@ -6,17 +6,20 @@ import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { MedicalRecord } from "@snailycad/types";
+import type { Citizen, MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
-import { useCitizen } from "context/CitizenContext";
+import { useValues } from "context/ValuesContext";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import { useImageUrl } from "hooks/useImageUrl";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
-  onCreate?: (newV: MedicalRecord) => void;
+  onCreate?(newV: MedicalRecord): void;
   onClose?(): void;
 }
 
@@ -25,7 +28,9 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
-  const { citizens } = useCitizen();
+  const { bloodGroup } = useValues();
+  const { makeImageUrl } = useImageUrl();
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 
@@ -50,6 +55,8 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
     type: "",
     description: "",
     citizenId: "",
+    citizenName: "",
+    bloodGroup: null,
   };
 
   return (
@@ -60,17 +67,58 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
+        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
           <form onSubmit={handleSubmit}>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
+              <InputSuggestions
+                onSuggestionClick={(suggestion: Citizen) => {
+                  const newValues = {
+                    ...values,
+                    citizenId: suggestion.id,
+                    citizenName: `${suggestion.name} ${suggestion.surname}`,
+                  };
+
+                  setValues(newValues, true);
+                }}
+                Component={({ suggestion }: { suggestion: Citizen }) => (
+                  <div className="flex items-center">
+                    {suggestion.imageId ? (
+                      <img
+                        className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                        draggable={false}
+                        src={makeImageUrl("citizens", suggestion.imageId)}
+                      />
+                    ) : null}
+                    <p>
+                      {suggestion.name} {suggestion.surname}{" "}
+                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                        <>(SSN: {suggestion.socialSecurityNumber})</>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/medical-name",
+                  method: "POST",
+                  dataKey: "name",
+                }}
+                inputProps={{
+                  value: values.citizenName,
+                  name: "citizenName",
+                  onChange: handleChange,
+                }}
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.bloodGroup} label={t("bloodGroup")}>
               <Select
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
+                values={bloodGroup.values.map((v) => ({
+                  value: v.id,
+                  label: v.value,
                 }))}
                 onChange={handleChange}
-                name="citizenId"
-                value={values.citizenId}
+                name="bloodGroup"
+                value={values.bloodGroup}
               />
             </FormField>
 

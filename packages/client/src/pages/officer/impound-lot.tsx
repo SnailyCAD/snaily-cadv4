@@ -7,13 +7,14 @@ import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import type { ImpoundedVehicle } from "@snailycad/types";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   vehicles: ImpoundedVehicle[];
@@ -24,6 +25,8 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   const common = useTranslations("Common");
   const { isOpen, closeModal, openModal } = useModal();
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageImpoundLot], true);
 
   const [vehicles, setVehicles] = React.useState(data);
   const [tempVehicle, setTempVehicle] = React.useState<ImpoundedVehicle | null>(null);
@@ -48,10 +51,14 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   }
 
   return (
-    <Layout className="dark:text-white">
+    <Layout
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewImpoundLot, Permissions.ManageImpoundLot],
+      }}
+      className="dark:text-white"
+    >
       <Title>{t("impoundLot")}</Title>
-
-      <h1 className="mb-3 text-3xl font-semibold">{t("impoundLot")}</h1>
 
       {vehicles.length <= 0 ? (
         <p className="mt-5">{t("noImpoundedVehicles")}</p>
@@ -71,7 +78,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             { Header: t("plate"), accessor: "plate" },
             { Header: t("model"), accessor: "model" },
             { Header: t("location"), accessor: "location" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}
@@ -88,7 +95,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             disabled={state === "loading"}
             onClick={() => closeModal(ModalIds.AlertCheckoutImpoundedVehicle)}
           >
-            {common("cancel")}
+            {common("no")}
           </Button>
           <Button
             disabled={state === "loading"}
@@ -96,7 +103,7 @@ export default function ImpoundLot({ vehicles: data }: Props) {
             onClick={handleCheckout}
           >
             {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}{" "}
-            {common("continue")}
+            {common("yes")}
           </Button>
         </div>
       </Modal>

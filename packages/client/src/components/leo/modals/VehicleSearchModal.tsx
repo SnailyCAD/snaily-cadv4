@@ -3,19 +3,12 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import type {
-  Business,
-  Citizen,
-  RegisteredVehicle,
-  TruckLog,
-  Value,
-  ValueType,
-} from "@snailycad/types";
+import { CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { yesOrNoText } from "lib/utils";
@@ -24,26 +17,38 @@ import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
 import { Infofield } from "components/shared/Infofield";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
+import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
+import { Pencil } from "react-bootstrap-icons";
+import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
+import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
+import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
+import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
+import { CustomFieldsArea } from "./CustomFieldsArea";
+import { Status } from "components/shared/Status";
 
-export function VehicleSearchModal() {
-  const [results, setResults] = React.useState<VehicleSearchResult | null | boolean>(null);
+interface Props {
+  id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
+}
 
-  const { isOpen, closeModal } = useModal();
+export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
+  const { currentResult, setCurrentResult } = useVehicleSearch();
+  const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
+
+  const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-  const { BUSINESS } = useFeatureEnabled();
+  const { BUSINESS, DMV } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
-  const showMarkStolen =
-    results && typeof results !== "boolean" && isLeo && !results.reportedStolen;
+  const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
 
   React.useEffect(() => {
-    if (!isOpen(ModalIds.VehicleSearch)) {
-      setResults(null);
+    if (!isOpen(id)) {
+      setCurrentResult(undefined);
     }
-  }, [isOpen]);
+  }, [id, isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/search/vehicle", {
@@ -53,40 +58,60 @@ export function VehicleSearchModal() {
     });
 
     if (json.id) {
-      setResults(json);
+      setCurrentResult(json);
     } else {
-      setResults(false);
+      setCurrentResult(null);
     }
   }
 
-  async function handleMarkStolen() {
-    if (!results || typeof results === "boolean") return;
+  function handleNameClick() {
+    if (!currentResult) return;
 
-    const { json } = await execute(`/bolos/mark-stolen/${results.id}`, {
+    openModal(ModalIds.NameSearch, {
+      name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
+    });
+    closeModal(ModalIds.VehicleSearchWithinName);
+  }
+
+  function handleEditVehicleFlags() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.ManageVehicleFlags);
+  }
+
+  function handleEditLicenses() {
+    if (!currentResult) return;
+
+    openModal(ModalIds.ManageVehicleLicenses);
+  }
+
+  async function handleMarkStolen() {
+    if (!currentResult) return;
+
+    const { json } = await execute(`/bolos/mark-stolen/${currentResult.id}`, {
       method: "POST",
       data: {
-        id: results.id,
-        color: results.color,
-        modelId: results.modelId,
-        plate: results.plate,
+        id: currentResult.id,
+        color: currentResult.color,
+        modelId: currentResult.modelId,
+        plate: currentResult.plate,
       },
     });
 
     if (json) {
-      // @ts-expect-error ignore
-      setResults((p) => ({ ...p, reportedStolen: true }));
+      setCurrentResult({ ...currentResult, reportedStolen: true });
     }
   }
 
   const INITIAL_VALUES = {
-    plateOrVin: "",
+    plateOrVin: currentResult?.vinNumber ?? "",
   };
 
   return (
     <Modal
       title={t("plateSearch")}
-      onClose={() => closeModal(ModalIds.VehicleSearch)}
-      isOpen={isOpen(ModalIds.VehicleSearch)}
+      onClose={() => closeModal(id)}
+      isOpen={isOpen(id)}
       className="w-[750px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
@@ -96,7 +121,7 @@ export function VehicleSearchModal() {
               <InputSuggestions
                 onSuggestionClick={(suggestion: VehicleSearchResult) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
-                  setResults(suggestion);
+                  setCurrentResult(suggestion);
                 }}
                 Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
                   <div className="flex items-center">
@@ -118,50 +143,102 @@ export function VehicleSearchModal() {
               />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{t("vehicleNotFound")}</p> : null}
-
-            {typeof results !== "boolean" && results ? (
+            {!currentResult ? (
+              typeof currentResult === "undefined" ? null : (
+                <p>{t("vehicleNotFound")}</p>
+              )
+            ) : (
               <div className="mt-3">
                 <h3 className="text-2xl font-semibold">{t("results")}</h3>
 
-                {results.reportedStolen ? (
+                {currentResult.reportedStolen ? (
                   <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
                     {t("vehicleReportedStolen")}
                   </div>
                 ) : null}
 
-                <ul className="mt-2">
+                <ul className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-1">
                   <li>
-                    <Infofield label={vT("plate")}>{results.plate.toUpperCase()}</Infofield>
+                    <Infofield className="capitalize" label={vT("owner")}>
+                      <Button
+                        title={common("openInSearch")}
+                        small
+                        type="button"
+                        onClick={handleNameClick}
+                      >
+                        {currentResult.citizen.name} {currentResult.citizen.surname}
+                      </Button>
+                    </Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("model")}>{results.model.value.value}</Infofield>
+                    <Infofield label={vT("plate")}>{currentResult.plate.toUpperCase()}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("color")}> {results.color}</Infofield>
+                    <Infofield label={vT("model")}>{currentResult.model.value.value}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("vinNumber")}>{results.vinNumber}</Infofield>
+                    <Infofield label={vT("color")}> {currentResult.color}</Infofield>
                   </li>
                   <li>
-                    <Infofield label={vT("vinNumber")}>
-                      {results.registrationStatus.value}
+                    <Infofield label={vT("vinNumber")}>{currentResult.vinNumber}</Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("registrationStatus")}>
+                      {currentResult.registrationStatus.value}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("insuranceStatus")}>
+                      {currentResult.insuranceStatus?.value ?? common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("taxStatus")}>
+                      {currentResult.taxStatus
+                        ? TAX_STATUS_LABELS[currentResult.taxStatus]
+                        : common("none")}
+                    </Infofield>
+                  </li>
+                  <li>
+                    <Infofield label={vT("inspectionStatus")}>
+                      {currentResult.inspectionStatus
+                        ? INSPECTION_STATUS_LABELS[currentResult.inspectionStatus]
+                        : common("none")}
                     </Infofield>
                   </li>
                   <li>
                     <Infofield label={common("createdAt")}>
-                      <FullDate>{results.createdAt}</FullDate>
+                      <FullDate>{currentResult.createdAt}</FullDate>
                     </Infofield>
                   </li>
-                  <li>
-                    <Infofield className="capitalize" label={vT("owner")}>
-                      {results.citizen.name} {results.citizen.surname}
-                    </Infofield>
-                  </li>
+
                   {BUSINESS ? (
                     <li>
                       <Infofield className="capitalize" label={vT("business")}>
-                        {results.Business[0]?.name ?? common("none")}
+                        {currentResult.Business[0]?.name ?? common("none")}
+                      </Infofield>
+                    </li>
+                  ) : null}
+                  <li>
+                    <Infofield className="capitalize flex items-center gap-2" label={vT("flags")}>
+                      <Button
+                        type="button"
+                        onClick={handleEditVehicleFlags}
+                        title={t("manageVehicleFlags")}
+                        aria-label={t("manageVehicleFlags")}
+                        className="px-1 mr-2"
+                      >
+                        <Pencil />
+                      </Button>
+                      {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
+                    </Infofield>
+                  </li>
+                  {DMV ? (
+                    <li>
+                      <Infofield label={vT("dmvStatus")}>
+                        <Status state={currentResult.dmvStatus}>
+                          {currentResult.dmvStatus?.toLowerCase()}
+                        </Status>
                       </Infofield>
                     </li>
                   ) : null}
@@ -170,23 +247,25 @@ export function VehicleSearchModal() {
                       childrenProps={{
                         className: classNames(
                           "capitalize",
-                          results.reportedStolen && "text-red-700 font-semibold",
+                          currentResult.reportedStolen && "text-red-700 font-semibold",
                         ),
                       }}
                       label={t("reportedStolen")}
                     >
-                      {common(yesOrNoText(results.reportedStolen))}
+                      {common(yesOrNoText(currentResult.reportedStolen))}
                     </Infofield>
                   </li>
+
+                  <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
                 </ul>
 
-                <TruckLogsTable results={results} />
+                <TruckLogsTable result={currentResult} />
               </div>
-            ) : null}
+            )}
 
-            <footer className={`mt-5 flex ${showMarkStolen ? "justify-between" : "justify-end"}`}>
-              {showMarkStolen ? (
-                <div>
+            <footer className="mt-5 flex justify-between">
+              <div className="flex gap-2">
+                {showMarkStolen ? (
                   <Button
                     type="button"
                     onClick={() => handleMarkStolen()}
@@ -195,15 +274,22 @@ export function VehicleSearchModal() {
                   >
                     {vT("reportAsStolen")}
                   </Button>
-                </div>
-              ) : null}
+                ) : null}
+
+                {isLeo && currentResult ? (
+                  <Button
+                    type="button"
+                    onClick={() => handleEditLicenses()}
+                    variant="cancel"
+                    className="px-1.5"
+                  >
+                    {t("editLicenses")}
+                  </Button>
+                ) : null}
+              </div>
 
               <div className="flex">
-                <Button
-                  type="reset"
-                  onClick={() => closeModal(ModalIds.VehicleSearch)}
-                  variant="cancel"
-                >
+                <Button type="reset" onClick={() => closeModal(id)} variant="cancel">
                   {common("cancel")}
                 </Button>
                 <Button
@@ -216,16 +302,22 @@ export function VehicleSearchModal() {
                 </Button>
               </div>
             </footer>
+
+            {currentResult ? (
+              <ManageCustomFieldsModal
+                onUpdate={(results) => setCurrentResult({ ...currentResult, ...results })}
+                category={CustomFieldCategory.VEHICLE}
+                url={`/search/actions/custom-fields/vehicle/${currentResult.id}`}
+                allCustomFields={currentResult.allCustomFields ?? []}
+                customFields={currentResult.customFields ?? []}
+              />
+            ) : null}
           </Form>
         )}
       </Formik>
+
+      <ManageVehicleFlagsModal />
+      <ManageVehicleLicensesModal />
     </Modal>
   );
-}
-
-export interface VehicleSearchResult extends RegisteredVehicle {
-  citizen: Citizen;
-  registrationStatus: Value<ValueType.LICENSE>;
-  TruckLog: TruckLog[];
-  Business: Business[];
 }

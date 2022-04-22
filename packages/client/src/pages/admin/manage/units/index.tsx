@@ -4,12 +4,12 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { FullDeputy, FullOfficer } from "state/dispatchState";
 import { useTranslations } from "use-intl";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { AllUnitsTab } from "components/admin/manage/units/AllUnitsTab";
-import { WhitelistStatus } from "@snailycad/types";
+import { EmsFdDeputy, Officer, WhitelistStatus, Rank } from "@snailycad/types";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -17,7 +17,7 @@ const DepartmentWhitelistingTab = dynamic(
       .DepartmentWhitelistingTab,
 );
 
-export type Unit = (FullOfficer & { type: "OFFICER" }) | (FullDeputy & { type: "DEPUTY" });
+export type Unit = (Officer & { type: "OFFICER" }) | (EmsFdDeputy & { type: "DEPUTY" });
 
 interface Props {
   units: Unit[];
@@ -25,28 +25,34 @@ interface Props {
 
 export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
 
   const pendingOfficers = units.filter(
     (v) => v.type === "OFFICER" && v.whitelistStatus?.status === WhitelistStatus.PENDING,
   );
 
+  const TABS = [{ name: t("Management.allUnits"), value: "allUnits" }];
+
+  if (hasManagePermissions) {
+    TABS[1] = {
+      name: t
+        .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
+        .toString(),
+      value: "departmentWhitelisting",
+    };
+  }
+
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+      }}
+    >
       <Title>{t("Management.MANAGE_UNITS")}</Title>
 
-      <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_UNITS")}</h1>
-
-      <TabList
-        tabs={[
-          { name: t("Management.allUnits"), value: "allUnits" },
-          {
-            name: t
-              .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
-              .toString(),
-            value: "departmentWhitelisting",
-          },
-        ]}
-      >
+      <TabList tabs={TABS}>
         <AllUnitsTab units={units} />
         <DepartmentWhitelistingTab pendingOfficers={pendingOfficers} />
       </TabList>

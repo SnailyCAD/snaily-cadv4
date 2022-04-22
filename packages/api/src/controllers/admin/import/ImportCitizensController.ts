@@ -8,7 +8,8 @@ import { generateString } from "utils/generateString";
 import { IMPORT_CITIZENS_ARR } from "@snailycad/schemas/dist/admin/import/citizens";
 import { importVehiclesHandler } from "./ImportVehiclesController";
 import { importWeaponsHandler } from "./ImportWeaponsController";
-import { linkDlCategories } from "../../citizen/CitizenController";
+import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
+import { manyToManyHelper } from "utils/manyToMany";
 
 @Controller("/admin/import/citizens")
 export class ImportCitizensController {
@@ -39,7 +40,8 @@ export class ImportCitizensController {
             weaponLicenseId: data.weaponLicenseId ?? null,
             driversLicenseId: data.driversLicenseId ?? null,
             pilotLicenseId: data.pilotLicenseId ?? null,
-            ccwId: data.ccwId ?? null,
+            postal: data.postal ?? null,
+            phoneNumber: data.phoneNumber ?? null,
           },
           include: { gender: true, ethnicity: true },
         });
@@ -52,13 +54,34 @@ export class ImportCitizensController {
           await importWeaponsHandler(data.weapons.map((v) => ({ ...v, ownerId: citizen.id })));
         }
 
-        await linkDlCategories(
-          citizen.id,
-          data.driversLicenseCategoryIds ?? [],
-          data.pilotLicenseCategoryIds ?? [],
-        );
+        if (data.flags) {
+          const disconnectConnectArr = manyToManyHelper([], data.flags);
 
-        return citizen;
+          await prisma.$transaction(
+            disconnectConnectArr.map((v) =>
+              prisma.citizen.update({ where: { id: citizen.id }, data: { flags: v } }),
+            ),
+          );
+        }
+
+        const licenseData = {
+          driversLicenseCategory: data.driversLicenseCategoryIds,
+          pilotLicenseCategory: data.pilotLicenseCategoryIds,
+          waterLicenseCategory: data.waterLicenseCategoryIds,
+          firearmLicenseCategory: data.firearmLicenseCategoryIds,
+        };
+
+        const updated = await updateCitizenLicenseCategories(citizen, licenseData, {
+          gender: true,
+          ethnicity: true,
+          weaponLicense: true,
+          driversLicense: true,
+          pilotLicense: true,
+          waterLicense: true,
+          dlCategory: { include: { value: true } },
+        });
+
+        return updated;
       }),
     );
   }

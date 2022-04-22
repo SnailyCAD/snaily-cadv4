@@ -1,8 +1,6 @@
 import { z } from "zod";
 
 const RANK_REGEX = /OWNER|ADMIN|USER/;
-const FEATURES_REGEX =
-  /BLEETER|TOW|TAXI|COURTHOUSE|TRUCK_LOGS|AOP|BUSINESS|ALLOW_DUPLICATE_CITIZEN_NAMES|DISCORD_AUTH|WEAPON_REGISTRATION|CALLS_911|SOCIAL_SECURITY_NUMBERS|DISALLOW_TEXTFIELD_SELECTION|ACTIVE_DISPATCHERS|ALLOW_CITIZEN_UPDATE_LICENSE|ALLOW_REGULAR_LOGIN|ACTIVE_INCIDENTS|RADIO_CHANNEL_MANAGEMENT/;
 
 export const CAD_SETTINGS_SCHEMA = z.object({
   name: z.string().min(2).max(255),
@@ -14,6 +12,7 @@ export const CAD_SETTINGS_SCHEMA = z.object({
   roleplayEnabled: z.boolean(),
   registrationCode: z.string().max(255),
   businessWhitelisted: z.boolean(),
+  image: z.any().optional().nullable(),
 });
 
 export const CAD_MISC_SETTINGS_SCHEMA = z.object({
@@ -23,6 +22,8 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxBusinessesPerCitizen: z.number().nullable(),
   maxDivisionsPerOfficer: z.number().nullable(),
   maxDepartmentsEachPerUser: z.number().nullable(),
+  maxAssignmentsToIncidents: z.number().nullable(),
+  maxAssignmentsToCalls: z.number().nullable(),
   maxPlateLength: z.number().min(1),
   pairedUnitTemplate: z.string().max(255).nullable(),
   callsignTemplate: z.string(),
@@ -30,22 +31,33 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   maxOfficersPerUser: z.number().nullable(),
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
+  inactivityTimeout: z.number().optional().nullable(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({
-  leoRoleId: z.string().nullable().optional(),
-  leoSupervisorRoleId: z.string().nullable().optional(),
-  emsFdRoleId: z.string().nullable().optional(),
-  dispatchRoleId: z.string().nullable().optional(),
-  towRoleId: z.string().nullable().optional(),
-  taxiRoleId: z.string().nullable().optional(),
+  leoRoles: z.array(z.any()).nullable().optional(),
+  emsFdRoles: z.array(z.any()).nullable().optional(),
+  leoSupervisorRoles: z.array(z.any()).nullable().optional(),
+  dispatchRoles: z.array(z.any()).nullable().optional(),
+  towRoles: z.array(z.any()).nullable().optional(),
+  taxiRoles: z.array(z.any()).nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
+
+  adminRolePermissions: z.array(z.string()).nullable().optional(),
+  leoRolePermissions: z.array(z.string()).nullable().optional(),
+  leoSupervisorRolePermissions: z.array(z.string()).nullable().optional(),
+  emsFdRolePermissions: z.array(z.string()).nullable().optional(),
+  dispatchRolePermissions: z.array(z.string()).nullable().optional(),
+  towRolePermissions: z.array(z.string()).nullable().optional(),
+  taxiRolePermissions: z.array(z.string()).nullable().optional(),
 });
 
 export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   call911WebhookId: z.string().nullable().optional(),
   statusesWebhookId: z.string().nullable().optional(),
+  panicButtonWebhookId: z.string().nullable().optional(),
+  boloWebhookId: z.string().nullable().optional(),
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({
@@ -55,7 +67,7 @@ export const CAD_AUTO_SET_PROPERTIES = z.object({
 });
 
 export const DISABLED_FEATURES_SCHEMA = z.object({
-  features: z.array(z.string().regex(FEATURES_REGEX)),
+  features: z.array(z.object({ isEnabled: z.boolean(), feature: z.string() })),
 });
 
 export const BAN_SCHEMA = z.object({
@@ -72,4 +84,13 @@ export const UPDATE_USER_SCHEMA = z.object({
   isSupervisor: z.boolean(),
   steamId: z.string().max(255),
   discordId: z.string().max(255),
+});
+
+export const PERMISSIONS_SCHEMA = z.record(z.string());
+
+const CUSTOM_FIELD_CATEGORY = /CITIZEN|WEAPON|VEHICLE/;
+export const CUSTOM_FIELDS_SCHEMA = z.object({
+  name: z.string().min(2),
+  category: z.string().regex(CUSTOM_FIELD_CATEGORY),
+  citizenEditable: z.boolean(),
 });

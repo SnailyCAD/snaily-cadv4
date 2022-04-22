@@ -9,7 +9,7 @@ import { Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
 import { BadRequest } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 
 import {
   HASH_SCHEMA_ARR,
@@ -30,16 +30,20 @@ import {
   type ValueLicenseType,
   WhatPages,
   ValueType,
-  StatusValue,
+  Value,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { createWarningApplicable } from "lib/records/penal-code";
+import { upsertWarningApplicable } from "lib/records/penal-code";
+import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
+import { getPermissionsForValuesRequest } from "lib/values/utils";
+import { UsePermissions } from "middlewares/UsePermissions";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
-export class ValuesController {
+export class ImportValuesViaFileController {
   @Post("/")
-  async patchValueByPathAndId(
+  @UsePermissions(getPermissionsForValuesRequest)
+  async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
   ) {
@@ -62,6 +66,10 @@ export class ValuesController {
       throw new BadRequest("couldNotParseBody");
     }
 
+    if (!Array.isArray(body)) {
+      throw new BadRequest("Body must be an array");
+    }
+
     const handler = typeHandlers[type as keyof typeof typeHandlers];
     const data = await handler(body, type);
     return data;
@@ -73,174 +81,250 @@ export class ValuesController {
 }
 
 export const typeHandlers = {
-  VEHICLE: async (body: unknown) => {
+  VEHICLE: async (body: unknown, id?: string) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.vehicleValue.create({
-        include: { value: true },
-        data: {
-          hash: item.hash,
-          value: createValueObj(item.value, ValueType.VEHICLE),
-        },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.vehicleValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.VEHICLE, {
+            hash: item.hash,
+            value: item.value,
+          }),
+          include: { value: true },
+        });
+      }),
+    );
   },
-  WEAPON: async (body: unknown) => {
+  WEAPON: async (body: unknown, id?: string) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.weaponValue.create({
-        include: { value: true },
-        data: {
-          hash: item.hash,
-          value: createValueObj(item.value, ValueType.WEAPON),
-        },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.weaponValue.upsert({
+          include: { value: true },
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.WEAPON, {
+            hash: item.hash,
+            value: item.value,
+          }),
+        });
+      }),
+    );
   },
-  BUSINESS_ROLE: async (body: unknown) => {
+  BUSINESS_ROLE: async (body: unknown, id?: string) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.employeeValue.create({
-        data: {
-          as: item.as as EmployeeAsEnum,
-          value: createValueObj(item.value, ValueType.BUSINESS_ROLE),
-        },
-        include: { value: true },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.employeeValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.BUSINESS_ROLE, {
+            as: item.as as EmployeeAsEnum,
+            value: item.value,
+          }),
+          include: { value: true },
+        });
+      }),
+    );
   },
-  DRIVERSLICENSE_CATEGORY: async (body: unknown) => {
+  DRIVERSLICENSE_CATEGORY: async (body: unknown, id?: string) => {
     const data = validateSchema(DLC_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.driversLicenseCategoryValue.create({
-        data: {
-          type: item.type as DriversLicenseCategoryType,
-          value: createValueObj(item.value, ValueType.DRIVERSLICENSE_CATEGORY),
-        },
-        include: { value: true },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.driversLicenseCategoryValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
+            type: item.type as DriversLicenseCategoryType,
+            value: item.value,
+          }),
+          include: { value: true },
+        });
+      }),
+    );
   },
-  DEPARTMENT: async (body: unknown) => {
+  DEPARTMENT: async (body: unknown, id?: string) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.departmentValue.create({
-        data: {
-          type: item.type as DepartmentType,
-          callsign: item.callsign,
-          value: createValueObj(item.value, ValueType.DEPARTMENT),
-          isDefaultDepartment: item.isDefaultDepartment ?? false,
-          whitelisted: item.whitelisted ?? false,
-        },
-        include: { value: true },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.departmentValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.DEPARTMENT, {
+            type: item.type as DepartmentType,
+            callsign: item.callsign,
+            value: item.value,
+            isDefaultDepartment: item.isDefaultDepartment ?? false,
+            isConfidential: item.isConfidential ?? false,
+            whitelisted: item.whitelisted ?? false,
+            defaultOfficerRank:
+              item.defaultOfficerRankId && item.type === "LEO"
+                ? { connect: { id: item.defaultOfficerRankId } }
+                : undefined,
+          }),
+          include: { value: true, defaultOfficerRank: true },
+        });
+      }),
+    );
   },
-  DIVISION: async (body: unknown) => {
+  DIVISION: async (body: unknown, id?: string) => {
     const data = validateSchema(DIVISION_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.divisionValue.create({
-        data: {
-          callsign: item.callsign,
-          department: { connect: { id: item.departmentId } },
-          value: createValueObj(item.value, ValueType.DIVISION),
-        },
-        include: { value: true, department: { include: { value: true } } },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.divisionValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.DIVISION, {
+            callsign: item.callsign,
+            department: { connect: { id: item.departmentId } },
+            value: item.value,
+          }),
+          include: { value: true, department: { include: { value: true } } },
+        });
+      }),
+    );
   },
-  CODES_10: async (body: unknown) => {
+  CODES_10: async (body: unknown, id?: string) => {
     const data = validateSchema(CODES_10_ARR, body);
     const DEFAULT_WHAT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
     return handlePromiseAll(data, async (item) => {
       const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
 
-      const value = await prisma.statusValue.create({
-        data: {
+      const value = await prisma.statusValue.findUnique({
+        where: { id: String(id) },
+        select: { id: true, departments: true },
+      });
+
+      const updatedValue = await prisma.statusValue.upsert({
+        where: { id: String(id) },
+        ...makePrismaData(ValueType.CODES_10, {
           type: item.type as StatusValueType,
           color: item.color,
           shouldDo: item.shouldDo as ShouldDoType,
           whatPages: whatPages as WhatPages[],
-          value: createValueObj(item.value, ValueType.CODES_10),
-        },
+          value: item.value,
+        }),
         include: { value: true },
       });
 
-      let last: StatusValue | null = null;
-      await Promise.all(
-        (item.departments ?? []).map(async (departmentId, idx) => {
-          const isLast = idx + 1 === item.departments?.length;
-          const statusValue = await prisma.statusValue.update({
-            where: { id: value.id },
-            data: { departments: { connect: { id: departmentId } } },
-            include: isLast
-              ? { value: true, departments: { include: { value: true } } }
-              : undefined,
-          });
-
-          if (isLast) {
-            last = statusValue;
-          }
-        }),
+      const disconnectConnectArr = manyToManyHelper(
+        value?.departments?.map((v) => v.id) ?? [],
+        item.departments ?? [],
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return { ...value, ...(last ?? {}) };
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.statusValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { value: true, departments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
     });
   },
-  PENAL_CODE: async (body: unknown) => {
+  PENAL_CODE: async (body: unknown, id?: string) => {
     const data = validateSchema(PENAL_CODE_ARR, body);
+    const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
 
     return handlePromiseAll(data, async (item) => {
-      return prisma.penalCode.create({
-        data: {
+      const data = {
+        update: {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await createWarningApplicable(item)),
+          ...(await upsertWarningApplicable(item, penalCode || undefined)),
         },
+        create: {
+          title: item.title,
+          description: item.description,
+          descriptionData: item.descriptionData ?? [],
+          groupId: item.groupId,
+          ...(await upsertWarningApplicable(item)),
+        },
+      };
+
+      return prisma.penalCode.upsert({
+        where: { id: String(id) },
+        ...data,
         include: { warningApplicable: true, warningNotApplicable: true },
       });
     });
   },
 
-  GENDER: async (body: unknown) => typeHandlers.GENERIC(body, "GENDER"),
-  ETHNICITY: async (body: unknown) => typeHandlers.GENERIC(body, "ETHNICITY"),
-  BLOOD_GROUP: async (body: unknown) => typeHandlers.GENERIC(body, "BLOOD_GROUP"),
-  IMPOUND_LOT: async (body: unknown) => typeHandlers.GENERIC(body, "IMPOUND_LOT"),
-  LICENSE: async (body: unknown) => typeHandlers.GENERIC(body, "LICENSE"),
-  OFFICER_RANK: async (body: unknown) => typeHandlers.GENERIC(body, "OFFICER_RANK"),
+  GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
+  ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
+  BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
+  IMPOUND_LOT: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "IMPOUND_LOT", id),
+  LICENSE: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "LICENSE", id),
+  VEHICLE_FLAG: async (body: unknown, id?: string) =>
+    typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
+  CITIZEN_FLAG: async (body: unknown, id?: string) =>
+    typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
+  OFFICER_RANK: async (body: unknown, id?: string) =>
+    typeHandlers.GENERIC(body, "OFFICER_RANK", id),
 
-  GENERIC: async (body: unknown, type: ValueType) => {
+  GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);
 
-    return handlePromiseAll(data, async (item) => {
-      return prisma.value.create({
-        data: {
-          isDefault: false,
-          type: type as ValueType,
-          value: item.value,
-          licenseType: type === "LICENSE" ? (item.licenseType as ValueLicenseType) : undefined,
-        },
-      });
-    });
+    return prisma.$transaction(
+      data.map((item) => {
+        const data = {
+          update: {
+            isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
+            type: type as ValueType,
+            value: { set: item.value },
+            licenseType:
+              type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
+          },
+          create: {
+            isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
+            type: type as ValueType,
+            value: item.value,
+            licenseType:
+              type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
+          },
+        };
+
+        return prisma.value.upsert({
+          where: { id: String(id) },
+          ...data,
+        });
+      }),
+    );
   },
 };
 
-function createValueObj(value: string, type: ValueType) {
+function makePrismaData<T extends { value: string }>(type: ValueType, data: T) {
+  const { value, ...rest } = data;
+
   return {
-    create: {
+    update: { ...rest, value: createValueObj(value, type, "update") },
+    create: { ...rest, value: createValueObj(value, type, "create") },
+  };
+}
+
+function createValueObj(
+  value: string,
+  type: ValueType,
+  updateType: "update" | "create" = "create",
+) {
+  return {
+    [updateType]: {
       isDefault: false,
       type,
-      value,
+      value: updateType === "update" ? { set: value } : value,
     },
   };
 }

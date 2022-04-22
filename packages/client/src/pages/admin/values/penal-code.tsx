@@ -4,8 +4,8 @@ import { Button } from "components/Button";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { useModal } from "context/ModalContext";
-import { type PenalCode, type PenalCodeGroup, ValueType } from "@snailycad/types";
+import { useModal } from "state/modalState";
+import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
@@ -21,6 +21,7 @@ import { Title } from "components/shared/Title";
 import { hasTableDataChanged } from "./[path]";
 import { OptionsDropdown } from "components/admin/values/import/OptionsDropdown";
 import { ImportValuesModal } from "components/admin/values/import/ImportValuesModal";
+import { Permissions } from "@snailycad/permissions";
 
 const ManagePenalCode = dynamic(async () => {
   return (await import("components/admin/values/penal-codes/ManagePenalCode")).ManagePenalCode;
@@ -150,18 +151,14 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDelete() {
     if (!tempValue) return;
 
-    try {
-      const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
-        method: "DELETE",
-      });
+    const { json } = await execute(`/admin/values/${type.toLowerCase()}/${tempValue.id}`, {
+      method: "DELETE",
+    });
 
-      if (json) {
-        setValues((p) => p.filter((v) => v.id !== tempValue.id));
-        setTempValue(null);
-        closeModal(ModalIds.AlertDeleteValue);
-      }
-    } catch (err) {
-      console.log({ err });
+    if (json) {
+      setValues((p) => p.filter((v) => v.id !== tempValue.id));
+      setTempValue(null);
+      closeModal(ModalIds.AlertDeleteValue);
     }
   }
 
@@ -178,18 +175,21 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   }, [isOpen]);
 
   return (
-    <AdminLayout>
-      <Title>{typeT("MANAGE")}</Title>
-
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ManageValuePenalCode],
+      }}
+    >
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{typeT("MANAGE")}</h1>
+        <Title className="!mb-0">{typeT("MANAGE")}</Title>
 
         <div className="flex gap-2">
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <Button onClick={() => openModal(ModalIds.ManagePenalCodeGroup)}>
             {t("addPenalCodeGroup")}
           </Button>
-          <OptionsDropdown values={values} />
+          <OptionsDropdown type={type} values={values} />
         </div>
       </header>
 

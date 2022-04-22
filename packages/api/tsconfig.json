@@ -1,10 +1,11 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "CommonJS",
+    "target": "esnext",
+    "module": "commonjs",
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "importHelpers": true,
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -26,5 +27,8 @@
       "controllers/*": ["./src/controllers/*"],
       "migrations/*": ["./src/migrations/*"]
     }
+  },
+  "ts-node": {
+    "swc": true
   }
 }

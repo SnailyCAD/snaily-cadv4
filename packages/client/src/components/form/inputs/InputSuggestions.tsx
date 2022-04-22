@@ -1,30 +1,47 @@
 import { FocusScope, useFocusManager } from "@react-aria/focus";
 import type { Method } from "axios";
+import { useFocusWithin } from "@react-aria/interactions";
+import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import * as React from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
+import { useTranslations } from "next-intl";
+import { useDebounce } from "react-use";
+
+type ApiPathFunc = (inputValue: string) => string;
 
 interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?: (suggestion: any) => void;
-  Component: ({ suggestion }: { suggestion: any }) => JSX.Element;
-  options: { apiPath: string; method: Method; minLength?: number; dataKey?: string };
+  onSuggestionClick?(suggestion: any): void;
+  Component({ suggestion }: { suggestion: any }): JSX.Element;
+  options: { apiPath: string | ApiPathFunc; method: Method; minLength?: number; dataKey?: string };
 }
 
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
+
   const [localValue, setLocalValue] = React.useState("");
-  const { execute } = useFetch();
+  useDebounce(
+    () => {
+      onSearch(localValue);
+    },
+    150,
+    [localValue],
+  );
+
+  const common = useTranslations("Common");
+
+  const { state, execute } = useFetch();
+  const { focusWithinProps } = useFocusWithin({
+    onBlurWithin: () => setOpen(false),
+  });
 
   const ref = useOnclickOutside(() => setOpen(false));
   const firstItemRef = React.useRef<HTMLButtonElement>(null);
 
-  async function onSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    const target = e.target as HTMLInputElement;
-    const value = target.value.trim();
-
+  async function onSearch(value: string) {
     setLocalValue(value);
 
     if (value.length < (options.minLength ?? 3)) {
@@ -37,8 +54,12 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
       data[options.dataKey] = value;
     }
 
-    const { json } = await execute(options.apiPath, {
+    const apiPath =
+      typeof options.apiPath === "function" ? options.apiPath(value) : options.apiPath;
+
+    const { json } = await execute(apiPath, {
       ...options,
+      noToast: true,
       data,
     });
 
@@ -70,16 +91,11 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
-    // todo: debounce
-    onSearch(e);
-  }
-
-  function handleBlur() {
-    setOpen(false);
+    setLocalValue(e.target.value);
   }
 
   return (
-    <div ref={ref} className="relative w-full">
+    <div {...focusWithinProps} ref={ref} className="relative w-full">
       <Input
         {...inputProps}
         autoComplete="off"
@@ -88,10 +104,20 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
         onChange={handleChange}
       />
 
-      {isOpen && suggestions.length > 0 ? (
+      {state === "loading" ? (
+        <span className="absolute top-1/2 right-3 -translate-y-1/2">
+          <Loader />
+        </span>
+      ) : null}
+
+      {isOpen ? (
         <FocusScope restoreFocus={false}>
-          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-dark-bright max-h-60">
-            <ul onBlur={handleBlur} className="flex flex-col gap-y-1">
+          <div className="absolute z-50 w-full p-2 overflow-auto bg-white rounded-md shadow-md top-11 dark:bg-gray-3 max-h-60">
+            <ul className="flex flex-col gap-y-1">
+              {suggestions.length <= 0 ? (
+                <span className="text-neutral-600 dark:text-gray-500">{common("noOptions")}</span>
+              ) : null}
+
               {suggestions.map((suggestion, idx) => (
                 <Suggestion
                   onSuggestionClick={handleSuggestionClick}

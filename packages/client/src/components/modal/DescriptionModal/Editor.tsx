@@ -31,7 +31,7 @@ declare module "slate" {
 interface EditorProps {
   isReadonly?: boolean;
   value: Descendant[] | JsonArray;
-  onChange?: (value: Descendant[]) => void;
+  onChange?(value: Descendant[]): void;
 }
 
 export const DEFAULT_EDITOR_DATA = [

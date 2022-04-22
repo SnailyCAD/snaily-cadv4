@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import type { User } from ".prisma/client";
+import { ShouldDoType, User } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -15,7 +15,6 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
-import { ShouldDoType } from "@prisma/client";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -34,7 +33,7 @@ export class AccountController {
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
+    const { soundSettings, username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
     const existing = await prisma.user.findUnique({
       where: {
@@ -46,6 +45,26 @@ export class AccountController {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
+    let soundSettingsId = null;
+    if (soundSettings) {
+      const updateCreateData = {
+        panicButton: soundSettings.panicButton,
+        signal100: soundSettings.signal100,
+        addedToCall: soundSettings.addedToCall,
+        stopRoleplay: soundSettings.stopRoleplay,
+        statusUpdate: soundSettings.statusUpdate,
+        incomingCall: soundSettings.incomingCall,
+      };
+
+      const updated = await prisma.userSoundSettings.upsert({
+        where: { id: String(user.soundSettingsId) },
+        create: updateCreateData,
+        update: updateCreateData,
+      });
+
+      soundSettingsId = updated.id;
+    }
+
     const updated = await prisma.user.update({
       where: {
         id: user.id,
@@ -55,6 +74,7 @@ export class AccountController {
         isDarkTheme,
         statusViewMode,
         tableActionsAlignment,
+        soundSettingsId,
       },
       select: userProperties,
     });
@@ -64,10 +84,10 @@ export class AccountController {
 
   @Delete("/")
   @Description("Delete the authenticated user's account")
-  async deleteAuthUser(@Context() ctx: Context) {
+  async deleteAuthUser(@Context("user") user: User) {
     await prisma.user.delete({
       where: {
-        id: ctx.get("user").id,
+        id: user.id,
       },
     });
   }

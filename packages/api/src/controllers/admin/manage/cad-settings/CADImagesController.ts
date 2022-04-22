@@ -3,7 +3,7 @@ import { Controller } from "@tsed/di";
 import { Context } from "@tsed/platform-params";
 import { Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { MultipartFile, PlatformMulterFile, UseBefore } from "@tsed/common";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";

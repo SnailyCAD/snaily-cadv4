@@ -1,13 +1,24 @@
-import { Controller, QueryParams, BodyParams, UseBefore, PathParams, Context } from "@tsed/common";
+import {
+  Controller,
+  QueryParams,
+  BodyParams,
+  UseBefore,
+  PathParams,
+  Context,
+  UseBeforeEach,
+} from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { TOW_SCHEMA, UPDATE_TOW_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -16,6 +27,7 @@ const CITIZEN_SELECTS = {
 };
 
 @Controller("/tow")
+@UseBeforeEach(IsAuth)
 export class TowController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -24,6 +36,10 @@ export class TowController {
 
   @Get("/")
   @Description("Get all the tow calls")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
+    fallback: (u) => u.isTow,
+  })
   async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded
@@ -106,6 +122,13 @@ export class TowController {
       });
 
       if (data.call911Id) {
+        const call = await prisma.call911.findUnique({
+          where: { id: data.call911Id },
+          include: callInclude,
+        });
+
+        if (!call) return;
+
         const event = await prisma.call911Event.create({
           data: {
             description: "Created a tow call",
@@ -113,7 +136,12 @@ export class TowController {
           },
         });
 
-        this.socket.emitAddCallEvent(event);
+        const normalizedCall = officerOrDeputyToUnit({
+          ...call,
+          events: [...call.events, event],
+        });
+
+        this.socket.emitUpdate911Call(normalizedCall);
       }
     }
 
@@ -128,6 +156,7 @@ export class TowController {
         plate: vehicle?.plate.toUpperCase() ?? null,
         model: vehicle?.model.value.value ?? null,
         ended: data.callCountyService || false,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -151,6 +180,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Put("/:id")
   @Description("Update a tow call by its id")
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
   async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
@@ -184,6 +217,7 @@ export class TowController {
         location: data.location,
         postal: data.postal ? String(data.postal) : null,
         assignedUnit: assignedUnitId,
+        name: data.name ?? null,
       },
       include: {
         assignedUnit: {
@@ -203,7 +237,11 @@ export class TowController {
   @UseBefore(IsAuth)
   @Delete("/:id")
   @Description("Delete a tow call by its id")
-  async deleteTowCall(@PathParams("id") callId: string) {
+  @UsePermissions({
+    permissions: [Permissions.ManageTowCalls],
+    fallback: (u) => u.isTow,
+  })
+  async endTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
       where: {
         id: callId,

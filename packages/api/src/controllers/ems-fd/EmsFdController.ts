@@ -1,24 +1,30 @@
 import process from "node:process";
 import { Controller, UseBeforeEach, Use, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
+import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User } from ".prisma/client";
+import { type MiscCadSettings, ShouldDoType, type User } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
-import { IsAuth } from "middlewares/index";
+import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
 import fs from "node:fs";
-import { unitProperties } from "lib/officer";
+import { unitProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 export class EmsFdController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async getUserDeputies(@Context("user") user: User) {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
@@ -27,24 +33,20 @@ export class EmsFdController {
       include: unitProperties,
     });
 
-    const citizens = await prisma.citizen.findMany({
-      select: {
-        name: true,
-        surname: true,
-        id: true,
-      },
-    });
-
-    return { deputies, citizens };
+    return { deputies };
   }
 
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
+    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const division = await prisma.divisionValue.findFirst({
       where: {
@@ -57,16 +59,12 @@ export class EmsFdController {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
-    const departmentCount = await prisma.emsFdDeputy.count({
-      where: { userId: user.id, departmentId: data.department },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "emsFdDeputy",
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -97,13 +95,17 @@ export class EmsFdController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async updateDeputy(
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
+    const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -127,16 +129,13 @@ export class EmsFdController {
       throw new ExtendedBadRequest({ division: "divisionNotInDepartment" });
     }
 
-    const departmentCount = await prisma.emsFdDeputy.count({
-      where: { userId: user.id, departmentId: data.department, NOT: { id: deputy.id } },
+    await validateMaxDepartmentsEachPerUser({
+      departmentId: data.department,
+      userId: user.id,
+      cad,
+      type: "emsFdDeputy",
+      unitId: deputy.id,
     });
-
-    if (
-      cad.miscCadSettings.maxDepartmentsEachPerUser &&
-      departmentCount >= cad.miscCadSettings.maxDepartmentsEachPerUser
-    ) {
-      throw new ExtendedBadRequest({ department: "maxDepartmentsReachedPerUser" });
-    }
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -169,6 +168,10 @@ export class EmsFdController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async deleteDeputy(@PathParams("id") id: string, @Context() ctx: Context) {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
@@ -192,12 +195,20 @@ export class EmsFdController {
 
   @Use(ActiveDeputy)
   @Get("/active-deputy")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+  })
   async getActiveDeputy(@Context() ctx: Context) {
     return ctx.get("activeDeputy");
   }
 
   @Get("/active-deputies")
   @Description("Get all the active EMS/FD deputies")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
+  })
   async getActiveDeputies() {
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
@@ -214,6 +225,10 @@ export class EmsFdController {
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async createMedicalRecord(@BodyParams() body: unknown) {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
@@ -233,6 +248,7 @@ export class EmsFdController {
         userId: citizen.userId,
         type: data.type,
         description: data.description,
+        bloodGroupId: data.bloodGroup ?? null,
       },
     });
 
@@ -241,6 +257,10 @@ export class EmsFdController {
 
   @Use(ActiveDeputy)
   @Post("/declare/:citizenId")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async declareCitizenDeadOrAlive(@PathParams("citizenId") citizenId: string) {
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -266,6 +286,10 @@ export class EmsFdController {
   }
 
   @Post("/image/:id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
   async uploadImageToOfficer(
     @Context("user") user: User,
     @PathParams("id") deputyId: string,

@@ -16,8 +16,11 @@
     "licenseType": "License Type",
     "whitelisted": "Whitelisted",
     "whatPages": "What Pages",
+    "departments": "Forces",
     "isDefaultDepartment": "Default Department",
     "deleteSelectedValues": "Delete Selected Values",
+    "isDefault": "Is Default",
+    "defaultOfficerRank": "Default Rank",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
@@ -105,5 +108,17 @@
     "ADD": "Add Pound",
     "DELETE": "Delete Pound",
     "EDIT": "Edit Pound"
+  },
+  "VEHICLE_FLAG": {
+    "MANAGE": "Manage Vehicle flags",
+    "ADD": "Add vehicle flag",
+    "DELETE": "Delete vehicle flag",
+    "EDIT": "Edit vehicle flag"
+  },
+  "CITIZEN_FLAG": {
+    "MANAGE": "Manage Civilian flags",
+    "ADD": "Add civilian flag",
+    "DELETE": "Delete civilian flag",
+    "EDIT": "Edit civilian flag"
   }
 }

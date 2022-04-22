@@ -1,13 +1,22 @@
 import { useAuth } from "context/AuthContext";
+import { classNames } from "lib/classNames";
 import Head from "next/head";
 
 type Child = string | null | undefined;
 
 interface Props {
   children: Child | Child[];
+
+  /**
+   * whether to render an h1 for the layout title
+   * @default true
+   */
+  renderLayoutTitle?: boolean;
+
+  className?: string;
 }
 
-export function Title({ children }: Props) {
+export function Title({ children, renderLayoutTitle = true, className }: Props) {
   const { cad } = useAuth();
   const cadName = cad?.name ?? "SnailyCAD";
 
@@ -20,11 +29,17 @@ export function Title({ children }: Props) {
   }
 
   return (
-    <Head>
-      <title>
-        {children} - {cadName}
-      </title>
-      <meta name="og:title" content={`${children} - ${cadName}`} />
-    </Head>
+    <>
+      <Head>
+        <title>
+          {children} - {cadName}
+        </title>
+        <meta name="og:title" content={`${children} - ${cadName}`} />
+      </Head>
+
+      {renderLayoutTitle ? (
+        <h1 className={classNames("text-3xl font-semibold mb-3", className)}>{children}</h1>
+      ) : null}
+    </>
   );
 }

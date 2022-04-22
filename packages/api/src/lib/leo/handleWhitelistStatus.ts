@@ -1,4 +1,4 @@
-import { Officer, LeoWhitelistStatus, WhitelistStatus } from "@prisma/client";
+import { Officer, LeoWhitelistStatus, WhitelistStatus, DepartmentValue } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
@@ -23,7 +23,7 @@ export async function handleWhitelistStatus(
     throw new ExtendedNotFound({ department: "This department could not be found" });
   }
 
-  let defaultDepartmentId: string | null = null;
+  let defaultDepartment: DepartmentValue | null = null;
   let whitelistStatusId: string | null = officer?.whitelistStatusId ?? null;
   if (department.whitelisted) {
     const whitelistStatus =
@@ -47,12 +47,12 @@ export async function handleWhitelistStatus(
       whitelistStatusId = updated.id;
     }
 
-    const defaultDepartment = await prisma.departmentValue.findFirst({
+    const _defaultDepartment = await prisma.departmentValue.findFirst({
       where: { isDefaultDepartment: true },
     });
 
     whitelistStatusId = whitelistStatus.id;
-    defaultDepartmentId = defaultDepartment?.id ?? null;
+    defaultDepartment = _defaultDepartment ?? null;
   } else {
     whitelistStatusId &&
       (await prisma.leoWhitelistStatus.delete({
@@ -60,8 +60,8 @@ export async function handleWhitelistStatus(
       }));
 
     whitelistStatusId = null;
-    defaultDepartmentId = null;
+    defaultDepartment = null;
   }
 
-  return { whitelistStatusId, defaultDepartmentId };
+  return { whitelistStatusId, defaultDepartment, department };
 }

@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import { usePortal } from "@casper124578/useful";
 import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useDispatchMapState } from "state/mapState";
 
@@ -22,11 +22,6 @@ export function MapActions() {
         <Button onClick={() => openModal(ModalIds.Manage911Call)}>
           {t("Calls.create911Call")}
         </Button>
-        {/* {user?.rank !== Rank.USER ? (
-          <Button disabled className="btn btn-primary">
-            TODO
-          </Button>
-        ) : null} */}
       </div>,
       portalRef,
     )

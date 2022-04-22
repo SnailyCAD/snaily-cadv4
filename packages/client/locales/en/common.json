@@ -43,7 +43,12 @@
     "cropImage": "Crop Image",
     "crop": "Crop",
     "hide": "Hide",
-    "show": "Show"
+    "show": "Show",
+    "filters": "Filters",
+    "openInSearch": "Open in search",
+    "goBack": "Go back",
+    "success": "Success",
+    "currency": "$"
   },
   "Nav": {
     "citizen": "Citizen",
@@ -73,7 +78,10 @@
     "register": "Register",
     "callHistory": "Call History",
     "citizenLogs": "Citizen Logs",
-    "courthouse": "Courthouse"
+    "courthouse": "Courthouse",
+    "dlExams": "Driver License Exams",
+    "dmv": "Department of Motor Vehicles",
+    "penalCodes": "Penal Codes"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
@@ -119,6 +127,9 @@
     "maxDepartmentsReachedPerUser": "You've reached the max set of units with this department. Please choose a different department or try again later.",
     "allowRegularLoginIsDisabled": "Regular login is disabled. Please use Discord OAuth instead",
     "Invalid Permissions": "You don't have permissions to access this API Route.",
-    "alreadyPendingNameChange": "This citizen already has a pending name change request."
+    "alreadyPendingNameChange": "This citizen already has a pending name change request.",
+    "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name.",
+    "socketError": "Socket connection error",
+    "socketErrorInfo": "Connection to the API has been disconnected. Please re-connect to the internet or reload the browser window."
   }
 }

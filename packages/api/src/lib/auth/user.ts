@@ -28,9 +28,14 @@ export const userProperties = {
   discordId: true,
   tableActionsAlignment: true,
   lastDiscordSyncTimestamp: true,
+  soundSettingsId: true,
+  soundSettings: true,
+  permissions: true,
 };
 
-export async function getSessionUser(req: Req, throwErrors = false): Promise<User> {
+export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
+export async function getSessionUser(req: Req, throwErrors?: false): Promise<User | null>;
+export async function getSessionUser(req: Req, throwErrors = false): Promise<User | null> {
   let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)[Cookie.Session];
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
@@ -90,11 +95,7 @@ export function canManageInvariant<T extends Error>(
     throw error;
   }
 
-  if (!userId) {
-    throw error;
-  }
-
-  if (userId && userId !== authUser.id) {
+  if ((authUser.rank as string) !== "API_TOKEN" && userId && userId !== authUser.id) {
     throw error;
   }
 }

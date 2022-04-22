@@ -3,32 +3,28 @@ import { useTranslations } from "use-intl";
 import dynamic from "next/dynamic";
 import { Button } from "components/Button";
 import { Layout } from "components/Layout";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import type { DepartmentValue, DivisionValue, EmsFdDeputy } from "@snailycad/types";
 import useFetch from "lib/useFetch";
-import type { FullDeputy } from "state/dispatchState";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
+import type { EmsFdDeputy } from "@snailycad/types";
+import { Permissions } from "@snailycad/permissions";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
   async () => (await import("components/ems-fd/modals/ManageDeputyModal")).ManageDeputyModal,
 );
 
-export type DeputyWithDept = EmsFdDeputy & {
-  division: DivisionValue;
-  department: DepartmentValue;
-};
-
 interface Props {
-  deputies: FullDeputy[];
+  deputies: EmsFdDeputy[];
 }
 
 export default function MyDeputies({ deputies: data }: Props) {
@@ -38,9 +34,10 @@ export default function MyDeputies({ deputies: data }: Props) {
   const { state, execute } = useFetch();
   const { generateCallsign } = useGenerateCallsign();
   const { makeImageUrl } = useImageUrl();
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const [deputies, setDeputies] = React.useState(data);
-  const [tempDeputy, setTempDeputy] = React.useState<FullDeputy | null>(null);
+  const [tempDeputy, setTempDeputy] = React.useState<EmsFdDeputy | null>(null);
 
   async function handleDeleteOfficer() {
     if (!tempDeputy) return;
@@ -53,22 +50,23 @@ export default function MyDeputies({ deputies: data }: Props) {
     }
   }
 
-  function handleEditClick(deputy: FullDeputy) {
+  function handleEditClick(deputy: EmsFdDeputy) {
     setTempDeputy(deputy);
     openModal(ModalIds.ManageDeputy);
   }
 
-  function handleDeleteClick(deputy: FullDeputy) {
+  function handleDeleteClick(deputy: EmsFdDeputy) {
     setTempDeputy(deputy);
     openModal(ModalIds.AlertDeleteDeputy);
   }
 
   return (
-    <Layout className="dark:text-white">
-      <Title>{t("Ems.myDeputies")}</Title>
-
+    <Layout
+      permissions={{ fallback: (u) => u.isEmsFd, permissions: [Permissions.EmsFd] }}
+      className="dark:text-white"
+    >
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("Ems.myDeputies")}</h1>
+        <Title className="!mb-0">{t("Ems.myDeputies")}</Title>
 
         <Button onClick={() => openModal(ModalIds.ManageDeputy)}>{t("Ems.createDeputy")}</Button>
       </header>
@@ -114,7 +112,7 @@ export default function MyDeputies({ deputies: data }: Props) {
           columns={[
             { Header: t("Ems.deputy"), accessor: "deputy" },
             { Header: t("Leo.callsign"), accessor: "callsign" },
-            { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
+            BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },

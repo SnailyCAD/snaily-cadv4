@@ -8,12 +8,13 @@ import { useTranslations } from "use-intl";
 import { Table } from "components/shared/Table";
 import type { FullRequest } from "src/pages/courthouse";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { ExpungementRequestStatus } from "@snailycad/types";
+import { ExpungementRequestStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   requests: FullRequest[];
@@ -28,6 +29,8 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
 
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
 
   async function handleUpdate(id: string, type: ExpungementRequestStatus) {
     const { json } = await execute(`/admin/manage/expungement-requests/${id}`, {
@@ -41,10 +44,13 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout
+      permissions={{
+        fallback: (u) => u.rank !== Rank.USER,
+        permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
+      }}
+    >
       <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
-
-      <h1 className="mb-4 text-3xl font-semibold">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h1>
 
       {pendingRequests.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
@@ -94,7 +100,7 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
             { Header: leo("tickets"), accessor: "tickets" },
             { Header: leo("status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}

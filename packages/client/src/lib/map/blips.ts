@@ -1,4 +1,10 @@
-export const blipTypes: any = {
+interface BlipType {
+  id?: number;
+  x?: number;
+  y?: number;
+}
+
+export const blipTypes: Record<string, BlipType> = {
   Standard: { id: 1, x: 0, y: 0 },
   Lift: { id: 36 },
   RaceFinish: { id: 38 },

@@ -1,57 +1,42 @@
-import type { DeputyWithDept } from "src/pages/ems-fd/my-deputies";
-import type { OfficerWithDept } from "src/pages/officer/my-officers";
 import type {
   Bolo,
   Call911,
-  Citizen,
-  StatusValue,
   Call911Event,
-  Value,
   ActiveDispatchers,
-  LeoWhitelistStatus,
-  ValueType,
   AssignedUnit,
   CombinedLeoUnit,
+  Officer,
+  EmsFdDeputy,
+  LeoIncident,
 } from "@snailycad/types";
 import create from "zustand";
-import type { FullIncident } from "src/pages/officer/incidents";
 
 export type Full911Call = Call911 & { assignedUnits: AssignedUnit[]; events: Call911Event[] };
-export type FullBolo = Bolo & { officer: FullOfficer | null };
-export type FullOfficer = OfficerWithDept & {
-  status: StatusValue;
-  citizen: Pick<Citizen, "name" | "surname" | "id"> | null;
-  whitelistStatus: LeoWhitelistStatus | null;
-};
-export type FullDeputy = DeputyWithDept & {
-  rank?: Value<ValueType.OFFICER_RANK>;
-  status: StatusValue;
-};
 
 interface DispatchState {
   calls: Full911Call[];
-  setCalls: (calls: Full911Call[]) => void;
+  setCalls(calls: Full911Call[]): void;
 
-  bolos: FullBolo[];
-  setBolos: (bolos: FullBolo[]) => void;
+  bolos: Bolo[];
+  setBolos(bolos: Bolo[]): void;
 
-  activeOfficers: (FullOfficer | CombinedLeoUnit)[];
-  setActiveOfficers: (officers: (FullOfficer | CombinedLeoUnit)[]) => void;
+  activeOfficers: (Officer | CombinedLeoUnit)[];
+  setActiveOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
 
-  activeDeputies: FullDeputy[];
-  setActiveDeputies: (deputies: FullDeputy[]) => void;
+  activeDeputies: EmsFdDeputy[];
+  setActiveDeputies(deputies: EmsFdDeputy[]): void;
 
-  allOfficers: FullOfficer[];
-  setAllOfficers: (officers: FullOfficer[]) => void;
+  allOfficers: Officer[];
+  setAllOfficers(officers: Officer[]): void;
 
-  allDeputies: FullDeputy[];
-  setAllDeputies: (deputies: FullDeputy[]) => void;
+  allDeputies: EmsFdDeputy[];
+  setAllDeputies(deputies: EmsFdDeputy[]): void;
 
   activeDispatchers: ActiveDispatchers[];
-  setActiveDispatchers: (dispatchers: ActiveDispatchers[]) => void;
+  setActiveDispatchers(dispatchers: ActiveDispatchers[]): void;
 
-  activeIncidents: FullIncident[];
-  setActiveIncidents: (incidents: FullIncident[]) => void;
+  activeIncidents: LeoIncident[];
+  setActiveIncidents(incidents: LeoIncident[]): void;
 }
 
 export const useDispatchState = create<DispatchState>((set) => ({

@@ -1,5 +1,4 @@
 import process from "node:process";
-import { User, WhitelistStatus, Rank } from ".prisma/client";
 import { Controller, BodyParams, Post, Res, Response } from "@tsed/common";
 import { hashSync, genSaltSync, compareSync } from "bcrypt";
 import { BadRequest } from "@tsed/exceptions";
@@ -7,14 +6,15 @@ import { prisma } from "lib/prisma";
 import { setCookie } from "utils/setCookie";
 import { signJWT } from "utils/jwt";
 import { Cookie } from "@snailycad/config";
-import { findOrCreateCAD } from "lib/cad";
+import { findOrCreateCAD, isFeatureEnabled } from "lib/cad";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
-import { Feature } from "@prisma/client";
+import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -30,9 +30,9 @@ export class AuthController {
   async login(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
-        username: data.username,
+        username: { mode: "insensitive", equals: data.username },
       },
     });
 
@@ -53,8 +53,14 @@ export class AuthController {
     }
 
     // only allow Discord auth (if enabled)
-    const cad = await prisma.cad.findFirst();
-    if (cad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+    const cad = await prisma.cad.findFirst({ include: { features: true } });
+    const regularAuthEnabled = isFeatureEnabled({
+      features: cad?.features,
+      feature: Feature.ALLOW_REGULAR_LOGIN,
+      defaultReturn: true,
+    });
+
+    if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
@@ -96,9 +102,9 @@ export class AuthController {
   async register(@BodyParams() body: unknown, @Res() res: Response) {
     const data = validateSchema(AUTH_SCHEMA, body);
 
-    const existing = await prisma.user.findUnique({
+    const existing = await prisma.user.findFirst({
       where: {
-        username: data.username,
+        username: { equals: data.username, mode: "insensitive" },
       },
     });
 
@@ -107,8 +113,9 @@ export class AuthController {
     }
 
     const preCad = await prisma.cad.findFirst({
-      select: { disabledFeatures: true, registrationCode: true },
+      select: { features: true, registrationCode: true },
     });
+
     if (preCad?.registrationCode) {
       const code = data.registrationCode;
       if (code !== preCad.registrationCode) {
@@ -117,7 +124,13 @@ export class AuthController {
     }
 
     // only allow Discord auth
-    if (preCad?.disabledFeatures.includes(Feature.ALLOW_REGULAR_LOGIN)) {
+    const regularAuthEnabled = isFeatureEnabled({
+      features: preCad?.features,
+      feature: Feature.ALLOW_REGULAR_LOGIN,
+      defaultReturn: true,
+    });
+
+    if (!regularAuthEnabled) {
       throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
@@ -137,7 +150,8 @@ export class AuthController {
       ownerId: user.id,
     });
 
-    const autoSetUserProperties = cad.autoSetUserProperties;
+    const permissions = getDefaultPermissionsForNewUser(cad);
+
     const extraUserData: Partial<User> =
       userCount <= 0
         ? {
@@ -151,13 +165,9 @@ export class AuthController {
             whitelistStatus: WhitelistStatus.ACCEPTED,
           }
         : {
-            isTow: !cad.towWhitelisted,
-            isTaxi: !cad.taxiWhitelisted,
             rank: Rank.USER,
             whitelistStatus: cad.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
-            isDispatch: autoSetUserProperties?.dispatch ?? false,
-            isEmsFd: autoSetUserProperties?.emsFd ?? false,
-            isLeo: autoSetUserProperties?.leo ?? false,
+            permissions,
           };
 
     await prisma.user.update({
@@ -189,4 +199,32 @@ export class AuthController {
 
     return { userId: user.id, isOwner: extraUserData.rank === Rank.OWNER };
   }
+}
+
+export function getDefaultPermissionsForNewUser(
+  cad: (cad & { autoSetUserProperties?: AutoSetUserProperties | null }) | null,
+) {
+  const permissions: Permissions[] = [];
+
+  if (!cad?.towWhitelisted) {
+    permissions.push(Permissions.ViewTowCalls, Permissions.ManageTowCalls, Permissions.ViewTowLogs);
+  }
+
+  if (!cad?.taxiWhitelisted) {
+    permissions.push(Permissions.ViewTaxiCalls, Permissions.ManageTaxiCalls);
+  }
+
+  if (cad?.autoSetUserProperties?.dispatch) {
+    permissions.push(...defaultPermissions.defaultDispatchPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.emsFd) {
+    permissions.push(...defaultPermissions.defaultEmsFdPermissions);
+  }
+
+  if (cad?.autoSetUserProperties?.leo) {
+    permissions.push(...defaultPermissions.defaultLeoPermissions);
+  }
+
+  return permissions;
 }

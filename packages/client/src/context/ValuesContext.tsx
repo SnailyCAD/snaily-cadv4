@@ -12,10 +12,10 @@ import {
   type VehicleValue,
 } from "@snailycad/types";
 
-type ContextValue<T extends ValueType, Custom = Value<T>> = {
+interface ContextValue<T extends ValueType, Custom = Value<T>> {
   type: ValueType;
   values: Custom extends undefined ? Value<T>[] : Custom[];
-};
+}
 
 interface Context {
   license: ContextValue<ValueType.LICENSE>;
@@ -28,6 +28,8 @@ interface Context {
   businessRole: ContextValue<ValueType.BUSINESS_ROLE, EmployeeValue>;
   codes10: ContextValue<ValueType.CODES_10, StatusValue>;
   vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
+  vehicleFlag: ContextValue<ValueType.VEHICLE_FLAG>;
+  citizenFlag: ContextValue<ValueType.CITIZEN_FLAG>;
   penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
   department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;
@@ -81,7 +83,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
 export function useValues() {
   const context = React.useContext(ValuesContext);
   if (typeof context === "undefined") {
-    throw new Error("`useValues` must be used within an `ValuesContext`");
+    throw new TypeError("`useValues` must be used within an `ValuesContext`");
   }
 
   return context;
@@ -95,7 +97,7 @@ export function normalizeValue(value: ValueType | (string & {})) {
   if (split.length > 1) {
     split = split.map((v, idx) => {
       if (idx > 0) {
-        return [v[0]!.toUpperCase(), v.substr(1).toLowerCase()].join("");
+        return [v[0]!.toUpperCase(), v.substring(1).toLowerCase()].join("");
       }
 
       return v.toLowerCase();

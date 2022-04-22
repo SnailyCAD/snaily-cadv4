@@ -4,16 +4,16 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { OfficerLog } from "@snailycad/types";
-import type { FullOfficer } from "state/dispatchState";
+import type { Officer, OfficerLog } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { FormField } from "components/form/FormField";
 import { makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
+import { Permissions } from "@snailycad/permissions";
 
-export type OfficerLogWithOfficer = OfficerLog & { officer: FullOfficer };
+export type OfficerLogWithOfficer = OfficerLog & { officer: Officer };
 
 interface Props {
   logs: OfficerLogWithOfficer[];
@@ -40,11 +40,12 @@ export default function MyOfficersLogs({ logs: data }: Props) {
   }, [data]);
 
   return (
-    <Layout className="dark:text-white">
-      <Title>{t("myOfficerLogs")}</Title>
-
+    <Layout
+      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.Leo] }}
+      className="dark:text-white"
+    >
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold">{t("myOfficerLogs")}</h1>
+        <Title className="!mb-0">{t("myOfficerLogs")}</Title>
 
         <div className="flex">
           <div className="ml-3 w-52">

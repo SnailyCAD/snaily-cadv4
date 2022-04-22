@@ -3,17 +3,16 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useModal } from "context/ModalContext";
+import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, Warrant } from "@snailycad/types";
+import type { Citizen, Record, Warrant } from "@snailycad/types";
 import { useCitizen } from "context/CitizenContext";
 import { Select, SelectValue } from "components/form/Select";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 
-type Result = Citizen & { Record: FullRecord[]; warrants: Warrant[] };
+type Result = Citizen & { Record: Record[]; warrants: Warrant[] };
 
 export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }) {
   const { state, execute } = useFetch();
@@ -222,7 +221,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   );
 }
 
-export function getTitles(record: FullRecord) {
+export function getTitles(record: Record) {
   const titles = record.violations.map((v) => v.penalCode.title);
   return titles.join(", ");
 }

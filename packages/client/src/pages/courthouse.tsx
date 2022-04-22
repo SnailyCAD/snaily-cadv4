@@ -2,10 +2,15 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { ExpungementRequest, NameChangeRequest, Warrant, Citizen } from "@snailycad/types";
+import type {
+  ExpungementRequest,
+  NameChangeRequest,
+  Warrant,
+  Citizen,
+  Record,
+} from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { requestAll } from "lib/utils";
-import type { FullRecord } from "components/leo/modals/NameSearchModal/RecordsArea";
 import { Title } from "components/shared/Title";
 import { TabList } from "components/shared/TabList";
 import { ExpungementRequestsTab } from "components/courthouse/expungement-requests/ExpungementRequestsTab";
@@ -13,7 +18,7 @@ import { NameChangeRequestTab } from "components/courthouse/name-change/NameChan
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
-  records: FullRecord[];
+  records: Record[];
   citizen: Citizen;
 };
 
@@ -27,11 +32,7 @@ export default function Courthouse(props: Props) {
 
   return (
     <Layout className="dark:text-white">
-      <Title>{t("courthouse")}</Title>
-
-      <header className="mb-5">
-        <h1 className="text-3xl font-semibold">{t("courthouse")}</h1>
-      </header>
+      <Title className="mb-3">{t("courthouse")}</Title>
 
       <TabList
         tabs={[

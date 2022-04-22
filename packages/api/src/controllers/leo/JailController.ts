@@ -3,12 +3,13 @@ import { Delete, Description, Get } from "@tsed/schema";
 import { PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { IsAuth } from "middlewares/index";
-import { leoProperties } from "lib/officer";
+import { IsAuth } from "middlewares/IsAuth";
+import { leoProperties } from "lib/leo/activeOfficer";
 import { ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 
 const citizenInclude = {
   Record: {
@@ -31,6 +32,10 @@ const citizenInclude = {
 export class LeoController {
   @Get("/")
   @Description("Get all the citizens who are jailed")
+  @UsePermissions({
+    permissions: [Permissions.ViewJail, Permissions.ManageJail],
+    fallback: (u) => u.isLeo,
+  })
   async getImprisonedCitizens() {
     const citizens = await prisma.citizen.findMany({
       where: {
@@ -57,6 +62,10 @@ export class LeoController {
 
   @Delete("/:id")
   @Description("Release a citizen by its id and type (time out / released by)")
+  @UsePermissions({
+    permissions: [Permissions.ManageJail],
+    fallback: (u) => u.isLeo,
+  })
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
     const citizen = await prisma.citizen.findUnique({
@@ -68,11 +77,11 @@ export class LeoController {
     }
 
     if (!citizen.arrested) {
-      throw new ExtendedBadRequest({ releasedBy: "citizenNotArrested" });
+      throw new ExtendedBadRequest({ releasedById: "citizenNotArrested" });
     }
 
     const type = data.type as ReleaseType;
-    const releasedBy = data.releasedBy;
+    const releasedById = data.releasedById;
     const recordId = data.recordId;
 
     const record = await prisma.record.findFirst({
@@ -89,7 +98,7 @@ export class LeoController {
     const release = await prisma.recordRelease.create({
       data: {
         type,
-        citizenId: type === ReleaseType.BAIL_POSTED ? releasedBy : null,
+        citizenId: type === ReleaseType.BAIL_POSTED ? releasedById : null,
       },
     });
 

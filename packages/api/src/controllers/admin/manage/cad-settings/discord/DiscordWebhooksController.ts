@@ -14,7 +14,7 @@ import type { cad, MiscCadSettings } from "@prisma/client";
 import { BadRequest } from "@tsed/exceptions";
 import { DISCORD_WEBHOOKS_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
-import { getRest } from "lib/discord";
+import { getRest } from "lib/discord/config";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
@@ -95,6 +95,16 @@ export class DiscordWebhooksController {
         cad.miscCadSettings.call911WebhookId,
         name,
       ),
+      panicButtonWebhookId: await this.makeWebhookForChannel(
+        data.panicButtonWebhookId,
+        cad.miscCadSettings.panicButtonWebhookId,
+        name,
+      ),
+      boloWebhookId: await this.makeWebhookForChannel(
+        data.boloWebhookId,
+        cad.miscCadSettings.boloWebhookId,
+        name,
+      ),
     };
 
     const miscCadSettings = await prisma.miscCadSettings.upsert({
@@ -136,7 +146,6 @@ export class DiscordWebhooksController {
         .catch(() => null)) as RESTGetAPIWebhookResult | null;
 
       if (prevWebhookData?.id) {
-        // todo: update Discord webhook?
         return prevWebhookData.id;
       }
     }

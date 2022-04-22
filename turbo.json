@@ -24,7 +24,8 @@
       ],
       "outputs": [
         ".env"
-      ]
+      ],
+      "cache": false
     },
     "build": {
       "dependsOn": [
@@ -38,11 +39,18 @@
       "outputs": [
         ".next/**",
         "dist/**"
-      ]
+      ],
+      "cache": false
     },
     "typecheck": {
       "dependsOn": [
         "^typecheck"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
       ],
       "outputs": []
     }
