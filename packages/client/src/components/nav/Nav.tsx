@@ -24,6 +24,7 @@ interface Props {
 
 export function Nav({ maxWidth }: Props) {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [showImage, setShowImage] = React.useState(true);
 
   const { user, cad } = useAuth();
   const { TOW, COURTHOUSE } = useFeatureEnabled();
@@ -62,7 +63,7 @@ export function Nav({ maxWidth }: Props) {
                 href="/citizen"
                 className="flex items-center gap-2 py-3 font-bold text-gray-800 dark:text-white"
               >
-                {url ? (
+                {url && showImage ? (
                   <>
                     <Head>
                       <link rel="shortcut icon" href={url} />
@@ -73,6 +74,7 @@ export function Nav({ maxWidth }: Props) {
                       height={30}
                       className="max-h-[30px] min-w-[30px]"
                       src={url}
+                      onError={() => setShowImage(false)}
                     />
                   </>
                 ) : null}
