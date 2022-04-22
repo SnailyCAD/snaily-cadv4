@@ -69,6 +69,13 @@ export async function updateMemberRolesLogin(
   const permissionsToGive = [];
   for (const [name, isTruthy] of userTruthyArr) {
     const perms = permissions[name];
+
+    if (typeof isTruthy === "undefined") {
+      // skip the permissions since the Discord role hasn't been set
+      // in the CAD settings
+      continue;
+    }
+
     if (isTruthy) {
       perms.length && permissionsToGive.push(...perms);
     } else {
@@ -107,6 +114,7 @@ export async function updateMemberRolesLogin(
 }
 
 function hasRoleArr(roles: DiscordRole[], roleIds: string[]) {
+  if (roles.length <= 0) return undefined;
   return roles.some((role) => roleIds.includes(role.id));
 }
 
