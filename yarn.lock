@@ -1302,24 +1302,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-dnd/asap@npm:4.0.0":
-  version: 4.0.0
-  resolution: "@react-dnd/asap@npm:4.0.0"
-  checksum: 4c37ef5c4efd5bb37ba938276074e6896f102b459ed462e2e7560bdb5e75500f2beeafd7e089e1ffea4a9fb337f15be7992952a78a9b56d80f372aadadc31eca
-  languageName: node
-  linkType: hard
-
 "@react-dnd/asap@npm:4.0.1":
   version: 4.0.1
   resolution: "@react-dnd/asap@npm:4.0.1"
   checksum: 757db3b5c436a95383b74f187f503321092909401ce9665d9cc1999308a44de22809bf8dbe82c9126bd73b72dd6665bbc4a788e864fc3c243c59f65057a4f87f
-  languageName: node
-  linkType: hard
-
-"@react-dnd/invariant@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@react-dnd/invariant@npm:3.0.0"
-  checksum: 1e8f08ef1e50b75db2e494060d2ae7444554f22036789212ce995296f1f187ee9c2ace5eaa95881b3029ba907eccf2deeacc0334d2870067d444ed683d0a9684
   languageName: node
   linkType: hard
 
@@ -1515,7 +1501,7 @@ __metadata:
     react-cropper: ^2.1.8
     react-digit-input: ^2.1.0
     react-dnd: 15.1.2
-    react-dnd-html5-backend: 15.1.2
+    react-dnd-html5-backend: 15.1.3
     react-dom: ^17.0.2
     react-hot-toast: ^2.2.0
     react-leaflet: ^3.2.5
@@ -4382,17 +4368,6 @@ __metadata:
   version: 1.1.3
   resolution: "dlv@npm:1.1.3"
   checksum: d7381bca22ed11933a1ccf376db7a94bee2c57aa61e490f680124fa2d1cd27e94eba641d9f45be57caab4f9a6579de0983466f620a2cd6230d7ec93312105ae7
-  languageName: node
-  linkType: hard
-
-"dnd-core@npm:15.1.1":
-  version: 15.1.1
-  resolution: "dnd-core@npm:15.1.1"
-  dependencies:
-    "@react-dnd/asap": 4.0.0
-    "@react-dnd/invariant": 3.0.0
-    redux: ^4.1.1
-  checksum: 11cc8dcbab62211ca54c0e42a625b52dcc1970294bd4fc65a8409bf588b0cf13a82bb592e87866b6aae93a310564322c03ea18659d144a75705eaae1023d2d0e
   languageName: node
   linkType: hard
 
@@ -8901,12 +8876,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dnd-html5-backend@npm:15.1.2":
-  version: 15.1.2
-  resolution: "react-dnd-html5-backend@npm:15.1.2"
+"react-dnd-html5-backend@npm:15.1.3":
+  version: 15.1.3
+  resolution: "react-dnd-html5-backend@npm:15.1.3"
   dependencies:
-    dnd-core: 15.1.1
-  checksum: e6b0a8faad47ec4a7e0ef1da2a45a5f764b629fd216233e3791ef74b25bec27031e6dd4b6fabe9717925182c7b6ad242d6bf79eed5f39d72bb71dec076442017
+    dnd-core: 15.1.2
+  checksum: 325672647965873365d5afaa5ddb81562202f30e11a6d4922236f5a1c46eb336db04746726fa070ee328cade45455c636330893d330dddd7d7aad6b45c7bfb7f
   languageName: node
   linkType: hard
 
@@ -9211,7 +9186,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.1.1, redux@npm:^4.1.2":
+"redux@npm:^4.1.2":
   version: 4.1.2
   resolution: "redux@npm:4.1.2"
   dependencies:
