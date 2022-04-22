@@ -95,7 +95,7 @@ export function ManageOccupationModal({ isLeo, occupation }: Props) {
                 <footer className="flex items-center justify-end mt-5">
                   <Button
                     type="reset"
-                    onClick={() => closeModal(ModalIds.RegisterWeapon)}
+                    onClick={() => closeModal(ModalIds.ManageOccupation)}
                     variant="cancel"
                   >
                     {common("cancel")}
