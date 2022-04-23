@@ -1,4 +1,4 @@
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { useRouter } from "next/router";
 
@@ -97,8 +97,8 @@ export function ManageBleetModal({ post }: Props) {
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, isValid, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setFieldValue, isValid, values, errors }) => (
+          <Form>
             <FormField optional errorMessage={errors.image as string} label={t("headerImage")}>
               <div className="flex">
                 <Input
@@ -154,7 +154,7 @@ export function ManageBleetModal({ post }: Props) {
               onSuccess={(...data) => onCropSuccess(...data, (d: any) => setFieldValue("image", d))}
               options={{ height: 500, aspectRatio: 16 / 9 }}
             />
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

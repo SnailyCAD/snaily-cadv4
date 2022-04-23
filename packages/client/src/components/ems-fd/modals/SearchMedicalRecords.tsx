@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Loader } from "components/Loader";
@@ -80,8 +80,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       className="w-[750px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, setFieldValue, handleChange, errors, values, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ setFieldValue, handleChange, errors, values, isValid }) => (
+          <Form>
             <FormField errorMessage={errors.name} label={t("MedicalRecords.citizen")}>
               <InputSuggestions
                 onSuggestionClick={(suggestion: SearchResult) => {
@@ -180,7 +180,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                 {t("Common.search")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

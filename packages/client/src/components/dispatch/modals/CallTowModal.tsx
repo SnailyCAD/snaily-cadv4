@@ -9,7 +9,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
-import { Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import { toastMessage } from "lib/toastMessage";
 import useFetch from "lib/useFetch";
@@ -79,8 +79,8 @@ export function DispatchCallTowModal({ call }: Props) {
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setFieldValue, values, isValid, errors }) => (
+          <Form>
             {unit ? (
               <FormField errorMessage={errors.creatorId as string} label={t("Calls.citizen")}>
                 <Select
@@ -174,7 +174,7 @@ export function DispatchCallTowModal({ call }: Props) {
                 </Button>
               </div>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

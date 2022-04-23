@@ -1,4 +1,4 @@
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
@@ -103,11 +103,8 @@ export default function Login() {
         <AuthScreenImages />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleSubmit, handleChange, errors, values, isValid }) => (
-            <form
-              className="relative w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
-              onSubmit={handleSubmit}
-            >
+          {({ handleChange, errors, values, isValid }) => (
+            <Form className="relative w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10">
               {typeof values.totpCode !== "undefined" ? (
                 <TwoFactorAuthScreen
                   errorMessage={errors.totpCode}
@@ -173,7 +170,7 @@ export default function Login() {
                   ) : null}
                 </>
               )}
-            </form>
+            </Form>
           )}
         </Formik>
         {cad?.version ? (

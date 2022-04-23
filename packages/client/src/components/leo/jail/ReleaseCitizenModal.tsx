@@ -6,7 +6,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -70,8 +70,8 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
       <p className="my-3">{t("releaseCitizen")}</p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setValues, errors, values, isValid }) => (
+          <Form>
             <FormField errorMessage={errors.type} label={common("type")}>
               <Select values={TYPES} value={values.type} name="type" onChange={handleChange} />
             </FormField>
@@ -134,7 +134,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
                 {t("release")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>
