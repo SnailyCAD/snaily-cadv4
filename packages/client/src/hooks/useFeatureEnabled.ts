@@ -6,7 +6,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   DISCORD_AUTH: { isEnabled: false },
   DL_EXAMS: { isEnabled: false },
   DMV: { isEnabled: false },
-  USER_API_TOKENS: { isEnabled: false },
+  // USER_API_TOKENS: { isEnabled: false },
 };
 
 export function useFeatureEnabled() {
