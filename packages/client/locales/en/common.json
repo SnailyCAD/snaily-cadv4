@@ -48,7 +48,9 @@
     "openInSearch": "Open in search",
     "goBack": "Go back",
     "success": "Success",
-    "currency": "$"
+    "currency": "$",
+    "left": "Left",
+    "right": "Right"
   },
   "Nav": {
     "citizen": "Citizen",
