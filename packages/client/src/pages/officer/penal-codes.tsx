@@ -2,7 +2,7 @@ import * as React from "react";
 import { Layout } from "components/Layout";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
-import { Editor } from "components/modal/DescriptionModal/Editor";
+import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { useTranslations } from "next-intl";
 import type { GetServerSideProps } from "next";
 import { requestAll } from "lib/utils";
@@ -46,13 +46,17 @@ export default function PenalCodesPage() {
           </FormField>
 
           <ul className="flex flex-col mt-3">
-            {filtered.map((penalCode) => (
-              <li className="card p-4" key={penalCode.id}>
-                <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
+            {filtered.map((penalCode) => {
+              const description = dataToSlate(penalCode);
 
-                <Editor isReadonly value={penalCode.descriptionData!} />
-              </li>
-            ))}
+              return (
+                <li className="card p-4" key={penalCode.id}>
+                  <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
+
+                  <Editor isReadonly value={description} />
+                </li>
+              );
+            })}
           </ul>
         </>
       )}
