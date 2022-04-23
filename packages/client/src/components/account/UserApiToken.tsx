@@ -9,7 +9,7 @@ import { Loader } from "components/Loader";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { PasswordInput } from "components/form/inputs/Input";
 
-export function AppearanceTab() {
+export function UserApiTokenTab() {
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();

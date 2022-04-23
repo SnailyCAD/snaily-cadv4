@@ -1034,6 +1034,7 @@ export enum Feature {
   DL_EXAMS = "DL_EXAMS",
   DMV = "DMV",
   BADGE_NUMBERS = "BADGE_NUMBERS",
+  USER_API_TOKENS = "USER_API_TOKENS",
 }
 
 export enum Rank {

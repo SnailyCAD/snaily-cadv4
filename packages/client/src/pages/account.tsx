@@ -27,13 +27,18 @@ const ConnectionsTab = dynamic(async () => {
   return (await import("components/account/ConnectionsTab")).ConnectionsTab;
 });
 
+const UserApiTokenTab = dynamic(async () => {
+  return (await import("components/account/UserApiToken")).UserApiTokenTab;
+});
+
 export default function Account() {
   const mounted = useMounted();
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
-  const { DISCORD_AUTH } = useFeatureEnabled();
+  const { DISCORD_AUTH, USER_API_TOKENS } = useFeatureEnabled();
   const errorT = useTranslations("Errors");
+  const showConnectionsTab = DISCORD_AUTH && canUseDiscordAuth();
 
   const errors = {
     discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
@@ -55,8 +60,13 @@ export default function Account() {
     { name: t("appearanceSettings"), value: "appearanceSettings" },
   ];
 
-  if (DISCORD_AUTH && canUseDiscordAuth()) {
+  if (showConnectionsTab) {
     TABS_TITLES[3] = { name: t("connections"), value: "connections" };
+  }
+
+  if (USER_API_TOKENS) {
+    const idx = showConnectionsTab ? 4 : 3;
+    TABS_TITLES[idx] = { name: t("userApiToken"), value: "userApiToken" };
   }
 
   if (!user) {
@@ -87,6 +97,7 @@ export default function Account() {
             <AccountSettingsTab />
             <AppearanceTab />
             {DISCORD_AUTH ? <ConnectionsTab /> : null}
+            {USER_API_TOKENS ? <UserApiTokenTab /> : null}
           </TabList>
         </div>
       </div>
