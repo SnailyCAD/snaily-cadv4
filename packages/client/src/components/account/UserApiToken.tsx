@@ -1,0 +1,113 @@
+import { TabsContent } from "components/shared/TabList";
+import { Button } from "components/Button";
+import { Toggle } from "components/form/Toggle";
+import { useAuth } from "context/AuthContext";
+import { Form, Formik, FormikHelpers } from "formik";
+import useFetch from "lib/useFetch";
+import { useTranslations } from "use-intl";
+import { Loader } from "components/Loader";
+import { SettingsFormField } from "components/form/SettingsFormField";
+import { PasswordInput } from "components/form/inputs/Input";
+
+export function AppearanceTab() {
+  const { user, setUser } = useAuth();
+  const t = useTranslations("Account");
+  const { execute, state } = useFetch();
+  const common = useTranslations("Common");
+
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
+    const { json } = await execute("/user/api-token", {
+      method: "PUT",
+      data: values,
+    });
+
+    if (json) {
+      helpers.setFieldValue("token", json.token);
+    }
+  }
+
+  async function handleRegenerate(
+    setFieldValue: FormikHelpers<typeof INITIAL_VALUES>["setFieldValue"],
+  ) {
+    if (!user) return;
+
+    const { json } = await execute("/user/api-token", {
+      method: "DELETE",
+    });
+
+    if (json.token) {
+      setUser({ ...user, ...json });
+      setFieldValue("token", json.token);
+    }
+  }
+
+  function handleClick(e: React.MouseEvent<HTMLInputElement>) {
+    const t = e.target as HTMLInputElement;
+    t.select();
+  }
+
+  const INITIAL_VALUES = {
+    enabled: user?.apiToken?.enabled ?? false,
+    token: user?.apiToken?.token ?? "",
+  };
+
+  return (
+    <TabsContent aria-label={t("userApiToken")} value="userApiToken">
+      <h3 className="text-2xl font-semibold">{t("userApiToken")}</h3>
+      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
+        {({ handleChange, setFieldValue, values }) => (
+          <Form className="mt-3 space-y-5">
+            <SettingsFormField
+              description="This is the token used to communicate to SnailyCAD via the API."
+              label="Token"
+            >
+              <PasswordInput onClick={handleClick} readOnly value={values.token} />
+            </SettingsFormField>
+
+            <SettingsFormField
+              action="checkbox"
+              description={
+                <>
+                  Read more info about{" "}
+                  <a
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-blue-600 underline"
+                    href="https://cad-docs.caspertheghost.me/docs/developer/public-api"
+                  >
+                    Public API Access here
+                  </a>
+                </>
+              }
+              label={common("enabled")}
+            >
+              <Toggle toggled={values.enabled} onClick={handleChange} name="enabled" />
+            </SettingsFormField>
+
+            <div className="flex">
+              {user?.apiTokenId ? (
+                <Button
+                  onClick={() => handleRegenerate(setFieldValue)}
+                  variant="danger"
+                  className="flex items-center mr-2"
+                  type="button"
+                  disabled={state === "loading"}
+                >
+                  {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
+                  {t("reGenerateToken")}
+                </Button>
+              ) : null}
+              <Button className="flex items-center" type="submit" disabled={state === "loading"}>
+                {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
+                {common("save")}
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </TabsContent>
+  );
+}

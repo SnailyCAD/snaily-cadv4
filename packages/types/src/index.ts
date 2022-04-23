@@ -168,6 +168,8 @@ export interface User {
   permissions: Permissions[] | null;
   soundSettingsId: string | null;
   soundSettings?: UserSoundSettings | null;
+  apiTokenId: string | null;
+  apiToken?: ApiToken | null;
 }
 
 /**
