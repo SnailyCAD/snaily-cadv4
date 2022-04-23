@@ -4,7 +4,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
@@ -73,8 +73,8 @@ export function ImportModal({ onImport, id, url }: Props) {
       isOpen={isOpen(id)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, values, errors }) => (
+          <Form>
             <FormField errorMessage={errors.file} label={t("file")}>
               <div className="flex">
                 <Input
@@ -106,7 +106,7 @@ export function ImportModal({ onImport, id, url }: Props) {
                 {"Import"}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

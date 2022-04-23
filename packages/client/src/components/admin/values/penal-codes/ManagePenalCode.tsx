@@ -4,7 +4,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
@@ -103,8 +103,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setFieldValue, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setFieldValue, values, errors }) => (
+          <Form>
             <FormField errorMessage={errors.title} label="Title">
               <Input autoFocus name="title" onChange={handleChange} value={values.title} />
             </FormField>
@@ -175,7 +175,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
                 {footerTitle}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

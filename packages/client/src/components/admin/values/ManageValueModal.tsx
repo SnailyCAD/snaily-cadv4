@@ -11,7 +11,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
@@ -179,8 +179,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       isOpen={isOpen(ModalIds.ManageValue)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, values, errors }) => (
+          <Form>
             {type === "DIVISION" ? (
               <FormField label="Department">
                 <Select
@@ -241,7 +241,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
                 {footerTitle}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

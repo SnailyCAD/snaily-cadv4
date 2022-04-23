@@ -5,7 +5,7 @@ import { PasswordInput } from "components/form/inputs/Input";
 import { Toggle } from "components/form/Toggle";
 import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
@@ -60,8 +60,8 @@ export function ApiTokenTab() {
       <h2 className="mt-2 text-2xl font-semibold">Public API access</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, setFieldValue, values }) => (
-          <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
+        {({ handleChange, setFieldValue, values }) => (
+          <Form className="mt-3 space-y-5">
             <SettingsFormField
               description="This is the token used to communicate to SnailyCAD via the API."
               label="Token"
@@ -107,7 +107,7 @@ export function ApiTokenTab() {
                 {common("save")}
               </Button>
             </div>
-          </form>
+          </Form>
         )}
       </Formik>
     </TabsContent>

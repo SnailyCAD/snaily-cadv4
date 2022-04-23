@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Button } from "components/Button";
@@ -105,8 +105,8 @@ export function MiscFeatures() {
       <h2 className="text-2xl font-semibold">Misc. Settings</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, errors, values }) => (
-          <form className="mt-3 space-y-5" onSubmit={handleSubmit}>
+        {({ handleChange, errors, values }) => (
+          <Form className="mt-3 space-y-5">
             <ImageSelectInput
               label="Auth screen header image"
               image={headerId}
@@ -318,7 +318,7 @@ export function MiscFeatures() {
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>

@@ -10,7 +10,7 @@ import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -112,8 +112,8 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleSubmit, handleChange, setFieldValue, values, isValid, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setFieldValue, values, isValid, errors }) => (
+          <Form>
             <FormField errorMessage={errors.creatorId} label={t("citizen")}>
               <Select
                 disabled={!!call}
@@ -171,7 +171,7 @@ export function ManageCallModal({ onDelete, onUpdate, onClose, isTow: tow, call 
                 </Button>
               </div>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
 

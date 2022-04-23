@@ -57,7 +57,7 @@ export function ManagePermissionsModal({ user }: Props) {
   const userPermissions = getPermissions(user.permissions ?? []);
   const { state, execute } = useFetch();
 
-  async function handleSubmit(data: typeof INITIAL_VALUES) {
+  async function onSubmit(data: typeof INITIAL_VALUES) {
     const { json } = await execute(`/admin/manage/users/permissions/${user.id}`, {
       method: "PUT",
       data: makePermissionsData(data),
@@ -106,7 +106,7 @@ export function ManagePermissionsModal({ user }: Props) {
       onClose={() => closeModal(ModalIds.ManagePermissions)}
       isOpen={isOpen(ModalIds.ManagePermissions)}
     >
-      <Formik onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
+      <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ handleChange, setValues, values }) => (
           <Form>
             <FormField label={common("search")} className="my-2">
