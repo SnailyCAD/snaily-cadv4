@@ -11,7 +11,7 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
@@ -127,8 +127,8 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleSubmit, handleChange, values, errors, isValid }) => (
-        <form onSubmit={handleSubmit}>
+      {({ handleChange, values, errors, isValid }) => (
+        <Form>
           <ImageSelectInput image={image} setImage={setImage} />
 
           <FormRow>
@@ -408,7 +408,7 @@ export function ManageCitizenForm({
               {citizen ? common("save") : common("create")}
             </Button>
           </div>
-        </form>
+        </Form>
       )}
     </Formik>
   );

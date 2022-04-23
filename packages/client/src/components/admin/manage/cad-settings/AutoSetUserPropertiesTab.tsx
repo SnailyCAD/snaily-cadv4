@@ -1,4 +1,4 @@
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 
 import { Button } from "components/Button";
@@ -53,8 +53,8 @@ export function AutoSetUserPropertiesTab() {
       </p>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, errors, values }) => (
-          <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
+        {({ handleChange, errors, values }) => (
+          <Form className="mt-5 space-y-5">
             <FormRow>
               <FormField errorMessage={errors.leo} label="LEO Access">
                 <Toggle name="leo" toggled={values.leo} onClick={handleChange} />
@@ -75,7 +75,7 @@ export function AutoSetUserPropertiesTab() {
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </div>

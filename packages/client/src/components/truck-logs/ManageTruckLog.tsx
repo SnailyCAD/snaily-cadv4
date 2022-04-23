@@ -8,7 +8,7 @@ import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
@@ -82,8 +82,8 @@ export function ManageTruckLogModal({
       className="w-[700px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleSubmit, handleChange, values, isValid, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, values, isValid, errors }) => (
+          <Form>
             <FormRow>
               <FormField errorMessage={errors.startedAt} label={t("startedAt")}>
                 <Input onChange={handleChange} name="startedAt" value={values.startedAt} />
@@ -133,7 +133,7 @@ export function ManageTruckLogModal({
                 </Button>
               </div>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

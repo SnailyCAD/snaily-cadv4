@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
@@ -91,11 +91,8 @@ export default function Register({ cad }: Props) {
         <AuthScreenImages />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleSubmit, handleChange, errors, isValid }) => (
-            <form
-              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10"
-              onSubmit={handleSubmit}
-            >
+          {({ handleChange, errors, isValid }) => (
+            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10">
               <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("register")}
               </h1>
@@ -131,7 +128,7 @@ export default function Register({ cad }: Props) {
                   {state === "loading" ? <Loader className="mr-3" /> : null} {t("register")}
                 </Button>
               </div>
-            </form>
+            </Form>
           )}
         </Formik>
         {cad.version ? (

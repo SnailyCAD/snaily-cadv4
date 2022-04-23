@@ -1,4 +1,4 @@
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useTranslations } from "use-intl";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { useModal } from "state/modalState";
@@ -69,8 +69,8 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, values, errors, isValid, handleChange }) => (
-          <form onSubmit={handleSubmit}>
+        {({ values, errors, isValid, handleChange }) => (
+          <Form>
             {DL_EXAMS ? null : (
               <FormRow>
                 <FormField errorMessage={errors.driversLicense} label={t("driversLicense")}>
@@ -232,7 +232,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
                 {common("save")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>
