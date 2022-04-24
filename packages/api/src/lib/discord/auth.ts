@@ -79,7 +79,7 @@ export async function updateMemberRolesLogin(
     if (isTruthy) {
       perms.length && permissionsToGive.push(...perms);
     } else {
-      user.permissions = user.permissions.filter((v) => perms.includes(v));
+      user.permissions = user.permissions.filter((v) => !perms.includes(v));
     }
   }
 
