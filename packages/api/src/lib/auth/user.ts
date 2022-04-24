@@ -31,6 +31,8 @@ export const userProperties = {
   soundSettingsId: true,
   soundSettings: true,
   permissions: true,
+  apiToken: true,
+  apiTokenId: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;

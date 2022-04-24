@@ -4,6 +4,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { Delete, Description, Put } from "@tsed/schema";
+import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { nanoid } from "nanoid";
@@ -15,29 +16,8 @@ export class AccountController {
   @Description("Enable or disable the authenticated user's API Token.")
   async enableDisableUserAPIToken(
     @Context("user") user: User & { apiToken?: ApiToken | null },
-    @BodyParams("body") body: any,
+    @BodyParams() body: any,
   ) {
-    const existing =
-      user.apiTokenId &&
-      (await prisma.apiToken.findFirst({
-        where: {
-          id: user.apiTokenId,
-        },
-      }));
-
-    if (existing && body.enabled === true) {
-      const updated = await prisma.apiToken.update({
-        where: {
-          id: existing.id,
-        },
-        data: {
-          enabled: body.enabled,
-        },
-      });
-
-      return updated;
-    }
-
     if (body.enabled === false) {
       user.apiTokenId &&
         (await prisma.apiToken.delete({
@@ -49,15 +29,26 @@ export class AccountController {
       return { enabled: false, token: "" };
     }
 
+    if (user.apiToken) {
+      return user;
+    }
+
     const apiToken = await prisma.apiToken.create({
       data: {
-        user: { connect: { id: user.id } },
         enabled: true,
         token: nanoid(56),
       },
     });
 
-    return apiToken;
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        apiTokenId: apiToken.id,
+      },
+      select: userProperties,
+    });
+
+    return updatedUser;
   }
 
   @Delete("/")

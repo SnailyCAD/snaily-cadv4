@@ -35,6 +35,7 @@ export const useModalState = create<ModalState>((set) => ({
 
 export function useModal(): UseModal {
   const modalState = useModalState();
+  const canBeClosed = React.useMemo(() => modalState.canBeClosed, [modalState.canBeClosed]);
 
   const isOpen = React.useCallback(
     (id: ModalIds) => {
@@ -65,7 +66,7 @@ export function useModal(): UseModal {
   }
 
   return {
-    canBeClosed: modalState.canBeClosed,
+    canBeClosed,
 
     isOpen,
     openModal,

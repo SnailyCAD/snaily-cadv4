@@ -137,6 +137,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Badge numbers",
     description: "When enabled, this will require officers to enter a badge number.",
   },
+  USER_API_TOKENS: {
+    name: "User API Tokens",
+    description:
+      "When enabled, this will allow users to generate their own API token to perform actions with via their account.",
+  },
 };
 
 export function CADFeaturesTab() {

@@ -25,7 +25,13 @@ export function UserApiTokenTab() {
     });
 
     if (json) {
-      helpers.setFieldValue("token", json.token);
+      setUser({ ...user, ...json });
+
+      if (json.apiToken) {
+        helpers.setFieldValue("token", json.apiToken.token);
+      } else {
+        helpers.setFieldValue("token", "");
+      }
     }
   }
 
