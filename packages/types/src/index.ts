@@ -619,6 +619,18 @@ export interface Officer {
   radioChannelId: string | null;
 }
 
+export interface UnitQualification {
+  departmentId: string;
+  department: DepartmentValue;
+
+  suspendedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+
+  officerId: string | null;
+  emsFdDeputyId: string | null;
+}
+
 /**
  * Model LeoWhitelistStatus
  *
@@ -1077,6 +1089,7 @@ export enum ValueType {
   IMPOUND_LOT = "IMPOUND_LOT",
   VEHICLE_FLAG = "VEHICLE_FLAG",
   CITIZEN_FLAG = "CITIZEN_FLAG",
+  QUALIFICATION = "QUALIFICATION",
 }
 
 export enum ValueLicenseType {
