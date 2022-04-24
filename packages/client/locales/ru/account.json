@@ -34,7 +34,9 @@
         "stopRoleplay": "Остановить РП",
         "addedToCall": "Прикреплен к вызову",
         "statusUpdate": "Обновление статуса",
-        "incomingCall": "Входящий звонок"
+        "incomingCall": "Входящий звонок",
+        "dotColor": "Точка",
+        "fullRowColor": "Строка"
     },
     "Notifications": {
         "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
