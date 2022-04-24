@@ -46,6 +46,10 @@ const groups = [
       ...defaultPermissions.defaultTaxiPermissions,
     ],
   },
+  {
+    name: "Other",
+    permissions: defaultPermissions.otherDefaultPermissions,
+  },
 ];
 
 export function ManagePermissionsModal({ user }: Props) {

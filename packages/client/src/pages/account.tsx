@@ -14,6 +14,7 @@ import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseDiscordAuth } from "lib/utils";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -27,13 +28,21 @@ const ConnectionsTab = dynamic(async () => {
   return (await import("components/account/ConnectionsTab")).ConnectionsTab;
 });
 
+const UserApiTokenTab = dynamic(async () => {
+  return (await import("components/account/UserApiToken")).UserApiTokenTab;
+});
+
 export default function Account() {
   const mounted = useMounted();
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
-  const { DISCORD_AUTH } = useFeatureEnabled();
+  const { DISCORD_AUTH, USER_API_TOKENS } = useFeatureEnabled();
   const errorT = useTranslations("Errors");
+  const showConnectionsTab = DISCORD_AUTH && canUseDiscordAuth();
+
+  const { hasPermissions } = usePermission();
+  const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken], false);
 
   const errors = {
     discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
@@ -55,8 +64,13 @@ export default function Account() {
     { name: t("appearanceSettings"), value: "appearanceSettings" },
   ];
 
-  if (DISCORD_AUTH && canUseDiscordAuth()) {
+  if (showConnectionsTab) {
     TABS_TITLES[3] = { name: t("connections"), value: "connections" };
+  }
+
+  if (USER_API_TOKENS && hasApiTokenPermissions) {
+    const idx = showConnectionsTab ? 4 : 3;
+    TABS_TITLES[idx] = { name: t("userApiToken"), value: "userApiToken" };
   }
 
   if (!user) {
@@ -87,6 +101,7 @@ export default function Account() {
             <AccountSettingsTab />
             <AppearanceTab />
             {DISCORD_AUTH ? <ConnectionsTab /> : null}
+            {USER_API_TOKENS && hasApiTokenPermissions ? <UserApiTokenTab /> : null}
           </TabList>
         </div>
       </div>

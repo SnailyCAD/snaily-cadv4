@@ -8,6 +8,7 @@ import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
 import { GiveTempPasswordModal } from "./GiveTempPasswordModal";
 import { useTranslations } from "use-intl";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   user: User;
@@ -18,6 +19,7 @@ export function DangerZone({ user }: Props) {
   const router = useRouter();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Management");
+  const { USER_API_TOKENS } = useFeatureEnabled();
 
   const formDisabled = user.rank === "OWNER";
 
@@ -30,6 +32,19 @@ export function DangerZone({ user }: Props) {
 
     if (json) {
       router.push("/admin/manage/users");
+    }
+  }
+
+  async function handleRevoke() {
+    if (formDisabled) return;
+
+    const { json } = await execute(`/admin/manage/users/${user.id}/api-token`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      router.push("/admin/manage/users");
+      closeModal(ModalIds.AlertRevokePersonalApiToken);
     }
   }
 
@@ -57,6 +72,18 @@ export function DangerZone({ user }: Props) {
           {state === "loading" ? <Loader className="mr-3" /> : null}
           Temporary Password
         </Button>
+
+        {USER_API_TOKENS && user.apiTokenId ? (
+          <Button
+            variant="danger"
+            className="flex items-center ml-2"
+            disabled={state === "loading"}
+            onClick={() => openModal(ModalIds.AlertRevokePersonalApiToken)}
+          >
+            {state === "loading" ? <Loader className="mr-3" /> : null}
+            Revoke Personal API Token
+          </Button>
+        ) : null}
       </div>
 
       <AlertModal
@@ -75,6 +102,14 @@ export function DangerZone({ user }: Props) {
         description={`Are you sure you want to give ${user.username} a temporary password? They will not be able to log in to their account with their previous password. They will only be able to login with the password provided in the next step.`}
         id={ModalIds.AlertGiveTempPassword}
         deleteText={t("continue")}
+      />
+
+      <AlertModal
+        onDeleteClick={handleRevoke}
+        title="Revoke Personal API token"
+        description={`Are you sure you want to revoke ${user.username}'s personal API Token? They will not be able to use this API token anymore. They are able to re-generate a new one later. You can remove their 'Use Personal Api Token' permissions via 'Manage Permissions'`}
+        id={ModalIds.AlertRevokePersonalApiToken}
+        deleteText="Revoke"
       />
 
       <GiveTempPasswordModal user={user} />
