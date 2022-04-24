@@ -1,6 +1,7 @@
 import type { PenalCode, WarningApplicable, WarningNotApplicable } from "@prisma/client";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
+import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 interface Options {
   penalCodeId?: string;
@@ -39,15 +40,47 @@ export async function validateRecordData(item: Options): Promise<Return> {
 
   // these if statements could be cleaned up?..
   if (item.fine && exists(minMaxFines) && !isCorrect(minMaxFines, item.fine)) {
-    return handleBadRequest(new BadRequest("fine_invalidDataReceived"), item.ticketId);
+    const name = `violations.${item.penalCodeId}.fine`;
+
+    return handleBadRequest(
+      new ExtendedBadRequest({
+        [name]: {
+          message: "fine_invalidDataReceived",
+          data: { min: minMaxFines[0] || 0, max: minMaxFines[1] || 0 },
+        },
+      }),
+      item.ticketId,
+    );
   }
 
   if (item.jailTime && exists(minMaxPrisonTerm) && !isCorrect(minMaxPrisonTerm, item.jailTime)) {
-    return handleBadRequest(new BadRequest("jailTime_invalidDataReceived"), item.ticketId);
+    const name = `violations.${item.penalCodeId}.jailTime`;
+
+    return handleBadRequest(
+      new ExtendedBadRequest({
+        [name]: {
+          message: "jailTime_invalidDataReceived",
+          data: { min: minMaxPrisonTerm[0] || 0, max: minMaxPrisonTerm[1] || 0 },
+        },
+      }),
+      item.ticketId,
+    );
   }
 
   if (item.bail && exists(minMaxBail) && !isCorrect(minMaxBail, item.bail)) {
-    return handleBadRequest(new BadRequest("bail_invalidDataReceived"), item.ticketId);
+    const name = `violations.${item.penalCodeId}.bail`;
+
+    console.log({ minMaxBail });
+
+    return handleBadRequest(
+      new ExtendedBadRequest({
+        [name]: {
+          message: "bail_invalidDataReceived",
+          data: { min: minMaxBail[0] || 0, max: minMaxBail[1] || 0 },
+        },
+      }),
+      item.ticketId,
+    );
   }
 
   return { ...item, penalCode };

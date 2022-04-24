@@ -1,7 +1,7 @@
 import { Middleware, MiddlewareMethods, Context, Req } from "@tsed/common";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { StoreSet, useDecorators } from "@tsed/core";
-import type { User } from "@prisma/client";
+import { Rank, User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import { Forbidden } from "@tsed/exceptions";
 
@@ -28,6 +28,10 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
 
     if (!user.permissions.length && fallback && !hasPerm) {
       hasPerm = fallback;
+    }
+
+    if (user.rank === Rank.OWNER) {
+      hasPerm = true;
     }
 
     if (!hasPerm) {
