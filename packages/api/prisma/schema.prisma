@@ -1199,4 +1199,5 @@ enum Feature {
   DL_EXAMS
   DMV
   BADGE_NUMBERS
+  USER_API_TOKENS
 }
