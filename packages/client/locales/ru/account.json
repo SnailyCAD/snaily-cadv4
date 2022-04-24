@@ -36,7 +36,9 @@
     "statusUpdate": "Обновление статуса",
     "incomingCall": "Входящий звонок",
     "dotColor": "Точка",
-    "fullRowColor": "Строка"
+    "fullRowColor": "Строка",
+    "userApiToken": "Пользовательский Api токен",
+    "reGenerateToken": "Сгенерировать токен заново"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
