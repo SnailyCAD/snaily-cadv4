@@ -70,7 +70,6 @@ export async function validateRecordData(item: Options): Promise<Return> {
   if (item.bail && exists(minMaxBail) && !isCorrect(minMaxBail, item.bail)) {
     const name = `violations.${item.penalCodeId}.bail`;
 
-
     return handleBadRequest(
       new ExtendedBadRequest({
         [name]: {
