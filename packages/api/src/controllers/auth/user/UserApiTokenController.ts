@@ -7,6 +7,7 @@ import { Delete, Description, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { nanoid } from "nanoid";
 
 @Controller("/user/api-token")
@@ -14,6 +15,10 @@ import { nanoid } from "nanoid";
 export class AccountController {
   @Put("/")
   @Description("Enable or disable the authenticated user's API Token.")
+  @UsePermissions({
+    fallback: false,
+    permissions: [Permissions.UsePersonalApiToken],
+  })
   async enableDisableUserAPIToken(
     @Context("user") user: User & { apiToken?: ApiToken | null },
     @BodyParams() body: any,
@@ -53,6 +58,10 @@ export class AccountController {
 
   @Delete("/")
   @Description("Re-generate a token")
+  @UsePermissions({
+    fallback: false,
+    permissions: [Permissions.UsePersonalApiToken],
+  })
   async generateNewApiToken(@Context("user") user: User & { apiToken?: ApiToken | null }) {
     if (!user.apiTokenId) {
       throw new BadRequest("noApiTokenId");

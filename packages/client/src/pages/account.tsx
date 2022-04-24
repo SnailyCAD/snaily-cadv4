@@ -14,6 +14,7 @@ import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseDiscordAuth } from "lib/utils";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -40,6 +41,9 @@ export default function Account() {
   const errorT = useTranslations("Errors");
   const showConnectionsTab = DISCORD_AUTH && canUseDiscordAuth();
 
+  const { hasPermissions } = usePermission();
+  const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken], false);
+
   const errors = {
     discordAccountAlreadyLinked: errorT("discordAccountAlreadyLinked"),
   };
@@ -64,7 +68,7 @@ export default function Account() {
     TABS_TITLES[3] = { name: t("connections"), value: "connections" };
   }
 
-  if (USER_API_TOKENS) {
+  if (USER_API_TOKENS && hasApiTokenPermissions) {
     const idx = showConnectionsTab ? 4 : 3;
     TABS_TITLES[idx] = { name: t("userApiToken"), value: "userApiToken" };
   }
@@ -97,7 +101,7 @@ export default function Account() {
             <AccountSettingsTab />
             <AppearanceTab />
             {DISCORD_AUTH ? <ConnectionsTab /> : null}
-            {USER_API_TOKENS ? <UserApiTokenTab /> : null}
+            {USER_API_TOKENS && hasApiTokenPermissions ? <UserApiTokenTab /> : null}
           </TabList>
         </div>
       </div>
