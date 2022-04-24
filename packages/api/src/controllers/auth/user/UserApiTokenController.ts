@@ -1,6 +1,7 @@
 import type { ApiToken, User } from "@prisma/client";
 import { BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
+import { BadRequest } from "@tsed/exceptions";
 import { UseBefore } from "@tsed/platform-middlewares";
 import { Delete, Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -61,5 +62,20 @@ export class AccountController {
 
   @Delete("/")
   @Description("Re-generate a token")
-  async generateNewApiToken() {}
+  async generateNewApiToken(@Context("user") user: User & { apiToken?: ApiToken | null }) {
+    if (!user.apiTokenId) {
+      throw new BadRequest("noApiTokenId");
+    }
+
+    const updated = await prisma.apiToken.update({
+      where: {
+        id: user.apiTokenId,
+      },
+      data: {
+        token: nanoid(56),
+      },
+    });
+
+    return updated;
+  }
 }
