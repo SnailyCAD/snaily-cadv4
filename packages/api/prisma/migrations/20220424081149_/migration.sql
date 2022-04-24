@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "Feature" ADD VALUE 'USER_API_TOKENS';

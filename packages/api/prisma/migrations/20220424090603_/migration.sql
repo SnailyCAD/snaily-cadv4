@@ -1,3 +1,6 @@
+-- AlterEnum
+ALTER TYPE "Feature" ADD VALUE 'USER_API_TOKENS';
+
 -- AlterTable
 ALTER TABLE "User" ADD COLUMN     "apiTokenId" TEXT;
 
