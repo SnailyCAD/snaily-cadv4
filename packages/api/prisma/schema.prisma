@@ -98,7 +98,8 @@ model ApiToken {
   // empty = *
   routes  String[]
 
-  cad cad[]
+  cad  cad[]
+  User User[]
 }
 
 model DiscordRoles {
@@ -188,6 +189,8 @@ model User {
   permissions              String[]
   soundSettings            UserSoundSettings?    @relation(fields: [soundSettingsId], references: [id])
   soundSettingsId          String?
+  apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
+  apiTokenId               String?
 
 
   // relational data
@@ -1196,4 +1199,5 @@ enum Feature {
   DL_EXAMS
   DMV
   BADGE_NUMBERS
+  USER_API_TOKENS
 }

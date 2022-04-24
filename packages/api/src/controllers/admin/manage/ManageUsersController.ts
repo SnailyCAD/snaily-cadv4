@@ -1,4 +1,4 @@
-import { Rank, type cad, WhitelistStatus } from "@prisma/client";
+import { Rank, type cad, WhitelistStatus, Feature, CadFeature } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -17,6 +17,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { isFeatureEnabled } from "lib/cad";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -300,6 +301,42 @@ export class ManageUsersController {
     if (updated.discordId && cad.whitelisted) {
       await updateMemberRoles(updated, cad.discordRolesId);
     }
+
+    return true;
+  }
+
+  @Delete("/:userId/api-token")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers],
+  })
+  async revokeApiToken(
+    @PathParams("userId") userId: string,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
+    const isUserAPITokensEnabled = isFeatureEnabled({
+      feature: Feature.USER_API_TOKENS,
+      features: cad.features,
+      defaultReturn: false,
+    });
+
+    if (!isUserAPITokensEnabled) {
+      throw new BadRequest("featureNotEnabled");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user || !user.apiTokenId) {
+      throw new NotFound("notFound");
+    }
+
+    await prisma.apiToken.delete({
+      where: { id: user.apiTokenId },
+    });
 
     return true;
   }

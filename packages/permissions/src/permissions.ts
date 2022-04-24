@@ -73,6 +73,9 @@ export enum Permissions {
   ManageValueImpoundLot = "ManageValueImpoundLot",
   ManageValueVehicleFlag = "ManageValueVehicleFlag",
   ManageValueCitizenFlag = "ManageValueCitizenFlag",
+
+  // other
+  UsePersonalApiToken = "UsePersonalApiToken",
 }
 
 export const allPermissions = Object.values(Permissions);

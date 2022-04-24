@@ -18,6 +18,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
   DL_EXAMS: "/leo/dl-exams",
   DMV: "/leo/dmv",
+  USER_API_TOKENS: "/user/api-token",
 };
 
 @Middleware()
