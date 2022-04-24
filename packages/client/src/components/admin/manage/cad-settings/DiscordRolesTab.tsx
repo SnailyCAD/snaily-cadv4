@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Select, SelectValue } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
-import { Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
@@ -108,8 +108,8 @@ export function DiscordRolesTab() {
       </header>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, errors, values }) => (
-          <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
+        {({ handleChange, errors, values }) => (
+          <Form className="mt-5 space-y-5">
             <SettingsFormField
               action="input"
               // eslint-disable-next-line quotes
@@ -293,7 +293,7 @@ export function DiscordRolesTab() {
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </TabsContent>

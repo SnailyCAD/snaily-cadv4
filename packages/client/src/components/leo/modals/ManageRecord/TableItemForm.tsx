@@ -25,7 +25,7 @@ export function TableItemForm({ penalCode }: Props) {
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
     string,
-    { fine?: string; jailTime: string }
+    { fine?: string; jailTime?: string; bail?: string }
   >;
 
   const current = values.violations.find(
@@ -92,7 +92,11 @@ export function TableItemForm({ penalCode }: Props) {
         </div>
       </FieldWrapper>
 
-      <FieldWrapper errorMessage={violationErrors[penalCode.id]?.jailTime}>
+      <FieldWrapper
+        errorMessage={
+          violationErrors[penalCode.id]?.jailTime || violationErrors[penalCode.id]?.bail
+        }
+      >
         <div className="flex items-center mt-1">
           <FormField className="mb-0" label={t("jailTime")} checkbox>
             <Input

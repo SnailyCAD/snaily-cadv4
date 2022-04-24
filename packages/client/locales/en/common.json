@@ -48,7 +48,9 @@
     "openInSearch": "Open in search",
     "goBack": "Go back",
     "success": "Success",
-    "currency": "$"
+    "currency": "$",
+    "left": "Left",
+    "right": "Right"
   },
   "Nav": {
     "citizen": "Citizen",
@@ -130,6 +132,9 @@
     "alreadyPendingNameChange": "This citizen already has a pending name change request.",
     "nameChangeRequestNotNew": "To create a name change request, the new name cannot match the previous name.",
     "socketError": "Socket connection error",
-    "socketErrorInfo": "Connection to the API has been disconnected. Please re-connect to the internet or reload the browser window."
+    "socketErrorInfo": "Connection to the API has been disconnected. Please re-connect to the internet or reload the browser window.",
+    "fine_invalidDataReceived": "Invalid fines data received. Min: {min}, max: {max}",
+    "jailTime_invalidDataReceived": "Invalid jail time data received. Min: {min}, max: {max}",
+    "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}"
   }
 }

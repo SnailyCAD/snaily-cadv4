@@ -4,7 +4,7 @@ import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
@@ -66,8 +66,8 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
       isOpen={isOpen(ModalIds.ManagePenalCodeGroup)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, values, errors }) => (
+          <Form>
             <FormField errorMessage={errors.name} label="Name">
               <Input autoFocus name="name" onChange={handleChange} value={values.name} />
             </FormField>
@@ -81,7 +81,7 @@ export function ManagePenalCodeGroup({ onCreate, onUpdate, onClose, group }: Pro
                 {footerTitle}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

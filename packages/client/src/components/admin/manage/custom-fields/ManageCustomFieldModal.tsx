@@ -3,7 +3,7 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
@@ -81,8 +81,8 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
       isOpen={isOpen(ModalIds.ManageCustomField)}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, values, errors }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, values, errors }) => (
+          <Form>
             <FormField errorMessage={errors.name} label={common("name")}>
               <Input autoFocus name="name" onChange={handleChange} value={values.name} />
             </FormField>
@@ -113,7 +113,7 @@ export function ManageCustomFieldModal({ field, onClose, onCreate, onUpdate }: P
                 {field ? common("save") : common("create")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

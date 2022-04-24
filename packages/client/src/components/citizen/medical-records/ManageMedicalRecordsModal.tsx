@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -74,8 +74,8 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, errors, values, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, errors, values, isValid }) => (
+          <Form>
             <FormField errorMessage={errors.type} label={t("diseases")}>
               <Input onChange={handleChange} name="type" value={values.type} />
             </FormField>
@@ -109,7 +109,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
                 {medicalRecord ? common("save") : common("create")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

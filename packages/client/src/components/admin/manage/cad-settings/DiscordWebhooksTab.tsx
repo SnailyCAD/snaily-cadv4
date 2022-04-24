@@ -3,7 +3,7 @@ import { Button } from "components/Button";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
@@ -66,8 +66,8 @@ export function DiscordWebhooksTab() {
       </header>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, handleSubmit, errors, values }) => (
-          <form className="mt-5 space-y-5" onSubmit={handleSubmit}>
+        {({ handleChange, errors, values }) => (
+          <Form className="mt-5 space-y-5">
             <SettingsFormField
               action="input"
               description="The Discord channel where 911 calls will be sent to."
@@ -141,7 +141,7 @@ export function DiscordWebhooksTab() {
               {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
               {common("save")}
             </Button>
-          </form>
+          </Form>
         )}
       </Formik>
     </TabsContent>

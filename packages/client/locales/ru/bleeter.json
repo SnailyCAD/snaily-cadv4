@@ -1,14 +1,14 @@
 {
-    "Bleeter": {
-        "bleeter": "Bleeter",
-        "noPosts": "Пока нет постов. Проверьте позже",
-        "createBleet": "Создать пост",
-        "editBleet": "Редактировать пост",
-        "deleteBleet": "Удалить пост",
-        "viewBleet": "Просмотреть пост",
-        "headerImage": "Изображение заголовка",
-        "bleetTitle": "Название поста",
-        "bleetBody": "Текст поста",
-        "alert_deleteBleet": "Вы уверены, что хотите удалить \"<span>{title}</span>\"? Это действие необратимо."
-    }
+  "Bleeter": {
+    "bleeter": "Bleeter",
+    "noPosts": "Пока нет постов. Проверьте позже",
+    "createBleet": "Создать пост",
+    "editBleet": "Редактировать пост",
+    "deleteBleet": "Удалить пост",
+    "viewBleet": "Просмотреть пост",
+    "headerImage": "Изображение заголовка",
+    "bleetTitle": "Название поста",
+    "bleetBody": "Текст поста",
+    "alert_deleteBleet": "Вы уверены, что хотите удалить \"<span>{title}</span>\"? Это действие необратимо."
+  }
 }
