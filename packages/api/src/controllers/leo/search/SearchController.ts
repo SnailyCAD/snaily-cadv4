@@ -240,6 +240,7 @@ function appendConfidential(
 
     if (isConfidential) {
       _citizens.push({
+        id: citizen.id,
         name: citizen.name,
         surname: citizen.surname,
         isConfidential: true,
