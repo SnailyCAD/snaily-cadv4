@@ -5,8 +5,9 @@ import { parse } from "cookie";
 import { Cookie, USER_API_TOKEN_HEADER } from "@snailycad/config";
 import { verifyJWT } from "utils/jwt";
 import { prisma } from "lib/prisma";
-import { Feature, WhitelistStatus, type User } from "@prisma/client";
+import { Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import { isFeatureEnabled } from "lib/cad";
+import { hasPermission, Permissions } from "@snailycad/permissions";
 
 export const userProperties = {
   id: true,
@@ -73,6 +74,18 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
       where: { apiToken: { token: userApiTokenHeader } },
       select: userProperties,
     });
+
+    if (user) {
+      let hasPerms = hasPermission(user.permissions, [Permissions.UsePersonalApiToken]);
+
+      if (user.rank === Rank.OWNER) {
+        hasPerms = true;
+      }
+
+      if (!hasPerms) {
+        throw new Forbidden("Invalid permissions for user API Token");
+      }
+    }
   } else {
     if (throwErrors && !header) {
       throw new Unauthorized("Unauthorized");
