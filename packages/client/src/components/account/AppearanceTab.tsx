@@ -10,22 +10,22 @@ import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 
-const LABELS = {
-  [StatusViewMode.DOT_COLOR]: "Dot color",
-  [StatusViewMode.FULL_ROW_COLOR]: "Full row color",
-};
-
-const TABLE_ALIGNMENT_LABELS = {
-  [TableActionsAlignment.NONE]: "None",
-  [TableActionsAlignment.LEFT]: "Left",
-  [TableActionsAlignment.RIGHT]: "Right",
-};
-
 export function AppearanceTab() {
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
+
+  const STATUS_VIEW_MODE_LABELS = {
+    [StatusViewMode.DOT_COLOR]: t("dotColor"),
+    [StatusViewMode.FULL_ROW_COLOR]: t("fullRowColor"),
+  };
+
+  const TABLE_ALIGNMENT_LABELS = {
+    [TableActionsAlignment.NONE]: common("none"),
+    [TableActionsAlignment.LEFT]: common("left"),
+    [TableActionsAlignment.RIGHT]: common("right"),
+  };
 
   if (!user) {
     return null;
@@ -70,7 +70,7 @@ export function AppearanceTab() {
               <Select
                 values={Object.values(StatusViewMode).map((v) => ({
                   value: v,
-                  label: LABELS[v],
+                  label: STATUS_VIEW_MODE_LABELS[v],
                 }))}
                 value={values.statusViewMode}
                 onChange={handleChange}

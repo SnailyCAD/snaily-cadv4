@@ -1,4 +1,4 @@
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { TEMP_PASSWORD_SCHEMA } from "@snailycad/schemas";
 import { useTranslations } from "use-intl";
@@ -60,11 +60,8 @@ export default function TempPassword() {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleSubmit, handleChange, errors, isValid }) => (
-            <form
-              className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2"
-              onSubmit={handleSubmit}
-            >
+          {({ handleChange, errors, isValid }) => (
+            <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2">
               <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 {t("changePassword")}
               </h1>
@@ -90,7 +87,7 @@ export default function TempPassword() {
                   {state === "loading" ? <Loader className="mr-3" /> : null} {common("save")}
                 </Button>
               </div>
-            </form>
+            </Form>
           )}
         </Formik>
         {cad?.version ? (

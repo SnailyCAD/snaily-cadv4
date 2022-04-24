@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
-import { Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -126,8 +126,8 @@ export function RegisterVehicleModal({
       className="w-[700px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setValues, errors, values, isValid }) => (
+          <Form>
             <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
               <Input
                 disabled={!!vehicle}
@@ -301,7 +301,7 @@ export function RegisterVehicleModal({
                 {vehicle ? common("save") : t("registerVehicle")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

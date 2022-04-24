@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
@@ -92,8 +92,8 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
       className="w-[600px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleSubmit, handleChange, setValues, errors, values, isValid }) => (
-          <form onSubmit={handleSubmit}>
+        {({ handleChange, setValues, errors, values, isValid }) => (
+          <Form>
             {CUSTOM_TEXTFIELD_VALUES ? (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
                 <Input
@@ -189,7 +189,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
                 {weapon ? common("save") : t("registerWeapon")}
               </Button>
             </footer>
-          </form>
+          </Form>
         )}
       </Formik>
     </Modal>

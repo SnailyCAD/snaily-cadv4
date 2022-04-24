@@ -20,7 +20,13 @@ export function TableRow<T extends object, RP extends object>({
   const isLeft = tableActionsAlignment === TableActionsAlignment.LEFT;
   const isNone = tableActionsAlignment === TableActionsAlignment.NONE;
   const dir = isNone ? "" : isLeft ? "left-0" : "right-0";
-  const bgColor = rowProps?.className?.includes("bg") ? rowProps.className : stickyBgColor;
+
+  const hasStyle = !!rowProps?.style;
+  const bgColor = hasStyle
+    ? ""
+    : rowProps?.className?.includes("bg")
+    ? rowProps.className
+    : stickyBgColor;
 
   return (
     <tr {...rowProps}>

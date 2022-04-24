@@ -19,6 +19,11 @@ type Options<Helpers extends object = object> = AxiosRequestConfig & {
   helpers?: FormikHelpers<Helpers>;
 };
 
+interface ErrorObj {
+  message: ErrorMessage;
+  data: any;
+}
+
 interface Return<Data> {
   json: Data;
   error: null | ErrorMessage | (string & {});
@@ -63,7 +68,12 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
       let hasAddedError = false as boolean; // as boolean because eslint gets upset otherwise.
       for (const error of errors) {
         Object.entries(error).map(([key, value]) => {
-          const message = isErrorKey(value) ? t(value) : value;
+          const translationOptions = typeof value === "string" ? undefined : value.data;
+          const translationKey = typeof value === "string" ? value : value.message;
+
+          const message = isErrorKey(translationKey)
+            ? t(translationKey, translationOptions)
+            : translationKey;
 
           if (message && options.helpers) {
             options.helpers.setFieldError(key, message);
@@ -116,7 +126,7 @@ function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {})
   return message ?? "unknown";
 }
 
-function parseErrors(error: AxiosError): Record<string, ErrorMessage>[] {
+function parseErrors(error: AxiosError): Record<string, ErrorMessage | ErrorObj>[] {
   return error.response?.data?.errors ?? [];
 }
 
@@ -131,7 +141,8 @@ function isAxiosError(error: any): error is AxiosError {
   return error instanceof Error || "response" in error;
 }
 
-function isErrorKey(key: string): key is ErrorMessage {
+function isErrorKey(key: string | ErrorObj): key is ErrorMessage {
+  if (typeof key !== "string") return false;
   return Object.keys(Common.Errors).includes(key);
 }
 

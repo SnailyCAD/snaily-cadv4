@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -103,8 +103,8 @@ export default function ManageCitizens(props: Props) {
 
       <div className="mt-5">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, handleSubmit, setFieldValue, isValid, values, errors }) => (
-            <form onSubmit={handleSubmit}>
+          {({ handleChange, setFieldValue, isValid, values, errors }) => (
+            <Form>
               {values.useOldPerms ? (
                 <>
                   <FormField errorMessage={errors.rank} label="Rank">
@@ -239,7 +239,7 @@ export default function ManageCitizens(props: Props) {
                   setFieldValue("useOldPerms", true);
                 }}
               />
-            </form>
+            </Form>
           )}
         </Formik>
 

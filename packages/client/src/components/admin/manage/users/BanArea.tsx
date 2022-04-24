@@ -2,7 +2,7 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import type { User } from "@snailycad/types";
@@ -62,8 +62,8 @@ export function BanArea({ user, setUser }: Props) {
         </div>
       ) : (
         <Formik validate={validate} onSubmit={onSubmit} initialValues={{ reason: "" }}>
-          {({ handleChange, handleSubmit, values, errors, isValid }) => (
-            <form className="mt-3" onSubmit={handleSubmit}>
+          {({ handleChange, values, errors, isValid }) => (
+            <Form className="mt-3">
               <FormField errorMessage={errors.reason} label={common("reason")}>
                 <Input
                   className="bg-gray-100"
@@ -82,7 +82,7 @@ export function BanArea({ user, setUser }: Props) {
                 {state === "loading" ? <Loader className="mr-3 border-red-300" /> : null}
                 Ban User
               </Button>
-            </form>
+            </Form>
           )}
         </Formik>
       )}
