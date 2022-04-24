@@ -50,7 +50,8 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
 
   let userApiTokenHeader;
   if (isUserAPITokensEnabled) {
-    userApiTokenHeader = String(req.headers[USER_API_TOKEN_HEADER]);
+    const _header = req.headers[USER_API_TOKEN_HEADER];
+    userApiTokenHeader = _header ? String(_header) : undefined;
   }
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
@@ -58,16 +59,7 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
     header = req.cookies[name] || parse(`${req.headers.session}`)[name];
   }
 
-  if (throwErrors && !header) {
-    throw new Unauthorized("Unauthorized");
-  }
-
-  const jwtPayload = verifyJWT(header);
-
-  if (throwErrors && !jwtPayload) {
-    throw new Unauthorized("Unauthorized");
-  }
-
+  let user;
   if (userApiTokenHeader && isUserAPITokensEnabled) {
     const token = await prisma.apiToken.findFirst({
       where: { token: userApiTokenHeader },
@@ -76,22 +68,30 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
     if (!token) {
       throw new Forbidden("invalid user API token");
     }
-  }
 
-  let user = jwtPayload
-    ? await prisma.user.findUnique({
-        where: {
-          id: jwtPayload.userId,
-        },
-        select: userProperties,
-      })
-    : null;
-
-  if (!user && userApiTokenHeader && isUserAPITokensEnabled) {
     user = await prisma.user.findFirst({
       where: { apiToken: { token: userApiTokenHeader } },
       select: userProperties,
     });
+  } else {
+    if (throwErrors && !header) {
+      throw new Unauthorized("Unauthorized");
+    }
+
+    const jwtPayload = verifyJWT(header);
+
+    if (throwErrors && !jwtPayload) {
+      throw new Unauthorized("Unauthorized");
+    }
+
+    user = jwtPayload
+      ? await prisma.user.findUnique({
+          where: {
+            id: jwtPayload.userId,
+          },
+          select: userProperties,
+        })
+      : null;
   }
 
   if (!throwErrors && !user) {
