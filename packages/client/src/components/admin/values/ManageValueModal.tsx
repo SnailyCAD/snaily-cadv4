@@ -128,7 +128,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
-    departments: value && isStatusValue(value) ? defaultDepartments(value) : undefined,
+    departments:
+      value && (isStatusValue(value) || isUnitQualification(value))
+        ? defaultDepartments(value)
+        : undefined,
     whatPages:
       value && isStatusValue(value)
         ? makeDefaultWhatPages(value)?.map((v) => ({
@@ -137,8 +140,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
           }))
         : [],
 
-    departmentId:
-      value && (isDivisionValue(value) || isUnitQualification(value)) ? value.departmentId : "",
+    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
     isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
     defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,

@@ -708,8 +708,8 @@ model QualificationValue {
   /// name of the qualification
   valueId           String
   value             Value               @relation(fields: [valueId], references: [id], onDelete: Cascade)
-  department        DepartmentValue     @relation(fields: [departmentId], references: [id])
-  departmentId      String
+  departments       DepartmentValue[]
+  departmentId      String?
   UnitQualification UnitQualification[]
 }
 

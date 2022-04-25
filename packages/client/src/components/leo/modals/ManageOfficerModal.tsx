@@ -20,6 +20,7 @@ import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
 import type { Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { UnitQualificationsTable } from "../UnitQualificationsTable";
 
 interface Props {
   officer: Officer | null;
@@ -205,6 +206,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               )}
               department={department.values.find((v) => v.id === values.department) ?? null}
             />
+
+            {officer ? <UnitQualificationsTable unit={officer as any} /> : null}
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">

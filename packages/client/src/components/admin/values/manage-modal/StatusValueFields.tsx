@@ -3,7 +3,7 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
-import { ShouldDoType, StatusValue, WhatPages } from "@snailycad/types";
+import { QualificationValue, ShouldDoType, StatusValue, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
 import { Button } from "components/Button";
@@ -43,9 +43,9 @@ export function useDefaultDepartments() {
     label: v.value.value,
   }));
 
-  function makeDefaultDepartments(status: StatusValue | null) {
-    if (!status) return [];
-    const departments = status.departments ?? [];
+  function makeDefaultDepartments(value: StatusValue | QualificationValue | null) {
+    if (!value) return [];
+    const departments = value.departments ?? [];
 
     return departments.length <= 0
       ? DEFAULT_DEPARTMENTS

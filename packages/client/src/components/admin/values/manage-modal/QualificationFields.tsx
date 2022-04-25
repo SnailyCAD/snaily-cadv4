@@ -11,15 +11,17 @@ export function QualificationFields() {
 
   return (
     <>
-      <FormField errorMessage={errors.departmentId as string} label="Department">
+      <FormField errorMessage={errors.departments as string} label="Departments">
         <Select
+          isMulti
           values={department.values.map((v) => ({
             value: v.id,
             label: v.value.value,
           }))}
-          name="departmentId"
+          name="departments"
           onChange={handleChange}
-          value={values.departmentId}
+          value={values.departments}
+          closeMenuOnSelect={false}
         />
       </FormField>
 

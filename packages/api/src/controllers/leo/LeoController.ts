@@ -44,7 +44,10 @@ export class LeoController {
   async getUserOfficers(@Context("user") user: User) {
     const officers = await prisma.officer.findMany({
       where: { userId: user.id },
-      include: leoProperties,
+      include: {
+        ...leoProperties,
+        qualifications: { include: { qualification: { include: { value: true } } } },
+      },
     });
 
     return { officers };
@@ -129,7 +132,13 @@ export class LeoController {
           prisma.officer.update({
             where: { id: officer.id },
             data: { divisions: v },
-            include: idx + 1 === disconnectConnectArr.length ? leoProperties : undefined,
+            include:
+              idx + 1 === disconnectConnectArr.length
+                ? {
+                    ...leoProperties,
+                    qualifications: { include: { qualification: { include: { value: true } } } },
+                  }
+                : undefined,
           }),
         ),
       ),
@@ -225,7 +234,10 @@ export class LeoController {
         rankId: rank,
         whitelistStatusId,
       },
-      include: leoProperties,
+      include: {
+        ...leoProperties,
+        qualifications: { include: { qualification: { include: { value: true } } } },
+      },
     });
 
     return updatedOfficer;

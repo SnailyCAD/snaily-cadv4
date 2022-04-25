@@ -266,20 +266,44 @@ export const typeHandlers = {
   QUALIFICATION: async (body: unknown, id?: string) => {
     const data = validateSchema(QUALIFICATION_ARR, body);
 
-    return prisma.$transaction(
-      data.map((item) => {
-        return prisma.qualificationValue.upsert({
-          where: { id: String(id) },
-          ...makePrismaData(ValueType.QUALIFICATION, {
-            // todo: support imgur
-            imageId: item.image,
-            value: item.value,
-            department: { connect: { id: item.departmentId } },
-          }),
-          include: { value: true },
-        });
-      }),
-    );
+    return handlePromiseAll(data, async (item) => {
+      const value = await prisma.qualificationValue.findUnique({
+        where: { id: String(id) },
+        select: { id: true, departments: true },
+      });
+
+      const updatedValue = await prisma.qualificationValue.upsert({
+        where: { id: String(id) },
+        ...makePrismaData(ValueType.QUALIFICATION, {
+          // todo: support imgur
+          imageId: item.image,
+          value: item.value,
+        }),
+        include: { value: true, departments: { include: { value: true } } },
+      });
+
+      const disconnectConnectArr = manyToManyHelper(
+        value?.departments?.map((v) => v.id) ?? [],
+        item.departments ?? [],
+      );
+
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.qualificationValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { value: true, departments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
+    });
   },
 
   GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
