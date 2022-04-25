@@ -8,9 +8,10 @@ import { AddQualificationsModal } from "./AddQualificationsModal";
 
 interface Props {
   unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
+  setUnit: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export function QualificationsTable({ unit }: Props) {
+export function QualificationsTable({ setUnit, unit }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal } = useModal();
@@ -59,7 +60,7 @@ export function QualificationsTable({ unit }: Props) {
         />
       )}
 
-      <AddQualificationsModal unit={unit} />
+      <AddQualificationsModal setUnit={setUnit} unit={unit} />
     </div>
   );
 }

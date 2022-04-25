@@ -1,4 +1,4 @@
-import type { EmsFdDeputy, Officer } from "@snailycad/types";
+import type { EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -12,10 +12,11 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  unit: EmsFdDeputy | Officer;
+  unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
+  setUnit: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export function AddQualificationsModal({ unit }: Props) {
+export function AddQualificationsModal({ unit, setUnit }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations();
   const { isOpen, closeModal } = useModal();
@@ -34,6 +35,7 @@ export function AddQualificationsModal({ unit }: Props) {
 
     if (json.id) {
       // todo: update state
+      setUnit((p: Props["unit"]) => ({ ...p, qualifications: [json, ...p.qualifications] }));
       closeModal(ModalIds.ManageUnitQualifications);
     }
   }

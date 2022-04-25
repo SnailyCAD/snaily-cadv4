@@ -330,6 +330,9 @@ export class AdminManageUnitsController {
         [t]: unitId,
         qualificationId: qualificationValue.id,
       },
+      include: {
+        qualification: { include: { value: true } },
+      },
     });
 
     return qualification;

@@ -1,3 +1,4 @@
+import * as React from "react";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -32,7 +33,9 @@ interface Props {
   unit: Unit | null;
 }
 
-export default function SupervisorPanelPage({ unit }: Props) {
+export default function SupervisorPanelPage({ unit: data }: Props) {
+  const [unit, setUnit] = React.useState(data);
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { codes10, department, division, officerRank } = useValues();
@@ -218,7 +221,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
         </div>
       ) : null}
 
-      <QualificationsTable unit={unit} />
+      <QualificationsTable setUnit={setUnit} unit={unit} />
     </AdminLayout>
   );
 }
