@@ -624,6 +624,9 @@ export interface Officer {
  *
  */
 export interface UnitQualification {
+  qualification: QualificationValue;
+  qualificationId: string;
+
   departmentId: string;
   department: DepartmentValue;
 

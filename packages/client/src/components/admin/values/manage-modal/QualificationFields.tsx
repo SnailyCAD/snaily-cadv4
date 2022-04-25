@@ -1,9 +1,9 @@
 import * as React from "react";
+import { useFormikContext } from "formik";
 import { FormField } from "components/form/FormField";
-import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
+// import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { useFormikContext } from "formik";
 
 export function QualificationFields() {
   const { values, errors, handleChange } = useFormikContext<any>();
@@ -23,9 +23,9 @@ export function QualificationFields() {
         />
       </FormField>
 
-      <ImageSelectInput
+      {/* <ImageSelectInput
       // todo
-      />
+      /> */}
     </>
   );
 }

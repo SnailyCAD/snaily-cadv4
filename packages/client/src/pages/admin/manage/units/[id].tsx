@@ -14,7 +14,7 @@ import useFetch from "lib/useFetch";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { Rank, EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
+import { Rank, EmsFdDeputy, Officer, OfficerLog, UnitQualification } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { Title } from "components/shared/Title";
 import { OfficerLogsTable } from "components/leo/logs/OfficerLogsTable";
@@ -22,8 +22,11 @@ import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Permissions } from "@snailycad/permissions";
+import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
 
-type Unit = (Officer & { logs: OfficerLog[] }) | EmsFdDeputy;
+type Unit = ((Officer & { logs: OfficerLog[] }) | EmsFdDeputy) & {
+  qualifications: UnitQualification[];
+};
 
 interface Props {
   unit: Unit | null;
@@ -214,6 +217,8 @@ export default function SupervisorPanelPage({ unit }: Props) {
           <OfficerLogsTable officer={unit} logs={unit.logs} />
         </div>
       ) : null}
+
+      <QualificationsTable unit={unit} />
     </AdminLayout>
   );
 }
@@ -221,7 +226,7 @@ export default function SupervisorPanelPage({ unit }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ query, req, locale }) => {
   const [unit, values] = await requestAll(req, [
     [`/admin/manage/units/${query.id}`, null],
-    ["/admin/values/codes_10?paths=department,division,officer_rank", []],
+    ["/admin/values/codes_10?paths=department,division,officer_rank,qualification", []],
   ]);
 
   if (!unit) {
