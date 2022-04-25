@@ -106,7 +106,11 @@ export function ActiveDeputies() {
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   deputy: (
-                    <ContextMenu canBeOpened={isDispatch} asChild items={codesMapped}>
+                    <ContextMenu
+                      canBeOpened={isDispatch && hasActiveDispatchers}
+                      asChild
+                      items={codesMapped}
+                    >
                       <span>
                         <Draggable
                           canDrag={hasActiveDispatchers && isDispatch}
