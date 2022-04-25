@@ -55,15 +55,19 @@ export class AdminManageUnitsController {
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
   })
   async getUnit(@PathParams("id") id: string) {
+    const extraInclude = {
+      qualifications: { include: { value: true } },
+    };
+
     let unit: any = await prisma.officer.findUnique({
       where: { id },
-      include: { ...leoProperties, logs: true },
+      include: { ...leoProperties, ...extraInclude, logs: true },
     });
 
     if (!unit) {
       unit = await prisma.emsFdDeputy.findUnique({
         where: { id },
-        include: unitProperties,
+        include: { ...unitProperties, ...extraInclude },
       });
     }
 

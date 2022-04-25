@@ -640,6 +640,7 @@ export interface UnitQualification {
  *
  */
 export interface QualificationValue {
+  id: string;
   valueId: string;
   /** name of the qualification */
   value: Value<ValueType.QUALIFICATION>;
