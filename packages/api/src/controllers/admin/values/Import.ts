@@ -20,6 +20,7 @@ import {
   CODES_10_ARR,
   DIVISION_ARR,
   PENAL_CODE_ARR,
+  QUALIFICATION_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -261,6 +262,23 @@ export const typeHandlers = {
         include: { warningApplicable: true, warningNotApplicable: true },
       });
     });
+  },
+  QUALIFICATION: async (body: unknown, id?: string) => {
+    const data = validateSchema(QUALIFICATION_ARR, body);
+
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.qualificationValue.upsert({
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.QUALIFICATION, {
+            // todo: support imgur
+            imageId: item.image,
+            value: item.value,
+          }),
+          include: { value: true },
+        });
+      }),
+    );
   },
 
   GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),

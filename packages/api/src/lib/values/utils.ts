@@ -42,6 +42,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   VEHICLE: [Permissions.ManageValueVehicle],
   VEHICLE_FLAG: [Permissions.ManageValueVehicleFlag],
   WEAPON: [Permissions.ManageValueWeapon],
+  QUALIFICATION: [Permissions.ManageValueQualification],
 };
 
 export function getTypeFromPath(path: string) {
