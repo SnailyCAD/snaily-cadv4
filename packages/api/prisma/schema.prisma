@@ -689,28 +689,31 @@ model Officer {
 }
 
 model UnitQualification {
-  id           String          @id @default(uuid())
-  department   DepartmentValue @relation(fields: [departmentId], references: [id])
-  departmentId String
+  id              String             @id @default(uuid())
+  qualification   QualificationValue @relation(fields: [qualificationId], references: [id])
+  qualificationId String
 
   suspendedAt DateTime?
   createdAt   DateTime
   updatedAt   DateTime
 
-  officerId     String?
-  Officer       Officer?     @relation(fields: [officerId], references: [id])
-  emsFdDeputyId String?
-  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id])
+  officerId         String?
+  Officer           Officer?         @relation(fields: [officerId], references: [id])
+  emsFdDeputyId     String?
+  emsFdDeputy       EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
+  DepartmentValue   DepartmentValue? @relation(fields: [departmentValueId], references: [id])
+  departmentValueId String?
 }
 
 model QualificationValue {
-  id           String          @id @default(uuid())
-  imageId      String
+  id                String              @id @default(uuid())
+  imageId           String?
   /// name of the qualification
-  valueId      String
-  value        Value           @relation(fields: [valueId], references: [id])
-  department   DepartmentValue @relation(fields: [departmentId], references: [id])
-  departmentId String
+  valueId           String
+  value             Value               @relation(fields: [valueId], references: [id])
+  department        DepartmentValue     @relation(fields: [departmentId], references: [id])
+  departmentId      String
+  UnitQualification UnitQualification[]
 }
 
 model LeoWhitelistStatus {

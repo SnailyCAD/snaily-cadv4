@@ -274,6 +274,7 @@ export const typeHandlers = {
             // todo: support imgur
             imageId: item.image,
             value: item.value,
+            department: { connect: { id: item.departmentId } },
           }),
           include: { value: true },
         });

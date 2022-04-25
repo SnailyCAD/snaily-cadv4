@@ -40,6 +40,7 @@ import {
   isWeaponValue,
   AnyValue,
 } from "@snailycad/utils/typeguards";
+import { QualificationFields } from "./manage-modal/QualificationFields";
 
 interface Props {
   type: ValueType;
@@ -135,7 +136,8 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
           }))
         : [],
 
-    departmentId: value && isDivisionValue(value) ? value.departmentId : "",
+    departmentId:
+      value && (isDivisionValue(value) || isQualificationValue(value)) ? value.departmentId : "",
     isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
     defaultOfficerRankId: value && isDepartmentValue(value) ? value.defaultOfficerRankId : null,
@@ -207,9 +209,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
-            {type === "DEPARTMENT" ? <DepartmentFields /> : null}
+            {type === ValueType.DEPARTMENT ? <DepartmentFields /> : null}
+            {type === ValueType.QUALIFICATION ? <QualificationFields /> : null}
 
-            {type === "BUSINESS_ROLE" ? (
+            {type === ValueType.BUSINESS_ROLE ? (
               <FormField label="As (this is so the database knows what to use.)">
                 <Select
                   values={BUSINESS_VALUES}

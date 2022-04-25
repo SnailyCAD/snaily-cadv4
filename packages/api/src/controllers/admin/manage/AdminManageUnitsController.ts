@@ -56,7 +56,7 @@ export class AdminManageUnitsController {
   })
   async getUnit(@PathParams("id") id: string) {
     const extraInclude = {
-      qualifications: { include: { value: true } },
+      qualifications: { include: { qualification: { include: { value: true } } } },
     };
 
     let unit: any = await prisma.officer.findUnique({
