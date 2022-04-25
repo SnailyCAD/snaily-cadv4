@@ -195,11 +195,6 @@ export const typeHandlers = {
     return handlePromiseAll(data, async (item) => {
       const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
 
-      const value = await prisma.statusValue.findUnique({
-        where: { id: String(id) },
-        select: { id: true, departments: true },
-      });
-
       const updatedValue = await prisma.statusValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.CODES_10, {
@@ -209,11 +204,11 @@ export const typeHandlers = {
           whatPages: whatPages as WhatPages[],
           value: item.value,
         }),
-        include: { value: true },
+        include: { value: true, departments: { include: { value: true } } },
       });
 
       const disconnectConnectArr = manyToManyHelper(
-        value?.departments?.map((v) => v.id) ?? [],
+        updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
       );
 
@@ -268,11 +263,6 @@ export const typeHandlers = {
     const data = validateSchema(QUALIFICATION_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
-      const value = await prisma.qualificationValue.findUnique({
-        where: { id: String(id) },
-        select: { id: true, departments: true },
-      });
-
       const updatedValue = await prisma.qualificationValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.QUALIFICATION, {
@@ -283,7 +273,7 @@ export const typeHandlers = {
       });
 
       const disconnectConnectArr = manyToManyHelper(
-        value?.departments?.map((v) => v.id) ?? [],
+        updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
       );
 
