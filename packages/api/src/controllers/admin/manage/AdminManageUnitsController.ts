@@ -19,6 +19,9 @@ import { manyToManyHelper } from "utils/manyToMany";
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
 type Action = typeof ACTIONS[number];
 
+const SUSPEND_TYPE = ["suspend", "unsuspend"] as const;
+type SuspendType = "suspend" | "unsuspend";
+
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
 export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
 
@@ -328,9 +331,7 @@ export class AdminManageUnitsController {
         [t]: unitId,
         qualificationId: qualificationValue.id,
       },
-      include: {
-        qualification: { include: { value: true } },
-      },
+      include: { qualification: { include: { value: true } } },
     });
 
     return qualification;
@@ -356,5 +357,44 @@ export class AdminManageUnitsController {
     });
 
     return true;
+  }
+
+  @Put("/:unitId/qualifications/:qualificationId")
+  async suspendOrUnsuspendUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @PathParams("qualificationId") qualificationId: string,
+    @BodyParams("type") suspendType: SuspendType,
+  ) {
+    if (!SUSPEND_TYPE.includes(suspendType)) {
+      throw new BadRequest("invalidType");
+    }
+
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const qualification = await prisma.unitQualification.findUnique({
+      where: { id: qualificationId },
+    });
+
+    if (!qualification) {
+      throw new NotFound("qualificationNotFound");
+    }
+
+    const updated = await prisma.unitQualification.update({
+      where: { id: qualification.id },
+      data: {
+        suspendedAt: suspendType === "suspend" ? new Date() : null,
+      },
+      include: { qualification: { include: { value: true } } },
+    });
+
+    return updated;
   }
 }

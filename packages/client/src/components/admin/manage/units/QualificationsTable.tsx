@@ -27,6 +27,29 @@ export function QualificationsTable({ setUnit, unit }: Props) {
     openModal(ModalIds.AlertDeleteUnitQualification);
   }
 
+  async function handleSuspendOrUnsuspend(
+    type: "suspend" | "unsuspend",
+    qualification: UnitQualification,
+  ) {
+    const { json } = await execute(
+      `/admin/manage/units/${unit.id}/qualifications/${qualification.id}`,
+      { method: "PUT", data: { type } },
+    );
+
+    if (json) {
+      setUnit((p: Props["unit"]) => ({
+        ...p,
+        qualifications: p.qualifications.map((q) => {
+          if (q.id === qualification.id) {
+            return { ...qualification, ...json };
+          }
+
+          return p;
+        }),
+      }));
+    }
+  }
+
   async function handleDelete() {
     if (!tempQualification) return;
 
@@ -67,15 +90,26 @@ export function QualificationsTable({ setUnit, unit }: Props) {
               actions: (
                 <>
                   {qa.suspendedAt ? (
-                    <Button small variant="success">
+                    <Button
+                      onClick={() => handleSuspendOrUnsuspend("unsuspend", qa)}
+                      disabled={state === "loading"}
+                      small
+                      variant="success"
+                    >
                       {t("unsuspend")}
                     </Button>
                   ) : (
-                    <Button small variant="danger">
+                    <Button
+                      disabled={state === "loading"}
+                      onClick={() => handleSuspendOrUnsuspend("suspend", qa)}
+                      small
+                      variant="amber"
+                    >
                       {t("suspend")}
                     </Button>
                   )}
                   <Button
+                    disabled={state === "loading"}
                     onClick={() => handleDeleteClick(qa)}
                     className="ml-2"
                     small
