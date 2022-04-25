@@ -4,7 +4,7 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Description, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
@@ -314,8 +314,6 @@ export class AdminManageUnitsController {
       "ems-fd": "emsFdDeputyId",
     } as const;
 
-    console.log({ qualificationId });
-
     const qualificationValue = await prisma.qualificationValue.findUnique({
       where: { id: qualificationId },
     });
@@ -336,5 +334,27 @@ export class AdminManageUnitsController {
     });
 
     return qualification;
+  }
+
+  @Delete("/:unitId/qualifications/:qualificationId")
+  async deleteUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @PathParams("qualificationId") qualificationId: string,
+  ) {
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    await prisma.unitQualification.delete({
+      where: { id: qualificationId },
+    });
+
+    return true;
   }
 }

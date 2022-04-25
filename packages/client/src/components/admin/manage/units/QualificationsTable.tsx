@@ -1,6 +1,9 @@
+import * as React from "react";
 import type { EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
+import { AlertModal } from "components/modal/AlertModal";
 import { Table } from "components/shared/Table";
+import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -12,9 +15,35 @@ interface Props {
 }
 
 export function QualificationsTable({ setUnit, unit }: Props) {
+  const [tempQualification, setTempQualification] = React.useState<UnitQualification | null>(null);
+
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
+  const { state, execute } = useFetch();
+
+  function handleDeleteClick(qualification: UnitQualification) {
+    setTempQualification(qualification);
+    openModal(ModalIds.AlertDeleteUnitQualification);
+  }
+
+  async function handleDelete() {
+    if (!tempQualification) return;
+
+    const { json } = await execute(
+      `/admin/manage/units/${unit.id}/qualifications/${tempQualification.id}`,
+      { method: "DELETE" },
+    );
+
+    if (json) {
+      setUnit((p: Props["unit"]) => ({
+        ...p,
+        qualifications: p.qualifications.filter((v) => v.id !== tempQualification.id),
+      }));
+      setTempQualification(null);
+      closeModal(ModalIds.AlertDeleteUnitQualification);
+    }
+  }
 
   return (
     <div className="mt-3">
@@ -46,7 +75,12 @@ export function QualificationsTable({ setUnit, unit }: Props) {
                       {t("suspend")}
                     </Button>
                   )}
-                  <Button className="ml-2" small variant="danger">
+                  <Button
+                    onClick={() => handleDeleteClick(qa)}
+                    className="ml-2"
+                    small
+                    variant="danger"
+                  >
                     {common("delete")}
                   </Button>
                 </>
@@ -61,6 +95,13 @@ export function QualificationsTable({ setUnit, unit }: Props) {
       )}
 
       <AddQualificationsModal setUnit={setUnit} unit={unit} />
+      <AlertModal
+        title={t("deleteQualification")}
+        description={t("alert_deleteQualification")}
+        id={ModalIds.AlertDeleteUnitQualification}
+        onDeleteClick={handleDelete}
+        state={state}
+      />
     </div>
   );
 }
