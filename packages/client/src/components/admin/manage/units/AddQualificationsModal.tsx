@@ -34,7 +34,6 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
     });
 
     if (json.id) {
-      // todo: update state
       setUnit((p: Props["unit"]) => ({ ...p, qualifications: [json, ...p.qualifications] }));
       closeModal(ModalIds.ManageUnitQualifications);
     }
