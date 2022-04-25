@@ -12,6 +12,7 @@ import {
   WhitelistStatus,
   CadFeature,
   Feature,
+  Rank,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -31,6 +32,7 @@ import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
+import { hasPermission } from "@snailycad/permissions";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -44,12 +46,7 @@ export class StatusController {
   @Description("Update the status of a unit by its id.")
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isSupervisor || u.isDispatch || u.isEmsFd,
-    permissions: [
-      Permissions.Dispatch,
-      Permissions.Leo,
-      Permissions.EmsFd,
-      Permissions.ManageUnits,
-    ],
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async updateUnitStatus(
     @PathParams("unitId") unitId: string,
@@ -62,7 +59,11 @@ export class StatusController {
     const bodyStatusId = data.status;
 
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
-    const isDispatch = isFromDispatch && user.isDispatch;
+    const isDispatch =
+      isFromDispatch &&
+      (hasPermission(user.permissions, [Permissions.Dispatch]) ||
+        user.isDispatch ||
+        user.rank === Rank.OWNER);
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 

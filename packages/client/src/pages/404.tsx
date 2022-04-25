@@ -5,9 +5,11 @@ import { getTranslations } from "lib/getTranslation";
 import { Title } from "components/shared/Title";
 import { handleRequest } from "lib/fetch";
 import { useAuth } from "context/AuthContext";
+import { useTranslations } from "next-intl";
 
 export default function FourOhFour() {
   const { setCad } = useAuth();
+  const t = useTranslations("Errors");
 
   /**
    * the 404 page can only be static due to Next.js' restrictions :/
@@ -28,7 +30,7 @@ export default function FourOhFour() {
 
   return (
     <Layout className="dark:text-white">
-      <Title>Page not found.</Title>
+      <Title>{t("pageNotFound")}</Title>
     </Layout>
   );
 }

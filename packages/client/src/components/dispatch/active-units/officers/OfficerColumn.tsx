@@ -60,7 +60,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
     : isUnitCombined(officer) && officer.id === activeOfficer?.id;
 
   const canBeOpened =
-    isDispatch ||
+    (isDispatch && hasActiveDispatchers) ||
     shouldShowSplit ||
     (activeOfficer &&
       activeOfficer.id !== officer.id &&
