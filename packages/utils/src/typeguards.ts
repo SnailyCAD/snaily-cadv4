@@ -11,6 +11,7 @@ import {
   Officer,
   CombinedLeoUnit,
   EmsFdDeputy,
+  QualificationValue,
 } from "@snailycad/types";
 
 export type ValueWithValueObj =
@@ -20,7 +21,8 @@ export type ValueWithValueObj =
   | DepartmentValue
   | DivisionValue
   | EmployeeValue
-  | DriversLicenseCategoryValue;
+  | DriversLicenseCategoryValue
+  | QualificationValue;
 
 export type AnyValue = Value<ValueType> | ValueWithValueObj;
 
@@ -54,6 +56,10 @@ export function isDivisionValue(value: AnyValue): value is DivisionValue {
 
 export function isEmployeeValue(value: AnyValue): value is EmployeeValue {
   return hasValueObj(value) && value.value.type === ValueType.BUSINESS_ROLE;
+}
+
+export function isUnitQualification(value: AnyValue): value is QualificationValue {
+  return hasValueObj(value) && value.value.type === ValueType.QUALIFICATION;
 }
 
 export function isUnitCombined(

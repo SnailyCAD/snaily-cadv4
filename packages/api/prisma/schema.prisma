@@ -396,6 +396,7 @@ model Value {
   citizenFlags                    Citizen[]                     @relation("citizenFlags")
   DLExam                          DLExam[]                      @relation("dlExamToLicense")
   DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
+  QualificationValue              QualificationValue[]
 }
 
 model PenalCode {
@@ -489,6 +490,8 @@ model DepartmentValue {
   defaultOfficerRank   Value?               @relation("departmentValueToOfficerRank", fields: [defaultOfficerRankId], references: [id])
   defaultOfficerRankId String?
   isConfidential       Boolean              @default(false)
+  Qualification        QualificationValue[]
+  UnitQualification    UnitQualification[]
 }
 
 model DriversLicenseCategoryValue {
@@ -681,7 +684,33 @@ model Officer {
   LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
+  qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
+}
+
+model UnitQualification {
+  id           String          @id @default(uuid())
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
+
+  suspendedAt DateTime?
+  createdAt   DateTime
+  updatedAt   DateTime
+
+  officerId     String?
+  Officer       Officer?     @relation(fields: [officerId], references: [id])
+  emsFdDeputyId String?
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id])
+}
+
+model QualificationValue {
+  id           String          @id @default(uuid())
+  imageId      String
+  /// name of the qualification
+  valueId      String
+  value        Value           @relation(fields: [valueId], references: [id])
+  department   DepartmentValue @relation(fields: [departmentId], references: [id])
+  departmentId String
 }
 
 model LeoWhitelistStatus {
@@ -976,6 +1005,7 @@ model EmsFdDeputy {
   updatedAt            DateTime               @default(now()) @updatedAt
   radioChannelId       String?
   AssignedUnit         AssignedUnit[]
+  qualifications       UnitQualification[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
 
@@ -1096,6 +1126,7 @@ enum ValueType {
   IMPOUND_LOT
   VEHICLE_FLAG
   CITIZEN_FLAG
+  QUALIFICATION
 }
 
 enum DriversLicenseCategoryType {

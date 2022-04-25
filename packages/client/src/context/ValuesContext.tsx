@@ -38,6 +38,7 @@ interface Context {
     DriversLicenseCategoryValue
   >;
   impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
+  qualification: ContextValue<ValueType.QUALIFICATION>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);

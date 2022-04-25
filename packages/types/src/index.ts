@@ -619,6 +619,10 @@ export interface Officer {
   radioChannelId: string | null;
 }
 
+/**
+ * Model UnitQualification
+ *
+ */
 export interface UnitQualification {
   departmentId: string;
   department: DepartmentValue;
@@ -629,6 +633,19 @@ export interface UnitQualification {
 
   officerId: string | null;
   emsFdDeputyId: string | null;
+}
+
+/**
+ * Model Qualification
+ *
+ */
+export interface QualificationValue {
+  valueId: string;
+  /** name of the qualification */
+  value: Value<ValueType.QUALIFICATION>;
+  imageId: string;
+  department: DepartmentValue;
+  departmentId: string;
 }
 
 /**
