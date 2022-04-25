@@ -628,9 +628,6 @@ export interface UnitQualification {
   qualification: QualificationValue;
   qualificationId: string;
 
-  departmentId: string;
-  department: DepartmentValue;
-
   suspendedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
