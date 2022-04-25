@@ -34,10 +34,8 @@ const LICENSE_VALUE = {
 } as Value<ValueType.LICENSE>;
 
 const QUALIFICATION_VALUE = {
-  type: ValueType.QUALIFICATION,
-  value: "Basic life support qualification",
-  createdAt: new Date(),
-} as Value<ValueType.QUALIFICATION>;
+  value: { value: "Basic life support qualification", type: ValueType.QUALIFICATION },
+} as any;
 
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
