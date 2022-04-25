@@ -1,14 +1,26 @@
-import { Get, Controller, PathParams, UseBeforeEach, BodyParams, QueryParams } from "@tsed/common";
+import {
+  Get,
+  Controller,
+  PathParams,
+  UseBeforeEach,
+  BodyParams,
+  QueryParams,
+  MultipartFile,
+  PlatformMulterFile,
+} from "@tsed/common";
+import process from "node:process";
+import fs from "node:fs";
 import { Delete, Description, Patch, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { IsValidPath } from "middlewares/ValidPath";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { typeHandlers } from "./Import";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { ValuesSelect, getTypeFromPath, getPermissionsForValuesRequest } from "lib/values/utils";
 import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
+import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
   QUALIFICATION: {
@@ -103,6 +115,45 @@ export class ValuesController {
     });
 
     return values;
+  }
+
+  @Post("/image/:id")
+  async uploadImageToTypes(
+    @PathParams("path") _path: string,
+    @MultipartFile("image") file: PlatformMulterFile,
+    @PathParams("id") id: string,
+  ) {
+    const type = getTypeFromPath(_path);
+
+    if (type !== ValueType.QUALIFICATION) {
+      return new BadRequest("invalidType");
+    }
+
+    if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
+      throw new ExtendedBadRequest({ image: "invalidImageType" });
+    }
+
+    const value = await prisma.qualificationValue.findUnique({
+      where: { id },
+    });
+
+    if (!value) {
+      throw new NotFound("valueNotFound");
+    }
+
+    // "image/png" -> "png"
+    const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
+    const path = `${process.cwd()}/public/values/${value.id}.${extension}`;
+
+    await fs.writeFileSync(path, file.buffer);
+
+    const data = await prisma.qualificationValue.update({
+      where: { id: value.id },
+      data: { imageId: `${value.id}.${extension}` },
+      select: { imageId: true },
+    });
+
+    return data;
   }
 
   @Post("/")

@@ -38,6 +38,7 @@ import { upsertWarningApplicable } from "lib/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
+import { validateImgurURL } from "utils/image";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -275,8 +276,7 @@ export const typeHandlers = {
       const updatedValue = await prisma.qualificationValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.QUALIFICATION, {
-          // todo: support imgur
-          imageId: item.image,
+          imageId: validateImgurURL(item.image),
           value: item.value,
         }),
         include: { value: true, departments: { include: { value: true } } },

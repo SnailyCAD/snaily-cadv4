@@ -2,6 +2,7 @@ import { IMGUR_REGEX } from "@snailycad/config";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
 export function validateImgurURL(image: unknown) {
+  if (image === null) return null;
   if (!image) return undefined;
 
   if (typeof image === "string" && image.includes("fakepath")) {

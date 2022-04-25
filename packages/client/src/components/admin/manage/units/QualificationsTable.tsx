@@ -9,6 +9,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddQualificationsModal } from "./AddQualificationsModal";
 import { FullDate } from "components/shared/FullDate";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
@@ -18,6 +19,7 @@ interface Props {
 export function QualificationsTable({ setUnit, unit }: Props) {
   const [tempQualification, setTempQualification] = React.useState<UnitQualification | null>(null);
 
+  const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
@@ -86,7 +88,16 @@ export function QualificationsTable({ setUnit, unit }: Props) {
       ) : (
         <Table
           data={unit.qualifications.map((qa) => {
+            console.log({ q: qa.qualification });
+
+            const imgUrl = makeImageUrl("values", qa.qualification.imageId);
+
             return {
+              image: imgUrl ? (
+                <img src={imgUrl} width={50} height={50} className="object-cover" />
+              ) : (
+                "—"
+              ),
               name: qa.qualification.value.value,
               assignedAt: <FullDate>{qa.createdAt}</FullDate>,
               actions: (
@@ -124,6 +135,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
             };
           })}
           columns={[
+            { Header: common("image"), accessor: "image" },
             { Header: common("name"), accessor: "name" },
             { Header: t("assignedAt"), accessor: "assignedAt" },
             { Header: common("actions"), accessor: "actions" },

@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   DEPARTMENT_SCHEMA,
   DIVISION_SCHEMA,
@@ -42,6 +43,7 @@ import {
   AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
+import { validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   type: ValueType;
@@ -76,6 +78,8 @@ const EXTRA_SCHEMAS: Partial<Record<ValueType, any>> = {
 };
 
 export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
+  const [image, setImage] = React.useState<File | string | null>(null);
+
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
@@ -106,6 +110,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
       if (json?.id) {
         closeModal(ModalIds.ManageValue);
+        await handleQualificationImageUpload(value.id, helpers);
         onUpdate(value, json);
       }
     } else {
@@ -116,9 +121,29 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       });
 
       if (json?.id) {
+        await handleQualificationImageUpload(json.id, helpers);
         closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
+    }
+  }
+
+  async function handleQualificationImageUpload(id: string, helpers: FormikHelpers<any>) {
+    const fd = new FormData();
+    const validatedImage = validateFile(image, helpers);
+
+    if (validatedImage) {
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+    }
+
+    if (validatedImage && typeof validatedImage === "object") {
+      await execute(`/admin/values/qualification/image/${id}`, {
+        method: "POST",
+        data: fd,
+        helpers,
+      });
     }
   }
 
@@ -155,6 +180,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
 
     showPicker: false,
+    image: "",
   };
 
   function validate(values: typeof INITIAL_VALUES) {
@@ -213,7 +239,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === ValueType.DEPARTMENT ? <DepartmentFields /> : null}
-            {type === ValueType.QUALIFICATION ? <QualificationFields /> : null}
+            {type === ValueType.QUALIFICATION ? (
+              <QualificationFields image={image} setImage={setImage} />
+            ) : null}
 
             {type === ValueType.BUSINESS_ROLE ? (
               <FormField label="As (this is so the database knows what to use.)">
