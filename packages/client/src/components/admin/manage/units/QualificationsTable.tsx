@@ -69,7 +69,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
   }
 
   return (
-    <div className="mt-3">
+    <div className="mt-10">
       <header className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">{t("unitQualifications")}</h1>
 

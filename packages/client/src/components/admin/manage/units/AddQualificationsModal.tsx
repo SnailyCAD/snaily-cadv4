@@ -59,10 +59,16 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
                 value={values.qualificationId}
                 name="qualificationId"
                 onChange={handleChange}
-                values={qualification.values.map((q) => ({
-                  value: q.id,
-                  label: q.value.value,
-                }))}
+                values={qualification.values
+                  .filter((v) => {
+                    return !v.departments.length
+                      ? true
+                      : v.departments.some((v) => unit.departmentId === v.id);
+                  })
+                  .map((q) => ({
+                    value: q.id,
+                    label: q.value.value,
+                  }))}
               />
             </FormField>
 

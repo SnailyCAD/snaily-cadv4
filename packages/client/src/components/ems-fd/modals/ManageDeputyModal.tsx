@@ -19,6 +19,7 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { UnitQualificationsTable } from "components/leo/UnitQualificationsTable";
 
 interface Props {
   deputy: EmsFdDeputy | null;
@@ -199,6 +200,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
               divisions={division.values.filter((v) => values.division === v.id)}
               department={department.values.find((v) => v.id === values.department) ?? null}
             />
+
+            {deputy ? <UnitQualificationsTable unit={deputy as any} /> : null}
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
