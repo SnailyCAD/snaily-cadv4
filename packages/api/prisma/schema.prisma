@@ -491,7 +491,6 @@ model DepartmentValue {
   defaultOfficerRankId String?
   isConfidential       Boolean              @default(false)
   Qualification        QualificationValue[]
-  UnitQualification    UnitQualification[]
 }
 
 model DriversLicenseCategoryValue {
@@ -694,15 +693,13 @@ model UnitQualification {
   qualificationId String
 
   suspendedAt DateTime?
-  createdAt   DateTime
-  updatedAt   DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
 
-  officerId         String?
-  Officer           Officer?         @relation(fields: [officerId], references: [id])
-  emsFdDeputyId     String?
-  emsFdDeputy       EmsFdDeputy?     @relation(fields: [emsFdDeputyId], references: [id])
-  DepartmentValue   DepartmentValue? @relation(fields: [departmentValueId], references: [id])
-  departmentValueId String?
+  officerId     String?
+  Officer       Officer?     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  emsFdDeputyId String?
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id], onDelete: Cascade)
 }
 
 model QualificationValue {
@@ -710,7 +707,7 @@ model QualificationValue {
   imageId           String?
   /// name of the qualification
   valueId           String
-  value             Value               @relation(fields: [valueId], references: [id])
+  value             Value               @relation(fields: [valueId], references: [id], onDelete: Cascade)
   department        DepartmentValue     @relation(fields: [departmentId], references: [id])
   departmentId      String
   UnitQualification UnitQualification[]

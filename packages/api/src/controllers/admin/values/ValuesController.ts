@@ -11,6 +11,7 @@ import { ValueType } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 
 const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
+  QUALIFICATION: { name: "qualificationValue" },
   VEHICLE: { name: "vehicleValue" },
   WEAPON: { name: "weaponValue" },
   BUSINESS_ROLE: { name: "employeeValue" },

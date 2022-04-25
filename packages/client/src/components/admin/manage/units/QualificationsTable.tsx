@@ -4,13 +4,10 @@ import { Table } from "components/shared/Table";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-
-interface UnitExtras {
-  qualifications: UnitQualification[];
-}
+import { AddQualificationsModal } from "./AddQualificationsModal";
 
 interface Props {
-  unit: (EmsFdDeputy | Officer) & UnitExtras;
+  unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
 }
 
 export function QualificationsTable({ unit }: Props) {
@@ -40,15 +37,15 @@ export function QualificationsTable({ unit }: Props) {
               actions: (
                 <>
                   {qa.suspendedAt ? (
-                    <Button small variant="danger">
-                      {t("suspend")}
-                    </Button>
-                  ) : (
                     <Button small variant="success">
                       {t("unsuspend")}
                     </Button>
+                  ) : (
+                    <Button small variant="danger">
+                      {t("suspend")}
+                    </Button>
                   )}
-                  <Button small variant="danger">
+                  <Button className="ml-2" small variant="danger">
                     {common("delete")}
                   </Button>
                 </>
@@ -61,6 +58,8 @@ export function QualificationsTable({ unit }: Props) {
           ]}
         />
       )}
+
+      <AddQualificationsModal unit={unit} />
     </div>
   );
 }

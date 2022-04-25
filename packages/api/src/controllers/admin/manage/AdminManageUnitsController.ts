@@ -7,6 +7,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { findUnit } from "lib/leo/findUnit";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -291,5 +292,46 @@ export class AdminManageUnitsController {
       default:
         return null;
     }
+  }
+
+  @Post("/:unitId/qualifications")
+  async addUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @BodyParams("qualificationId") qualificationId: string,
+  ) {
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const types = {
+      leo: "officerId",
+      "ems-fd": "emsFdDeputyId",
+    } as const;
+
+    console.log({ qualificationId });
+
+    const qualificationValue = await prisma.qualificationValue.findUnique({
+      where: { id: qualificationId },
+    });
+
+    if (!qualificationValue) {
+      throw new NotFound("qualificationNotFound");
+    }
+
+    const t = types[unit.type];
+    const qualification = await prisma.unitQualification.create({
+      data: {
+        [t]: unitId,
+        qualificationId: qualificationValue.id,
+      },
+    });
+
+    return qualification;
   }
 }
