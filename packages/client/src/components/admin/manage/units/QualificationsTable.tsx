@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AddQualificationsModal } from "./AddQualificationsModal";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
@@ -87,6 +88,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
           data={unit.qualifications.map((qa) => {
             return {
               name: qa.qualification.value.value,
+              assignedAt: <FullDate>{qa.createdAt}</FullDate>,
               actions: (
                 <>
                   {qa.suspendedAt ? (
@@ -123,6 +125,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
           })}
           columns={[
             { Header: common("name"), accessor: "name" },
+            { Header: t("assignedAt"), accessor: "assignedAt" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />
