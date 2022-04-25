@@ -12,6 +12,7 @@ import {
   WhitelistStatus,
   CadFeature,
   Feature,
+  Rank,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -60,7 +61,9 @@ export class StatusController {
     const isFromDispatch = req.headers["is-from-dispatch"]?.toString() === "true";
     const isDispatch =
       isFromDispatch &&
-      (hasPermission(user.permissions, [Permissions.Dispatch]) || user.isDispatch);
+      (hasPermission(user.permissions, [Permissions.Dispatch]) ||
+        user.isDispatch ||
+        user.rank === Rank.OWNER);
 
     const { type, unit } = await findUnit(unitId, { userId: isDispatch ? undefined : user.id });
 

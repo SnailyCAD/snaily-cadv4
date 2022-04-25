@@ -135,6 +135,8 @@
     "socketErrorInfo": "Connection to the API has been disconnected. Please re-connect to the internet or reload the browser window.",
     "fine_invalidDataReceived": "Invalid fines data received. Min: {min}, max: {max}",
     "jailTime_invalidDataReceived": "Invalid jail time data received. Min: {min}, max: {max}",
-    "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}"
+    "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}",
+    "forbidden": "Forbidden",
+    "pageNotFound": "Page Not Found"
   }
 }
