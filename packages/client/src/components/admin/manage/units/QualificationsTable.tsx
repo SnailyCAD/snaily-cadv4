@@ -88,8 +88,6 @@ export function QualificationsTable({ setUnit, unit }: Props) {
       ) : (
         <Table
           data={unit.qualifications.map((qa) => {
-            console.log({ q: qa.qualification });
-
             const imgUrl = makeImageUrl("values", qa.qualification.imageId);
 
             return {
