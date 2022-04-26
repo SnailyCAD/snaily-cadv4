@@ -135,6 +135,8 @@
     "socketErrorInfo": "Соединение с API было разорвано. Повторно подключитесь к Интернету или перезагрузите окно браузера.",
     "fine_invalidDataReceived": "Неверная величина штрафа. Мин: {min}, Макс: {max}",
     "jailTime_invalidDataReceived": "Неверная величина заключения. Мин: {min}, Макс: {max}",
-    "bail_invalidDataReceived": "Неверная величина залога. Мин: {min}, Макс: {max}"
+    "bail_invalidDataReceived": "Неверная величина залога. Мин: {min}, Макс: {max}",
+    "forbidden": "Запрещено",
+    "pageNotFound": "Страница не найдена"
   }
 }
