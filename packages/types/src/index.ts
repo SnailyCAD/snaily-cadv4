@@ -620,6 +620,36 @@ export interface Officer {
 }
 
 /**
+ * Model UnitQualification
+ *
+ */
+export interface UnitQualification {
+  id: string;
+  qualification: QualificationValue;
+  qualificationId: string;
+
+  suspendedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+
+  officerId: string | null;
+  emsFdDeputyId: string | null;
+}
+
+/**
+ * Model Qualification
+ *
+ */
+export interface QualificationValue {
+  id: string;
+  valueId: string;
+  /** name of the qualification */
+  value: Value<ValueType.QUALIFICATION>;
+  imageId: string;
+  departments: DepartmentValue[];
+}
+
+/**
  * Model LeoWhitelistStatus
  *
  */
@@ -1077,6 +1107,7 @@ export enum ValueType {
   IMPOUND_LOT = "IMPOUND_LOT",
   VEHICLE_FLAG = "VEHICLE_FLAG",
   CITIZEN_FLAG = "CITIZEN_FLAG",
+  QUALIFICATION = "QUALIFICATION",
 }
 
 export enum ValueLicenseType {

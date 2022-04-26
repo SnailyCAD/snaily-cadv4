@@ -30,7 +30,10 @@ export class EmsFdController {
       where: {
         userId: user.id,
       },
-      include: unitProperties,
+      include: {
+        ...unitProperties,
+        qualifications: { include: { qualification: { include: { value: true } } } },
+      },
     });
 
     return { deputies };
@@ -88,7 +91,10 @@ export class EmsFdController {
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
       },
-      include: unitProperties,
+      include: {
+        ...unitProperties,
+        qualifications: { include: { qualification: { include: { value: true } } } },
+      },
     });
 
     return deputy;
@@ -161,7 +167,10 @@ export class EmsFdController {
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
       },
-      include: unitProperties,
+      include: {
+        ...unitProperties,
+        qualifications: { include: { qualification: { include: { value: true } } } },
+      },
     });
 
     return updated;

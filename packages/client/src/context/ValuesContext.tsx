@@ -10,6 +10,7 @@ import {
   type Value,
   ValueType,
   type VehicleValue,
+  QualificationValue,
 } from "@snailycad/types";
 
 interface ContextValue<T extends ValueType, Custom = Value<T>> {
@@ -38,6 +39,7 @@ interface Context {
     DriversLicenseCategoryValue
   >;
   impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
+  qualification: ContextValue<ValueType.QUALIFICATION, QualificationValue>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);

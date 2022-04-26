@@ -20,6 +20,7 @@ import {
   CODES_10_ARR,
   DIVISION_ARR,
   PENAL_CODE_ARR,
+  QUALIFICATION_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -37,6 +38,7 @@ import { upsertWarningApplicable } from "lib/records/penal-code";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
+import { validateImgurURL } from "utils/image";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -193,11 +195,6 @@ export const typeHandlers = {
     return handlePromiseAll(data, async (item) => {
       const whatPages = (item.whatPages?.length ?? 0) <= 0 ? DEFAULT_WHAT_PAGES : item.whatPages;
 
-      const value = await prisma.statusValue.findUnique({
-        where: { id: String(id) },
-        select: { id: true, departments: true },
-      });
-
       const updatedValue = await prisma.statusValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.CODES_10, {
@@ -207,11 +204,11 @@ export const typeHandlers = {
           whatPages: whatPages as WhatPages[],
           value: item.value,
         }),
-        include: { value: true },
+        include: { value: true, departments: { include: { value: true } } },
       });
 
       const disconnectConnectArr = manyToManyHelper(
-        value?.departments?.map((v) => v.id) ?? [],
+        updatedValue.departments.map((v) => v.id),
         item.departments ?? [],
       );
 
@@ -260,6 +257,42 @@ export const typeHandlers = {
         ...data,
         include: { warningApplicable: true, warningNotApplicable: true },
       });
+    });
+  },
+  QUALIFICATION: async (body: unknown, id?: string) => {
+    const data = validateSchema(QUALIFICATION_ARR, body);
+
+    return handlePromiseAll(data, async (item) => {
+      const updatedValue = await prisma.qualificationValue.upsert({
+        where: { id: String(id) },
+        ...makePrismaData(ValueType.QUALIFICATION, {
+          imageId: validateImgurURL(item.image),
+          value: item.value,
+        }),
+        include: { value: true, departments: { include: { value: true } } },
+      });
+
+      const disconnectConnectArr = manyToManyHelper(
+        updatedValue.departments.map((v) => v.id),
+        item.departments ?? [],
+      );
+
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.qualificationValue.update({
+              where: { id: updatedValue.id },
+              data: { departments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { value: true, departments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
     });
   },
 

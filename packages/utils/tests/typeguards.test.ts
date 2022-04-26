@@ -33,6 +33,10 @@ const LICENSE_VALUE = {
   createdAt: new Date(),
 } as Value<ValueType.LICENSE>;
 
+const QUALIFICATION_VALUE = {
+  value: { value: "Basic life support qualification", type: ValueType.QUALIFICATION },
+} as any;
+
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
@@ -75,6 +79,10 @@ test("typeguards.isDivisionValue -> DIVISION_VALUE -> true", () => {
 
 test("typeguards.isEmployeeValue -> EMPLOYEE_VALUE -> true", () => {
   expect(typeguards.isEmployeeValue(EMPLOYEE_VALUE)).toBe(true);
+});
+
+test("typeguards.isUnitQualification -> QUALIFICATION_VALUE -> true", () => {
+  expect(typeguards.isUnitQualification(QUALIFICATION_VALUE)).toBe(true);
 });
 
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {

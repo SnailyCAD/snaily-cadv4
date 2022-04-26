@@ -16,6 +16,7 @@ export const enum ModalIds {
   ImportVehicles = "ImportVehiclesModal",
   ImportWeapons = "ImportWeaponsModal",
   ManageCustomField = "ManageCustomFieldModal",
+  ManageUnitQualifications = "ManageUnitQualificationsModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
@@ -106,4 +107,5 @@ export const enum ModalIds {
   AlertDeleteDLExam = "AlertDeleteDLExamModal",
   AlertDeleteCustomField = "AlertDeleteCustomFieldModal",
   AlertRevokePersonalApiToken = "AlertRevokePersonalApiTokenModal",
+  AlertDeleteUnitQualification = "AlertDeleteUnitQualificationModal",
 }

@@ -4,9 +4,10 @@ import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { Description, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { findUnit } from "lib/leo/findUnit";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -17,6 +18,9 @@ import { manyToManyHelper } from "utils/manyToMany";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
 type Action = typeof ACTIONS[number];
+
+const SUSPEND_TYPE = ["suspend", "unsuspend"] as const;
+type SuspendType = "suspend" | "unsuspend";
 
 export const ACCEPT_DECLINE_TYPES = ["ACCEPT", "DECLINE"] as const;
 export type AcceptDeclineType = typeof ACCEPT_DECLINE_TYPES[number];
@@ -55,15 +59,19 @@ export class AdminManageUnitsController {
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
   })
   async getUnit(@PathParams("id") id: string) {
+    const extraInclude = {
+      qualifications: { include: { qualification: { include: { value: true } } } },
+    };
+
     let unit: any = await prisma.officer.findUnique({
       where: { id },
-      include: { ...leoProperties, logs: true },
+      include: { ...leoProperties, ...extraInclude, logs: true },
     });
 
     if (!unit) {
       unit = await prisma.emsFdDeputy.findUnique({
         where: { id },
-        include: unitProperties,
+        include: { ...unitProperties, ...extraInclude },
       });
     }
 
@@ -287,5 +295,106 @@ export class AdminManageUnitsController {
       default:
         return null;
     }
+  }
+
+  @Post("/:unitId/qualifications")
+  async addUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @BodyParams("qualificationId") qualificationId: string,
+  ) {
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const types = {
+      leo: "officerId",
+      "ems-fd": "emsFdDeputyId",
+    } as const;
+
+    const qualificationValue = await prisma.qualificationValue.findUnique({
+      where: { id: qualificationId },
+    });
+
+    if (!qualificationValue) {
+      throw new NotFound("qualificationNotFound");
+    }
+
+    const t = types[unit.type];
+    const qualification = await prisma.unitQualification.create({
+      data: {
+        [t]: unitId,
+        qualificationId: qualificationValue.id,
+      },
+      include: { qualification: { include: { value: true } } },
+    });
+
+    return qualification;
+  }
+
+  @Delete("/:unitId/qualifications/:qualificationId")
+  async deleteUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @PathParams("qualificationId") qualificationId: string,
+  ) {
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    await prisma.unitQualification.delete({
+      where: { id: qualificationId },
+    });
+
+    return true;
+  }
+
+  @Put("/:unitId/qualifications/:qualificationId")
+  async suspendOrUnsuspendUnitQualification(
+    @PathParams("unitId") unitId: string,
+    @PathParams("qualificationId") qualificationId: string,
+    @BodyParams("type") suspendType: SuspendType,
+  ) {
+    if (!SUSPEND_TYPE.includes(suspendType)) {
+      throw new BadRequest("invalidType");
+    }
+
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const qualification = await prisma.unitQualification.findUnique({
+      where: { id: qualificationId },
+    });
+
+    if (!qualification) {
+      throw new NotFound("qualificationNotFound");
+    }
+
+    const updated = await prisma.unitQualification.update({
+      where: { id: qualification.id },
+      data: {
+        suspendedAt: suspendType === "suspend" ? new Date() : null,
+      },
+      include: { qualification: { include: { value: true } } },
+    });
+
+    return updated;
   }
 }
