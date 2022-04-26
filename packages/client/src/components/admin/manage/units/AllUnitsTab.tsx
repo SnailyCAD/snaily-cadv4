@@ -26,6 +26,7 @@ interface Props {
 
 export function AllUnitsTab({ search, units }: Props) {
   const [tempUnit, setTempUnit] = React.useState<Unit | null>(null);
+
   const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
@@ -37,7 +38,7 @@ export function AllUnitsTab({ search, units }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const router = useRouter();
   const { BADGE_NUMBERS } = useFeatureEnabled();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
   function handleDeleteClick(unit: Unit) {
     setTempUnit(unit);
@@ -52,7 +53,13 @@ export function AllUnitsTab({ search, units }: Props) {
     });
 
     if (json) {
-      console.log({ json });
+      setTempUnit(null);
+      closeModal(ModalIds.AlertDeleteUnit);
+
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
     }
   }
 
