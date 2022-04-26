@@ -298,6 +298,10 @@ export class AdminManageUnitsController {
   }
 
   @Post("/:unitId/qualifications")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits],
+  })
   async addUnitQualification(
     @PathParams("unitId") unitId: string,
     @BodyParams("qualificationId") qualificationId: string,
@@ -338,6 +342,10 @@ export class AdminManageUnitsController {
   }
 
   @Delete("/:unitId/qualifications/:qualificationId")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits],
+  })
   async deleteUnitQualification(
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
@@ -360,6 +368,10 @@ export class AdminManageUnitsController {
   }
 
   @Put("/:unitId/qualifications/:qualificationId")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnits],
+  })
   async suspendOrUnsuspendUnitQualification(
     @PathParams("unitId") unitId: string,
     @PathParams("qualificationId") qualificationId: string,
@@ -396,5 +408,35 @@ export class AdminManageUnitsController {
     });
 
     return updated;
+  }
+
+  @Delete("/:unitId")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.DeleteUnits],
+  })
+  async deleteUnit(@PathParams("unitId") unitId: string) {
+    const unit = await findUnit(unitId);
+
+    if (unit.type === "combined") {
+      throw new BadRequest("Cannot add qualifications to combined units");
+    }
+
+    if (!unit.unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const types = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+    } as const;
+    const t = types[unit.type];
+
+    // @ts-expect-error properties are the same for this method.
+    await prisma[t].delete({
+      where: { id: unit.unit.id },
+    });
+
+    return true;
   }
 }

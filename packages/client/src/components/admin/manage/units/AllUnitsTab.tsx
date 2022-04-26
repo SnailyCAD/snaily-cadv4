@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment } from "lib/utils";
@@ -13,22 +14,54 @@ import { Status } from "components/shared/Status";
 import { isUnitOfficer } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { classNames } from "lib/classNames";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
+import { AlertModal } from "components/modal/AlertModal";
 
 interface Props {
   units: Unit[];
+  search: string;
 }
 
-export function AllUnitsTab({ units }: Props) {
+export function AllUnitsTab({ search, units }: Props) {
+  const [tempUnit, setTempUnit] = React.useState<Unit | null>(null);
+
   const tableSelect = useTableSelect(units, (u) => `${u.id}-${u.type}`);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
+  const { state, execute } = useFetch();
 
   const t = useTranslations();
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
-  const { execute } = useFetch();
   const router = useRouter();
   const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { openModal, closeModal } = useModal();
+
+  function handleDeleteClick(unit: Unit) {
+    setTempUnit(unit);
+    openModal(ModalIds.AlertDeleteUnit);
+  }
+
+  async function handleDeleteUnit() {
+    if (!tempUnit) return;
+
+    const { json } = await execute(`/admin/manage/units/${tempUnit.id}`, {
+      method: "DELETE",
+    });
+
+    if (json) {
+      setTempUnit(null);
+      closeModal(ModalIds.AlertDeleteUnit);
+
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
+    }
+  }
 
   async function setSelectedUnitsOffDuty() {
     if (tableSelect.selectedRows.length <= 0) return;
@@ -68,6 +101,7 @@ export function AllUnitsTab({ units }: Props) {
         <p>{t("Management.noUnits")}</p>
       ) : (
         <Table
+          filter={search}
           disabledColumnId={["dropdown"]}
           data={units.map((unit) => {
             const departmentStatus = isUnitOfficer(unit) ? unit.whitelistStatus?.status : null;
@@ -103,13 +137,25 @@ export function AllUnitsTab({ units }: Props) {
               status: unit.status?.value.value ?? common("none"),
               suspended: common(yesOrNoText(unit.suspended)),
               actions: (
-                <Link href={`/admin/manage/units/${unit.id}`}>
-                  <a>
-                    <Button small variant="success">
-                      {common("manage")}
+                <>
+                  {hasManagePermissions ? (
+                    <Link href={`/admin/manage/units/${unit.id}`}>
+                      <a className={classNames("p-0.5 px-2 rounded-md", buttonVariants.success)}>
+                        {common("manage")}
+                      </a>
+                    </Link>
+                  ) : null}
+                  {hasDeletePermissions ? (
+                    <Button
+                      small
+                      className="ml-2"
+                      onClick={() => handleDeleteClick(unit)}
+                      variant="danger"
+                    >
+                      {common("delete")}
                     </Button>
-                  </a>
-                </Link>
+                  ) : null}
+                </>
               ),
             };
           })}
@@ -137,10 +183,26 @@ export function AllUnitsTab({ units }: Props) {
             { Header: t("Leo.status"), accessor: "status" },
             { Header: t("Leo.suspended"), accessor: "suspended" },
             { Header: t("Leo.status"), accessor: "departmentStatus" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            hasManagePermissions || hasDeletePermissions
+              ? { Header: common("actions"), accessor: "actions" }
+              : null,
           ]}
         />
       )}
+
+      {tempUnit ? (
+        <AlertModal
+          title={t("Management.deleteUnit")}
+          id={ModalIds.AlertDeleteUnit}
+          onDeleteClick={handleDeleteUnit}
+          state={state}
+          description={t.rich("Management.alert_deleteUnit", {
+            span: (c) => <span className="font-bold">{c}</span>,
+            unit: `${generateCallsign(tempUnit)} ${makeUnitName(tempUnit)}`,
+          })}
+          onClose={() => setTempUnit(null)}
+        />
+      ) : null}
     </TabsContent>
   );
 }

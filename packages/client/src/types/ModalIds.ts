@@ -108,4 +108,5 @@ export const enum ModalIds {
   AlertDeleteCustomField = "AlertDeleteCustomFieldModal",
   AlertRevokePersonalApiToken = "AlertRevokePersonalApiTokenModal",
   AlertDeleteUnitQualification = "AlertDeleteUnitQualificationModal",
+  AlertDeleteUnit = "AlertDeleteUnitModal",
 }
