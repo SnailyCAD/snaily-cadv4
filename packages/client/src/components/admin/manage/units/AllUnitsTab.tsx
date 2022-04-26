@@ -2,7 +2,7 @@ import type { Unit } from "src/pages/admin/manage/units";
 import Link from "next/link";
 import { formatUnitDivisions, makeUnitName, yesOrNoText, formatOfficerDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -85,6 +85,13 @@ export function AllUnitsTab({ units }: Props) {
               ),
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
+              user: (
+                <Link href={`/admin/manage/users/${unit.userId}`}>
+                  <a className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}>
+                    {unit.user.username}
+                  </a>
+                </Link>
+              ),
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
               department: formatOfficerDepartment(unit) ?? common("none"),
@@ -121,6 +128,7 @@ export function AllUnitsTab({ units }: Props) {
               : null,
             { Header: `${t("Ems.deputy")}/${t("Leo.officer")}`, accessor: "unit" },
             { Header: common("name"), accessor: "name" },
+            { Header: common("user"), accessor: "user" },
             { Header: t("Leo.callsign"), accessor: "callsign" },
             BADGE_NUMBERS ? { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" } : null,
             { Header: t("Leo.department"), accessor: "department" },

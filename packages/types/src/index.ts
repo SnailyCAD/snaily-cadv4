@@ -617,6 +617,7 @@ export interface Officer {
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
   radioChannelId: string | null;
+  user: Pick<User, "id" | "username">;
 }
 
 /**
@@ -977,6 +978,7 @@ export interface EmsFdDeputy {
   createdAt: Date;
   updatedAt: Date;
   radioChannelId: string | null;
+  user: Pick<User, "id" | "username">;
 }
 
 /**
