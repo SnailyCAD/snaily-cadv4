@@ -120,5 +120,11 @@
     "ADD": "Add citizen flag",
     "DELETE": "Delete citizen flag",
     "EDIT": "Edit citizen flag"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Manage Unit Qualifications",
+    "ADD": "Add Unit Qualification",
+    "DELETE": "Delete Unit Qualification",
+    "EDIT": "Edit Unit Qualification"
   }
 }

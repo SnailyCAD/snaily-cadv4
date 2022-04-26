@@ -50,7 +50,8 @@
     "success": "Success",
     "currency": "$",
     "left": "Left",
-    "right": "Right"
+    "right": "Right",
+    "user": "User"
   },
   "Nav": {
     "citizen": "Citizen",

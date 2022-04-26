@@ -45,6 +45,7 @@ export const defaultValuePermissions = [
   Permissions.ManageValueImpoundLot,
   Permissions.ManageValueVehicleFlag,
   Permissions.ManageValueCitizenFlag,
+  Permissions.ManageValueQualification,
 ];
 
 export const allDefaultAdminPermissions = [

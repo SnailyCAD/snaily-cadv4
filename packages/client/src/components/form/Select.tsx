@@ -35,32 +35,32 @@ interface Props<Value extends SelectValue = SelectValue<any>>
 export function Select({ name, onChange, ...rest }: Props) {
   const { user } = useAuth();
   const common = useTranslations("Common");
+  const { canBeClosed } = useModal();
+
   const value =
     typeof rest.value === "string" ? rest.values.find((v) => v.value === rest.value) : rest.value;
-  const { canBeClosed } = useModal();
 
   const useDarkTheme =
     user?.isDarkTheme &&
     typeof window !== "undefined" &&
     window.document.body.classList.contains("dark");
 
+  const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
   const fixedClearable =
     Array.isArray(value) && value.some((v) => typeof v.isFixed !== "undefined");
-  const theme = useDarkTheme ? { backgroundColor: "rgb(39, 40, 43)", color: "white" } : {};
-  const fixedOptions = React.useMemo(
-    () => (Array.isArray(value) ? value.filter((v) => v.isFixed) : []),
-    [value],
-  );
 
   function handleChange(changedValue: SelectValue | null, actionMeta: ActionMeta<any>) {
+    const fixedOptions = Array.isArray(value) ? value.filter((v) => v.isFixed) : [];
+
     if (["pop-value", "remove-value"].includes(actionMeta.action) && changedValue?.isFixed) {
       return;
     }
 
     if (actionMeta.action === "clear" && Array.isArray(value)) {
-      return onChange({
+      onChange({
         target: { name, value: rest.isMulti ? fixedOptions : changedValue?.value ?? null },
       });
+      return;
     }
 
     onChange({

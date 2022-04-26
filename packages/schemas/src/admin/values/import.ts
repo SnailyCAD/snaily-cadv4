@@ -96,3 +96,10 @@ export const PENAL_CODE_SCHEMA = z.object({
 });
 
 export const PENAL_CODE_ARR = z.array(PENAL_CODE_SCHEMA).min(1);
+
+export const QUALIFICATION_SCHEMA = BASE_VALUE_SCHEMA.extend({
+  departments: z.array(z.string()).min(1),
+  image: z.any().nullish().optional(),
+});
+
+export const QUALIFICATION_ARR = z.array(QUALIFICATION_SCHEMA).min(1);

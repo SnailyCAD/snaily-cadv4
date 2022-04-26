@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/permissions",
-  "version": "1.0.0-beta.89",
+  "version": "1.0.0-beta.90",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -25,10 +25,10 @@
     "test": "yarn vitest run"
   },
   "devDependencies": {
-    "tsup": "^5.12.4",
+    "tsup": "^5.12.6",
     "typescript": "^4.6.3",
-    "vite": "^2.9.1",
-    "vitest": "^0.9.2"
+    "vite": "^2.9.6",
+    "vitest": "^0.10.0"
   },
   "dependencies": {
     "type-fest": "^2.12.2",
