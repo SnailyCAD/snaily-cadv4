@@ -650,6 +650,7 @@ export interface QualificationValue {
   imageId: string;
   departments: DepartmentValue[];
   description: string | null;
+  qualificationType: QualificationValueType;
 }
 
 /**
@@ -1210,4 +1211,9 @@ export enum CustomFieldCategory {
   CITIZEN = "CITIZEN",
   WEAPON = "WEAPON",
   VEHICLE = "VEHICLE",
+}
+
+export enum QualificationValueType {
+  QUALIFICATION = "QUALIFICATION",
+  AWARD = "AWARD",
 }

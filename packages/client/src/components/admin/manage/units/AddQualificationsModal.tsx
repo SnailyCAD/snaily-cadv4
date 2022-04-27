@@ -1,4 +1,4 @@
-import type { EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
+import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -19,9 +19,10 @@ interface Props {
 export function AddQualificationsModal({ unit, setUnit }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations();
-  const { isOpen, closeModal } = useModal();
+  const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
   const { qualification } = useValues();
+  const type = getPayload<QualificationValueType>(ModalIds.ManageUnitQualifications);
 
   function handleClose() {
     closeModal(ModalIds.ManageUnitQualifications);
@@ -45,7 +46,7 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
 
   return (
     <Modal
-      title={t("Leo.addQualification")}
+      title={type === QualificationValueType.AWARD ? t("Leo.addAward") : t("Leo.addQualification")}
       onClose={() => closeModal(ModalIds.ManageUnitQualifications)}
       isOpen={isOpen(ModalIds.ManageUnitQualifications)}
       className="min-w-[600px]"
@@ -53,7 +54,12 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
       <Formik initialValues={INITIAL_VALUES} onSubmit={handleSubmit}>
         {({ handleChange, errors, values, isValid }) => (
           <Form>
-            <FormField errorMessage={errors.qualificationId} label={t("Leo.qualification")}>
+            <FormField
+              errorMessage={errors.qualificationId}
+              label={
+                type === QualificationValueType.AWARD ? t("Leo.award") : t("Leo.qualification")
+              }
+            >
               <Select
                 value={values.qualificationId}
                 name="qualificationId"
@@ -61,8 +67,9 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
                 values={qualification.values
                   .filter((v) => {
                     return !v.departments.length
-                      ? true
-                      : v.departments.some((v) => unit.departmentId === v.id);
+                      ? v.qualificationType === type
+                      : v.departments.some((v) => unit.departmentId === v.id) &&
+                          v.qualificationType === type;
                   })
                   .map((q) => ({
                     value: q.id,
@@ -81,7 +88,9 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("Leo.addQualification")}
+                {type === QualificationValueType.AWARD
+                  ? t("Leo.addAward")
+                  : t("Leo.addQualification")}
               </Button>
             </footer>
           </Form>

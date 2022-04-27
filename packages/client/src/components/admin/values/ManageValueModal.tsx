@@ -151,6 +151,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     value: value ? getValueStrFromValue(value) : "",
 
     description: value && isUnitQualification(value) ? value.description : "",
+    qualificationType:
+      value && isUnitQualification(value) ? value.qualificationType : "qualification",
+
     shouldDo: value && isStatusValue(value) ? value.shouldDo : "",
     color: value && isStatusValue(value) ? value.color ?? "" : "",
     type: value && (isStatusValue(value) || isDepartmentValue(value)) ? value.type : "STATUS_CODE",
