@@ -42,13 +42,18 @@ export function useSignal100() {
   return { signal100Enabled, audio, Component };
 }
 
-function Component({ audio }: { audio: any }) {
+function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
   const t = useTranslations("Leo");
 
   return (
-    <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
+    <>
       {audio}
-      <p>{t("signal100enabled")}</p>
-    </div>
+
+      {enabled ? (
+        <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
+          <p>{t("signal100enabled")}</p>
+        </div>
+      ) : null}
+    </>
   );
 }

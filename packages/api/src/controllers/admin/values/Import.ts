@@ -29,6 +29,7 @@ import {
   type ShouldDoType,
   type StatusValueType,
   type ValueLicenseType,
+  type QualificationValueType,
   WhatPages,
   ValueType,
   Value,
@@ -269,6 +270,7 @@ export const typeHandlers = {
           description: item.description,
           imageId: validateImgurURL(item.image),
           value: item.value,
+          qualificationType: item.qualificationType as QualificationValueType,
         }),
         include: { value: true, departments: { include: { value: true } } },
       });

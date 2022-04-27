@@ -10,6 +10,7 @@ import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 
 const PANIC_BUTTON_SRC = "/sounds/panic-button.mp3" as const;
+
 export function usePanicButton() {
   const [unit, setUnit] = React.useState<EmsFdDeputy | Officer | CombinedLeoUnit | null>(null);
   const { user } = useAuth();
@@ -43,22 +44,31 @@ export function usePanicButton() {
   return { unit, audio, PanicButton: Component };
 }
 
-function Component({ unit, audio }: { unit: Officer | EmsFdDeputy | CombinedLeoUnit; audio: any }) {
+function Component({
+  unit,
+  audio,
+}: {
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit | null;
+  audio: any;
+}) {
   const t = useTranslations("Leo");
   const { generateCallsign } = useGenerateCallsign();
-  const callsign = generateCallsign(
-    unit,
-    isUnitCombined(unit) ? "pairedUnitTemplate" : "callsignTemplate",
-  );
+  const callsign =
+    unit &&
+    generateCallsign(unit, isUnitCombined(unit) ? "pairedUnitTemplate" : "callsignTemplate");
 
   return (
-    <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
+    <>
       {audio}
-      <p>
-        {t.rich("panicButtonLeo", {
-          officer: `${callsign} ${makeUnitName(unit)}`,
-        })}
-      </p>
-    </div>
+      {unit ? (
+        <div role="alert" className="p-2 px-3 my-2 font-semibold text-white bg-red-500 rounded-md">
+          <p>
+            {t.rich("panicButtonLeo", {
+              officer: `${callsign} ${makeUnitName(unit)}`,
+            })}
+          </p>
+        </div>
+      ) : null}
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
+import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table } from "components/shared/Table";
@@ -17,6 +17,68 @@ interface Props {
 }
 
 export function QualificationsTable({ setUnit, unit }: Props) {
+  const t = useTranslations("Leo");
+  const { openModal } = useModal();
+
+  const awards = unit.qualifications.filter(
+    (v) => v.qualification.qualificationType === QualificationValueType.AWARD,
+  );
+
+  const qualifications = unit.qualifications.filter(
+    (v) => v.qualification.qualificationType === QualificationValueType.QUALIFICATION,
+  );
+
+  return (
+    <div className="mt-10">
+      <div id="qualifications">
+        <header className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">{t("unitQualifications")}</h2>
+
+          <div>
+            <Button
+              onClick={() =>
+                openModal(ModalIds.ManageUnitQualifications, QualificationValueType.QUALIFICATION)
+              }
+            >
+              {t("addQualification")}
+            </Button>
+          </div>
+        </header>
+
+        {!qualifications.length ? (
+          <p className="my-2 text-gray-400">{t("noQualifications")}</p>
+        ) : (
+          <QualificationAwardsTable setUnit={setUnit} unit={{ ...unit, qualifications }} />
+        )}
+      </div>
+
+      <div id="awards">
+        <header className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">{t("unitAwards")}</h2>
+          <div>
+            <Button
+              onClick={() =>
+                openModal(ModalIds.ManageUnitQualifications, QualificationValueType.AWARD)
+              }
+            >
+              {t("addAward")}
+            </Button>
+          </div>
+        </header>
+
+        {!awards.length ? (
+          <p className="my-2 text-gray-400">{t("noAwards")}</p>
+        ) : (
+          <QualificationAwardsTable setUnit={setUnit} unit={{ ...unit, qualifications: awards }} />
+        )}
+      </div>
+
+      <AddQualificationsModal setUnit={setUnit} unit={unit} />
+    </div>
+  );
+}
+
+function QualificationAwardsTable({ unit, setUnit }: Props) {
   const [tempQualification, setTempQualification] = React.useState<UnitQualification | null>(null);
 
   const t = useTranslations("Leo");
@@ -71,70 +133,55 @@ export function QualificationsTable({ setUnit, unit }: Props) {
   }
 
   return (
-    <div className="mt-10">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">{t("unitQualifications")}</h1>
-
-        <div>
-          <Button onClick={() => openModal(ModalIds.ManageUnitQualifications)}>
-            {t("addQualification")}
-          </Button>
-        </div>
-      </header>
-
-      {unit.qualifications.length <= 0 ? (
-        <p className="my-2 text-gray-400">{t("noQualifications")}</p>
-      ) : (
-        <Table
-          data={unit.qualifications.map((qa) => {
-            return {
-              image: <QualificationsHoverCard qualification={qa} />,
-              name: qa.qualification.value.value,
-              assignedAt: <FullDate>{qa.createdAt}</FullDate>,
-              actions: (
-                <>
-                  {qa.suspendedAt ? (
-                    <Button
-                      onClick={() => handleSuspendOrUnsuspend("unsuspend", qa)}
-                      disabled={state === "loading"}
-                      small
-                      variant="success"
-                    >
-                      {t("unsuspend")}
-                    </Button>
-                  ) : (
-                    <Button
-                      disabled={state === "loading"}
-                      onClick={() => handleSuspendOrUnsuspend("suspend", qa)}
-                      small
-                      variant="amber"
-                    >
-                      {t("suspend")}
-                    </Button>
-                  )}
+    <div>
+      <Table
+        data={unit.qualifications.map((qa) => {
+          return {
+            image: <QualificationsHoverCard qualification={qa} />,
+            name: qa.qualification.value.value,
+            assignedAt: <FullDate>{qa.createdAt}</FullDate>,
+            actions: (
+              <>
+                {qa.suspendedAt ? (
+                  <Button
+                    onClick={() => handleSuspendOrUnsuspend("unsuspend", qa)}
+                    disabled={state === "loading"}
+                    small
+                    variant="success"
+                  >
+                    {t("unsuspend")}
+                  </Button>
+                ) : (
                   <Button
                     disabled={state === "loading"}
-                    onClick={() => handleDeleteClick(qa)}
-                    className="ml-2"
+                    onClick={() => handleSuspendOrUnsuspend("suspend", qa)}
                     small
-                    variant="danger"
+                    variant="amber"
                   >
-                    {common("delete")}
+                    {t("suspend")}
                   </Button>
-                </>
-              ),
-            };
-          })}
-          columns={[
-            { Header: common("image"), accessor: "image" },
-            { Header: common("name"), accessor: "name" },
-            { Header: t("assignedAt"), accessor: "assignedAt" },
-            { Header: common("actions"), accessor: "actions" },
-          ]}
-        />
-      )}
+                )}
+                <Button
+                  disabled={state === "loading"}
+                  onClick={() => handleDeleteClick(qa)}
+                  className="ml-2"
+                  small
+                  variant="danger"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          };
+        })}
+        columns={[
+          { Header: common("image"), accessor: "image" },
+          { Header: common("name"), accessor: "name" },
+          { Header: t("assignedAt"), accessor: "assignedAt" },
+          { Header: common("actions"), accessor: "actions" },
+        ]}
+      />
 
-      <AddQualificationsModal setUnit={setUnit} unit={unit} />
       <AlertModal
         title={t("deleteQualification")}
         description={t("alert_deleteQualification")}

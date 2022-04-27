@@ -33,7 +33,7 @@ export function Layout({
       <Nav maxWidth={navMaxWidth} />
 
       <main className={`mt-5 px-4 pb-5 container max-w-[100rem] mx-auto ${className}`}>
-        {roleplayStopped && !hideAlerts ? <Component audio={audio} /> : null}
+        <Component enabled={roleplayStopped && !hideAlerts} audio={audio} />
         {showError ? <SocketErrorComponent /> : null}
 
         {children}
