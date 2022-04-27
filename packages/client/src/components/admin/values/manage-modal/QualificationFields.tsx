@@ -4,6 +4,7 @@ import { FormField } from "components/form/FormField";
 import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
+import { Textarea } from "components/form/Textarea";
 
 export function QualificationFields({ image, setImage }: any) {
   const { values, errors, handleChange } = useFormikContext<any>();
@@ -24,6 +25,10 @@ export function QualificationFields({ image, setImage }: any) {
           value={values.departments}
           closeMenuOnSelect={false}
         />
+      </FormField>
+
+      <FormField optional errorMessage={errors.description as string} label="Description">
+        <Textarea value={values.description} name="description" onChange={handleChange} />
       </FormField>
 
       <ImageSelectInput image={image} setImage={setImage} />

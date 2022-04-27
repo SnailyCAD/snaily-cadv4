@@ -266,6 +266,7 @@ export const typeHandlers = {
       const updatedValue = await prisma.qualificationValue.upsert({
         where: { id: String(id) },
         ...makePrismaData(ValueType.QUALIFICATION, {
+          description: item.description,
           imageId: validateImgurURL(item.image),
           value: item.value,
         }),
