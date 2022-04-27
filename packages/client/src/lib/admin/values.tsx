@@ -4,13 +4,14 @@ import { useTranslations } from "next-intl";
 import {
   type StatusValue,
   StatusValueType,
-  type ValueType,
+  ValueType,
   type DepartmentValue,
   type DivisionValue,
   type VehicleValue,
   type Value,
   WhatPages,
   ShouldDoType,
+  QualificationValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -19,6 +20,7 @@ import {
 } from "components/admin/values/manage-modal/StatusValueFields";
 import { DEPARTMENT_LABELS } from "components/admin/values/manage-modal/DepartmentFields";
 import { type AnyValue, isBaseValue } from "@snailycad/utils";
+import { useImageUrl } from "hooks/useImageUrl";
 
 const TYPE_LABELS = {
   [StatusValueType.SITUATION_CODE]: "Situation Code",
@@ -39,6 +41,7 @@ export function makeDefaultWhatPages(
 export function useTableDataOfType(type: ValueType) {
   const common = useTranslations("Common");
   const defaultDepartments = useDefaultDepartments();
+  const { makeImageUrl } = useImageUrl();
 
   function get(value: AnyValue) {
     // state mismatch prevention
@@ -46,7 +49,7 @@ export function useTableDataOfType(type: ValueType) {
     if (valueType !== type) return;
 
     switch (type) {
-      case "CODES_10": {
+      case ValueType.CODES_10: {
         const v = value as StatusValue;
         const whatPages = makeDefaultWhatPages(v);
         const departments = defaultDepartments(v);
@@ -72,7 +75,7 @@ export function useTableDataOfType(type: ValueType) {
           ),
         };
       }
-      case "DEPARTMENT": {
+      case ValueType.DEPARTMENT: {
         const v = value as DepartmentValue;
 
         return {
@@ -83,7 +86,7 @@ export function useTableDataOfType(type: ValueType) {
           defaultOfficerRank: v.defaultOfficerRank?.value ?? common("none"),
         };
       }
-      case "DIVISION": {
+      case ValueType.DIVISION: {
         const v = value as DivisionValue;
 
         return {
@@ -91,20 +94,33 @@ export function useTableDataOfType(type: ValueType) {
           department: v.department.value.value,
         };
       }
-      case "VEHICLE":
-      case "WEAPON": {
+      case ValueType.VEHICLE:
+      case ValueType.WEAPON: {
         const v = value as VehicleValue;
 
         return {
           gameHash: v.hash || common("none"),
         };
       }
-      case "LICENSE": {
+      case ValueType.LICENSE: {
         const v = value as Value<ValueType.LICENSE>;
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
           isDefault: common(yesOrNoText(v.isDefault)),
+        };
+      }
+      case ValueType.QUALIFICATION: {
+        const v = value as QualificationValue;
+        const imgUrl = makeImageUrl("values", v.imageId);
+
+        return {
+          image: imgUrl ? (
+            <img src={imgUrl} width={50} height={50} className="object-cover" />
+          ) : (
+            "—"
+          ),
+          departments: v.departments.map((v) => v.value.value).join(", "),
         };
       }
       default: {
@@ -121,7 +137,7 @@ export function useTableHeadersOfType(type: ValueType) {
   const t = useTranslations("Values");
 
   switch (type) {
-    case "CODES_10": {
+    case ValueType.CODES_10: {
       return [
         { Header: t("shouldDo"), accessor: "shouldDo" },
         { Header: common("type"), accessor: "type" },
@@ -130,7 +146,7 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: t("departments"), accessor: "departments" },
       ];
     }
-    case "DEPARTMENT": {
+    case ValueType.DEPARTMENT: {
       return [
         { Header: t("callsign"), accessor: "callsign" },
         { Header: common("type"), accessor: "type" },
@@ -139,20 +155,26 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: t("defaultOfficerRank"), accessor: "defaultOfficerRank" },
       ];
     }
-    case "DIVISION": {
+    case ValueType.DIVISION: {
       return [
         { Header: t("callsign"), accessor: "callsign" },
         { Header: t("department"), accessor: "department" },
       ];
     }
-    case "VEHICLE":
-    case "WEAPON": {
+    case ValueType.VEHICLE:
+    case ValueType.WEAPON: {
       return [{ Header: t("gameHash"), accessor: "gameHash" }];
     }
-    case "LICENSE": {
+    case ValueType.LICENSE: {
       return [
         { Header: t("licenseType"), accessor: "licenseType" },
         { Header: t("isDefault"), accessor: "isDefault" },
+      ];
+    }
+    case ValueType.QUALIFICATION: {
+      return [
+        { Header: common("image"), accessor: "image" },
+        { Header: t("departments"), accessor: "departments" },
       ];
     }
     default: {
