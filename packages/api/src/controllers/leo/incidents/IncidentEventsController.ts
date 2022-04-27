@@ -22,7 +22,7 @@ export class IncidentController {
   @Post("/:incidentId")
   @Description("Create a new incident event.")
   @UsePermissions({
-    permissions: [Permissions.ViewIncidents, Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ViewIncidents, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async createIncidentEvent(
@@ -60,7 +60,7 @@ export class IncidentController {
   @Put("/:incidentId/:eventId")
   @Description("Update an incident event by the incident id and event id.")
   @UsePermissions({
-    permissions: [Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async updateIncidentEvent(
@@ -118,7 +118,7 @@ export class IncidentController {
   @Delete("/:incidentId/:eventId")
   @Description("Delete an incident event by the incident id and event id")
   @UsePermissions({
-    permissions: [Permissions.ManageIncidents],
+    permissions: [Permissions.Dispatch, Permissions.ManageIncidents],
     fallback: (u) => u.isDispatch || u.isLeo,
   })
   async deleteIncidentEvent(
