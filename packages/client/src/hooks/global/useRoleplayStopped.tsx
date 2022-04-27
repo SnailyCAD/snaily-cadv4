@@ -43,14 +43,19 @@ export function useRoleplayStopped() {
   return { roleplayStopped, audio, Component };
 }
 
-function Component({ audio }: { audio: any }) {
+function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
   const t = useTranslations("Common");
 
   return (
-    <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-500">
+    <>
       {audio}
-      <h1 className="text-xl font-bold">{t("stopRoleplay")}</h1>
-      <p className="mt-1 text-lg">{t("roleplayStopped")}</p>
-    </div>
+
+      {enabled ? (
+        <div role="alert" className="p-2 px-4 my-2 mb-5 text-black rounded-md shadow bg-amber-500">
+          <h1 className="text-xl font-bold">{t("stopRoleplay")}</h1>
+          <p className="mt-1 text-lg">{t("roleplayStopped")}</p>
+        </div>
+      ) : null}
+    </>
   );
 }

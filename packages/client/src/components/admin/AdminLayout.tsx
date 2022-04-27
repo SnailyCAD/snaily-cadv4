@@ -31,7 +31,7 @@ export function AdminLayout({ children, className, permissions }: Props) {
           <AdminSidebar />
 
           <div className="ml-6 px-4 py-5 admin-dashboard-responsive">
-            {roleplayStopped ? <Component audio={audio} /> : null}
+            <Component enabled={roleplayStopped} audio={audio} />
             {showError ? <SocketErrorComponent /> : null}
 
             {children}

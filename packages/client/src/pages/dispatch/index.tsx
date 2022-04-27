@@ -93,8 +93,8 @@ export default function OfficerDashboard(props: Props) {
     >
       <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
-      {signal100Enabled ? <Component audio={signal100Audio} /> : null}
-      {unit ? <PanicButton audio={audio} unit={unit} /> : null}
+      <Component enabled={signal100Enabled} audio={signal100Audio} />
+      <PanicButton audio={audio} unit={unit} />
 
       <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
