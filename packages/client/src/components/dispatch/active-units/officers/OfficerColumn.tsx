@@ -19,6 +19,7 @@ import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { classNames } from "lib/classNames";
+import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 
 interface Props {
   officer: Officer | CombinedLeoUnit;
@@ -112,28 +113,30 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
             // * 9 to fix overlapping issues with next table column
             style={{ minWidth: nameAndCallsign.length * 9 }}
           >
-            {isUnitOfficer(officer) && officer.imageId ? (
-              <img
-                className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                draggable={false}
-                src={makeImageUrl("units", officer.imageId)}
-              />
-            ) : null}
-            {isUnitCombined(officer) ? (
-              <div className="flex items-center">
-                {generateCallsign(officer, "pairedUnitTemplate")}
-                <span className="mx-4">
-                  <ArrowRight />
-                </span>
-                {officer.officers.map((officer) => (
-                  <React.Fragment key={officer.id}>
-                    {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                  </React.Fragment>
-                ))}
-              </div>
-            ) : (
-              nameAndCallsign
-            )}
+            <ActiveUnitsQualificationsCard unit={officer}>
+              {isUnitOfficer(officer) && officer.imageId ? (
+                <img
+                  className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                  draggable={false}
+                  src={makeImageUrl("units", officer.imageId)}
+                />
+              ) : null}
+              {isUnitCombined(officer) ? (
+                <div className="flex items-center">
+                  {generateCallsign(officer, "pairedUnitTemplate")}
+                  <span className="mx-4">
+                    <ArrowRight />
+                  </span>
+                  {officer.officers.map((officer) => (
+                    <React.Fragment key={officer.id}>
+                      {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                    </React.Fragment>
+                  ))}
+                </div>
+              ) : (
+                nameAndCallsign
+              )}
+            </ActiveUnitsQualificationsCard>
           </span>
         </Draggable>
       </span>

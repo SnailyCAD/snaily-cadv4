@@ -20,7 +20,7 @@ import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
 import type { Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { UnitQualificationsTable } from "../UnitQualificationsTable";
+import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
 
 interface Props {
   officer: Officer | null;

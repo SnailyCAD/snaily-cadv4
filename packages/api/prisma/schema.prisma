@@ -706,14 +706,15 @@ model UnitQualification {
 }
 
 model QualificationValue {
-  id                String              @id @default(uuid())
+  id                String                 @id @default(uuid())
   imageId           String?
   /// name of the qualification
   valueId           String
-  value             Value               @relation(fields: [valueId], references: [id], onDelete: Cascade)
+  value             Value                  @relation(fields: [valueId], references: [id], onDelete: Cascade)
   departments       DepartmentValue[]
   departmentId      String?
-  description       String?             @db.Text
+  description       String?                @db.Text
+  type              QualificationValueType @default(QUALIFICATION)
   UnitQualification UnitQualification[]
 }
 
@@ -1060,6 +1061,11 @@ model CustomFieldValue {
   Citizens           Citizen[]
   RegisteredVehicles RegisteredVehicle[]
   Weapons            Weapon[]
+}
+
+enum QualificationValueType {
+  QUALIFICATION
+  AWARD
 }
 
 enum CustomFieldCategory {

@@ -27,6 +27,7 @@ import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
+import { findUnit } from "lib/leo/findUnit";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -508,6 +509,36 @@ export class LeoController {
     });
 
     return true;
+  }
+
+  @Get("/qualifications/:unitId")
+  @Description("Get a unit's awards and qualifications")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
+  async getUnitQualifications(@PathParams("unitId") unitId: string) {
+    const { type, unit } = await findUnit(unitId);
+
+    if (type === "combined") {
+      throw new BadRequest("combinedNotSupported");
+    }
+
+    if (!unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const types = {
+      leo: "officerId",
+      "ems-fd": "emsFdDeputyId",
+    };
+
+    const data = await prisma.unitQualification.findMany({
+      where: { [types[type]]: unit.id },
+      include: { qualification: { include: { value: true } } },
+    });
+
+    return data;
   }
 }
 
