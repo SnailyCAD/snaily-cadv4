@@ -26,6 +26,7 @@ import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
+import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 
 export function ActiveDeputies() {
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
@@ -112,25 +113,27 @@ export function ActiveDeputies() {
                       items={codesMapped}
                     >
                       <span>
-                        <Draggable
-                          canDrag={hasActiveDispatchers && isDispatch}
-                          item={deputy}
-                          type={DndActions.MoveUnitTo911Call}
-                        >
-                          <span // * 9 to fix overlapping issues with next table column
-                            style={{ minWidth: nameAndCallsign.length * 9 }}
-                            className="capitalize cursor-default"
+                        <ActiveUnitsQualificationsCard unit={deputy}>
+                          <Draggable
+                            canDrag={hasActiveDispatchers && isDispatch}
+                            item={deputy}
+                            type={DndActions.MoveUnitTo911Call}
                           >
-                            {deputy.imageId ? (
-                              <img
-                                className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                                draggable={false}
-                                src={makeImageUrl("units", deputy.imageId)}
-                              />
-                            ) : null}
-                            {nameAndCallsign}
-                          </span>
-                        </Draggable>
+                            <span // * 9 to fix overlapping issues with next table column
+                              style={{ minWidth: nameAndCallsign.length * 9 }}
+                              className="capitalize cursor-default"
+                            >
+                              {deputy.imageId ? (
+                                <img
+                                  className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                                  draggable={false}
+                                  src={makeImageUrl("units", deputy.imageId)}
+                                />
+                              ) : null}
+                              {nameAndCallsign}
+                            </span>
+                          </Draggable>
+                        </ActiveUnitsQualificationsCard>
                       </span>
                     </ContextMenu>
                   ),
