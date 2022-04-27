@@ -43,7 +43,7 @@ import {
   AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
-import { validateFile } from "components/form/inputs/ImageSelectInput";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   type: ValueType;
@@ -110,7 +110,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
       if (json?.id) {
         closeModal(ModalIds.ManageValue);
-        await handleQualificationImageUpload(value.id, helpers);
+        await handleValueImageUpload(type.toLowerCase(), value.id, helpers);
         onUpdate(value, json);
       }
     } else {
@@ -121,14 +121,14 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
       });
 
       if (json?.id) {
-        await handleQualificationImageUpload(json.id, helpers);
+        await handleValueImageUpload(type.toLowerCase(), json.id, helpers);
         closeModal(ModalIds.ManageValue);
         onCreate(json);
       }
     }
   }
 
-  async function handleQualificationImageUpload(id: string, helpers: FormikHelpers<any>) {
+  async function handleValueImageUpload(type: string, id: string, helpers: FormikHelpers<any>) {
     const fd = new FormData();
     const validatedImage = validateFile(image, helpers);
 
@@ -139,7 +139,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/admin/values/qualification/image/${id}`, {
+      await execute(`/admin/values/${type}/image/${id}`, {
         method: "POST",
         data: fd,
         helpers,
@@ -179,6 +179,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+    officerRankImageId: "",
 
     showPicker: false,
     image: "",
@@ -259,6 +260,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               <FormField optional label="Game Hash">
                 <Input name="hash" onChange={handleChange} value={values.hash} />
               </FormField>
+            ) : null}
+
+            {type === ValueType.OFFICER_RANK ? (
+              <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}

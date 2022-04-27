@@ -124,8 +124,9 @@ export class ValuesController {
     @PathParams("id") id: string,
   ) {
     const type = getTypeFromPath(_path);
+    const supportedValueTypes = [ValueType.QUALIFICATION, ValueType.OFFICER_RANK] as string[];
 
-    if (type !== ValueType.QUALIFICATION) {
+    if (!supportedValueTypes.includes(type)) {
       return new BadRequest("invalidType");
     }
 
@@ -133,25 +134,44 @@ export class ValuesController {
       throw new ExtendedBadRequest({ image: "invalidImageType" });
     }
 
-    const value = await prisma.qualificationValue.findUnique({
-      where: { id },
-    });
+    if (type === ValueType.QUALIFICATION) {
+      const value = await prisma.qualificationValue.findUnique({
+        where: { id },
+      });
 
-    if (!value) {
-      throw new NotFound("valueNotFound");
+      if (!value) {
+        throw new NotFound("valueNotFound");
+      }
+    } else if (type === ValueType.OFFICER_RANK) {
+      const value = await prisma.value.findFirst({
+        where: { id, type: ValueType.OFFICER_RANK },
+      });
+
+      if (!value) {
+        throw new NotFound("valueNotFound");
+      }
     }
 
     // "image/png" -> "png"
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
-    const path = `${process.cwd()}/public/values/${value.id}.${extension}`;
+    const path = `${process.cwd()}/public/values/${id}.${extension}`;
 
     await fs.writeFileSync(path, file.buffer);
 
-    const data = await prisma.qualificationValue.update({
-      where: { id: value.id },
-      data: { imageId: `${value.id}.${extension}` },
-      select: { imageId: true },
-    });
+    let data;
+    if (type === ValueType.QUALIFICATION) {
+      data = await prisma.qualificationValue.update({
+        where: { id },
+        data: { imageId: `${id}.${extension}` },
+        select: { imageId: true },
+      });
+    } else if (type === ValueType.OFFICER_RANK) {
+      data = await prisma.value.update({
+        where: { id },
+        data: { officerRankImageId: `${id}.${extension}` },
+        select: { officerRankImageId: true },
+      });
+    }
 
     return data;
   }

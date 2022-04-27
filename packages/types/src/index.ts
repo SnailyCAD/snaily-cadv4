@@ -312,6 +312,7 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+  officerRankImageId: string | null;
 }
 
 /**

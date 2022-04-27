@@ -312,6 +312,8 @@ export const typeHandlers = {
   GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);
 
+    console.log({ data });
+
     return prisma.$transaction(
       data.map((item) => {
         const data = {
@@ -321,6 +323,10 @@ export const typeHandlers = {
             value: { set: item.value },
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
+            officerRankImageId:
+              type === ValueType.OFFICER_RANK
+                ? validateImgurURL(item.officerRankImageId)
+                : undefined,
           },
           create: {
             isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
@@ -328,6 +334,10 @@ export const typeHandlers = {
             value: item.value,
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
+            officerRankImageId:
+              type === ValueType.OFFICER_RANK
+                ? validateImgurURL(item.officerRankImageId)
+                : undefined,
           },
         };
 
