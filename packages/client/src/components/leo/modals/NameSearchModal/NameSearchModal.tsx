@@ -21,7 +21,6 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
@@ -326,7 +325,9 @@ export function NameSearchModal() {
                           {currentResult.phoneNumber || common("none")}
                         </Infofield>
 
-                        <ManageOccupationModal isLeo occupation={currentResult.occupation} />
+                        <Infofield className="max-w-[400px]" label={cT("occupation")}>
+                          {currentResult.occupation || common("none")}
+                        </Infofield>
                       </div>
                     </div>
 
