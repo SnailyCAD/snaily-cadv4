@@ -20,6 +20,7 @@ import { Info } from "react-bootstrap-icons";
 import { Status } from "components/shared/Status";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { OfficerRank } from "components/leo/OfficerRank";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -128,7 +129,7 @@ export default function MyOfficers({ officers: data }: Props) {
                 </span>
               ),
               division: formatUnitDivisions(officer),
-              rank: officer.rank?.value ?? common("none"),
+              rank: <OfficerRank unit={officer} />,
               actions: (
                 <>
                   <Button small onClick={() => handleEditClick(officer)} variant="success">

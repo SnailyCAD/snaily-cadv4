@@ -369,6 +369,9 @@ model Value {
   // this was added here since the migration of eg `LicenseValue` would be to large.
   licenseType ValueLicenseType?
 
+  /// OFFICER_RANK only
+  officerRankImageId String?
+
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
   genderToValue                   Citizen[]                     @relation("genderToValue")
@@ -710,6 +713,7 @@ model QualificationValue {
   value             Value               @relation(fields: [valueId], references: [id], onDelete: Cascade)
   departments       DepartmentValue[]
   departmentId      String?
+  description       String?             @db.Text
   UnitQualification UnitQualification[]
 }
 

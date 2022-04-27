@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   data: (Citizen & { Record: Record[] })[];
@@ -29,6 +30,7 @@ export default function Jail({ data: jailedCitizens }: Props) {
   const { generateCallsign } = useGenerateCallsign();
   const { hasPermissions } = usePermission();
   const router = useRouter();
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
     null,
@@ -80,7 +82,11 @@ export default function Jail({ data: jailedCitizens }: Props) {
 
             return {
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
-              citizen: `${item.name} ${item.surname}`,
+              citizen: `${item.name} ${item.surname} ${
+                SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber
+                  ? `(SSN: ${item.socialSecurityNumber})`
+                  : null
+              }`,
               officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
               jailTime,
               status,

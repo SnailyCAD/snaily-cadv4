@@ -1,7 +1,7 @@
 import type { EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
+import { QualificationsHoverCard } from "components/admin/manage/units/QualificationHoverCard";
 import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
-import { useImageUrl } from "hooks/useImageUrl";
 import { classNames } from "lib/classNames";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +12,6 @@ interface Props {
 export function UnitQualificationsTable({ unit }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { makeImageUrl } = useImageUrl();
 
   return (
     <div className="mt-3">
@@ -23,14 +22,8 @@ export function UnitQualificationsTable({ unit }: Props) {
       ) : (
         <Table
           data={unit.qualifications.map((qa) => {
-            const imgUrl = makeImageUrl("values", qa.qualification.imageId);
-
             return {
-              image: imgUrl ? (
-                <img src={imgUrl} width={50} height={50} className="object-cover" />
-              ) : (
-                "—"
-              ),
+              image: <QualificationsHoverCard qualification={qa} />,
               name: (
                 <p className="flex flex-col">
                   <span className={classNames(qa.suspendedAt && "text-gray-400 line-through")}>

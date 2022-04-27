@@ -16,12 +16,10 @@ import { LicensesCard } from "components/citizen/licenses/LicensesCard";
 import { MedicalRecords } from "components/citizen/medical-records/MedicalRecords";
 import { calculateAge, formatCitizenAddress, requestAll } from "lib/utils";
 import { useCitizen } from "context/CitizenContext";
-// import { RecordsArea } from "components/leo/modals/NameSearchModal/tabs/RecordsArea";
 import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { ManageOccupationModal } from "components/citizen/modals/ManageOccupationModal";
 import { Infofield } from "components/shared/Infofield";
 import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
@@ -127,7 +125,9 @@ export default function CitizenId() {
             <Infofield label={t("address")}>{formatCitizenAddress(citizen)}</Infofield>
             <Infofield label={t("phoneNumber")}>{citizen.phoneNumber || common("none")}</Infofield>
 
-            <ManageOccupationModal occupation={citizen.occupation} />
+            <Infofield className="max-w-[400px]" label={t("occupation")}>
+              {citizen.occupation || common("none")}
+            </Infofield>
           </div>
         </div>
 

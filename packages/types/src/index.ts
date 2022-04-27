@@ -312,6 +312,7 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+  officerRankImageId: string | null;
 }
 
 /**
@@ -648,6 +649,7 @@ export interface QualificationValue {
   value: Value<ValueType.QUALIFICATION>;
   imageId: string;
   departments: DepartmentValue[];
+  description: string | null;
 }
 
 /**

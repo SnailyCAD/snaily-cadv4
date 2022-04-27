@@ -42,7 +42,7 @@ export const citizenInclude = {
       registrationStatus: true,
     },
   },
-  medicalRecords: true,
+  medicalRecords: { include: { bloodGroup: true } },
   ethnicity: true,
   gender: true,
   weaponLicense: true,

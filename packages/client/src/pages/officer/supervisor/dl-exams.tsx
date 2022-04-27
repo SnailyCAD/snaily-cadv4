@@ -34,7 +34,14 @@ export default function CitizenLogs({ exams: data }: Props) {
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
+  const cT = useTranslations("Vehicles");
   const { state, execute } = useFetch();
+
+  const PASS_FAIL_LABELS = {
+    PASSED: cT("passed"),
+    FAILED: cT("failed"),
+    IN_PROGRESS: cT("inProgress"),
+  };
 
   async function handleDelete() {
     if (!tempExam) return;
@@ -99,12 +106,16 @@ export default function CitizenLogs({ exams: data }: Props) {
                 },
                 citizen: `${exam.citizen.name} ${exam.citizen.surname}`,
                 theoryExam: (
-                  <span className="capitalize">{exam.theoryExam?.toLowerCase() ?? "—"}</span>
+                  <span className="capitalize">
+                    {exam.theoryExam ? PASS_FAIL_LABELS[exam.theoryExam] : "—"}
+                  </span>
                 ),
                 practiceExam: (
-                  <span className="capitalize">{exam.practiceExam?.toLowerCase() ?? "—"}</span>
+                  <span className="capitalize">
+                    {exam.practiceExam ? PASS_FAIL_LABELS[exam.practiceExam] : "—"}
+                  </span>
                 ),
-                status: <Status state={exam.status}>{exam.status.toLowerCase()}</Status>,
+                status: <Status state={exam.status}>{PASS_FAIL_LABELS[exam.status]}</Status>,
                 categories: exam.categories?.map((v) => v.value.value).join(", ") || "—",
                 license: exam.license.value,
                 createdAt: <FullDate>{exam.createdAt}</FullDate>,
@@ -184,7 +195,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req),
       exams,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "citizen", "common"], locale)),
       },
     },
   };

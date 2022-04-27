@@ -17,6 +17,7 @@ import { Title } from "components/shared/Title";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { OfficerRank } from "components/leo/OfficerRank";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -92,7 +93,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             badgeNumber: deputy.badgeNumber,
             department: deputy.department.value.value,
             division: deputy.division.value.value,
-            rank: deputy.rank?.value ?? common("none"),
+            rank: <OfficerRank unit={deputy} />,
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(deputy)} variant="success">
