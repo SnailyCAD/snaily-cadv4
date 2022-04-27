@@ -123,6 +123,18 @@ export function useTableDataOfType(type: ValueType) {
           departments: v.departments.map((v) => v.value.value).join(", "),
         };
       }
+      case ValueType.OFFICER_RANK: {
+        const v = value as Value<ValueType.OFFICER_RANK>;
+        const imgUrl = makeImageUrl("values", v.officerRankImageId);
+
+        return {
+          image: imgUrl ? (
+            <img src={imgUrl} width={50} height={50} className="object-cover" />
+          ) : (
+            "—"
+          ),
+        };
+      }
       default: {
         return {};
       }
@@ -176,6 +188,9 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: common("image"), accessor: "image" },
         { Header: t("departments"), accessor: "departments" },
       ];
+    }
+    case ValueType.OFFICER_RANK: {
+      return [{ Header: common("image"), accessor: "image" }];
     }
     default: {
       return [];

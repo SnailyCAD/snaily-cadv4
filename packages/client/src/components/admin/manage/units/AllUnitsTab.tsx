@@ -18,6 +18,7 @@ import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
+import { OfficerRank } from "components/leo/OfficerRank";
 
 interface Props {
   units: Unit[];
@@ -133,7 +134,7 @@ export function AllUnitsTab({ search, units }: Props) {
                 <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
               ),
               division: formatUnitDivisions(unit),
-              rank: unit.rank?.value ?? common("none"),
+              rank: <OfficerRank unit={unit} />,
               status: unit.status?.value.value ?? common("none"),
               suspended: common(yesOrNoText(unit.suspended)),
               actions: (
