@@ -714,7 +714,7 @@ model QualificationValue {
   departments       DepartmentValue[]
   departmentId      String?
   description       String?                @db.Text
-  type              QualificationValueType @default(QUALIFICATION)
+  qualificationType QualificationValueType @default(QUALIFICATION)
   UnitQualification UnitQualification[]
 }
 

@@ -5,13 +5,29 @@ import { ImageSelectInput } from "components/form/inputs/ImageSelectInput";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
 import { Textarea } from "components/form/Textarea";
+import { QualificationValueType } from "@snailycad/types";
 
 export function QualificationFields({ image, setImage }: any) {
   const { values, errors, handleChange } = useFormikContext<any>();
   const { department } = useValues();
 
+  const TYPES = [
+    { label: "Qualification", value: QualificationValueType.QUALIFICATION },
+    { label: "Award", value: QualificationValueType.AWARD },
+  ];
+
   return (
     <>
+      <FormField errorMessage={errors.qualificationType as string} label="Type">
+        <Select
+          isClearable={false}
+          values={TYPES}
+          name="qualificationType"
+          onChange={handleChange}
+          value={values.qualificationType}
+        />
+      </FormField>
+
       <FormField errorMessage={errors.departments as string} label="Departments">
         <Select
           isMulti
