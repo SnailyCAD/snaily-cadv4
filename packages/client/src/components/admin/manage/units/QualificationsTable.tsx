@@ -47,7 +47,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
             return { ...qualification, ...json };
           }
 
-          return p;
+          return q;
         }),
       }));
     }
