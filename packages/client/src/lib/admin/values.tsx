@@ -121,6 +121,7 @@ export function useTableDataOfType(type: ValueType) {
             "—"
           ),
           departments: v.departments.map((v) => v.value.value).join(", "),
+          type: v.qualificationType.toLowerCase(),
         };
       }
       case ValueType.OFFICER_RANK: {
@@ -187,6 +188,7 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: common("image"), accessor: "image" },
         { Header: t("departments"), accessor: "departments" },
+        { Header: common("type"), accessor: "type" },
       ];
     }
     case ValueType.OFFICER_RANK: {

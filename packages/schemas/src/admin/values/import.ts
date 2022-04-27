@@ -102,6 +102,7 @@ export const QUALIFICATION_SCHEMA = BASE_VALUE_SCHEMA.extend({
   departments: z.array(z.string()).min(1),
   image: z.any().nullable().optional(),
   description: z.string().nullable().optional(),
+  qualificationType: z.string().min(2),
 });
 
 export const QUALIFICATION_ARR = z.array(QUALIFICATION_SCHEMA).min(1);

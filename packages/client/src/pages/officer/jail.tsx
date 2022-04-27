@@ -18,6 +18,7 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearchModal";
 
 interface Props {
   data: (Citizen & { Record: Record[] })[];
@@ -45,6 +46,10 @@ export default function Jail({ data: jailedCitizens }: Props) {
   function handleCheckoutClick(item: Citizen, recordId: string) {
     setTempCitizen({ ...item, recordId });
     openModal(ModalIds.AlertReleaseCitizen);
+  }
+
+  function handleNameClick(item: Citizen) {
+    openModal(ModalIds.NameSearch, { name: `${item.name} ${item.surname}` });
   }
 
   return (
@@ -82,11 +87,14 @@ export default function Jail({ data: jailedCitizens }: Props) {
 
             return {
               rowProps: { style: released ? { opacity: "0.5" } : undefined },
-              citizen: `${item.name} ${item.surname} ${
-                SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber
-                  ? `(SSN: ${item.socialSecurityNumber})`
-                  : null
-              }`,
+              citizen: (
+                <Button onClick={() => handleNameClick(item)}>
+                  {item.name} {item.surname}{" "}
+                  {SOCIAL_SECURITY_NUMBERS && item.socialSecurityNumber
+                    ? `(SSN: ${item.socialSecurityNumber})`
+                    : null}
+                </Button>
+              ),
               officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
               jailTime,
               status,
@@ -115,6 +123,8 @@ export default function Jail({ data: jailedCitizens }: Props) {
           ]}
         />
       )}
+
+      <NameSearchModal />
       <ReleaseCitizenModal onSuccess={handleSuccess} citizen={tempCitizen} />
     </Layout>
   );
@@ -128,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req),
       data: jailData,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "citizen", "common"], locale)),
       },
     },
   };

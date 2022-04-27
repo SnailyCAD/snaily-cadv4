@@ -63,7 +63,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
     >
       <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
-      {signal100Enabled ? <Component audio={audio} /> : null}
+      <Component enabled={signal100Enabled} audio={audio} />
 
       <UtilityPanel>
         <div className="px-4">

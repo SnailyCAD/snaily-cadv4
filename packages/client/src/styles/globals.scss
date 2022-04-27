@@ -92,7 +92,7 @@ li {
 }
 
 .dropdown-fade {
-  animation: dropdownFade 100ms ease-out;
+  animation: dropdownFade 100ms ease-out forwards;
 }
 
 @keyframes dropdownFade {

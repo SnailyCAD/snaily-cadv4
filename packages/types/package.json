@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.0.0-beta.90",
+  "version": "1.0.0-beta.91",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -23,7 +23,7 @@
     "zod": "^3.14.4"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.0.0-beta.90",
+    "@snailycad/permissions": "1.0.0-beta.91",
     "tsup": "^5.12.6",
     "typescript": "^4.6.3"
   },

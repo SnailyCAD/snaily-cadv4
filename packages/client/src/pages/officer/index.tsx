@@ -98,8 +98,8 @@ export default function OfficerDashboard({
     >
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
-      {signal100Enabled ? <Component audio={signal100Audio} /> : null}
-      {unit ? <PanicButton audio={audio} unit={unit} /> : null}
+      <Component enabled={signal100Enabled} audio={signal100Audio} />
+      <PanicButton audio={audio} unit={unit} />
 
       <UtilityPanel>
         <div className="px-4">

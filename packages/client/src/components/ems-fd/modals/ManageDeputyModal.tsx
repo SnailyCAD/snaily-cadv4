@@ -19,7 +19,7 @@ import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSele
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { UnitQualificationsTable } from "components/leo/UnitQualificationsTable";
+import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
 
 interface Props {
   deputy: EmsFdDeputy | null;
