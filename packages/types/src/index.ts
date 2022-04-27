@@ -648,6 +648,7 @@ export interface QualificationValue {
   value: Value<ValueType.QUALIFICATION>;
   imageId: string;
   departments: DepartmentValue[];
+  description: string | null;
 }
 
 /**
