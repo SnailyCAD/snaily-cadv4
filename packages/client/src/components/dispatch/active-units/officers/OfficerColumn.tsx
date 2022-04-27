@@ -105,39 +105,41 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
     >
       <span>
         <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911Call} item={officer}>
-          <span
-            className={classNames(
-              "flex items-center capitalize",
-              canDrag ? "cursor-grab" : "cursor-default",
-            )}
-            // * 9 to fix overlapping issues with next table column
-            style={{ minWidth: nameAndCallsign.length * 9 }}
-          >
-            <ActiveUnitsQualificationsCard unit={officer}>
-              {isUnitOfficer(officer) && officer.imageId ? (
-                <img
-                  className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                  draggable={false}
-                  src={makeImageUrl("units", officer.imageId)}
-                />
-              ) : null}
-              {isUnitCombined(officer) ? (
-                <div className="flex items-center">
-                  {generateCallsign(officer, "pairedUnitTemplate")}
-                  <span className="mx-4">
-                    <ArrowRight />
-                  </span>
-                  {officer.officers.map((officer) => (
-                    <React.Fragment key={officer.id}>
-                      {generateCallsign(officer)} {makeUnitName(officer)} <br />
-                    </React.Fragment>
-                  ))}
-                </div>
-              ) : (
-                nameAndCallsign
+          {({ isDragging }) => (
+            <span
+              className={classNames(
+                "flex items-center capitalize",
+                canDrag ? "cursor-grab" : "cursor-default",
               )}
-            </ActiveUnitsQualificationsCard>
-          </span>
+              // * 9 to fix overlapping issues with next table column
+              style={{ minWidth: nameAndCallsign.length * 9 }}
+            >
+              <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
+                {isUnitOfficer(officer) && officer.imageId ? (
+                  <img
+                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                    draggable={false}
+                    src={makeImageUrl("units", officer.imageId)}
+                  />
+                ) : null}
+                {isUnitCombined(officer) ? (
+                  <div className="flex items-center">
+                    {generateCallsign(officer, "pairedUnitTemplate")}
+                    <span className="mx-4">
+                      <ArrowRight />
+                    </span>
+                    {officer.officers.map((officer) => (
+                      <React.Fragment key={officer.id}>
+                        {generateCallsign(officer)} {makeUnitName(officer)} <br />
+                      </React.Fragment>
+                    ))}
+                  </div>
+                ) : (
+                  nameAndCallsign
+                )}
+              </ActiveUnitsQualificationsCard>
+            </span>
+          )}
         </Draggable>
       </span>
     </ContextMenu>

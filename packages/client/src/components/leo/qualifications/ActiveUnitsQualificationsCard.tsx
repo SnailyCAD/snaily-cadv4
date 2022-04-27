@@ -11,6 +11,7 @@ import { UnitQualificationsTable } from "./UnitQualificationsTable";
 interface Props {
   unit: ((Officer | EmsFdDeputy) & { qualifications?: UnitQualification[] }) | CombinedLeoUnit;
   children: React.ReactNode;
+  canBeOpened?: boolean;
 }
 
 interface CacheStore {
@@ -23,7 +24,7 @@ const useCacheStore = create<CacheStore>((set) => ({
   setUnits: (units) => set({ units }),
 }));
 
-export function ActiveUnitsQualificationsCard({ unit, children }: Props) {
+export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, children }: Props) {
   const { state, execute } = useFetch();
   const { units, setUnits } = useCacheStore();
 
@@ -54,13 +55,14 @@ export function ActiveUnitsQualificationsCard({ unit, children }: Props) {
     }
   }, [hovered, state, handleHover]);
 
-  if (isUnitCombined(unit)) {
+  if (isUnitCombined(unit) || !canBeOpened) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <>{children}</>;
   }
 
   return (
     <HoverCard
+      openDelay={250}
       showArrow={false}
       contentProps={{ sideOffset: 0, side: "bottom", className: "dark:bg-gray-2" }}
       pointerEvents
