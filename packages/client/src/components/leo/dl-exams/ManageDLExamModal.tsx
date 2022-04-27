@@ -1,5 +1,11 @@
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
-import { Citizen, DLExam, DLExamPassType } from "@snailycad/types";
+import {
+  Citizen,
+  DLExam,
+  DLExamPassType,
+  DriversLicenseCategoryType,
+  ValueLicenseType,
+} from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
@@ -23,19 +29,20 @@ interface Props {
   onClose?(): void;
 }
 
-const PASS_FAIL_VALUES = [
-  { label: "Passed", value: DLExamPassType.PASSED },
-  { label: "Failed", value: DLExamPassType.FAILED },
-];
-
 export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const cT = useTranslations("Vehicles");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory, license } = useValues();
+
+  const PASS_FAIL_VALUES = [
+    { label: cT("passed"), value: DLExamPassType.PASSED },
+    { label: cT("failed"), value: DLExamPassType.FAILED },
+  ];
 
   function handleClose() {
     closeModal(ModalIds.ManageDLExam);
@@ -140,10 +147,14 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
                 value={values.license}
                 onChange={handleChange}
                 name="license"
-                values={license.values.map((v) => ({
-                  label: v.value,
-                  value: v.id,
-                }))}
+                values={license.values
+                  .filter((v) =>
+                    v.licenseType ? v.licenseType === ValueLicenseType.LICENSE : true,
+                  )
+                  .map((v) => ({
+                    label: v.value,
+                    value: v.id,
+                  }))}
               />
             </FormField>
 
@@ -154,10 +165,12 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
                 value={values.categories}
                 onChange={handleChange}
                 name="categories"
-                values={driverslicenseCategory.values.map((v) => ({
-                  label: v.value.value,
-                  value: v.id,
-                }))}
+                values={driverslicenseCategory.values
+                  .filter((v) => v.type !== DriversLicenseCategoryType.FIREARM)
+                  .map((v) => ({
+                    label: v.value.value,
+                    value: v.id,
+                  }))}
               />
             </FormField>
 

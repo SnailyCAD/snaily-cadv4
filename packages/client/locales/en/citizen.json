@@ -65,6 +65,7 @@
     "untaxed": "Untaxed",
     "passed": "Passed",
     "failed": "Failed",
+    "inProgress": "In Progress",
     "vehicleImpounded": "This vehicle is impounded",
     "successVehicleRegistered": "Successfully registered a vehicle with plate: {plate}",
     "dmvStatus": "DMV Status",
