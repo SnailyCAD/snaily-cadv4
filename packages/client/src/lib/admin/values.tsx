@@ -124,7 +124,8 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.OFFICER_RANK: {
-        const imgUrl = makeImageUrl("values", value.officerRankImageId);
+        const v = value as Value<ValueType.OFFICER_RANK>;
+        const imgUrl = makeImageUrl("values", v.officerRankImageId);
 
         return {
           image: imgUrl ? (
