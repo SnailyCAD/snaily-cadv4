@@ -74,6 +74,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
     callsign: unit.callsign,
     callsign2: unit.callsign2,
     rank: unit.rankId,
+    position: unit.position ?? "",
     suspended: unit.suspended,
     badgeNumber: unit.badgeNumber ?? "",
   };
@@ -150,18 +151,24 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
               )}
             </FormField>
 
-            <FormField label={t("rank")}>
-              <Select
-                isClearable
-                name="rank"
-                onChange={handleChange}
-                value={values.rank}
-                values={officerRank.values.map((value) => ({
-                  label: value.value,
-                  value: value.id,
-                }))}
-              />
-            </FormField>
+            <FormRow>
+              <FormField label={t("rank")}>
+                <Select
+                  isClearable
+                  name="rank"
+                  onChange={handleChange}
+                  value={values.rank}
+                  values={officerRank.values.map((value) => ({
+                    label: value.value,
+                    value: value.id,
+                  }))}
+                />
+              </FormField>
+
+              <FormField optional label={t("position")}>
+                <Input name="position" onChange={handleChange} value={values.position} />
+              </FormField>
+            </FormRow>
 
             <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
               <Input
