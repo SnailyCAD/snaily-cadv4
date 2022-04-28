@@ -65,6 +65,7 @@
     "untaxed": "Неоплачены",
     "passed": "Пройден",
     "failed": "Непройден",
+    "inProgress": "В прогрессе",
     "vehicleImpounded": "Транспорт эвакуирован",
     "successVehicleRegistered": "Транспорт успешно зарегистрирован с номерным знаком: {plate}",
     "dmvStatus": "Статус DMV",
