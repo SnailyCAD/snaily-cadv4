@@ -750,6 +750,7 @@ export interface IncidentEvent {
 export interface CombinedLeoUnit {
   id: string;
   callsign: string;
+  callsign2: string;
   statusId: string | null;
   status: StatusValue | null;
   radioChannelId: string | null;
