@@ -61,6 +61,7 @@
     "citizenDead": "WARNING: This citizen died on {date}",
     "hasWarrants": "WARNING: This citizen has active warrants!",
     "rank": "Rank",
+    "position": "Position",
     "officerLogs": "Officer Logs",
     "disableSignal100": "Disable Signal 100",
     "enableSignal100": "Enable Signal 100",

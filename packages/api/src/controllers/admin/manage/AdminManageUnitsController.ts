@@ -184,6 +184,7 @@ export class AdminManageUnitsController {
         departmentId: data.department,
         divisionId: data.division,
         rankId: data.rank || null,
+        position: data.position || null,
         suspended: data.suspended ?? false,
         callsign2: data.callsign2,
         callsign: data.callsign,

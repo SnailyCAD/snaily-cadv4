@@ -94,6 +94,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             department: deputy.department.value.value,
             division: deputy.division.value.value,
             rank: <OfficerRank unit={deputy} />,
+            position: deputy.position ?? common("none"),
             actions: (
               <>
                 <Button small onClick={() => handleEditClick(deputy)} variant="success">
@@ -117,6 +118,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },
+            { Header: t("Leo.position"), accessor: "position" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />

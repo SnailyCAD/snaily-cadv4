@@ -602,6 +602,7 @@ export interface Officer {
   divisions: DivisionValue[];
   rankId: string | null;
   rank: Value<ValueType.OFFICER_RANK> | null;
+  position: string | null;
   statusId: string | null;
   status: StatusValue | null;
   suspended: boolean;
@@ -971,6 +972,7 @@ export interface EmsFdDeputy {
   division: DivisionValue;
   rankId: string | null;
   rank: Value<ValueType.OFFICER_RANK> | null;
+  position: string | null;
   statusId: string | null;
   status: StatusValue | null;
   suspended: boolean;

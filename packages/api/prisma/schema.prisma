@@ -661,6 +661,7 @@ model Officer {
   divisions                   DivisionValue[]        @relation("officerDivisionsToDivision")
   rank                        Value?                 @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
+  position                    String?                @db.Text
   status                      StatusValue?           @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
   suspended                   Boolean                @default(false)
@@ -995,6 +996,7 @@ model EmsFdDeputy {
   callsign2            String                 @db.VarChar(255)
   division             DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
   divisionId           String
+  position             String?                @db.Text
   rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
   rankId               String?
   status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])

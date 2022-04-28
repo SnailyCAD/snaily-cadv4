@@ -130,6 +130,7 @@ export default function MyOfficers({ officers: data }: Props) {
               ),
               division: formatUnitDivisions(officer),
               rank: <OfficerRank unit={officer} />,
+              position: officer.position ?? common("none"),
               actions: (
                 <>
                   <Button small onClick={() => handleEditClick(officer)} variant="success">
@@ -154,6 +155,7 @@ export default function MyOfficers({ officers: data }: Props) {
             { Header: t("department"), accessor: "department" },
             { Header: t("division"), accessor: "division" },
             { Header: t("rank"), accessor: "rank" },
+            { Header: t("Leo.position"), accessor: "position" },
             { Header: t("status"), accessor: "departmentStatus" },
             { Header: common("actions"), accessor: "actions" },
           ]}
