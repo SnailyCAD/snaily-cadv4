@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useLeoState } from "state/leoState";
 
+const STOLEN_TEXT = "stolen" as const;
 interface BoloItemProps {
   idx: number;
   bolo: Bolo;
@@ -15,7 +16,7 @@ interface BoloItemProps {
 }
 
 export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps) {
-  const t = useTranslations("Leo");
+  const t = useTranslations();
   const common = useTranslations("Common");
   const { activeOfficer } = useLeoState();
   const { pathname } = useRouter();
@@ -41,14 +42,16 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
             </div>
           ) : bolo.type === BoloType.VEHICLE ? (
             <div>
-              <p className="mb-1">{bolo.description}</p>
-              <span className="font-semibold">{t("plate")}: </span>
+              <p className="mb-1">
+                {bolo.description === STOLEN_TEXT ? t("Bolos.stolen") : bolo.description}
+              </p>
+              <span className="font-semibold">{t("Leo.plate")}: </span>
               {bolo.plate?.toUpperCase() || common("none")}
               <br />
-              <span className="font-semibold">{t("color")}: </span>
+              <span className="font-semibold">{t("Leo.color")}: </span>
               {bolo.color || common("none")}
               <br />
-              <span className="font-semibold">{t("model")}: </span>
+              <span className="font-semibold">{t("Leo.model")}: </span>
               {bolo.model || common("none")}
             </div>
           ) : (
@@ -56,10 +59,10 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
           )}
 
           <p>
-            <span className="font-semibold">{t("officer")}: </span>
+            <span className="font-semibold">{t("Leo.officer")}: </span>
             {bolo.officer
               ? `${generateCallsign(bolo.officer)} ${makeUnitName(bolo.officer)}`
-              : t("dispatch")}
+              : t("Leo.dispatch")}
           </p>
         </div>
       </div>

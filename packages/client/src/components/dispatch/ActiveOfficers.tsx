@@ -25,6 +25,7 @@ import { OfficerColumn } from "./active-units/officers/OfficerColumn";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { HoverCard } from "components/shared/HoverCard";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
@@ -108,7 +109,17 @@ export function ActiveOfficers() {
                   badgeNumber: isUnitOfficer(officer) && String(officer.badgeNumber),
                   department:
                     (isUnitOfficer(officer) && officer.department?.value.value) ?? common("none"),
-                  division: isUnitOfficer(officer) && formatUnitDivisions(officer),
+                  division: (
+                    <HoverCard
+                      trigger={
+                        <p className="max-w-xs truncate">
+                          {isUnitOfficer(officer) && formatUnitDivisions(officer)}
+                        </p>
+                      }
+                    >
+                      {isUnitOfficer(officer) && formatUnitDivisions(officer)}
+                    </HoverCard>
+                  ),
                   rank: (isUnitOfficer(officer) && officer.rank?.value) ?? common("none"),
                   status: (
                     <span className="flex items-center">

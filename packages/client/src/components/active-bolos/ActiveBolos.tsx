@@ -66,7 +66,7 @@ export function ActiveBolos() {
                     {items.length <= 0 ? (
                       <p>
                         {t.rich("noActiveBolosForType", {
-                          type: boloType.toLowerCase(),
+                          type: t(boloType.toLowerCase()),
                         })}
                       </p>
                     ) : (
