@@ -13,7 +13,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
   const isCombined = !("citizenId" in unit) || "officers" in unit;
 
   const callsign = isCombined ? unit.officers[0]?.callsign : unit.callsign;
-  const callsign2 = isCombined ? null : unit.callsign2;
+  const callsign2 = unit.callsign2;
   const department = isCombined ? null : unit.department;
   const incremental = isCombined ? unit.incremental : null;
 

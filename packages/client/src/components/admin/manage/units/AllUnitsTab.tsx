@@ -135,6 +135,7 @@ export function AllUnitsTab({ search, units }: Props) {
               ),
               division: formatUnitDivisions(unit),
               rank: <OfficerRank unit={unit} />,
+              position: unit.position ?? common("none"),
               status: unit.status?.value.value ?? common("none"),
               suspended: common(yesOrNoText(unit.suspended)),
               actions: (
@@ -181,6 +182,7 @@ export function AllUnitsTab({ search, units }: Props) {
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },
+            { Header: t("Leo.position"), accessor: "position" },
             { Header: t("Leo.status"), accessor: "status" },
             { Header: t("Leo.suspended"), accessor: "suspended" },
             { Header: t("Leo.status"), accessor: "departmentStatus" },

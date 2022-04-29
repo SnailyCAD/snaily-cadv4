@@ -23,6 +23,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   department: z.string().min(2).max(255),
   division: z.string().min(2).max(255).nullable(),
   rank: z.string().max(255).nullable(),
+  position: z.string().nullable().optional(),
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).nullable(),
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),

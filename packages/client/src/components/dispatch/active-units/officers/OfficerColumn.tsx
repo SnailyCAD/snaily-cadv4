@@ -106,15 +106,15 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       <span>
         <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911Call} item={officer}>
           {({ isDragging }) => (
-            <span
-              className={classNames(
-                "flex items-center capitalize",
-                canDrag ? "cursor-grab" : "cursor-default",
-              )}
-              // * 9 to fix overlapping issues with next table column
-              style={{ minWidth: nameAndCallsign.length * 9 }}
-            >
-              <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
+            <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
+              <span
+                className={classNames(
+                  "flex items-center capitalize",
+                  canDrag ? "cursor-grab" : "cursor-default",
+                )}
+                // * 9 to fix overlapping issues with next table column
+                style={{ minWidth: nameAndCallsign.length * 9 }}
+              >
                 {isUnitOfficer(officer) && officer.imageId ? (
                   <img
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2"
@@ -137,8 +137,8 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                 ) : (
                   nameAndCallsign
                 )}
-              </ActiveUnitsQualificationsCard>
-            </span>
+              </span>
+            </ActiveUnitsQualificationsCard>
           )}
         </Draggable>
       </span>
