@@ -209,6 +209,10 @@
     "createBolo": "Создать BOLO",
     "typeBolos": "{type} BOLO",
     "noActiveBolosForType": "Нет актиных BOLO для типа: {type}",
+    "person": "Человек",
+    "vehicle": "Транспорт",
+    "other": "Прочее",
+    "stolen": "В угоне",
     "alert_deleteBolo": "Вы уверены, что хотите удалить эту запись BOLO? Это действие необратимо."
   }
 }
