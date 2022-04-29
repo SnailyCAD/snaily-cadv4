@@ -47,7 +47,10 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const { json } = await execute("/dispatch/status/merge", {
       method: "POST",
-      data: values.ids.map((v) => ({ entry: v.isFixed, id: v.value })),
+      data: values.ids.map((v) => ({
+        entry: isDispatch ? v.isFixed : v.value === activeOfficer?.id && v.isFixed,
+        id: v.value,
+      })),
     });
 
     if (json.id) {
