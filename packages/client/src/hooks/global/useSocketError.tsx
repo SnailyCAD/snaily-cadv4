@@ -3,6 +3,8 @@ import { useSocket } from "@casper124578/use-socket.io";
 import type { Socket } from "socket.io-client";
 import { useTranslations } from "next-intl";
 
+const DISCONNECT_REASONS = ["transport close", "transport error"];
+
 export function useSocketError() {
   const [showError, setShowError] = React.useState(false);
   const socket = useSocket();
@@ -16,8 +18,10 @@ export function useSocketError() {
     };
 
     const disconnectHandler = (reason: Socket.DisconnectReason) => {
-      console.info({ disconnectReason: reason });
-      setShowError(true);
+      if (DISCONNECT_REASONS.includes(reason)) {
+        console.info({ disconnectReason: reason });
+        setShowError(true);
+      }
     };
 
     socket.on("disconnect", disconnectHandler);
