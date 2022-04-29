@@ -209,6 +209,10 @@
     "createBolo": "Create Bolo",
     "typeBolos": "{type} bolos",
     "noActiveBolosForType": "No active bolos for type: {type}",
+    "person": "person",
+    "vehicle": "vehicle",
+    "other": "other",
+    "stolen": "stolen",
     "alert_deleteBolo": "Are you sure you want to delete this bolo? This action cannot be undone"
   }
 }
