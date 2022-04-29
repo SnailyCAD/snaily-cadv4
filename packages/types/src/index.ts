@@ -96,6 +96,10 @@ export interface ApiToken {
   enabled: boolean;
   token: string | null;
   routes: string[];
+
+  createdAt: Date;
+  updatedAt: Date;
+  uses: number | null;
 }
 
 /**

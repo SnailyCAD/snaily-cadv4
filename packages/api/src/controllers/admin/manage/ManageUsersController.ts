@@ -65,6 +65,7 @@ export class ManageUsersController {
       select: {
         ...userProperties,
         ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+        apiToken: true,
       },
     });
 

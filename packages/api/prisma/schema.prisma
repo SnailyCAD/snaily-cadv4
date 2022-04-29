@@ -98,6 +98,10 @@ model ApiToken {
   // empty = *
   routes  String[]
 
+  uses      Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   cad  cad[]
   User User[]
 }
