@@ -10,7 +10,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { Bolo, BoloType, cad, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
+import { Bolo, BoloType, DiscordWebhookType } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -50,7 +50,6 @@ export class BoloController {
   })
   async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
-    const cad = ctx.get("cad") as cad & { miscCadSettings: MiscCadSettings | null };
 
     const bolo = await prisma.bolo.create({
       data: {
@@ -69,13 +68,11 @@ export class BoloController {
       },
     });
 
-    if (cad.miscCadSettings?.boloWebhookId) {
-      try {
-        const embed = createBoloEmbed(bolo);
-        await sendDiscordWebhook(DiscordWebhookType.BOLO, embed);
-      } catch (error) {
-        console.error("[cad_bolo]: Could not send Discord webhook.", error);
-      }
+    try {
+      const embed = createBoloEmbed(bolo);
+      await sendDiscordWebhook(DiscordWebhookType.BOLO, embed);
+    } catch (error) {
+      console.error("[cad_bolo]: Could not send Discord webhook.", error);
     }
 
     this.socket.emitCreateBolo(bolo);
