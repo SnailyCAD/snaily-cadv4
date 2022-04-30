@@ -5,6 +5,7 @@ CREATE TYPE "DiscordWebhookType" AS ENUM ('CALL_911', 'PANIC_BUTTON', 'UNIT_STAT
 CREATE TABLE "DiscordWebhook" (
     "id" TEXT NOT NULL,
     "type" "DiscordWebhookType" NOT NULL,
+    "webhookId" TEXT,
     "channelId" TEXT NOT NULL,
     "extraMessage" TEXT,
     "miscCadSettingsId" TEXT,
