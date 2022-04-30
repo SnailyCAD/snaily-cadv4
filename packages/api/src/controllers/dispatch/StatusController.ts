@@ -13,6 +13,7 @@ import {
   CadFeature,
   Feature,
   Rank,
+  DiscordWebhookType,
 } from "@prisma/client";
 import { UPDATE_OFFICER_STATUS_SCHEMA } from "@snailycad/schemas";
 import { Req, UseBeforeEach } from "@tsed/common";
@@ -129,7 +130,7 @@ export class StatusController {
         if (cad.miscCadSettings.panicButtonWebhookId && officer) {
           try {
             const embed = createPanicButtonEmbed(cad, officer);
-            await sendDiscordWebhook(cad.miscCadSettings, "panicButtonWebhookId", embed);
+            await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
           } catch (error) {
             console.error("[cad_panicButton]: Could not send Discord webhook.", error);
           }
@@ -233,7 +234,7 @@ export class StatusController {
 
     try {
       const data = createWebhookData(cad, updatedUnit);
-      await sendDiscordWebhook(cad.miscCadSettings, "statusesWebhookId", data);
+      await sendDiscordWebhook(DiscordWebhookType.UNIT_STATUS, data);
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }

@@ -36,7 +36,7 @@ export interface cad {
 }
 
 /**
- * Model MiscCadSettings
+ * Model CadFeature
  *
  */
 
@@ -69,11 +69,20 @@ export interface MiscCadSettings {
   roleplayEnabled: boolean | null;
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
-  statusesWebhookId: string | null;
-  call911WebhookId: string | null;
-  panicButtonWebhookId: string | null;
-  boloWebhookId: string | null;
   inactivityTimeout: number | null;
+  webhooks?: DiscordWebhook[];
+}
+
+/**
+ * Model DiscordWebhook
+ *
+ */
+export interface DiscordWebhook {
+  id: string;
+  type: DiscordWebhookType;
+  channelId: string;
+  extraMessage: string | null;
+  miscCadSettingsId: string | null;
 }
 
 /**
@@ -96,6 +105,24 @@ export interface ApiToken {
   enabled: boolean;
   token: string | null;
   routes: string[];
+
+  createdAt: Date;
+  updatedAt: Date;
+  uses: number | null;
+  logs?: ApiTokenLog[];
+}
+
+/**
+ * Model ApiTokenLog
+ *
+ */
+export interface ApiTokenLog {
+  id: string;
+  statusCode: string | null;
+  route: string | null;
+  method: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
@@ -1219,4 +1246,11 @@ export enum CustomFieldCategory {
 export enum QualificationValueType {
   QUALIFICATION = "QUALIFICATION",
   AWARD = "AWARD",
+}
+
+export enum DiscordWebhookType {
+  CALL_911 = "CALL_911",
+  PANIC_BUTTON = "PANIC_BUTTON",
+  UNIT_STATUS = "UNIT_STATUS",
+  BOLO = "BOLO",
 }
