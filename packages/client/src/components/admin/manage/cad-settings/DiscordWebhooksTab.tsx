@@ -8,6 +8,9 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { cad, DiscordWebhookType } from "@snailycad/types";
+import { Textarea } from "components/form/Textarea";
+import { FormField } from "components/form/FormField";
 
 export function DiscordWebhooksTab() {
   const [channels, setChannels] = React.useState<any[]>([]);
@@ -16,10 +19,10 @@ export function DiscordWebhooksTab() {
   const { cad } = useAuth();
 
   const INITIAL_VALUES = {
-    call911WebhookId: cad?.miscCadSettings?.call911WebhookId ?? null,
-    statusesWebhookId: cad?.miscCadSettings?.statusesWebhookId ?? null,
-    panicButtonWebhookId: cad?.miscCadSettings?.panicButtonWebhookId ?? null,
-    boloWebhookId: cad?.miscCadSettings?.boloWebhookId ?? null,
+    call911Webhook: makeInitialValue(cad!, DiscordWebhookType.CALL_911),
+    statusesWebhook: makeInitialValue(cad!, DiscordWebhookType.UNIT_STATUS),
+    panicButtonWebhook: makeInitialValue(cad!, DiscordWebhookType.PANIC_BUTTON),
+    boloWebhook: makeInitialValue(cad!, DiscordWebhookType.BOLO),
   };
 
   React.useEffect(() => {
@@ -71,7 +74,7 @@ export function DiscordWebhooksTab() {
             <SettingsFormField
               action="input"
               description="The Discord channel where 911 calls will be sent to."
-              errorMessage={errors.call911WebhookId}
+              errorMessage={errors.call911Webhook?.id}
               label="911 calls channel"
             >
               <Select
@@ -80,15 +83,23 @@ export function DiscordWebhooksTab() {
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.call911WebhookId}
-                name="call911WebhookId"
+                value={values.call911Webhook.id}
+                name="call911Webhook.id"
                 onChange={handleChange}
               />
+
+              <FormField optional className="mt-2" label="Extra message">
+                <Textarea
+                  value={values.call911Webhook.extraMessage}
+                  name="call911Webhook.extraMessage"
+                  onChange={handleChange}
+                />
+              </FormField>
             </SettingsFormField>
 
             <SettingsFormField
               description="The Discord channel where unit status updates will be sent to."
-              errorMessage={errors.statusesWebhookId}
+              errorMessage={errors.statusesWebhook?.id}
               label="Status updates channel"
             >
               <Select
@@ -97,15 +108,23 @@ export function DiscordWebhooksTab() {
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.statusesWebhookId}
-                name="statusesWebhookId"
+                value={values.statusesWebhook.id}
+                name="statusesWebhook.id"
                 onChange={handleChange}
               />
+
+              <FormField optional className="mt-2" label="Extra message">
+                <Textarea
+                  value={values.statusesWebhook.extraMessage}
+                  name="statusesWebhook.extraMessage"
+                  onChange={handleChange}
+                />
+              </FormField>
             </SettingsFormField>
 
             <SettingsFormField
               description="The Discord channel where panic button triggers will be sent to."
-              errorMessage={errors.panicButtonWebhookId}
+              errorMessage={errors.panicButtonWebhook?.id}
               label="Panic button channel"
             >
               <Select
@@ -114,15 +133,23 @@ export function DiscordWebhooksTab() {
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.panicButtonWebhookId}
-                name="panicButtonWebhookId"
+                value={values.panicButtonWebhook.id}
+                name="panicButtonWebhook.id"
                 onChange={handleChange}
               />
+
+              <FormField optional className="mt-2" label="Extra message">
+                <Textarea
+                  value={values.panicButtonWebhook.extraMessage}
+                  name="panicButtonWebhook.extraMessage"
+                  onChange={handleChange}
+                />
+              </FormField>
             </SettingsFormField>
 
             <SettingsFormField
               description="The Discord channel where new BOLO's will be sent to."
-              errorMessage={errors.boloWebhookId}
+              errorMessage={errors.boloWebhook?.id}
               label="BOLO's channel"
             >
               <Select
@@ -131,10 +158,18 @@ export function DiscordWebhooksTab() {
                   value: role.id,
                   label: role.name,
                 }))}
-                value={values.boloWebhookId}
-                name="boloWebhookId"
+                value={values.boloWebhook.id}
+                name="boloWebhook.id"
                 onChange={handleChange}
               />
+
+              <FormField optional className="mt-2" label="Extra message">
+                <Textarea
+                  value={values.boloWebhook.extraMessage}
+                  name="boloWebhook.extraMessage"
+                  onChange={handleChange}
+                />
+              </FormField>
             </SettingsFormField>
 
             <Button className="flex items-center" type="submit" disabled={state === "loading"}>
@@ -146,4 +181,15 @@ export function DiscordWebhooksTab() {
       </Formik>
     </TabsContent>
   );
+}
+
+function makeInitialValue(cad: cad, type: string) {
+  const webhook = cad.miscCadSettings?.webhooks?.find((v) => v.type === type);
+  if (!webhook) return { id: null, type, extraMessage: "" };
+
+  return {
+    id: webhook.channelId,
+    extraMessage: webhook.extraMessage ?? "",
+    type,
+  };
 }
