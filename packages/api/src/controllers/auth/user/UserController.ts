@@ -129,7 +129,7 @@ export class AccountController {
       data: { statusId: null },
     });
 
-    this.socket.emitUpdateDeputyStatus();
+    await this.socket.emitUpdateDeputyStatus();
 
     setCookie({
       res,

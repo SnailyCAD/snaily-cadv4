@@ -199,7 +199,7 @@ export class DispatchController {
     if (["leo", "combined"].includes(type)) {
       await this.socket.emitUpdateOfficerStatus();
     } else {
-      this.socket.emitUpdateDeputyStatus();
+      await this.socket.emitUpdateDeputyStatus();
     }
 
     return updated;

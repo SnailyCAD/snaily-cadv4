@@ -183,7 +183,7 @@ export class IncidentController {
 
     const corrected = officerOrDeputyToUnit(updated);
 
-    await this.socket.emitUpdateActiveIncident(corrected);
+    this.socket.emitUpdateActiveIncident(corrected);
     await this.socket.emitUpdateOfficerStatus();
 
     return corrected;
