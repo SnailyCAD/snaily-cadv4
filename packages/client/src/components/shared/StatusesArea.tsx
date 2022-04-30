@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import type { ActiveDeputy } from "state/emsFdState";
 import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
-import { ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
+import { Officer, ShouldDoType, WhatPages, type StatusValue } from "@snailycad/types";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 
@@ -56,20 +56,13 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     onDutyCode && handleStatusUpdate(onDutyCode);
   }
 
-  async function getActiveUnit() {
-    const path = isEmsFd ? "/ems-fd/active-deputy" : "/leo/active-officer";
-    const { json, error } = await execute(path, { noToast: true });
+  async function getActiveUnit(data: Officer[]) {
+    const unit = data.find((v) => v.id === activeUnit?.id);
 
-    if (json.id) {
-      setActiveUnit({ ...activeUnit, ...json });
-
-      if (shouldPlayStatusUpdateSound) {
-        controls.seek(0);
-        controls.play();
-      }
-    }
-
-    if (error && ["noActiveOfficer", "noActiveDeputy"].includes(error)) {
+    if (unit && shouldPlayStatusUpdateSound) {
+      controls.seek(0);
+      controls.play();
+    } else {
       setActiveUnit(null);
       controls.pause();
     }
@@ -77,8 +70,10 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
 
   useListener(
     socketEvent,
-    () => {
-      getActiveUnit();
+    (data: Officer[] | null) => {
+      if (data && Array.isArray(data)) {
+        getActiveUnit(data);
+      }
     },
     [setActiveUnit, activeUnit],
   );

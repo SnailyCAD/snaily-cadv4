@@ -240,9 +240,9 @@ export class StatusController {
     }
 
     if (["leo", "combined"].includes(type)) {
-      this.socket.emitUpdateOfficerStatus();
+      await this.socket.emitUpdateOfficerStatus();
     } else {
-      this.socket.emitUpdateDeputyStatus();
+      await this.socket.emitUpdateDeputyStatus();
     }
 
     return updatedUnit;

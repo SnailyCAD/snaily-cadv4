@@ -457,7 +457,7 @@ export class LeoController {
       }
     }
 
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
     this.socket.emitPanicButtonLeo(officer, panicType);
   }
 

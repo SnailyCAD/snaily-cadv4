@@ -1,8 +1,10 @@
 import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
-import type { LeoIncident, Call911, TowCall, Bolo, TaxiCall } from "@prisma/client";
+import { LeoIncident, Call911, TowCall, Bolo, TaxiCall, ShouldDoType } from "@prisma/client";
 import type { IncidentEvent } from "@snailycad/types";
+import { prisma } from "lib/prisma";
+import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
 type FullIncident = LeoIncident & { unitsInvolved: any[]; events?: IncidentEvent[] };
 
@@ -67,12 +69,29 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.RoleplayStopped, value);
   }
 
-  emitUpdateOfficerStatus() {
-    this.io.sockets.emit(SocketEvents.UpdateOfficerStatus);
+  async emitUpdateOfficerStatus() {
+    const [officers, units] = await Promise.all([
+      await prisma.officer.findMany({
+        where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+        include: leoProperties,
+      }),
+      await prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
+    ]);
+
+    const data = [...officers, ...units];
+
+    this.io.sockets.emit(SocketEvents.UpdateOfficerStatus, data);
   }
 
-  emitUpdateDeputyStatus() {
-    this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus);
+  async emitUpdateDeputyStatus() {
+    const deputies = await prisma.emsFdDeputy.findMany({
+      where: { status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } } },
+      include: unitProperties,
+    });
+
+    this.io.sockets.emit(SocketEvents.UpdateEmsFdStatus, deputies);
   }
 
   emitUserBanned(userId: string) {

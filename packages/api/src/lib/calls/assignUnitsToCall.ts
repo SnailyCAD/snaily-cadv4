@@ -59,8 +59,8 @@ export async function assignUnitsToCall({
           data: { statusId: status.id },
         });
 
-        socket.emitUpdateOfficerStatus();
-        socket.emitUpdateDeputyStatus();
+        await socket.emitUpdateOfficerStatus();
+        await socket.emitUpdateDeputyStatus();
       }
 
       const assignedUnit = await prisma.assignedUnit.create({

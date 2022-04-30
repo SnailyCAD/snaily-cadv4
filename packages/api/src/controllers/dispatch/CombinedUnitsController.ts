@@ -91,7 +91,7 @@ export class CombinedUnitsController {
     );
 
     const last = data[data.length - 1];
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
 
     return last;
   }
@@ -133,7 +133,7 @@ export class CombinedUnitsController {
       where: { id: unitId },
     });
 
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
   }
 
   /**
