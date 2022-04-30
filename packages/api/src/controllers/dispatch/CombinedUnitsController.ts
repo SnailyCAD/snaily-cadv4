@@ -24,7 +24,7 @@ export class CombinedUnitsController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
+  async mergeOfficers(@BodyParams() ids: { entry: boolean; id: string }[]) {
     const officers = await prisma.$transaction(
       ids.map((officer) => {
         return prisma.officer.findFirst({
@@ -68,6 +68,7 @@ export class CombinedUnitsController {
         statusId: status?.id ?? null,
         callsign: entryOfficer.callsign,
         callsign2: entryOfficer.callsign2,
+        departmentId: entryOfficer.departmentId,
         incremental: nextInt,
       },
     });

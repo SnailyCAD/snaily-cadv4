@@ -36,6 +36,7 @@ export const leoProperties = {
 
 export const combinedUnitProperties = {
   status: { include: { value: true } },
+  department: { include: { value: true } },
   officers: { include: _leoProperties },
 };
 
