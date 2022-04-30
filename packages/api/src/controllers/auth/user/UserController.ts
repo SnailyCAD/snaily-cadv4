@@ -121,7 +121,7 @@ export class AccountController {
         userId,
       });
 
-      this.socket.emitUpdateOfficerStatus();
+      await this.socket.emitUpdateOfficerStatus();
     }
 
     await prisma.emsFdDeputy.updateMany({

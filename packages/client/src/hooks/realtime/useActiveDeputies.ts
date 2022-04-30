@@ -5,6 +5,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useEmsFdState } from "state/emsFdState";
+import type { EmsFdDeputy } from "@snailycad/types";
 
 export function useActiveDeputies() {
   const { user } = useAuth();
@@ -12,27 +13,40 @@ export function useActiveDeputies() {
   const { state, execute } = useFetch();
   const { setActiveDeputy } = useEmsFdState();
 
+  const handleState = React.useCallback(
+    (data: EmsFdDeputy[]) => {
+      setActiveDeputies(data);
+
+      const activeDeputy = data.find((v) => v.userId === user?.id);
+      if (activeDeputy) {
+        setActiveDeputy(activeDeputy);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user?.id],
+  );
+
   const getActiveDeputies = React.useCallback(async () => {
     const { json } = await execute("/ems-fd/active-deputies", {
       noToast: true,
     });
 
     if (json && Array.isArray(json)) {
-      setActiveDeputies(json);
-
-      const activeDeputy = json.find((v) => v.userId === user?.id);
-      if (activeDeputy) {
-        setActiveDeputy(activeDeputy);
-      }
+      handleState(json);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, handleState]);
 
   React.useEffect(() => {
     getActiveDeputies();
   }, [getActiveDeputies]);
 
-  useListener(SocketEvents.UpdateEmsFdStatus, () => {
+  useListener(SocketEvents.UpdateEmsFdStatus, (data: EmsFdDeputy[] | null) => {
+    if (data && Array.isArray(data)) {
+      handleState(data);
+      return;
+    }
+
     getActiveDeputies();
   });
 
