@@ -93,8 +93,6 @@ export default function ManageCitizens(props: Props) {
   const isRankDisabled = user.rank === "OWNER" || user.id === session?.id;
   const validate = handleValidate(UPDATE_USER_SCHEMA);
 
-  console.log({ user });
-
   return (
     <AdminLayout
       permissions={{
