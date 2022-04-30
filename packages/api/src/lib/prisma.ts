@@ -4,6 +4,7 @@ import { pairedSymbolToTemplate } from "migrations/pairedSymbolToTemplate";
 import { xToXArrAll } from "migrations/xToXArr";
 import { disabledFeatureToCadFeature } from "migrations/disabledFeatureToCadFeature";
 import { officersToUnitsInvolved } from "migrations/officersToUnitsInvolved";
+import { webhookIdToWebhooks } from "migrations/webhookIdToWebhooks";
 
 export const prisma = new PrismaClient({
   errorFormat: "colorless",
@@ -12,6 +13,7 @@ export const prisma = new PrismaClient({
 
 async function handleMigrations() {
   await Promise.all([
+    webhookIdToWebhooks(),
     divisionToDivisions(),
     pairedSymbolToTemplate(),
     xToXArrAll(),

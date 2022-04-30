@@ -1,32 +1,35 @@
-import type { MiscCadSettings } from "@snailycad/types";
+import type { DiscordWebhookType } from "@prisma/client";
 import {
   type RESTGetAPIWebhookResult,
   type RESTPostAPIWebhookWithTokenJSONBody,
   Routes,
 } from "discord-api-types/v10";
 import { getRest } from "lib/discord/config";
+import { prisma } from "lib/prisma";
 
 export async function sendDiscordWebhook(
-  miscCadSettings: MiscCadSettings | null,
-  type: keyof Pick<
-    MiscCadSettings,
-    "call911WebhookId" | "statusesWebhookId" | "boloWebhookId" | "panicButtonWebhookId"
-  >,
+  type: DiscordWebhookType,
   data: Partial<RESTPostAPIWebhookWithTokenJSONBody>,
 ) {
-  const id = miscCadSettings?.[type];
-  if (!id) return;
+  const webhook = await prisma.discordWebhook.findUnique({
+    where: { type },
+  });
+
+  if (!webhook || !webhook.webhookId) return;
 
   const rest = getRest();
 
   const webhookData = (await rest
-    .get(Routes.webhook(id))
+    .get(Routes.webhook(webhook.webhookId))
     .catch(() => null)) as RESTGetAPIWebhookResult | null;
 
   if (!webhookData) return;
-  data;
 
+  const normalizedData: Partial<RESTPostAPIWebhookWithTokenJSONBody> = {
+    ...data,
+    content: webhook.extraMessage ?? undefined,
+  };
   await rest.post(Routes.webhook(webhookData.id, webhookData.token), {
-    body: data,
+    body: normalizedData,
   });
 }

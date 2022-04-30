@@ -30,7 +30,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   steamApiKey: user?.rank === Rank.OWNER,
   apiTokenId: user?.rank === Rank.OWNER,
   apiToken: user?.rank === Rank.OWNER,
-  miscCadSettings: true,
+  miscCadSettings: user?.rank === Rank.OWNER ? { include: { webhooks: true } } : true,
   miscCadSettingsId: true,
   logoId: true,
   discordRolesId: true,

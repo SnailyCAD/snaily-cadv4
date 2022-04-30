@@ -53,11 +53,20 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   taxiRolePermissions: z.array(z.string()).nullable().optional(),
 });
 
+/** discord webhooks */
+const DISCORD_WEBHOOK_TYPE = /CALL_911|BOLO|UNIT_STATUS|PANIC_BUTTON/;
+
+export const DISCORD_WEBHOOK = z.object({
+  id: z.string().max(255).nullable().optional(),
+  extraMessage: z.string().nullable().optional(),
+  type: z.string().regex(DISCORD_WEBHOOK_TYPE),
+});
+
 export const DISCORD_WEBHOOKS_SCHEMA = z.object({
-  call911WebhookId: z.string().nullable().optional(),
-  statusesWebhookId: z.string().nullable().optional(),
-  panicButtonWebhookId: z.string().nullable().optional(),
-  boloWebhookId: z.string().nullable().optional(),
+  call911Webhook: DISCORD_WEBHOOK,
+  statusesWebhook: DISCORD_WEBHOOK,
+  panicButtonWebhook: DISCORD_WEBHOOK,
+  boloWebhook: DISCORD_WEBHOOK,
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({
