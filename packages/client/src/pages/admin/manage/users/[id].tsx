@@ -30,6 +30,7 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
 import { Infofield } from "components/shared/Infofield";
+import { Table } from "components/shared/Table";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -258,6 +259,23 @@ export default function ManageCitizens(props: Props) {
               <Infofield label="Created At">
                 <FullDate>{user.apiToken.createdAt}</FullDate>
               </Infofield>
+
+              {!user.apiToken.logs?.length ? null : (
+                <Table
+                  data={user.apiToken.logs.map((log) => ({
+                    route: (
+                      <span className="font-mono">
+                        <span className="font-semibold">{log.method}</span> {log.route}
+                      </span>
+                    ),
+                    createdAt: <FullDate>{log.createdAt}</FullDate>,
+                  }))}
+                  columns={[
+                    { Header: "Route", accessor: "route" },
+                    { Header: "Created At", accessor: "createdAt" },
+                  ]}
+                />
+              )}
             </div>
           ) : (
             <p className="text-gray-400 mt-2">User has no API Token set.</p>

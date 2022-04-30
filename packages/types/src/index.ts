@@ -100,6 +100,20 @@ export interface ApiToken {
   createdAt: Date;
   updatedAt: Date;
   uses: number | null;
+  logs?: ApiTokenLog[];
+}
+
+/**
+ * Model ApiTokenLog
+ *
+ */
+export interface ApiTokenLog {
+  id: string;
+  statusCode: string | null;
+  route: string | null;
+  method: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**

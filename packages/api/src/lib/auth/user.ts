@@ -129,12 +129,13 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
     throw new NotFound("whitelistDeclined");
   }
 
-  console.log({ apiTokenUsedId: apiTokenUsed });
-
   if (apiTokenUsed) {
     await prisma.apiToken.update({
       where: { id: apiTokenUsed.id },
-      data: { uses: (apiTokenUsed.uses ?? 0) + 1 },
+      data: {
+        uses: (apiTokenUsed.uses ?? 0) + 1,
+        logs: { create: { method: req.method, route: req.originalUrl } },
+      },
     });
   }
 
