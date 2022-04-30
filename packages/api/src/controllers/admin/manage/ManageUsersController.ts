@@ -65,6 +65,7 @@ export class ManageUsersController {
       select: {
         ...userProperties,
         ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+        apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
       },
     });
 

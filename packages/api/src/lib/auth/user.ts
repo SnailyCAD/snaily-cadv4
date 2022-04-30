@@ -61,6 +61,7 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
   }
 
   let user;
+  let apiTokenUsed;
   if (userApiTokenHeader && isUserAPITokensEnabled) {
     const token = await prisma.apiToken.findFirst({
       where: { token: userApiTokenHeader },
@@ -70,6 +71,7 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
       throw new Forbidden("invalid user API token");
     }
 
+    apiTokenUsed = token;
     user = await prisma.user.findFirst({
       where: { apiToken: { token: userApiTokenHeader } },
       select: userProperties,
@@ -125,6 +127,16 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
 
   if (throwErrors && user?.whitelistStatus === WhitelistStatus.DECLINED) {
     throw new NotFound("whitelistDeclined");
+  }
+
+  if (apiTokenUsed) {
+    await prisma.apiToken.update({
+      where: { id: apiTokenUsed.id },
+      data: {
+        uses: (apiTokenUsed.uses ?? 0) + 1,
+        logs: { create: { method: req.method, route: req.originalUrl } },
+      },
+    });
   }
 
   const { tempPassword, ...rest } = user ?? {};

@@ -98,8 +98,24 @@ model ApiToken {
   // empty = *
   routes  String[]
 
+  uses      Int?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now()) @updatedAt
+  logs      ApiTokenLog[]
+
   cad  cad[]
   User User[]
+}
+
+model ApiTokenLog {
+  id         String   @id @default(uuid())
+  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id])
+  apiTokenId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  statusCode String?
+  route      String?
+  method     String?
 }
 
 model DiscordRoles {
