@@ -28,7 +28,7 @@ const ManageCallModal = dynamic(
   async () => (await import("components/citizen/tow/ManageTowCall")).ManageCallModal,
 );
 const Manage911CallModal = dynamic(
-  async () => (await import("components/modals/Manage911CallModal")).Manage911CallModal,
+  async () => (await import("components/dispatch/modals/Manage911CallModal")).Manage911CallModal,
 );
 
 interface Props {

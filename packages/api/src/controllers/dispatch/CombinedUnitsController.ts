@@ -7,6 +7,7 @@ import { ShouldDoType } from "@prisma/client";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { combinedUnitProperties } from "lib/leo/activeOfficer";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -74,7 +75,7 @@ export class CombinedUnitsController {
     });
 
     const data = await Promise.all(
-      ids.map(async ({ id: officerId }) => {
+      ids.map(async ({ id: officerId }, idx) => {
         await prisma.officer.update({
           where: { id: officerId },
           data: { statusId: null },
@@ -87,6 +88,7 @@ export class CombinedUnitsController {
           data: {
             officers: { connect: { id: officerId } },
           },
+          include: idx === ids.length - 1 ? combinedUnitProperties : undefined,
         });
       }),
     );

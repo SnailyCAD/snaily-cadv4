@@ -23,7 +23,7 @@ export function TableRow<T extends object, RP extends object>({
 
   const hasStyle = !!rowProps?.style;
   const bgColor = hasStyle
-    ? ""
+    ? null
     : rowProps?.className?.includes("bg")
     ? rowProps.className
     : stickyBgColor;
