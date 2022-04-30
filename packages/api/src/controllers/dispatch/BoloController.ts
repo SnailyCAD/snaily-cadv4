@@ -10,7 +10,7 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { Bolo, BoloType, cad, MiscCadSettings } from "@prisma/client";
+import { Bolo, BoloType, cad, DiscordWebhookType, MiscCadSettings } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
@@ -72,7 +72,7 @@ export class BoloController {
     if (cad.miscCadSettings?.boloWebhookId) {
       try {
         const embed = createBoloEmbed(bolo);
-        await sendDiscordWebhook(cad.miscCadSettings, "boloWebhookId", embed);
+        await sendDiscordWebhook(DiscordWebhookType.BOLO, embed);
       } catch (error) {
         console.error("[cad_bolo]: Could not send Discord webhook.", error);
       }

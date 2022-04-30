@@ -9,7 +9,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import type { User, MiscCadSettings, Call911 } from "@prisma/client";
+import { User, MiscCadSettings, Call911, DiscordWebhookType } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -139,7 +139,7 @@ export class Calls911Controller {
 
     try {
       const data = this.createWebhookData(normalizedCall);
-      await sendDiscordWebhook(cad.miscCadSettings, "call911WebhookId", data);
+      await sendDiscordWebhook(DiscordWebhookType.CALL_911, data);
     } catch (error) {
       console.error("Could not send Discord webhook.", error);
     }
