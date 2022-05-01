@@ -114,7 +114,7 @@ export class RecordsController {
         postal: String(data.postal),
       },
       include: {
-        violations: true,
+        officer: { include: leoProperties },
       },
     });
 
@@ -150,6 +150,9 @@ export class RecordsController {
                 id: ticket.id,
               },
             },
+          },
+          include: {
+            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
           },
         });
 
@@ -230,7 +233,9 @@ export class RecordsController {
             },
             records: { connect: { id: updated.id } },
           },
-          include: { penalCode: true },
+          include: {
+            penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
+          },
         });
       }),
     );
