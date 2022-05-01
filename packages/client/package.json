@@ -73,7 +73,7 @@
   "devDependencies": {
     "@types/leaflet": "^1.7.9",
     "@types/react": "^17.0.43",
-    "@types/react-dom": "^17.0.14",
+    "@types/react-dom": "^18.0.3",
     "@types/react-table": "^7.7.11",
     "@types/sortablejs": "^1.10.7",
     "@types/uuid": "^8.3.4",
