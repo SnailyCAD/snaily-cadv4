@@ -93,7 +93,7 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
                 value={values.bloodGroup}
               />
 
-              {bloodGroupId !== values.bloodGroup ? (
+              {bloodGroupId && bloodGroupId !== values.bloodGroup ? (
                 <small className="mt-2 text-base">{t("info_bloodgroup")}</small>
               ) : null}
             </FormField>
