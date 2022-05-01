@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
+import { CALL_911_SCHEMA, LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -99,7 +99,7 @@ export class Calls911Controller {
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
     @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
   ) {
-    const data = validateSchema(CREATE_911_CALL, body);
+    const data = validateSchema(CALL_911_SCHEMA, body);
     const isFromDispatch = isFromDispatchHeader === "true" && user.isDispatch;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
@@ -160,7 +160,7 @@ export class Calls911Controller {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_911_CALL, body);
+    const data = validateSchema(CALL_911_SCHEMA, body);
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const call = await prisma.call911.findUnique({
@@ -304,7 +304,7 @@ export class Calls911Controller {
     permissions: [Permissions.ManageCallHistory],
   })
   async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
-    const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
+    const data = validateSchema(LINK_INCIDENT_TO_CALL_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },

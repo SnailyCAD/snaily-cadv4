@@ -19,7 +19,7 @@ import { makeUnitName } from "lib/utils";
 import { Call911Event, EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
-import { CREATE_911_CALL } from "@snailycad/schemas";
+import { CALL_911_SCHEMA } from "@snailycad/schemas";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { useValues } from "context/ValuesContext";
 import { isUnitCombined } from "@snailycad/utils";
@@ -200,7 +200,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
     }
   }
 
-  const validate = handleValidate(CREATE_911_CALL);
+  const validate = handleValidate(CALL_911_SCHEMA);
   const INITIAL_VALUES = {
     name: call?.name ?? "",
     location: call?.location ?? "",
