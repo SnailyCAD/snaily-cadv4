@@ -39,6 +39,11 @@ export class MedicalRecordsController {
       },
     });
 
+    await prisma.medicalRecord.updateMany({
+      where: { citizenId: citizen.id },
+      data: { bloodGroupId: data.bloodGroup || undefined },
+    });
+
     return medicalRecord;
   }
 
@@ -71,6 +76,11 @@ export class MedicalRecordsController {
       include: {
         bloodGroup: true,
       },
+    });
+
+    await prisma.medicalRecord.updateMany({
+      where: { citizenId: record.citizenId },
+      data: { bloodGroupId: data.bloodGroup || undefined },
     });
 
     return updated;

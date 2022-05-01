@@ -59,10 +59,12 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
   }
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
+  const bloodGroupId = citizen.medicalRecords.find((v) => v.bloodGroupId)?.bloodGroupId;
+
   const INITIAL_VALUES = {
     type: medicalRecord?.type ?? "",
     description: medicalRecord?.description ?? "",
-    bloodGroup: medicalRecord?.bloodGroupId ?? "",
+    bloodGroup: bloodGroupId ?? "",
     citizenId: citizen.id,
   };
 
@@ -90,6 +92,10 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
                 name="bloodGroup"
                 value={values.bloodGroup}
               />
+
+              {bloodGroupId !== values.bloodGroup ? (
+                <small className="mt-2 text-base">{t("info_bloodgroup")}</small>
+              ) : null}
             </FormField>
 
             <FormField errorMessage={errors.description} label={common("description")}>
