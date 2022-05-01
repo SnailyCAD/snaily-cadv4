@@ -115,7 +115,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   return { execute, state };
 }
 
-function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {}) {
+function parseError(error: AxiosError<any>): ErrorMessage | "unknown" | (string & {}) {
   const message = error.response?.data?.message ?? error.message;
   const name = error.name;
 
@@ -126,11 +126,11 @@ function parseError(error: AxiosError): ErrorMessage | "unknown" | (string & {})
   return message ?? "unknown";
 }
 
-function parseErrors(error: AxiosError): Record<string, ErrorMessage | ErrorObj>[] {
+function parseErrors(error: AxiosError<any>): Record<string, ErrorMessage | ErrorObj>[] {
   return error.response?.data?.errors ?? [];
 }
 
-function parseErrorTitle(error: AxiosError) {
+function parseErrorTitle(error: AxiosError<any>) {
   const name = (error.response?.data?.name ?? error.message) as string | undefined;
   if (!name) return;
 
