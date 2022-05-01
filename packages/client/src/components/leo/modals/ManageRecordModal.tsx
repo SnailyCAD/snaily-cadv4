@@ -28,9 +28,10 @@ interface Props {
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
   isEdit?: boolean;
   onUpdate?(data: Record): void;
+  onCreate?(data: Record): void;
 }
 
-export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props) {
+export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id }: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -108,6 +109,7 @@ export function ManageRecordModal({ onUpdate, record, type, isEdit, id }: Props)
           icon: "success",
         });
 
+        onCreate?.(json);
         closeModal(data[type].id);
       }
     }

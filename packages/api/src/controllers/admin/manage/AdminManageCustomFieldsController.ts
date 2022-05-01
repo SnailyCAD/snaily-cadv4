@@ -13,10 +13,6 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 @UseBeforeEach(IsAuth)
 export class AdminManageCustomFieldsController {
   @Get("/")
-  @UsePermissions({
-    fallback: (u) => u.rank !== Rank.USER,
-    permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
-  })
   async getCustomFields() {
     const fields = await prisma.customField.findMany();
     return fields;
