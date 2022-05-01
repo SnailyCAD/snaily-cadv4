@@ -10,7 +10,7 @@ export type RequestData = Record<string, unknown>;
 interface Options extends Omit<AxiosRequestConfig, "headers"> {
   headers?: any;
   req?: IncomingMessage & { cookies?: NextApiRequestCookies };
-  method?: Method;
+  method?: Method | string;
   data?: RequestData;
   isSsr?: boolean;
 }

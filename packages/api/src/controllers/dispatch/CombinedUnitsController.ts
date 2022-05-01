@@ -7,6 +7,7 @@ import { ShouldDoType } from "@prisma/client";
 import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { combinedUnitProperties } from "lib/leo/activeOfficer";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -24,7 +25,7 @@ export class CombinedUnitsController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async mergeOfficers(@BodyParams() ids: { entry?: boolean; id: string }[]) {
+  async mergeOfficers(@BodyParams() ids: { entry: boolean; id: string }[]) {
     const officers = await prisma.$transaction(
       ids.map((officer) => {
         return prisma.officer.findFirst({
@@ -68,12 +69,13 @@ export class CombinedUnitsController {
         statusId: status?.id ?? null,
         callsign: entryOfficer.callsign,
         callsign2: entryOfficer.callsign2,
+        departmentId: entryOfficer.departmentId,
         incremental: nextInt,
       },
     });
 
     const data = await Promise.all(
-      ids.map(async ({ id: officerId }) => {
+      ids.map(async ({ id: officerId }, idx) => {
         await prisma.officer.update({
           where: { id: officerId },
           data: { statusId: null },
@@ -86,12 +88,13 @@ export class CombinedUnitsController {
           data: {
             officers: { connect: { id: officerId } },
           },
+          include: idx === ids.length - 1 ? combinedUnitProperties : undefined,
         });
       }),
     );
 
     const last = data[data.length - 1];
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
 
     return last;
   }
@@ -133,7 +136,7 @@ export class CombinedUnitsController {
       where: { id: unitId },
     });
 
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
   }
 
   /**

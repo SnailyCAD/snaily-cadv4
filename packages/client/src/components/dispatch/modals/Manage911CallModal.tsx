@@ -13,7 +13,7 @@ import { Full911Call, useDispatchState } from "state/dispatchState";
 import { useRouter } from "next/router";
 import { Select, SelectValue } from "components/form/Select";
 import { AlertModal } from "components/modal/AlertModal";
-import { CallEventsArea } from "./911Call/EventsArea";
+import { CallEventsArea } from "../911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { Call911Event, EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";

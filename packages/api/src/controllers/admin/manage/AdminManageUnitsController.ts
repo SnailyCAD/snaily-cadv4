@@ -120,8 +120,8 @@ export class AdminManageUnitsController {
       }),
     );
 
-    this.socket.emitUpdateDeputyStatus();
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateDeputyStatus();
+    await this.socket.emitUpdateOfficerStatus();
 
     return updated;
   }

@@ -781,6 +781,8 @@ export interface CombinedLeoUnit {
   callsign2: string;
   statusId: string | null;
   status: StatusValue | null;
+  department: DepartmentValue | null;
+  departmentId: string | null;
   radioChannelId: string | null;
   incremental: number | null;
   officers: Officer[];

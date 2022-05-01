@@ -23,7 +23,7 @@ import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
 import { AlertModal } from "components/modal/AlertModal";
 import { useTableSelect } from "hooks/shared/useTableSelect";
-import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 

@@ -106,7 +106,7 @@ export class IncidentController {
 
     if (updated.isActive) {
       this.socket.emitCreateActiveIncident(corrected);
-      this.socket.emitUpdateOfficerStatus();
+      await this.socket.emitUpdateOfficerStatus();
     }
 
     return corrected;
@@ -184,7 +184,7 @@ export class IncidentController {
     const corrected = officerOrDeputyToUnit(updated);
 
     this.socket.emitUpdateActiveIncident(corrected);
-    this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateOfficerStatus();
 
     return corrected;
   }

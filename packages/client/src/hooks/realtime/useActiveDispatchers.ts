@@ -4,9 +4,13 @@ import { SocketEvents } from "@snailycad/config";
 import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useRouter } from "next/router";
 
 let ran = false;
 export function useActiveDispatchers() {
+  const router = useRouter();
+  const isCitizen = router.pathname.includes("/citizen");
+
   const { state, execute } = useFetch();
   const dispatchState = useDispatchState((s) => ({
     setActiveDispatchers: s.setActiveDispatchers,
@@ -26,11 +30,11 @@ export function useActiveDispatchers() {
   }, []);
 
   React.useEffect(() => {
-    if (!ran) {
+    if (!ran && !isCitizen) {
       getActiveDispatchers();
       ran = true;
     }
-  }, [getActiveDispatchers]);
+  }, [isCitizen, getActiveDispatchers]);
 
   useListener({ eventName: SocketEvents.UpdateDispatchersState, checkHasListeners: true }, () => {
     getActiveDispatchers();

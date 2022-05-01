@@ -5,6 +5,8 @@ import useFetch from "lib/useFetch";
 import { useDispatchState } from "state/dispatchState";
 import { useAuth } from "context/AuthContext";
 import { useLeoState } from "state/leoState";
+import type { CombinedLeoUnit, Officer } from "@snailycad/types";
+import { isUnitOfficer } from "@snailycad/utils";
 
 let ran = false;
 export function useActiveOfficers() {
@@ -13,21 +15,36 @@ export function useActiveOfficers() {
   const { state, execute } = useFetch();
   const { setActiveOfficer } = useLeoState();
 
+  const handleState = React.useCallback(
+    (data: (Officer | CombinedLeoUnit)[]) => {
+      setActiveOfficers(data);
+
+      const activeOfficer = data.find((v) => {
+        if (isUnitOfficer(v)) {
+          return v.userId === user?.id;
+        }
+
+        return v.officers.some((v) => v.userId === user?.id);
+      });
+
+      if (activeOfficer) {
+        setActiveOfficer(activeOfficer);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user?.id],
+  );
+
   const getActiveOfficers = React.useCallback(async () => {
     const { json } = await execute("/leo/active-officers", {
       noToast: true,
     });
 
     if (json && Array.isArray(json)) {
-      setActiveOfficers(json);
-
-      const activeOfficer = json.find((v) => v.userId === user?.id);
-      if (activeOfficer) {
-        setActiveOfficer(activeOfficer);
-      }
+      handleState(json);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, handleState]);
 
   React.useEffect(() => {
     if (!ran) {
@@ -36,7 +53,12 @@ export function useActiveOfficers() {
     }
   }, [getActiveOfficers]);
 
-  useListener(SocketEvents.UpdateOfficerStatus, () => {
+  useListener(SocketEvents.UpdateOfficerStatus, (data: (Officer | CombinedLeoUnit)[] | null) => {
+    if (data && Array.isArray(data)) {
+      handleState(data);
+      return;
+    }
+
     getActiveOfficers();
   });
 

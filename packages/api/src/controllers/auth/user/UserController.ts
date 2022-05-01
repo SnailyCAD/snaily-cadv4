@@ -121,7 +121,7 @@ export class AccountController {
         userId,
       });
 
-      this.socket.emitUpdateOfficerStatus();
+      await this.socket.emitUpdateOfficerStatus();
     }
 
     await prisma.emsFdDeputy.updateMany({
@@ -129,7 +129,7 @@ export class AccountController {
       data: { statusId: null },
     });
 
-    this.socket.emitUpdateDeputyStatus();
+    await this.socket.emitUpdateDeputyStatus();
 
     setCookie({
       res,
