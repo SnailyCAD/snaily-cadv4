@@ -40,7 +40,7 @@
     "formik": "^2.2.9",
     "hex-color-regex": "^1.1.0",
     "is-hotkey": "^0.2.0",
-    "leaflet": "^1.7.1",
+    "leaflet": "^1.8.0",
     "next": "^12.1.5",
     "next-intl": "2.7.1",
     "nookies": "^2.5.2",
