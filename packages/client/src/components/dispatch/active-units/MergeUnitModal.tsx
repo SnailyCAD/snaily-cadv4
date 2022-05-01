@@ -76,7 +76,7 @@ export function MergeUnitModal({ unit, isDispatch, onClose }: Props) {
   const INITIAL_VALUES = {
     ids:
       activeOfficer && isUnitOfficer(activeOfficer) && !isDispatch
-        ? [makeValuesOption(unit, true), makeValuesOption(activeOfficer, true)]
+        ? [makeValuesOption(activeOfficer, true), makeValuesOption(unit, true)]
         : [makeValuesOption(unit, true)],
   };
 
