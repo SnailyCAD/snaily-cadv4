@@ -9,7 +9,7 @@
     "MANAGE_EXPUNGEMENT_REQUESTS": "Запросы на удаление",
     "MANAGE_NAME_CHANGE_REQUESTS": "Управление запросами на изменение имени",
     "MANAGE_CAD_SETTINGS": "CAD",
-    "MANAGE_CUSTOM_FIELDS": "Управление пользовательскими полями",
+    "MANAGE_CUSTOM_FIELDS": "Пользовательские поля",
     "import": "Импорт",
     "IMPORT_CITIZENS": "Импорт граждан",
     "IMPORT_VEHICLES": "Импорт транспорта",
