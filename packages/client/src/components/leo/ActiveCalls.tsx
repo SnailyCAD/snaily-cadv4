@@ -2,7 +2,7 @@ import * as React from "react";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { Button } from "components/Button";
-import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";

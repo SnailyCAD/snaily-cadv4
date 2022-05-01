@@ -26,7 +26,7 @@ interface Props {
 }
 
 const NotepadModal = dynamic(async () => {
-  return (await import("components/modals/NotepadModal")).NotepadModal;
+  return (await import("components/shared/NotepadModal")).NotepadModal;
 });
 
 const SelectDeputyModal = dynamic(async () => {

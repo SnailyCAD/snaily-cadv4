@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import type { Call911 } from "@snailycad/types";
-import { Manage911CallModal } from "components/modals/Manage911CallModal";
+import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useListener } from "@casper124578/use-socket.io";
 import { SocketEvents } from "@snailycad/config";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";

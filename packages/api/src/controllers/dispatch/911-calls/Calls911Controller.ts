@@ -28,6 +28,7 @@ export const assignedUnitsInclude = {
     combinedUnit: {
       include: {
         status: { include: { value: true } },
+        department: { include: { value: true } },
         officers: {
           include: _leoProperties,
         },

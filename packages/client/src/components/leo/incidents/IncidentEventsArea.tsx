@@ -3,8 +3,8 @@ import type { IncidentEvent, LeoIncident } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import compareDesc from "date-fns/compareDesc";
-import { EventItem } from "components/modals/events/EventItem";
-import { UpdateEventForm } from "components/modals/events/UpdateEventForm";
+import { UpdateEventForm } from "components/dispatch/events/UpdateEventForm";
+import { EventItem } from "components/dispatch/events/EventItem";
 import type { FormikHelpers } from "formik";
 import { classNames } from "lib/classNames";
 
