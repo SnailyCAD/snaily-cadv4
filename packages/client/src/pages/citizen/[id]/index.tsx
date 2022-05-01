@@ -147,7 +147,7 @@ export default function CitizenId() {
 
       <div className="grid grid-cols-1 gap-2 mt-3 gap-y-3 md:grid-cols-2">
         <LicensesCard />
-        <MedicalRecords medicalRecords={citizen.medicalRecords} />
+        <MedicalRecords />
       </div>
 
       <div className="mt-3 space-y-3">
