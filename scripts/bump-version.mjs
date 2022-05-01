@@ -7,7 +7,7 @@ const { format } = prettier;
 
 const PACKAGES_PATH = join(process.cwd(), "packages");
 
-const packages = readdirSync(PACKAGES_PATH);
+const packages = readdirSync(PACKAGES_PATH).filter((v) => !v.endsWith(".md"));
 const utilPackages = packages.filter((v) => !["client", "api"].includes(v));
 
 const version = await askNewVersion();
