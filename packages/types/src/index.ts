@@ -646,6 +646,7 @@ export interface Officer {
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
+  activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
 }

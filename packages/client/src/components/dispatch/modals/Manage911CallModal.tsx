@@ -32,11 +32,12 @@ import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {
   call: Full911Call | null;
+  forceOpen?: boolean;
   setCall?: React.Dispatch<React.SetStateAction<Full911Call | null>>;
   onClose?(): void;
 }
 
-export function Manage911CallModal({ setCall, call, onClose }: Props) {
+export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props) {
   const { isOpen, closeModal, openModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
@@ -229,7 +230,7 @@ export function Manage911CallModal({ setCall, call, onClose }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen(ModalIds.Manage911Call)}
+      isOpen={forceOpen ?? isOpen(ModalIds.Manage911Call)}
       onClose={handleClose}
       title={call ? t("manage911Call") : t("create911Call")}
       className={call ? "w-[1200px]" : "w-[650px]"}

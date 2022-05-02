@@ -24,12 +24,15 @@ import { MergeUnitModal } from "./active-units/MergeUnitModal";
 import { OfficerColumn } from "./active-units/officers/OfficerColumn";
 import { isUnitOfficer } from "@snailycad/utils/typeguards";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
+import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { HoverCard } from "components/shared/HoverCard";
+import { useDispatchState } from "state/dispatchState";
 
 export function ActiveOfficers() {
   const { activeOfficers } = useActiveOfficers();
   const { activeIncidents } = useActiveIncidents();
+  const { calls } = useDispatchState();
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -90,8 +93,11 @@ export function ActiveOfficers() {
               .map((officer) => {
                 const color = officer.status?.color;
                 const activeIncidentId = isUnitOfficer(officer) ? officer.activeIncidentId : null;
+                const activeCallId = isUnitOfficer(officer) ? officer.activeCallId : null;
+
                 const activeIncident =
                   activeIncidents.find((v) => v.id === activeIncidentId) ?? null;
+                const activeCall = calls.find((v) => v.id === activeCallId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;
@@ -133,6 +139,7 @@ export function ActiveOfficers() {
                     </span>
                   ),
                   incident: <ActiveIncidentColumn incident={activeIncident} />,
+                  activeCall: <ActiveCallColumn call={activeCall} />,
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <Button
@@ -154,6 +161,7 @@ export function ActiveOfficers() {
               { Header: t("rank"), accessor: "rank" },
               { Header: t("status"), accessor: "status" },
               ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
+              { Header: "activeCall", accessor: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT
                 ? { Header: t("radioChannel"), accessor: "radioChannel" }
                 : null,

@@ -181,9 +181,16 @@ export class Calls911Controller {
     // reset assignedUnits. find a better way to do this?
     await Promise.all(
       call.assignedUnits.map(async ({ id }) => {
-        await prisma.assignedUnit.delete({
+        const unit = await prisma.assignedUnit.delete({
           where: { id },
         });
+
+        if (unit.officerId) {
+          await prisma.officer.update({
+            where: { id: unit.officerId },
+            data: { activeCallId: null },
+          });
+        }
       }),
     );
 
@@ -395,6 +402,15 @@ export class Calls911Controller {
       await prisma.assignedUnit.delete({
         where: { id: existing.id },
       });
+    }
+
+    if (type === "leo") {
+      await prisma.officer.update({
+        where: { id: unit.id },
+        data: { activeCallId: callType === "assign" ? callId : null },
+      });
+
+      await this.socket.emitUpdateOfficerStatus();
     }
 
     const updated = await prisma.call911.findUnique({

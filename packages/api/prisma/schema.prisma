@@ -715,6 +715,8 @@ model Officer {
   assignedUnit                AssignedUnit[]
   activeIncident              LeoIncident?           @relation("activeIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId            String?
+  activeCall                  Call911?               @relation("activeCall", fields: [activeCallId], references: [id])
+  activeCallId                String?
   LeoIncident                 LeoIncident[]
   LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
@@ -879,6 +881,7 @@ model Call911 {
   departments     DepartmentValue[]
   events          Call911Event[]
   incidents       LeoIncident[]
+  Officer         Officer[]         @relation("activeCall")
 }
 
 model Position {

@@ -59,6 +59,13 @@ export async function assignUnitsToCall({
           data: { statusId: status.id },
         });
 
+        if (type === "leo") {
+          await prisma.officer.update({
+            where: { id: unit.id },
+            data: { activeCallId: callId },
+          });
+        }
+
         await socket.emitUpdateOfficerStatus();
         await socket.emitUpdateDeputyStatus();
       }
