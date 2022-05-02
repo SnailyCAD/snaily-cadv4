@@ -59,13 +59,11 @@ export async function assignUnitsToCall({
         });
       }
 
-      if (type !== "combined") {
-        // @ts-expect-error they have the same properties for updating
-        await prisma[t].update({
-          where: { id: unit.id },
-          data: { activeCallId: callId },
-        });
-      }
+      // @ts-expect-error they have the same properties for updating
+      await prisma[t].update({
+        where: { id: unit.id },
+        data: { activeCallId: callId },
+      });
 
       if (socket) {
         await socket.emitUpdateOfficerStatus();

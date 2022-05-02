@@ -789,6 +789,7 @@ export interface CombinedLeoUnit {
   incremental: number | null;
   pairedUnitTemplate: string | null;
   officers: Officer[];
+  activeCallId: string | null;
 }
 
 /**

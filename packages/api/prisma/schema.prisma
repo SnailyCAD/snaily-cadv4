@@ -845,6 +845,8 @@ model CombinedLeoUnit {
   status               StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId             String?
   pairedUnitTemplate   String?
+  activeCall           Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
   AssignedUnit         AssignedUnit[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
@@ -883,6 +885,7 @@ model Call911 {
   incidents       LeoIncident[]
   Officer         Officer[]         @relation("activeCall")
   EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
+  CombinedLeoUnit CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
 }
 
 model Position {

@@ -93,11 +93,10 @@ export function ActiveOfficers() {
               .map((officer) => {
                 const color = officer.status?.color;
                 const activeIncidentId = isUnitOfficer(officer) ? officer.activeIncidentId : null;
-                const activeCallId = isUnitOfficer(officer) ? officer.activeCallId : null;
 
                 const activeIncident =
                   activeIncidents.find((v) => v.id === activeIncidentId) ?? null;
-                const activeCall = calls.find((v) => v.id === activeCallId) ?? null;
+                const activeCall = calls.find((v) => v.id === officer.activeCallId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
                 const nameAndCallsign = `${generateCallsign(officer)} ${makeUnitName(officer)}`;

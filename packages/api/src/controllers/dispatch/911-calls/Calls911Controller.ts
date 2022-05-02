@@ -198,6 +198,13 @@ export class Calls911Controller {
             data: { activeCallId: null },
           });
         }
+
+        if (unit.combinedLeoId) {
+          await prisma.combinedLeoUnit.update({
+            where: { id: unit.combinedLeoId },
+            data: { activeCallId: null },
+          });
+        }
       }),
     );
 
@@ -415,23 +422,22 @@ export class Calls911Controller {
       });
     }
 
-    if (type !== "combined") {
-      const prismaNames = {
-        leo: "officer",
-        "ems-fd": "emsFdDeputy",
-      };
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+      combined: "combinedLeoUnit",
+    };
 
-      // @ts-expect-error they have the same properties for updating
-      await prisma[prismaNames[type]].update({
-        where: { id: unit.id },
-        data: { activeCallId: callType === "assign" ? callId : null },
-      });
+    // @ts-expect-error they have the same properties for updating
+    await prisma[prismaNames[type]].update({
+      where: { id: unit.id },
+      data: { activeCallId: callType === "assign" ? callId : null },
+    });
 
-      await Promise.all([
-        this.socket.emitUpdateOfficerStatus(),
-        this.socket.emitUpdateDeputyStatus(),
-      ]);
-    }
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     const updated = await prisma.call911.findUnique({
       where: {
