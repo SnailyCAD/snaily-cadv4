@@ -30,6 +30,12 @@ export const COMBINED_UNIT = {
   officers: [OFFICER],
 } as any;
 
+export const COMBINED_UNIT_WITH_TEMPLATE = {
+  ...COMBINED_UNIT,
+  incremental: 2,
+  pairedUnitTemplate: "TROJAN-{incremental}",
+} as any;
+
 const DEFAULT_TEMPLATE = "{department}{callsign1} - {callsign2}{division}";
 const PAIRED_UNIT_TEMPLATE = "1A-{callsign1}";
 
@@ -43,6 +49,12 @@ test(`should generate EMS/FD callsign template: ${DEFAULT_TEMPLATE}`, () => {
 
 test(`should generate paired unit callsign template: ${PAIRED_UNIT_TEMPLATE}`, () => {
   expect(generateCallsign(COMBINED_UNIT, PAIRED_UNIT_TEMPLATE)).toMatchInlineSnapshot('"1A-E"');
+});
+
+test(`should generate paired unit callsign template: ${COMBINED_UNIT_WITH_TEMPLATE.pairedUnitTemplate}`, () => {
+  expect(
+    generateCallsign(COMBINED_UNIT_WITH_TEMPLATE, COMBINED_UNIT_WITH_TEMPLATE.pairedUnitTemplate),
+  ).toMatchInlineSnapshot('"TROJAN-2"');
 });
 
 test(`should return "" if template === null`, () => {

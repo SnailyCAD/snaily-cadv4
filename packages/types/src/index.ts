@@ -429,6 +429,7 @@ export interface DivisionValue {
   departmentId: string;
   department: DepartmentValue;
   callsign: string | null;
+  pairedUnitTemplate: string | null;
 }
 
 /**
@@ -785,6 +786,7 @@ export interface CombinedLeoUnit {
   departmentId: string | null;
   radioChannelId: string | null;
   incremental: number | null;
+  pairedUnitTemplate: string | null;
   officers: Officer[];
 }
 

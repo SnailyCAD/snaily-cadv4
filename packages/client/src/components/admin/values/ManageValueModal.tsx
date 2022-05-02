@@ -169,6 +169,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
           }))
         : [],
 
+    pairedUnitTemplate: value && isDivisionValue(value) ? value.pairedUnitTemplate ?? "" : "",
     departmentId: value && isDivisionValue(value) ? value.departmentId : "",
     isConfidential: value && isDepartmentValue(value) ? value.isConfidential : false,
     whitelisted: value && isDepartmentValue(value) ? value.whitelisted : false,
@@ -238,9 +239,19 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === "LICENSE" ? <LicenseFields /> : null}
 
             {["DIVISION"].includes(type) ? (
-              <FormField optional label="Callsign Symbol">
-                <Input name="callsign" onChange={handleChange} value={values.callsign} />
-              </FormField>
+              <>
+                <FormField optional label="Callsign Symbol">
+                  <Input name="callsign" onChange={handleChange} value={values.callsign} />
+                </FormField>
+
+                <FormField optional label="Paired Unit Template">
+                  <Input
+                    name="pairedUnitTemplate"
+                    onChange={handleChange}
+                    value={values.pairedUnitTemplate}
+                  />
+                </FormField>
+              </>
             ) : null}
 
             {type === ValueType.DEPARTMENT ? <DepartmentFields /> : null}
