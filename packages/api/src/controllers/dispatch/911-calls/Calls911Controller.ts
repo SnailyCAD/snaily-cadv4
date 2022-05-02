@@ -181,9 +181,29 @@ export class Calls911Controller {
     // reset assignedUnits. find a better way to do this?
     await Promise.all(
       call.assignedUnits.map(async ({ id }) => {
-        await prisma.assignedUnit.delete({
+        const unit = await prisma.assignedUnit.delete({
           where: { id },
         });
+
+        const types = {
+          officerId: "officer",
+          emsFdDeputyId: "emsFdDeputy",
+          combinedLeoId: "combinedLeoUnit",
+        } as const;
+
+        for (const type in types) {
+          const key = type as keyof typeof types;
+          const unitId = unit[key];
+          const name = types[key];
+
+          if (unitId) {
+            // @ts-expect-error they have the same properties for updating
+            await prisma[name].update({
+              where: { id: unitId },
+              data: { activeCallId: null },
+            });
+          }
+        }
       }),
     );
 
@@ -226,9 +246,13 @@ export class Calls911Controller {
     await assignUnitsToCall({
       callId: call.id,
       maxAssignmentsToCalls,
-      socket: this.socket,
       unitIds,
     });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     await linkOrUnlinkCallDepartmentsAndDivisions({
       departments: (data.departments ?? []) as string[],
@@ -396,6 +420,23 @@ export class Calls911Controller {
         where: { id: existing.id },
       });
     }
+
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+      combined: "combinedLeoUnit",
+    };
+
+    // @ts-expect-error they have the same properties for updating
+    await prisma[prismaNames[type]].update({
+      where: { id: unit.id },
+      data: { activeCallId: callType === "assign" ? callId : null },
+    });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     const updated = await prisma.call911.findUnique({
       where: {

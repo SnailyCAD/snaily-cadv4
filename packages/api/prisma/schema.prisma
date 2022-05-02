@@ -715,6 +715,8 @@ model Officer {
   assignedUnit                AssignedUnit[]
   activeIncident              LeoIncident?           @relation("activeIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId            String?
+  activeCall                  Call911?               @relation("activeCall", fields: [activeCallId], references: [id])
+  activeCallId                String?
   LeoIncident                 LeoIncident[]
   LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
@@ -843,6 +845,8 @@ model CombinedLeoUnit {
   status               StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId             String?
   pairedUnitTemplate   String?
+  activeCall           Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
   AssignedUnit         AssignedUnit[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
@@ -879,6 +883,9 @@ model Call911 {
   departments     DepartmentValue[]
   events          Call911Event[]
   incidents       LeoIncident[]
+  Officer         Officer[]         @relation("activeCall")
+  EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
+  CombinedLeoUnit CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
 }
 
 model Position {
@@ -1046,6 +1053,8 @@ model EmsFdDeputy {
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @default(now()) @updatedAt
   radioChannelId       String?
+  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
   AssignedUnit         AssignedUnit[]
   qualifications       UnitQualification[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]

@@ -646,6 +646,7 @@ export interface Officer {
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
+  activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
 }
@@ -788,6 +789,7 @@ export interface CombinedLeoUnit {
   incremental: number | null;
   pairedUnitTemplate: string | null;
   officers: Officer[];
+  activeCallId: string | null;
 }
 
 /**
@@ -1016,6 +1018,7 @@ export interface EmsFdDeputy {
   updatedAt: Date;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
+  activeCallId: string | null;
 }
 
 /**

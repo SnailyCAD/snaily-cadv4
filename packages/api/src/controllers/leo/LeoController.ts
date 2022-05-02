@@ -514,8 +514,8 @@ export class LeoController {
   @Get("/qualifications/:unitId")
   @Description("Get a unit's awards and qualifications")
   @UsePermissions({
-    fallback: (u) => u.isLeo,
-    permissions: [Permissions.Leo],
+    fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
+    permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
   async getUnitQualifications(@PathParams("unitId") unitId: string) {
     const { type, unit } = await findUnit(unitId);

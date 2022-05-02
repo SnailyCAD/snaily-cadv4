@@ -8,7 +8,7 @@ interface Options {
   callId: string;
   unitIds: string[];
   maxAssignmentsToCalls: number;
-  socket: Socket;
+  socket?: Socket;
 }
 
 export async function assignUnitsToCall({
@@ -49,16 +49,23 @@ export async function assignUnitsToCall({
         where: { shouldDo: ShouldDoType.SET_ASSIGNED },
       });
 
-      if (status) {
-        const t =
-          type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
+      const t = type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
 
+      if (status) {
         // @ts-expect-error ignore
         await prisma[t].update({
           where: { id: unit.id },
           data: { statusId: status.id },
         });
+      }
 
+      // @ts-expect-error they have the same properties for updating
+      await prisma[t].update({
+        where: { id: unit.id },
+        data: { activeCallId: callId },
+      });
+
+      if (socket) {
         await socket.emitUpdateOfficerStatus();
         await socket.emitUpdateDeputyStatus();
       }
