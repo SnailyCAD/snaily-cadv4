@@ -157,16 +157,12 @@ export class StatusController {
       if (type === "leo") {
         await prisma.officer.updateMany({
           where: { userId: user.id },
-          data: {
-            statusId: null,
-          },
+          data: { activeCallId: null, statusId: null },
         });
       } else if (type === "ems-fd") {
         await prisma.emsFdDeputy.updateMany({
           where: { userId: user.id },
-          data: {
-            statusId: null,
-          },
+          data: { statusId: null, activeCallId: null },
         });
       }
     }
