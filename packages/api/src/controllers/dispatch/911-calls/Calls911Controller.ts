@@ -191,6 +191,13 @@ export class Calls911Controller {
             data: { activeCallId: null },
           });
         }
+
+        if (unit.emsFdDeputyId) {
+          await prisma.emsFdDeputy.update({
+            where: { id: unit.emsFdDeputyId },
+            data: { activeCallId: null },
+          });
+        }
       }),
     );
 
@@ -233,9 +240,13 @@ export class Calls911Controller {
     await assignUnitsToCall({
       callId: call.id,
       maxAssignmentsToCalls,
-      socket: this.socket,
       unitIds,
     });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     await linkOrUnlinkCallDepartmentsAndDivisions({
       departments: (data.departments ?? []) as string[],
@@ -404,13 +415,22 @@ export class Calls911Controller {
       });
     }
 
-    if (type === "leo") {
-      await prisma.officer.update({
+    if (type !== "combined") {
+      const prismaNames = {
+        leo: "officer",
+        "ems-fd": "emsFdDeputy",
+      };
+
+      // @ts-expect-error they have the same properties for updating
+      await prisma[prismaNames[type]].update({
         where: { id: unit.id },
         data: { activeCallId: callType === "assign" ? callId : null },
       });
 
-      await this.socket.emitUpdateOfficerStatus();
+      await Promise.all([
+        this.socket.emitUpdateOfficerStatus(),
+        this.socket.emitUpdateDeputyStatus(),
+      ]);
     }
 
     const updated = await prisma.call911.findUnique({

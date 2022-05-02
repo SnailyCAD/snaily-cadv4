@@ -27,6 +27,8 @@ import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
+import { useDispatchState } from "state/dispatchState";
+import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 
 export function ActiveDeputies() {
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
@@ -42,6 +44,7 @@ export function ActiveDeputies() {
   const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
+  const { calls } = useDispatchState();
 
   const router = useRouter();
   const isDispatch = router.pathname === "/dispatch";
@@ -91,6 +94,8 @@ export function ActiveDeputies() {
               .map((deputy) => {
                 const color = deputy.status?.color;
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
+
+                const activeCall = calls.find((v) => v.id === deputy.activeCallId) ?? null;
 
                 const codesMapped = codes10.values
                   .filter((v) => v.type === "STATUS_CODE")
@@ -155,6 +160,7 @@ export function ActiveDeputies() {
                     </span>
                   ),
                   radioChannel: <UnitRadioChannelModal unit={deputy} />,
+                  activeCall: <ActiveCallColumn call={activeCall} />,
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}
@@ -177,6 +183,7 @@ export function ActiveDeputies() {
               RADIO_CHANNEL_MANAGEMENT
                 ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
                 : null,
+              { Header: t("Leo.activeCall"), accessor: "activeCall" },
               isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
             ]}
           />

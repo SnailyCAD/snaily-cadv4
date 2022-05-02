@@ -882,6 +882,7 @@ model Call911 {
   events          Call911Event[]
   incidents       LeoIncident[]
   Officer         Officer[]         @relation("activeCall")
+  EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
 }
 
 model Position {
@@ -1049,6 +1050,8 @@ model EmsFdDeputy {
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @default(now()) @updatedAt
   radioChannelId       String?
+  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId         String?
   AssignedUnit         AssignedUnit[]
   qualifications       UnitQualification[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]

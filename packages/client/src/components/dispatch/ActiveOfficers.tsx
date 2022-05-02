@@ -161,7 +161,7 @@ export function ActiveOfficers() {
               { Header: t("rank"), accessor: "rank" },
               { Header: t("status"), accessor: "status" },
               ACTIVE_INCIDENTS ? { Header: t("incident"), accessor: "incident" } : null,
-              { Header: "activeCall", accessor: "activeCall" },
+              { Header: t("activeCall"), accessor: "activeCall" },
               RADIO_CHANNEL_MANAGEMENT
                 ? { Header: t("radioChannel"), accessor: "radioChannel" }
                 : null,

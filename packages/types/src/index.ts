@@ -1017,6 +1017,7 @@ export interface EmsFdDeputy {
   updatedAt: Date;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
+  activeCallId: string | null;
 }
 
 /**
