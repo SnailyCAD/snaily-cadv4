@@ -111,7 +111,7 @@ export class AccountController {
     if (officer) {
       await prisma.officer.update({
         where: { id: officer.id },
-        data: { statusId: null },
+        data: { statusId: null, activeCallId: null },
       });
 
       await handleStartEndOfficerLog({
@@ -126,7 +126,7 @@ export class AccountController {
 
     await prisma.emsFdDeputy.updateMany({
       where: { userId },
-      data: { statusId: null },
+      data: { statusId: null, activeCallId: null },
     });
 
     await this.socket.emitUpdateDeputyStatus();
