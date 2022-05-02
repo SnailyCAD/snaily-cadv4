@@ -185,25 +185,24 @@ export class Calls911Controller {
           where: { id },
         });
 
-        if (unit.officerId) {
-          await prisma.officer.update({
-            where: { id: unit.officerId },
-            data: { activeCallId: null },
-          });
-        }
+        const types = {
+          officerId: "officer",
+          emsFdDeputyId: "emsFdDeputy",
+          combinedLeoId: "combinedLeoUnit",
+        } as const;
 
-        if (unit.emsFdDeputyId) {
-          await prisma.emsFdDeputy.update({
-            where: { id: unit.emsFdDeputyId },
-            data: { activeCallId: null },
-          });
-        }
+        for (const type in types) {
+          const key = type as keyof typeof types;
+          const unitId = unit[key];
+          const name = types[key];
 
-        if (unit.combinedLeoId) {
-          await prisma.combinedLeoUnit.update({
-            where: { id: unit.combinedLeoId },
-            data: { activeCallId: null },
-          });
+          if (unitId) {
+            // @ts-expect-error they have the same properties for updating
+            await prisma[name].update({
+              where: { id: unitId },
+              data: { activeCallId: null },
+            });
+          }
         }
       }),
     );
