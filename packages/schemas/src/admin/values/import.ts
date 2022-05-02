@@ -75,6 +75,7 @@ export const DEPARTMENT_ARR = z.array(DEPARTMENT_SCHEMA).min(1);
 export const DIVISION_SCHEMA = BASE_VALUE_SCHEMA.extend({
   callsign: z.string().max(255).optional(),
   departmentId: z.string().min(2),
+  pairedUnitTemplate: z.string().nullable().optional(),
 });
 
 export const DIVISION_ARR = z.array(DIVISION_SCHEMA).min(1);

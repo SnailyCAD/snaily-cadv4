@@ -91,6 +91,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           callsign: v.callsign || common("none"),
+          pairedUnitTemplate: v.pairedUnitTemplate ?? common("none"),
           department: v.department.value.value,
         };
       }
@@ -172,6 +173,7 @@ export function useTableHeadersOfType(type: ValueType) {
       return [
         { Header: t("callsign"), accessor: "callsign" },
         { Header: t("department"), accessor: "department" },
+        { Header: t("pairedUnitTemplate"), accessor: "pairedUnitTemplate" },
       ];
     }
     case ValueType.VEHICLE:

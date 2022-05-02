@@ -502,6 +502,7 @@ model DivisionValue {
   officers                   Officer[]        @relation("officerDivisionToDivision")
   officerDivisionsToDivision Officer[]        @relation("officerDivisionsToDivision")
   deputies                   EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
+  pairedUnitTemplate         String?
   Call911                    Call911[]
 }
 
@@ -841,6 +842,7 @@ model CombinedLeoUnit {
   radioChannelId       String?
   status               StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
   statusId             String?
+  pairedUnitTemplate   String?
   AssignedUnit         AssignedUnit[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
 }
