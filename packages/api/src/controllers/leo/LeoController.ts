@@ -29,6 +29,7 @@ import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -114,6 +115,7 @@ export class LeoController {
       type: "leo",
     });
 
+    const incremental = await findNextAvailableIncremental({ type: "leo" });
     const officer = await prisma.officer.create({
       data: {
         callsign: data.callsign,
@@ -128,6 +130,7 @@ export class LeoController {
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         whitelistStatusId,
+        incremental,
       },
       include: leoProperties,
     });
@@ -234,6 +237,10 @@ export class LeoController {
           ? defaultDepartment.defaultOfficerRankId
           : department.defaultOfficerRankId) || undefined;
 
+    const incremental = officer.incremental
+      ? undefined
+      : await findNextAvailableIncremental({ type: "leo" });
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -247,6 +254,7 @@ export class LeoController {
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
         rankId: rank,
         whitelistStatusId,
+        incremental,
       },
       include: {
         ...leoProperties,

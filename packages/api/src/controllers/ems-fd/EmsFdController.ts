@@ -17,6 +17,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -86,6 +87,7 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
@@ -96,6 +98,7 @@ export class EmsFdController {
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
       },
       include: {
         ...unitProperties,
@@ -166,6 +169,10 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const incremental = deputy.incremental
+      ? undefined
+      : await findNextAvailableIncremental({ type: "ems-fd" });
+
     const updated = await prisma.emsFdDeputy.update({
       where: {
         id: deputy.id,
@@ -178,6 +185,7 @@ export class EmsFdController {
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
       },
       include: {
         ...unitProperties,

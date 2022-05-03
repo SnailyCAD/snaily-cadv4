@@ -687,6 +687,7 @@ model Officer {
   departmentId                String?
   callsign                    String                 @db.VarChar(255)
   callsign2                   String                 @db.VarChar(255)
+  incremental                 Int?
   // `division` is deprecated. Use `divisions` instead.
   division                    DivisionValue?         @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String?
@@ -1036,6 +1037,7 @@ model EmsFdDeputy {
   departmentId         String
   callsign             String                 @db.VarChar(255)
   callsign2            String                 @db.VarChar(255)
+  incremental          Int?
   division             DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
   divisionId           String
   position             String?                @db.Text

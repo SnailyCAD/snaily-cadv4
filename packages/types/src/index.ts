@@ -627,6 +627,7 @@ export interface Officer {
   department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
+  incremental: number | null;
   divisions: DivisionValue[];
   rankId: string | null;
   rank: Value<ValueType.OFFICER_RANK> | null;
@@ -1001,6 +1002,7 @@ export interface EmsFdDeputy {
   department: DepartmentValue;
   callsign: string;
   callsign2: string;
+  incremental: number | null;
   divisionId: string;
   division: DivisionValue;
   rankId: string | null;
