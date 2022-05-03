@@ -32,6 +32,11 @@ interface Props {
 export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
   const { hasPermissions } = usePermission();
+
+  const hasViewPermissions = hasPermissions(
+    [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
+    true,
+  );
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
   const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
 
@@ -42,24 +47,26 @@ export default function SupervisorPanelPage({ units }: Props) {
     (v) => v.type === "OFFICER" && v.whitelistStatus?.status === WhitelistStatus.PENDING,
   );
 
-  const TABS = [{ name: t("Management.allUnits"), value: "allUnits" }];
+  const TABS = [];
+
+  if (hasViewPermissions) {
+    TABS.push({ name: t("Management.allUnits"), value: "allUnits" });
+  }
 
   if (hasManageCallsignPermissions) {
-    TABS[1] = {
+    TABS.push({
       name: t("Management.callsignManagement"),
       value: "callsignManagement",
-    };
+    });
   }
 
   if (hasManagePermissions) {
-    const idx = hasManageCallsignPermissions ? 2 : 1;
-
-    TABS[idx] = {
+    TABS.push({
       name: t
         .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
         .toString(),
       value: "departmentWhitelisting",
-    };
+    });
   }
 
   const departmentFilters: [string, string][] = Object.entries(

@@ -38,7 +38,12 @@ export class AdminManageUnitsController {
   @Description("Get all the units in the CAD")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+    permissions: [
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageUnits,
+      Permissions.ManageUnitCallsigns,
+    ],
   })
   async getUnits() {
     const units = await Promise.all([
