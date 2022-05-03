@@ -9,7 +9,12 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
   // dispatch is allowed to use ems-fd routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {
-    if (!user.isDispatch) {
+    const hasDispatchPermissions =
+      hasPermission(user.permissions, [Permissions.Dispatch]) ||
+      user.isDispatch ||
+      user.rank === Rank.OWNER;
+
+    if (!hasDispatchPermissions) {
       throw new Unauthorized("Must be dispatch to use this header.");
     } else {
       isDispatch = true;

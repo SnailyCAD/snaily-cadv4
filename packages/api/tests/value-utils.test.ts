@@ -1,7 +1,11 @@
 /* eslint-disable quotes */
 import { BadRequest } from "@tsed/exceptions";
 import { expect, test } from "vitest";
-import { getPermissionsForValuesRequest, getTypeFromPath } from "../src/lib/values/utils";
+import {
+  getPermissionsForValuesRequest,
+  getTypeFromPath,
+  permissionsForRouteType,
+} from "../src/lib/values/utils";
 
 const testPath1 = "vehicle";
 const testPath2 = "vehicle_flag";
@@ -33,4 +37,15 @@ test(`Should return permissions for type ${testPath1}`, () => {
 test("Should throw error if no params provided", () => {
   const req = { params: { path: null } } as any;
   expect(() => getPermissionsForValuesRequest(req)).toThrow(BadRequest);
+});
+
+test("Should get correct permissions for type", () => {
+  const type = "BLOOD_GROUP";
+  const type2 = "VEHICLE";
+
+  expect(permissionsForRouteType[type]).toBeTypeOf("object");
+  expect(permissionsForRouteType[type2]).toBeTypeOf("object");
+
+  // @ts-expect-error expected failure
+  expect(permissionsForRouteType["INVALID_TYPE"]).toBe(undefined);
 });

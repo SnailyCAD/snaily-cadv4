@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL_EVENT } from "@snailycad/schemas";
+import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -26,7 +26,7 @@ export class Calls911Controller {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async createCallEvent(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
+    const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
@@ -64,7 +64,7 @@ export class Calls911Controller {
     @PathParams("eventId") eventId: string,
     @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
+    const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },

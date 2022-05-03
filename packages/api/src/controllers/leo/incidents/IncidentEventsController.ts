@@ -4,7 +4,7 @@ import { NotFound } from "@tsed/exceptions";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { CREATE_911_CALL_EVENT } from "@snailycad/schemas";
+import { CALL_911_EVENT_SCHEMA } from "@snailycad/schemas";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import { incidentInclude } from "./IncidentController";
@@ -29,7 +29,7 @@ export class IncidentController {
     @PathParams("incidentId") incidentId: string,
     @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
+    const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },
@@ -68,7 +68,7 @@ export class IncidentController {
     @PathParams("eventId") eventId: string,
     @BodyParams() body: unknown,
   ) {
-    const data = validateSchema(CREATE_911_CALL_EVENT, body);
+    const data = validateSchema(CALL_911_EVENT_SCHEMA, body);
 
     const incident = await prisma.leoIncident.findUnique({
       where: { id: incidentId },

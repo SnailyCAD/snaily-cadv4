@@ -1,6 +1,6 @@
 import { Controller } from "@tsed/di";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_911_CALL, LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
+import { CALL_911_SCHEMA, LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
 import { HeaderParams, BodyParams, Context, PathParams, QueryParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -9,7 +9,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { User, MiscCadSettings, Call911, DiscordWebhookType } from "@prisma/client";
+import { User, MiscCadSettings, Call911, DiscordWebhookType, Rank } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -20,6 +20,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
+import { hasPermission } from "@snailycad/permissions";
 
 export const assignedUnitsInclude = {
   include: {
@@ -99,8 +100,13 @@ export class Calls911Controller {
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
     @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
   ) {
-    const data = validateSchema(CREATE_911_CALL, body);
-    const isFromDispatch = isFromDispatchHeader === "true" && user.isDispatch;
+    const data = validateSchema(CALL_911_SCHEMA, body);
+    const hasDispatchPermissions =
+      hasPermission(user.permissions, [Permissions.Dispatch]) ||
+      user.isDispatch ||
+      user.rank === Rank.OWNER;
+
+    const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const call = await prisma.call911.create({
@@ -160,7 +166,7 @@ export class Calls911Controller {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings: MiscCadSettings },
   ) {
-    const data = validateSchema(CREATE_911_CALL, body);
+    const data = validateSchema(CALL_911_SCHEMA, body);
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const call = await prisma.call911.findUnique({
@@ -181,9 +187,29 @@ export class Calls911Controller {
     // reset assignedUnits. find a better way to do this?
     await Promise.all(
       call.assignedUnits.map(async ({ id }) => {
-        await prisma.assignedUnit.delete({
+        const unit = await prisma.assignedUnit.delete({
           where: { id },
         });
+
+        const types = {
+          officerId: "officer",
+          emsFdDeputyId: "emsFdDeputy",
+          combinedLeoId: "combinedLeoUnit",
+        } as const;
+
+        for (const type in types) {
+          const key = type as keyof typeof types;
+          const unitId = unit[key];
+          const name = types[key];
+
+          if (unitId) {
+            // @ts-expect-error they have the same properties for updating
+            await prisma[name].update({
+              where: { id: unitId },
+              data: { activeCallId: null },
+            });
+          }
+        }
       }),
     );
 
@@ -226,9 +252,13 @@ export class Calls911Controller {
     await assignUnitsToCall({
       callId: call.id,
       maxAssignmentsToCalls,
-      socket: this.socket,
       unitIds,
     });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     await linkOrUnlinkCallDepartmentsAndDivisions({
       departments: (data.departments ?? []) as string[],
@@ -304,7 +334,7 @@ export class Calls911Controller {
     permissions: [Permissions.ManageCallHistory],
   })
   async linkCallToIncident(@PathParams("callId") callId: string, @BodyParams() body: unknown) {
-    const data = validateSchema(LINK_INCIDENT_TO_CALL, body);
+    const data = validateSchema(LINK_INCIDENT_TO_CALL_SCHEMA, body);
 
     const call = await prisma.call911.findUnique({
       where: { id: callId },
@@ -396,6 +426,23 @@ export class Calls911Controller {
         where: { id: existing.id },
       });
     }
+
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+      combined: "combinedLeoUnit",
+    };
+
+    // @ts-expect-error they have the same properties for updating
+    await prisma[prismaNames[type]].update({
+      where: { id: unit.id },
+      data: { activeCallId: callType === "assign" ? callId : null },
+    });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     const updated = await prisma.call911.findUnique({
       where: {

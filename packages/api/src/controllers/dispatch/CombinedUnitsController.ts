@@ -52,6 +52,7 @@ export class CombinedUnitsController {
 
     const entryOfficer = await prisma.officer.findUnique({
       where: { id: entryOfficerId },
+      include: { divisions: { take: 1, where: { pairedUnitTemplate: { not: null } } } },
     });
 
     if (!entryOfficer) {
@@ -63,6 +64,8 @@ export class CombinedUnitsController {
       select: { id: true },
     });
 
+    const [division] = entryOfficer.divisions;
+
     const nextInt = await this.findNextAvailableIncremental();
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
@@ -71,6 +74,7 @@ export class CombinedUnitsController {
         callsign2: entryOfficer.callsign2,
         departmentId: entryOfficer.departmentId,
         incremental: nextInt,
+        pairedUnitTemplate: division?.pairedUnitTemplate ?? null,
       },
     });
 

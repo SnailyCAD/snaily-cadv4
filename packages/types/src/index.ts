@@ -429,6 +429,7 @@ export interface DivisionValue {
   departmentId: string;
   department: DepartmentValue;
   callsign: string | null;
+  pairedUnitTemplate: string | null;
 }
 
 /**
@@ -645,6 +646,7 @@ export interface Officer {
   combinedLeoUnitId: string | null;
   activeIncident: LeoIncident | null;
   activeIncidentId: string | null;
+  activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
 }
@@ -785,7 +787,9 @@ export interface CombinedLeoUnit {
   departmentId: string | null;
   radioChannelId: string | null;
   incremental: number | null;
+  pairedUnitTemplate: string | null;
   officers: Officer[];
+  activeCallId: string | null;
 }
 
 /**
@@ -1014,6 +1018,7 @@ export interface EmsFdDeputy {
   updatedAt: Date;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
+  activeCallId: string | null;
 }
 
 /**

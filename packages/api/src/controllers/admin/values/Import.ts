@@ -183,6 +183,7 @@ export const typeHandlers = {
             callsign: item.callsign,
             department: { connect: { id: item.departmentId } },
             value: item.value,
+            pairedUnitTemplate: item.pairedUnitTemplate || null,
           }),
           include: { value: true, department: { include: { value: true } } },
         });

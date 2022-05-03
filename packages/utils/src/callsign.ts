@@ -12,12 +12,13 @@ type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> |
 export function generateCallsign(unit: Unit, template: string | null) {
   const isCombined = !("citizenId" in unit) || "officers" in unit;
   const incremental = isCombined ? unit.incremental : null;
+  const _template = isCombined && unit.pairedUnitTemplate ? unit.pairedUnitTemplate : template;
 
   const unitDivision =
     "divisions" in unit ? unit.divisions : "division" in unit ? unit.division : [];
   const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
-  if (!template) {
+  if (!_template) {
     return "";
   }
 
@@ -29,7 +30,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
     incremental,
   };
 
-  const templateArr: (string | null)[] = template.split(/[{}]/);
+  const templateArr: (string | null)[] = _template.split(/[{}]/);
   Object.entries(replacers).forEach(([replacer, value]) => {
     const idx = templateArr.indexOf(replacer);
 

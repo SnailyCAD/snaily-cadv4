@@ -1,4 +1,4 @@
-import { LINK_INCIDENT_TO_CALL } from "@snailycad/schemas";
+import { LINK_INCIDENT_TO_CALL_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select, SelectValue } from "components/form/Select";
@@ -39,7 +39,7 @@ export function LinkCallToIncidentModal({ incidents, onSave, call }: Props) {
     }
   }
 
-  const validate = handleValidate(LINK_INCIDENT_TO_CALL);
+  const validate = handleValidate(LINK_INCIDENT_TO_CALL_SCHEMA);
   const callIncidents = call?.incidents?.map((v) => ({ value: v.id, label: `#${v.caseNumber}` }));
   const INITIAL_VALUES = {
     incidentIds: (callIncidents ?? []) as SelectValue[],
