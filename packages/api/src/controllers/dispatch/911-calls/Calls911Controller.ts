@@ -9,7 +9,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { User, MiscCadSettings, Call911, DiscordWebhookType } from "@prisma/client";
+import { User, MiscCadSettings, Call911, DiscordWebhookType, Rank } from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
@@ -20,6 +20,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
+import { hasPermission } from "@snailycad/permissions";
 
 export const assignedUnitsInclude = {
   include: {
@@ -100,7 +101,12 @@ export class Calls911Controller {
     @HeaderParams("is-from-dispatch") isFromDispatchHeader: string | undefined,
   ) {
     const data = validateSchema(CALL_911_SCHEMA, body);
-    const isFromDispatch = isFromDispatchHeader === "true" && user.isDispatch;
+    const hasDispatchPermissions =
+      hasPermission(user.permissions, [Permissions.Dispatch]) ||
+      user.isDispatch ||
+      user.rank === Rank.OWNER;
+
+    const isFromDispatch = isFromDispatchHeader === "true" && hasDispatchPermissions;
     const maxAssignmentsToCalls = cad.miscCadSettings.maxAssignmentsToCalls ?? Infinity;
 
     const call = await prisma.call911.create({
