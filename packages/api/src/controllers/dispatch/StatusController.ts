@@ -34,6 +34,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -168,18 +169,27 @@ export class StatusController {
     }
 
     let updatedUnit;
+    const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
 
     if (type === "leo") {
+      const incremental = shouldFindIncremental
+        ? await findNextAvailableIncremental({ type: "leo" })
+        : undefined;
+
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, incremental },
         include: leoProperties,
       });
     } else if (type === "ems-fd") {
+      const incremental = shouldFindIncremental
+        ? await findNextAvailableIncremental({ type: "ems-fd" })
+        : undefined;
+
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, incremental },
         include: unitProperties,
       });
     } else {

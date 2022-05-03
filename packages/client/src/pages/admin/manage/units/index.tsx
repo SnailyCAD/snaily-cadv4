@@ -15,6 +15,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
+import { CallsignsTab } from "components/admin/manage/units/CallsignsTab";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -31,7 +32,14 @@ interface Props {
 export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
   const { hasPermissions } = usePermission();
+
+  const hasViewPermissions = hasPermissions(
+    [Permissions.ManageUnits, Permissions.ViewUnits, Permissions.DeleteUnits],
+    true,
+  );
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
+
   const [filter, setFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
 
@@ -39,15 +47,26 @@ export default function SupervisorPanelPage({ units }: Props) {
     (v) => v.type === "OFFICER" && v.whitelistStatus?.status === WhitelistStatus.PENDING,
   );
 
-  const TABS = [{ name: t("Management.allUnits"), value: "allUnits" }];
+  const TABS = [];
+
+  if (hasViewPermissions) {
+    TABS.push({ name: t("Management.allUnits"), value: "allUnits" });
+  }
+
+  if (hasManageCallsignPermissions) {
+    TABS.push({
+      name: t("Management.callsignManagement"),
+      value: "callsignManagement",
+    });
+  }
 
   if (hasManagePermissions) {
-    TABS[1] = {
+    TABS.push({
       name: t
         .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
         .toString(),
       value: "departmentWhitelisting",
-    };
+    });
   }
 
   const departmentFilters: [string, string][] = Object.entries(
@@ -65,7 +84,12 @@ export default function SupervisorPanelPage({ units }: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+        permissions: [
+          Permissions.ViewUnits,
+          Permissions.DeleteUnits,
+          Permissions.ManageUnits,
+          Permissions.ManageUnitCallsigns,
+        ],
       }}
     >
       <Title>{t("Management.MANAGE_UNITS")}</Title>
@@ -99,6 +123,7 @@ export default function SupervisorPanelPage({ units }: Props) {
             filter ? getUnitDepartment(v)?.id === filter : true,
           )}
         />
+        {hasManageCallsignPermissions ? <CallsignsTab search={search} units={units} /> : null}
       </TabList>
     </AdminLayout>
   );

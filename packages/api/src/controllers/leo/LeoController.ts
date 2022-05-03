@@ -28,6 +28,8 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -107,6 +109,13 @@ export class LeoController {
       null,
     );
 
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "leo",
+    });
+
+    const incremental = await findNextAvailableIncremental({ type: "leo" });
     const officer = await prisma.officer.create({
       data: {
         callsign: data.callsign,
@@ -121,6 +130,7 @@ export class LeoController {
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         whitelistStatusId,
+        incremental,
       },
       include: leoProperties,
     });
@@ -174,6 +184,12 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "leo",
+      unitId: officer.id,
+    });
     await validateMaxDepartmentsEachPerUser({
       departmentId: data.department,
       userId: user.id,
@@ -221,6 +237,10 @@ export class LeoController {
           ? defaultDepartment.defaultOfficerRankId
           : department.defaultOfficerRankId) || undefined;
 
+    const incremental = officer.incremental
+      ? undefined
+      : await findNextAvailableIncremental({ type: "leo" });
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -234,6 +254,7 @@ export class LeoController {
         departmentId: defaultDepartment ? defaultDepartment.id : data.department,
         rankId: rank,
         whitelistStatusId,
+        incremental,
       },
       include: {
         ...leoProperties,

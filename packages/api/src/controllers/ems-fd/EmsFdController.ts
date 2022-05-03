@@ -16,6 +16,8 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -68,6 +70,11 @@ export class EmsFdController {
       cad,
       type: "emsFdDeputy",
     });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
+    });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -80,6 +87,7 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
@@ -90,6 +98,7 @@ export class EmsFdController {
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
       },
       include: {
         ...unitProperties,
@@ -142,6 +151,12 @@ export class EmsFdController {
       type: "emsFdDeputy",
       unitId: deputy.id,
     });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
+      unitId: deputy.id,
+    });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -153,6 +168,10 @@ export class EmsFdController {
     if (!citizen) {
       throw new NotFound("citizenNotFound");
     }
+
+    const incremental = deputy.incremental
+      ? undefined
+      : await findNextAvailableIncremental({ type: "ems-fd" });
 
     const updated = await prisma.emsFdDeputy.update({
       where: {
@@ -166,6 +185,7 @@ export class EmsFdController {
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
       },
       include: {
         ...unitProperties,

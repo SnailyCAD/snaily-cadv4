@@ -8,6 +8,7 @@ import { Socket } from "services/SocketService";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { combinedUnitProperties } from "lib/leo/activeOfficer";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -66,7 +67,7 @@ export class CombinedUnitsController {
 
     const [division] = entryOfficer.divisions;
 
-    const nextInt = await this.findNextAvailableIncremental();
+    const nextInt = await findNextAvailableIncremental({ type: "combined" });
     const combinedUnit = await prisma.combinedLeoUnit.create({
       data: {
         statusId: status?.id ?? null,
@@ -141,24 +142,5 @@ export class CombinedUnitsController {
     });
 
     await this.socket.emitUpdateOfficerStatus();
-  }
-
-  /**
-   * find the first smallest missing item from an array
-   */
-  protected async findNextAvailableIncremental() {
-    const units = await prisma.combinedLeoUnit.findMany({
-      where: { incremental: { not: null } },
-    });
-
-    const incrementalNumbers = units.map((v) => v.incremental!);
-    const sorted = incrementalNumbers.sort((a, b) => a - b);
-    let nextIncremental = 1;
-
-    for (let i = 0; i < sorted.length; i++) {
-      if (sorted[i] === nextIncremental) nextIncremental++;
-    }
-
-    return nextIncremental;
   }
 }

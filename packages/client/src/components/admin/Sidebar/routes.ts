@@ -23,7 +23,12 @@ export const managementRoutes: SidebarRoute[] = [
   },
   {
     type: "UNITS",
-    permissions: [Permissions.ViewUnits, Permissions.ManageUnits, Permissions.DeleteUnits],
+    permissions: [
+      Permissions.ViewUnits,
+      Permissions.ManageUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageUnitCallsigns,
+    ],
   },
   {
     type: "BUSINESSES",
