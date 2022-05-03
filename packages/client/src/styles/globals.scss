@@ -81,6 +81,20 @@ li {
   scrollbar-width: thin;
 }
 
+.thin-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: #161618; /* color of the tracking area */
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #5e5e5f; /* color of the scroll thumb */
+  border: none; /* creates padding around scroll thumb */
+}
+
 .dropdown-right,
 .dropdown-fade[data-side="left"] {
   transform-origin: top right;
