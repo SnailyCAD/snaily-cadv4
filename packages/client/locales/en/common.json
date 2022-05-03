@@ -138,6 +138,7 @@
     "jailTime_invalidDataReceived": "Invalid jail time data received. Min: {min}, max: {max}",
     "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}",
     "forbidden": "Forbidden",
-    "pageNotFound": "Page Not Found"
+    "pageNotFound": "Page Not Found",
+    "unitCallsignInUse": "This full callsign is already in-use by another unit. Please specify another callsign."
   }
 }

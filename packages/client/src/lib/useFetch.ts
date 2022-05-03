@@ -75,6 +75,8 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
             ? t(translationKey, translationOptions)
             : translationKey;
 
+          console.log({ message });
+
           if (message && options.helpers) {
             options.helpers.setFieldError(key, message);
             hasAddedError = true;

@@ -15,6 +15,7 @@ import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
+import { CallsignsTab } from "components/admin/manage/units/CallsignsTab";
 
 const DepartmentWhitelistingTab = dynamic(
   async () =>
@@ -32,6 +33,8 @@ export default function SupervisorPanelPage({ units }: Props) {
   const t = useTranslations();
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
+  const hasManageCallsignPermissions = hasPermissions([Permissions.ManageUnitCallsigns], true);
+
   const [filter, setFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
 
@@ -41,8 +44,17 @@ export default function SupervisorPanelPage({ units }: Props) {
 
   const TABS = [{ name: t("Management.allUnits"), value: "allUnits" }];
 
-  if (hasManagePermissions) {
+  if (hasManageCallsignPermissions) {
     TABS[1] = {
+      name: t("Management.callsignManagement"),
+      value: "callsignManagement",
+    };
+  }
+
+  if (hasManagePermissions) {
+    const idx = hasManageCallsignPermissions ? 2 : 1;
+
+    TABS[idx] = {
       name: t
         .rich("Management.departmentWhitelisting", { length: pendingOfficers.length })
         .toString(),
@@ -65,7 +77,12 @@ export default function SupervisorPanelPage({ units }: Props) {
     <AdminLayout
       permissions={{
         fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+        permissions: [
+          Permissions.ViewUnits,
+          Permissions.DeleteUnits,
+          Permissions.ManageUnits,
+          Permissions.ManageUnitCallsigns,
+        ],
       }}
     >
       <Title>{t("Management.MANAGE_UNITS")}</Title>
@@ -99,6 +116,7 @@ export default function SupervisorPanelPage({ units }: Props) {
             filter ? getUnitDepartment(v)?.id === filter : true,
           )}
         />
+        {hasManageCallsignPermissions ? <CallsignsTab search={search} units={units} /> : null}
       </TabList>
     </AdminLayout>
   );

@@ -1,5 +1,5 @@
 import { Rank, WhitelistStatus } from "@prisma/client";
-import { UPDATE_UNIT_SCHEMA } from "@snailycad/schemas";
+import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -8,6 +8,7 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -124,6 +125,47 @@ export class AdminManageUnitsController {
       this.socket.emitUpdateOfficerStatus(),
       this.socket.emitUpdateDeputyStatus(),
     ]);
+
+    return updated;
+  }
+
+  @Put("/callsign/:unitId")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnitCallsigns, Permissions.ManageUnits],
+  })
+  @Description("Update a unit's callsign by its id")
+  async updateCallsignUnit(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
+
+    const { type, unit } = await findUnit(unitId);
+
+    if (!unit || type === "combined") {
+      throw new NotFound("unitNotFound");
+    }
+
+    const prismaNames = {
+      "ems-fd": "emsFdDeputy",
+      leo: "officer",
+    } as const;
+    const t = prismaNames[type];
+
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      unitId: unit.id,
+      type,
+    });
+
+    // @ts-expect-error ignore
+    const updated = await prisma[t].update({
+      where: { id: unit.id },
+      data: {
+        callsign2: data.callsign2,
+        callsign: data.callsign,
+      },
+      include: type === "leo" ? leoProperties : unitProperties,
+    });
 
     return updated;
   }

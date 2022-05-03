@@ -28,6 +28,7 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -107,6 +108,12 @@ export class LeoController {
       null,
     );
 
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "leo",
+    });
+
     const officer = await prisma.officer.create({
       data: {
         callsign: data.callsign,
@@ -174,6 +181,12 @@ export class LeoController {
     }
 
     await validateMaxDivisionsPerOfficer(data.divisions as string[], cad);
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "leo",
+      unitId: officer.id,
+    });
     await validateMaxDepartmentsEachPerUser({
       departmentId: data.department,
       userId: user.id,

@@ -16,6 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -67,6 +68,11 @@ export class EmsFdController {
       userId: user.id,
       cad,
       type: "emsFdDeputy",
+    });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
     });
 
     const citizen = await prisma.citizen.findFirst({
@@ -140,6 +146,12 @@ export class EmsFdController {
       userId: user.id,
       cad,
       type: "emsFdDeputy",
+      unitId: deputy.id,
+    });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
       unitId: deputy.id,
     });
 
