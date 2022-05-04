@@ -123,7 +123,12 @@ export default function SupervisorPanelPage({ units }: Props) {
             filter ? getUnitDepartment(v)?.id === filter : true,
           )}
         />
-        {hasManageCallsignPermissions ? <CallsignsTab search={search} units={units} /> : null}
+        {hasManageCallsignPermissions ? (
+          <CallsignsTab
+            search={search}
+            units={units.filter((v) => (filter ? getUnitDepartment(v)?.id === filter : true))}
+          />
+        ) : null}
       </TabList>
     </AdminLayout>
   );
