@@ -11,12 +11,21 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
-import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
+import {
+  CadFeature,
+  Feature,
+  RecordType,
+  SeizedItem,
+  Violation,
+  WarrantStatus,
+  WhitelistStatus,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { isFeatureEnabled } from "lib/cad";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -191,7 +200,11 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
+  async updateRecordById(
+    @Context("cad") cad: { features?: CadFeature[] },
+    @BodyParams() body: unknown,
+    @PathParams("id") recordId: string,
+  ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const record = await prisma.record.findUnique({
@@ -210,11 +223,19 @@ export class RecordsController {
     await unlinkViolations(record.violations);
     await unlinkSeizedItems(record.seizedItems);
 
+    const isApprovalEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+    });
+    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
+
     const updated = await prisma.record.update({
       where: { id: recordId },
       data: {
         notes: data.notes,
         postal: data.postal,
+        status: recordStatus,
       },
       include: { officer: { include: leoProperties } },
     });
