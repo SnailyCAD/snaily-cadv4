@@ -49,7 +49,12 @@ export class AdminManageCitizensController {
         records: {
           include: {
             officer: { include: leoProperties },
-            violations: { include: { penalCode: true } },
+            violations: {
+              include: {
+                penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
+              },
+            },
+            seizedItems: true,
           },
         },
         citizen: {

@@ -8,19 +8,21 @@ import type React from "react";
 
 interface Props {
   penalCode: PenalCode;
+  isReadOnly?: boolean;
 }
 
-export function TableItemForm({ penalCode }: Props) {
+export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
   const [minFine, maxFine] =
     penalCode.warningNotApplicable?.fines ?? penalCode.warningApplicable?.fines ?? [];
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
   const [minBail, maxBail] = penalCode.warningNotApplicable?.bail ?? [];
 
-  const jailTimeDisabled = !penalCode.warningNotApplicable?.prisonTerm;
-  const warningNotApplicableDisabled = !penalCode.warningNotApplicableId || jailTimeDisabled;
+  const jailTimeDisabled = isReadOnly || !penalCode.warningNotApplicable?.prisonTerm;
+  const warningNotApplicableDisabled =
+    isReadOnly || !penalCode.warningNotApplicableId || jailTimeDisabled;
   const finesDisabled =
-    !penalCode.warningNotApplicable?.fines && !penalCode.warningApplicable?.fines;
+    isReadOnly || (!penalCode.warningNotApplicable?.fines && !penalCode.warningApplicable?.fines);
 
   const { setFieldValue, values, errors } = useFormikContext<any>();
   const violationErrors = (errors.violations ?? {}) as Record<
@@ -86,7 +88,7 @@ export function TableItemForm({ penalCode }: Props) {
             max={maxFine}
             type="number"
             className="max-w-[125px] ml-5 py-0.5"
-            disabled={!currentValue.fine?.enabled}
+            disabled={isReadOnly || !currentValue.fine?.enabled}
             value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
           />
         </div>
@@ -115,7 +117,7 @@ export function TableItemForm({ penalCode }: Props) {
             max={maxJailTime}
             type="number"
             className="max-w-[125px] ml-5 py-0.5"
-            disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
+            disabled={isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
             value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
           />
           <div className="flex flex-row items-center mb-0 ml-5">
@@ -125,7 +127,9 @@ export function TableItemForm({ penalCode }: Props) {
               onChange={handleValueChange.bind(null, "bail", undefined)}
               name="bail.value"
               className="py-0.5 max-w-[125px] ml-5"
-              disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
+              disabled={
+                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
+              }
               value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
               min={minBail}
               max={maxBail}

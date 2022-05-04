@@ -919,6 +919,7 @@ export interface Record {
   expungementRequestId: string | null;
   violations: Violation[];
   seizedItems: SeizedItem[];
+  status?: WhitelistStatus;
 }
 
 /**
@@ -1109,6 +1110,7 @@ export enum Feature {
   DMV = "DMV",
   BADGE_NUMBERS = "BADGE_NUMBERS",
   USER_API_TOKENS = "USER_API_TOKENS",
+  CITIZEN_RECORD_APPROVAL = "CITIZEN_RECORD_APPROVAL",
 }
 
 export enum Rank {

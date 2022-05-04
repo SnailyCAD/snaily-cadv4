@@ -8,6 +8,7 @@ interface Props {
   value: SelectValue<PenalCode>[];
   penalCodes: PenalCode[];
   handleChange: any;
+  isReadOnly?: boolean;
 }
 
 const ungroupedGroup = {
@@ -20,7 +21,7 @@ const allPenalCodesGroup = {
   name: "All",
 } as PenalCodeGroup;
 
-export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
+export function SelectPenalCode({ value, handleChange, penalCodes, isReadOnly }: Props) {
   const { penalCodeGroups } = useValues();
   const [currentGroup, setCurrentGroup] = React.useState<string | null>("all");
 
@@ -28,6 +29,7 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
   const [codes, setCodes] = React.useState<PenalCode[]>(penalCodes);
 
   function onGroupChange(e: { target: { value: string } }) {
+    if (isReadOnly) return;
     const group = e.target.value;
 
     setCurrentGroup(e.target.value);
@@ -42,6 +44,7 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
   return (
     <FormRow flexLike>
       <Select
+        disabled={isReadOnly}
         className="w-[200px]"
         onChange={onGroupChange}
         value={currentGroup}
@@ -52,6 +55,7 @@ export function SelectPenalCode({ value, handleChange, penalCodes }: Props) {
         }))}
       />
       <Select
+        disabled={isReadOnly}
         className="w-full"
         extra={{ showPenalCodeDescriptions: true }}
         value={value}
