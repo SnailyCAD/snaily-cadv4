@@ -32,27 +32,12 @@ export class DispatchController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
-    const includeData = {
-      include: {
-        department: { include: { value: true } },
-        status: { include: { value: true } },
-        division: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
-    };
-
     const officers = await prisma.officer.findMany({
-      ...includeData,
+      include: leoProperties,
     });
 
     const deputies = await prisma.emsFdDeputy.findMany({
-      ...includeData,
+      include: unitProperties,
     });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
