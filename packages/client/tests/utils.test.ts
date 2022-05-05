@@ -1,5 +1,5 @@
 /* eslint-disable quotes */
-import { ValueLicenseType } from "@snailycad/types";
+import { ValueLicenseType, WhitelistStatus } from "@snailycad/types";
 import { expect, test } from "vitest";
 import {
   calculateAge,
@@ -13,6 +13,7 @@ import {
   requestAll,
   filterLicenseTypes,
   canUseDiscordAuth,
+  isUnitDisabled,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -250,4 +251,14 @@ test("Should handle Discord auth -> window defined", () => {
   // @ts-expect-error testing purposes
   global.window = { location: "test", parent: { location: "test" } };
   expect(canUseDiscordAuth()).toBe(true);
+});
+
+test("Should return a boolean if unit is disabled", () => {
+  expect(isUnitDisabled({ whitelistStatus: null, suspended: false } as any)).toBe(false);
+  expect(isUnitDisabled({ whitelistStatus: { status: WhitelistStatus.PENDING } } as any)).toBe(
+    true,
+  );
+  expect(isUnitDisabled({ whitelistStatus: { status: WhitelistStatus.ACCEPTED } } as any)).toBe(
+    false,
+  );
 });

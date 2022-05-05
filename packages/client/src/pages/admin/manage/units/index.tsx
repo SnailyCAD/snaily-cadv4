@@ -44,7 +44,7 @@ export default function SupervisorPanelPage({ units }: Props) {
   const [search, setSearch] = React.useState("");
 
   const pendingOfficers = units.filter(
-    (v) => v.type === "OFFICER" && v.whitelistStatus?.status === WhitelistStatus.PENDING,
+    (v) => v.whitelistStatus?.status === WhitelistStatus.PENDING,
   );
 
   const TABS = [];

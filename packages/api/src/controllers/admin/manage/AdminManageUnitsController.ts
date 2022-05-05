@@ -17,7 +17,7 @@ import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
 
-const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
+const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
 
 const SUSPEND_TYPE = ["suspend", "unsuspend"] as const;
@@ -245,14 +245,14 @@ export class AdminManageUnitsController {
     return updated;
   }
 
-  @Post("/departments/:officerId")
+  @Post("/departments/:unitId")
   @Description("Accept or decline a unit into a department")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async acceptOrDeclineUnit(
-    @PathParams("officerId") officerId: string,
+    @PathParams("unitId") unitId: string,
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
   ) {
@@ -264,55 +264,78 @@ export class AdminManageUnitsController {
       throw new BadRequest("invalidType");
     }
 
-    const officer = await prisma.officer.findUnique({
-      where: { id: officerId },
+    let unitType: "leo" | "ems-fd" = "leo";
+    let unit: any = await prisma.officer.findFirst({
+      where: { id: unitId },
       include: leoProperties,
     });
 
-    if (!officer) {
-      throw new NotFound("officerNotFound");
+    if (!unit) {
+      unitType = "ems-fd";
+      unit = await prisma.emsFdDeputy.findFirst({
+        where: { id: unitId },
+        include: unitProperties,
+      });
     }
 
-    if (!officer.whitelistStatus || officer.whitelistStatus.status !== WhitelistStatus.PENDING) {
-      throw new BadRequest("officerIsNotAwaiting");
+    if (!unit) {
+      throw new NotFound("unitNotFound");
     }
 
-    if (officer.whitelistStatusId) {
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+    } as const;
+    const prismaName = prismaNames[unitType];
+
+    if (!unit.whitelistStatus || unit.whitelistStatus.status !== WhitelistStatus.PENDING) {
+      throw new BadRequest("unitIsNotAwaiting");
+    }
+
+    if (unit.whitelistStatusId && type === "ACCEPT") {
       await prisma.leoWhitelistStatus.update({
-        where: { id: officer.whitelistStatusId },
-        data: { status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED },
+        where: { id: unit.whitelistStatusId },
+        data: { status: WhitelistStatus.ACCEPTED },
       });
     }
 
     if (type === "ACCEPT") {
-      const updated = await prisma.officer.update({
-        where: { id: officerId },
+      // @ts-expect-error function has the same properties
+      const updated = await prisma[prismaName].update({
+        where: { id: unitId },
         data: {
-          departmentId: officer.whitelistStatus.departmentId,
-          rankId: officer.whitelistStatus.department.defaultOfficerRankId ?? undefined,
+          departmentId: unit.whitelistStatus.departmentId,
+          rankId: unit.whitelistStatus.department.defaultOfficerRankId ?? undefined,
         },
-        include: leoProperties,
+        include: unitType === "leo" ? leoProperties : unitProperties,
       });
 
       return updated;
     }
 
     switch (action) {
-      case "DELETE_OFFICER": {
-        const updated = await prisma.officer.delete({
-          where: { id: officer.id },
+      case "DELETE_UNIT": {
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].delete({
+          where: { id: unit.id },
         });
 
         return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
-        const updated = await prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            departmentId: null,
-          },
-          include: leoProperties,
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: null },
+          include: unitType === "leo" ? leoProperties : unitProperties,
         });
+
+        if (unit.whitelistStatusId) {
+          await prisma.leoWhitelistStatus.update({
+            where: { id: unit.whitelistStatusId },
+            data: { status: WhitelistStatus.DECLINED },
+          });
+        }
 
         return updated;
       }
@@ -325,19 +348,18 @@ export class AdminManageUnitsController {
           throw new ExtendedBadRequest({ action: "No default department found" });
         }
 
-        if (officer.whitelistStatusId) {
+        if (unit.whitelistStatusId) {
           await prisma.leoWhitelistStatus.update({
-            where: { id: officer.whitelistStatusId },
+            where: { id: unit.whitelistStatusId },
             data: { status: WhitelistStatus.DECLINED },
           });
         }
 
-        const updated = await prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            departmentId: defaultDepartment.id,
-          },
-          include: leoProperties,
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: defaultDepartment.id },
+          include: unitType === "leo" ? leoProperties : unitProperties,
         });
 
         return updated;

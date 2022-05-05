@@ -762,6 +762,7 @@ model LeoWhitelistStatus {
   department   DepartmentValue @relation(fields: [departmentId], references: [id])
   departmentId String
   Officers     Officer[]
+  EmsFdDeputy  EmsFdDeputy[]
 }
 
 model StatusValue {
@@ -1035,8 +1036,8 @@ model NameChangeRequest {
 // ems-fd
 model EmsFdDeputy {
   id                        String                 @id @default(cuid())
-  department                DepartmentValue        @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId              String
+  department                DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId              String?
   callsign                  String                 @db.VarChar(255)
   callsign2                 String                 @db.VarChar(255)
   incremental               Int?
@@ -1059,8 +1060,10 @@ model EmsFdDeputy {
   radioChannelId            String?
   activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
-  lastStatusChangeTimestamp DateTime?
+  whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId         String?
   AssignedUnit              AssignedUnit[]
+  lastStatusChangeTimestamp DateTime?
   qualifications            UnitQualification[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
 }

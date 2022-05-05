@@ -18,6 +18,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -87,18 +88,28 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      null,
+    );
+
     const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
         userId: user.id,
-        departmentId: data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
+        rankId:
+          (defaultDepartment
+            ? defaultDepartment.defaultOfficerRankId
+            : department.defaultOfficerRankId) || undefined,
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         incremental,
+        whitelistStatusId,
       },
       include: {
         ...unitProperties,
@@ -127,6 +138,7 @@ export class EmsFdController {
         id: deputyId,
         userId: user.id,
       },
+      include: { whitelistStatus: true },
     });
 
     if (!deputy) {
@@ -173,6 +185,17 @@ export class EmsFdController {
       ? undefined
       : await findNextAvailableIncremental({ type: "ems-fd" });
 
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      deputy,
+    );
+
+    const rank = deputy.rankId
+      ? undefined
+      : (defaultDepartment
+          ? defaultDepartment.defaultOfficerRankId
+          : department.defaultOfficerRankId) || undefined;
+
     const updated = await prisma.emsFdDeputy.update({
       where: {
         id: deputy.id,
@@ -180,12 +203,14 @@ export class EmsFdController {
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
-        departmentId: data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
         incremental,
+        whitelistStatusId,
+        rankId: rank,
       },
       include: {
         ...unitProperties,

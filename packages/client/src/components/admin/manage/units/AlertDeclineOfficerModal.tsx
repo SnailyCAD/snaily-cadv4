@@ -13,13 +13,13 @@ export function AlertDeclineOfficerModal({
   onSubmit,
   state,
 }: {
-  onSubmit(data: { action: string; officer: Unit; helpers: any }): void;
+  onSubmit(data: { action: string; unit: Unit; helpers: any }): void;
   state: "loading" | "idle" | "error" | null;
 }) {
   const common = useTranslations("Common");
   const t = useTranslations("Management");
   const { isOpen, closeModal, getPayload } = useModal();
-  const officer = getPayload<Unit>(ModalIds.AlertDeclineOfficer);
+  const unit = getPayload<Unit>(ModalIds.AlertDeclineOfficer);
 
   function handleClose() {
     closeModal(ModalIds.AlertDeclineOfficer);
@@ -28,7 +28,7 @@ export function AlertDeclineOfficerModal({
   const ACTIONS = [
     { value: "SET_DEPARTMENT_DEFAULT", label: "Set department to default department" },
     { value: "SET_DEPARTMENT_NULL", label: "Set department to none" },
-    { value: "DELETE_OFFICER", label: "Delete officer" },
+    { value: "DELETE_UNIT", label: "Delete Unit" },
   ];
 
   const INITIAL_VALUES = {
@@ -37,14 +37,14 @@ export function AlertDeclineOfficerModal({
 
   return (
     <Modal
-      title={t("declineOfficer")}
+      title={t("declineUnit")}
       onClose={() => closeModal(ModalIds.AlertDeclineOfficer)}
       isOpen={isOpen(ModalIds.AlertDeclineOfficer)}
       className="min-w-[600px]"
     >
       <Formik
         initialValues={INITIAL_VALUES}
-        onSubmit={(d, helpers) => onSubmit({ ...d, helpers, officer: officer! })}
+        onSubmit={(d, helpers) => onSubmit({ ...d, helpers, unit: unit! })}
       >
         {({ handleChange, errors, values, isValid }) => (
           <Form>
@@ -67,7 +67,7 @@ export function AlertDeclineOfficerModal({
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {t("declineOfficer")}
+                {t("declineUnit")}
               </Button>
             </footer>
           </Form>
