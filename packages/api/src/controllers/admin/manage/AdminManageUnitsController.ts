@@ -264,6 +264,7 @@ export class AdminManageUnitsController {
       throw new BadRequest("invalidType");
     }
 
+    // TODO: accept EMS/FD units here too
     const officer = await prisma.officer.findUnique({
       where: { id: officerId },
       include: leoProperties,

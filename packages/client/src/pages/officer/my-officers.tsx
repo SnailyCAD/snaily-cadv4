@@ -8,19 +8,17 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
-import { Officer, WhitelistStatus } from "@snailycad/types";
+import type { Officer } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { formatOfficerDepartment, formatUnitDivisions, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
-import { HoverCard } from "components/shared/HoverCard";
-import { Info } from "react-bootstrap-icons";
-import { Status } from "components/shared/Status";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
+import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageOfficerModal = dynamic(
@@ -81,11 +79,6 @@ export default function MyOfficers({ officers: data }: Props) {
       ) : (
         <Table
           data={officers.map((officer) => {
-            const departmentStatus = officer.whitelistStatus?.status ?? null;
-            const departmentStatusFormatted = departmentStatus
-              ? departmentStatus.toLowerCase()
-              : "—";
-
             return {
               officer: (
                 <span className="flex items-center">
@@ -102,32 +95,7 @@ export default function MyOfficers({ officers: data }: Props) {
               callsign: generateCallsign(officer),
               badgeNumber: officer.badgeNumber,
               department: formatOfficerDepartment(officer) ?? common("none"),
-              departmentStatus: (
-                <span className="capitalize flex items-center gap-2">
-                  <Status state={departmentStatus}>{departmentStatusFormatted}</Status>
-
-                  {officer.whitelistStatus?.status === WhitelistStatus.PENDING ? (
-                    <HoverCard
-                      trigger={
-                        <Button className="px-1 cursor-default">
-                          <Info />
-                        </Button>
-                      }
-                    >
-                      <p className="max-w-[400px]">
-                        {t.rich(
-                          officer.department?.isDefaultDepartment
-                            ? "pendingAccessDepartment"
-                            : "pendingAccessDepartmentNoDefault",
-                          {
-                            defaultDepartment: officer.department?.value.value,
-                          },
-                        )}
-                      </p>
-                    </HoverCard>
-                  ) : null}
-                </span>
-              ),
+              departmentStatus: <UnitDepartmentStatus unit={officer} />,
               division: formatUnitDivisions(officer),
               rank: <OfficerRank unit={officer} />,
               position: officer.position ?? common("none"),

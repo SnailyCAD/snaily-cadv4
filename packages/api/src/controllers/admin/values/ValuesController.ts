@@ -185,7 +185,7 @@ export class ValuesController {
     if (type === ValueType.DEPARTMENT) {
       if (body.isDefaultDepartment) {
         const existing = await prisma.departmentValue.findFirst({
-          where: { isDefaultDepartment: true },
+          where: { isDefaultDepartment: true, type: body.type },
         });
 
         if (existing) {

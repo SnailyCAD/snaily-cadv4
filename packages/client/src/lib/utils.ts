@@ -92,8 +92,6 @@ export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {
 }
 
 export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
-  if (!isUnitOfficer(unit)) return getUnitDepartment(unit)?.value.value ?? null;
-
   const whitelistStatus = unit.whitelistStatus;
   const department = unit.department;
 

@@ -1021,6 +1021,8 @@ export interface EmsFdDeputy {
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
   activeCallId: string | null;
+  whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
 }
 
 /**

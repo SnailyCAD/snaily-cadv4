@@ -761,6 +761,7 @@ model LeoWhitelistStatus {
   department   DepartmentValue @relation(fields: [departmentId], references: [id])
   departmentId String
   Officers     Officer[]
+  EmsFdDeputy  EmsFdDeputy[]
 }
 
 model StatusValue {
@@ -1057,6 +1058,8 @@ model EmsFdDeputy {
   radioChannelId       String?
   activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
   activeCallId         String?
+  whitelistStatus      LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId    String?
   AssignedUnit         AssignedUnit[]
   qualifications       UnitQualification[]
   IncidentInvolvedUnit IncidentInvolvedUnit[]
