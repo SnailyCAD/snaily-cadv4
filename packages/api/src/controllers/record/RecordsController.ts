@@ -101,7 +101,11 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createTicket(
+    @BodyParams() body: unknown,
+    @Context() ctx: Context,
+    @Context("cad") cad: { features?: CadFeature[] },
+  ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -114,6 +118,13 @@ export class RecordsController {
       throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
 
+    const isApprovalEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+    });
+    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
+
     const ticket = await prisma.record.create({
       data: {
         type: data.type as RecordType,
@@ -121,6 +132,7 @@ export class RecordsController {
         officerId: ctx.get("activeOfficer").id,
         notes: data.notes,
         postal: String(data.postal),
+        status: recordStatus,
       },
       include: {
         officer: { include: leoProperties },
@@ -200,11 +212,7 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async updateRecordById(
-    @Context("cad") cad: { features?: CadFeature[] },
-    @BodyParams() body: unknown,
-    @PathParams("id") recordId: string,
-  ) {
+  async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const record = await prisma.record.findUnique({
@@ -223,19 +231,11 @@ export class RecordsController {
     await unlinkViolations(record.violations);
     await unlinkSeizedItems(record.seizedItems);
 
-    const isApprovalEnabled = isFeatureEnabled({
-      defaultReturn: false,
-      feature: Feature.CITIZEN_RECORD_APPROVAL,
-      features: cad.features,
-    });
-    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
-
     const updated = await prisma.record.update({
       where: { id: recordId },
       data: {
         notes: data.notes,
         postal: data.postal,
-        status: recordStatus,
       },
       include: { officer: { include: leoProperties } },
     });
