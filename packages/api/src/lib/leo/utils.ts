@@ -31,9 +31,9 @@ export async function validateMaxDepartmentsEachPerUser({
   }
 }
 
-export function getInactivityFilter<Obj = { updatedAt: Date }>(
+export function getInactivityFilter(
   cad: { miscCadSettings: MiscCadSettings | null },
-  property: keyof Obj,
+  property = "updatedAt",
 ) {
   const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
 
