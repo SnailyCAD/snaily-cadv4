@@ -105,3 +105,15 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
 export function canUseDiscordAuth() {
   return typeof window !== "undefined" && window.location === window.parent.location;
 }
+
+export function isUnitDisabled(unit: Officer | EmsFdDeputy) {
+  if (!unit.whitelistStatus) return false;
+  if (unit.suspended) {
+    return true;
+  }
+
+  return (
+    unit.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
+    !unit.department?.isDefaultDepartment
+  );
+}
