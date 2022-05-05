@@ -85,7 +85,7 @@ export function TableItemForm({ penalCode }: Props) {
             min={minFine}
             max={maxFine}
             type="number"
-            className="max-w-[125px] ml-5 py-0.5"
+            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
             disabled={!currentValue.fine?.enabled}
             value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
           />
@@ -114,7 +114,7 @@ export function TableItemForm({ penalCode }: Props) {
             min={minJailTime}
             max={maxJailTime}
             type="number"
-            className="max-w-[125px] ml-5 py-0.5"
+            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
             disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
             value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
           />
@@ -124,7 +124,7 @@ export function TableItemForm({ penalCode }: Props) {
               type="number"
               onChange={handleValueChange.bind(null, "bail", undefined)}
               name="bail.value"
-              className="py-0.5 max-w-[125px] ml-5"
+              className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
               disabled={warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
               value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
               min={minBail}
