@@ -162,10 +162,9 @@ export const typeHandlers = {
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
-            defaultOfficerRank:
-              item.defaultOfficerRankId && item.type === "LEO"
-                ? { connect: { id: item.defaultOfficerRankId } }
-                : undefined,
+            defaultOfficerRank: item.defaultOfficerRankId
+              ? { connect: { id: item.defaultOfficerRankId } }
+              : undefined,
           }),
           include: { value: true, defaultOfficerRank: true },
         });

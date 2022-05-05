@@ -13,6 +13,7 @@ export const unitProperties = {
   user: { select: userProperties },
   AssignedUnit: { where: { call911: { ended: false } } },
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
+  whitelistStatus: { include: { department: { include: { value: true } } } },
   rank: true,
 };
 

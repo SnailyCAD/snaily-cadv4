@@ -1,4 +1,10 @@
-import { Officer, LeoWhitelistStatus, WhitelistStatus, DepartmentValue } from "@prisma/client";
+import {
+  EmsFdDeputy,
+  Officer,
+  LeoWhitelistStatus,
+  WhitelistStatus,
+  DepartmentValue,
+} from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 
@@ -13,7 +19,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
  */
 export async function handleWhitelistStatus(
   departmentId: string,
-  officer: (Officer & { whitelistStatus: LeoWhitelistStatus | null }) | null,
+  unit: ((Officer | EmsFdDeputy) & { whitelistStatus: LeoWhitelistStatus | null }) | null,
 ) {
   const department = await prisma.departmentValue.findUnique({
     where: { id: departmentId },
@@ -24,22 +30,22 @@ export async function handleWhitelistStatus(
   }
 
   let defaultDepartment: DepartmentValue | null = null;
-  let whitelistStatusId: string | null = officer?.whitelistStatusId ?? null;
+  let whitelistStatusId: string | null = unit?.whitelistStatusId ?? null;
   if (department.whitelisted) {
     const whitelistStatus =
-      officer?.whitelistStatus ??
+      unit?.whitelistStatus ??
       (await prisma.leoWhitelistStatus.create({
         data: { status: WhitelistStatus.PENDING, departmentId },
       }));
 
     const previousDepartmentId =
       whitelistStatus.status === WhitelistStatus.DECLINED
-        ? officer?.departmentId
+        ? unit?.departmentId
         : whitelistStatus.departmentId;
 
-    if (previousDepartmentId !== department.id && officer?.whitelistStatusId) {
+    if (previousDepartmentId !== department.id && unit?.whitelistStatusId) {
       const updated = await prisma.leoWhitelistStatus.update({
-        where: { id: officer.whitelistStatusId },
+        where: { id: unit.whitelistStatusId },
         data: { status: WhitelistStatus.PENDING, departmentId },
         select: { id: true },
       });
