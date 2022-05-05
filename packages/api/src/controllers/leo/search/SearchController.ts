@@ -21,7 +21,7 @@ import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 
-export const citizenSearchInclude = (cad: cad & { features: CadFeature[] }) => {
+const citizenSearchInclude = (cad: cad & { features: CadFeature[] }) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
     features: cad.features,
