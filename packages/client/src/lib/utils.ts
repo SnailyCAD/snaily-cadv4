@@ -107,10 +107,8 @@ export function canUseDiscordAuth() {
 }
 
 export function isUnitDisabled(unit: Officer | EmsFdDeputy) {
+  if (unit.suspended) return true;
   if (!unit.whitelistStatus) return false;
-  if (unit.suspended) {
-    return true;
-  }
 
   return (
     unit.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
