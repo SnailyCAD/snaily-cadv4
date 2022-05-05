@@ -10,7 +10,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageSeizedItemsModal } from "./ManageSeizedItemsModal";
 import type { SeizedItem } from "@snailycad/types";
 
-export function SeizedItemsTable() {
+export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
   const [tempItem, setTempItem] = React.useState(null);
   const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
   const { openModal } = useModal();
@@ -40,6 +40,7 @@ export function SeizedItemsTable() {
           className="absolute right-0 top-0"
           type="button"
           onClick={() => openModal(ModalIds.ManageSeizedItems)}
+          disabled={isReadOnly}
         >
           {t("add")}
         </Button>
@@ -52,7 +53,13 @@ export function SeizedItemsTable() {
               illegal: common(yesOrNoText(v.illegal)),
               actions: (
                 <>
-                  <Button small type="button" onClick={() => handleEditClick(v)} variant="success">
+                  <Button
+                    disabled={isReadOnly}
+                    small
+                    type="button"
+                    onClick={() => handleEditClick(v)}
+                    variant="success"
+                  >
                     {common("edit")}
                   </Button>
                   <Button
@@ -61,6 +68,7 @@ export function SeizedItemsTable() {
                     type="button"
                     onClick={() => handleDeleteClick(v)}
                     variant="danger"
+                    disabled={isReadOnly}
                   >
                     {common("delete")}
                   </Button>

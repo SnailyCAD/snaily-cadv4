@@ -6,9 +6,10 @@ import { TableItemForm } from "./TableItemForm";
 
 interface Props {
   penalCodes: PenalCode[];
+  isReadOnly?: boolean;
 }
 
-export function PenalCodesTable({ penalCodes }: Props) {
+export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   const { values } = useFormikContext<any>();
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -38,7 +39,7 @@ export function PenalCodesTable({ penalCodes }: Props) {
       <Table
         data={penalCodes.map((penalCode) => ({
           title: penalCode.title,
-          data: <TableItemForm penalCode={penalCode} />,
+          data: <TableItemForm isReadOnly={isReadOnly} penalCode={penalCode} />,
         }))}
         columns={[
           { accessor: "title", Header: t("penalCode") },

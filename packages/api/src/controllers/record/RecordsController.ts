@@ -11,12 +11,21 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
-import type { RecordType, SeizedItem, Violation, WarrantStatus } from "@prisma/client";
+import {
+  CadFeature,
+  Feature,
+  RecordType,
+  SeizedItem,
+  Violation,
+  WarrantStatus,
+  WhitelistStatus,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { isFeatureEnabled } from "lib/cad";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -92,7 +101,11 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async createTicket(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createTicket(
+    @BodyParams() body: unknown,
+    @Context() ctx: Context,
+    @Context("cad") cad: { features?: CadFeature[] },
+  ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -105,6 +118,13 @@ export class RecordsController {
       throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
 
+    const isApprovalEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CITIZEN_RECORD_APPROVAL,
+      features: cad.features,
+    });
+    const recordStatus = isApprovalEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED;
+
     const ticket = await prisma.record.create({
       data: {
         type: data.type as RecordType,
@@ -112,6 +132,7 @@ export class RecordsController {
         officerId: ctx.get("activeOfficer").id,
         notes: data.notes,
         postal: String(data.postal),
+        status: recordStatus,
       },
       include: {
         officer: { include: leoProperties },
