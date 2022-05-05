@@ -145,7 +145,7 @@ export function ActiveDeputies() {
                     </ContextMenu>
                   ),
                   badgeNumber: deputy.badgeNumber,
-                  department: deputy.department.value.value,
+                  department: deputy.department?.value.value ?? common("none"),
                   division: formatUnitDivisions(deputy),
                   rank: deputy.rank?.value ?? common("none"),
                   status: (

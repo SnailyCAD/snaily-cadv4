@@ -998,8 +998,8 @@ export interface NameChangeRequest {
  */
 export interface EmsFdDeputy {
   id: string;
-  departmentId: string;
-  department: DepartmentValue;
+  departmentId: string | null;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
   incremental: number | null;
