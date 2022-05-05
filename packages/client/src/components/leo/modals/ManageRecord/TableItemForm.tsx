@@ -87,8 +87,8 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             min={minFine}
             max={maxFine}
             type="number"
-            className="max-w-[125px] ml-5 py-0.5"
             disabled={isReadOnly || !currentValue.fine?.enabled}
+            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
             value={!isNaN(currentValue.fine?.value) ? currentValue.fine?.value : ""}
           />
         </div>
@@ -116,8 +116,8 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             min={minJailTime}
             max={maxJailTime}
             type="number"
-            className="max-w-[125px] ml-5 py-0.5"
             disabled={isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled}
+            className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
             value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
           />
           <div className="flex flex-row items-center mb-0 ml-5">
@@ -126,10 +126,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
               type="number"
               onChange={handleValueChange.bind(null, "bail", undefined)}
               name="bail.value"
-              className="py-0.5 max-w-[125px] ml-5"
               disabled={
                 isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
               }
+              className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
               value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
               min={minBail}
               max={maxBail}

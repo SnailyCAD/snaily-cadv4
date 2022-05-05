@@ -12,9 +12,9 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { useLeoState } from "state/leoState";
 import { useValues } from "context/ValuesContext";
-import { Officer, ShouldDoType, WhitelistStatus } from "@snailycad/types";
+import { ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { makeUnitName } from "lib/utils";
+import { isUnitDisabled, makeUnitName } from "lib/utils";
 
 export function SelectOfficerModal() {
   const { officers, setActiveOfficer } = useLeoState();
@@ -43,18 +43,6 @@ export function SelectOfficerModal() {
     }
   }
 
-  function isOfficerDisabled(officer: Officer) {
-    if (!officer.whitelistStatus) return false;
-    if (officer.suspended) {
-      return true;
-    }
-
-    return (
-      officer.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
-      !officer.department?.isDefaultDepartment
-    );
-  }
-
   const validate = handleValidate(SELECT_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
     officer: "",
@@ -79,7 +67,7 @@ export function SelectOfficerModal() {
                 values={officers.map((officer) => ({
                   label: `${generateCallsign(officer)} ${makeUnitName(officer)}`,
                   value: officer.id,
-                  isDisabled: isOfficerDisabled(officer),
+                  isDisabled: isUnitDisabled(officer),
                 }))}
               />
             </FormField>

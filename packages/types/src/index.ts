@@ -999,8 +999,8 @@ export interface NameChangeRequest {
  */
 export interface EmsFdDeputy {
   id: string;
-  departmentId: string;
-  department: DepartmentValue;
+  departmentId: string | null;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
   incremental: number | null;
@@ -1022,6 +1022,8 @@ export interface EmsFdDeputy {
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
   activeCallId: string | null;
+  whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
 }
 
 /**

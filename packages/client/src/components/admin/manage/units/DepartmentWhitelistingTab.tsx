@@ -27,21 +27,23 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const { state, execute } = useFetch();
 
   async function handleAcceptOrDecline(data: {
-    officer: Unit;
+    unit: Unit;
     type: "ACCEPT" | "DECLINE";
     action?: string;
     helpers?: any;
   }) {
-    const { helpers, officer, ...rest } = data;
+    const { helpers, unit, ...rest } = data;
 
-    await execute(`/admin/manage/units/departments/${officer.id}`, {
+    const { json } = await execute(`/admin/manage/units/departments/${unit.id}`, {
       data: rest,
       helpers,
       method: "POST",
     });
 
-    closeModal(ModalIds.AlertDeclineOfficer);
-    router.replace({ pathname: router.pathname, query: router.query });
+    if (json.id) {
+      closeModal(ModalIds.AlertDeclineOfficer);
+      router.replace({ pathname: router.pathname, query: router.query });
+    }
   }
 
   return (
@@ -61,7 +63,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleAcceptOrDecline({ officer, type: "ACCEPT" })}
+                  onClick={() => handleAcceptOrDecline({ unit: officer, type: "ACCEPT" })}
                   small
                   variant="success"
                 >

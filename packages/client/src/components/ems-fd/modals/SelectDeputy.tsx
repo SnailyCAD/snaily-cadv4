@@ -14,7 +14,7 @@ import { useEmsFdState } from "state/emsFdState";
 import { useValues } from "context/ValuesContext";
 import { ShouldDoType } from "@snailycad/types";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import { makeUnitName } from "lib/utils";
+import { isUnitDisabled, makeUnitName } from "lib/utils";
 
 export function SelectDeputyModal() {
   const { deputies, setActiveDeputy } = useEmsFdState();
@@ -69,7 +69,7 @@ export function SelectDeputyModal() {
                 values={deputies.map((deputy) => ({
                   label: `${generateCallsign(deputy)} ${makeUnitName(deputy)}`,
                   value: deputy.id,
-                  isDisabled: deputy.suspended,
+                  isDisabled: isUnitDisabled(deputy),
                 }))}
               />
             </FormField>
