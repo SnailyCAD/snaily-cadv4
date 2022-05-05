@@ -142,6 +142,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow users to generate their own API token to perform actions with via their account.",
   },
+  CITIZEN_RECORD_APPROVAL: {
+    name: "Citizen Record Approvals",
+    description:
+      "When enabled, this will require supervisors to accept or decline arrest reports before they can be used.",
+  },
 };
 
 export function CADFeaturesTab() {
