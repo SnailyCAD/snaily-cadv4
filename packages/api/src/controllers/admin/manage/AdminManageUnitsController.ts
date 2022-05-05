@@ -2,7 +2,7 @@ import { Rank, WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { BadRequest, NotFound, UnprocessableEntity } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
@@ -300,6 +300,7 @@ export class AdminManageUnitsController {
     }
 
     if (type === "ACCEPT") {
+      // @ts-expect-error function has the same properties
       const updated = await prisma[prismaName].update({
         where: { id: unitId },
         data: {
@@ -314,6 +315,7 @@ export class AdminManageUnitsController {
 
     switch (action) {
       case "DELETE_UNIT": {
+        // @ts-expect-error function has the same properties
         const updated = await prisma[prismaName].delete({
           where: { id: unit.id },
         });
@@ -321,6 +323,7 @@ export class AdminManageUnitsController {
         return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
+        // @ts-expect-error function has the same properties
         const updated = await prisma[prismaName].update({
           where: { id: unit.id },
           data: { departmentId: null },
@@ -352,6 +355,7 @@ export class AdminManageUnitsController {
           });
         }
 
+        // @ts-expect-error function has the same properties
         const updated = await prisma[prismaName].update({
           where: { id: unit.id },
           data: { departmentId: defaultDepartment.id },
