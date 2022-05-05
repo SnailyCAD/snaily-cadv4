@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import { Record, RecordType } from "@snailycad/types";
+import { Record, RecordType, WhitelistStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { FullDate } from "components/shared/FullDate";
@@ -13,6 +13,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageRecordModal } from "../modals/ManageRecordModal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
+import { useRouter } from "next/router";
 
 interface Props {
   search: string;
@@ -34,6 +35,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
+  const router = useRouter();
 
   function handleViewClick(item: CitizenLog) {
     setTempRecord(item.records!);
@@ -43,12 +45,18 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
   }
 
   async function handleAcceptDeclineClick(item: Record, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute(`/admin/manage/records-logs/${item.id}`, {
+    const { json } = await execute(`/admin/manage/citizens/records-logs/${item.id}`, {
       method: "POST",
       data: { type },
     });
 
-    console.log({ json });
+    if (json.id) {
+      setTempRecord(null);
+      router.replace({
+        pathname: router.pathname,
+        query: router.query,
+      });
+    }
   }
 
   return (
@@ -137,10 +145,16 @@ function uniqueList(logs: CitizenLog[]) {
   const arrestReports: CitizenLog[] = [];
 
   for (let i = 0; i < logs.length; i++) {
-    const citizenId = logs[i]?.citizenId;
-    const isArrestReport = logs[i]?.records?.type === RecordType.ARREST_REPORT;
+    const log = logs[i]!;
 
-    if (arrestReports.some((v) => v.citizenId === citizenId) || !isArrestReport) {
+    const citizenId = log.citizenId;
+    const isArrestReport = log.records?.type === RecordType.ARREST_REPORT;
+
+    if (
+      arrestReports.some((v) => v.citizenId === citizenId) ||
+      !isArrestReport ||
+      log.records?.status !== WhitelistStatus.PENDING
+    ) {
       continue;
     }
 

@@ -13,6 +13,7 @@ import { Permissions } from "@snailycad/permissions";
 import { TabList } from "components/shared/TabList";
 import { CitizenLogsTab } from "components/leo/citizen-logs/CitizenLogsTab";
 import { ArrestReportsTab } from "components/leo/citizen-logs/ArrestReportsTab";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export type CitizenLog = RecordLog & { citizen: Citizen };
 interface Props {
@@ -21,14 +22,16 @@ interface Props {
 
 export default function CitizenLogs({ logs }: Props) {
   const [search, setSearch] = React.useState("");
+  const { CITIZEN_RECORD_APPROVAL } = useFeatureEnabled();
 
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
 
-  const TABS = [
-    { value: "citizen-logs-tab", name: t("citizenLogs") },
-    { value: "arrest-reports-tab", name: t("citizenLogs") },
-  ];
+  const TABS = [{ value: "citizen-logs-tab", name: t("citizenLogs") }];
+
+  if (CITIZEN_RECORD_APPROVAL) {
+    TABS[1] = { value: "arrest-reports-tab", name: t("citizenLogs") };
+  }
 
   return (
     <Layout
@@ -43,7 +46,7 @@ export default function CitizenLogs({ logs }: Props) {
 
       <TabList tabs={TABS}>
         <CitizenLogsTab search={search} logs={logs} />
-        <ArrestReportsTab search={search} logs={logs} />
+        {CITIZEN_RECORD_APPROVAL ? <ArrestReportsTab search={search} logs={logs} /> : null}
       </TabList>
     </Layout>
   );
