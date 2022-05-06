@@ -18,6 +18,7 @@ import { canManageInvariant, userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -68,22 +69,31 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context("user") user: User) {
+  async getCitizens(@Context("cad") cad: any, @Context("user") user: User) {
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+
     const citizens = await prisma.citizen.findMany({
       where: {
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
+      include: { user: { select: userProperties } },
     });
 
     return citizens;
   }
 
   @Get("/:id")
-  async getCitizen(@Context("user") user: User, @PathParams("id") citizenId: string) {
+  async getCitizen(
+    @Context("cad") cad: any,
+    @Context("user") user: User,
+    @PathParams("id") citizenId: string,
+  ) {
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
       include: citizenInclude,
     });
@@ -98,6 +108,8 @@ export class CitizenController {
   @Delete("/:id")
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
     const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
+    const user = ctx.get("user") as User;
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({
       features: cad.features,
@@ -112,7 +124,7 @@ export class CitizenController {
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: citizenId,
-        userId: ctx.get("user").id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -214,9 +226,11 @@ export class CitizenController {
   async updateCitizen(
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
+    @Context("cad") cad: any,
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -224,7 +238,11 @@ export class CitizenController {
       },
     });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    if (checkCitizenUserId) {
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    } else if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
 
     const date = new Date(data.dateOfBirth).getTime();
     const now = Date.now();
@@ -263,6 +281,7 @@ export class CitizenController {
   @Post("/:id")
   async uploadImageToCitizen(
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
   ) {
@@ -272,8 +291,11 @@ export class CitizenController {
       },
     });
 
-    if (!citizen || (user.rank === "USER" && citizen.userId !== user.id)) {
-      throw new NotFound("Not Found");
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    if (checkCitizenUserId) {
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    } else if (!citizen) {
+      throw new NotFound("citizenNotFound");
     }
 
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {

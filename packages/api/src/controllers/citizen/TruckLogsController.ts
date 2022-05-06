@@ -1,4 +1,4 @@
-import type { User } from "@prisma/client";
+import type { CadFeature, User } from "@prisma/client";
 import { CREATE_TRUCK_LOG_SCHEMA } from "@snailycad/schemas";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
@@ -8,6 +8,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { validateSchema } from "lib/validateSchema";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 @Controller("/truck-logs")
 @UseBeforeEach(IsAuth)
@@ -39,13 +40,18 @@ export class TruckLogsController {
   }
 
   @Post("/")
-  async createTruckLog(@Context("user") user: User, @BodyParams() body: unknown) {
+  async createTruckLog(
+    @Context("user") user: User,
+    @Context("cad") cad: { features: CadFeature[] },
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -90,6 +96,7 @@ export class TruckLogsController {
   @Put("/:id")
   async updateTruckLog(
     @Context("user") user: User,
+    @Context("cad") cad: { features: CadFeature[] },
     @BodyParams() body: unknown,
     @PathParams("id") id: string,
   ) {
@@ -106,10 +113,11 @@ export class TruckLogsController {
       throw new NotFound("notFound");
     }
 
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -150,11 +158,16 @@ export class TruckLogsController {
   }
 
   @Delete("/:id")
-  async deleteTruckLog(@Context("user") user: User, @PathParams("id") id: string) {
+  async deleteTruckLog(
+    @Context("cad") cad: { features: CadFeature[] },
+    @Context("user") user: User,
+    @PathParams("id") id: string,
+  ) {
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const log = await prisma.truckLog.findFirst({
       where: {
         id,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 

@@ -9,6 +9,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   DMV: { isEnabled: false },
   USER_API_TOKENS: { isEnabled: false },
   CITIZEN_RECORD_APPROVAL: { isEnabled: false },
+  COMMON_CITIZEN_CARDS: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {
