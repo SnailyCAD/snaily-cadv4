@@ -47,7 +47,7 @@ export class TruckLogsController {
   ) {
     const data = validateSchema(CREATE_TRUCK_LOG_SCHEMA, body);
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
@@ -113,7 +113,7 @@ export class TruckLogsController {
       throw new NotFound("notFound");
     }
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
@@ -163,7 +163,7 @@ export class TruckLogsController {
     @Context("user") user: User,
     @PathParams("id") id: string,
   ) {
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     const log = await prisma.truckLog.findFirst({
       where: {
         id,

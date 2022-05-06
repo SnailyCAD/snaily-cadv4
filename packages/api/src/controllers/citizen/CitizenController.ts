@@ -70,12 +70,17 @@ export const citizenInclude = {
 export class CitizenController {
   @Get("/")
   async getCitizens(@Context("cad") cad: any, @Context("user") user: User) {
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+
+    console.log({
+      checkCitizenUserId,
+    });
 
     const citizens = await prisma.citizen.findMany({
       where: {
         userId: checkCitizenUserId ? user.id : undefined,
       },
+      include: { user: { select: userProperties } },
     });
 
     return citizens;
@@ -87,7 +92,7 @@ export class CitizenController {
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
   ) {
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -108,7 +113,7 @@ export class CitizenController {
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
     const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
     const user = ctx.get("user") as User;
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({
       features: cad.features,
@@ -229,7 +234,7 @@ export class CitizenController {
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -290,7 +295,7 @@ export class CitizenController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {

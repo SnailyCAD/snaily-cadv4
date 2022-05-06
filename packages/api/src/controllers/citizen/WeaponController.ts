@@ -28,7 +28,7 @@ export class WeaponController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
@@ -92,7 +92,7 @@ export class WeaponController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
     } else if (!weapon) {
@@ -130,7 +130,7 @@ export class WeaponController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
     } else if (!weapon) {

@@ -40,7 +40,7 @@ export class VehiclesController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
@@ -173,7 +173,7 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId) {
         canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
       } else if (!vehicle) {
@@ -259,7 +259,7 @@ export class VehiclesController {
 
       // registered vehicles may not have `userId`
       // therefore we should use `citizen`
-      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId) {
         canManageInvariant(owner?.userId, user, new NotFound("notFound"));
       } else if (!owner) {

@@ -1,24 +1,26 @@
-import { Feature, cad, CadFeature } from "@prisma/client";
+import { Feature, cad, CadFeature, User, Rank } from "@prisma/client";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { isFeatureEnabled } from "lib/cad";
-import { prisma } from "lib/prisma";
 
 interface Options {
-  userId: string;
+  user: User;
   cad: Partial<cad> & { features?: CadFeature[] };
 }
 
-export async function shouldCheckCitizenUserId({ cad, userId }: Options) {
+export async function shouldCheckCitizenUserId({ cad, user }: Options) {
   const isCommonCardsEnabled = isFeatureEnabled({
     defaultReturn: false,
     feature: Feature.COMMON_CITIZEN_CARDS,
     features: cad.features,
   });
 
-  const officerCount = await prisma.officer.count({
-    where: { userId },
-  });
-  const hasOfficers = officerCount >= 1;
+  const hasLeoPermissions =
+    hasPermission(user.permissions, defaultPermissions.defaultLeoPermissions) ||
+    user.isLeo ||
+    user.rank === Rank.OWNER;
 
-  if (isCommonCardsEnabled && hasOfficers) return false;
+  console.log({ isCommonCardsEnabled, hasLeoPermissions });
+
+  if (isCommonCardsEnabled && hasLeoPermissions) return false;
   return true;
 }
