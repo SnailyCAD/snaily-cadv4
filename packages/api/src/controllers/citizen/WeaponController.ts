@@ -1,4 +1,4 @@
-import { User, CadFeature, Feature } from "@prisma/client";
+import { User, CadFeature, Feature, cad } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -6,6 +6,7 @@ import { NotFound } from "@tsed/exceptions";
 import { Post, Delete, Put, Description } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/user";
 import { isFeatureEnabled } from "lib/cad";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -19,7 +20,7 @@ export class WeaponController {
   async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(WEAPON_SCHEMA, body);
     const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features: CadFeature[] } | null;
+    const cad = ctx.get("cad") as { features: CadFeature[] };
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -27,10 +28,15 @@ export class WeaponController {
       },
     });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    if (checkCitizenUserId) {
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    } else if (!citizen) {
+      throw new NotFound("NotFound");
+    }
 
     const isCustomEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: cad.features,
       feature: Feature.CUSTOM_TEXTFIELD_VALUES,
       defaultReturn: false,
     });
@@ -74,6 +80,7 @@ export class WeaponController {
   @Description("Update a registered weapon")
   async updateWeapon(
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @PathParams("id") weaponId: string,
     @BodyParams() body: unknown,
   ) {
@@ -85,7 +92,12 @@ export class WeaponController {
       },
     });
 
-    canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    if (checkCitizenUserId) {
+      canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+    } else if (!weapon) {
+      throw new NotFound("NotFound");
+    }
 
     const updated = await prisma.weapon.update({
       where: {
@@ -107,14 +119,23 @@ export class WeaponController {
 
   @Delete("/:id")
   @Description("Delete a registered weapon")
-  async deleteWeapon(@Context("user") user: User, @PathParams("id") weaponId: string) {
+  async deleteWeapon(
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
+    @PathParams("id") weaponId: string,
+  ) {
     const weapon = await prisma.weapon.findUnique({
       where: {
         id: weaponId,
       },
     });
 
-    canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    if (checkCitizenUserId) {
+      canManageInvariant(weapon?.userId, user, new NotFound("notFound"));
+    } else if (!weapon) {
+      throw new NotFound("NotFound");
+    }
 
     await prisma.weapon.delete({
       where: {
