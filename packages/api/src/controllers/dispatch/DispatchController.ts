@@ -32,16 +32,16 @@ export class DispatchController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
-    const unitsInactivityFilter = getInactivityFilter(cad);
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     const officers = await prisma.officer.findMany({
       include: leoProperties,
-      where: { lastStatusChangeTimestamp: unitsInactivityFilter?.updatedAt },
+      where: { lastStatusChangeTimestamp: unitsInactivityFilter?.lastStatusChangeTimestamp },
     });
 
     const deputies = await prisma.emsFdDeputy.findMany({
       include: unitProperties,
-      where: { lastStatusChangeTimestamp: unitsInactivityFilter?.updatedAt },
+      where: { lastStatusChangeTimestamp: unitsInactivityFilter?.lastStatusChangeTimestamp },
     });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
