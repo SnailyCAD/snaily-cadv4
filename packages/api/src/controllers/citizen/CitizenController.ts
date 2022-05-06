@@ -72,10 +72,6 @@ export class CitizenController {
   async getCitizens(@Context("cad") cad: any, @Context("user") user: User) {
     const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
-    console.log({
-      checkCitizenUserId,
-    });
-
     const citizens = await prisma.citizen.findMany({
       where: {
         userId: checkCitizenUserId ? user.id : undefined,

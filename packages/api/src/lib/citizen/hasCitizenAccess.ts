@@ -19,8 +19,6 @@ export async function shouldCheckCitizenUserId({ cad, user }: Options) {
     user.isLeo ||
     user.rank === Rank.OWNER;
 
-  console.log({ isCommonCardsEnabled, hasLeoPermissions });
-
   if (isCommonCardsEnabled && hasLeoPermissions) return false;
   return true;
 }
