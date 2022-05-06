@@ -170,7 +170,7 @@ export class StatusController {
     } else {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, lastStatusChangeTimestamp: new Date() },
         include: combinedUnitProperties,
       });
     }
