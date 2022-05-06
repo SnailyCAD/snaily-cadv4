@@ -27,11 +27,20 @@ interface Props {
   type: RecordType;
   id?: ModalIds.ManageRecord | ModalIds.CreateTicket;
   isEdit?: boolean;
+  isReadOnly?: boolean;
   onUpdate?(data: Record): void;
   onCreate?(data: Record): void;
 }
 
-export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id }: Props) {
+export function ManageRecordModal({
+  onUpdate,
+  onCreate,
+  isReadOnly,
+  record,
+  type,
+  isEdit,
+  id,
+}: Props) {
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -71,6 +80,8 @@ export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    if (isReadOnly) return;
+
     const requestData = {
       ...values,
       type,
@@ -154,7 +165,7 @@ export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id
                   value: values.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
-                  disabled: !!record,
+                  disabled: isReadOnly || !!record,
                 }}
                 onSuggestionClick={(suggestion: Citizen) => {
                   const newValues = {
@@ -193,22 +204,36 @@ export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id
             </FormField>
 
             <FormField errorMessage={errors.postal} label={t("postal")}>
-              <Input value={values.postal} name="postal" onChange={handleChange} />
+              <Input
+                disabled={isReadOnly}
+                value={values.postal}
+                name="postal"
+                onChange={handleChange}
+              />
             </FormField>
 
             <FormField label={t("violations")}>
               <SelectPenalCode
+                isReadOnly={isReadOnly}
                 penalCodes={penalCodes}
                 value={values.violations}
                 handleChange={handleChange}
               />
             </FormField>
 
-            <PenalCodesTable penalCodes={values.violations.map((v) => v.value)} />
-            <SeizedItemsTable />
+            <PenalCodesTable
+              isReadOnly={isReadOnly}
+              penalCodes={values.violations.map((v) => v.value)}
+            />
+            <SeizedItemsTable isReadOnly={isReadOnly} />
 
             <FormField optional errorMessage={errors.notes} label={t("notes")}>
-              <Textarea value={values.notes} name="notes" onChange={handleChange} />
+              <Textarea
+                disabled={isReadOnly}
+                value={values.notes}
+                name="notes"
+                onChange={handleChange}
+              />
             </FormField>
 
             <footer className="flex justify-end mt-5">
@@ -217,7 +242,7 @@ export function ManageRecordModal({ onUpdate, onCreate, record, type, isEdit, id
               </Button>
               <Button
                 className="flex items-center"
-                disabled={!isValid || state === "loading"}
+                disabled={isReadOnly || !isValid || state === "loading"}
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}

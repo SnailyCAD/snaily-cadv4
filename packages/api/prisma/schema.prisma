@@ -969,6 +969,7 @@ model Record {
   ExpungementRequest   ExpungementRequest? @relation(fields: [expungementRequestId], references: [id])
   expungementRequestId String?
   seizedItems          SeizedItem[]
+  status               WhitelistStatus?    @default(ACCEPTED)
 }
 
 model RecordRelease {
@@ -1302,4 +1303,5 @@ enum Feature {
   DMV
   BADGE_NUMBERS
   USER_API_TOKENS
+  CITIZEN_RECORD_APPROVAL
 }
