@@ -147,6 +147,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will require supervisors to accept or decline arrest reports before they can be used.",
   },
+  COMMON_CITIZEN_CARDS: {
+    name: "Common Citizen Cards",
+    description:
+      "When enabled, this will allow any officers to edit, register vehicles/weapons to, create medical records to any citizen.",
+  },
 };
 
 export function CADFeaturesTab() {

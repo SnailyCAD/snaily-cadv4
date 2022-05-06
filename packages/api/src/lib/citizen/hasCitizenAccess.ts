@@ -4,7 +4,7 @@ import { prisma } from "lib/prisma";
 
 interface Options {
   userId: string;
-  cad: cad & { features?: CadFeature[] };
+  cad: Partial<cad> & { features?: CadFeature[] };
 }
 
 export async function shouldCheckCitizenUserId({ cad, userId }: Options) {

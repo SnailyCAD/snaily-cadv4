@@ -10,6 +10,7 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 @Controller("/licenses")
 @UseBeforeEach(IsAuth)
@@ -38,7 +39,12 @@ export class LicensesController {
       include: { dlCategory: true },
     });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, userId: user.id });
+    if (checkCitizenUserId) {
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    } else if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
 
     await updateCitizenLicenseCategories(citizen, data);
 
