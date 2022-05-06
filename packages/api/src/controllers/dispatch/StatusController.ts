@@ -158,19 +158,19 @@ export class StatusController {
     if (type === "leo") {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
-        data: { statusId, incremental },
+        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
         include: leoProperties,
       });
     } else if (type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.id },
-        data: { statusId, incremental },
+        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
         include: unitProperties,
       });
     } else {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, lastStatusChangeTimestamp: new Date() },
         include: combinedUnitProperties,
       });
     }

@@ -722,6 +722,7 @@ model Officer {
   LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
   combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
+  lastStatusChangeTimestamp   DateTime?
   qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
 }
@@ -836,21 +837,22 @@ model IncidentEvent {
 }
 
 model CombinedLeoUnit {
-  id                   String                 @id @default(uuid())
-  officers             Officer[]
-  callsign             String
-  callsign2            String?
-  department           DepartmentValue?       @relation(fields: [departmentId], references: [id])
-  departmentId         String?
-  incremental          Int?
-  radioChannelId       String?
-  status               StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
-  statusId             String?
-  pairedUnitTemplate   String?
-  activeCall           Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
-  activeCallId         String?
-  AssignedUnit         AssignedUnit[]
-  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  id                        String                 @id @default(uuid())
+  officers                  Officer[]
+  callsign                  String
+  callsign2                 String?
+  department                DepartmentValue?       @relation(fields: [departmentId], references: [id])
+  departmentId              String?
+  incremental               Int?
+  radioChannelId            String?
+  status                    StatusValue?           @relation("combinedUnitStatusToValue", fields: [statusId], references: [id])
+  statusId                  String?
+  pairedUnitTemplate        String?
+  activeCall                Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
+  activeCallId              String?
+  lastStatusChangeTimestamp DateTime?
+  AssignedUnit              AssignedUnit[]
+  IncidentInvolvedUnit      IncidentInvolvedUnit[]
 }
 
 // dispatching
@@ -1034,36 +1036,37 @@ model NameChangeRequest {
 
 // ems-fd
 model EmsFdDeputy {
-  id                   String                 @id @default(cuid())
-  department           DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
-  departmentId         String?
-  callsign             String                 @db.VarChar(255)
-  callsign2            String                 @db.VarChar(255)
-  incremental          Int?
-  division             DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
-  divisionId           String
-  position             String?                @db.Text
-  rank                 Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
-  rankId               String?
-  status               StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
-  statusId             String?
-  suspended            Boolean                @default(false)
-  badgeNumber          Int?
-  imageId              String?                @db.VarChar(255)
-  citizen              Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  citizenId            String
-  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId               String
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @default(now()) @updatedAt
-  radioChannelId       String?
-  activeCall           Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
-  activeCallId         String?
-  whitelistStatus      LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
-  whitelistStatusId    String?
-  AssignedUnit         AssignedUnit[]
-  qualifications       UnitQualification[]
-  IncidentInvolvedUnit IncidentInvolvedUnit[]
+  id                        String                 @id @default(cuid())
+  department                DepartmentValue?       @relation("emsFdDepartmentToDepartment", fields: [departmentId], references: [id])
+  departmentId              String?
+  callsign                  String                 @db.VarChar(255)
+  callsign2                 String                 @db.VarChar(255)
+  incremental               Int?
+  division                  DivisionValue          @relation("emsFdDivisionToDivision", fields: [divisionId], references: [id])
+  divisionId                String
+  position                  String?                @db.Text
+  rank                      Value?                 @relation("emsFdRankToValue", fields: [rankId], references: [id])
+  rankId                    String?
+  status                    StatusValue?           @relation("emsFdStatusToValue", fields: [statusId], references: [id])
+  statusId                  String?
+  suspended                 Boolean                @default(false)
+  badgeNumber               Int?
+  imageId                   String?                @db.VarChar(255)
+  citizen                   Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  citizenId                 String
+  user                      User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                    String
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @default(now()) @updatedAt
+  radioChannelId            String?
+  activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
+  activeCallId              String?
+  whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  whitelistStatusId         String?
+  AssignedUnit              AssignedUnit[]
+  lastStatusChangeTimestamp DateTime?
+  qualifications            UnitQualification[]
+  IncidentInvolvedUnit      IncidentInvolvedUnit[]
 }
 
 // truck logs

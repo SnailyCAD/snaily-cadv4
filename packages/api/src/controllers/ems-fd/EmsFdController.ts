@@ -15,10 +15,11 @@ import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
+import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -263,7 +264,13 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputies() {
+  async getActiveDeputies(@Context("cad") cad: any) {
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+
+    if (unitsInactivityFilter) {
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+    }
+
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
         status: {
@@ -275,7 +282,11 @@ export class EmsFdController {
       include: unitProperties,
     });
 
-    return Array.isArray(deputies) ? deputies : [deputies];
+    const deputiesWithUpdatedStatus = deputies.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+
+    return deputiesWithUpdatedStatus;
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")
