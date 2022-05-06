@@ -139,7 +139,7 @@ export function MiscFeatures() {
               optional
               action="short-input"
               label="Inactivity Timeout"
-              description="Calls/incidents that have not been updated after this timeout will be automatically ended. The format must be in minutes. (Default: none)"
+              description="Calls/incidents/units that have not been updated after this timeout will be automatically ended/set off-duty. The format must be in minutes. (Default: none)"
               errorMessage={errors.inactivityTimeout}
             >
               <Input

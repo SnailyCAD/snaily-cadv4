@@ -25,11 +25,12 @@ import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -330,7 +331,13 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficers() {
+  async getActiveOfficers(@Context("cad") cad: any) {
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+
+    if (unitsInactivityFilter) {
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+    }
+
     const [officers, units] = await Promise.all([
       await prisma.officer.findMany({
         where: {
@@ -347,7 +354,11 @@ export class LeoController {
       }),
     ]);
 
-    return [...officers, ...units];
+    const officersWithUpdatedStatus = officers.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+
+    return [...officersWithUpdatedStatus, ...units];
   }
 
   @Post("/image/:id")

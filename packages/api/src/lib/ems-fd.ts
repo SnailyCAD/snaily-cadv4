@@ -3,6 +3,7 @@ import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { unitProperties } from "lib/leo/activeOfficer";
+import { getInactivityFilter } from "./leo/utils";
 import { prisma } from "./prisma";
 
 export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
@@ -36,9 +37,15 @@ export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
     return null;
   }
 
+  const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
+  const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
+
   const deputy = await prisma.emsFdDeputy.findFirst({
     where: {
       userId: user.id,
+      lastStatusChangeTimestamp: unitsInactivityFilter
+        ? { lte: unitsInactivityFilter.lastStatusChangeTimestamp }
+        : undefined,
       NOT: {
         status: {
           shouldDo: "SET_OFF_DUTY",
