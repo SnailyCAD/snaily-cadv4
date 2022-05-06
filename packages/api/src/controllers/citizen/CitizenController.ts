@@ -68,10 +68,16 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context("user") user: User) {
+  async getCitizens(@Context("cad") cad: any, @Context("user") user: User) {
+    const isCommonCardsEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.COMMON_CITIZEN_CARDS,
+      features: cad.features,
+    });
+
     const citizens = await prisma.citizen.findMany({
       where: {
-        userId: user.id,
+        userId: isCommonCardsEnabled ? undefined : user.id,
       },
     });
 
