@@ -1,4 +1,4 @@
-import type { Officer, EmsFdDeputy } from "@prisma/client";
+import type { Officer, EmsFdDeputy, CombinedLeoUnit } from "@prisma/client";
 
 import { prisma } from "lib/prisma";
 
@@ -16,6 +16,11 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
       },
       data: { statusId: null, activeCallId: null },
     }),
+    prisma.combinedLeoUnit.deleteMany({
+      where: {
+        lastStatusChangeTimestamp: { lte: lastStatusChangeTimestamp },
+      },
+    }),
   ]);
 }
 
@@ -23,7 +28,7 @@ export function filterInactiveUnits({
   unit,
   unitsInactivityFilter,
 }: {
-  unit: Officer | EmsFdDeputy;
+  unit: Officer | EmsFdDeputy | CombinedLeoUnit;
   unitsInactivityFilter: any;
 }) {
   if (!unit.lastStatusChangeTimestamp || !unitsInactivityFilter?.lastStatusChangeTimestamp) {

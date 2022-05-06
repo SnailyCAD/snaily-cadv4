@@ -357,8 +357,11 @@ export class LeoController {
     const officersWithUpdatedStatus = officers.map((u) =>
       filterInactiveUnits({ unit: u, unitsInactivityFilter }),
     );
+    const combinedUnitsWithUpdatedStatus = units.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
 
-    return [...officersWithUpdatedStatus, ...units];
+    return [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus];
   }
 
   @Post("/image/:id")
