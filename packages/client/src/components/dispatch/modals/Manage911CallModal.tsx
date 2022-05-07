@@ -58,7 +58,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   );
 
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
-  const isDispatch = router.pathname === "/dispatch" && hasDispatchPermissions;
+  const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
   const isCitizen = router.pathname.includes("/citizen");
   const isDisabled = hasActiveDispatchers ? !isCitizen && !isDispatch : isCitizen;
   const isEndDisabled = isDispatch
