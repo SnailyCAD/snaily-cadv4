@@ -55,7 +55,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
-        <a href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication">
+        <a
+          className="underline"
+          href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication"
+        >
           Click here for Documentation
         </a>
       </>
@@ -157,7 +160,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description: (
       <>
         When enabled, this will allow users to login and register with Steam.{" "}
-        <a href="https://cad-docs.caspertheghost.me/docs/steam-integration/steam-authentication">
+        <a
+          className="underline"
+          href="https://cad-docs.caspertheghost.me/docs/steam-integration/steam-authentication"
+        >
           Click here for Documentation
         </a>
       </>

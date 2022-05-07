@@ -17,7 +17,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
-import { canUseDiscordAuth } from "lib/utils";
+import { canUseThirdPartyConnections } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 
 const INITIAL_VALUES = {
@@ -39,6 +39,8 @@ export default function Login() {
     deleted: tError("userDeleted"),
     discordNameInUse: tError("discordNameInUse"),
     cannotRegisterFirstWithDiscord: tError("cannotRegisterFirstWithDiscord"),
+    steamNameInUse: tError("steamNameInUse"),
+    cannotRegisterFirstWithSteam: tError("cannotRegisterFirstWithSteam"),
     userBanned: tError("userBanned"),
     whitelistPending: tError("whitelistPending"),
     whitelistDeclined: tError("whitelistDeclined"),
@@ -102,8 +104,8 @@ export default function Login() {
 
   const showHr =
     !ALLOW_REGULAR_LOGIN ||
-    (STEAM_OAUTH && canUseDiscordAuth()) ||
-    (DISCORD_AUTH && canUseDiscordAuth()) ||
+    (STEAM_OAUTH && canUseThirdPartyConnections()) ||
+    (DISCORD_AUTH && canUseThirdPartyConnections()) ||
     !!user?.id;
 
   return (
@@ -169,7 +171,7 @@ export default function Login() {
                     </Button>
                   ) : null}
 
-                  {DISCORD_AUTH && canUseDiscordAuth() ? (
+                  {DISCORD_AUTH && canUseThirdPartyConnections() ? (
                     <Button
                       type="button"
                       onClick={handleDiscordLogin}
@@ -180,7 +182,7 @@ export default function Login() {
                     </Button>
                   ) : null}
 
-                  {STEAM_OAUTH && canUseDiscordAuth() ? (
+                  {STEAM_OAUTH && canUseThirdPartyConnections() ? (
                     <Button
                       type="button"
                       onClick={handleSteamLogin}
