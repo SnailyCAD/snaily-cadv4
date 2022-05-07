@@ -55,7 +55,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
-        <a href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication">
+        <a
+          className="underline"
+          href="https://cad-docs.caspertheghost.me/docs/discord-integration/discord-authentication"
+        >
           Click here for Documentation
         </a>
       </>
@@ -151,6 +154,20 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Common Citizen Cards",
     description:
       "When enabled, this will allow any officers to edit, register vehicles/weapons to, create medical records to any citizen.",
+  },
+  STEAM_OAUTH: {
+    name: "Steam OAuth",
+    description: (
+      <>
+        When enabled, this will allow users to login and register with Steam.{" "}
+        <a
+          className="underline"
+          href="https://cad-docs.caspertheghost.me/docs/steam-integration/steam-authentication"
+        >
+          Click here for Documentation
+        </a>
+      </>
+    ),
   },
 };
 

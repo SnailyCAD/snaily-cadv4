@@ -19,6 +19,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   DL_EXAMS: "/leo/dl-exams",
   DMV: "/leo/dmv",
   USER_API_TOKENS: "/user/api-token",
+  STEAM_OAUTH: "/v1/auth/steam",
 };
 
 @Middleware()

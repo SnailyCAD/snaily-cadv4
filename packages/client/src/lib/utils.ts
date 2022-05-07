@@ -102,7 +102,7 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   return getUnitDepartment(unit)?.value.value ?? null;
 }
 
-export function canUseDiscordAuth() {
+export function canUseThirdPartyConnections() {
   return typeof window !== "undefined" && window.location === window.parent.location;
 }
 

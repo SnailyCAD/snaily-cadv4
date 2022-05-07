@@ -81,7 +81,7 @@ interface MarkButtonProps {
   icon: React.ReactNode;
 }
 
-const MarkButton = ({ format, icon }: MarkButtonProps) => {
+function MarkButton({ format, icon }: MarkButtonProps) {
   const editor = useSlate();
   const isActive = isMarkActive(editor, format);
 
@@ -98,4 +98,4 @@ const MarkButton = ({ format, icon }: MarkButtonProps) => {
       </Button>
     </RToolbar.ToolbarToggleItem>
   );
-};
+}
