@@ -12,7 +12,7 @@ import {
   formatOfficerDepartment,
   requestAll,
   filterLicenseTypes,
-  canUseDiscordAuth,
+  canUseThirdPartyConnections,
   isUnitDisabled,
 } from "../src/lib/utils";
 
@@ -250,13 +250,13 @@ test("Should filter license types -> INSURANCE_STATUS", () => {
 });
 
 test("Should handle Discord auth -> window not defined", () => {
-  expect(canUseDiscordAuth()).toBe(false);
+  expect(canUseThirdPartyConnections()).toBe(false);
 });
 
 test("Should handle Discord auth -> window defined", () => {
   // @ts-expect-error testing purposes
   global.window = { location: "test", parent: { location: "test" } };
-  expect(canUseDiscordAuth()).toBe(true);
+  expect(canUseThirdPartyConnections()).toBe(true);
 });
 
 describe("isUnitDisabled", () => {

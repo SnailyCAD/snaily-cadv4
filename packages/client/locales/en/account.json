@@ -38,7 +38,13 @@
     "dotColor": "Dot color",
     "fullRowColor": "Full row color",
     "userApiToken": "User Api Token",
-    "reGenerateToken": "Re-generate token"
+    "reGenerateToken": "Re-generate token",
+    "discord": "Discord",
+    "steam": "Steam",
+    "connectSteam": "Connect Steam account",
+    "disconnectSteam": "Disconnect Steam account",
+    "disconnectSteamText": "This will remove the ability to login via Steam.",
+    "connectSteamText": "This will add the ability to login via Steam."
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

@@ -49,7 +49,7 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
   async function handleUnmerge() {
     if (!unit) return;
 
-    const json = await execute(`/dispatch/status/unmerge/${unit.id}`, {
+    const { json } = await execute(`/dispatch/status/unmerge/${unit.id}`, {
       method: "POST",
     });
 
