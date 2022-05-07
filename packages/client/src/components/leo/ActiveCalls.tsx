@@ -5,7 +5,14 @@ import { Button } from "components/Button";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
+import {
+  AssignedUnit,
+  Call911,
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  Officer,
+  ShouldDoType,
+} from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -302,7 +309,9 @@ export function ActiveCalls() {
                   assignedUnits: (
                     <Droppable
                       accepts={[DndActions.MoveUnitTo911Call]}
-                      onDrop={(item) => void handleAssignToCall(call, item)}
+                      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
+                        void handleAssignToCall(call, item.id)
+                      }
                       canDrop={(item) =>
                         isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)
                       }
