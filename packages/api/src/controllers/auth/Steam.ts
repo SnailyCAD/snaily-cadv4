@@ -61,8 +61,6 @@ export class SteamOAuthController {
       prisma.cad.findFirst({ include: { autoSetUserProperties: true } }),
     ]);
 
-    console.log({ steamData });
-
     const steamId = steamData.steamid;
     const steamUsername = steamData.personaname;
 
