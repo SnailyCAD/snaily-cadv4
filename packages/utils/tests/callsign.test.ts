@@ -34,7 +34,7 @@ export const COMBINED_UNIT_WITH_TEMPLATE = {
   ...COMBINED_UNIT,
   incremental: 2,
   pairedUnitTemplate: "TROJAN-{incremental}",
-} as any;
+};
 
 const DEFAULT_TEMPLATE = "{department}{callsign1} - {callsign2}{division}";
 const PAIRED_UNIT_TEMPLATE = "1A-{callsign1}";

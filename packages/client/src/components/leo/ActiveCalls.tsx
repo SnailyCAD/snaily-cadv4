@@ -212,10 +212,6 @@ export function ActiveCalls() {
     }
   }
 
-  async function handleDrop(call: Full911Call, item: { id: string }) {
-    handleAssignToCall(call, item.id);
-  }
-
   async function handleUnassignFromCall(call: Full911Call) {
     const { json } = await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
@@ -306,7 +302,7 @@ export function ActiveCalls() {
                   assignedUnits: (
                     <Droppable
                       accepts={[DndActions.MoveUnitTo911Call]}
-                      onDrop={(item) => handleDrop(call, item)}
+                      onDrop={(item) => void handleAssignToCall(call, item)}
                       canDrop={(item) =>
                         isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)
                       }

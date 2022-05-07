@@ -1,5 +1,6 @@
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
+import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
 import type { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
@@ -26,7 +27,7 @@ export function AlertModal(props: Props) {
 
   return (
     <Modal
-      className={`w-[550px] ${props.className}`}
+      className={classNames("w-[550px]", props.className)}
       title={props.title}
       onClose={handleClose}
       isOpen={isOpen(props.id)}

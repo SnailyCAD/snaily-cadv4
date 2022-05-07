@@ -2,6 +2,7 @@ import * as React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "react-bootstrap-icons";
 import { useModal } from "state/modalState";
+import { classNames } from "lib/classNames";
 
 export interface ModalProps {
   modalStyles?: React.CSSProperties;
@@ -65,7 +66,10 @@ export function Modal({
           >
             <div
               style={modalStyles}
-              className={`z-30 max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg ${className}`}
+              className={classNames(
+                "z-30 max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg",
+                className,
+              )}
             >
               <Dialog.Title
                 as="h3"

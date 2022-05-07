@@ -330,8 +330,8 @@ function createPanicButtonEmbed(
     : cad.miscCadSettings.callsignTemplate;
 
   const callsign = generateCallsign(unit as any, template);
-  const badgeNumber = isBadgeNumberEnabled && !isCombined ? `${unit.badgeNumber} - ` : "";
-  const officerName = `${badgeNumber}${callsign} ${unitName}`;
+  const badgeNumber = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumber} - `;
+  const officerName = isCombined ? `${callsign}` : `${badgeNumber}${callsign} ${unitName}`;
 
   return {
     embeds: [

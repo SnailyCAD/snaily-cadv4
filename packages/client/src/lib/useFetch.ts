@@ -150,15 +150,13 @@ function getErrorObj(error: unknown) {
   let errorObj = {};
 
   if (isAxiosError(error)) {
-    const err = error as AxiosError;
-
     errorObj = {
-      message: err.message,
-      status: err.response?.status,
-      response: err.response,
-      method: err.config.method,
-      data: err.config.data,
-      url: err.config.url,
+      message: error.message,
+      status: error.response?.status,
+      response: error.response,
+      method: error.config.method,
+      data: error.config.data,
+      url: error.config.url,
     };
   }
 

@@ -72,7 +72,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     socketEvent,
     (data: Officer[] | null) => {
       if (data && Array.isArray(data)) {
-        getActiveUnit(data);
+        void getActiveUnit(data);
       }
     },
     [setActiveUnit, activeUnit],

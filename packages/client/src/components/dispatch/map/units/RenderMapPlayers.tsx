@@ -80,12 +80,12 @@ export function RenderMapPlayers() {
 
   return (
     <>
-      {players.map((player, idx) => {
+      {players.map((player) => {
         const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
         if (!pos) return null;
 
         return (
-          <Marker icon={PLAYER_ICON} key={idx} position={pos}>
+          <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
             <Tooltip direction="top">{player.name}</Tooltip>
 
             <Popup minWidth={500}>

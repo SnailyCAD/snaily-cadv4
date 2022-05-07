@@ -3,20 +3,20 @@ import { ArrowsExpand } from "react-bootstrap-icons";
 import { useTranslations } from "use-intl";
 import { handleFilter, sortValues } from "src/pages/admin/values/[path]";
 import { Button } from "components/Button";
-import type { AnyValue } from "@snailycad/utils";
+import type { DriversLicenseCategoryValue } from "@snailycad/types";
 
 interface ListProps {
-  values: AnyValue[];
+  values: DriversLicenseCategoryValue[];
   search: string;
   setList: any;
-  handleEdit(value: AnyValue): void;
-  handleDelete(value: AnyValue): void;
+  handleEdit(value: DriversLicenseCategoryValue): void;
+  handleDelete(value: DriversLicenseCategoryValue): void;
 }
 
 export function SortableList({ values, search, setList, handleEdit, handleDelete }: ListProps) {
   const common = useTranslations("Common");
 
-  function checkMoved(list: AnyValue[]) {
+  function checkMoved(list: DriversLicenseCategoryValue[]) {
     let wasMoved = false;
 
     for (let i = 0; i < values.length; i++) {
@@ -49,12 +49,7 @@ export function SortableList({ values, search, setList, handleEdit, handleDelete
               </span>
 
               <span className="text-gray-500 select-none">{++idx}.</span>
-              <span className="ml-2">
-                {typeof value.value !== "string" && value.value.type === "DIVISION" ? (
-                  <span>{(value as any).department.value?.value} / </span>
-                ) : null}
-                {typeof value.value === "string" ? value.value : value.value.value}
-              </span>
+              <span className="ml-2">{value.value.value}</span>
             </div>
 
             <div>

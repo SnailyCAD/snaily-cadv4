@@ -64,7 +64,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
       const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
 
       if (v.type === "PENAL_CODE") {
-        obj["penalCodeGroups"] = (v as any)?.groups ?? [];
+        obj["penalCodeGroups"] = (v as any).groups ?? [];
       }
 
       return { ...obj, [normalizeValue(valueType)]: v };
