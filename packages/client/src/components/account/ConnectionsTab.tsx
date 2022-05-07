@@ -29,8 +29,6 @@ export function ConnectionsTab() {
     }
   }
 
-  console.log({ STEAM_OAUTH });
-
   return (
     <TabsContent aria-label={t("connections")} value="connections">
       <h3 className="text-2xl font-semibold">{t("connections")}</h3>
