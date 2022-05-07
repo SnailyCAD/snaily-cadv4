@@ -24,7 +24,8 @@ export function ConnectionsTab() {
     const { json } = await execute(`/auth/${type}`, { method: "DELETE" });
 
     if (json && user) {
-      setUser({ ...user, discordId: null });
+      const key = type === "discord" ? "discordId" : "steamId";
+      setUser({ ...user, [key]: null });
     }
   }
 
