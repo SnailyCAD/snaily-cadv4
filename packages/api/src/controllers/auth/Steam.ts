@@ -44,6 +44,8 @@ export class SteamOAuthController {
     const steamData = await getSteamData(steamId);
     console.log({ steamData });
 
+    // TODO: update user data
+
     return steamData;
   }
 
