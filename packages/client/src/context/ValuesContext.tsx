@@ -97,12 +97,14 @@ export function normalizeValue(value: ValueType | (string & {})) {
   let split = value.toLowerCase().split(/_/);
 
   if (split.length > 1) {
-    split = split.map((v, idx) => {
+    split = split.map((valueType, idx) => {
       if (idx > 0) {
-        return [v[0]!.toUpperCase(), v.substring(1).toLowerCase()].join("");
+        const firstLetter = valueType.charAt(0);
+
+        return [firstLetter.toUpperCase(), valueType.substring(1).toLowerCase()].join("");
       }
 
-      return v.toLowerCase();
+      return valueType.toLowerCase();
     });
   }
 
