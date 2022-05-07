@@ -92,7 +92,7 @@ export default function Admin({ counts }: { counts: Counts | null }) {
   );
 }
 
-const Group = ({ name, children }: { name: string; children: React.ReactNode }) => {
+function Group({ name, children }: { name: string; children: React.ReactNode }) {
   return (
     <section className="max-w-2xl my-2 mb-7 select-none">
       <h4 className="text-lg">{name}</h4>
@@ -100,9 +100,9 @@ const Group = ({ name, children }: { name: string; children: React.ReactNode }) 
       <div className="flex justify-between">{children}</div>
     </section>
   );
-};
+}
 
-const Item = ({
+function Item({
   count,
   name,
   percentage,
@@ -110,7 +110,7 @@ const Item = ({
   count: number | string;
   name: string;
   percentage?: number;
-}) => {
+}) {
   return (
     <div className="relative flex items-end select-none">
       <div>
@@ -125,7 +125,7 @@ const Item = ({
       </div>
     </div>
   );
-};
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const [data] = await requestAll(req, [["/admin/", null]]);

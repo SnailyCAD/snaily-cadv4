@@ -10,7 +10,7 @@ interface Props extends DropdownMenu.MenuContentProps {
   extra?: { maxWidth?: number };
 }
 
-export const Dropdown = ({ trigger, children, extra, ...rest }: Props) => {
+export function Dropdown({ trigger, children, extra, ...rest }: Props) {
   const maxWidth = extra?.maxWidth ?? 150;
 
   return (
@@ -34,26 +34,27 @@ export const Dropdown = ({ trigger, children, extra, ...rest }: Props) => {
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
+}
+
+Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "ref">) {
+  return (
+    <DropdownMenu.Item asChild>
+      <Button
+        {...rest}
+        variant="transparent"
+        className={classNames(
+          "p-1 my-1 px-1.5 rounded-md transition-colors w-full text-left bg-transparent",
+          "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
+          rest.className,
+        )}
+      >
+        {children}
+      </Button>
+    </DropdownMenu.Item>
+  );
 };
 
-Dropdown.Item = ({ children, ...rest }: Omit<ButtonProps, "ref">) => (
-  <DropdownMenu.Item asChild>
-    <Button
-      {...rest}
-      variant="transparent"
-      className={classNames(
-        "p-1 my-1 px-1.5 rounded-md transition-colors w-full text-left bg-transparent",
-        "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
-        rest.className,
-      )}
-    >
-      {children}
-    </Button>
-  </DropdownMenu.Item>
-);
-
-Dropdown.LinkItem = ({ children, ...rest }: JSX.IntrinsicElements["a"]) => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElements["a"]) {
   const router = useRouter();
 
   // next/link doesn't support a "ref" prop. :(
