@@ -47,7 +47,7 @@ export function SettingsFormField({
   const borderColor = errorMessage ? "border-red-400" : "dark:border-gray-600";
 
   return (
-    <div className={classNames("w-full card mb-5 border-[1px]", borderColor)}>
+    <div className={classNames("w-full rounded-md mb-5 border-[1px]", borderColor)}>
       <div
         className={classNames(
           "py-0 gap-2",
