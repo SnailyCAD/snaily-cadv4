@@ -253,7 +253,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
   return meData;
 }
 
-function findUrl() {
+export function findUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
   const includesDockerContainerName = envUrl === "http://api:8080/v1";
 
@@ -264,7 +264,7 @@ function findUrl() {
   return envUrl;
 }
 
-function findRedirectURL() {
+export function findRedirectURL() {
   return process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
 }
 
