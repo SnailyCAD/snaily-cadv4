@@ -23,7 +23,7 @@ async function handleMigrations() {
 }
 
 try {
-  handleMigrations();
+  void handleMigrations();
   console.info("Successfully migrated.");
 } catch (e) {
   console.error("Could not migrate: ", e);

@@ -26,7 +26,7 @@ export function DiscordWebhooksTab() {
   };
 
   React.useEffect(() => {
-    refreshChannels();
+    void refreshChannels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
