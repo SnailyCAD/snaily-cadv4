@@ -12,7 +12,7 @@ interface ModalState {
   setOpen(id: ModalIds[]): void;
 
   payloads: Payloads;
-  setPayloads(payload: any): void;
+  setPayloads(payloads: Payloads): void;
 }
 
 interface UseModal extends Pick<ModalState, "canBeClosed" | "setCanBeClosed"> {
