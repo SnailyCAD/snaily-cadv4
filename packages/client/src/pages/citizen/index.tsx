@@ -32,11 +32,13 @@ const Manage911CallModal = dynamic(
 );
 
 interface Props {
-  citizens: (Citizen & { user: Pick<User, "username"> })[];
+  citizens: (Citizen & { user?: Pick<User, "username"> })[];
 }
 
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
+  const common = useTranslations("Common");
+
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
   const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
@@ -125,7 +127,7 @@ export default function CitizenPage({ citizens }: Props) {
                     {citizen.name} {citizen.surname}
                   </p>
 
-                  {COMMON_CITIZEN_CARDS ? <p>{citizen.user.username}</p> : null}
+                  {COMMON_CITIZEN_CARDS ? <p>{citizen.user?.username ?? common("none")}</p> : null}
                 </div>
               </div>
 
