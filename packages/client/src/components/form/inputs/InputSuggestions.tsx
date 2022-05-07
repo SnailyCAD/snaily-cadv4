@@ -23,13 +23,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
 
   const [localValue, setLocalValue] = React.useState("");
-  useDebounce(
-    () => {
-      onSearch(localValue);
-    },
-    150,
-    [localValue],
-  );
+  useDebounce(async () => onSearch(localValue), 150, [localValue]);
 
   const common = useTranslations("Common");
 
