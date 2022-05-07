@@ -2,7 +2,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AUTH_SCHEMA } from "@snailycad/schemas";
-import { Discord } from "react-bootstrap-icons";
+import { Discord, Steam } from "react-bootstrap-icons";
 import useFetch from "lib/useFetch";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
@@ -31,7 +31,7 @@ export default function Login() {
   const { state, execute } = useFetch();
   const t = useTranslations("Auth");
   const tError = useTranslations("Errors");
-  const { DISCORD_AUTH, ALLOW_REGULAR_LOGIN } = useFeatureEnabled();
+  const { DISCORD_AUTH, ALLOW_REGULAR_LOGIN, STEAM_OAUTH } = useFeatureEnabled();
   const { user, cad } = useAuth();
 
   const authMessages = {
@@ -88,12 +88,23 @@ export default function Login() {
     window.location.href = fullUrl;
   }
 
+  function handleSteamLogin() {
+    const url = findUrl();
+
+    const fullUrl = `${url}/auth/steam`;
+    window.location.href = fullUrl;
+  }
+
   function handleContinueAs() {
     const from = typeof router.query.from === "string" ? router.query.from : "/citizen";
     router.push(from);
   }
 
-  const showHr = !ALLOW_REGULAR_LOGIN || (DISCORD_AUTH && canUseDiscordAuth()) || !!user?.id;
+  const showHr =
+    !ALLOW_REGULAR_LOGIN ||
+    (STEAM_OAUTH && canUseDiscordAuth()) ||
+    (DISCORD_AUTH && canUseDiscordAuth()) ||
+    !!user?.id;
 
   return (
     <>
@@ -166,6 +177,17 @@ export default function Login() {
                     >
                       <Discord />
                       {t("loginViaDiscord")}
+                    </Button>
+                  ) : null}
+
+                  {STEAM_OAUTH && canUseDiscordAuth() ? (
+                    <Button
+                      type="button"
+                      onClick={handleSteamLogin}
+                      className="flex items-center justify-center gap-2 w-full mt-2"
+                    >
+                      <Steam />
+                      {t("loginViaSteam")}
                     </Button>
                   ) : null}
                 </>
