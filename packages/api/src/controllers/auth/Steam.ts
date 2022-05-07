@@ -4,11 +4,20 @@ import { BadRequest } from "@tsed/exceptions";
 import { Controller } from "@tsed/di";
 import { URL } from "node:url";
 import { prisma } from "lib/prisma";
-import type { User } from "@prisma/client";
+import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { IsAuth } from "middlewares/IsAuth";
 import { Description } from "@tsed/schema";
 import { request } from "undici";
 import { findRedirectURL, findUrl } from "./Discord";
+import { getSessionUser } from "lib/auth/user";
+import { signJWT } from "utils/jwt";
+import {
+  AUTH_TOKEN_EXPIRES_MS,
+  AUTH_TOKEN_EXPIRES_S,
+  getDefaultPermissionsForNewUser,
+} from "./Auth";
+import { setCookie } from "utils/setCookie";
+import { Cookie } from "@snailycad/config";
 
 const callbackUrl = makeCallbackURL(findUrl());
 const STEAM_API_KEY = process.env["STEAM_API_KEY"];
@@ -36,29 +45,143 @@ export class SteamOAuthController {
     const redirectURL = findRedirectURL();
     const identity = query["openid.identity"];
 
-    const steamId = identity?.replace("https://steamcommunity.com/openid/id/", "");
-    if (!steamId) {
+    const rawSteamId = identity?.replace("https://steamcommunity.com/openid/id/", "");
+    if (!rawSteamId) {
       return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
     }
 
-    const steamData = await getSteamData(steamId);
+    const users = await prisma.user.count();
+    if (users <= 0) {
+      return res.redirect(`${redirectURL}/auth/login?error=cannotRegisterFirstWithDiscord`);
+    }
+
+    const [steamData, authUser, cad] = await Promise.all([
+      getSteamData(rawSteamId),
+      getSessionUser(req, false),
+      prisma.cad.findFirst({ include: { autoSetUserProperties: true } }),
+    ]);
+
     console.log({ steamData });
 
-    // TODO: update user data
+    const steamId = steamData.steamid;
+    const steamUsername = steamData.personaname;
+
+    const user = await prisma.user.findFirst({
+      where: { steamId: steamData.steamid },
+    });
+
+    /**
+     * a user was found with the steamId, but the user is not authenticated.
+     *
+     * -> log the user in and set the cookie
+     */
+    if (!authUser && user) {
+      validateUser(user);
+
+      // authenticate user with cookie
+      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
+      setCookie({
+        res,
+        name: Cookie.Session,
+        expires: AUTH_TOKEN_EXPIRES_MS,
+        value: jwtToken,
+      });
+
+      return res.redirect(`${redirectURL}/citizen`);
+    }
+
+    /**
+     * there is no user authenticated and there is no user with the steamId already registered
+     *
+     * -> register the account and set cookie
+     */
+    if (!user && !authUser) {
+      const existingUserWithUsername = await prisma.user.findUnique({
+        where: { username: steamUsername },
+      });
+
+      if (existingUserWithUsername) {
+        return res.redirect(`${redirectURL}/auth/login?error=steamNameInUse`);
+      }
+
+      const user = await prisma.user.create({
+        data: {
+          username: steamUsername,
+          password: "",
+          steamId,
+          permissions: getDefaultPermissionsForNewUser(cad),
+          whitelistStatus: cad?.whitelisted ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+        },
+      });
+
+      validateUser(user);
+
+      const jwtToken = signJWT({ userId: user.id }, AUTH_TOKEN_EXPIRES_S);
+      setCookie({
+        res,
+        name: Cookie.Session,
+        expires: AUTH_TOKEN_EXPIRES_MS,
+        value: jwtToken,
+      });
+
+      return res.redirect(`${redirectURL}/citizen`);
+    }
+
+    if (authUser && user) {
+      if (user.id === authUser.id) {
+        const updated = await prisma.user.update({
+          where: { id: authUser.id },
+          data: { steamId },
+        });
+
+        validateUser(updated);
+
+        return res.redirect(`${redirectURL}/account?tab=discord&success`);
+      }
+
+      return res.redirect(`${redirectURL}/account?tab=discord&error=steamAccountAlreadyLinked`);
+    }
+
+    if (authUser && !user) {
+      const updated = await prisma.user.update({
+        where: { id: authUser.id },
+        data: { steamId },
+      });
+
+      validateUser(updated);
+
+      return res.redirect(`${redirectURL}/account?tab=discord&success`);
+    }
 
     return steamData;
+
+    function validateUser(user: User) {
+      if (user.rank !== Rank.OWNER) {
+        if (user.banned) {
+          return res.redirect(`${redirectURL}/auth/login?error=userBanned`);
+        }
+
+        if (user.whitelistStatus === WhitelistStatus.PENDING) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistPending`);
+        }
+
+        if (user.whitelistStatus === WhitelistStatus.DECLINED) {
+          return res.redirect(`${redirectURL}/auth/login?error=whitelistDeclined`);
+        }
+      }
+    }
   }
 
   @Delete("/")
   @UseBefore(IsAuth)
   @Description("Remove Steam OAuth2 from the authenticated user")
-  async removeDiscordAuth(@Context("user") user: User) {
+  async removeSteamOauth(@Context("user") user: User) {
     await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
-        discordId: null,
+        steamId: null,
       },
     });
 

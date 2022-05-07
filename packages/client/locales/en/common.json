@@ -139,6 +139,8 @@
     "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}",
     "forbidden": "Forbidden",
     "pageNotFound": "Page Not Found",
-    "unitCallsignInUse": "This full callsign is already in-use by another unit. Please specify another callsign."
+    "unitCallsignInUse": "This full callsign is already in-use by another unit. Please specify another callsign.",
+    "steamNameInUse": "Could not create a new account with Steam since the username is already in-use.",
+    "steamAccountAlreadyLinked": "This Steam account is already linked to another account."
   }
 }
