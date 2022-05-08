@@ -1,4 +1,8 @@
 version = 1
+test_patterns = [
+  "tests/*.test.ts*",
+]
+
 
 [[analyzers]]
 name = "test-coverage"

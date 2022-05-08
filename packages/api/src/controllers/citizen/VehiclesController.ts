@@ -141,7 +141,7 @@ export class VehiclesController {
   @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -182,7 +182,7 @@ export class VehiclesController {
     }
 
     const isDmvEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: cad.features,
       feature: Feature.DMV,
       defaultReturn: false,
     });

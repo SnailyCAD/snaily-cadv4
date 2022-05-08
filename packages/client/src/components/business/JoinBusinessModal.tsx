@@ -12,12 +12,12 @@ import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { useRouter } from "next/router";
-import { type FullBusiness, useBusinessState } from "state/businessState";
+import { useBusinessState, type FullEmployee } from "state/businessState";
 import { toastMessage } from "lib/toastMessage";
-import { WhitelistStatus } from "@snailycad/types";
+import { Business, WhitelistStatus } from "@snailycad/types";
 
 interface Props {
-  onCreate(business: FullBusiness): void;
+  onCreate(business: FullEmployee & { business: Business }): void;
 }
 
 export function JoinBusinessModal({ onCreate }: Props) {

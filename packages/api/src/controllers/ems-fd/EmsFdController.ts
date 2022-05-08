@@ -264,7 +264,7 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputies(@Context("cad") cad: any) {
+  async getActiveDeputies(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {

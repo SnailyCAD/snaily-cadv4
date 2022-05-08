@@ -1,4 +1,4 @@
-import { Rank, WhitelistStatus } from "@prisma/client";
+import { MiscCadSettings, Rank, WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -184,7 +184,7 @@ export class AdminManageUnitsController {
   async updateUnit(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 

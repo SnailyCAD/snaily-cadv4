@@ -71,7 +71,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
       </div>
 
       {disabled ? null : (
-        <div className={classNames(isHovering ? "flex" : "hidden")}>
+        <div className={classNames(isHovering || open || isEditing ? "flex" : "hidden")}>
           <Button
             className="p-0 px-1 mr-2"
             small

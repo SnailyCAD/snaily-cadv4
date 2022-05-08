@@ -22,7 +22,7 @@ export function calculateAge(dateOfBirth: string | Date): string {
   return age as string;
 }
 
-type Config = [string, any?][];
+type Config = [string, unknown?][];
 export async function requestAll(
   req: IncomingMessage & { cookies?: NextApiRequestCookies },
   config: Config,

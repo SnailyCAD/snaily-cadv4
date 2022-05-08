@@ -331,7 +331,7 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficers(@Context("cad") cad: any) {
+  async getActiveOfficers(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
     const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
 
     if (unitsInactivityFilter) {

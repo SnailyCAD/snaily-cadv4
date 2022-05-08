@@ -85,9 +85,13 @@ export default function BusinessPage(props: Props) {
         </ul>
       </section>
 
-      <JoinBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
+      <JoinBusinessModal onCreate={(bus) => setBusinesses((p) => [...p, bus])} />
       {hasCreateBusinessesPerms ? (
-        <CreateBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
+        <CreateBusinessModal
+          onCreate={({ business, employee }) =>
+            setBusinesses((p) => [...p, { ...employee, business }])
+          }
+        />
       ) : null}
     </Layout>
   );

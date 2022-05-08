@@ -62,8 +62,7 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
     }
 
-    const data = await getDiscordData(code);
-    const authUser = await getSessionUser(req, false);
+    const [data, authUser] = await Promise.all([getDiscordData(code), getSessionUser(req, false)]);
 
     if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);

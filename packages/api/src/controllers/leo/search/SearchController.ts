@@ -21,7 +21,7 @@ import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 
-const citizenSearchInclude = (cad: cad & { features: CadFeature[] }) => {
+const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
     features: cad.features,
@@ -86,7 +86,10 @@ export class SearchController {
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
-  async searchName(@BodyParams("name") fullName: string, @Context("cad") cad: any) {
+  async searchName(
+    @BodyParams("name") fullName: string,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
@@ -214,7 +217,10 @@ export class SearchController {
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
-  async customFieldSearch(@BodyParams() body: unknown, @Context("cad") cad: any) {
+  async customFieldSearch(
+    @BodyParams() body: unknown,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
     const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
 
     const customField = await prisma.customField.findUnique({

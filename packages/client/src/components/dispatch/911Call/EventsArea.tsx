@@ -21,7 +21,10 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
   const t = useTranslations("Calls");
   const [tempEvent, setTempEvent] = React.useState<Call911Event | null>(null);
 
-  async function onEventSubmit(values: { description: string }, helpers: FormikHelpers<any>) {
+  async function onEventSubmit(
+    values: { description: string },
+    helpers: FormikHelpers<{ description: string }>,
+  ) {
     if (!call) return;
 
     if (tempEvent) {

@@ -71,7 +71,7 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context("cad") cad: any, @Context("user") user: User) {
+  async getCitizens(@Context("cad") cad: { features?: CadFeature[] }, @Context("user") user: User) {
     const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
 
     const citizens = await prisma.citizen.findMany({
@@ -87,7 +87,7 @@ export class CitizenController {
 
   @Get("/:id")
   async getCitizen(
-    @Context("cad") cad: any,
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
   ) {
@@ -229,7 +229,7 @@ export class CitizenController {
   async updateCitizen(
     @PathParams("id") citizenId: string,
     @Context("user") user: User,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
