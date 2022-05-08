@@ -19,6 +19,9 @@ import { useEmsFdState } from "state/emsFdState";
 import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { RegisteredVehicle } from "@snailycad/types";
+import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 
 interface Props {
   call: Full911Call | null;
@@ -69,6 +72,7 @@ export function DispatchCallTowModal({ call }: Props) {
     deliveryAddress: "",
     model: "",
     plate: "",
+    plateOrVin: "",
   };
 
   return (
@@ -126,7 +130,32 @@ export function DispatchCallTowModal({ call }: Props) {
                 </FormField>
 
                 <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
-                  <Input onChange={handleChange} name="plate" value={values.plate} />
+                  <InputSuggestions
+                    onSuggestionClick={(suggestion: VehicleSearchResult) => {
+                      setFieldValue("plate", suggestion.plate);
+                      setFieldValue("model", suggestion.model.value.value);
+                    }}
+                    Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                      <div className="flex items-center">
+                        <p>
+                          {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
+                        </p>
+                      </div>
+                    )}
+                    options={{
+                      apiPath: "/search/vehicle?includeMany=true",
+                      method: "POST",
+                      dataKey: "plateOrVin",
+                    }}
+                    inputProps={{
+                      value: values.plate,
+                      name: "plate",
+                      onChange: (e) => {
+                        handleChange(e);
+                        setFieldValue("plateOrVin", e.target.value);
+                      },
+                    }}
+                  />
                 </FormField>
 
                 <FormField optional errorMessage={errors.model} label={t("Vehicles.model")}>
