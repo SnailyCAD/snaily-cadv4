@@ -46,7 +46,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
           </div>
         </div>
 
-        <p className="my-2 mt-5 text-neutral-600 dark:text-gray-400 max-w-2xl">
+        <p className="my-2 mt-5 text-neutral-700 dark:text-gray-400 max-w-2xl">
           Here you can mass-import vehicles that are registered to a citizen. In the table below you
           can also view all registered vehicles.
         </p>

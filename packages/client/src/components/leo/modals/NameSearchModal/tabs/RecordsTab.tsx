@@ -70,7 +70,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
             <h3 className="text-xl font-semibold">{title}</h3>
 
             {data.length <= 0 ? (
-              <p className="text-gray-400 my-2">{noValuesText}</p>
+              <p className="text-neutral-700 dark:text-gray-400 my-2">{noValuesText}</p>
             ) : (
               <RecordsTable data={data} />
             )}
@@ -80,7 +80,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
             <h3 className="text-xl font-semibold">{title}</h3>
 
             {data.length <= 0 ? (
-              <p className="text-gray-400 my-2">{noValuesText}</p>
+              <p className="text-neutral-700 dark:text-gray-400 my-2">{noValuesText}</p>
             ) : (
               <RecordsTable data={data} />
             )}

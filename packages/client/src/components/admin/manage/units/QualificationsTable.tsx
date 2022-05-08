@@ -46,7 +46,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
         </header>
 
         {!qualifications.length ? (
-          <p className="my-2 text-gray-400">{t("noQualifications")}</p>
+          <p className="my-2 text-neutral-700 dark:text-gray-400">{t("noQualifications")}</p>
         ) : (
           <QualificationAwardsTable setUnit={setUnit} unit={{ ...unit, qualifications }} />
         )}
@@ -67,7 +67,7 @@ export function QualificationsTable({ setUnit, unit }: Props) {
         </header>
 
         {!awards.length ? (
-          <p className="my-2 text-gray-400">{t("noAwards")}</p>
+          <p className="my-2 text-neutral-700 dark:text-gray-400">{t("noAwards")}</p>
         ) : (
           <QualificationAwardsTable setUnit={setUnit} unit={{ ...unit, qualifications: awards }} />
         )}

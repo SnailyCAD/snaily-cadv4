@@ -24,6 +24,7 @@ export const citizenInclude = {
   user: { select: userProperties },
   flags: true,
   vehicles: {
+    orderBy: { createdAt: "desc" },
     include: {
       flags: true,
       model: { include: { value: true } },
@@ -38,12 +39,13 @@ export const citizenInclude = {
     },
   },
   weapons: {
+    orderBy: { createdAt: "desc" },
     include: {
       model: { include: { value: true } },
       registrationStatus: true,
     },
   },
-  medicalRecords: { include: { bloodGroup: true } },
+  medicalRecords: { include: { bloodGroup: true }, orderBy: { createdAt: "desc" } },
   ethnicity: true,
   gender: true,
   weaponLicense: true,
@@ -63,7 +65,7 @@ export const citizenInclude = {
       },
     },
   },
-};
+} as const;
 
 @Controller("/citizen")
 @UseBeforeEach(IsAuth)
@@ -76,6 +78,7 @@ export class CitizenController {
       where: {
         userId: checkCitizenUserId ? user.id : undefined,
       },
+      orderBy: { createdAt: "desc" },
       include: { user: { select: userProperties } },
     });
 

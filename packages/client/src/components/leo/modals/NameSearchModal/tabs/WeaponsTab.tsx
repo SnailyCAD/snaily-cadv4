@@ -33,7 +33,7 @@ export function NameSearchWeaponsTab() {
       <h3 className="text-xl font-semibold">{t("Weapons.registeredWeapons")}</h3>
 
       {currentResult.weapons.length <= 0 ? (
-        <p className="text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
+        <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noWeaponsCitizen")}</p>
       ) : (
         <Table
           data={currentResult.weapons.map((weapon) => ({

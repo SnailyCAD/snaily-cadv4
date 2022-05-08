@@ -32,7 +32,7 @@ export default function ImportCitizensPage() {
           </div>
         </div>
 
-        <p className="my-2 text-neutral-600 dark:text-gray-400 max-w-2xl">
+        <p className="my-2 text-neutral-700 dark:text-gray-400 max-w-2xl">
           Here you can mass import citizens that may not be connected to a registered user account.
         </p>
       </header>

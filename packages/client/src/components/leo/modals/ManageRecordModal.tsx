@@ -166,6 +166,7 @@ export function ManageRecordModal({
                   name: "citizenName",
                   onChange: handleChange,
                   disabled: isReadOnly || !!record,
+                  errorMessage: errors.citizenName,
                 }}
                 onSuggestionClick={(suggestion: Citizen) => {
                   const newValues = {

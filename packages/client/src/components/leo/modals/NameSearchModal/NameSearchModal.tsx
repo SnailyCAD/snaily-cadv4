@@ -272,7 +272,7 @@ export function NameSearchModal() {
                           className="cursor-pointer"
                         >
                           <img
-                            className="rounded-full w-[100px] h-[100px] object-cover"
+                            className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", currentResult.imageId)}
                           />

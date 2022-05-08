@@ -34,7 +34,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
   return (
     <TabsContent aria-label={t("pendingBusinesses")} value="pendingBusinesses">
       <h2 className="text-2xl font-semibold mb-2">{t("pendingBusinesses")}</h2>
-      <p className="text-gray-300">{t("info_pendingBusinesses")}</p>
+      <p className="text-neutral-700 dark:text-gray-400">{t("info_pendingBusinesses")}</p>
 
       <Table
         data={businesses.map((business) => ({

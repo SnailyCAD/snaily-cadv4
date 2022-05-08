@@ -139,7 +139,7 @@ export function Manage2FAModal() {
 
             {currentStep === Steps.ScanQRCode && dataUri ? (
               <div className="flex flex-col items-center">
-                <p className="my-3 mb-5 dark:text-gray-300">{t("scanQRCode")}</p>
+                <p className="my-3 mb-5 text-neutral-700 dark:text-gray-400">{t("scanQRCode")}</p>
 
                 <img
                   className="self-center"
@@ -153,7 +153,7 @@ export function Manage2FAModal() {
 
             {currentStep === Steps.VerifyCode ? (
               <>
-                <p className="my-3 mb-5 dark:text-gray-300">{t("verifyCode")}</p>
+                <p className="my-3 mb-5 text-neutral-700 dark:text-gray-400">{t("verifyCode")}</p>
 
                 <FormField errorMessage={errors.totpCode} label="Code">
                   <Input
