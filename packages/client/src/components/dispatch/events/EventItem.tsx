@@ -51,6 +51,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     });
 
     setTempEvent(null);
+    setOpen(false);
     handleClose();
   }
 
@@ -59,7 +60,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
       ref={actionsRef}
       className={classNames(
         "flex justify-between dark:hover:bg-dark-bright hover:bg-gray-200/70 rounded-md px-1.5",
-        isEditing && "dark:bg-dark-bright bg-gray-200/70",
+        (isEditing || open) && "dark:bg-dark-bright bg-gray-200/70",
       )}
     >
       <div>
@@ -91,6 +92,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
           onDeleteClick={deleteEvent}
           title={t("deleteCallEvent")}
           id={ModalIds.AlertDeleteCallEvent}
+          onClose={() => setOpen(false)}
         />
       ) : null}
     </li>
