@@ -51,6 +51,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
                 key={event.id}
                 setTempEvent={setTempEvent}
                 event={event}
+                isEditing={tempEvent?.id === event.id}
               />
             ))
         )}
