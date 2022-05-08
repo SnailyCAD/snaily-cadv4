@@ -11,8 +11,8 @@ import { UpdateEventForm } from "../events/UpdateEventForm";
 interface Props {
   call: Full911Call;
   disabled?: boolean;
-  onUpdate?(event: Call911Event): void;
-  onCreate?(event: Call911Event): void;
+  onUpdate?(event: Full911Call): void;
+  onCreate?(event: Full911Call): void;
 }
 
 export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
@@ -39,7 +39,9 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
         data: values,
       });
 
-      onCreate?.(json);
+      if (json.id) {
+        onCreate?.(json);
+      }
     }
 
     setTempEvent(null);

@@ -66,8 +66,15 @@ export default function ManageCustomFields({ customFields: data }: Props) {
         permissions: [Permissions.ManageCustomFields, Permissions.ViewCustomFields],
       }}
     >
-      <header className="flex items-center justify-between mb-5">
-        <Title className="!mb-0">{t("MANAGE_CUSTOM_FIELDS")}</Title>
+      <header className="flex items-start justify-between mb-5">
+        <div className="flex flex-col">
+          <Title className="!mb-0">{t("MANAGE_CUSTOM_FIELDS")}</Title>
+
+          <p className="max-w-2xl mt-2 text-neutral-600 dark:text-gray-400">
+            Here you can add custom fields, these fields can be added by any officer to citizens
+            when searching their information.
+          </p>
+        </div>
 
         <div>
           <Button onClick={() => openModal(ModalIds.ManageCustomField)}>

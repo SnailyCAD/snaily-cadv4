@@ -16,7 +16,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { CallEventsArea } from "../911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { Call911Event, EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
@@ -70,69 +70,13 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
-  const handleAddEvent = React.useCallback(
-    (event: Call911Event | null) => {
-      if (!event?.id || !call) return;
-
-      setCall?.({
-        ...call,
-        events: [event, ...call.events],
-      });
-
-      setCalls(
-        calls.map((c) => {
-          if (c.id === call.id) {
-            return { ...c, events: [event, ...c.events] };
-          }
-
-          return c;
-        }),
-      );
+  const handleAddUpdateCallEvent = React.useCallback(
+    (call: Full911Call) => {
+      setCall?.(call);
+      setCalls(calls.map((c) => (c.id === call.id ? call : c)));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [call, calls, setCalls],
-  );
-
-  const handleUpdateEvent = React.useCallback(
-    (event: Call911Event | null) => {
-      if (!event?.id || !call) return;
-
-      function update(c: Full911Call) {
-        if (!event?.id || !call) return c;
-
-        if (c.id === call?.id) {
-          return {
-            ...c,
-            events: c.events.map((ev) => {
-              if (ev.id === event.id) {
-                return event;
-              }
-
-              return ev;
-            }),
-          };
-        }
-
-        return c;
-      }
-
-      setCall?.((p) => ({
-        ...(p ?? call),
-        events: update(p ?? call).events,
-      }));
-
-      setCalls(
-        calls.map((c) => {
-          if (c.id === call.id) {
-            return update(c);
-          }
-
-          return c;
-        }),
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [call, calls, setCalls],
+    [call, calls],
   );
 
   function handleClose() {
@@ -170,15 +114,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
       });
 
       if (json.id) {
-        setCalls(
-          calls.map((c) => {
-            if (c.id === json.id) {
-              return json;
-            }
-
-            return c;
-          }),
-        );
+        setCalls(calls.map((c) => (c.id === json.id ? json : call)));
         closeModal(ModalIds.Manage911Call);
       }
     } else {
@@ -188,12 +124,13 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
       });
 
       if (json.id) {
-        isCitizen &&
+        if (isCitizen) {
           toastMessage({
             title: common("success"),
             message: t("911CallCreated"),
             icon: "success",
           });
+        }
 
         setCalls([json, ...calls]);
         closeModal(ModalIds.Manage911Call);
@@ -388,8 +325,8 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
         {call ? (
           <CallEventsArea
-            onCreate={handleAddEvent}
-            onUpdate={handleUpdateEvent}
+            onCreate={handleAddUpdateCallEvent}
+            onUpdate={handleAddUpdateCallEvent}
             disabled={isEndDisabled}
             call={call}
           />
