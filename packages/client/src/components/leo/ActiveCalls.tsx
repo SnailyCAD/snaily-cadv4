@@ -352,7 +352,7 @@ export function ActiveCalls() {
 
                       {TOW ? (
                         <Button
-                          disabled={!hasActiveDispatchers || (!isDispatch && !isUnitActive)}
+                          disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
                           small
                           className="ml-2"
                           onClick={() => handleCallTow(call)}
