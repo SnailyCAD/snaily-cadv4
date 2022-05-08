@@ -23,10 +23,10 @@ export function LicensesCard() {
       method: "PUT",
       data: {
         ...values,
-        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value?.id),
-        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value?.id),
-        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value?.id),
-        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value?.id),
+        driversLicenseCategory: values.driversLicenseCategory.map((v) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v) => v.value),
       },
     });
 
