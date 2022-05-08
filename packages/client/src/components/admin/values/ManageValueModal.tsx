@@ -40,10 +40,12 @@ import {
   isVehicleValue,
   isWeaponValue,
   isUnitQualification,
+  isDLCategoryValue,
   AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
+import { Textarea } from "components/form/Textarea";
 
 interface Props {
   type: ValueType;
@@ -150,7 +152,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   const INITIAL_VALUES = {
     value: value ? getValueStrFromValue(value) : "",
 
-    description: value && isUnitQualification(value) ? value.description : "",
+    description:
+      value && (isUnitQualification(value) || isDLCategoryValue(value))
+        ? value.description ?? ""
+        : "",
     qualificationType:
       value && isUnitQualification(value) ? value.qualificationType : "qualification",
 
@@ -278,6 +283,12 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
             {type === ValueType.OFFICER_RANK ? (
               <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+            ) : null}
+
+            {type === ValueType.DRIVERSLICENSE_CATEGORY ? (
+              <FormField optional label="Description">
+                <Textarea name="description" onChange={handleChange} value={values.description} />
+              </FormField>
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}

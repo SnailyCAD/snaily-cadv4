@@ -49,6 +49,7 @@ const DLC_TYPE_REGEX = /AUTOMOTIVE|AVIATION|WATER|FIREARM/;
 
 export const DLC_SCHEMA = BASE_VALUE_SCHEMA.extend({
   type: z.string().regex(DLC_TYPE_REGEX).max(255),
+  description: z.string().nullable().optional(),
 });
 
 export const DLC_ARR = z.array(DLC_SCHEMA).min(1);

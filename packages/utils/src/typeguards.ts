@@ -62,6 +62,10 @@ export function isUnitQualification(value: AnyValue): value is QualificationValu
   return hasValueObj(value) && value.value.type === ValueType.QUALIFICATION;
 }
 
+export function isDLCategoryValue(value: AnyValue): value is DriversLicenseCategoryValue {
+  return hasValueObj(value) && value.value.type === ValueType.DRIVERSLICENSE_CATEGORY;
+}
+
 export function isUnitCombined(
   unit: Officer | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedLeoUnit {

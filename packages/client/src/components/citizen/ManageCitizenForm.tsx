@@ -84,6 +84,7 @@ export function ManageCitizenForm({
         .map((v) => ({
           value: v.id,
           label: v.value.value,
+          description: v.description,
         })) ?? null,
     pilotLicenseCategory:
       citizen?.dlCategory
@@ -91,6 +92,7 @@ export function ManageCitizenForm({
         .map((v) => ({
           value: v.id,
           label: v.value.value,
+          description: v.description,
         })) ?? null,
     waterLicenseCategory:
       citizen?.dlCategory
@@ -98,6 +100,7 @@ export function ManageCitizenForm({
         .map((v) => ({
           value: v.id,
           label: v.value.value,
+          description: v.description,
         })) ?? null,
     firearmLicenseCategory:
       citizen?.dlCategory
@@ -105,6 +108,7 @@ export function ManageCitizenForm({
         .map((v) => ({
           value: v.id,
           label: v.value.value,
+          description: v.description,
         })) ?? null,
   };
 
@@ -262,11 +266,13 @@ export function ManageCitizenForm({
                   label={t("driversLicenseCategory")}
                 >
                   <Select
+                    extra={{ showDLCategoryDescriptions: true }}
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
-                      .map((v) => ({
-                        label: v.value.value,
-                        value: v.id,
+                      .map((category) => ({
+                        label: category.value.value,
+                        value: category.id,
+                        description: category.description,
                       }))}
                     value={values.driversLicenseCategory}
                     onChange={handleChange}
@@ -302,11 +308,13 @@ export function ManageCitizenForm({
                     label={t("firearmLicenseCategory")}
                   >
                     <Select
+                      extra={{ showDLCategoryDescriptions: true }}
                       values={driverslicenseCategory.values
                         .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
-                        .map((v) => ({
-                          label: v.value.value,
-                          value: v.id,
+                        .map((category) => ({
+                          label: category.value.value,
+                          value: category.id,
+                          description: category.description,
                         }))}
                       value={values.firearmLicenseCategory}
                       onChange={handleChange}
@@ -340,11 +348,13 @@ export function ManageCitizenForm({
                   label={t("pilotLicenseCategory")}
                 >
                   <Select
+                    extra={{ showDLCategoryDescriptions: true }}
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
-                      .map((v) => ({
-                        label: v.value.value,
-                        value: v.id,
+                      .map((category) => ({
+                        label: category.value.value,
+                        value: category.id,
+                        description: category.description,
                       }))}
                     value={values.pilotLicenseCategory}
                     onChange={handleChange}
@@ -377,11 +387,13 @@ export function ManageCitizenForm({
                   label={t("waterLicenseCategory")}
                 >
                   <Select
+                    extra={{ showDLCategoryDescriptions: true }}
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === DriversLicenseCategoryType.WATER)
-                      .map((v) => ({
-                        label: v.value.value,
-                        value: v.id,
+                      .map((category) => ({
+                        label: category.value.value,
+                        value: category.id,
+                        description: category.description,
                       }))}
                     value={values.waterLicenseCategory}
                     onChange={handleChange}
