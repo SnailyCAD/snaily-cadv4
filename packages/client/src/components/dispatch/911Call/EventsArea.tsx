@@ -64,6 +64,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
                 key={event.id}
                 setTempEvent={setTempEvent}
                 event={event}
+                isEditing={tempEvent?.id === event.id}
               />
             ))
         )}

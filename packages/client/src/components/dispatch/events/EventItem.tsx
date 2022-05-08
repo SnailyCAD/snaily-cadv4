@@ -15,11 +15,13 @@ interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
   event: T;
   setTempEvent: React.Dispatch<React.SetStateAction<T | null>>;
+  isEditing: boolean;
 }
 
 export function EventItem<T extends IncidentEvent | Call911Event>({
   disabled,
   event,
+  isEditing,
   setTempEvent,
 }: EventItemProps<T>) {
   const { openModal, closeModal } = useModal();
@@ -53,7 +55,13 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
   }
 
   return (
-    <li ref={actionsRef} className="flex justify-between">
+    <li
+      ref={actionsRef}
+      className={classNames(
+        "flex justify-between dark:hover:bg-dark-bright hover:bg-gray-200/70 rounded-md px-1.5",
+        isEditing && "dark:bg-dark-bright bg-gray-200/70",
+      )}
+    >
       <div>
         <span className="select-none text-gray-800 dark:text-gray-400 mr-1 font-semibold w-[90%]">
           <FullDate>{event.createdAt}</FullDate>:
