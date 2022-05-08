@@ -5,7 +5,14 @@ import { Button } from "components/Button";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
+import {
+  AssignedUnit,
+  Call911,
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  Officer,
+  ShouldDoType,
+} from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
@@ -212,10 +219,6 @@ export function ActiveCalls() {
     }
   }
 
-  async function handleDrop(call: Full911Call, item: { id: string }) {
-    handleAssignToCall(call, item.id);
-  }
-
   async function handleUnassignFromCall(call: Full911Call) {
     const { json } = await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
@@ -306,7 +309,9 @@ export function ActiveCalls() {
                   assignedUnits: (
                     <Droppable
                       accepts={[DndActions.MoveUnitTo911Call]}
-                      onDrop={(item) => handleDrop(call, item)}
+                      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
+                        void handleAssignToCall(call, item.id)
+                      }
                       canDrop={(item) =>
                         isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)
                       }
@@ -347,7 +352,7 @@ export function ActiveCalls() {
 
                       {TOW ? (
                         <Button
-                          disabled={!hasActiveDispatchers || (!isDispatch && !isUnitActive)}
+                          disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
                           small
                           className="ml-2"
                           onClick={() => handleCallTow(call)}

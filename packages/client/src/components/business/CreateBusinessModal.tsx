@@ -14,13 +14,13 @@ import { useCitizen } from "context/CitizenContext";
 import { Select } from "components/form/Select";
 import { Toggle } from "components/form/Toggle";
 import { useRouter } from "next/router";
-import type { FullEmployee } from "state/businessState";
+import type { FullBusiness, FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
 import { toastMessage } from "lib/toastMessage";
 import { WhitelistStatus } from "@snailycad/types";
 
 interface Props {
-  onCreate?(business: FullEmployee): void;
+  onCreate?(business: { employee: FullEmployee; business: FullBusiness }): void;
 }
 
 export function CreateBusinessModal({ onCreate }: Props) {

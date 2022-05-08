@@ -318,7 +318,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   };
 };
 
-export function sortValues(values: AnyValue[]): any[] {
+export function sortValues<T extends AnyValue>(values: T[]): T[] {
   return values.sort((a, b) => {
     const { position: posA, createdAt: crA } = findCreatedAtAndPosition(a);
     const { position: posB, createdAt: crB } = findCreatedAtAndPosition(b);

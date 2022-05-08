@@ -21,6 +21,10 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
   const { values, setFieldValue } = useFormikContext<{ seizedItems: SeizedItem[] }>();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
+    if (!data.item) {
+      return;
+    }
+
     if (item) {
       const seizedItems = values.seizedItems;
       const idxOf = seizedItems.indexOf(item);

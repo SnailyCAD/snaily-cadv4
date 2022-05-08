@@ -28,6 +28,8 @@ export enum Permissions {
   ManageTowCalls = "ManageTowCalls",
   ViewTowLogs = "ViewTowLogs",
 
+  CreateBusinesses = "CreateBusinesses",
+
   // admin related
   ViewUsers = "ViewUsers",
   ManageUsers = "ManageUsers",
@@ -41,6 +43,7 @@ export enum Permissions {
   ViewUnits = "ViewUnits",
   ManageUnits = "ManageUnits",
   DeleteUnits = "DeleteUnits",
+  ManageUnitCallsigns = "ManageUnitCallsigns",
 
   ViewBusinesses = "ViewBusinesses",
   ManageBusinesses = "ManageBusinesses",

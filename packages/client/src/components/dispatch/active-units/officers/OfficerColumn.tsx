@@ -97,7 +97,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
         {
           name: shouldShowSplit ? t("unmerge") : t("merge"),
           onClick: () => {
-            shouldShowSplit ? handleunMerge(officer.id) : handleMerge(officer);
+            shouldShowSplit ? void handleunMerge(officer.id) : handleMerge(officer);
           },
         },
         ...dispatchCodes,

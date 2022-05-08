@@ -9,7 +9,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ModalIds } from "types/ModalIds";
 import useFetch from "lib/useFetch";
-import { makeUnitName, requestAll } from "lib/utils";
+import { formatOfficerDepartment, makeUnitName, requestAll } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Table } from "components/shared/Table";
@@ -18,6 +18,7 @@ import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { OfficerRank } from "components/leo/OfficerRank";
+import { UnitDepartmentStatus } from "components/leo/UnitDepartmentStatus";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageDeputyModal = dynamic(
@@ -91,7 +92,8 @@ export default function MyDeputies({ deputies: data }: Props) {
             ),
             callsign: generateCallsign(deputy),
             badgeNumber: deputy.badgeNumber,
-            department: deputy.department.value.value,
+            department: formatOfficerDepartment(deputy) ?? common("none"),
+            departmentStatus: <UnitDepartmentStatus unit={deputy} />,
             division: deputy.division.value.value,
             rank: <OfficerRank unit={deputy} />,
             position: deputy.position ?? common("none"),
@@ -119,6 +121,7 @@ export default function MyDeputies({ deputies: data }: Props) {
             { Header: t("Leo.division"), accessor: "division" },
             { Header: t("Leo.rank"), accessor: "rank" },
             { Header: t("Leo.position"), accessor: "position" },
+            { Header: t("Leo.status"), accessor: "departmentStatus" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />

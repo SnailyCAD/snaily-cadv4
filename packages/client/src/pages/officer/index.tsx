@@ -7,7 +7,15 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { Bolo, LeoIncident, Officer, Record, RecordType } from "@snailycad/types";
+import {
+  Bolo,
+  EmsFdDeputy,
+  LeoIncident,
+  Officer,
+  Record,
+  RecordType,
+  ShouldDoType,
+} from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -23,63 +31,62 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
+import { useAuth } from "context/AuthContext";
 
-const NotepadModal = dynamic(async () => {
-  return (await import("components/shared/NotepadModal")).NotepadModal;
-});
-
-const SelectOfficerModal = dynamic(async () => {
-  return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
-});
-
-const CreateTicketModal = dynamic(async () => {
-  return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
-});
-
-const WeaponSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
-});
-
-const VehicleSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
-});
-
-const NameSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
-});
-
-const CreateWarrantModal = dynamic(async () => {
-  return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
-});
-
-const CustomFieldSearch = dynamic(async () => {
-  return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
-    .CustomFieldSearch;
-});
+const Modals = {
+  CreateWarrantModal: dynamic(async () => {
+    return (await import("components/leo/modals/CreateWarrantModal")).CreateWarrantModal;
+  }),
+  CustomFieldSearch: dynamic(async () => {
+    return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+      .CustomFieldSearch;
+  }),
+  NameSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
+  }),
+  VehicleSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
+  }),
+  WeaponSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+  }),
+  NotepadModal: dynamic(async () => {
+    return (await import("components/shared/NotepadModal")).NotepadModal;
+  }),
+  SelectOfficerModal: dynamic(async () => {
+    return (await import("components/leo/modals/SelectOfficerModal")).SelectOfficerModal;
+  }),
+  CreateTicketModal: dynamic(async () => {
+    return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
+  }),
+};
 
 interface Props {
-  officers: Officer[];
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: Bolo[];
   activeIncidents: LeoIncident[];
+
+  allDeputies: EmsFdDeputy[];
   allOfficers: Officer[];
 }
 
 export default function OfficerDashboard({
-  officers,
   bolos,
   calls,
   activeOfficer,
   activeIncidents,
+
   allOfficers,
+  allDeputies,
 }: Props) {
-  const state = useLeoState();
+  const leoState = useLeoState();
   const dispatchState = useDispatchState();
   const t = useTranslations("Leo");
   const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
   const { unit, audio, PanicButton } = usePanicButton();
   const { isOpen } = useModal();
+  const { user } = useAuth();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
@@ -93,15 +100,34 @@ export default function OfficerDashboard({
   }
 
   React.useEffect(() => {
-    state.setActiveOfficer(activeOfficer);
-    state.setOfficers(officers);
-    dispatchState.setActiveIncidents(activeIncidents);
-    dispatchState.setAllOfficers(allOfficers);
+    leoState.setActiveOfficer(activeOfficer);
 
     dispatchState.setCalls(calls);
     dispatchState.setBolos(bolos);
+
+    dispatchState.setActiveIncidents(activeIncidents);
+    dispatchState.setAllOfficers(allOfficers);
+
+    function activeFilter(v: EmsFdDeputy | Officer) {
+      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
+    }
+
+    const activeOfficers = [...allOfficers].filter(activeFilter);
+    const activeDeputies = [...allDeputies].filter(activeFilter);
+
+    dispatchState.setActiveDeputies(activeDeputies);
+    dispatchState.setActiveOfficers(activeOfficers);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bolos, calls, officers, activeOfficer]);
+  }, [bolos, calls, allOfficers, allDeputies, activeOfficer]);
+
+  React.useEffect(() => {
+    if (!user) return;
+    const userOfficers = allOfficers.filter((v) => v.userId === user.id);
+
+    leoState.setOfficers(userOfficers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, allOfficers]);
 
   return (
     <Layout
@@ -121,8 +147,8 @@ export default function OfficerDashboard({
         <StatusesArea
           setUnits={dispatchState.setActiveOfficers}
           units={dispatchState.activeOfficers}
-          activeUnit={state.activeOfficer}
-          setActiveUnit={state.setActiveOfficer}
+          activeUnit={leoState.activeOfficer}
+          setActiveUnit={leoState.setActiveOfficer}
         />
       </UtilityPanel>
 
@@ -134,54 +160,52 @@ export default function OfficerDashboard({
         <ActiveDeputies />
       </div>
 
-      <SelectOfficerModal />
-      <NotepadModal />
+      <Modals.SelectOfficerModal />
+      <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}
       {isOpen(ModalIds.NameSearch) ? null : (
         <>
-          <WeaponSearchModal />
-          <VehicleSearchModal id={ModalIds.VehicleSearch} />
+          <Modals.WeaponSearchModal />
+          <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
         </>
       )}
-      <NameSearchModal />
-      <CreateWarrantModal />
-      <CustomFieldSearch />
+      <Modals.NameSearchModal />
+      <Modals.CreateWarrantModal />
+      <Modals.CustomFieldSearch />
 
       <div>
-        <CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
-        <CreateTicketModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
-        <CreateTicketModal onCreate={handleRecordCreate} type={RecordType.WRITTEN_WARNING} />
+        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
+        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.WRITTEN_WARNING} />
       </div>
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const adminValuesURL =
+    "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag";
+
   const [
-    { officers },
     activeOfficer,
     values,
     calls,
     bolos,
-    { officers: allOfficers, activeIncidents },
+    { officers: allOfficers, deputies: allDeputies, activeIncidents },
   ] = await requestAll(req, [
-    ["/leo", { officers: [] }],
     ["/leo/active-officer", null],
-    [
-      "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag",
-      [],
-    ],
+    [adminValuesURL, []],
     ["/911-calls", []],
     ["/bolos", []],
-    ["/dispatch", { officers: [], activeIncidents: [] }],
+    ["/dispatch", { officers: [], deputies: [], activeIncidents: [] }],
   ]);
 
   return {
     props: {
       session: await getSessionUser(req),
       allOfficers,
+      allDeputies,
       activeOfficer,
-      officers,
       calls,
       bolos,
       values,

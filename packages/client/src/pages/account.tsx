@@ -13,7 +13,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useMounted } from "@casper124578/useful";
 import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
-import { canUseDiscordAuth } from "lib/utils";
+import { canUseThirdPartyConnections } from "lib/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 
 const AccountSettingsTab = dynamic(async () => {
@@ -37,9 +37,9 @@ export default function Account() {
   const { user } = useAuth();
   const t = useTranslations("Account");
   const router = useRouter();
-  const { DISCORD_AUTH, USER_API_TOKENS } = useFeatureEnabled();
+  const { DISCORD_AUTH, STEAM_OAUTH, USER_API_TOKENS } = useFeatureEnabled();
   const errorT = useTranslations("Errors");
-  const showConnectionsTab = DISCORD_AUTH && canUseDiscordAuth();
+  const showConnectionsTab = (DISCORD_AUTH || STEAM_OAUTH) && canUseThirdPartyConnections();
 
   const { hasPermissions } = usePermission();
   const hasApiTokenPermissions = hasPermissions([Permissions.UsePersonalApiToken], false);
@@ -100,7 +100,7 @@ export default function Account() {
             </TabsContent>
             <AccountSettingsTab />
             <AppearanceTab />
-            {DISCORD_AUTH ? <ConnectionsTab /> : null}
+            {showConnectionsTab ? <ConnectionsTab /> : null}
             {USER_API_TOKENS && hasApiTokenPermissions ? <UserApiTokenTab /> : null}
           </TabList>
         </div>

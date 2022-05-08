@@ -1,8 +1,8 @@
 import { Controller } from "@tsed/di";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
-import { Delete, Description, Get, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { prisma } from "lib/prisma";
@@ -12,8 +12,22 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Rank, User } from "@prisma/client";
+import { Rank, User, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import {
+  ACCEPT_DECLINE_TYPES,
+  type AcceptDeclineType,
+} from "controllers/admin/manage/AdminManageUnitsController";
+
+const recordsInclude = {
+  officer: { include: leoProperties },
+  violations: {
+    include: {
+      penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
+    },
+  },
+  seizedItems: true,
+};
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/citizens")
@@ -46,12 +60,7 @@ export class AdminManageCitizensController {
     const citizens = await prisma.recordLog.findMany({
       include: {
         warrant: { include: { officer: { include: leoProperties } } },
-        records: {
-          include: {
-            officer: { include: leoProperties },
-            violations: { include: { penalCode: true } },
-          },
-        },
+        records: { include: recordsInclude },
         citizen: {
           include: { user: { select: userProperties }, gender: true, ethnicity: true },
         },
@@ -74,6 +83,39 @@ export class AdminManageCitizensController {
     });
 
     return citizen;
+  }
+
+  @Post("/records-logs/:id")
+  @Description("Accept or decline a record by it's id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageCitizens],
+  })
+  async acceptOrDeclineArrestReport(
+    @PathParams("id") id: string,
+    @BodyParams("type") type: AcceptDeclineType | null,
+  ) {
+    if (!type || !ACCEPT_DECLINE_TYPES.includes(type)) {
+      throw new BadRequest("invalidType");
+    }
+
+    const record = await prisma.record.findUnique({
+      where: { id },
+    });
+
+    if (!record) {
+      throw new NotFound("recordNotFound");
+    }
+
+    const updated = await prisma.record.update({
+      where: { id: record.id },
+      data: {
+        status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED,
+      },
+      include: recordsInclude,
+    });
+
+    return updated;
   }
 
   @Put("/:id")

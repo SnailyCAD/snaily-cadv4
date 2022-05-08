@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
+import { useNameSearch } from "state/search/nameSearchState";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -17,6 +18,7 @@ export function ManageVehicleFlagsModal() {
   const t = useTranslations("Leo");
   const veh = useTranslations("Vehicles");
   const { currentResult, setCurrentResult } = useVehicleSearch();
+  const nameSearchState = useNameSearch();
   const { vehicleFlag } = useValues();
   const { state, execute } = useFetch();
 
@@ -29,8 +31,18 @@ export function ManageVehicleFlagsModal() {
     });
 
     if (json.flags) {
-      setCurrentResult({ ...currentResult, ...json });
+      const updatedVehicle = { ...currentResult, ...json };
+      setCurrentResult(updatedVehicle);
       closeModal(ModalIds.ManageVehicleFlags);
+
+      if (nameSearchState.currentResult) {
+        nameSearchState.setCurrentResult({
+          ...nameSearchState.currentResult,
+          vehicles: nameSearchState.currentResult.vehicles.map((v) =>
+            v.id === updatedVehicle.id ? updatedVehicle : v,
+          ),
+        });
+      }
     }
   }
 

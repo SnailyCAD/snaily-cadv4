@@ -1,8 +1,7 @@
 import { PathParams, QueryParams, Middleware, MiddlewareMethods } from "@tsed/common";
 import { BadRequest } from "@tsed/exceptions";
 
-// penal code groups are only allowed for /position
-// todo: un-hard code these
+// penal_code_group is only allowed for /position
 const validPaths = [
   "license",
   "gender",

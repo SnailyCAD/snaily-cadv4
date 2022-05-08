@@ -23,13 +23,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   const [suggestions, setSuggestions] = React.useState<any[]>([]);
 
   const [localValue, setLocalValue] = React.useState("");
-  useDebounce(
-    () => {
-      onSearch(localValue);
-    },
-    150,
-    [localValue],
-  );
+  useDebounce(async () => onSearch(localValue), 150, [localValue]);
 
   const common = useTranslations("Common");
 
@@ -166,6 +160,7 @@ const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(
         onKeyDown={onKeyDown}
         className="p-1.5 px-2 transition-colors rounded-md cursor-pointer hover:bg-gray-200 focus:bg-gray-200 dark:hover:bg-dark-bg dark:focus:bg-dark-bg w-full"
         onClick={() => onSuggestionClick?.(suggestion)}
+        type="button"
       >
         <Component suggestion={suggestion} />
       </button>

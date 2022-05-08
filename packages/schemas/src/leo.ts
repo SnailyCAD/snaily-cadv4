@@ -30,6 +30,11 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   badgeNumber: z.number().min(1),
 });
 
+export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
+  callsign: z.string().min(1).max(255),
+  callsign2: z.string().min(1).max(255),
+});
+
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
   status: z.string().min(2).max(255),
   suspended: z.boolean().optional(),

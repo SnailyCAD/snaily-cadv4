@@ -1,4 +1,4 @@
-import { Controller, UseBeforeEach } from "@tsed/common";
+import { Controller, UseBeforeEach, Context } from "@tsed/common";
 import { Description, Header, Post } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { BodyParams, QueryParams } from "@tsed/platform-params";
@@ -7,36 +7,55 @@ import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { Citizen, CustomFieldCategory, DepartmentValue, Officer } from "@prisma/client";
+import {
+  cad,
+  CadFeature,
+  Citizen,
+  CustomFieldCategory,
+  DepartmentValue,
+  Feature,
+  Officer,
+  WhitelistStatus,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
+import { isFeatureEnabled } from "lib/cad";
 
-export const citizenSearchInclude = {
-  officers: { select: { department: { select: { isConfidential: true } } } },
-  ...citizenInclude,
-  businesses: true,
-  medicalRecords: true,
-  customFields: { include: { field: true } },
-  warrants: { include: { officer: { include: leoProperties } } },
-  Record: {
-    include: {
-      officer: {
-        include: leoProperties,
-      },
-      seizedItems: true,
-      violations: {
-        include: {
-          penalCode: {
-            include: {
-              warningApplicable: true,
-              warningNotApplicable: true,
+const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
+  const isEnabled = isFeatureEnabled({
+    feature: Feature.CITIZEN_RECORD_APPROVAL,
+    features: cad.features,
+    defaultReturn: false,
+  });
+
+  return {
+    officers: { select: { department: { select: { isConfidential: true } } } },
+    ...citizenInclude,
+    businesses: true,
+    medicalRecords: true,
+    customFields: { include: { field: true } },
+    warrants: { include: { officer: { include: leoProperties } } },
+    Record: {
+      where: isEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
+      include: {
+        officer: {
+          include: leoProperties,
+        },
+        seizedItems: true,
+        violations: {
+          include: {
+            penalCode: {
+              include: {
+                warningApplicable: true,
+                warningNotApplicable: true,
+              },
             },
           },
         },
       },
     },
-  },
-  dlCategory: { include: { value: true } },
+    dlCategory: { include: { value: true } },
+  };
 };
 
 const vehiclesInclude = {
@@ -67,7 +86,10 @@ export class SearchController {
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
-  async searchName(@BodyParams("name") fullName: string) {
+  async searchName(
+    @BodyParams("name") fullName: string,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {
@@ -79,7 +101,7 @@ export class SearchController {
         name: { contains: name, mode: "insensitive" },
         surname: { contains: surname, mode: "insensitive" },
       },
-      include: citizenSearchInclude,
+      include: citizenSearchInclude(cad),
     });
 
     if (citizen.length <= 0) {
@@ -87,7 +109,7 @@ export class SearchController {
         where: {
           socialSecurityNumber: name,
         },
-        include: citizenSearchInclude,
+        include: citizenSearchInclude(cad),
       });
     }
 
@@ -97,7 +119,7 @@ export class SearchController {
           name: { contains: surname, mode: "insensitive" },
           surname: { contains: name, mode: "insensitive" },
         },
-        include: citizenSearchInclude,
+        include: citizenSearchInclude(cad),
       });
     }
 
@@ -106,7 +128,7 @@ export class SearchController {
         where: {
           name: { startsWith: name, mode: "insensitive" },
         },
-        include: citizenSearchInclude,
+        include: citizenSearchInclude(cad),
       });
     }
 
@@ -115,7 +137,7 @@ export class SearchController {
         where: {
           surname: { startsWith: name, mode: "insensitive" },
         },
-        include: citizenSearchInclude,
+        include: citizenSearchInclude(cad),
       });
     }
 
@@ -195,7 +217,10 @@ export class SearchController {
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
   })
-  async customFieldSearch(@BodyParams() body: unknown) {
+  async customFieldSearch(
+    @BodyParams() body: unknown,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+  ) {
     const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
 
     const customField = await prisma.customField.findUnique({
@@ -205,7 +230,7 @@ export class SearchController {
     const _results = await prisma.customFieldValue.findMany({
       where: { fieldId: data.customFieldId, value: { mode: "insensitive", equals: data.query } },
       include: {
-        Citizens: { include: citizenSearchInclude },
+        Citizens: { include: citizenSearchInclude(cad) },
         RegisteredVehicles: { include: vehiclesInclude },
         Weapons: { include: weaponsInclude },
         field: true,

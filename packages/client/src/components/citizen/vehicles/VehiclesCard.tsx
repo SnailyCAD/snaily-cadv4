@@ -62,7 +62,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         </header>
 
         {vehicles.length <= 0 ? (
-          <p className="text-gray-600 dark:text-gray-400">{t("noVehicles")}</p>
+          <p className="text-neutral-700 dark:text-gray-400">{t("noVehicles")}</p>
         ) : (
           <Table
             isWithinCard

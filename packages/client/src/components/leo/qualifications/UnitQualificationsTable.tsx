@@ -26,7 +26,7 @@ export function UnitQualificationsTable({ unit }: Props) {
         <h2 className="text-xl font-semibold">{t("unitQualifications")}</h2>
 
         {!qualifications.length ? (
-          <p className="my-2 text-gray-400">{t("noQualifications")}</p>
+          <p className="my-2 text-neutral-700 dark:text-gray-400">{t("noQualifications")}</p>
         ) : (
           <QualificationAwardsTable data={qualifications} />
         )}
@@ -36,7 +36,7 @@ export function UnitQualificationsTable({ unit }: Props) {
         <h2 className="text-xl font-semibold">{t("unitAwards")}</h2>
 
         {!awards.length ? (
-          <p className="my-2 text-gray-400">{t("noAwards")}</p>
+          <p className="my-2 text-neutral-700 dark:text-gray-400">{t("noAwards")}</p>
         ) : (
           <QualificationAwardsTable data={awards} />
         )}
@@ -56,7 +56,11 @@ function QualificationAwardsTable({ data }: { data: UnitQualification[] }) {
           image: <QualificationsHoverCard qualification={qa} />,
           name: (
             <p className="flex flex-col">
-              <span className={classNames(qa.suspendedAt && "text-gray-400 line-through")}>
+              <span
+                className={classNames(
+                  qa.suspendedAt && "text-neutral-700 dark:text-gray-400 line-through",
+                )}
+              >
                 {qa.qualification.value.value}
               </span>
               {qa.suspendedAt ? (

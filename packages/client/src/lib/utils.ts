@@ -22,7 +22,7 @@ export function calculateAge(dateOfBirth: string | Date): string {
   return age as string;
 }
 
-type Config = [string, any?][];
+type Config = [string, unknown?][];
 export async function requestAll(
   req: IncomingMessage & { cookies?: NextApiRequestCookies },
   config: Config,
@@ -92,8 +92,6 @@ export function getUnitDepartment(unit: Officer | EmsFdDeputy | null) {
 }
 
 export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
-  if (!isUnitOfficer(unit)) return getUnitDepartment(unit)?.value.value ?? null;
-
   const whitelistStatus = unit.whitelistStatus;
   const department = unit.department;
 
@@ -104,6 +102,16 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   return getUnitDepartment(unit)?.value.value ?? null;
 }
 
-export function canUseDiscordAuth() {
+export function canUseThirdPartyConnections() {
   return typeof window !== "undefined" && window.location === window.parent.location;
+}
+
+export function isUnitDisabled(unit: Officer | EmsFdDeputy) {
+  if (unit.suspended) return true;
+  if (!unit.whitelistStatus) return false;
+
+  return (
+    unit.whitelistStatus.status !== WhitelistStatus.ACCEPTED &&
+    !unit.department?.isDefaultDepartment
+  );
 }

@@ -14,6 +14,7 @@ import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/user";
 import { isFeatureEnabled } from "lib/cad";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -31,7 +32,7 @@ export class VehiclesController {
     const cad = ctx.get("cad") as {
       features: CadFeature[];
       miscCadSettings?: MiscCadSettings;
-    } | null;
+    };
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -39,7 +40,12 @@ export class VehiclesController {
       },
     });
 
-    canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    if (checkCitizenUserId) {
+      canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
+    } else if (!citizen) {
+      throw new NotFound("NotFound");
+    }
 
     const existing = await prisma.registeredVehicle.findUnique({
       where: {
@@ -51,13 +57,13 @@ export class VehiclesController {
       throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
     }
 
-    const plateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
+    const plateLength = cad.miscCadSettings?.maxPlateLength ?? 8;
     if (data.plate.length > plateLength) {
       throw new ExtendedBadRequest({ plate: "plateToLong" });
     }
 
     const isCustomEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: cad.features,
       feature: Feature.CUSTOM_TEXTFIELD_VALUES,
       defaultReturn: false,
     });
@@ -81,7 +87,7 @@ export class VehiclesController {
     }
 
     const isDmvEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: cad.features,
       feature: Feature.DMV,
       defaultReturn: false,
     });
@@ -135,7 +141,7 @@ export class VehiclesController {
   @Description("Update a registered vehicle")
   async updateVehicle(
     @Context("user") user: User,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -167,11 +173,16 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
+      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+      if (checkCitizenUserId) {
+        canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
+      } else if (!vehicle) {
+        throw new NotFound("NotFound");
+      }
     }
 
     const isDmvEnabled = isFeatureEnabled({
-      features: cad?.features,
+      features: cad.features,
       feature: Feature.DMV,
       defaultReturn: false,
     });
@@ -210,6 +221,7 @@ export class VehiclesController {
   @Description("Delete a registered vehicle")
   async deleteVehicle(
     @Context("user") user: User,
+    @Context("cad") cad: { features?: CadFeature[] },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
   ) {
@@ -247,7 +259,12 @@ export class VehiclesController {
 
       // registered vehicles may not have `userId`
       // therefore we should use `citizen`
-      canManageInvariant(owner?.userId, user, new NotFound("notFound"));
+      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+      if (checkCitizenUserId) {
+        canManageInvariant(owner?.userId, user, new NotFound("notFound"));
+      } else if (!owner) {
+        throw new NotFound("NotFound");
+      }
     }
     await prisma.registeredVehicle.delete({
       where: {

@@ -4,6 +4,7 @@ import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
+import { getInactivityFilter } from "./utils";
 
 export const unitProperties = {
   department: { include: { value: true } },
@@ -13,6 +14,7 @@ export const unitProperties = {
   user: { select: userProperties },
   AssignedUnit: { where: { call911: { ended: false } } },
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
+  whitelistStatus: { include: { department: { include: { value: true } } } },
   rank: true,
 };
 
@@ -79,23 +81,21 @@ export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
     include: combinedUnitProperties,
   });
 
+  const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
+  const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
+
+  const filters: any[] = [{ status: { shouldDo: "SET_OFF_DUTY" } }, { status: { is: null } }];
+
+  if (unitsInactivityFilter) {
+    filters.push({
+      lastStatusChangeTimestamp: { lte: unitsInactivityFilter.lastStatusChangeTimestamp },
+    });
+  }
+
   const officer = await prisma.officer.findFirst({
     where: {
       userId: user.id,
-      NOT: {
-        OR: [
-          {
-            status: {
-              shouldDo: "SET_OFF_DUTY",
-            },
-          },
-          {
-            status: {
-              is: null,
-            },
-          },
-        ],
-      },
+      NOT: { OR: filters },
     },
     include: leoProperties,
   });

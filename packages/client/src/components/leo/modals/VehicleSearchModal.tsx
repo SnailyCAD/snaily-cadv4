@@ -25,6 +25,7 @@ import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
 import { CustomFieldsArea } from "./CustomFieldsArea";
 import { Status } from "components/shared/Status";
+import { useNameSearch } from "state/search/nameSearchState";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -32,6 +33,7 @@ interface Props {
 
 export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { currentResult, setCurrentResult } = useVehicleSearch();
+  const nameSearchState = useNameSearch();
   const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -99,7 +101,18 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
     });
 
     if (json) {
-      setCurrentResult({ ...currentResult, reportedStolen: true });
+      const updatedVehicle = { ...currentResult, reportedStolen: true };
+
+      setCurrentResult(updatedVehicle);
+
+      if (nameSearchState.currentResult) {
+        nameSearchState.setCurrentResult({
+          ...nameSearchState.currentResult,
+          vehicles: nameSearchState.currentResult.vehicles.map((v) =>
+            v.id === updatedVehicle.id ? updatedVehicle : v,
+          ),
+        });
+      }
     }
   }
 

@@ -31,8 +31,21 @@ export async function validateMaxDepartmentsEachPerUser({
   }
 }
 
-export function getInactivityFilter(cad: { miscCadSettings: MiscCadSettings | null }) {
+type InactivityReturn<Prop extends string> = {
+  filter: Record<
+    Prop,
+    {
+      gte: Date;
+    }
+  >;
+} & Record<Prop, Date>;
+
+export function getInactivityFilter<Prop extends string = "updatedAt">(
+  cad: { miscCadSettings: MiscCadSettings | null },
+  property?: Prop,
+): InactivityReturn<Prop> | null {
   const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
+  const _prop = property ?? "updatedAt";
 
   if (!inactivityTimeout) {
     return null;
@@ -42,8 +55,8 @@ export function getInactivityFilter(cad: { miscCadSettings: MiscCadSettings | nu
   const updatedAt = new Date(new Date().getTime() - milliseconds);
 
   const filter = {
-    updatedAt: { gte: updatedAt },
+    [_prop]: { gte: updatedAt },
   };
 
-  return { filter, updatedAt };
+  return { filter, [_prop]: updatedAt } as InactivityReturn<Prop>;
 }

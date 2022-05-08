@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Rank, User, CadFeature, WhitelistStatus } from "@prisma/client";
+import { Rank, User, CadFeature, WhitelistStatus, Feature } from "@prisma/client";
 import {
   API_TOKEN_HEADER,
   DISABLED_API_TOKEN_ROUTES,
@@ -14,6 +14,7 @@ import { updateMemberRolesLogin } from "lib/discord/auth";
 import { getCADVersion } from "@snailycad/utils/version";
 import { allPermissions } from "@snailycad/permissions";
 
+const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
 const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
   name: true,
@@ -53,21 +54,17 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
 @Middleware()
 export class IsAuth implements MiddlewareMethods {
   async use(@Req() req: Req, @Context() ctx: Context) {
-    const header = req.headers[API_TOKEN_HEADER];
+    const apiTokenHeader = req.headers[API_TOKEN_HEADER];
 
     let user;
-    if (header) {
+    if (apiTokenHeader) {
       const cad = await prisma.cad.findFirst({
         select: {
           apiToken: true,
         },
       });
 
-      if (!cad?.apiToken?.enabled) {
-        throw new Unauthorized("Unauthorized");
-      }
-
-      if (cad.apiToken.token !== header) {
+      if (!cad?.apiToken?.enabled || cad.apiToken.token !== apiTokenHeader) {
         throw new Unauthorized("Unauthorized");
       }
 
@@ -107,7 +104,7 @@ export class IsAuth implements MiddlewareMethods {
       }
     }
 
-    if (!header && !user) {
+    if (!apiTokenHeader && !user) {
       throw new Unauthorized("Unauthorized");
     }
 
@@ -116,26 +113,17 @@ export class IsAuth implements MiddlewareMethods {
     });
 
     if (cad && !cad.miscCadSettings) {
-      const miscSettings = await prisma.miscCadSettings.create({
-        data: {},
-      });
-
       cad = await prisma.cad.update({
-        where: {
-          id: cad.id,
-        },
+        where: { id: cad.id },
         data: {
           miscCadSettings: {
-            connect: {
-              id: miscSettings.id,
-            },
+            create: {},
           },
         },
         select: CAD_SELECT(user),
       });
     }
 
-    const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
     const hasThreeMinTimeoutEnded =
       !user?.lastDiscordSyncTimestamp ||
       THREE_MIN_TIMEOUT_MS - (Date.now() - user.lastDiscordSyncTimestamp.getTime()) < 0;
@@ -163,13 +151,14 @@ export function setDiscordAUth(cad: { features?: CadFeature[] } | null) {
   const isEnabled = !cad?.features?.some((v) => v.isEnabled && v.feature === "DISCORD_AUTH");
 
   const notEnabled = { isEnabled: false, feature: "DISCORD_AUTH" } as CadFeature;
+  const filtered = cad?.features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
 
   if (!cad && !hasDiscordTokens) {
-    return { features: [notEnabled] };
+    return { features: [...filtered, notEnabled] };
   }
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, features: [...(cad?.features ?? []), notEnabled] };
+    return { ...cad, features: [...filtered, notEnabled] };
   }
 
   return cad;

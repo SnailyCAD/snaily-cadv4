@@ -84,6 +84,7 @@ export function useTableDataOfType(type: ValueType) {
           whitelisted: common(yesOrNoText(v.whitelisted)),
           isDefaultDepartment: common(yesOrNoText(v.isDefaultDepartment)),
           defaultOfficerRank: v.defaultOfficerRank?.value ?? common("none"),
+          isConfidential: common(yesOrNoText(v.isConfidential)),
         };
       }
       case ValueType.DIVISION: {
@@ -167,6 +168,7 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: t("whitelisted"), accessor: "whitelisted" },
         { Header: t("isDefaultDepartment"), accessor: "isDefaultDepartment" },
         { Header: t("defaultOfficerRank"), accessor: "defaultOfficerRank" },
+        { Header: t("isConfidential"), accessor: "isConfidential" },
       ];
     }
     case ValueType.DIVISION: {

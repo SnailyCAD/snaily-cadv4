@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
-import type { Citizen } from "@snailycad/types";
+import type { Citizen, User } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -32,14 +32,16 @@ const Manage911CallModal = dynamic(
 );
 
 interface Props {
-  citizens: Citizen[];
+  citizens: (Citizen & { user?: Pick<User, "username"> })[];
 }
 
 export default function CitizenPage({ citizens }: Props) {
   const t = useTranslations("Citizen");
+  const common = useTranslations("Common");
+
   const { openModal, closeModal } = useModal();
   const [modal, setModal] = React.useState<string | null>(null);
-  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911 } = useFeatureEnabled();
+  const { TOW, TAXI, WEAPON_REGISTRATION, CALLS_911, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const { showAop, areaOfPlay } = useAreaOfPlay();
   const { makeImageUrl } = useImageUrl();
 
@@ -120,9 +122,13 @@ export default function CitizenPage({ citizens }: Props) {
                   <PersonFill className="w-12 h-12 text-gray-500/60" />
                 )}
 
-                <p className="text-xl font-semibold">
-                  {citizen.name} {citizen.surname}
-                </p>
+                <div className="flex flex-col">
+                  <p className="text-xl font-semibold">
+                    {citizen.name} {citizen.surname}
+                  </p>
+
+                  {COMMON_CITIZEN_CARDS ? <p>{citizen.user?.username ?? common("none")}</p> : null}
+                </div>
               </div>
 
               <Link href={`/citizen/${citizen.id}`}>

@@ -34,6 +34,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { findUnit } from "lib/leo/findUnit";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 
 @Controller("/dispatch/status")
 @UseBeforeEach(IsAuth)
@@ -116,40 +117,19 @@ export class StatusController {
         throw new BadRequest("cannotUseThisOfficer");
       }
 
-      if (
-        officer?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
-        code.shouldDo !== ShouldDoType.PANIC_BUTTON
-      ) {
-        this.socket.emitPanicButtonLeo(officer, "OFF");
-      } else if (
-        officer?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
-        code.shouldDo === ShouldDoType.PANIC_BUTTON
-      ) {
-        this.socket.emitPanicButtonLeo(officer, "ON");
-
-        if (cad.miscCadSettings.panicButtonWebhookId && officer) {
-          try {
-            const embed = createPanicButtonEmbed(cad, officer);
-            await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
-          } catch (error) {
-            console.error("[cad_panicButton]: Could not send Discord webhook.", error);
-          }
-        }
-      }
+      await this.handlePanicButtonPressed({
+        cad,
+        status: code,
+        unit: officer!,
+      });
     }
 
     if (type === "combined") {
-      if (
-        (unit as any)?.status?.shouldDo === ShouldDoType.PANIC_BUTTON &&
-        code.shouldDo !== ShouldDoType.PANIC_BUTTON
-      ) {
-        this.socket.emitPanicButtonLeo(unit, "OFF");
-      } else if (
-        (unit as any)?.status?.shouldDo !== ShouldDoType.PANIC_BUTTON &&
-        code.shouldDo === ShouldDoType.PANIC_BUTTON
-      ) {
-        this.socket.emitPanicButtonLeo(unit, "ON");
-      }
+      await this.handlePanicButtonPressed({
+        cad,
+        status: code,
+        unit,
+      });
     }
 
     // reset all units for user
@@ -168,24 +148,29 @@ export class StatusController {
     }
 
     let updatedUnit;
+    const shouldFindIncremental = code.shouldDo === ShouldDoType.SET_ON_DUTY && !unit.incremental;
     const statusId = code.shouldDo === ShouldDoType.SET_OFF_DUTY ? null : code.id;
+
+    const incremental = shouldFindIncremental
+      ? await findNextAvailableIncremental({ type })
+      : undefined;
 
     if (type === "leo") {
       updatedUnit = await prisma.officer.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
         include: leoProperties,
       });
     } else if (type === "ems-fd") {
       updatedUnit = await prisma.emsFdDeputy.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, incremental, lastStatusChangeTimestamp: new Date() },
         include: unitProperties,
       });
     } else {
       updatedUnit = await prisma.combinedLeoUnit.update({
         where: { id: unit.id },
-        data: { statusId },
+        data: { statusId, lastStatusChangeTimestamp: new Date() },
         include: combinedUnitProperties,
       });
     }
@@ -243,6 +228,44 @@ export class StatusController {
 
     return updatedUnit;
   }
+
+  protected isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
+    return unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON;
+  }
+
+  protected isStatusPanicButton(status: StatusValue) {
+    return status.shouldDo === ShouldDoType.PANIC_BUTTON;
+  }
+
+  protected async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
+    const isCurrentlyPanicMode = this.isUnitCurrentlyInPanicMode(options.unit);
+    const isPanicButton = this.isStatusPanicButton(options.status);
+
+    const shouldEnablePanicMode = !isCurrentlyPanicMode && isPanicButton;
+
+    if (shouldEnablePanicMode) {
+      this.socket.emitPanicButtonLeo(options.unit, "ON");
+
+      if (options.cad?.miscCadSettings.panicButtonWebhookId) {
+        try {
+          const embed = createPanicButtonEmbed(options.cad, options.unit);
+          await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
+        } catch (error) {
+          console.error("[cad_panicButton]: Could not send Discord webhook.", error);
+        }
+      }
+    } else {
+      this.socket.emitPanicButtonLeo(options.unit, "OFF");
+    }
+  }
+}
+
+interface HandlePanicButtonPressedOptions {
+  status: StatusValue;
+  unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
+    status?: StatusValue | null;
+  };
+  cad: any;
 }
 
 type V<T> = T & { value: Value };
@@ -291,18 +314,24 @@ function createWebhookData(
 
 function createPanicButtonEmbed(
   cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
-  unit: Officer & { citizen: Pick<Citizen, "name" | "surname"> },
+  unit: HandlePanicButtonPressedOptions["unit"],
 ) {
+  const isCombined = !("citizen" in unit);
+
   const isBadgeNumberEnabled = isFeatureEnabled({
     defaultReturn: true,
     feature: Feature.BADGE_NUMBERS,
     features: cad.features,
   });
 
-  const unitName = `${unit.citizen.name} ${unit.citizen.surname}`;
-  const callsign = generateCallsign(unit as any, cad.miscCadSettings.callsignTemplate);
-  const badgeNumber = isBadgeNumberEnabled ? `${unit.badgeNumber} - ` : "";
-  const officerName = `${badgeNumber}${callsign} ${unitName}`;
+  const unitName = isCombined ? null : `${unit.citizen.name} ${unit.citizen.surname}`;
+  const template = isCombined
+    ? cad.miscCadSettings.pairedUnitSymbol
+    : cad.miscCadSettings.callsignTemplate;
+
+  const callsign = generateCallsign(unit as any, template);
+  const badgeNumber = isBadgeNumberEnabled || isCombined ? "" : `${unit.badgeNumber} - `;
+  const officerName = isCombined ? `${callsign}` : `${badgeNumber}${callsign} ${unitName}`;
 
   return {
     embeds: [

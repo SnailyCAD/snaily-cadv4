@@ -28,13 +28,16 @@ export function RenderActiveCalls() {
 
   async function handleMoveEnd(e: LeafletEvent, call: Full911Call) {
     const latLng = e.target._latlng;
-    const data = { ...call, position: { id: call.positionId ?? "", ...latLng } };
+    const data = {
+      ...call,
+      position: { id: call.positionId ?? "", ...latLng },
+    };
 
     handleCallStateUpdate(call.id, { ...data });
 
     const { json } = await execute(`/911-calls/${call.id}`, {
       method: "PUT",
-      data,
+      data: { ...data, situationCode: call.situationCodeId },
     });
 
     handleCallStateUpdate(call.id, { ...data, ...json });
@@ -52,7 +55,7 @@ export function RenderActiveCalls() {
 
     const { json } = await execute(`/911-calls/${call.id}`, {
       method: "PUT",
-      data: callData,
+      data: { ...callData, situationCode: call.situationCodeId },
     });
 
     handleCallStateUpdate(call.id, { ...callData, ...json });

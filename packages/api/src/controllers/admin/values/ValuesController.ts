@@ -185,7 +185,7 @@ export class ValuesController {
     if (type === ValueType.DEPARTMENT) {
       if (body.isDefaultDepartment) {
         const existing = await prisma.departmentValue.findFirst({
-          where: { isDefaultDepartment: true },
+          where: { isDefaultDepartment: true, type: body.type },
         });
 
         if (existing) {
@@ -210,11 +210,7 @@ export class ValuesController {
     const type = getTypeFromPath(path);
     const ids = body as string[];
 
-    const arr = await Promise.all(
-      ids.map(async (id) => {
-        return this.deleteById(type, id);
-      }),
-    );
+    const arr = await Promise.all(ids.map(async (id) => this.deleteById(type, id)));
 
     return arr.every((v) => v);
   }

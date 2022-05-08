@@ -182,7 +182,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
   );
 }
 
-const FieldsRow = ({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) => {
+function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "bail" }) {
   const { values, handleChange, setFieldValue } = useFormikContext<any>();
 
   const disabled = keyValue === "fines1" ? !values.warningApplicable : !values.warningNotApplicable;
@@ -240,4 +240,4 @@ const FieldsRow = ({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
       </FormRow>
     </FormRow>
   );
-};
+}

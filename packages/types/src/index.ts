@@ -458,6 +458,7 @@ export interface DriversLicenseCategoryValue {
   valueId: string;
   value: Value<ValueType.DRIVERSLICENSE_CATEGORY>;
   type: DriversLicenseCategoryType;
+  description: string | null;
 }
 
 /**
@@ -627,6 +628,7 @@ export interface Officer {
   department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
+  incremental: number | null;
   divisions: DivisionValue[];
   rankId: string | null;
   rank: Value<ValueType.OFFICER_RANK> | null;
@@ -918,6 +920,7 @@ export interface Record {
   expungementRequestId: string | null;
   violations: Violation[];
   seizedItems: SeizedItem[];
+  status?: WhitelistStatus;
 }
 
 /**
@@ -997,10 +1000,11 @@ export interface NameChangeRequest {
  */
 export interface EmsFdDeputy {
   id: string;
-  departmentId: string;
-  department: DepartmentValue;
+  departmentId: string | null;
+  department: DepartmentValue | null;
   callsign: string;
   callsign2: string;
+  incremental: number | null;
   divisionId: string;
   division: DivisionValue;
   rankId: string | null;
@@ -1019,6 +1023,8 @@ export interface EmsFdDeputy {
   radioChannelId: string | null;
   user: Pick<User, "id" | "username">;
   activeCallId: string | null;
+  whitelistStatusId: string | null;
+  whitelistStatus?: LeoWhitelistStatus | null;
 }
 
 /**
@@ -1107,6 +1113,9 @@ export enum Feature {
   DMV = "DMV",
   BADGE_NUMBERS = "BADGE_NUMBERS",
   USER_API_TOKENS = "USER_API_TOKENS",
+  CITIZEN_RECORD_APPROVAL = "CITIZEN_RECORD_APPROVAL",
+  COMMON_CITIZEN_CARDS = "COMMON_CITIZEN_CARDS",
+  STEAM_OAUTH = "STEAM_OAUTH",
 }
 
 export enum Rank {

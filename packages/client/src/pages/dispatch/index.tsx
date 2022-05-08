@@ -18,48 +18,50 @@ import { requestAll } from "lib/utils";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
-import type { ActiveDispatchers, Bolo, EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import {
+  ActiveDispatchers,
+  Bolo,
+  EmsFdDeputy,
+  LeoIncident,
+  Officer,
+  ShouldDoType,
+} from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 
-const NotepadModal = dynamic(async () => {
-  return (await import("components/shared/NotepadModal")).NotepadModal;
-});
-
-const WeaponSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
-});
-
-const VehicleSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
-});
-
-const AddressSearchModal = dynamic(async () => {
-  return (await import("components/dispatch/modals/AddressSearchModal")).AddressSearchModal;
-});
-
-const NameSearchModal = dynamic(async () => {
-  return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
-});
-
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
 });
 
-const CustomFieldSearch = dynamic(async () => {
-  return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
-    .CustomFieldSearch;
-});
+const Modals = {
+  CustomFieldSearch: dynamic(async () => {
+    return (await import("components/leo/modals/CustomFieldSearch/CustomFieldSearch"))
+      .CustomFieldSearch;
+  }),
+  NameSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/NameSearchModal/NameSearchModal")).NameSearchModal;
+  }),
+  VehicleSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal;
+  }),
+  WeaponSearchModal: dynamic(async () => {
+    return (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal;
+  }),
+  NotepadModal: dynamic(async () => {
+    return (await import("components/shared/NotepadModal")).NotepadModal;
+  }),
+  AddressSearchModal: dynamic(async () => {
+    return (await import("components/dispatch/modals/AddressSearchModal")).AddressSearchModal;
+  }),
+};
 
 interface Props {
   calls: Full911Call[];
   bolos: Bolo[];
   officers: Officer[];
   deputies: EmsFdDeputy[];
-  activeDeputies: EmsFdDeputy[];
-  activeOfficers: Officer[];
   activeDispatchers: ActiveDispatchers[];
   activeIncidents: LeoIncident[];
 }
@@ -78,11 +80,21 @@ export default function OfficerDashboard(props: Props) {
     state.setCalls(props.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
-    state.setActiveDeputies(props.activeDeputies);
-    state.setActiveOfficers(props.activeOfficers);
+
     state.setAllDeputies(props.deputies);
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);
+
+    function activeFilter(v: EmsFdDeputy | Officer) {
+      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
+    }
+
+    const activeOfficers = [...props.officers].filter(activeFilter);
+    const activeDeputies = [...props.deputies].filter(activeFilter);
+
+    state.setActiveDeputies(activeDeputies);
+    state.setActiveOfficers(activeOfficers);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
@@ -124,40 +136,32 @@ export default function OfficerDashboard(props: Props) {
         {ACTIVE_INCIDENTS ? <ActiveIncidents /> : null}
       </div>
 
-      <NotepadModal />
+      <Modals.NotepadModal />
       {/* name search have their own vehicle/weapon search modal */}
       {isOpen(ModalIds.NameSearch) ? null : (
         <>
-          <WeaponSearchModal id={ModalIds.WeaponSearch} />
-          <VehicleSearchModal id={ModalIds.VehicleSearch} />
+          <Modals.WeaponSearchModal id={ModalIds.WeaponSearch} />
+          <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
         </>
       )}
-      <AddressSearchModal />
-      <NameSearchModal />
-      <CustomFieldSearch />
+      <Modals.AddressSearchModal />
+      <Modals.NameSearchModal />
+      <Modals.CustomFieldSearch />
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [
-    values,
-    calls,
-    bolos,
-    { officers, deputies, activeDispatchers, activeIncidents },
-    activeDeputies,
-    activeOfficers,
-  ] = await requestAll(req, [
-    [
-      "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag",
-      [],
-    ],
-    ["/911-calls", []],
-    ["/bolos", []],
-    ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
-    ["/ems-fd/active-deputies", []],
-    ["/leo/active-officers", []],
-  ]);
+  const adminValuesURL =
+    "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag";
+
+  const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
+    await requestAll(req, [
+      [adminValuesURL, []],
+      ["/911-calls", []],
+      ["/bolos", []],
+      ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
+    ]);
 
   return {
     props: {
@@ -167,8 +171,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       officers,
       deputies,
-      activeDeputies,
-      activeOfficers,
       activeDispatchers,
       activeIncidents,
       messages: {

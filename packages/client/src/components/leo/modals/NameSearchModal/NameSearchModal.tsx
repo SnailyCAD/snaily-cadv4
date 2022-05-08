@@ -25,7 +25,10 @@ import { Infofield } from "components/shared/Infofield";
 import { CitizenLicenses } from "components/citizen/licenses/LicensesCard";
 import { FullDate } from "components/shared/FullDate";
 import dynamic from "next/dynamic";
-import { ManageLicensesModal } from "components/citizen/licenses/ManageLicensesModal";
+import {
+  LicenseInitialValues,
+  ManageLicensesModal,
+} from "components/citizen/licenses/ManageLicensesModal";
 import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
@@ -79,17 +82,17 @@ export function NameSearchModal() {
     }
   }, [isOpen, setCurrentResult, setResults]);
 
-  async function handleLicensesSubmit(values: any) {
+  async function handleLicensesSubmit(values: LicenseInitialValues) {
     if (!currentResult) return;
 
     const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
       method: "PUT",
       data: {
         ...values,
-        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
-        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
-        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
-        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value),
+        driversLicenseCategory: values.driversLicenseCategory.map((v) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v) => v.value),
       },
     });
 
@@ -272,7 +275,7 @@ export function NameSearchModal() {
                           className="cursor-pointer"
                         >
                           <img
-                            className="rounded-full w-[100px] h-[100px] object-cover"
+                            className="rounded-md w-[100px] h-[100px] object-cover"
                             draggable={false}
                             src={makeImageUrl("citizens", currentResult.imageId)}
                           />

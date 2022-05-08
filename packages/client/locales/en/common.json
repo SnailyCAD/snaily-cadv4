@@ -138,6 +138,11 @@
     "jailTime_invalidDataReceived": "Invalid jail time data received. Min: {min}, max: {max}",
     "bail_invalidDataReceived": "Invalid bail data received. Min: {min}, max: {max}",
     "forbidden": "Forbidden",
-    "pageNotFound": "Page Not Found"
+    "pageNotFound": "Page Not Found",
+    "unitCallsignInUse": "This full callsign is already in-use by another unit. Please specify another callsign.",
+    "steamNameInUse": "Could not create a new account with Steam since the username is already in-use.",
+    "steamAccountAlreadyLinked": "This Steam account is already linked to another account.",
+    "cannotRegisterFirstWithSteam": "The first account must be registered without Steam. You can link Steam once the account is created.",
+    "Unauthorized": "You have been logged out. Please log back in to continue."
   }
 }

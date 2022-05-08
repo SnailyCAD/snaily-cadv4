@@ -11,8 +11,8 @@ import { UpdateEventForm } from "../events/UpdateEventForm";
 interface Props {
   call: Full911Call;
   disabled?: boolean;
-  onUpdate?(event: Call911Event): void;
-  onCreate?(event: Call911Event): void;
+  onUpdate?(event: Full911Call): void;
+  onCreate?(event: Full911Call): void;
 }
 
 export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
@@ -21,7 +21,10 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
   const t = useTranslations("Calls");
   const [tempEvent, setTempEvent] = React.useState<Call911Event | null>(null);
 
-  async function onEventSubmit(values: { description: string }, helpers: FormikHelpers<any>) {
+  async function onEventSubmit(
+    values: { description: string },
+    helpers: FormikHelpers<{ description: string }>,
+  ) {
     if (!call) return;
 
     if (tempEvent) {
@@ -39,7 +42,9 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
         data: values,
       });
 
-      onCreate?.(json);
+      if (json.id) {
+        onCreate?.(json);
+      }
     }
 
     setTempEvent(null);
@@ -62,6 +67,7 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
                 key={event.id}
                 setTempEvent={setTempEvent}
                 event={event}
+                isEditing={tempEvent?.id === event.id}
               />
             ))
         )}

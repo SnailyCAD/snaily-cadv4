@@ -13,13 +13,16 @@ import { ModalIds } from "types/ModalIds";
 import { ValueLicenseType } from "@snailycad/types";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
+import { useNameSearch } from "state/search/nameSearchState";
 
 export function ManageVehicleLicensesModal() {
   const common = useTranslations("Common");
   const { isOpen, closeModal } = useModal();
   const { license } = useValues();
   const { currentResult, setCurrentResult } = useVehicleSearch();
+  const nameSearchState = useNameSearch();
   const { state, execute } = useFetch();
+
   const t = useTranslations();
   const { INSPECTION_STATUS, TAX_STATUS } = useVehicleLicenses();
 
@@ -32,8 +35,19 @@ export function ManageVehicleLicensesModal() {
     });
 
     if (json) {
-      setCurrentResult({ ...currentResult, ...json });
+      const updatedVehicle = { ...currentResult, ...json };
+
+      setCurrentResult(updatedVehicle);
       closeModal(ModalIds.ManageVehicleLicenses);
+
+      if (nameSearchState.currentResult) {
+        nameSearchState.setCurrentResult({
+          ...nameSearchState.currentResult,
+          vehicles: nameSearchState.currentResult.vehicles.map((v) =>
+            v.id === updatedVehicle.id ? updatedVehicle : v,
+          ),
+        });
+      }
     }
   }
 

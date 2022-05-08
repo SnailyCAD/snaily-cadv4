@@ -204,7 +204,7 @@ export class AuthController {
 export function getDefaultPermissionsForNewUser(
   cad: (cad & { autoSetUserProperties?: AutoSetUserProperties | null }) | null,
 ) {
-  const permissions: Permissions[] = [];
+  const permissions: Permissions[] = [Permissions.CreateBusinesses];
 
   if (!cad?.towWhitelisted) {
     permissions.push(Permissions.ViewTowCalls, Permissions.ManageTowCalls, Permissions.ViewTowLogs);

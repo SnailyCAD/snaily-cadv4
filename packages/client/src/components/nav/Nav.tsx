@@ -51,7 +51,11 @@ export function Nav({ maxWidth }: Props) {
     <nav className="bg-white dark:bg-[#171717] shadow-sm sticky top-0 z-30">
       <div style={{ maxWidth: maxWidth ?? "100rem" }} className="mx-auto px-4">
         <div className="flex items-center justify-between h-14">
-          <button onClick={() => setMenuOpen((o) => !o)} className="flex flex-col nav:hidden w-7">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="flex flex-col nav:hidden w-7"
+          >
             <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
             <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
             <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />

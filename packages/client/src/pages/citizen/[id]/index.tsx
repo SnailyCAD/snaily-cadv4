@@ -79,9 +79,13 @@ export default function CitizenId() {
       <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">
           {citizen.imageId ? (
-            <button onClick={() => openModal(ModalIds.CitizenImage)} className="cursor-pointer">
+            <button
+              type="button"
+              onClick={() => openModal(ModalIds.CitizenImage)}
+              className="cursor-pointer"
+            >
               <img
-                className="rounded-full w-[150px] h-[150px] object-cover"
+                className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}
                 src={makeImageUrl("citizens", citizen.imageId)}
               />
@@ -90,7 +94,7 @@ export default function CitizenId() {
             <PersonFill className="text-gray-500/60 w-[150px] h-[150px]" />
           )}
 
-          <div className="flex flex-col mt-2 sm:ml-3 sm:mt-0">
+          <div className="flex flex-col mt-2 sm:ml-4 sm:mt-0">
             <Infofield label={t("fullName")}>
               {citizen.name} {citizen.surname}
             </Infofield>

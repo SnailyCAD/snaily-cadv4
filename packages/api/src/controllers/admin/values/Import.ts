@@ -142,6 +142,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
             type: item.type as DriversLicenseCategoryType,
             value: item.value,
+            description: item.description,
           }),
           include: { value: true },
         });
@@ -162,10 +163,9 @@ export const typeHandlers = {
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
-            defaultOfficerRank:
-              item.defaultOfficerRankId && item.type === "LEO"
-                ? { connect: { id: item.defaultOfficerRankId } }
-                : undefined,
+            defaultOfficerRank: item.defaultOfficerRankId
+              ? { connect: { id: item.defaultOfficerRankId } }
+              : undefined,
           }),
           include: { value: true, defaultOfficerRank: true },
         });

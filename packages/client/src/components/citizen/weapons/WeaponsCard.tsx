@@ -66,7 +66,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
         </header>
 
         {weapons.length <= 0 ? (
-          <p className="text-gray-600 dark:text-gray-400">{t("noWeapons")}</p>
+          <p className="text-neutral-700 dark:text-gray-400">{t("noWeapons")}</p>
         ) : (
           <Table
             isWithinCard

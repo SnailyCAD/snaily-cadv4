@@ -35,7 +35,7 @@ export function NameSearchVehiclesTab() {
       <h3 className="text-xl font-semibold">{t("Vehicles.registeredVehicles")}</h3>
 
       {currentResult.vehicles.length <= 0 ? (
-        <p className="text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
+        <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noVehiclesCitizen")}</p>
       ) : (
         <Table
           data={currentResult.vehicles.map((vehicle) => ({

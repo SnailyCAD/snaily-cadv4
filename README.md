@@ -40,3 +40,4 @@ this is a web based integration for communities who love police roleplaying and 
 *All stars/forks are appreciated ⚡. Made with ❤️ and TypeScript!*
 
 
+ 

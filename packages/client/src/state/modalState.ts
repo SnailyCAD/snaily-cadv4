@@ -12,7 +12,7 @@ interface ModalState {
   setOpen(id: ModalIds[]): void;
 
   payloads: Payloads;
-  setPayloads(payload: any): void;
+  setPayloads(payloads: Payloads): void;
 }
 
 interface UseModal extends Pick<ModalState, "canBeClosed" | "setCanBeClosed"> {
@@ -51,19 +51,19 @@ export function useModal(): UseModal {
     [modalState.payloads],
   );
 
-  function openModal<T = unknown>(id: ModalIds, payload?: T) {
+  const openModal = <T = unknown>(id: ModalIds, payload?: T) => {
     if (isOpen(id)) return;
 
     modalState.setPayloads({ ...modalState.payloads, [id]: payload });
     modalState.setOpen([...modalState.open, id]);
-  }
+  };
 
-  function closeModal(id: ModalIds) {
+  const closeModal = (id: ModalIds) => {
     if (!isOpen(id)) return;
 
     modalState.setPayloads({ ...modalState.payloads, [id]: undefined });
     modalState.setOpen(modalState.open.filter((v) => v !== id));
-  }
+  };
 
   return {
     canBeClosed,

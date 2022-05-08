@@ -62,8 +62,7 @@ export class DiscordAuth {
       return res.redirect(`${redirectURL}/auth/login?error=invalidCode`);
     }
 
-    const data = await getDiscordData(code);
-    const authUser = await getSessionUser(req, false);
+    const [data, authUser] = await Promise.all([getDiscordData(code), getSessionUser(req, false)]);
 
     if (!data || !data.id) {
       return res.redirect(`${redirectURL}/auth/login?error=could not fetch discord data`);
@@ -253,7 +252,7 @@ async function getDiscordData(code: string): Promise<APIUser | null> {
   return meData;
 }
 
-function findUrl() {
+export function findUrl() {
   const envUrl = process.env.NEXT_PUBLIC_PROD_ORIGIN ?? "http://localhost:8080/v1";
   const includesDockerContainerName = envUrl === "http://api:8080/v1";
 
@@ -264,7 +263,7 @@ function findUrl() {
   return envUrl;
 }
 
-function findRedirectURL() {
+export function findRedirectURL() {
   return process.env.CORS_ORIGIN_URL ?? "http://localhost:3000";
 }
 

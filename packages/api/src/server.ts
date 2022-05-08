@@ -77,8 +77,8 @@ export class Server {
     });
   }
 
-  public $afterInit() {
-    checkForUpdates();
+  public async $afterInit() {
+    await checkForUpdates();
   }
 }
 

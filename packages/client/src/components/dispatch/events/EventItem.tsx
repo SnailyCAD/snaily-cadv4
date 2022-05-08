@@ -15,11 +15,13 @@ interface EventItemProps<T extends IncidentEvent | Call911Event> {
   disabled?: boolean;
   event: T;
   setTempEvent: React.Dispatch<React.SetStateAction<T | null>>;
+  isEditing: boolean;
 }
 
 export function EventItem<T extends IncidentEvent | Call911Event>({
   disabled,
   event,
+  isEditing,
   setTempEvent,
 }: EventItemProps<T>) {
   const { openModal, closeModal } = useModal();
@@ -49,11 +51,18 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
     });
 
     setTempEvent(null);
+    setOpen(false);
     handleClose();
   }
 
   return (
-    <li ref={actionsRef} className="flex justify-between">
+    <li
+      ref={actionsRef}
+      className={classNames(
+        "flex justify-between dark:hover:bg-dark-bright hover:bg-gray-200/70 rounded-md px-1.5",
+        (isEditing || open) && "dark:bg-dark-bright bg-gray-200/70",
+      )}
+    >
       <div>
         <span className="select-none text-gray-800 dark:text-gray-400 mr-1 font-semibold w-[90%]">
           <FullDate>{event.createdAt}</FullDate>:
@@ -62,7 +71,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
       </div>
 
       {disabled ? null : (
-        <div className={classNames(isHovering ? "flex" : "hidden")}>
+        <div className={classNames(isHovering || open || isEditing ? "flex" : "hidden")}>
           <Button
             className="p-0 px-1 mr-2"
             small
@@ -83,6 +92,7 @@ export function EventItem<T extends IncidentEvent | Call911Event>({
           onDeleteClick={deleteEvent}
           title={t("deleteCallEvent")}
           id={ModalIds.AlertDeleteCallEvent}
+          onClose={() => setOpen(false)}
         />
       ) : null}
     </li>

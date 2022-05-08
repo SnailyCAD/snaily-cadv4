@@ -8,14 +8,17 @@ import ReactSelect, {
 } from "react-select";
 import { useAuth } from "context/AuthContext";
 import { useModal } from "state/modalState";
+
 import { MultiValueContainerContextMenu } from "./select/MultiValueContainerContextMenu";
 import { MultiValueContainerPenalCode } from "./select/MultiValueContainerPenalCode";
+import { MultiValueContainerDescription } from "./select/MultiValueContainerDescription";
 
 export interface SelectValue<Value = string> {
   readonly label: string;
   readonly value: Value;
   readonly isDisabled?: boolean;
   readonly isFixed?: boolean;
+  readonly description?: string | null;
 }
 
 interface Props<Value extends SelectValue = SelectValue<any>>
@@ -29,6 +32,7 @@ interface Props<Value extends SelectValue = SelectValue<any>>
   extra?: {
     showContextMenuForUnits?: boolean;
     showPenalCodeDescriptions?: boolean;
+    showDLCategoryDescriptions?: boolean;
   };
 }
 
@@ -85,6 +89,8 @@ export function Select({ name, onChange, ...rest }: Props) {
           ? { MultiValueContainer: MultiValueContainerContextMenu }
           : rest.extra?.showPenalCodeDescriptions
           ? { MultiValueContainer: MultiValueContainerPenalCode }
+          : rest.extra?.showDLCategoryDescriptions
+          ? { MultiValueContainer: MultiValueContainerDescription }
           : undefined
       }
     />

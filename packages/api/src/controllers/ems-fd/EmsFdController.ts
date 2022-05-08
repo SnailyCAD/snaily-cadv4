@@ -15,7 +15,11 @@ import { validateImgurURL } from "utils/image";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
+import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
+import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
+import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -68,6 +72,11 @@ export class EmsFdController {
       cad,
       type: "emsFdDeputy",
     });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
+    });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -80,16 +89,28 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      null,
+    );
+
+    const incremental = await findNextAvailableIncremental({ type: "ems-fd" });
     const deputy = await prisma.emsFdDeputy.create({
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
         userId: user.id,
-        departmentId: data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
+        rankId:
+          (defaultDepartment
+            ? defaultDepartment.defaultOfficerRankId
+            : department.defaultOfficerRankId) || undefined,
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
+        whitelistStatusId,
       },
       include: {
         ...unitProperties,
@@ -118,6 +139,7 @@ export class EmsFdController {
         id: deputyId,
         userId: user.id,
       },
+      include: { whitelistStatus: true },
     });
 
     if (!deputy) {
@@ -142,6 +164,12 @@ export class EmsFdController {
       type: "emsFdDeputy",
       unitId: deputy.id,
     });
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      type: "ems-fd",
+      unitId: deputy.id,
+    });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -154,6 +182,21 @@ export class EmsFdController {
       throw new NotFound("citizenNotFound");
     }
 
+    const incremental = deputy.incremental
+      ? undefined
+      : await findNextAvailableIncremental({ type: "ems-fd" });
+
+    const { defaultDepartment, department, whitelistStatusId } = await handleWhitelistStatus(
+      data.department,
+      deputy,
+    );
+
+    const rank = deputy.rankId
+      ? undefined
+      : (defaultDepartment
+          ? defaultDepartment.defaultOfficerRankId
+          : department.defaultOfficerRankId) || undefined;
+
     const updated = await prisma.emsFdDeputy.update({
       where: {
         id: deputy.id,
@@ -161,11 +204,14 @@ export class EmsFdController {
       data: {
         callsign: data.callsign,
         callsign2: data.callsign2,
-        departmentId: data.department,
+        departmentId: defaultDepartment ? defaultDepartment.id : data.department,
         divisionId: data.division!,
         badgeNumber: data.badgeNumber,
         citizenId: citizen.id,
         imageId: validateImgurURL(data.image),
+        incremental,
+        whitelistStatusId,
+        rankId: rank,
       },
       include: {
         ...unitProperties,
@@ -218,7 +264,13 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputies() {
+  async getActiveDeputies(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+
+    if (unitsInactivityFilter) {
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+    }
+
     const deputies = await prisma.emsFdDeputy.findMany({
       where: {
         status: {
@@ -230,7 +282,11 @@ export class EmsFdController {
       include: unitProperties,
     });
 
-    return Array.isArray(deputies) ? deputies : [deputies];
+    const deputiesWithUpdatedStatus = deputies.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+
+    return deputiesWithUpdatedStatus;
   }
   @Use(ActiveDeputy)
   @Post("/medical-record")

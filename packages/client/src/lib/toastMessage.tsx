@@ -33,6 +33,7 @@ export function toastMessage(options: Options) {
         </div>
         <div className="flex items-start justify-start h-full">
           <button
+            type="button"
             aria-label="Close message"
             onClick={() => toast.dismiss(t.id)}
             className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium"

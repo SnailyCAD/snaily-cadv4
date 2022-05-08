@@ -51,7 +51,7 @@ export class Calls911Controller {
 
     this.socket.emitUpdate911Call(normalizedCall);
 
-    return event;
+    return normalizedCall;
   }
 
   @Put("/:callId/:eventId")
@@ -109,7 +109,7 @@ export class Calls911Controller {
 
     this.socket.emitUpdate911Call(normalizedCall);
 
-    return updatedEvent;
+    return normalizedCall;
   }
 
   @Delete("/:callId/:eventId")
@@ -150,6 +150,6 @@ export class Calls911Controller {
 
     this.socket.emitUpdate911Call(normalizedCall);
 
-    return true;
+    return normalizedCall;
   }
 }

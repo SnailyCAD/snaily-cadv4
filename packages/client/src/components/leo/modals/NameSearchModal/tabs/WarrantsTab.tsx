@@ -81,7 +81,7 @@ export function NameSearchWarrantsTab() {
       <h3 className="text-xl font-semibold">{t("Leo.warrants")}</h3>
 
       {currentResult.warrants.length <= 0 ? (
-        <p className="text-gray-400 my-2">{t("Leo.noWarrants")}</p>
+        <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noWarrants")}</p>
       ) : (
         <>
           <Table

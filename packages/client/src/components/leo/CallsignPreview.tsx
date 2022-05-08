@@ -23,6 +23,7 @@ export function CallSignPreview({ divisions, department }: Props) {
     callsign: values.callsign,
     callsign2: values.callsign2,
     divisions,
+    incremental: null,
   };
 
   return (

@@ -37,7 +37,7 @@ export function ApiTokenArea({ user }: Props) {
           )}
         </div>
       ) : (
-        <p className="text-gray-400 mt-2">User has no API Token set.</p>
+        <p className="text-neutral-700 dark:text-gray-400 mt-2">User has no API Token set.</p>
       )}
     </div>
   );

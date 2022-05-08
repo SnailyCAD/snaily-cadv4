@@ -19,7 +19,10 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
   const t = useTranslations("Leo");
   const [tempEvent, setTempEvent] = React.useState<IncidentEvent | null>(null);
 
-  async function onEventSubmit(values: { description: string }, helpers: FormikHelpers<any>) {
+  async function onEventSubmit(
+    values: { description: string },
+    helpers: FormikHelpers<{ description: string }>,
+  ) {
     if (tempEvent) {
       await execute(`/incidents/events/${incident.id}/${tempEvent.id}`, {
         method: "PUT",
@@ -51,6 +54,7 @@ export function IncidentEventsArea({ disabled, incident }: Props) {
                 key={event.id}
                 setTempEvent={setTempEvent}
                 event={event}
+                isEditing={tempEvent?.id === event.id}
               />
             ))
         )}

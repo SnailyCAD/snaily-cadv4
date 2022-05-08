@@ -65,7 +65,7 @@ export function MedicalRecords() {
         </header>
 
         {citizen.medicalRecords.length <= 0 ? (
-          <p className="text-gray-600 dark:text-gray-400">{t("noMedicalRecords")}</p>
+          <p className="text-neutral-700 dark:text-gray-400">{t("noMedicalRecords")}</p>
         ) : (
           <Table
             isWithinCard

@@ -10,6 +10,7 @@ import type { Full911Call } from "state/dispatchState";
 import type { MapCallProps } from "./ActiveMapCalls";
 import { useTranslations } from "next-intl";
 import { Infofield } from "components/shared/Infofield";
+import { isUnitCombined } from "@snailycad/utils";
 
 interface CallItemProps extends Omit<MapCallProps, "toggledId" | "openItems" | "setOpenItems"> {
   call: Full911Call;
@@ -33,15 +34,19 @@ export function CallItem({ call, setTempCall, hasMarker, setMarker }: CallItemPr
   }
 
   const assignedUnits = React.useMemo(() => {
-    return call.assignedUnits.map((c, i) => {
+    return call.assignedUnits.map((unit, i) => {
       const comma = i !== call.assignedUnits.length - 1 ? ", " : " ";
-      if (!c.unit) {
+      if (!unit.unit) {
         return null;
       }
 
+      const unitName = isUnitCombined(unit.unit)
+        ? generateCallsign(unit.unit, "pairedUnitTemplate")
+        : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+
       return (
-        <span key={c.id}>
-          {makeUnitName(c.unit)} {generateCallsign(c.unit)}
+        <span key={unit.id}>
+          {unitName}
           {comma}
         </span>
       );

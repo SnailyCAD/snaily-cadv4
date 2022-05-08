@@ -1,5 +1,5 @@
-import { Rank, WhitelistStatus } from "@prisma/client";
-import { UPDATE_UNIT_SCHEMA } from "@snailycad/schemas";
+import { MiscCadSettings, Rank, WhitelistStatus } from "@prisma/client";
+import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -8,6 +8,7 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
+import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
@@ -16,7 +17,7 @@ import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
 
-const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_OFFICER"] as const;
+const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
 
 const SUSPEND_TYPE = ["suspend", "unsuspend"] as const;
@@ -37,7 +38,12 @@ export class AdminManageUnitsController {
   @Description("Get all the units in the CAD")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
-    permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
+    permissions: [
+      Permissions.ViewUnits,
+      Permissions.DeleteUnits,
+      Permissions.ManageUnits,
+      Permissions.ManageUnitCallsigns,
+    ],
   })
   async getUnits() {
     const units = await Promise.all([
@@ -128,6 +134,47 @@ export class AdminManageUnitsController {
     return updated;
   }
 
+  @Put("/callsign/:unitId")
+  @UsePermissions({
+    fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUnitCallsigns, Permissions.ManageUnits],
+  })
+  @Description("Update a unit's callsign by its id")
+  async updateCallsignUnit(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
+
+    const { type, unit } = await findUnit(unitId);
+
+    if (!unit || type === "combined") {
+      throw new NotFound("unitNotFound");
+    }
+
+    const prismaNames = {
+      "ems-fd": "emsFdDeputy",
+      leo: "officer",
+    } as const;
+    const t = prismaNames[type];
+
+    await validateDuplicateCallsigns({
+      callsign1: data.callsign,
+      callsign2: data.callsign2,
+      unitId: unit.id,
+      type,
+    });
+
+    // @ts-expect-error ignore
+    const updated = await prisma[t].update({
+      where: { id: unit.id },
+      data: {
+        callsign2: data.callsign2,
+        callsign: data.callsign,
+      },
+      include: type === "leo" ? leoProperties : unitProperties,
+    });
+
+    return updated;
+  }
+
   @Put("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
@@ -137,7 +184,7 @@ export class AdminManageUnitsController {
   async updateUnit(
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
-    @Context("cad") cad: any,
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(UPDATE_UNIT_SCHEMA, body);
 
@@ -198,14 +245,14 @@ export class AdminManageUnitsController {
     return updated;
   }
 
-  @Post("/departments/:officerId")
+  @Post("/departments/:unitId")
   @Description("Accept or decline a unit into a department")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ManageUnits],
   })
   async acceptOrDeclineUnit(
-    @PathParams("officerId") officerId: string,
+    @PathParams("unitId") unitId: string,
     @BodyParams("action") action: Action | null,
     @BodyParams("type") type: AcceptDeclineType | null,
   ) {
@@ -217,55 +264,78 @@ export class AdminManageUnitsController {
       throw new BadRequest("invalidType");
     }
 
-    const officer = await prisma.officer.findUnique({
-      where: { id: officerId },
+    let unitType: "leo" | "ems-fd" = "leo";
+    let unit: any = await prisma.officer.findFirst({
+      where: { id: unitId },
       include: leoProperties,
     });
 
-    if (!officer) {
-      throw new NotFound("officerNotFound");
+    if (!unit) {
+      unitType = "ems-fd";
+      unit = await prisma.emsFdDeputy.findFirst({
+        where: { id: unitId },
+        include: unitProperties,
+      });
     }
 
-    if (!officer.whitelistStatus || officer.whitelistStatus.status !== WhitelistStatus.PENDING) {
-      throw new BadRequest("officerIsNotAwaiting");
+    if (!unit) {
+      throw new NotFound("unitNotFound");
     }
 
-    if (officer.whitelistStatusId) {
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+    } as const;
+    const prismaName = prismaNames[unitType];
+
+    if (!unit.whitelistStatus || unit.whitelistStatus.status !== WhitelistStatus.PENDING) {
+      throw new BadRequest("unitIsNotAwaiting");
+    }
+
+    if (unit.whitelistStatusId && type === "ACCEPT") {
       await prisma.leoWhitelistStatus.update({
-        where: { id: officer.whitelistStatusId },
-        data: { status: type === "ACCEPT" ? WhitelistStatus.ACCEPTED : WhitelistStatus.DECLINED },
+        where: { id: unit.whitelistStatusId },
+        data: { status: WhitelistStatus.ACCEPTED },
       });
     }
 
     if (type === "ACCEPT") {
-      const updated = await prisma.officer.update({
-        where: { id: officerId },
+      // @ts-expect-error function has the same properties
+      const updated = await prisma[prismaName].update({
+        where: { id: unitId },
         data: {
-          departmentId: officer.whitelistStatus.departmentId,
-          rankId: officer.whitelistStatus.department.defaultOfficerRankId ?? undefined,
+          departmentId: unit.whitelistStatus.departmentId,
+          rankId: unit.whitelistStatus.department.defaultOfficerRankId ?? undefined,
         },
-        include: leoProperties,
+        include: unitType === "leo" ? leoProperties : unitProperties,
       });
 
       return updated;
     }
 
     switch (action) {
-      case "DELETE_OFFICER": {
-        const updated = await prisma.officer.delete({
-          where: { id: officer.id },
+      case "DELETE_UNIT": {
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].delete({
+          where: { id: unit.id },
         });
 
         return { ...updated, deleted: true };
       }
       case "SET_DEPARTMENT_NULL": {
-        const updated = await prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            departmentId: null,
-          },
-          include: leoProperties,
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: null },
+          include: unitType === "leo" ? leoProperties : unitProperties,
         });
+
+        if (unit.whitelistStatusId) {
+          await prisma.leoWhitelistStatus.update({
+            where: { id: unit.whitelistStatusId },
+            data: { status: WhitelistStatus.DECLINED },
+          });
+        }
 
         return updated;
       }
@@ -278,19 +348,18 @@ export class AdminManageUnitsController {
           throw new ExtendedBadRequest({ action: "No default department found" });
         }
 
-        if (officer.whitelistStatusId) {
+        if (unit.whitelistStatusId) {
           await prisma.leoWhitelistStatus.update({
-            where: { id: officer.whitelistStatusId },
+            where: { id: unit.whitelistStatusId },
             data: { status: WhitelistStatus.DECLINED },
           });
         }
 
-        const updated = await prisma.officer.update({
-          where: { id: officer.id },
-          data: {
-            departmentId: defaultDepartment.id,
-          },
-          include: leoProperties,
+        // @ts-expect-error function has the same properties
+        const updated = await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { departmentId: defaultDepartment.id },
+          include: unitType === "leo" ? leoProperties : unitProperties,
         });
 
         return updated;

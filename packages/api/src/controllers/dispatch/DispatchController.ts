@@ -17,6 +17,7 @@ import { userProperties } from "lib/auth/user";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
+import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -32,27 +33,18 @@ export class DispatchController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async getDispatchData(@Context("cad") cad: { miscCadSettings: MiscCadSettings | null }) {
-    const includeData = {
-      include: {
-        department: { include: { value: true } },
-        status: { include: { value: true } },
-        division: { include: { value: true } },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
-      },
-    };
+    const unitsInactivityFilter = getInactivityFilter(cad, "lastStatusChangeTimestamp");
+
+    if (unitsInactivityFilter) {
+      setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
+    }
 
     const officers = await prisma.officer.findMany({
-      ...includeData,
+      include: leoProperties,
     });
 
     const deputies = await prisma.emsFdDeputy.findMany({
-      ...includeData,
+      include: unitProperties,
     });
 
     const activeDispatchers = await prisma.activeDispatchers.findMany({
@@ -74,8 +66,19 @@ export class DispatchController {
     });
 
     const correctedIncidents = activeIncidents.map(officerOrDeputyToUnit);
+    const officersWithUpdatedStatus = officers.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
+    const deputiesWithUpdatedStatus = deputies.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
 
-    return { deputies, officers, activeIncidents: correctedIncidents, activeDispatchers };
+    return {
+      deputies: deputiesWithUpdatedStatus,
+      officers: officersWithUpdatedStatus,
+      activeIncidents: correctedIncidents,
+      activeDispatchers,
+    };
   }
 
   @Post("/aop")

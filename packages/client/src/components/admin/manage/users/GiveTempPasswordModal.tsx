@@ -30,7 +30,7 @@ export function GiveTempPasswordModal({ user }: Props) {
 
   React.useEffect(() => {
     if (!result && isOpen(ModalIds.GiveTempPassword)) {
-      fetchNewPassword();
+      void fetchNewPassword();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, result]);

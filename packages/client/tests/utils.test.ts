@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
-import { ValueLicenseType } from "@snailycad/types";
-import { expect, test } from "vitest";
+import { ValueLicenseType, WhitelistStatus } from "@snailycad/types";
+import { describe, expect, test } from "vitest";
 import {
   calculateAge,
   yesOrNoText,
@@ -12,7 +12,8 @@ import {
   formatOfficerDepartment,
   requestAll,
   filterLicenseTypes,
-  canUseDiscordAuth,
+  canUseThirdPartyConnections,
+  isUnitDisabled,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -162,6 +163,12 @@ test("Should format unit department -> TEST_EMS_FD_DEPUTY", () => {
   expect(formatOfficerDepartment(TEST_EMS_FD_DEPUTY)).toMatchInlineSnapshot('"Fire"');
 });
 
+test("Should return null if the department is null -> TEST_EMS_FD_DEPUTY", () => {
+  delete TEST_EMS_FD_DEPUTY.department;
+
+  expect(formatOfficerDepartment(TEST_EMS_FD_DEPUTY)).toBe(null);
+});
+
 test("Should format unit department -> TEST_OFFICER", () => {
   expect(formatOfficerDepartment(TEST_OFFICER)).toMatchInlineSnapshot('"LSPD"');
 });
@@ -243,11 +250,33 @@ test("Should filter license types -> INSURANCE_STATUS", () => {
 });
 
 test("Should handle Discord auth -> window not defined", () => {
-  expect(canUseDiscordAuth()).toBe(false);
+  expect(canUseThirdPartyConnections()).toBe(false);
 });
 
 test("Should handle Discord auth -> window defined", () => {
   // @ts-expect-error testing purposes
   global.window = { location: "test", parent: { location: "test" } };
-  expect(canUseDiscordAuth()).toBe(true);
+  expect(canUseThirdPartyConnections()).toBe(true);
+});
+
+describe("isUnitDisabled", () => {
+  test("should return `true` if the unit is suspended", () => {
+    expect(isUnitDisabled({ whitelistStatus: null, suspended: true } as any)).toBe(true);
+  });
+
+  test("should return `false` if the unit is NOT suspended", () => {
+    expect(isUnitDisabled({ whitelistStatus: null, suspended: false } as any)).toBe(false);
+  });
+
+  test("should return `true` if the unit is PENDING access", () => {
+    TEST_OFFICER.whitelistStatus = { status: WhitelistStatus.PENDING };
+
+    expect(isUnitDisabled(TEST_OFFICER)).toBe(true);
+  });
+
+  test("should return `false` if the unit is ACCEPTED", () => {
+    TEST_OFFICER.whitelistStatus = { status: WhitelistStatus.ACCEPTED };
+
+    expect(isUnitDisabled(TEST_OFFICER)).toBe(false);
+  });
 });
