@@ -28,6 +28,8 @@ export enum Permissions {
   ManageTowCalls = "ManageTowCalls",
   ViewTowLogs = "ViewTowLogs",
 
+  CreateBusinesses = "CreateBusinesses",
+
   // admin related
   ViewUsers = "ViewUsers",
   ManageUsers = "ManageUsers",

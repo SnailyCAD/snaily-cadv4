@@ -13,6 +13,7 @@ import { prisma } from "lib/prisma";
 import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@snailycad/types";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 const businessInclude = {
   citizen: {
@@ -65,11 +66,7 @@ export class BusinessController {
         id,
       },
       include: {
-        businessPosts: {
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
+        businessPosts: { orderBy: { createdAt: "desc" } },
         vehicles: {
           include: {
             model: { include: { value: true } },
@@ -79,27 +76,11 @@ export class BusinessController {
         },
         employees: {
           include: {
-            role: {
-              include: {
-                value: true,
-              },
-            },
-            citizen: {
-              select: {
-                name: true,
-                surname: true,
-                id: true,
-              },
-            },
+            role: { include: { value: true } },
+            citizen: { select: { name: true, surname: true, id: true } },
           },
         },
-        citizen: {
-          select: {
-            name: true,
-            surname: true,
-            id: true,
-          },
-        },
+        citizen: { select: { name: true, surname: true, id: true } },
       },
     });
 
@@ -315,6 +296,10 @@ export class BusinessController {
   }
 
   @Post("/create")
+  @UsePermissions({
+    fallback: true,
+    permissions: [Permissions.CreateBusinesses],
+  })
   async createBusiness(@BodyParams() body: unknown, @Context() ctx: Context) {
     const data = validateSchema(CREATE_COMPANY_SCHEMA, body);
 

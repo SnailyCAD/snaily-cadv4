@@ -13,6 +13,7 @@ import { BusinessCard } from "components/business/BusinessCard";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   businesses: (FullEmployee & { business: Business })[];
@@ -33,6 +34,9 @@ export default function BusinessPage(props: Props) {
   const [businesses, setBusinesses] = React.useState(props.businesses);
   const setJoinableBusinesses = useBusinessState((s) => s.setJoinableBusinesses);
 
+  const { hasPermissions } = usePermission();
+  const hasCreateBusinessesPerms = hasPermissions([Permissions.CreateBusinesses], true);
+
   const ownedBusinesses = businesses.filter((em) => em.citizenId === em.business?.citizenId);
   const joinedBusinesses = businesses.filter((em) => em.citizenId !== em.business?.citizenId);
 
@@ -47,9 +51,11 @@ export default function BusinessPage(props: Props) {
 
         <div>
           <Button onClick={() => openModal(ModalIds.JoinBusiness)}>{t("joinBusiness")}</Button>
-          <Button className="ml-2" onClick={() => openModal(ModalIds.CreateBusiness)}>
-            {t("createBusiness")}
-          </Button>
+          {hasCreateBusinessesPerms ? (
+            <Button className="ml-2" onClick={() => openModal(ModalIds.CreateBusiness)}>
+              {t("createBusiness")}
+            </Button>
+          ) : null}
         </div>
       </header>
 
@@ -80,7 +86,9 @@ export default function BusinessPage(props: Props) {
       </section>
 
       <JoinBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
-      <CreateBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
+      {hasCreateBusinessesPerms ? (
+        <CreateBusinessModal onCreate={(bus: any) => setBusinesses((p) => [...p, bus])} />
+      ) : null}
     </Layout>
   );
 }
