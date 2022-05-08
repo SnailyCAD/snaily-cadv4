@@ -11,6 +11,7 @@ import useFetch from "lib/useFetch";
 import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
+import type { SelectValue } from "components/form/Select";
 
 interface Props {
   citizen: Citizen & { user: User };
@@ -35,10 +36,18 @@ export default function ManageCitizens({ citizen }: Props) {
       helpers,
       data: {
         ...data,
-        driversLicenseCategory: data.driversLicenseCategory?.map((v: any) => v.value?.id) ?? null,
-        pilotLicenseCategory: data.pilotLicenseCategory?.map((v: any) => v.value?.id) ?? null,
-        waterLicenseCategory: data.waterLicenseCategory?.map((v: any) => v.value?.id) ?? null,
-        firearmLicenseCategory: data.firearmLicenseCategory?.map((v: any) => v.value?.id) ?? null,
+        driversLicenseCategory: Array.isArray(data.driversLicenseCategory)
+          ? (data.driversLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.driversLicenseCategory,
+        pilotLicenseCategory: Array.isArray(data.pilotLicenseCategory)
+          ? (data.pilotLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.pilotLicenseCategory,
+        waterLicenseCategory: Array.isArray(data.waterLicenseCategory)
+          ? (data.waterLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.waterLicenseCategory,
+        firearmLicenseCategory: Array.isArray(data.firearmLicenseCategory)
+          ? (data.firearmLicenseCategory as SelectValue[]).map((v) => v.value)
+          : data.firearmLicenseCategory,
       },
     });
 
