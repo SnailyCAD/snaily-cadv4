@@ -458,6 +458,7 @@ export interface DriversLicenseCategoryValue {
   valueId: string;
   value: Value<ValueType.DRIVERSLICENSE_CATEGORY>;
   type: DriversLicenseCategoryType;
+  description: string | null;
 }
 
 /**

@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
-import { ManageLicensesModal } from "./ManageLicensesModal";
+import { LicenseInitialValues, ManageLicensesModal } from "./ManageLicensesModal";
 import { CitizenWithVehAndWep, useCitizen } from "context/CitizenContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Infofield } from "components/shared/Infofield";
@@ -18,15 +18,15 @@ export function LicensesCard() {
   const t = useTranslations("Citizen");
   const { execute, state } = useFetch();
 
-  async function onSubmit(values: any) {
+  async function onSubmit(values: LicenseInitialValues) {
     const { json } = await execute(`/licenses/${citizen.id}`, {
       method: "PUT",
       data: {
         ...values,
-        driversLicenseCategory: values.driversLicenseCategory.map((v: any) => v.value),
-        pilotLicenseCategory: values.pilotLicenseCategory.map((v: any) => v.value),
-        waterLicenseCategory: values.waterLicenseCategory.map((v: any) => v.value),
-        firearmLicenseCategory: values.firearmLicenseCategory.map((v: any) => v.value),
+        driversLicenseCategory: values.driversLicenseCategory.map((v) => v.value),
+        pilotLicenseCategory: values.pilotLicenseCategory.map((v) => v.value),
+        waterLicenseCategory: values.waterLicenseCategory.map((v) => v.value),
+        firearmLicenseCategory: values.firearmLicenseCategory.map((v) => v.value),
       },
     });
 

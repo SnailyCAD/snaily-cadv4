@@ -142,6 +142,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
             type: item.type as DriversLicenseCategoryType,
             value: item.value,
+            description: item.description,
           }),
           include: { value: true },
         });

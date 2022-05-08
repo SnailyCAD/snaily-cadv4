@@ -529,12 +529,13 @@ model DepartmentValue {
 }
 
 model DriversLicenseCategoryValue {
-  id       String                     @id @default(cuid())
-  valueId  String
-  value    Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
-  type     DriversLicenseCategoryType
-  citizens Citizen[]                  @relation("dlCategoryToDLCategory")
-  DLExam   DLExam[]
+  id          String                     @id @default(cuid())
+  valueId     String
+  value       Value                      @relation("driversLicenseCategoryToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  type        DriversLicenseCategoryType
+  description String?
+  citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
+  DLExam      DLExam[]
 }
 
 model VehicleValue {

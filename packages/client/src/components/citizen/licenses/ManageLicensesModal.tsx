@@ -52,24 +52,28 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
       .map((v) => ({
         value: v.id,
         label: v.value.value,
+        description: v.description,
       })),
     pilotLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
+        description: v.description,
       })),
     waterLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === DriversLicenseCategoryType.WATER)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
+        description: v.description,
       })),
     firearmLicenseCategory: citizen.dlCategory
       .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
       .map((v) => ({
         value: v.id,
         label: v.value.value,
+        description: v.description,
       })),
   };
 
@@ -105,12 +109,14 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
                   label={t("driversLicenseCategory")}
                 >
                   <Select
+                    extra={{ showDLCategoryDescriptions: true }}
                     isMulti
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === DriversLicenseCategoryType.AUTOMOTIVE)
                       .map((category) => ({
                         label: category.value.value,
                         value: category.id,
+                        description: category.description,
                       }))}
                     value={values.driversLicenseCategory}
                     name="driversLicenseCategory"
@@ -142,11 +148,13 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
               >
                 <Select
                   isMulti
+                  extra={{ showDLCategoryDescriptions: true }}
                   values={driverslicenseCategory.values
                     .filter((v) => v.type === DriversLicenseCategoryType.AVIATION)
                     .map((category) => ({
                       label: category.value.value,
                       value: category.id,
+                      description: category.description,
                     }))}
                   value={values.pilotLicenseCategory}
                   name="pilotLicenseCategory"
@@ -177,11 +185,13 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
               >
                 <Select
                   isMulti
+                  extra={{ showDLCategoryDescriptions: true }}
                   values={driverslicenseCategory.values
                     .filter((v) => v.type === DriversLicenseCategoryType.WATER)
                     .map((category) => ({
                       label: category.value.value,
                       value: category.id,
+                      description: category.description,
                     }))}
                   value={values.waterLicenseCategory}
                   name="waterLicenseCategory"
@@ -211,6 +221,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
                   label={t("firearmLicenseCategory")}
                 >
                   <Select
+                    extra={{ showDLCategoryDescriptions: true }}
                     values={driverslicenseCategory.values
                       .filter((v) => v.type === DriversLicenseCategoryType.FIREARM)
                       .map((v) => ({

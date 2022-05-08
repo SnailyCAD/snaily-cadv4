@@ -6,10 +6,10 @@ import useFetch from "lib/useFetch";
 import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
-import type { SelectValue } from "components/form/Select";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { ManageCitizenForm } from "components/citizen/ManageCitizenForm";
+import type { SelectValue } from "components/form/Select";
 
 export default function CreateCitizen() {
   const { state, execute } = useFetch();
