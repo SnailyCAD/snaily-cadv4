@@ -123,6 +123,7 @@ export function AdminSidebar() {
         </div>
 
         <button
+          type="button"
           aria-label="Open sidebar"
           onClick={() => setMenuOpen((o) => !o)}
           className={classNames("flex flex-col nav:hidden w-7", menuOpen ? "mt-5 ml-3" : "mb-10")}

@@ -79,7 +79,11 @@ export default function CitizenId() {
       <div className="flex items-start justify-between p-4 card">
         <div className="flex flex-col items-start sm:flex-row">
           {citizen.imageId ? (
-            <button onClick={() => openModal(ModalIds.CitizenImage)} className="cursor-pointer">
+            <button
+              type="button"
+              onClick={() => openModal(ModalIds.CitizenImage)}
+              className="cursor-pointer"
+            >
               <img
                 className="rounded-md w-[150px] h-[150px] object-cover"
                 draggable={false}

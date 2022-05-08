@@ -78,6 +78,7 @@ export function Modal({
                 {title}
 
                 <button
+                  type="button"
                   aria-label="Close Modal"
                   onClick={onClose}
                   className="p-1.5 transition-all cursor-pointer rounded-lg hover:bg-gray-200 dark:hover:bg-dark-bright"
