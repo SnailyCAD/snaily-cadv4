@@ -227,7 +227,15 @@ export class DispatchController {
   ) {
     const user = await prisma.user.findFirst({
       where: { steamId },
-      select: userProperties,
+      select: {
+        username: true,
+        id: true,
+        isEmsFd: true,
+        isLeo: true,
+        isDispatch: true,
+        permissions: true,
+        rank: true,
+      },
     });
 
     if (!user) {
