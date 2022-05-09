@@ -6,7 +6,11 @@ import { unitProperties } from "lib/leo/activeOfficer";
 import { getInactivityFilter } from "./leo/utils";
 import { prisma } from "./prisma";
 
-export async function getActiveDeputy(req: Req, user: User, ctx: Context) {
+export async function getActiveDeputy(
+  req: Req,
+  user: Pick<User, "rank" | "id" | "permissions" | "isEmsFd" | "isDispatch" | "isLeo">,
+  ctx: Context,
+) {
   // dispatch is allowed to use ems-fd routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {

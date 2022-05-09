@@ -9,7 +9,12 @@ import { IsAuth } from "middlewares/IsAuth";
 import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
-import { leoProperties, unitProperties, combinedUnitProperties } from "lib/leo/activeOfficer";
+import {
+  leoProperties,
+  unitProperties,
+  combinedUnitProperties,
+  getActiveOfficer,
+} from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
@@ -18,6 +23,8 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { Req } from "@tsed/common";
+import { getActiveDeputy } from "lib/ems-fd";
 
 @Controller("/dispatch")
 @UseBeforeEach(IsAuth)
@@ -206,6 +213,39 @@ export class DispatchController {
     }
 
     return updated;
+  }
+
+  @Get("/players/:steamId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch,
+    permissions: [Permissions.Dispatch],
+  })
+  async findUserBySteamId(
+    @Req() req: Req,
+    @PathParams("steamId") steamId: string,
+    @Context() ctx: Context,
+  ) {
+    const user = await prisma.user.findFirst({
+      where: { steamId },
+      select: userProperties,
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const [officer, deputy] = await Promise.all([
+      getActiveOfficer(req, user, ctx),
+      getActiveDeputy(req, user, ctx),
+    ]);
+
+    const unit = officer ?? deputy ?? null;
+
+    if (!unit) {
+      return null;
+    }
+
+    return { ...user, unit };
   }
 
   protected async endInactiveIncidents(updatedAt: Date) {

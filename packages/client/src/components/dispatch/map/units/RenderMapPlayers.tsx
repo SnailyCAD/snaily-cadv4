@@ -1,4 +1,4 @@
-import type { cad } from "@snailycad/types";
+import type { cad, EmsFdDeputy, Officer, User } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import { convertToMap } from "lib/map/utils";
@@ -6,6 +6,9 @@ import * as React from "react";
 import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { DataActions, PlayerDataEvent, PlayerLeftEvent } from "types/Map";
 import L from "leaflet";
+import BN from "bignumber.js";
+import useFetch from "lib/useFetch";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 
 const PLAYER_ICON = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
@@ -14,17 +17,55 @@ const PLAYER_ICON = L.icon({
   iconAnchor: [9, 8],
 });
 
+type PlayerDataEventPayload = PlayerDataEvent["payload"][number];
+interface MapPlayers extends User, PlayerDataEventPayload {
+  unit: EmsFdDeputy | Officer | null;
+}
+
 export function RenderMapPlayers() {
-  const [players, setPlayers] = React.useState<PlayerDataEvent["payload"]>([]);
+  const [players, setPlayers] = React.useState<MapPlayers[]>([]);
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
 
-  const { cad } = useAuth();
+  const { cad, user: u } = useAuth();
   const url = getCADURL(cad);
   const map = useMap();
+  const { state, execute } = useFetch();
 
-  const onPlayerData = React.useCallback((data: PlayerDataEvent) => {
-    setPlayers(data.payload);
-  }, []);
+  const handleSearchPlayer = React.useCallback(
+    async (steamId: string) => {
+      const existing = players.find((v) => v.steamId === steamId);
+
+      if (existing) return existing;
+
+      const { json } = await execute(`/dispatch/players/${steamId}`, {
+        method: "GET",
+      });
+
+      return json;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [players],
+  );
+
+  const onPlayerData = React.useCallback(
+    async (data: PlayerDataEvent) => {
+      for (const player of data.payload) {
+        if (!player.identifier.startsWith("steam:")) {
+          continue;
+        }
+
+        const steamId = player.identifier.replace("steam:", "");
+        const convertedSteamId = new BN(steamId, 16).toString();
+
+        const user = await handleSearchPlayer(convertedSteamId);
+
+        if (user) {
+          setPlayers((p) => [...p, { ...player, ...user }]);
+        }
+      }
+    },
+    [handleSearchPlayer],
+  );
 
   const onPlayerLeft = React.useCallback((data: PlayerLeftEvent) => {
     setPlayers((p) => p.filter((v) => v.identifier !== data.payload));
@@ -82,7 +123,16 @@ export function RenderMapPlayers() {
     <>
       {players.map((player) => {
         const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
+        console.log({ player });
         if (!pos) return null;
+
+        const hasLeoPermissions = player.permissions
+          ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
+          : player.isLeo;
+
+        const hasEmsFdPermissions = player.permissions
+          ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
+          : player.isEmsFd;
 
         return (
           <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
@@ -93,22 +143,22 @@ export function RenderMapPlayers() {
                 <strong>Player:</strong> {player.name}
               </p>
               <div>
-                {/* <p style={{ margin: 2 }}>
-                  <strong>EMS-FD: </strong> {player.ems_fd}
+                <p style={{ margin: 2 }}>
+                  <strong>EMS-FD: </strong> {String(hasEmsFdPermissions)}
                 </p>
                 <p style={{ margin: 2 }}>
-                  <strong>Leo: </strong> {player.leo}
-                </p> */}
+                  <strong>Leo: </strong> {String(hasLeoPermissions)}
+                </p>
                 {player.Weapon ? (
                   <p style={{ margin: 2 }}>
                     <strong>Weapon: </strong> {player.Weapon}
                   </p>
                 ) : null}
                 <p style={{ margin: 2 }}>
-                  <strong>Location: </strong> {player?.Location}
+                  <strong>Location: </strong> {player.Location}
                 </p>
                 <p style={{ margin: 2 }}>
-                  <strong>Vehicle: </strong> {player?.Vehicle || "On foot"}
+                  <strong>Vehicle: </strong> {player.Vehicle || "On foot"}
                 </p>
                 {player["License Plate"] ? (
                   <p style={{ margin: 2 }}>
@@ -116,7 +166,7 @@ export function RenderMapPlayers() {
                   </p>
                 ) : null}
                 <p style={{ margin: 2 }}>
-                  <strong>Identifier: </strong> {player?.identifier}
+                  <strong>Identifier: </strong> {player.identifier}
                 </p>
               </div>
             </Popup>
