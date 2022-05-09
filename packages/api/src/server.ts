@@ -23,9 +23,6 @@ import { checkForUpdates } from "utils/checkForUpdates";
 import { getCADVersion } from "@snailycad/utils/version";
 
 const rootDir = __dirname;
-const CORS_ORIGIN_URL = stripBackslashFromCorsURL(
-  process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",
-);
 
 @Configuration({
   rootDir,
@@ -49,12 +46,15 @@ const CORS_ORIGIN_URL = stripBackslashFromCorsURL(
     cookieParser(),
     compress(),
     json({ limit: "500kb" }),
-    cors({ origin: CORS_ORIGIN_URL, credentials: true }),
+    cors({ origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000", credentials: true }),
     IsEnabled,
   ],
   swagger: [{ path: "/api-docs", specVersion: "3.0.3" }],
   socketIO: {
-    cors: { credentials: true, origin: CORS_ORIGIN_URL },
+    cors: {
+      credentials: true,
+      origin: process.env.CORS_ORIGIN_URL ?? "http://localhost:3000",
+    },
   },
 })
 export class Server {
@@ -134,14 +134,4 @@ export class ErrorFilter implements ExceptionFilterMethods {
       };
     }, {});
   }
-}
-
-function stripBackslashFromCorsURL(url: string) {
-  const split = url.split("");
-
-  const idx = split.lastIndexOf("/");
-  const removed = split.splice(0, idx);
-  const str = removed.join("");
-
-  return str;
 }

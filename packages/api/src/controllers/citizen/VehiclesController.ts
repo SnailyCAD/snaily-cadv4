@@ -214,7 +214,11 @@ export class VehiclesController {
         await prisma.vehicleValue.create({
           data: {
             value: {
-              create: { value: data.model, type: ValueType.VEHICLE, isDefault: false },
+              create: {
+                value: data.model,
+                type: ValueType.VEHICLE,
+                isDefault: false,
+              },
             },
           },
         });
