@@ -22,6 +22,7 @@
     "isDefault": "По умолчанию",
     "defaultOfficerRank": "Звание офицера по умолчанию",
     "pairedUnitTemplate": "Шаблон парного юнита",
+    "isConfidential": "Конфиденциально",
     "alert_deletePenalCodeGroup": "Вы уверены, что хотите удалить <span>{group}</span>? Это действие необратимо.",
     "alert_deleteValue": "Вы уверены, что хотите удалить <span>{value}</span>? Это действие необратимо.",
     "alert_deleteSelectedValues": "Вы уверены, что хотите удалить {length} элемент (ов)? Это действие необратимо."
