@@ -42,7 +42,11 @@ export const combinedUnitProperties = {
   officers: { include: _leoProperties },
 };
 
-export async function getActiveOfficer(req: Req, user: User, ctx: Context) {
+export async function getActiveOfficer(
+  req: Req,
+  user: Pick<User, "rank" | "id" | "permissions" | "isEmsFd" | "isDispatch" | "isLeo">,
+  ctx: Context,
+) {
   // dispatch is allowed to use officer routes
   let isDispatch = false;
   if (req.headers["is-from-dispatch"]?.toString() === "true") {

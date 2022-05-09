@@ -102,7 +102,7 @@ export function RegisterVehicleModal({
   }
 
   const INITIAL_VALUES = {
-    model: vehicle?.modelId ?? "",
+    model: vehicle ? (CUSTOM_TEXTFIELD_VALUES ? vehicle.model.value.value : vehicle.modelId) : "",
     modelName: vehicle?.model.value.value ?? "",
     color: vehicle?.color ?? "",
     insuranceStatus: vehicle?.insuranceStatusId ?? null,
@@ -149,7 +149,14 @@ export function RegisterVehicleModal({
                   list="vehicle-models-list"
                   value={values.model}
                   name="model"
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setValues({
+                      ...values,
+                      modelName: value,
+                      model: value,
+                    });
+                  }}
                 />
 
                 <datalist id="vehicle-models-list">

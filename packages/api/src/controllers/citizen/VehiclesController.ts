@@ -6,6 +6,7 @@ import {
   VehicleInspectionStatus,
   VehicleTaxStatus,
   WhitelistStatus,
+  ValueType,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
@@ -187,18 +188,49 @@ export class VehiclesController {
       defaultReturn: false,
     });
 
+    const isCustomEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.CUSTOM_TEXTFIELD_VALUES,
+      defaultReturn: false,
+    });
+
     const dmvStatus = isDmvEnabled
       ? data.reApplyForDmv && vehicle.dmvStatus === WhitelistStatus.DECLINED
         ? WhitelistStatus.PENDING
         : undefined // undefined = will not update the database entry
       : null;
 
+    let valueModel;
+    if (isCustomEnabled) {
+      valueModel = await prisma.vehicleValue.findFirst({
+        where: {
+          value: {
+            value: { contains: data.model, mode: "insensitive" },
+          },
+        },
+      });
+
+      if (!valueModel) {
+        await prisma.vehicleValue.create({
+          data: {
+            value: {
+              create: {
+                value: data.model,
+                type: ValueType.VEHICLE,
+                isDefault: false,
+              },
+            },
+          },
+        });
+      }
+    }
+
     const updated = await prisma.registeredVehicle.update({
       where: {
         id: vehicle.id,
       },
       data: {
-        modelId: data.model,
+        modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,
         vinNumber: data.vinNumber || vehicle.vinNumber,

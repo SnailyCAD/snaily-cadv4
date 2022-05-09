@@ -30,7 +30,7 @@ export default function CitizenLogs({ logs }: Props) {
   const TABS = [{ value: "citizen-logs-tab", name: t("citizenLogs") }];
 
   if (CITIZEN_RECORD_APPROVAL) {
-    TABS[1] = { value: "arrest-reports-tab", name: t("citizenLogs") };
+    TABS[1] = { value: "arrest-reports-tab", name: t("arrestReportLogs") };
   }
 
   return (
