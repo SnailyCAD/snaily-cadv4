@@ -23,7 +23,7 @@ interface MapPlayer extends User, PlayerDataEventPayload {
 }
 
 export function RenderMapPlayers() {
-  const [players, setPlayers] = React.useState<MapPlayer[]>([]);
+  const [players, setPlayers] = React.useState<(MapPlayer | PlayerDataEventPayload)[]>([]);
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
 
   const { cad } = useAuth();
@@ -33,12 +33,19 @@ export function RenderMapPlayers() {
 
   const handleSearchPlayer = React.useCallback(
     async (player: PlayerDataEventPayload) => {
-      const existing = players.find((v) => v.steamId === player.identifier);
+      const existing = players.find((v) =>
+        "steamId" in v ? v.steamId === player.identifier : v.identifier === player.identifier,
+      );
       if (existing) return existing;
 
       const { json } = await execute(`/dispatch/players/${player.identifier}`, {
         method: "GET",
       });
+
+      if (!json.steamId) {
+        setPlayers((p) => [...p, player]);
+        return;
+      }
 
       const data = { ...player, ...json };
       setPlayers((p) => [...p, data]);
@@ -125,17 +132,21 @@ export function RenderMapPlayers() {
         const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
         if (!pos) return null;
 
+        const isCADUser = "steamId" in player;
+
         const hasLeoPermissions =
-          player.rank === Rank.OWNER ||
-          (player.permissions
-            ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
-            : player.isLeo);
+          isCADUser &&
+          (player.rank === Rank.OWNER ||
+            (player.permissions
+              ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
+              : player.isLeo));
 
         const hasEmsFdPermissions =
-          player.rank === Rank.OWNER ||
-          (player.permissions
-            ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
-            : player.isEmsFd);
+          isCADUser &&
+          (player.rank === Rank.OWNER ||
+            (player.permissions
+              ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
+              : player.isEmsFd));
 
         return (
           <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
@@ -145,36 +156,40 @@ export function RenderMapPlayers() {
               <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}
               </p>
+              {isCADUser ? (
+                <>
+                  <p style={{ margin: 2 }}>
+                    <strong>CAD Username: </strong> {player.username}
+                  </p>
+
+                  <p style={{ margin: 2 }}>
+                    <strong>EMS-FD: </strong> {String(hasEmsFdPermissions)}
+                  </p>
+                  <p style={{ margin: 2 }}>
+                    <strong>Leo: </strong> {String(hasLeoPermissions)}
+                  </p>
+                </>
+              ) : null}
+
+              {player.Weapon ? (
+                <p style={{ margin: 2 }}>
+                  <strong>Weapon: </strong> {player.Weapon}
+                </p>
+              ) : null}
               <p style={{ margin: 2 }}>
-                <strong>CAD Username: </strong> {player.username}
+                <strong>Location: </strong> {player.Location}
               </p>
-              <div>
+              <p style={{ margin: 2 }}>
+                <strong>Vehicle: </strong> {player.Vehicle || "On foot"}
+              </p>
+              {player["License Plate"] ? (
                 <p style={{ margin: 2 }}>
-                  <strong>EMS-FD: </strong> {String(hasEmsFdPermissions)}
+                  <strong>License plate: </strong> {player["License Plate"]}
                 </p>
-                <p style={{ margin: 2 }}>
-                  <strong>Leo: </strong> {String(hasLeoPermissions)}
-                </p>
-                {player.Weapon ? (
-                  <p style={{ margin: 2 }}>
-                    <strong>Weapon: </strong> {player.Weapon}
-                  </p>
-                ) : null}
-                <p style={{ margin: 2 }}>
-                  <strong>Location: </strong> {player.Location}
-                </p>
-                <p style={{ margin: 2 }}>
-                  <strong>Vehicle: </strong> {player.Vehicle || "On foot"}
-                </p>
-                {player["License Plate"] ? (
-                  <p style={{ margin: 2 }}>
-                    <strong>License plate: </strong> {player["License Plate"]}
-                  </p>
-                ) : null}
-                <p style={{ margin: 2 }}>
-                  <strong>Identifier: </strong> {player.identifier}
-                </p>
-              </div>
+              ) : null}
+              <p style={{ margin: 2 }}>
+                <strong>Identifier: </strong> {player.identifier}
+              </p>
             </Popup>
           </Marker>
         );

@@ -235,6 +235,7 @@ export class DispatchController {
         isDispatch: true,
         permissions: true,
         rank: true,
+        steamId: true,
       },
     });
 
