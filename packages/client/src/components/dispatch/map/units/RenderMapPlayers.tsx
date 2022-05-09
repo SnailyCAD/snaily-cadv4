@@ -1,4 +1,4 @@
-import type { cad, EmsFdDeputy, Officer, User } from "@snailycad/types";
+import { cad, EmsFdDeputy, Officer, Rank, User } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 import { toastMessage } from "lib/toastMessage";
 import { convertToMap } from "lib/map/utils";
@@ -18,30 +18,31 @@ const PLAYER_ICON = L.icon({
 });
 
 type PlayerDataEventPayload = PlayerDataEvent["payload"][number];
-interface MapPlayers extends User, PlayerDataEventPayload {
+interface MapPlayer extends User, PlayerDataEventPayload {
   unit: EmsFdDeputy | Officer | null;
 }
 
 export function RenderMapPlayers() {
-  const [players, setPlayers] = React.useState<MapPlayers[]>([]);
+  const [players, setPlayers] = React.useState<MapPlayer[]>([]);
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
 
-  const { cad, user: u } = useAuth();
+  const { cad } = useAuth();
   const url = getCADURL(cad);
   const map = useMap();
-  const { state, execute } = useFetch();
+  const { execute } = useFetch();
 
   const handleSearchPlayer = React.useCallback(
-    async (steamId: string) => {
-      const existing = players.find((v) => v.steamId === steamId);
-
+    async (player: PlayerDataEventPayload) => {
+      const existing = players.find((v) => v.steamId === player.identifier);
       if (existing) return existing;
 
-      const { json } = await execute(`/dispatch/players/${steamId}`, {
+      const { json } = await execute(`/dispatch/players/${player.identifier}`, {
         method: "GET",
       });
 
-      return json;
+      const data = { ...player, ...json };
+      setPlayers((p) => [...p, data]);
+      return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [players],
@@ -57,11 +58,10 @@ export function RenderMapPlayers() {
         const steamId = player.identifier.replace("steam:", "");
         const convertedSteamId = new BN(steamId, 16).toString();
 
-        const user = await handleSearchPlayer(convertedSteamId);
-
-        if (user) {
-          setPlayers((p) => [...p, { ...player, ...user }]);
-        }
+        await handleSearchPlayer({
+          ...player,
+          identifier: convertedSteamId,
+        });
       }
     },
     [handleSearchPlayer],
@@ -123,16 +123,19 @@ export function RenderMapPlayers() {
     <>
       {players.map((player) => {
         const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
-        console.log({ player });
         if (!pos) return null;
 
-        const hasLeoPermissions = player.permissions
-          ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
-          : player.isLeo;
+        const hasLeoPermissions =
+          player.rank === Rank.OWNER ||
+          (player.permissions
+            ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
+            : player.isLeo);
 
-        const hasEmsFdPermissions = player.permissions
-          ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
-          : player.isEmsFd;
+        const hasEmsFdPermissions =
+          player.rank === Rank.OWNER ||
+          (player.permissions
+            ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
+            : player.isEmsFd);
 
         return (
           <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
@@ -141,6 +144,9 @@ export function RenderMapPlayers() {
             <Popup minWidth={500}>
               <p style={{ margin: 2 }}>
                 <strong>Player:</strong> {player.name}
+              </p>
+              <p style={{ margin: 2 }}>
+                <strong>CAD Username: </strong> {player.username}
               </p>
               <div>
                 <p style={{ margin: 2 }}>
