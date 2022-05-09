@@ -67,6 +67,8 @@ export const DISCORD_WEBHOOKS_SCHEMA = z.object({
   statusesWebhook: DISCORD_WEBHOOK,
   panicButtonWebhook: DISCORD_WEBHOOK,
   boloWebhook: DISCORD_WEBHOOK,
+  vehicleImpoundedWebhook: DISCORD_WEBHOOK,
+  citizenRecordsWebhook: DISCORD_WEBHOOK,
 });
 
 export const CAD_AUTO_SET_PROPERTIES = z.object({
