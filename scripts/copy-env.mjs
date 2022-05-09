@@ -21,7 +21,7 @@ function addPortToClientPackageJson() {
 
   if (port && port !== DEFAULT_PORT) {
     json = JSON.parse(json);
-    json.scripts.start = `next start -p ${port}`;
+    json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
 
     writeFileSync(dir, json, (err) => {

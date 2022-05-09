@@ -20,6 +20,7 @@ import cors from "cors";
 import { IsEnabled } from "middlewares/IsEnabled";
 import { sendErrorReport } from "@snailycad/telemetry";
 import { checkForUpdates } from "utils/checkForUpdates";
+import { getCADVersion } from "@snailycad/utils/version";
 
 const rootDir = __dirname;
 
@@ -69,11 +70,15 @@ export class Server {
       app.set("trust proxy", 1);
     }
 
-    this.app.get("/", (_: any, res: Response) => {
+    this.app.get("/", async (_: any, res: Response) => {
+      const version = await getCADVersion();
+
       res.setHeader("content-type", "text/html");
       return res
         .status(200)
-        .send("<html><head><title>SnailyCAD API</title></head><body>200 Success</body></html>");
+        .send(
+          `<html><head><title>SnailyCAD API</title></head><body>200 Success. Current CAD Version: ${version}</body></html>`,
+        );
     });
   }
 
