@@ -14,11 +14,19 @@ import { NotFound } from "@tsed/exceptions";
 import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
-import type { User } from "@prisma/client";
+import {
+  Citizen,
+  DiscordWebhookType,
+  RegisteredVehicle,
+  User,
+  Value,
+  VehicleValue,
+} from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
+import { sendDiscordWebhook } from "lib/discord/webhooks";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -112,14 +120,26 @@ export class TowController {
         },
       });
 
-      await prisma.registeredVehicle.update({
+      const impoundedVehicle = await prisma.registeredVehicle.update({
         where: {
           id: vehicle.id,
         },
         data: {
           impounded: true,
         },
+        include: {
+          model: { include: { value: true } },
+          registrationStatus: true,
+          citizen: true,
+        },
       });
+
+      try {
+        const data = createWebhookData(impoundedVehicle);
+        await sendDiscordWebhook(DiscordWebhookType.VEHICLE_IMPOUNDED, data);
+      } catch (error) {
+        console.error("Could not send Discord webhook.", error);
+      }
 
       if (data.call911Id) {
         const call = await prisma.call911.findUnique({
@@ -274,4 +294,29 @@ export class TowController {
 
     return true;
   }
+}
+
+function createWebhookData(
+  vehicle: RegisteredVehicle & {
+    model: VehicleValue & { value: Value };
+    registrationStatus: Value;
+    citizen: Pick<Citizen, "name" | "surname">;
+  },
+) {
+  return {
+    embeds: [
+      {
+        title: "Vehicle Impounded",
+        fields: [
+          { name: "Registration Status", value: vehicle.registrationStatus.value, inline: true },
+          { name: "Model", value: vehicle.model.value.value, inline: true },
+          {
+            name: "Owner",
+            value: `${vehicle.citizen.name} ${vehicle.citizen.surname}`,
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
 }
