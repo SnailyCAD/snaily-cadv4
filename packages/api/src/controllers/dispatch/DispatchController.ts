@@ -218,7 +218,7 @@ export class DispatchController {
   @Get("/players/:steamId")
   @UsePermissions({
     fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
   async findUserBySteamId(
     @Req() req: Req,
