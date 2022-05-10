@@ -60,11 +60,12 @@ interface ActiveUnitsOptions {
 
 function makeActiveUnits({ players, activeOfficers, activeDeputies }: ActiveUnitsOptions) {
   const activeUnits: MapPlayer[] = [];
+  const _activeOfficers = activeOfficers.flatMap((officer) => {
+    if (isUnitCombined(officer)) return officer.officers;
+    return officer;
+  });
 
-  for (const activeUnit of [...activeOfficers, ...activeDeputies]) {
-    // todo: allow combined units
-    if (isUnitCombined(activeUnit)) continue;
-
+  for (const activeUnit of [..._activeOfficers, ...activeDeputies]) {
     const steamId = activeUnit.user.steamId;
     const player = players.find((v) => "steamId" in v && v.steamId === steamId);
 
