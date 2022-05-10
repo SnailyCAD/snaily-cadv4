@@ -5,7 +5,7 @@ import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import type { Citizen, DepartmentValue, Officer } from "@prisma/client";
+import { appendConfidential } from "controllers/leo/search/SearchController";
 
 const citizenSearchInclude = {
   medicalRecords: { include: { bloodGroup: true } },
@@ -87,27 +87,4 @@ export class SearchController {
 
     return appendConfidential(citizen);
   }
-}
-
-function appendConfidential(
-  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue | null })[] })[],
-) {
-  const _citizens = [];
-
-  for (const citizen of citizens) {
-    const isConfidential = citizen.officers.some((v) => v.department?.isConfidential);
-
-    if (isConfidential) {
-      _citizens.push({
-        id: citizen.id,
-        name: citizen.name,
-        surname: citizen.surname,
-        isConfidential: true,
-      });
-    } else {
-      _citizens.push(citizen);
-    }
-  }
-
-  return _citizens;
 }
