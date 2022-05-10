@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { usePortal } from "@casper124578/useful";
 import { useTranslations } from "next-intl";
 import { UnitItem } from "./UnitItem";
+import { ManageUnitModal } from "components/dispatch/modals/ManageUnit";
 
 interface Props {
   players: (MapPlayer | PlayerDataEventPayload)[];
@@ -17,6 +18,8 @@ interface Props {
 }
 
 export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
+  const [tempUnit, setTempUnit] = React.useState<null | Officer | EmsFdDeputy>(null);
+
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
 
@@ -41,10 +44,12 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
         ) : (
           <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player) => {
-              return <UnitItem key={player.identifier} player={player} />;
+              return <UnitItem setTempUnit={setTempUnit} key={player.identifier} player={player} />;
             })}
           </AccordionRoot>
         )}
+
+        {tempUnit ? <ManageUnitModal onClose={() => setTempUnit(null)} unit={tempUnit} /> : null}
       </div>,
       portalRef,
     )

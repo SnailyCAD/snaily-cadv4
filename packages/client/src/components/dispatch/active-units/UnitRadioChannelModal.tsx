@@ -30,7 +30,7 @@ export function UnitRadioChannelModal({ unit, onClose }: Props) {
   const { hasActiveDispatchers } = useActiveDispatchers();
 
   const router = useRouter();
-  const isDispatch = router.pathname === "/dispatch";
+  const isDispatch = router.pathname.includes("/dispatch");
 
   function handleClose() {
     onClose?.();
