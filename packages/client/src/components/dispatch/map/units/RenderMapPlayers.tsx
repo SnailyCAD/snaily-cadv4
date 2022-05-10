@@ -32,13 +32,21 @@ export function RenderMapPlayers() {
   const { execute } = useFetch();
 
   const handleSearchPlayer = React.useCallback(
-    async (player: PlayerDataEventPayload) => {
+    async (steamId: string | null, player: PlayerDataEventPayload) => {
       const existing = players.find((v) =>
-        "steamId" in v ? v.steamId === player.identifier : v.identifier === player.identifier,
+        "steamId" in v ? v.steamId === steamId : v.identifier === player.identifier,
       );
-      if (existing) return existing;
+      if (existing) {
+        const copied = [...players];
+        const idx = copied.findIndex((v) => v.identifier === player.identifier);
 
-      const { json } = await execute(`/dispatch/players/${player.identifier}`, {
+        copied[idx] = { ...existing, ...player };
+        setPlayers(copied);
+
+        return;
+      }
+
+      const { json } = await execute(`/dispatch/players/${steamId}`, {
         method: "GET",
       });
 
@@ -49,7 +57,6 @@ export function RenderMapPlayers() {
 
       const data = { ...player, ...json };
       setPlayers((p) => [...p, data]);
-      return data;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [players],
@@ -58,17 +65,16 @@ export function RenderMapPlayers() {
   const onPlayerData = React.useCallback(
     async (data: PlayerDataEvent) => {
       for (const player of data.payload) {
+        if (!player.identifier) continue;
         if (!player.identifier.startsWith("steam:")) {
+          await handleSearchPlayer(null, player);
           continue;
         }
 
         const steamId = player.identifier.replace("steam:", "");
         const convertedSteamId = new BN(steamId, 16).toString();
 
-        await handleSearchPlayer({
-          ...player,
-          identifier: convertedSteamId,
-        });
+        await handleSearchPlayer(convertedSteamId, player);
       }
     },
     [handleSearchPlayer],
