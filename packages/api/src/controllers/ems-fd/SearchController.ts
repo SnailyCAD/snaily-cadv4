@@ -5,9 +5,11 @@ import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import type { Citizen, DepartmentValue, Officer } from "@prisma/client";
 
 const citizenSearchInclude = {
   medicalRecords: { include: { bloodGroup: true } },
+  officers: { include: { department: true } },
 };
 
 @Controller("/search")
@@ -83,6 +85,29 @@ export class SearchController {
       });
     }
 
-    return citizen;
+    return appendConfidential(citizen);
   }
+}
+
+function appendConfidential(
+  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue | null })[] })[],
+) {
+  const _citizens = [];
+
+  for (const citizen of citizens) {
+    const isConfidential = citizen.officers.some((v) => v.department?.isConfidential);
+
+    if (isConfidential) {
+      _citizens.push({
+        id: citizen.id,
+        name: citizen.name,
+        surname: citizen.surname,
+        isConfidential: true,
+      });
+    } else {
+      _citizens.push(citizen);
+    }
+  }
+
+  return _citizens;
 }

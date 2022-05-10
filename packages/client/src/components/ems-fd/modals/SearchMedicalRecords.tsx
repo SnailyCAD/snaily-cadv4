@@ -118,7 +118,10 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
               />
             </FormField>
 
-            {typeof results !== "boolean" && results && results.medicalRecords.length <= 0 ? (
+            {typeof results !== "boolean" &&
+            results &&
+            !results.isConfidential &&
+            results.medicalRecords.length <= 0 ? (
               <div className="flex items-center justify-between my-5">
                 <p>{t("Ems.citizenNoMedicalRecords")}</p>
                 <Button
@@ -136,7 +139,9 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
             {typeof results === "boolean" && !results ? <p>{t("Errors.citizenNotFound")}</p> : null}
 
-            {typeof results !== "boolean" && results && results.medicalRecords.length >= 1 ? (
+            {typeof results !== "boolean" && results && results.isConfidential ? (
+              <p className="my-5 px-2">{t("Leo.citizenIsConfidential")}</p>
+            ) : typeof results !== "boolean" && results && results.medicalRecords.length >= 1 ? (
               <Table
                 data={results.medicalRecords.map((record) => ({
                   type: record.type,
@@ -189,4 +194,5 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
 
 interface SearchResult extends Citizen {
   medicalRecords: MedicalRecord[];
+  isConfidential?: boolean;
 }
