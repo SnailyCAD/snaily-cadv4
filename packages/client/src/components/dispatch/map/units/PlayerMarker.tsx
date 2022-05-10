@@ -1,0 +1,97 @@
+import { Rank } from "@snailycad/types";
+import { convertToMap } from "lib/map/utils";
+import * as React from "react";
+import { Marker, Popup, Tooltip, useMap } from "react-leaflet";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
+import { Button } from "components/Button";
+import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
+import { icon as leafletIcon } from "leaflet";
+
+interface Props {
+  player: MapPlayer | PlayerDataEventPayload;
+  handleToggle(playerId: string): void;
+}
+
+const PLAYER_ICON = leafletIcon({
+  iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
+  iconSize: [25, 40],
+  popupAnchor: [0, 0],
+  iconAnchor: [9, 8],
+});
+
+export function PlayerMarker({ player, handleToggle }: Props) {
+  const map = useMap();
+
+  const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
+  if (!pos) return null;
+
+  const isCADUser = "steamId" in player;
+
+  const hasLeoPermissions =
+    isCADUser &&
+    (player.rank === Rank.OWNER ||
+      (player.permissions
+        ? hasPermission(player.permissions, defaultPermissions.defaultLeoPermissions)
+        : player.isLeo));
+
+  const hasEmsFdPermissions =
+    isCADUser &&
+    (player.rank === Rank.OWNER ||
+      (player.permissions
+        ? hasPermission(player.permissions, defaultPermissions.defaultEmsFdPermissions)
+        : player.isEmsFd));
+
+  return (
+    <Marker icon={PLAYER_ICON} key={player.identifier} position={pos}>
+      <Tooltip direction="top">{player.name}</Tooltip>
+
+      <Popup minWidth={500}>
+        <p style={{ margin: 2 }}>
+          <strong>Player:</strong> {player.name}
+        </p>
+        {isCADUser ? (
+          <>
+            <p style={{ margin: 2 }}>
+              <strong>CAD Username: </strong> {player.username}
+            </p>
+
+            <p style={{ margin: 2 }}>
+              <strong>EMS-FD: </strong> {String(hasEmsFdPermissions)}
+            </p>
+            <p style={{ margin: 2 }}>
+              <strong>Leo: </strong> {String(hasLeoPermissions)}
+            </p>
+          </>
+        ) : null}
+
+        {player.Weapon ? (
+          <p style={{ margin: 2 }}>
+            <strong>Weapon: </strong> {player.Weapon}
+          </p>
+        ) : null}
+        <p style={{ margin: 2 }}>
+          <strong>Location: </strong> {player.Location}
+        </p>
+        <p style={{ margin: 2 }}>
+          <strong>Vehicle: </strong> {player.Vehicle || "On foot"}
+        </p>
+        {player["License Plate"] ? (
+          <p style={{ margin: 2 }}>
+            <strong>License plate: </strong> {player["License Plate"]}
+          </p>
+        ) : null}
+        <p style={{ margin: 2 }}>
+          <strong>Identifier: </strong> {player.identifier}
+        </p>
+
+        {"id" in player ? (
+          <div className="mt-3">
+            <Button small className="!text-base" onClick={() => handleToggle(player.id)}>
+              {"togglePlayer"}
+            </Button>
+          </div>
+        ) : null}
+      </Popup>
+    </Marker>
+  );
+}

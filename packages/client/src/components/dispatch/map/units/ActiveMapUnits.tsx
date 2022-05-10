@@ -3,7 +3,7 @@ import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 import { isUnitCombined } from "@snailycad/utils";
 import { useActiveDeputies } from "hooks/realtime/useActiveDeputies";
 import { useActiveOfficers } from "hooks/realtime/useActiveOfficers";
-import type { MapPlayer, PlayerDataEventPayload } from "./RenderMapPlayers";
+import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { Root as AccordionRoot } from "@radix-ui/react-accordion";
 import { createPortal } from "react-dom";
 import { usePortal } from "@casper124578/useful";
@@ -19,7 +19,6 @@ interface Props {
 export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
-  t;
 
   const { activeOfficers } = useActiveOfficers();
   const { activeDeputies } = useActiveDeputies();
@@ -36,9 +35,9 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
         id="map-calls"
         className="fixed z-50 p-3 top-20 right-4 w-80 rounded-md shadow bg-gray-50 dark:bg-dark-bg dark:text-white"
       >
-        <h1 className="text-xl font-semibold">{"activeUnits"}</h1>
+        <h1 className="text-xl font-semibold">{t("activeUnits")}</h1>
         {units.length <= 0 ? (
-          <p>{"noActiveUnits"}</p>
+          <p className="text-base mt-2">{t("noActiveUnits")}</p>
         ) : (
           <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player) => {
