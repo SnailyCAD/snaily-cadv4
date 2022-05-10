@@ -12,9 +12,11 @@ import { UnitItem } from "./UnitItem";
 
 interface Props {
   players: (MapPlayer | PlayerDataEventPayload)[];
+  openItems: string[];
+  setOpenItems: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-export function ActiveMapUnits({ players }: Props) {
+export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
   const portalRef = usePortal("ActiveMapCalls");
   const t = useTranslations("Leo");
   t;
@@ -27,8 +29,6 @@ export function ActiveMapUnits({ players }: Props) {
     activeDeputies,
   });
 
-  console.log({ units });
-
   return (
     portalRef &&
     createPortal(
@@ -40,10 +40,7 @@ export function ActiveMapUnits({ players }: Props) {
         {units.length <= 0 ? (
           <p>{"noActiveUnits"}</p>
         ) : (
-          <AccordionRoot
-            // value={openItems} onValueChange={setOpenItems}
-            type="multiple"
-          >
+          <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player) => {
               return <UnitItem key={player.identifier} player={player} />;
             })}

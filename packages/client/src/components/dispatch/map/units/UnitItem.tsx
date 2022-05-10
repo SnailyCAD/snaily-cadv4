@@ -36,7 +36,9 @@ export function UnitItem({ player }: CallItemProps) {
           />
         </Accordion.Trigger>
         <Accordion.Content className="pt-2 text-base text-neutral-800 dark:text-white">
-          <div className="map-column">TODO</div>
+          <div className="map-column">
+            <div className="grid grid-cols-2 grid-flow-col gap-2 mt-2">TODO</div>
+          </div>
         </Accordion.Content>
       </Accordion.Item>
     </div>

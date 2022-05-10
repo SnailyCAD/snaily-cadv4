@@ -10,6 +10,7 @@ import BN from "bignumber.js";
 import useFetch from "lib/useFetch";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { ActiveMapUnits } from "./ActiveMapUnits";
+import { Button } from "components/Button";
 
 const PLAYER_ICON = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
@@ -27,6 +28,7 @@ export interface MapPlayer extends User, PlayerDataEventPayload {
 export function RenderMapPlayers() {
   const [players, setPlayers] = React.useState<(MapPlayer | PlayerDataEventPayload)[]>([]);
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
+  const [openItems, setOpenItems] = React.useState<string[]>([]);
 
   const { cad } = useAuth();
   const url = getCADURL(cad);
@@ -134,6 +136,16 @@ export function RenderMapPlayers() {
     };
   }, [socket, onError, onMessage]);
 
+  function handleToggle(playerId: string) {
+    setOpenItems((p) => {
+      if (p.includes(playerId)) {
+        return p.filter((v) => v !== playerId);
+      }
+
+      return [...p, playerId];
+    });
+  }
+
   return (
     <>
       {players.map((player) => {
@@ -198,12 +210,20 @@ export function RenderMapPlayers() {
               <p style={{ margin: 2 }}>
                 <strong>Identifier: </strong> {player.identifier}
               </p>
+
+              {"id" in player ? (
+                <div className="mt-3">
+                  <Button small className="!text-base" onClick={() => handleToggle(player.id)}>
+                    {"togglePlayer"}
+                  </Button>
+                </div>
+              ) : null}
             </Popup>
           </Marker>
         );
       })}
 
-      <ActiveMapUnits players={players} />
+      <ActiveMapUnits setOpenItems={setOpenItems} openItems={openItems} players={players} />
     </>
   );
 }
