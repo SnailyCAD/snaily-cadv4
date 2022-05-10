@@ -11,6 +11,7 @@ import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { toastMessage } from "lib/toastMessage";
 import type { cad } from "@snailycad/types";
+import { omit } from "lib/utils";
 
 export function useMapPlayers() {
   const [players, setPlayers] = React.useState<(MapPlayer | PlayerDataEventPayload)[]>([]);
@@ -30,8 +31,16 @@ export function useMapPlayers() {
         const copied = [...players];
         const idx = copied.findIndex((v) => v.identifier === player.identifier);
 
-        // todo: omit player properties from the `existing` var
-        copied[idx] = { ...existing, ...player, convertedSteamId: steamId };
+        const omittedExisting = omit(existing, [
+          "License Plate",
+          "Vehicle",
+          "Location",
+          "Weapon",
+          "icon",
+          "pos",
+        ]);
+
+        copied[idx] = { ...omittedExisting, ...player, convertedSteamId: steamId };
         setPlayers(copied);
 
         return;
