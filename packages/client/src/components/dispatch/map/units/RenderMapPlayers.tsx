@@ -9,6 +9,7 @@ import L from "leaflet";
 import BN from "bignumber.js";
 import useFetch from "lib/useFetch";
 import { defaultPermissions, hasPermission } from "@snailycad/permissions";
+import { ActiveMapUnits } from "./ActiveMapUnits";
 
 const PLAYER_ICON = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.0/dist/images/marker-icon-2x.png",
@@ -17,9 +18,10 @@ const PLAYER_ICON = L.icon({
   iconAnchor: [9, 8],
 });
 
-type PlayerDataEventPayload = PlayerDataEvent["payload"][number];
-interface MapPlayer extends User, PlayerDataEventPayload {
+export type PlayerDataEventPayload = PlayerDataEvent["payload"][number];
+export interface MapPlayer extends User, PlayerDataEventPayload {
   unit: EmsFdDeputy | Officer | null;
+  convertedSteamId: string | null;
 }
 
 export function RenderMapPlayers() {
@@ -40,7 +42,7 @@ export function RenderMapPlayers() {
         const copied = [...players];
         const idx = copied.findIndex((v) => v.identifier === player.identifier);
 
-        copied[idx] = { ...existing, ...player };
+        copied[idx] = { ...existing, ...player, convertedSteamId: steamId };
         setPlayers(copied);
 
         return;
@@ -55,7 +57,7 @@ export function RenderMapPlayers() {
         return;
       }
 
-      const data = { ...player, ...json };
+      const data = { ...player, ...json, convertedSteamId: steamId };
       setPlayers((p) => [...p, data]);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,6 +202,8 @@ export function RenderMapPlayers() {
           </Marker>
         );
       })}
+
+      <ActiveMapUnits players={players} />
     </>
   );
 }
