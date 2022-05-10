@@ -25,10 +25,12 @@ export function useMapPlayers() {
       const existing = players.find((v) =>
         "steamId" in v ? v.steamId === steamId : v.identifier === player.identifier,
       );
+
       if (existing) {
         const copied = [...players];
         const idx = copied.findIndex((v) => v.identifier === player.identifier);
 
+        // todo: omit player properties from the `existing` var
         copied[idx] = { ...existing, ...player, convertedSteamId: steamId };
         setPlayers(copied);
 

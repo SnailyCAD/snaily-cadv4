@@ -22,7 +22,10 @@ const PLAYER_ICON = leafletIcon({
 export function PlayerMarker({ player, handleToggle }: Props) {
   const map = useMap();
 
-  const pos = player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map);
+  const pos = React.useMemo(
+    () => player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map),
+    [player.pos, map],
+  );
   if (!pos) return null;
 
   const isCADUser = "steamId" in player;
