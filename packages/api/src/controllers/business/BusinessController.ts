@@ -383,7 +383,7 @@ export class BusinessController {
       include: businessInclude,
     });
 
-    await prisma.business.update({
+    const updated = await prisma.business.update({
       where: {
         id: business.id,
       },
@@ -392,6 +392,6 @@ export class BusinessController {
       },
     });
 
-    return { id: business.id, employee };
+    return { business: updated, id: business.id, employee };
   }
 }
