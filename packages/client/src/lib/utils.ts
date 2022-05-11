@@ -115,3 +115,21 @@ export function isUnitDisabled(unit: Officer | EmsFdDeputy) {
     !unit.department?.isDefaultDepartment
   );
 }
+
+export function omit<Obj extends object, Properties extends keyof Obj>(
+  obj: Obj,
+  properties: Properties[],
+): Omit<Obj, Properties> {
+  const newObj = {} as any;
+  const entries = Object.entries(obj);
+
+  for (const [name, value] of entries) {
+    if (properties.includes(name as Properties)) {
+      continue;
+    }
+
+    newObj[name] = value;
+  }
+
+  return newObj;
+}

@@ -650,7 +650,7 @@ export interface Officer {
   activeIncidentId: string | null;
   activeCallId: string | null;
   radioChannelId: string | null;
-  user: Pick<User, "id" | "username">;
+  user: Pick<User, "id" | "username" | "steamId">;
 }
 
 /**
@@ -1021,7 +1021,7 @@ export interface EmsFdDeputy {
   createdAt: Date;
   updatedAt: Date;
   radioChannelId: string | null;
-  user: Pick<User, "id" | "username">;
+  user: Pick<User, "id" | "username" | "steamId">;
   activeCallId: string | null;
   whitelistStatusId: string | null;
   whitelistStatus?: LeoWhitelistStatus | null;
