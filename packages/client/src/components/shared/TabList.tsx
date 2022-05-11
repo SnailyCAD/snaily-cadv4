@@ -20,7 +20,7 @@ export function TabList<Tabs extends Tab[]>({
 }: Props<Tabs>) {
   return (
     <Tabs.Root defaultValue={defaultValue} className="w-full px-2 sm:px-0">
-      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto">
+      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto thin-scrollbar">
         {tabs.map((tab) => (
           <Tabs.Trigger
             value={tab.value}
