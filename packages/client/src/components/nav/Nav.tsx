@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { useAuth } from "src/context/AuthContext";
+import { useAuth } from "context/AuthContext";
 import { useRouter } from "next/router";
 import { classNames } from "lib/classNames";
 import { CitizenDropdown } from "./dropdowns/CitizenDropdown";

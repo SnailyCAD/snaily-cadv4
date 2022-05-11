@@ -2,7 +2,7 @@ import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "use-intl";
 import { Form, Formik, FormikHelpers } from "formik";
 
-import { useAuth } from "src/context/AuthContext";
+import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";

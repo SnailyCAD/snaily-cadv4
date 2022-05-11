@@ -37,6 +37,10 @@ const QUALIFICATION_VALUE = {
   value: { value: "Basic life support qualification", type: ValueType.QUALIFICATION },
 } as any;
 
+const DL_CATEGORY = {
+  value: { value: "A", type: ValueType.DRIVERSLICENSE_CATEGORY },
+} as any;
+
 test("typeguards.hasValueObj -> VEHICLE_VALUE", () => {
   expect(typeguards.hasValueObj(VEHICLE_VALUE)).toBe(true);
 });
@@ -83,6 +87,10 @@ test("typeguards.isEmployeeValue -> EMPLOYEE_VALUE -> true", () => {
 
 test("typeguards.isUnitQualification -> QUALIFICATION_VALUE -> true", () => {
   expect(typeguards.isUnitQualification(QUALIFICATION_VALUE)).toBe(true);
+});
+
+test("typeguards.isDLCategoryValue -> DL_CATEGORY -> true", () => {
+  expect(typeguards.isDLCategoryValue(DL_CATEGORY)).toBe(true);
 });
 
 test("typeguards.isUnitOfficer -> OFFICER -> true", () => {

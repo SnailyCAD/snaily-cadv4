@@ -4,7 +4,7 @@ import { TabsContent, TabList } from "components/shared/TabList";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 
-import { useAuth } from "src/context/AuthContext";
+import { useAuth } from "context/AuthContext";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import dynamic from "next/dynamic";
