@@ -6,6 +6,7 @@ import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { Button } from "components/Button";
 import type { MapPlayer, PlayerDataEventPayload } from "types/Map";
 import { icon as leafletIcon } from "leaflet";
+import { useTranslations } from "next-intl";
 
 interface Props {
   player: MapPlayer | PlayerDataEventPayload;
@@ -21,6 +22,7 @@ const PLAYER_ICON = leafletIcon({
 
 export function PlayerMarker({ player, handleToggle }: Props) {
   const map = useMap();
+  const t = useTranslations("Leo");
 
   const pos = React.useMemo(
     () => player.pos?.x && player.pos.y && convertToMap(player.pos.x, player.pos.y, map),
@@ -50,47 +52,47 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
       <Popup minWidth={500}>
         <p style={{ margin: 2 }}>
-          <strong>Player:</strong> {player.name}
+          <strong>{t("player")}:</strong> {player.name}
         </p>
         {isCADUser ? (
           <>
             <p style={{ margin: 2 }}>
-              <strong>CAD Username: </strong> {player.username}
+              <strong>{t("cadUsername")}: </strong> {player.username}
             </p>
 
             <p style={{ margin: 2 }}>
-              <strong>EMS-FD: </strong> {String(hasEmsFdPermissions)}
+              <strong>{t("emsFd")}: </strong> {String(hasEmsFdPermissions)}
             </p>
             <p style={{ margin: 2 }}>
-              <strong>Leo: </strong> {String(hasLeoPermissions)}
+              <strong>{t("leo")}: </strong> {String(hasLeoPermissions)}
             </p>
           </>
         ) : null}
 
         {player.Weapon ? (
           <p style={{ margin: 2 }}>
-            <strong>Weapon: </strong> {player.Weapon}
+            <strong>{t("weapon")}: </strong> {player.Weapon}
           </p>
         ) : null}
         <p style={{ margin: 2 }}>
-          <strong>Location: </strong> {player.Location}
+          <strong>{t("location")}: </strong> {player.Location}
         </p>
         <p style={{ margin: 2 }}>
-          <strong>Vehicle: </strong> {player.Vehicle || "On foot"}
+          <strong>{t("vehicle")}: </strong> {player.Vehicle || t("onFoot")}
         </p>
         {player["License Plate"] ? (
           <p style={{ margin: 2 }}>
-            <strong>License plate: </strong> {player["License Plate"]}
+            <strong>{t("licensePlate")}: </strong> {player["License Plate"]}
           </p>
         ) : null}
         <p style={{ margin: 2 }}>
-          <strong>Identifier: </strong> {player.identifier}
+          <strong>{t("identifier")}: </strong> {player.identifier}
         </p>
 
         {"id" in player ? (
           <div className="mt-3">
             <Button small className="!text-base" onClick={() => handleToggle(player.id)}>
-              {"togglePlayer"}
+              {t("togglePlayer")}
             </Button>
           </div>
         ) : null}
