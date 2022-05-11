@@ -383,19 +383,15 @@ export class BusinessController {
       include: businessInclude,
     });
 
-    const updated = await prisma.business.update({
+    await prisma.business.update({
       where: {
         id: business.id,
       },
       data: {
-        employees: {
-          connect: {
-            id: employee.id,
-          },
-        },
+        employees: { connect: { id: employee.id } },
       },
     });
 
-    return { business: updated, id: business.id, employee };
+    return { id: business.id, employee };
   }
 }
