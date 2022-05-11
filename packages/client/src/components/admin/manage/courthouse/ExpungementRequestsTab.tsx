@@ -1,34 +1,28 @@
 import * as React from "react";
-import { AdminLayout } from "components/admin/AdminLayout";
-import { getSessionUser } from "lib/auth";
-import { getTranslations } from "lib/getTranslation";
-import { requestAll } from "lib/utils";
-import type { GetServerSideProps } from "next";
-import { useTranslations } from "use-intl";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { ExpungementRequestStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
-import type { FullRequest } from "src/pages/courthouse";
+import { usePermission, Permissions } from "hooks/usePermission";
+import { useTranslations } from "next-intl";
 import { getTitles } from "components/courthouse/expungement-requests/RequestExpungement";
-import { ExpungementRequestStatus, Rank } from "@snailycad/types";
-import useFetch from "lib/useFetch";
 import { Button } from "components/Button";
-import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
-import { usePermission, Permissions } from "hooks/usePermission";
+import type { FullRequest } from "src/pages/courthouse";
+import useFetch from "lib/useFetch";
 
 interface Props {
   requests: FullRequest[];
 }
 
-export default function SupervisorPanelPage({ requests: data }: Props) {
+export function ExpungementRequestsTab({ requests: data }: Props) {
   const [requests, setRequests] = React.useState(data);
 
   const t = useTranslations();
   const common = useTranslations("Common");
-  const leo = useTranslations("Leo");
-  const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
 
   const { state, execute } = useFetch();
+  const pendingRequests = requests.filter((v) => v.status === ExpungementRequestStatus.PENDING);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageExpungementRequests], true);
 
@@ -44,13 +38,8 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout
-      permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ViewExpungementRequests, Permissions.ManageExpungementRequests],
-      }}
-    >
-      <Title>{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</Title>
+    <TabsContent value="expungement-requests">
+      <h3 className="font-semibold text-xl">{t("Management.MANAGE_EXPUNGEMENT_REQUESTS")}</h3>
 
       {pendingRequests.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noPendingRequests")}</p>
@@ -94,30 +83,16 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
             ),
           }))}
           columns={[
-            { Header: leo("citizen"), accessor: "citizen" },
-            { Header: leo("warrants"), accessor: "warrants" },
-            { Header: leo("arrestReports"), accessor: "arrestReports" },
-            { Header: leo("tickets"), accessor: "tickets" },
-            { Header: leo("status"), accessor: "status" },
+            { Header: t("Leo.citizen"), accessor: "citizen" },
+            { Header: t("Leo.warrants"), accessor: "warrants" },
+            { Header: t("Leo.arrestReports"), accessor: "arrestReports" },
+            { Header: t("Leo.tickets"), accessor: "tickets" },
+            { Header: t("Leo.status"), accessor: "status" },
             { Header: common("createdAt"), accessor: "createdAt" },
             hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}
-    </AdminLayout>
+    </TabsContent>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [requests] = await requestAll(req, [["/admin/manage/expungement-requests", []]]);
-
-  return {
-    props: {
-      requests,
-      session: await getSessionUser(req),
-      messages: {
-        ...(await getTranslations(["admin", "leo", "courthouse", "values", "common"], locale)),
-      },
-    },
-  };
-};
