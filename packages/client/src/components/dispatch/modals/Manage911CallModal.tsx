@@ -175,7 +175,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
       <div className="flex flex-col md:flex-row">
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, setFieldValue, values, errors }) => (
-            <Form className="w-full">
+            <Form className="w-full h-full">
               <FormField errorMessage={errors.name} label={common("name")}>
                 <Input
                   disabled={isDisabled}
