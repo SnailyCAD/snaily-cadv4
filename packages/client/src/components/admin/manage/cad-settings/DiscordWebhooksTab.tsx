@@ -18,7 +18,7 @@ interface DiscordChannel {
   id: string;
 }
 
-export function DiscordWebhooksTab() {
+export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   const [channels, setChannels] = React.useState<DiscordChannel[]>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -41,6 +41,7 @@ export function DiscordWebhooksTab() {
   async function refreshChannels() {
     const { json } = await execute("/admin/manage/cad-settings/discord/webhooks", {
       method: "GET",
+      noToast: !canWarn,
     });
 
     if (Array.isArray(json)) {

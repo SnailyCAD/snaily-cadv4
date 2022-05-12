@@ -48,6 +48,7 @@ export enum SettingsTabs {
 
 export default function CadSettings() {
   const t = useTranslations("Management");
+  const [activeTab, setActiveTab] = React.useState<string>(SettingsTabs.GeneralSettings);
 
   const SETTINGS_TABS = [
     { name: t("GENERAL_SETTINGS"), value: SettingsTabs.GeneralSettings },
@@ -63,7 +64,7 @@ export default function CadSettings() {
     <AdminLayout>
       <Title>{t("MANAGE_CAD_SETTINGS")}</Title>
 
-      <TabList tabs={SETTINGS_TABS}>
+      <TabList onValueChange={setActiveTab} tabs={SETTINGS_TABS}>
         <GeneralSettingsTab />
 
         <Tabs.CADFeaturesTab />
@@ -71,7 +72,7 @@ export default function CadSettings() {
         <Tabs.AutoSetUserPropertiesTab />
         <Tabs.ApiTokenTab />
         <Tabs.DiscordRolesTab />
-        <Tabs.DiscordWebhooksTab />
+        <Tabs.DiscordWebhooksTab canWarn={activeTab === SettingsTabs.DiscordWebhooks} />
       </TabList>
     </AdminLayout>
   );
