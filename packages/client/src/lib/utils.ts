@@ -13,13 +13,11 @@ import { handleRequest } from "./fetch";
 import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
+import differenceInYears from "date-fns/differenceInYears";
 
 export function calculateAge(dateOfBirth: string | Date): string {
-  const [age] = ((Date.now() - new Date(dateOfBirth).getTime()) / (60 * 60 * 24 * 365.25 * 1000))
-    .toString()
-    .split(".");
-
-  return age as string;
+  const difference = differenceInYears(new Date(), new Date(dateOfBirth));
+  return String(difference);
 }
 
 type Config = [string, unknown?][];

@@ -21,15 +21,13 @@ this is a web based integration for communities who love police roleplaying and 
 - [Bugs reports & Feature requests](https://github.com/SnailyCAD/snaily-cadv4/issues)
 - [Contributing](./.github/CONTRIBUTING.md)
 
-
 ## License
 
 [MIT © Dev-CasperTheGhost](./LICENSE)
 
-
 ## Archived versions
 
-*A list of previous (archived) versions of SnailyCAD. This list is here so people can view older versions if needed.*
+_A list of previous (archived) versions of SnailyCAD. This list is here so people can view older versions if needed._
 
 - [SnailyCADv3](https://github.com/Dev-CasperTheGhost/snaily-cadv3)
 - [SnailyCADv2](https://github.com/Dev-CasperTheGhost/snaily-cadv2)
@@ -37,7 +35,4 @@ this is a web based integration for communities who love police roleplaying and 
 
 ---
 
-*All stars/forks are appreciated ⚡. Made with ❤️ and TypeScript!*
-
-
- 
+_All stars/forks are appreciated ⚡. Made with ❤️ and TypeScript!_
