@@ -104,8 +104,9 @@ export function AccountDropdown() {
 
               {cad?.version ? (
                 <div className="px-1 py-1">
-                  <p className="text-gray-900 dark:text-gray-200 block w-full px-3 py-1.5 text-sm">
-                    v{cad.version}
+                  <p className="text-gray-900 dark:text-gray-200 block w-full px-3 py-1.5 text-sm cursor-default">
+                    v{cad.version.currentVersion}
+                    <br /> {cad.version.currentCommitHash}
                   </p>
                 </div>
               ) : null}
