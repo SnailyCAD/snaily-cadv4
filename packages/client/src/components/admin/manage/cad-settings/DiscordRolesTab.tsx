@@ -12,6 +12,7 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { FormField } from "components/form/FormField";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { formatPermissionName } from "../users/ManagePermissionsModal";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 
 function makeRoleValues(roles?: DiscordRole[]) {
   if (!roles) return [];
@@ -22,7 +23,7 @@ function makeRoleValues(roles?: DiscordRole[]) {
 }
 
 export function DiscordRolesTab() {
-  const [roles, setRoles] = React.useState<any[]>([]);
+  const [roles, setRoles] = React.useState<Omit<DiscordRole, "discordRolesId">[]>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { cad } = useAuth();
@@ -91,7 +92,7 @@ export function DiscordRolesTab() {
   }, [discordRoles]);
 
   return (
-    <TabsContent value="DISCORD_ROLES_TAB">
+    <TabsContent value={SettingsTabs.DiscordRoles}>
       <header>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Discord Roles</h2>

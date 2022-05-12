@@ -11,9 +11,15 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { cad, DiscordWebhookType } from "@snailycad/types";
 import { Textarea } from "components/form/Textarea";
 import { FormField } from "components/form/FormField";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+
+interface DiscordChannel {
+  name: string;
+  id: string;
+}
 
 export function DiscordWebhooksTab() {
-  const [channels, setChannels] = React.useState<any[]>([]);
+  const [channels, setChannels] = React.useState<DiscordChannel[]>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const { cad } = useAuth();
@@ -54,7 +60,7 @@ export function DiscordWebhooksTab() {
   }
 
   return (
-    <TabsContent value="DISCORD_WEBHOOKS_TAB">
+    <TabsContent value={SettingsTabs.DiscordWebhooks}>
       <header>
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Discord Webhooks</h2>

@@ -9,6 +9,8 @@ import useFetch from "lib/useFetch";
 import { FormRow } from "components/form/FormRow";
 import type { AutoSetUserProperties } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { TabsContent } from "components/shared/TabList";
 
 export function AutoSetUserPropertiesTab() {
   const common = useTranslations("Common");
@@ -38,7 +40,11 @@ export function AutoSetUserPropertiesTab() {
   };
 
   return (
-    <div className="mt-3">
+    <TabsContent
+      aria-label="Auto set user properties"
+      value={SettingsTabs.AutoSetProperties}
+      className="mt-3"
+    >
       <h2 className="text-2xl font-semibold">Auto set user properties</h2>
 
       <p className="my-3 text-neutral-700 dark:text-gray-200">
@@ -78,6 +84,6 @@ export function AutoSetUserPropertiesTab() {
           </Form>
         )}
       </Formik>
-    </div>
+    </TabsContent>
   );
 }
