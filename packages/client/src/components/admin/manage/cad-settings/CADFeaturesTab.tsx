@@ -11,6 +11,8 @@ import { Toggle } from "components/form/Toggle";
 import type { CadFeature, Feature } from "@snailycad/types";
 import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { TabsContent } from "components/shared/TabList";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 
 interface FeatureItem {
   name: string;
@@ -221,7 +223,7 @@ export function CADFeaturesTab() {
   ) as [Feature, FeatureItem][];
 
   return (
-    <div className="mt-3">
+    <TabsContent value={SettingsTabs.Features} className="mt-3">
       <h2 className="text-2xl font-semibold">Enable or disable features</h2>
 
       <FormField label={common("search")} className="mt-3 mb-2.5">
@@ -263,6 +265,6 @@ export function CADFeaturesTab() {
           </Form>
         )}
       </Formik>
-    </div>
+    </TabsContent>
   );
 }

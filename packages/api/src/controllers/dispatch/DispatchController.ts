@@ -143,9 +143,10 @@ export class DispatchController {
     fallback: (u) => u.isDispatch,
     permissions: [Permissions.Dispatch],
   })
-  async setActiveDispatchersState(@Context("user") user: User, @BodyParams() body: any) {
-    const value = Boolean(body.value);
-
+  async setActiveDispatchersState(
+    @Context("user") user: User,
+    @BodyParams("value") value: boolean,
+  ) {
     let dispatcher = await prisma.activeDispatchers.findFirst({
       where: { userId: user.id },
       include: { user: { select: userProperties } },
@@ -218,7 +219,7 @@ export class DispatchController {
   @Get("/players/:steamId")
   @UsePermissions({
     fallback: (u) => u.isDispatch,
-    permissions: [Permissions.Dispatch],
+    permissions: [Permissions.Dispatch, Permissions.LiveMap],
   })
   async findUserBySteamId(
     @Req() req: Req,

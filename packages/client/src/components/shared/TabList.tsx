@@ -11,16 +11,22 @@ interface Props<Tabs extends Tab[]> {
   tabs: Tabs;
   defaultValue?: Tabs[number]["value"];
   children: React.ReactNode;
+  onValueChange?(value: string): void;
 }
 
 export function TabList<Tabs extends Tab[]>({
   children,
   tabs,
   defaultValue = tabs[0]?.value,
+  onValueChange,
 }: Props<Tabs>) {
   return (
-    <Tabs.Root defaultValue={defaultValue} className="w-full px-2 sm:px-0">
-      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto">
+    <Tabs.Root
+      onValueChange={onValueChange}
+      defaultValue={defaultValue}
+      className="w-full px-2 sm:px-0"
+    >
+      <Tabs.List className="flex p-1 pl-0 pb-0 gap-x-5 border-b-[1.75px] border-gray-300 dark:border-gray-2 overflow-y-auto thin-scrollbar">
         {tabs.map((tab) => (
           <Tabs.Trigger
             value={tab.value}

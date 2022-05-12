@@ -255,13 +255,13 @@ export class SearchController {
   }
 }
 
-function appendConfidential(
-  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue })[] })[],
+export function appendConfidential(
+  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue | null })[] })[],
 ) {
   const _citizens = [];
 
   for (const citizen of citizens) {
-    const isConfidential = citizen.officers.some((v) => v.department.isConfidential);
+    const isConfidential = citizen.officers.some((v) => v.department?.isConfidential);
 
     if (isConfidential) {
       _citizens.push({

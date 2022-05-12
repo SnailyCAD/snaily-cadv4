@@ -10,6 +10,8 @@ import { Input } from "components/form/inputs/Input";
 import type { MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { TabsContent } from "components/shared/TabList";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -101,7 +103,7 @@ export function MiscFeatures() {
   };
 
   return (
-    <div className="mt-3">
+    <TabsContent value={SettingsTabs.MiscSettings} className="mt-3">
       <h2 className="text-2xl font-semibold">Misc. Settings</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -321,6 +323,6 @@ export function MiscFeatures() {
           </Form>
         )}
       </Formik>
-    </div>
+    </TabsContent>
   );
 }

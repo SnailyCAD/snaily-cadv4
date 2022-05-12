@@ -88,20 +88,25 @@ export class DiscordWebhooksController {
           throw new BadRequest("invalidChannelId");
         }
 
-        if (!webhookData.id) return;
-
-        const webhookId = await this.makeWebhookForChannel(
+        const webhook = await this.makeWebhookForChannel(
           webhookData.id,
           prevWebhook?.webhookId ?? null,
           name,
         );
 
+        if (!webhook) {
+          await prisma.discordWebhook.deleteMany({
+            where: { type: webhookData.type as DiscordWebhookType },
+          });
+          return;
+        }
+
         const createUpdateData = {
-          channelId: webhookData.id,
+          channelId: webhook.channelId,
           type: webhookData.type as DiscordWebhookType,
           extraMessage: webhookData.extraMessage,
           miscCadSettingsId: cad.miscCadSettingsId!,
-          webhookId,
+          webhookId: webhook.webhookId,
         };
 
         await prisma.discordWebhook.upsert({
@@ -144,7 +149,7 @@ export class DiscordWebhooksController {
         .catch(() => null)) as RESTGetAPIWebhookResult | null;
 
       if (prevWebhookData?.id) {
-        return prevWebhookData.id;
+        return { webhookId: prevWebhookData.id, channelId };
       }
     }
 
@@ -154,6 +159,6 @@ export class DiscordWebhooksController {
       },
     })) as RESTGetAPIWebhookResult;
 
-    return createdWebhook.id;
+    return { webhookId: createdWebhook.id, channelId };
   }
 }

@@ -5,9 +5,11 @@ import { BodyParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
+import { appendConfidential } from "controllers/leo/search/SearchController";
 
 const citizenSearchInclude = {
   medicalRecords: { include: { bloodGroup: true } },
+  officers: { include: { department: true } },
 };
 
 @Controller("/search")
@@ -83,6 +85,6 @@ export class SearchController {
       });
     }
 
-    return citizen;
+    return appendConfidential(citizen);
   }
 }

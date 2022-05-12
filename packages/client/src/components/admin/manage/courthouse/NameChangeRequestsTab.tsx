@@ -1,33 +1,28 @@
 import * as React from "react";
-import { AdminLayout } from "components/admin/AdminLayout";
-import { getSessionUser } from "lib/auth";
-import { getTranslations } from "lib/getTranslation";
-import { requestAll } from "lib/utils";
-import type { GetServerSideProps } from "next";
-import { useTranslations } from "use-intl";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { NameChangeRequest, WhitelistStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
-import { type NameChangeRequest, WhitelistStatus, Rank } from "@snailycad/types";
-import useFetch from "lib/useFetch";
+import { usePermission, Permissions } from "hooks/usePermission";
+import { useTranslations } from "next-intl";
 import { Button } from "components/Button";
-import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
-import { usePermission, Permissions } from "hooks/usePermission";
+import useFetch from "lib/useFetch";
 
 interface Props {
   requests: NameChangeRequest[];
 }
 
-export default function SupervisorPanelPage({ requests: data }: Props) {
+export function NameChangeRequestsTab({ requests: data }: Props) {
   const [requests, setRequests] = React.useState(data);
 
   const t = useTranslations();
   const common = useTranslations("Common");
+
+  const { state, execute } = useFetch();
   const pendingRequests = requests.filter((v) => v.status === WhitelistStatus.PENDING);
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageNameChangeRequests], true);
-
-  const { state, execute } = useFetch();
 
   async function handleUpdate(id: string, type: WhitelistStatus) {
     const { json } = await execute(`/admin/manage/name-change-requests/${id}`, {
@@ -41,13 +36,8 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
   }
 
   return (
-    <AdminLayout
-      permissions={{
-        fallback: (u) => u.rank !== Rank.USER,
-        permissions: [Permissions.ViewNameChangeRequests, Permissions.ManageNameChangeRequests],
-      }}
-    >
-      <Title>{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</Title>
+    <TabsContent value="name-change-requests">
+      <h3 className="font-semibold text-xl">{t("Management.MANAGE_NAME_CHANGE_REQUESTS")}</h3>
 
       {pendingRequests.length <= 0 ? (
         <p className="my-2">{t("Courthouse.noNameChangeRequests")}</p>
@@ -89,20 +79,6 @@ export default function SupervisorPanelPage({ requests: data }: Props) {
           ]}
         />
       )}
-    </AdminLayout>
+    </TabsContent>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [requests] = await requestAll(req, [["/admin/manage/name-change-requests", []]]);
-
-  return {
-    props: {
-      requests,
-      session: await getSessionUser(req),
-      messages: {
-        ...(await getTranslations(["admin", "courthouse", "values", "common"], locale)),
-      },
-    },
-  };
-};

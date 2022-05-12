@@ -13,10 +13,13 @@ import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
 import {
   CadFeature,
+  Citizen,
   Feature,
+  Record,
   RecordType,
   SeizedItem,
   Violation,
+  Warrant,
   WarrantStatus,
   WhitelistStatus,
 } from "@prisma/client";
@@ -26,6 +29,8 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
+import { DiscordWebhookType } from "@snailycad/types";
+import { sendDiscordWebhook } from "lib/discord/webhooks";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -56,7 +61,12 @@ export class RecordsController {
         description: data.description,
         status: data.status as WarrantStatus,
       },
+      include: {
+        citizen: true,
+      },
     });
+
+    await this.handleDiscordWebhook(warrant);
 
     await prisma.recordLog.create({
       data: {
@@ -136,6 +146,7 @@ export class RecordsController {
       },
       include: {
         officer: { include: leoProperties },
+        citizen: true,
       },
     });
 
@@ -202,6 +213,8 @@ export class RecordsController {
         recordId: ticket.id,
       },
     });
+
+    await this.handleDiscordWebhook(ticket);
 
     return { ...ticket, violations, seizedItems };
   }
@@ -314,6 +327,15 @@ export class RecordsController {
 
     return true;
   }
+
+  protected async handleDiscordWebhook(ticket: any) {
+    try {
+      const data = createWebhookData(ticket);
+      await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);
+    } catch (error) {
+      console.error("Could not send Discord webhook.", error);
+    }
+  }
 }
 
 async function unlinkViolations(violations: Pick<Violation, "id">[]) {
@@ -330,4 +352,37 @@ async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
       await prisma.seizedItem.delete({ where: { id } });
     }),
   );
+}
+
+function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; officer: any }) {
+  const isWarrant = !("notes" in data);
+  const citizen = `${data.citizen.name} ${data.citizen.surname}`;
+  const description = !isWarrant ? data.notes : "";
+
+  const fields = [
+    {
+      name: "citizen",
+      value: citizen,
+      inline: true,
+    },
+  ];
+
+  if (isWarrant) {
+    fields.push({ name: "Status", value: data.status.toLowerCase(), inline: true });
+  } else {
+    fields.push(
+      { name: "Postal", value: data.postal, inline: true },
+      { name: "Record Type", value: data.type.toLowerCase(), inline: true },
+    );
+  }
+
+  return {
+    embeds: [
+      {
+        title: isWarrant ? "New warrant created" : "New record created",
+        description: description || undefined,
+        fields,
+      },
+    ],
+  };
 }

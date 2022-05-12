@@ -71,13 +71,13 @@ export class Server {
     }
 
     this.app.get("/", async (_: any, res: Response) => {
-      const version = await getCADVersion();
+      const versions = await getCADVersion();
 
       res.setHeader("content-type", "text/html");
       return res
         .status(200)
         .send(
-          `<html><head><title>SnailyCAD API</title></head><body>200 Success. Current CAD Version: ${version}</body></html>`,
+          `<html><head><title>SnailyCAD API</title></head><body>200 Success. Current CAD Version: ${versions?.currentVersion} - ${versions?.currentCommitHash}</body></html>`,
         );
     });
   }

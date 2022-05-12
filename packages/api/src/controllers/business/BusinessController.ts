@@ -388,11 +388,7 @@ export class BusinessController {
         id: business.id,
       },
       data: {
-        employees: {
-          connect: {
-            id: employee.id,
-          },
-        },
+        employees: { connect: { id: employee.id } },
       },
     });
 

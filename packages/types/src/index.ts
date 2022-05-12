@@ -32,7 +32,12 @@ export interface cad {
   autoSetUserProperties: AutoSetUserProperties | null;
   discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
-  version: string | null;
+  version: CADVersion | null;
+}
+
+interface CADVersion {
+  currentCommitHash: string;
+  currentVersion: string;
 }
 
 /**
@@ -650,7 +655,7 @@ export interface Officer {
   activeIncidentId: string | null;
   activeCallId: string | null;
   radioChannelId: string | null;
-  user: Pick<User, "id" | "username">;
+  user: Pick<User, "id" | "username" | "steamId">;
 }
 
 /**
@@ -1021,7 +1026,7 @@ export interface EmsFdDeputy {
   createdAt: Date;
   updatedAt: Date;
   radioChannelId: string | null;
-  user: Pick<User, "id" | "username">;
+  user: Pick<User, "id" | "username" | "steamId">;
   activeCallId: string | null;
   whitelistStatusId: string | null;
   whitelistStatus?: LeoWhitelistStatus | null;
@@ -1269,4 +1274,6 @@ export enum DiscordWebhookType {
   PANIC_BUTTON = "PANIC_BUTTON",
   UNIT_STATUS = "UNIT_STATUS",
   BOLO = "BOLO",
+  VEHICLE_IMPOUNDED = "VEHICLE_IMPOUNDED",
+  CITIZEN_RECORD = "CITIZEN_RECORD",
 }

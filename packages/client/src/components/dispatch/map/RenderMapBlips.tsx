@@ -35,7 +35,7 @@ export function RenderMapBlips() {
           >
             <Popup>
               <p className="text-base !m-0">
-                <strong>Name: </strong> {blip.type}- {blip.name}
+                <strong>Name: </strong> {blip.type} - {blip.name}
               </p>
             </Popup>
           </Marker>
@@ -54,30 +54,29 @@ async function generateBlips(map: L.Map) {
   const createdBlips: Blip[] = [];
 
   for (const id in blipsData) {
-    if (blipsData[id]) {
-      const blipArray = blipsData[id];
+    if (!blipsData[id]) continue;
 
-      for (const i in blipArray) {
-        const blipData = blipArray[+i];
-        const markerData = markerTypes[+id];
-        if (!blipData) continue;
+    const blipArray = blipsData[id];
 
-        const pos =
-          "pos" in blipData ? blipData.pos : { x: blipData.x, y: blipData.y, z: blipData.z };
+    for (const i in blipArray) {
+      const blipData = blipArray[+i];
+      if (!blipData) continue;
 
-        const converted = convertToMap(pos.x, pos.y, map);
+      const markerData = markerTypes[id];
+      const pos =
+        "pos" in blipData ? blipData.pos : { x: blipData.x, y: blipData.y, z: blipData.z };
 
-        const blip: Blip = {
-          name: markerData?.name ?? id,
-          description: null,
-          pos: converted,
-          rawPos: pos,
-          type: Number(id),
-          icon: markerData ? L.icon(markerData) : undefined,
-        };
+      const converted = convertToMap(pos.x, pos.y, map);
+      const blip: Blip = {
+        name: markerData?.name ?? id,
+        description: null,
+        pos: converted,
+        rawPos: pos,
+        type: Number(id),
+        icon: markerData ? L.icon(markerData) : undefined,
+      };
 
-        createdBlips.push(blip);
-      }
+      createdBlips.push(blip);
     }
   }
 

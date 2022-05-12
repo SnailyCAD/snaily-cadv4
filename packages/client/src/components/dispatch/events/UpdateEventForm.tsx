@@ -40,7 +40,7 @@ export function UpdateEventForm<T extends IncidentEvent | Call911Event>({
   return (
     <Formik onSubmit={onSubmit} initialValues={{ description: event?.description ?? "" }}>
       {({ handleChange, submitForm, values, errors }) => (
-        <Form className="absolute bottom-0 w-full">
+        <Form className="md:absolute bottom-0 w-full">
           <FormField errorMessage={errors.description} label={common("description")}>
             <Textarea
               required

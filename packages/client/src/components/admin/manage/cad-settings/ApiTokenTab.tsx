@@ -9,6 +9,7 @@ import { Form, Formik, FormikHelpers } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
+import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 
 export function ApiTokenTab() {
   const common = useTranslations("Common");
@@ -56,7 +57,7 @@ export function ApiTokenTab() {
   };
 
   return (
-    <TabsContent aria-label="API Token" value="API_TOKEN">
+    <TabsContent aria-label="API Token" value={SettingsTabs.APIToken}>
       <h2 className="mt-2 text-2xl font-semibold">Public API access</h2>
 
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>

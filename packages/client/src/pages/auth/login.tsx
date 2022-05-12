@@ -102,11 +102,11 @@ export default function Login() {
     router.push(from);
   }
 
-  const showHr =
-    !ALLOW_REGULAR_LOGIN ||
-    (STEAM_OAUTH && canUseThirdPartyConnections()) ||
-    (DISCORD_AUTH && canUseThirdPartyConnections()) ||
-    !!user?.id;
+  const useThirdPartyConnectionsAbility = canUseThirdPartyConnections();
+  const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility;
+  const showDiscordOAuth = DISCORD_AUTH && useThirdPartyConnectionsAbility;
+
+  const showHorizontalLine = !ALLOW_REGULAR_LOGIN || showSteamOAuth || showDiscordOAuth || !!user;
 
   return (
     <>
@@ -163,7 +163,9 @@ export default function Login() {
                     </>
                   ) : null}
 
-                  {showHr ? <hr className="my-5 border-[1.5px] rounded-md border-gray-3" /> : null}
+                  {showHorizontalLine ? (
+                    <hr className="my-5 border-[1.5px] rounded-md border-gray-3" />
+                  ) : null}
 
                   {user ? (
                     <Button type="button" onClick={handleContinueAs} className="w-full mb-2">
@@ -171,7 +173,7 @@ export default function Login() {
                     </Button>
                   ) : null}
 
-                  {DISCORD_AUTH && canUseThirdPartyConnections() ? (
+                  {showDiscordOAuth ? (
                     <Button
                       type="button"
                       onClick={handleDiscordLogin}
@@ -182,7 +184,7 @@ export default function Login() {
                     </Button>
                   ) : null}
 
-                  {STEAM_OAUTH && canUseThirdPartyConnections() ? (
+                  {showSteamOAuth ? (
                     <Button
                       type="button"
                       onClick={handleSteamLogin}
@@ -198,7 +200,9 @@ export default function Login() {
           )}
         </Formik>
         {cad?.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">v{cad.version}</p>
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+            v{cad.version.currentVersion} - {cad.version.currentCommitHash}
+          </p>
         ) : null}
       </main>
     </>

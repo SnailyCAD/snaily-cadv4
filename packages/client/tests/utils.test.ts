@@ -14,6 +14,7 @@ import {
   filterLicenseTypes,
   canUseThirdPartyConnections,
   isUnitDisabled,
+  omit,
 } from "../src/lib/utils";
 
 const DOB_1 = "1999-03-02";
@@ -279,4 +280,10 @@ describe("isUnitDisabled", () => {
 
     expect(isUnitDisabled(TEST_OFFICER)).toBe(false);
   });
+});
+
+test("Should correctly omit values from an object", () => {
+  const myObj = { a: 1, b: 2, c: 3, d: 4 };
+
+  expect(omit(myObj, ["a", "d"])).toMatchObject({ b: 2, c: 3 });
 });

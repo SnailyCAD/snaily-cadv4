@@ -8,8 +8,10 @@ async function bootstrap() {
     const platform = await PlatformExpress.bootstrap(Server);
 
     await platform.listen();
-    const version = await getCADVersion();
-    const versionStr = version ? `with version ${version}` : "";
+    const versions = await getCADVersion();
+    const versionStr = versions
+      ? `with version ${versions.currentVersion} - ${versions.currentCommitHash}`
+      : "";
 
     console.log(`SnailyCADv4 is running ${versionStr}`);
   } catch (er) {

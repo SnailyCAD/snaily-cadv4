@@ -178,7 +178,6 @@ export default function ManageCitizens(props: Props) {
                 >
                   <Button
                     disabled={user.rank === Rank.OWNER}
-                    className="!bg-dark-bg"
                     type="button"
                     onClick={() => openModal(ModalIds.ManagePermissions)}
                   >
