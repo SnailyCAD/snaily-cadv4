@@ -71,7 +71,7 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
           </Button>
         </div>
 
-        <p className="my-3 text-neutral-700 dark:text-gray-200 max-w-2xl">
+        <p className="my-3 text-neutral-700 dark:text-gray-400 max-w-2xl">
           Select a channel for each webhook type. This will create a new Discord webhook and send
           webhooks on the respective event type.
         </p>
