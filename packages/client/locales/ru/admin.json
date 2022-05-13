@@ -10,6 +10,7 @@
     "MANAGE_NAME_CHANGE_REQUESTS": "Управление запросами на изменение имени",
     "MANAGE_CAD_SETTINGS": "CAD",
     "MANAGE_CUSTOM_FIELDS": "Пользовательские поля",
+    "MANAGE_COURTHOUSE": "Суды",
     "import": "Импорт",
     "IMPORT_CITIZENS": "Импорт граждан",
     "IMPORT_VEHICLES": "Импорт транспорта",
