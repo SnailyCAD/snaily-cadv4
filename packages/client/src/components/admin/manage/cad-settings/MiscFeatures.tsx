@@ -7,11 +7,12 @@ import { Loader } from "components/Loader";
 import { useAuth } from "context/AuthContext";
 import useFetch from "lib/useFetch";
 import { Input } from "components/form/inputs/Input";
-import type { MiscCadSettings } from "@snailycad/types";
+import { JailTimeScale, MiscCadSettings } from "@snailycad/types";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { Select } from "components/form/Select";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -100,6 +101,7 @@ export function MiscFeatures() {
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
     inactivityTimeout: miscSettings.inactivityTimeout ?? "",
+    jailTimeScaling: miscSettings.jailTimeScaling ?? JailTimeScale.MINUTES,
   };
 
   return (
@@ -312,6 +314,22 @@ export function MiscFeatures() {
               <Input
                 name="pairedUnitTemplate"
                 value={values.pairedUnitTemplate}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="The total jail time calculated from an arrest report will be converted to the scale set below. This will automatically checkout the citizen from jail after the time has ended in realtime."
+              errorMessage={errors.jailTimeScaling}
+              label="Jail Time Scaling"
+            >
+              <Select
+                values={[
+                  { label: "Minutes", value: JailTimeScale.MINUTES },
+                  { label: "Seconds", value: JailTimeScale.SECONDS },
+                ]}
+                name="jailTimeScaling"
+                value={values.jailTimeScaling}
                 onChange={handleChange}
               />
             </SettingsFormField>
