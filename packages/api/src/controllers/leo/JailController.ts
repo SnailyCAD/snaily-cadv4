@@ -10,7 +10,7 @@ import { validateSchema } from "lib/validateSchema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { JailTimeScale } from "@snailycad/types";
+import { convertToJailTimeScale } from "lib/leo/utils";
 
 const citizenInclude = {
   Record: {
@@ -73,19 +73,6 @@ export class LeoController {
 
       return { ...citizen, Record };
     });
-
-    // move to leo files
-    function convertToJailTimeScale(total: number, scale: JailTimeScale) {
-      if (scale === JailTimeScale.HOURS) {
-        return total * 60 * 60 * 1000 * 24;
-      }
-
-      if (scale === JailTimeScale.MINUTES) {
-        return total * 60 * 60 * 1000;
-      }
-
-      return total * 60 * 1000;
-    }
 
     return citizens;
   }
