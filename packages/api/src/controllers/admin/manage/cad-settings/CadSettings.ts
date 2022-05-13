@@ -126,6 +126,7 @@ export class ManageCitizensController {
         maxAssignmentsToCalls: data.maxAssignmentsToCalls,
         maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
         inactivityTimeout: data.inactivityTimeout || null,
+        jailTimeScaling: data.jailTimeScaling || null,
       },
     });
 

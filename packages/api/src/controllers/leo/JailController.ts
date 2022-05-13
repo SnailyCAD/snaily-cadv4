@@ -1,15 +1,16 @@
-import { Controller, UseBeforeEach, BodyParams } from "@tsed/common";
+import { Context, Controller, UseBeforeEach, BodyParams } from "@tsed/common";
 import { Delete, Description, Get } from "@tsed/schema";
 import { PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { ReleaseType } from "@prisma/client";
+import { MiscCadSettings, ReleaseType } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
+import { JailTimeScale } from "@snailycad/types";
 
 const citizenInclude = {
   Record: {
@@ -36,7 +37,7 @@ export class LeoController {
     permissions: [Permissions.ViewJail, Permissions.ManageJail],
     fallback: (u) => u.isLeo,
   })
-  async getImprisonedCitizens() {
+  async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
     const citizens = await prisma.citizen.findMany({
       where: {
         OR: [
@@ -56,6 +57,35 @@ export class LeoController {
       },
       include: citizenInclude,
     });
+
+    citizens.map((citizen) => {
+      const Record = citizen.Record.filter((record) => {
+        if (record.type === "ARREST_REPORT") {
+          const totalJailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
+          const time = convertToJailTimeScale(totalJailTime, cad.miscCadSettings.jailTimeScale);
+          const expireDate = new Date(record.createdAt).getTime() + time;
+
+          return expireDate <= Date.now();
+        }
+
+        return true;
+      });
+
+      return { ...citizen, Record };
+    });
+
+    // move to leo files
+    function convertToJailTimeScale(total: number, scale: JailTimeScale) {
+      if (scale === JailTimeScale.HOURS) {
+        return total * 60 * 60 * 1000 * 24;
+      }
+
+      if (scale === JailTimeScale.MINUTES) {
+        return total * 60 * 60 * 1000;
+      }
+
+      return total * 60 * 1000;
+    }
 
     return citizens;
   }

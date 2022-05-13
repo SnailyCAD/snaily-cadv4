@@ -32,6 +32,11 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   authScreenBgImageId: z.any().or(z.string()).optional(),
   authScreenHeaderImageId: z.any().or(z.string()).optional(),
   inactivityTimeout: z.number().optional().nullable(),
+  jailTimeScaling: z
+    .string()
+    .regex(/MINUTES|SECONDS/)
+    .nullable()
+    .optional(),
 });
 
 export const DISCORD_SETTINGS_SCHEMA = z.object({

@@ -101,7 +101,7 @@ export function MiscFeatures() {
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
     inactivityTimeout: miscSettings.inactivityTimeout ?? "",
-    jailTimeScaling: miscSettings.jailTimeScaling ?? JailTimeScale.MINUTES,
+    jailTimeScaling: miscSettings.jailTimeScaling ?? null,
   };
 
   return (
@@ -325,12 +325,14 @@ export function MiscFeatures() {
             >
               <Select
                 values={[
-                  { label: "Minutes", value: JailTimeScale.MINUTES },
+                  { label: "Hours", value: JailTimeScale.HOURS },
+                  { label: "Seconds", value: JailTimeScale.SECONDS },
                   { label: "Seconds", value: JailTimeScale.SECONDS },
                 ]}
                 name="jailTimeScaling"
                 value={values.jailTimeScaling}
                 onChange={handleChange}
+                isClearable
               />
             </SettingsFormField>
 

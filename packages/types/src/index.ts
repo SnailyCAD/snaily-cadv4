@@ -1280,6 +1280,7 @@ export enum DiscordWebhookType {
 }
 
 export enum JailTimeScale {
+  HOURS = "HOURS",
   MINUTES = "MINUTES",
   SECONDS = "SECONDS",
 }
