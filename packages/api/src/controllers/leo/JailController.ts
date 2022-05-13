@@ -38,7 +38,7 @@ export class LeoController {
     fallback: (u) => u.isLeo,
   })
   async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
-    const citizens = await prisma.citizen.findMany({
+    let citizens = await prisma.citizen.findMany({
       where: {
         OR: [
           {
@@ -58,21 +58,40 @@ export class LeoController {
       include: citizenInclude,
     });
 
-    citizens.map((citizen) => {
-      const Record = citizen.Record.filter((record) => {
-        if (record.type === "ARREST_REPORT") {
-          const totalJailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
-          const time = convertToJailTimeScale(totalJailTime, cad.miscCadSettings.jailTimeScale);
-          const expireDate = new Date(record.createdAt).getTime() + time;
+    if (cad.miscCadSettings.jailTimeScale) {
+      const citizenIdsToUpdate: string[] = [];
 
-          return expireDate <= Date.now();
-        }
+      citizens = citizens.map((citizen) => {
+        const Record = citizen.Record.filter((record) => {
+          if (record.type === "ARREST_REPORT") {
+            const totalJailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
+            const time = convertToJailTimeScale(totalJailTime, cad.miscCadSettings.jailTimeScale);
+            const expireDate = new Date(record.createdAt).getTime() + time;
 
-        return true;
+            const shouldExpire = expireDate >= Date.now();
+
+            if (shouldExpire) {
+              citizenIdsToUpdate.push(citizen.id);
+            }
+
+            return shouldExpire;
+          }
+
+          return true;
+        });
+
+        return { ...citizen, Record };
       });
 
-      return { ...citizen, Record };
-    });
+      prisma.$transaction(
+        citizenIdsToUpdate.map((citizenId) =>
+          prisma.citizen.update({
+            where: { id: citizenId },
+            data: { arrested: false },
+          }),
+        ),
+      );
+    }
 
     return citizens;
   }
