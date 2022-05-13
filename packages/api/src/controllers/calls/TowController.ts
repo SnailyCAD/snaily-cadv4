@@ -34,6 +34,11 @@ const CITIZEN_SELECTS = {
   id: true,
 };
 
+export const towIncludes = {
+  assignedUnit: { select: CITIZEN_SELECTS },
+  creator: { select: CITIZEN_SELECTS },
+};
+
 @Controller("/tow")
 @UseBeforeEach(IsAuth)
 export class TowController {
@@ -50,21 +55,8 @@ export class TowController {
   })
   async getTowCalls(@QueryParams("ended") includingEnded = false) {
     const calls = await prisma.towCall.findMany({
-      where: includingEnded
-        ? undefined
-        : {
-            NOT: {
-              ended: true,
-            },
-          },
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      where: includingEnded ? undefined : { ended: false },
+      include: towIncludes,
     });
 
     return calls;
@@ -76,23 +68,17 @@ export class TowController {
   async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
     const data = validateSchema(TOW_SCHEMA, body);
 
-    let citizen;
-
     if (data.creatorId) {
       const extraWhere = data.plate
         ? {
             OR: [
-              {
-                officers: { some: { citizenId: data.creatorId } },
-              },
-              {
-                emsFdDeputies: { some: { citizenId: data.creatorId } },
-              },
+              { officers: { some: { citizenId: data.creatorId } } },
+              { emsFdDeputies: { some: { citizenId: data.creatorId } } },
             ],
           }
         : {};
 
-      citizen = await prisma.citizen.findFirst({
+      const citizen = await prisma.citizen.findFirst({
         where: {
           id: data.creatorId,
           ...extraWhere,
@@ -178,14 +164,7 @@ export class TowController {
         ended: data.callCountyService || false,
         name: data.name ?? null,
       },
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      include: towIncludes,
     });
 
     if (call.ended) {
@@ -208,9 +187,7 @@ export class TowController {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.towCall.findUnique({
-      where: {
-        id: callId,
-      },
+      where: { id: callId },
     });
 
     if (!call) {
@@ -220,17 +197,13 @@ export class TowController {
     const rawAssignedUnitId = data.assignedUnitId;
     const assignedUnitId =
       rawAssignedUnitId === null
-        ? {
-            disconnect: true,
-          }
+        ? { disconnect: true }
         : data.assignedUnitId
         ? { connect: { id: data.assignedUnitId } }
         : undefined;
 
     const updated = await prisma.towCall.update({
-      where: {
-        id: callId,
-      },
+      where: { id: callId },
       data: {
         description: data.description,
         descriptionData: data.descriptionData,
@@ -239,14 +212,7 @@ export class TowController {
         assignedUnit: assignedUnitId,
         name: data.name ?? null,
       },
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      include: towIncludes,
     });
 
     await this.socket.emitUpdateTowCall(updated);
@@ -263,9 +229,7 @@ export class TowController {
   })
   async endTowCall(@PathParams("id") callId: string) {
     const call = await prisma.towCall.findUnique({
-      where: {
-        id: callId,
-      },
+      where: { id: callId },
     });
 
     if (!call) {
@@ -273,21 +237,9 @@ export class TowController {
     }
 
     const updated = await prisma.towCall.update({
-      where: {
-        id: call.id,
-      },
-      data: {
-        ended: true,
-      },
-
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      where: { id: call.id },
+      data: { ended: true },
+      include: towIncludes,
     });
 
     await this.socket.emitTowCallEnd(updated);

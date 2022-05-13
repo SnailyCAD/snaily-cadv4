@@ -60,7 +60,8 @@ export class AuthController {
       defaultReturn: true,
     });
 
-    if (!regularAuthEnabled) {
+    // allow owners to login by username/password, a little backup function.
+    if (!regularAuthEnabled && user.rank !== Rank.OWNER) {
       throw new BadRequest("allowRegularLoginIsDisabled");
     }
 
