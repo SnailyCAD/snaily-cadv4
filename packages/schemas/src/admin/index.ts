@@ -34,7 +34,7 @@ export const CAD_MISC_SETTINGS_SCHEMA = z.object({
   inactivityTimeout: z.number().optional().nullable(),
   jailTimeScaling: z
     .string()
-    .regex(/MINUTES|SECONDS/)
+    .regex(/HOURS|MINUTES|SECONDS/)
     .nullable()
     .optional(),
 });
