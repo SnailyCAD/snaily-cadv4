@@ -67,7 +67,7 @@ export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
   }
 
   if (scale === JailTimeScale.MINUTES) {
-    return total * 60 * 60 * 1000;
+    return total * 60 * 1000;
   }
 
   return total * 1000;
