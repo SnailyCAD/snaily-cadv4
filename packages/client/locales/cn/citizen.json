@@ -39,7 +39,7 @@
     "occupation": "职业",
     "manageOccupation": "管理职业",
     "manageLicenses": "管理许可证",
-    "licenses": "Licenses",
+    "licenses": "许可",
     "alert_deleteCitizen": "是否确实要删除 <span>{citizen}</span>？此操作无法撤消."
   },
   "Vehicles": {
