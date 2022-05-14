@@ -76,16 +76,16 @@
     "EDIT": "编辑部"
   },
   "CODES_10": {
-    "MANAGE": "管理 10 code个代码",
-    "ADD": "添加 10 个code代码",
-    "DELETE": "删除 10 个code代码",
-    "EDIT": "Edit 10 Code"
+    "MANAGE": "管理 10code代码",
+    "ADD": "添加 10code代码",
+    "DELETE": "删除 10code代码",
+    "EDIT": "编辑10code代码"
   },
   "OFFICER_RANK": {
-    "MANAGE": "管理军官军衔",
-    "ADD": "添加军官军衔",
-    "DELETE": "删除军官军衔",
-    "EDIT": "编辑军官军衔"
+    "MANAGE": "管理警官警衔",
+    "ADD": "添加警官警衔",
+    "DELETE": "删除警官警衔",
+    "EDIT": "编辑警官警衔"
   },
   "PENAL_CODE": {
     "MANAGE": "管理刑法典",
