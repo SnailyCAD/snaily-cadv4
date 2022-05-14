@@ -70,5 +70,5 @@ export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
     return total * 60 * 60 * 1000;
   }
 
-  return total * 60 * 1000;
+  return total * 1000;
 }

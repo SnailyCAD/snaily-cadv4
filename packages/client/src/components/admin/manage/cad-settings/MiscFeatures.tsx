@@ -101,7 +101,7 @@ export function MiscFeatures() {
     pairedUnitTemplate: miscSettings.pairedUnitTemplate ?? "",
     liveMapURL: miscSettings.liveMapURL ?? "",
     inactivityTimeout: miscSettings.inactivityTimeout ?? "",
-    jailTimeScaling: miscSettings.jailTimeScaling ?? null,
+    jailTimeScaling: miscSettings.jailTimeScale ?? null,
   };
 
   return (
@@ -326,7 +326,7 @@ export function MiscFeatures() {
               <Select
                 values={[
                   { label: "Hours", value: JailTimeScale.HOURS },
-                  { label: "Seconds", value: JailTimeScale.SECONDS },
+                  { label: "Minutes", value: JailTimeScale.MINUTES },
                   { label: "Seconds", value: JailTimeScale.SECONDS },
                 ]}
                 name="jailTimeScaling"

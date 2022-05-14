@@ -38,59 +38,53 @@ export class LeoController {
     fallback: (u) => u.isLeo,
   })
   async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
-    let citizens = await prisma.citizen.findMany({
+    const citizens = await prisma.citizen.findMany({
       where: {
         OR: [
           {
             arrested: true,
           },
-          {
-            Record: {
-              some: {
-                release: {
-                  isNot: null,
-                },
-              },
-            },
-          },
+          { Record: { some: { release: { isNot: null } } } },
         ],
       },
       include: citizenInclude,
     });
 
-    if (cad.miscCadSettings.jailTimeScale) {
-      const citizenIdsToUpdate: string[] = [];
+    const jailTimeScale = cad.miscCadSettings.jailTimeScale;
+    if (jailTimeScale) {
+      const citizenIdsToUpdate = {} as Record<string, string[]>;
 
-      citizens = citizens.map((citizen) => {
-        const Record = citizen.Record.filter((record) => {
+      citizens.map((citizen) => {
+        citizen.Record.map((record) => {
           if (record.type === "ARREST_REPORT") {
             const totalJailTime = record.violations.reduce((ac, cv) => ac + (cv.jailTime || 0), 0);
-            const time = convertToJailTimeScale(totalJailTime, cad.miscCadSettings.jailTimeScale);
+            const time = convertToJailTimeScale(totalJailTime, jailTimeScale);
             const expireDate = new Date(record.createdAt).getTime() + time;
-
-            const shouldExpire = expireDate >= Date.now();
+            const shouldExpire = Date.now() >= expireDate;
 
             if (shouldExpire) {
-              citizenIdsToUpdate.push(citizen.id);
+              citizenIdsToUpdate[citizen.id] = [
+                ...(citizenIdsToUpdate[citizen.id] ?? []),
+                record.id,
+              ];
             }
-
-            return shouldExpire;
           }
-
-          return true;
         });
-
-        return { ...citizen, Record };
       });
 
-      prisma.$transaction(
-        citizenIdsToUpdate.map((citizenId) =>
-          prisma.citizen.update({
-            where: { id: citizenId },
-            data: { arrested: false },
-          }),
-        ),
-      );
+      Promise.all(
+        Object.entries(citizenIdsToUpdate).map(async ([citizenId, recordIds]) => {
+          await Promise.all(
+            recordIds.map(async (recordId) => {
+              await this.handleReleaseCitizen(citizenId, {
+                recordId,
+                releasedById: "",
+                type: ReleaseType.TIME_OUT,
+              });
+            }),
+          );
+        }),
+      ).catch(console.error);
     }
 
     return citizens;
@@ -104,8 +98,18 @@ export class LeoController {
   })
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
+
+    await this.handleReleaseCitizen(id, data);
+
+    return true;
+  }
+
+  protected async handleReleaseCitizen(
+    citizenId: string,
+    data: Zod.infer<typeof RELEASE_CITIZEN_SCHEMA>,
+  ) {
     const citizen = await prisma.citizen.findUnique({
-      where: { id },
+      where: { id: citizenId },
     });
 
     if (!citizen) {
@@ -145,7 +149,5 @@ export class LeoController {
         release: { connect: { id: release.id } },
       },
     });
-
-    return true;
   }
 }

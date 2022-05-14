@@ -5,7 +5,7 @@ import { execSync } from "node:child_process";
 import { get, set } from "./cache";
 import { getCADVersion } from "@snailycad/utils/version";
 
-const TELEMETRY_ENABLED = (process.env.TELEMETRY_ENABLED === "true" || true) as boolean;
+const TELEMETRY_ENABLED = false as boolean;
 const REPORT_URL = "https://snailycad-telemetry.caspertheghost.workers.dev/";
 
 interface ErrorReport {

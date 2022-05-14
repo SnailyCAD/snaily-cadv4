@@ -75,7 +75,7 @@ export interface MiscCadSettings {
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
   inactivityTimeout: number | null;
-  jailTimeScaling: JailTimeScale | null;
+  jailTimeScale: JailTimeScale | null;
   webhooks?: DiscordWebhook[];
 }
 
