@@ -1,7 +1,7 @@
 {
   "Calls": {
-    "tow": "拖曳",
-    "towLogs": "拖车原木",
+    "tow": "拖车",
+    "towLogs": "拖车记录",
     "taxi": "出租车",
     "active911Calls": "活动 911 呼叫",
     "noTowCalls": "还没有拖车呼叫",
@@ -28,7 +28,7 @@
     "viewEvents": "查看事件",
     "callEvents": "呼叫事件",
     "deleteCallEvent": "删除事件",
-    "postal": "邮政",
+    "postal": "邮编",
     "noEvents": "此调用没有任何事件",
     "deliveryAddress": "送货地址",
     "callTow": "呼叫拖车",
