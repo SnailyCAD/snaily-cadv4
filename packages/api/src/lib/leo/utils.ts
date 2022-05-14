@@ -1,4 +1,4 @@
-import type { MiscCadSettings } from "@prisma/client";
+import { MiscCadSettings, JailTimeScale } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
@@ -59,4 +59,16 @@ export function getInactivityFilter<Prop extends string = "updatedAt">(
   };
 
   return { filter, [_prop]: updatedAt } as InactivityReturn<Prop>;
+}
+
+export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
+  if (scale === JailTimeScale.HOURS) {
+    return total * 60 * 60 * 1000 * 24;
+  }
+
+  if (scale === JailTimeScale.MINUTES) {
+    return total * 60 * 1000;
+  }
+
+  return total * 1000;
 }

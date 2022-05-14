@@ -14,7 +14,7 @@ import { UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import type { cad, Feature } from "@prisma/client";
+import type { cad, Feature, JailTimeScale } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 
 @Controller("/admin/manage/cad-settings")
@@ -126,6 +126,7 @@ export class ManageCitizensController {
         maxAssignmentsToCalls: data.maxAssignmentsToCalls,
         maxAssignmentsToIncidents: data.maxAssignmentsToIncidents,
         inactivityTimeout: data.inactivityTimeout || null,
+        jailTimeScale: (data.jailTimeScaling || null) as JailTimeScale | null,
       },
     });
 

@@ -75,6 +75,7 @@ export interface MiscCadSettings {
   authScreenBgImageId: string | null;
   authScreenHeaderImageId: string | null;
   inactivityTimeout: number | null;
+  jailTimeScale: JailTimeScale | null;
   webhooks?: DiscordWebhook[];
 }
 
@@ -1276,4 +1277,10 @@ export enum DiscordWebhookType {
   BOLO = "BOLO",
   VEHICLE_IMPOUNDED = "VEHICLE_IMPOUNDED",
   CITIZEN_RECORD = "CITIZEN_RECORD",
+}
+
+export enum JailTimeScale {
+  HOURS = "HOURS",
+  MINUTES = "MINUTES",
+  SECONDS = "SECONDS",
 }
