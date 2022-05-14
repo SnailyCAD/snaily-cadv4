@@ -1,0 +1,22 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "創建醫療記錄",
+    "searchMedicalRecord": "搜索醫療記錄",
+    "activeDeputies": "積極代表",
+    "selectDeputy": "選擇副手",
+    "deputy": "副手",
+    "myDeputies": "我的副手",
+    "createDeputy": "創建副手",
+    "editDeputy": "編輯副手",
+    "deputyName": "副名",
+    "deleteDeputy": "刪除副手",
+    "noDeputies": "你沒有任何副手",
+    "noActiveDeputies": "沒有現役代表",
+    "citizenNoMedicalRecords": "這個公民沒有任何醫療記錄。",
+    "activeDeputy": "現役副手",
+    "declareDead": "宣布死亡",
+    "declareAlive": "宣布活著",
+    "alert_deleteDeputy": "是否確實要刪除 <span>{deputy}</span>？此操作無法撤消。"
+  }
+}
