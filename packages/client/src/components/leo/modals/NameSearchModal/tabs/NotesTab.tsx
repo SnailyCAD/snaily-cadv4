@@ -13,7 +13,7 @@ import { ManageNoteModal } from "../ManageNoteModal";
 export function NameSearchNotesTabs() {
   const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
-  const { currentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch();
   const { openModal } = useModal();
 
   function handleEditClick(note: Note) {
@@ -48,30 +48,47 @@ export function NameSearchNotesTabs() {
         <Table
           data={currentResult.notes.map((note) => ({
             text: note.text,
-            createdBy: String(note.createdBy),
+            // createdBy: String(note.createdBy),
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
               <>
-                <Button small onClick={() => handleEditClick(note)}>
-                  {t("common.edit")}
+                <Button type="button" variant="success" small onClick={() => handleEditClick(note)}>
+                  {t("Common.edit")}
                 </Button>
 
-                <Button small onClick={() => handleDeleteClick(note)}>
-                  {t("common.delete")}
+                <Button
+                  type="button"
+                  variant="danger"
+                  className="ml-2"
+                  small
+                  onClick={() => handleDeleteClick(note)}
+                >
+                  {t("Common.delete")}
                 </Button>
               </>
             ),
           }))}
           columns={[
-            { Header: t("Vehicles.text"), accessor: "text" },
-            { Header: t("Vehicles.createdBy"), accessor: "createdBy" },
+            { Header: t("Leo.text"), accessor: "text" },
+            // { Header: t("Common.createdBy"), accessor: "createdBy" },
             { Header: t("Common.createdAt"), accessor: "createdAt" },
             { Header: t("Common.actions"), accessor: "actions" },
           ]}
         />
       )}
 
-      <ManageNoteModal note={tempNote} />
+      <ManageNoteModal
+        onClose={() => setTempNote(null)}
+        onCreate={(note) => {
+          if (!currentResult) return;
+
+          setCurrentResult({
+            ...currentResult,
+            notes: [...(currentResult.notes ?? []), note],
+          });
+        }}
+        note={tempNote}
+      />
     </TabsContent>
   );
 }

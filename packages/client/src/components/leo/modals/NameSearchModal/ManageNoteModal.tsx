@@ -13,14 +13,21 @@ import { Loader } from "components/Loader";
 
 interface Props {
   note: Note | null;
+  onCreate?(note: Note): void;
+  onClose?(): void;
 }
 
-export function ManageNoteModal({ note }: Props) {
+export function ManageNoteModal({ onCreate, onClose, note }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { currentResult, setCurrentResult } = useNameSearch();
+  const { currentResult } = useNameSearch();
   const { state, execute } = useFetch();
+
+  function handleClose() {
+    onClose?.();
+    closeModal(ModalIds.ManageNote);
+  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
@@ -31,8 +38,8 @@ export function ManageNoteModal({ note }: Props) {
     });
 
     if (json.id) {
-      setCurrentResult({ ...currentResult, ...json });
-      closeModal(ModalIds.ManageNote);
+      onCreate?.(json);
+      handleClose();
     }
   }
 
@@ -48,7 +55,7 @@ export function ManageNoteModal({ note }: Props) {
     <Modal
       title={t("manageNote")}
       isOpen={isOpen(ModalIds.ManageNote)}
-      onClose={() => closeModal(ModalIds.ManageNote)}
+      onClose={handleClose}
       className="w-[600px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
@@ -62,7 +69,7 @@ export function ManageNoteModal({ note }: Props) {
               <Button
                 disabled={state === "loading"}
                 type="reset"
-                onClick={() => closeModal(ModalIds.ManageNote)}
+                onClick={handleClose}
                 variant="cancel"
               >
                 {common("cancel")}
@@ -73,7 +80,7 @@ export function ManageNoteModal({ note }: Props) {
                 type="submit"
               >
                 {state === "loading" ? <Loader className="mr-2" /> : null}
-                {common("save")}
+                {note ? common("save") : common("create")}
               </Button>
             </footer>
           </Form>
