@@ -267,7 +267,6 @@ export function ActiveCalls() {
           </Button>
         </div>
       </header>
-
       <div className="px-4">
         <CallsFilters calls={calls} />
 

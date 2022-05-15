@@ -38,7 +38,9 @@ interface Props {
 }
 
 export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props) {
-  const { isOpen, closeModal, openModal } = useModal();
+  const [showAlert, setShowAlert] = React.useState(false);
+
+  const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
   const { state, execute } = useFetch();
@@ -79,8 +81,16 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     [call, calls],
   );
 
+  function handleEndClick() {
+    if (!call || isEndDisabled) return;
+
+    setShowAlert(true);
+  }
+
   function handleClose() {
     onClose?.();
+
+    setShowAlert(false);
     closeModal(ModalIds.Manage911Call);
   }
 
@@ -92,7 +102,6 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     });
 
     if (json) {
-      closeModal(ModalIds.AlertEnd911Call);
       handleClose();
     }
   }
@@ -295,7 +304,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
               <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
                 {call ? (
                   <Button
-                    onClick={() => openModal(ModalIds.AlertEnd911Call)}
+                    onClick={handleEndClick}
                     type="button"
                     variant="danger"
                     disabled={isEndDisabled}
@@ -333,13 +342,16 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
         ) : null}
       </div>
 
-      {call ? (
+      {call && showAlert ? (
         <AlertModal
+          forceOpen
           id={ModalIds.AlertEnd911Call}
           title={t("end911Call")}
           description={t("alert_end911Call")}
           onDeleteClick={handleDelete}
           deleteText={t("endCall")}
+          state={state}
+          onClose={() => setShowAlert(false)}
         />
       ) : null}
     </Modal>
