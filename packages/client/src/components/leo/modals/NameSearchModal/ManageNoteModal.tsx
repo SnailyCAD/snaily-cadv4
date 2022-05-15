@@ -14,10 +14,11 @@ import { Loader } from "components/Loader";
 interface Props {
   note: Note | null;
   onCreate?(note: Note): void;
+  onUpdate?(note: Note): void;
   onClose?(): void;
 }
 
-export function ManageNoteModal({ onCreate, onClose, note }: Props) {
+export function ManageNoteModal({ onCreate, onUpdate, onClose, note }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
@@ -32,14 +33,26 @@ export function ManageNoteModal({ onCreate, onClose, note }: Props) {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute("/notes", {
-      method: "POST",
-      data: { text: values.text, type: "CITIZEN", itemId: currentResult.id },
-    });
+    if (note) {
+      const { json } = await execute(`/notes/${note.id}`, {
+        method: "PUT",
+        data: { text: values.text, type: "CITIZEN", itemId: currentResult.id },
+      });
 
-    if (json.id) {
-      onCreate?.(json);
-      handleClose();
+      if (json.id) {
+        onUpdate?.(json);
+        handleClose();
+      }
+    } else {
+      const { json } = await execute("/notes", {
+        method: "POST",
+        data: { text: values.text, type: "CITIZEN", itemId: currentResult.id },
+      });
+
+      if (json.id) {
+        onCreate?.(json);
+        handleClose();
+      }
     }
   }
 

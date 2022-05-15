@@ -9,12 +9,33 @@ import { useModal } from "state/modalState";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 import { ManageNoteModal } from "../ManageNoteModal";
+import { AlertModal } from "components/modal/AlertModal";
+import useFetch from "lib/useFetch";
 
 export function NameSearchNotesTabs() {
   const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
   const { currentResult, setCurrentResult } = useNameSearch();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
+  const { state, execute } = useFetch();
+
+  async function handleDelete() {
+    if (!currentResult || !tempNote) return;
+
+    const { json } = await execute(`/notes/${tempNote.id}`, {
+      method: "DELETE",
+      data: { type: "CITIZEN", itemId: currentResult.id, text: tempNote.text },
+    });
+
+    if (typeof json === "boolean") {
+      setCurrentResult({
+        ...currentResult,
+        notes: currentResult.notes?.filter((v) => v.id !== tempNote.id),
+      });
+      setTempNote(null);
+      closeModal(ModalIds.AlertDeleteNote);
+    }
+  }
 
   function handleEditClick(note: Note) {
     setTempNote(note);
@@ -87,7 +108,24 @@ export function NameSearchNotesTabs() {
             notes: [...(currentResult.notes ?? []), note],
           });
         }}
+        onUpdate={(note) => {
+          if (!currentResult.notes) return;
+          const notes = [...currentResult.notes];
+          const idx = notes.findIndex((v) => v.id === note.id);
+
+          notes[idx] = note;
+
+          setCurrentResult({ ...currentResult, notes });
+        }}
         note={tempNote}
+      />
+
+      <AlertModal
+        title={t("Leo.deleteNote")}
+        description={t("Leo.alert_deleteNote")}
+        id={ModalIds.AlertDeleteNote}
+        onDeleteClick={handleDelete}
+        state={state}
       />
     </TabsContent>
   );
