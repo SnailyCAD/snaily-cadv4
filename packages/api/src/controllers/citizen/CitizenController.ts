@@ -216,7 +216,7 @@ export class CitizenController {
         waterLicenseId: data.waterLicense || defaultLicenseValueId,
         phoneNumber: data.phoneNumber || null,
         imageId: validateImgurURL(data.image),
-        socialSecurityNumber: generateString(9, { numbersOnly: true }),
+        socialSecurityNumber: data.socialSecurityNumber ?? generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
       },
     });
@@ -271,9 +271,9 @@ export class CitizenController {
         phoneNumber: data.phoneNumber,
         occupation: data.occupation,
         imageId: validateImgurURL(data.image),
-        socialSecurityNumber: !citizen.socialSecurityNumber
-          ? generateString(9, { numbersOnly: true })
-          : undefined,
+        socialSecurityNumber:
+          data.socialSecurityNumber ??
+          (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
       },
       include: { gender: true, ethnicity: true },
     });
