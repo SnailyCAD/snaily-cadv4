@@ -5,23 +5,14 @@ import { Button } from "components/Button";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { useRouter } from "next/router";
 import { Full911Call, useDispatchState } from "state/dispatchState";
-import {
-  AssignedUnit,
-  Call911,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  Officer,
-  ShouldDoType,
-} from "@snailycad/types";
+import { AssignedUnit, Call911, ShouldDoType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
-import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
-import { makeUnitName } from "lib/utils";
 import { DispatchCallTowModal } from "components/dispatch/modals/CallTowModal";
 import compareDesc from "date-fns/compareDesc";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -32,13 +23,13 @@ import { Filter } from "react-bootstrap-icons";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { classNames } from "lib/classNames";
-import { isUnitCombined } from "@snailycad/utils";
 import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useAudio } from "react-use";
 import { useAuth } from "context/AuthContext";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { DndActions } from "types/DndActions";
+import { AssignedUnitsColumn } from "./active-calls/AssignedUnitsColumn";
 
 const ADDED_TO_CALL_SRC = "/sounds/added-to-call.mp3" as const;
 const INCOMING_CALL_SRC = "/sounds/incoming-call.mp3" as const;
@@ -54,7 +45,7 @@ export function ActiveCalls() {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { hasPermissions } = usePermission();
-  const { calls, setCalls } = useDispatchState();
+  const { calls, setCalls, isDraggingUnit } = useDispatchState();
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -74,7 +65,6 @@ export function ActiveCalls() {
   });
 
   const { openModal } = useModal();
-  const { generateCallsign } = useGenerateCallsign();
   const { execute } = useFetch();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
@@ -98,12 +88,6 @@ export function ActiveCalls() {
 
   const isUnitAssignedToCall = (call: Full911Call) =>
     call.assignedUnits.some((v) => v.unit?.id === unit?.id);
-
-  function makeAssignedUnit(unit: AssignedUnit) {
-    return isUnitCombined(unit.unit)
-      ? generateCallsign(unit.unit, "pairedUnitTemplate")
-      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
-  }
 
   useListener(
     SocketEvents.Create911Call,
@@ -219,10 +203,10 @@ export function ActiveCalls() {
     }
   }
 
-  async function handleUnassignFromCall(call: Full911Call) {
+  async function handleUnassignFromCall(call: Full911Call, unitId = unit?.id) {
     const { json } = await execute(`/911-calls/unassign/${call.id}`, {
       method: "POST",
-      data: { unit: unit?.id },
+      data: { unit: unitId },
     });
 
     if (json.id) {
@@ -236,6 +220,10 @@ export function ActiveCalls() {
 
       setCalls(callsMapped);
     }
+  }
+
+  function handleUnassign({ unit, call }: { unit: AssignedUnit; call: Full911Call }) {
+    handleUnassignFromCall(call, unit.unit.id);
   }
 
   if (!CALLS_911) {
@@ -306,17 +294,11 @@ export function ActiveCalls() {
                   situationCode: call.situationCode?.value.value ?? common("none"),
                   updatedAt: <FullDate>{call.updatedAt}</FullDate>,
                   assignedUnits: (
-                    <Droppable
-                      accepts={[DndActions.MoveUnitTo911Call]}
-                      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
-                        void handleAssignToCall(call, item.id)
-                      }
-                      canDrop={(item) =>
-                        isDispatch && !call.assignedUnits.some((v) => v.unit?.id === item.id)
-                      }
-                    >
-                      {call.assignedUnits.map(makeAssignedUnit).join(", ") || common("none")}
-                    </Droppable>
+                    <AssignedUnitsColumn
+                      handleAssignToCall={handleAssignToCall}
+                      call={call}
+                      isDispatch={isDispatch}
+                    />
                   ),
                   actions: (
                     <>
@@ -376,6 +358,19 @@ export function ActiveCalls() {
           />
         )}
       </div>
+
+      {isDispatch ? (
+        <Droppable onDrop={handleUnassign} accepts={[DndActions.UnassignUnitFrom911Call]}>
+          <div
+            className={classNames(
+              "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+              isDraggingUnit ? "pointer-events-all opacity-100" : "pointer-events-none opacity-0",
+            )}
+          >
+            <p>{t("dropToUnassign")}</p>
+          </div>
+        </Droppable>
+      ) : null}
 
       <DispatchCallTowModal call={tempCall} />
       {tempCall?.descriptionData ? (
