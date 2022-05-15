@@ -65,8 +65,6 @@ export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
     return null;
   }
 
-  console.log({ open });
-
   return (
     <TabsContent value="notes">
       <header className="flex items-center justify-between">
