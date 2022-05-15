@@ -35,6 +35,7 @@ const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
     medicalRecords: true,
     customFields: { include: { field: true } },
     warrants: { include: { officer: { include: leoProperties } } },
+    notes: true,
     Record: {
       where: isEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
       include: {

@@ -11,6 +11,7 @@ import { RecordType } from "@snailycad/types";
 const NameSearchWeaponsTab = dynamic(
   async () => (await import("./WeaponsTab")).NameSearchWeaponsTab,
 );
+const NameSearchNotesTabs = dynamic(async () => (await import("./NotesTab")).NameSearchNotesTabs);
 
 export function NameSearchTabsContainer() {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
@@ -32,6 +33,7 @@ export function NameSearchTabsContainer() {
     (v) => v.type === RecordType.WRITTEN_WARNING,
   ).length;
   const warrantsLength = currentResult.warrants.length;
+  const notesLength = currentResult.notes?.length ?? 0;
 
   const TABS = [
     { value: "vehicles", name: `${t("Vehicles.registeredVehicles")} (${vehiclesLength})` },
@@ -40,6 +42,7 @@ export function NameSearchTabsContainer() {
     { value: "arrestReports", name: `${t("Leo.arrestReports")} (${arrestReportsLength})` },
     { value: "writtenWarnings", name: `${t("Leo.writtenWarnings")} (${writtenWarningsLength})` },
     { value: "warrants", name: `${t("Leo.warrants")} (${warrantsLength})` },
+    { value: "notes", name: `${t("Leo.notes")} (${notesLength})` },
   ];
 
   return (
@@ -48,6 +51,7 @@ export function NameSearchTabsContainer() {
       {WEAPON_REGISTRATION ? <NameSearchWeaponsTab /> : null}
       <RecordsTab records={currentResult.Record} />
       <NameSearchWarrantsTab />
+      <NameSearchNotesTabs />
     </TabList>
   );
 }

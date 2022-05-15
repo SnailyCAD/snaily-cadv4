@@ -269,6 +269,18 @@ export interface Citizen {
   updatedAt: Date;
   dlCategory: DriversLicenseCategoryValue[];
   flags?: Value<ValueType.CITIZEN_FLAG>[];
+  notes?: Note[];
+}
+
+export interface Note {
+  id: string;
+  text: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  createdBy: Officer | null;
+  citizenId: string | null;
+  vehicleId: string | null;
 }
 
 /**
@@ -297,6 +309,7 @@ export interface RegisteredVehicle {
   impounded: boolean;
   flags?: Value<ValueType.VEHICLE_FLAG>[];
   dmvStatus: WhitelistStatus | null;
+  notes?: Note[];
 }
 
 /**

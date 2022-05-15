@@ -322,6 +322,21 @@ model Citizen {
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
   DLExam               DLExam[]
+  notes                Note[]
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  createdBy   Officer?           @relation(fields: [createdById], references: [id])
+  createdById String?
+  Citizen     Citizen?           @relation(fields: [citizenId], references: [id])
+  citizenId   String?
+  vehicle     RegisteredVehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId   String?
 }
 
 model RegisteredVehicle {
@@ -348,6 +363,7 @@ model RegisteredVehicle {
   impounded            Boolean                  @default(false)
   customFields         CustomFieldValue[]
   dmvStatus            WhitelistStatus?
+  notes                Note[]
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
@@ -727,6 +743,7 @@ model Officer {
   lastStatusChangeTimestamp   DateTime?
   qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
+  Note                        Note[]
 }
 
 model UnitQualification {
