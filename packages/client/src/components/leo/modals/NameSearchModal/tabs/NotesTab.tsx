@@ -16,9 +16,11 @@ import useFetch from "lib/useFetch";
 interface Props {
   currentResult: VehicleSearchResult | NameSearchResult;
   setCurrentResult: any;
+  type: "CITIZEN" | "VEHICLE";
 }
 
-export function NotesTab({ currentResult, setCurrentResult }: Props) {
+export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
+  const [open, setOpen] = React.useState(false);
   const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
   const { openModal, closeModal } = useModal();
@@ -29,7 +31,7 @@ export function NotesTab({ currentResult, setCurrentResult }: Props) {
 
     const { json } = await execute(`/notes/${tempNote.id}`, {
       method: "DELETE",
-      data: { type: "CITIZEN", itemId: currentResult.id, text: tempNote.text },
+      data: { type, itemId: currentResult.id, text: tempNote.text },
     });
 
     if (typeof json === "boolean") {
@@ -45,16 +47,25 @@ export function NotesTab({ currentResult, setCurrentResult }: Props) {
   function handleEditClick(note: Note) {
     setTempNote(note);
     openModal(ModalIds.ManageNote);
+    setOpen(true);
   }
 
   function handleDeleteClick(note: Note) {
     setTempNote(note);
     openModal(ModalIds.AlertDeleteNote);
+    setOpen(true);
+  }
+
+  function handleAddClick() {
+    setOpen(true);
+    openModal(ModalIds.ManageNote);
   }
 
   if (!currentResult || !Array.isArray(currentResult.notes)) {
     return null;
   }
+
+  console.log({ open });
 
   return (
     <TabsContent value="notes">
@@ -62,7 +73,7 @@ export function NotesTab({ currentResult, setCurrentResult }: Props) {
         <h3 className="text-xl font-semibold">{t("Leo.notes")}</h3>
 
         <div>
-          <Button type="button" onClick={() => openModal(ModalIds.ManageNote)}>
+          <Button type="button" onClick={handleAddClick}>
             {t("Leo.addNote")}
           </Button>
         </div>
@@ -74,7 +85,6 @@ export function NotesTab({ currentResult, setCurrentResult }: Props) {
         <Table
           data={currentResult.notes.map((note) => ({
             text: note.text,
-            // createdBy: String(note.createdBy),
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
               <>
@@ -96,42 +106,50 @@ export function NotesTab({ currentResult, setCurrentResult }: Props) {
           }))}
           columns={[
             { Header: t("Leo.text"), accessor: "text" },
-            // { Header: t("Common.createdBy"), accessor: "createdBy" },
             { Header: t("Common.createdAt"), accessor: "createdAt" },
             { Header: t("Common.actions"), accessor: "actions" },
           ]}
         />
       )}
 
-      <ManageNoteModal
-        onClose={() => setTempNote(null)}
-        onCreate={(note) => {
-          if (!currentResult) return;
+      {open ? (
+        <>
+          <ManageNoteModal
+            currentResult={currentResult}
+            type={type}
+            onClose={() => {
+              setTempNote(null);
+              setOpen(false);
+            }}
+            onCreate={(note) => {
+              if (!currentResult) return;
 
-          setCurrentResult({
-            ...currentResult,
-            notes: [...(currentResult.notes ?? []), note],
-          });
-        }}
-        onUpdate={(note) => {
-          if (!currentResult.notes) return;
-          const notes = [...currentResult.notes];
-          const idx = notes.findIndex((v) => v.id === note.id);
+              setCurrentResult({
+                ...currentResult,
+                notes: [...(currentResult.notes ?? []), note],
+              });
+            }}
+            onUpdate={(note) => {
+              if (!currentResult.notes) return;
+              const notes = [...currentResult.notes];
+              const idx = notes.findIndex((v) => v.id === note.id);
 
-          notes[idx] = note;
+              notes[idx] = note;
 
-          setCurrentResult({ ...currentResult, notes });
-        }}
-        note={tempNote}
-      />
+              setCurrentResult({ ...currentResult, notes });
+            }}
+            note={tempNote}
+          />
 
-      <AlertModal
-        title={t("Leo.deleteNote")}
-        description={t("Leo.alert_deleteNote")}
-        id={ModalIds.AlertDeleteNote}
-        onDeleteClick={handleDelete}
-        state={state}
-      />
+          <AlertModal
+            title={t("Leo.deleteNote")}
+            description={t("Leo.alert_deleteNote")}
+            id={ModalIds.AlertDeleteNote}
+            onDeleteClick={handleDelete}
+            state={state}
+          />
+        </>
+      ) : null}
     </TabsContent>
   );
 }

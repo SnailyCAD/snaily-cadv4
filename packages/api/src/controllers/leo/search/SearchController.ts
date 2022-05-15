@@ -68,6 +68,7 @@ const vehiclesInclude = {
   citizen: { include: { warrants: true } },
   flags: true,
   customFields: { include: { field: true } },
+  notes: true,
 };
 
 const weaponsInclude = {

@@ -6,23 +6,26 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
-import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 import { Textarea } from "components/form/Textarea";
 import { Loader } from "components/Loader";
+import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   note: Note | null;
+  type: "CITIZEN" | "VEHICLE";
+  currentResult: NameSearchResult | VehicleSearchResult;
+
   onCreate?(note: Note): void;
   onUpdate?(note: Note): void;
   onClose?(): void;
 }
 
-export function ManageNoteModal({ onCreate, onUpdate, onClose, note }: Props) {
+export function ManageNoteModal({ onCreate, onUpdate, onClose, currentResult, type, note }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { currentResult } = useNameSearch();
   const { state, execute } = useFetch();
 
   function handleClose() {
@@ -36,7 +39,7 @@ export function ManageNoteModal({ onCreate, onUpdate, onClose, note }: Props) {
     if (note) {
       const { json } = await execute(`/notes/${note.id}`, {
         method: "PUT",
-        data: { text: values.text, type: "CITIZEN", itemId: currentResult.id },
+        data: { text: values.text, type, itemId: currentResult.id },
       });
 
       if (json.id) {
@@ -46,7 +49,7 @@ export function ManageNoteModal({ onCreate, onUpdate, onClose, note }: Props) {
     } else {
       const { json } = await execute("/notes", {
         method: "POST",
-        data: { text: values.text, type: "CITIZEN", itemId: currentResult.id },
+        data: { text: values.text, type, itemId: currentResult.id },
       });
 
       if (json.id) {

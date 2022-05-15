@@ -51,7 +51,11 @@ export function NameSearchTabsContainer() {
       {WEAPON_REGISTRATION ? <NameSearchWeaponsTab /> : null}
       <RecordsTab records={currentResult.Record} />
       <NameSearchWarrantsTab />
-      <NameSearchNotesTabs currentResult={currentResult} setCurrentResult={setCurrentResult} />
+      <NameSearchNotesTabs
+        type="CITIZEN"
+        currentResult={currentResult}
+        setCurrentResult={setCurrentResult}
+      />
     </TabList>
   );
 }
