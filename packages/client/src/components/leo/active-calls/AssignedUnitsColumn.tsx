@@ -2,6 +2,7 @@ import type { AssignedUnit, CombinedLeoUnit, EmsFdDeputy, Officer } from "@snail
 import { isUnitCombined } from "@snailycad/utils";
 import { Draggable } from "components/shared/dnd/Draggable";
 import { Droppable } from "components/shared/dnd/Droppable";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
@@ -18,6 +19,8 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
   const common = useTranslations("Common");
   const { generateCallsign } = useGenerateCallsign();
   const dispatchState = useDispatchState();
+  const { hasActiveDispatchers } = useActiveDispatchers();
+  const canDrag = hasActiveDispatchers && isDispatch;
 
   function makeAssignedUnit(unit: AssignedUnit) {
     return isUnitCombined(unit.unit)
@@ -38,7 +41,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
           ? common("none")
           : call.assignedUnits.map((unit, idx) => (
               <Draggable
-                canDrag={isDispatch}
+                canDrag={canDrag}
                 onDrag={(isDragging) => {
                   dispatchState.setIsDraggingUnit(isDragging);
                 }}
@@ -49,7 +52,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
                 {() => {
                   const comma = idx + 1 === call.assignedUnits.length ? "" : ", ";
                   return (
-                    <p className={isDispatch ? "!cursor-move" : "cursor-default"}>
+                    <p className={canDrag ? "!cursor-move" : "cursor-default"}>
                       {makeAssignedUnit(unit)}
                       {comma}
                     </p>
