@@ -6,16 +6,21 @@ import { Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
 import { useModal } from "state/modalState";
-import { useNameSearch } from "state/search/nameSearchState";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
 import { ManageNoteModal } from "../ManageNoteModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
-export function NameSearchNotesTabs() {
+interface Props {
+  currentResult: VehicleSearchResult | NameSearchResult;
+  setCurrentResult: any;
+}
+
+export function NotesTab({ currentResult, setCurrentResult }: Props) {
   const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
-  const { currentResult, setCurrentResult } = useNameSearch();
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
 

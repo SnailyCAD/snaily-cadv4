@@ -11,12 +11,12 @@ import { RecordType } from "@snailycad/types";
 const NameSearchWeaponsTab = dynamic(
   async () => (await import("./WeaponsTab")).NameSearchWeaponsTab,
 );
-const NameSearchNotesTabs = dynamic(async () => (await import("./NotesTab")).NameSearchNotesTabs);
+const NameSearchNotesTabs = dynamic(async () => (await import("./NotesTab")).NotesTab);
 
 export function NameSearchTabsContainer() {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const t = useTranslations();
-  const { currentResult } = useNameSearch();
+  const { currentResult, setCurrentResult } = useNameSearch();
 
   if (!currentResult) {
     return null;
@@ -51,7 +51,7 @@ export function NameSearchTabsContainer() {
       {WEAPON_REGISTRATION ? <NameSearchWeaponsTab /> : null}
       <RecordsTab records={currentResult.Record} />
       <NameSearchWarrantsTab />
-      <NameSearchNotesTabs />
+      <NameSearchNotesTabs currentResult={currentResult} setCurrentResult={setCurrentResult} />
     </TabList>
   );
 }
