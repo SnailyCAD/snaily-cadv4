@@ -11,7 +11,6 @@ import { useTranslations } from "use-intl";
 import { CustomFieldCategory, Citizen, RecordType, BoloType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
-// import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { NameSearchTabsContainer } from "./tabs/TabsContainer";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";

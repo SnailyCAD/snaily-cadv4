@@ -77,6 +77,7 @@ export const enum ModalIds {
   RequestNameChange = "RequestNameChangeModal",
 
   Description = "DescriptionModal",
+  ManageNote = "ManageNoteModal",
 
   AlertDeleteCitizen = "alert_DeleteCitizenModal",
   AlertDeleteVehicle = "alert_DeleteVehicleModal",
@@ -110,4 +111,5 @@ export const enum ModalIds {
   AlertRevokePersonalApiToken = "AlertRevokePersonalApiTokenModal",
   AlertDeleteUnitQualification = "AlertDeleteUnitQualificationModal",
   AlertDeleteUnit = "AlertDeleteUnitModal",
+  AlertDeleteNote = "AlertDeleteNoteModal",
 }
