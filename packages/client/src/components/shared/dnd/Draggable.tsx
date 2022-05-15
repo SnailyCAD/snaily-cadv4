@@ -6,9 +6,11 @@ interface Props {
   canDrag?: boolean;
   type: string;
   item: any;
+
+  onDrag?(isDragging: boolean): void;
 }
 
-export function Draggable({ canDrag, type, item, children }: Props) {
+export function Draggable({ canDrag, type, item, onDrag, children }: Props) {
   const [{ opacity, isDragging }, drag] = useDrag(
     () => ({
       type,
@@ -21,6 +23,11 @@ export function Draggable({ canDrag, type, item, children }: Props) {
     }),
     [item, canDrag, type],
   );
+
+  React.useEffect(() => {
+    onDrag?.(isDragging);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDragging]);
 
   return (
     <div ref={drag} style={{ opacity }}>
