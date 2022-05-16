@@ -11,6 +11,13 @@
     "noNameChangeRequests": "There are no name change requests.",
     "newName": "New Name",
     "newSurname": "New surname",
-    "status": "Status"
+    "status": "Status",
+    "courtEntries": "Court Entries",
+    "noCourtEntries": "There are no court entries.",
+    "addCourtEntry": "Add court entry",
+    "deleteCourtEntry": "Delete court entry",
+    "manageCourtEntry": "Manage court entry",
+    "caseNumber": "Case Number",
+    "title": "Title"
   }
 }

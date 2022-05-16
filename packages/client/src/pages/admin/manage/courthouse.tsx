@@ -1,4 +1,4 @@
-import { NameChangeRequest, Rank } from "@snailycad/types";
+import { CourtEntry, NameChangeRequest, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { ExpungementRequestsTab } from "components/admin/manage/courthouse/ExpungementRequestsTab";
 import { NameChangeRequestsTab } from "components/admin/manage/courthouse/NameChangeRequestsTab";
@@ -15,6 +15,7 @@ import type { FullRequest } from "src/pages/courthouse";
 interface Props {
   expungementRequests: FullRequest[];
   nameChangeRequests: NameChangeRequest[];
+  courtEntries: CourtEntry[];
 }
 
 export default function ManageCourthouse({ expungementRequests, nameChangeRequests }: Props) {

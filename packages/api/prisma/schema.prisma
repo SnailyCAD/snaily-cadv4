@@ -1053,6 +1053,24 @@ model NameChangeRequest {
   updatedAt  DateTime        @default(now()) @updatedAt
 }
 
+model CourtEntry {
+  id              String      @id @default(uuid())
+  title           String
+  caseNumber      String
+  descriptionData Json?
+  dates           CourtDate[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @default(now()) @updatedAt
+}
+
+model CourtDate {
+  id           String     @id @default(uuid())
+  note         String
+  date         DateTime
+  courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id])
+  courtEntryId String
+}
+
 // ems-fd
 model EmsFdDeputy {
   id                        String                 @id @default(cuid())
