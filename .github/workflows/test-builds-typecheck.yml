@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Run turbo build
         run: yarn turbo run build
