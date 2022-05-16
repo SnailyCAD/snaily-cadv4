@@ -103,7 +103,7 @@ export function CourtEntriesTab(props: Props) {
       <AlertModal
         id={ModalIds.AlertDeleteCourtEntry}
         title={t("deleteCourtEntry")}
-        description={t("deleteCourtEntry")}
+        description={t("alert_deleteCourtEntry")}
         onDeleteClick={deleteCourtEntry}
         onClose={() => setTempEntry(null)}
         state={state}

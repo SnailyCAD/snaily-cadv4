@@ -11,6 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import type { CourtDate } from "@snailycad/types";
 import { Textarea } from "components/form/Textarea";
 import { v4 } from "uuid";
+import { isDate } from "components/citizen/ManageCitizenForm";
 
 interface Props {
   date: CourtDate | null;
@@ -57,7 +58,16 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
           <Form>
             <FormField label={t("date")} errorMessage={errors.date as string}>
               {/* todo: set correct value */}
-              <Input name="date" type="date" value={values.date} onChange={handleChange} />
+              <Input
+                name="date"
+                type="date"
+                value={
+                  isDate(values.date)
+                    ? new Date(values.date.toString()).toISOString().slice(0, 10)
+                    : String(values.date)
+                }
+                onChange={handleChange}
+              />
             </FormField>
 
             <FormField label={t("note")} errorMessage={errors.note}>

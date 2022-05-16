@@ -98,6 +98,12 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
             </FormField>
 
             <CourtEntryDates
+              onDelete={(date) =>
+                setFieldValue(
+                  "dates",
+                  values.dates.filter((v) => v.id !== date.id),
+                )
+              }
               onCreate={(date) => setFieldValue("dates", [...values.dates, date])}
               onUpdate={(date) => {
                 const dates = [...values.dates];

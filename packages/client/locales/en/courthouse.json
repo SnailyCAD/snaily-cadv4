@@ -23,6 +23,9 @@
     "addDate": "Add Date",
     "manageCourtDate": "Manage court date",
     "date": "Date",
-    "note": "Note"
+    "note": "Note",
+    "deleteCourtDate": "Delete court date",
+    "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
+    "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone."
   }
 }

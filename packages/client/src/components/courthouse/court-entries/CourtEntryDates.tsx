@@ -7,19 +7,29 @@ import { useTranslations } from "next-intl";
 import { ManageCourtDateModal } from "./ManageCourtDateModal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
+import { AlertModal } from "components/modal/AlertModal";
 
 interface Props {
   dates: CourtDate[];
   onCreate(date: Pick<CourtDate, "date" | "note" | "id">): void;
   onUpdate(date: Pick<CourtDate, "date" | "note" | "id">): void;
+  onDelete(date: Pick<CourtDate, "id">): void;
 }
 
-export function CourtEntryDates({ onUpdate, onCreate, dates }: Props) {
+export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) {
   const [tempDate, setTempDate] = React.useState<CourtDate | null>(null);
 
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
-  const { openModal } = useModal();
+  const { closeModal, openModal } = useModal();
+
+  async function deleteCourtDate() {
+    if (!tempDate) return;
+
+    closeModal(ModalIds.AlertDeleteCourtDate);
+    onDelete(tempDate);
+    setTempDate(null);
+  }
 
   function handleDeleteClick(entry: CourtDate) {
     setTempDate(entry);
@@ -45,7 +55,7 @@ export function CourtEntryDates({ onUpdate, onCreate, dates }: Props) {
 
       <Table
         data={dates.map((date) => ({
-          date: <FullDate>{date.date}</FullDate>,
+          date: <FullDate onlyDate>{date.date}</FullDate>,
           note: date.note || common("none"),
           actions: (
             <>
@@ -65,8 +75,8 @@ export function CourtEntryDates({ onUpdate, onCreate, dates }: Props) {
           ),
         }))}
         columns={[
-          { Header: "Date", accessor: "date" },
-          { Header: "Note", accessor: "note" },
+          { Header: t("date"), accessor: "date" },
+          { Header: t("note"), accessor: "note" },
           { Header: common("actions"), accessor: "actions" },
         ]}
       />
@@ -82,6 +92,14 @@ export function CourtEntryDates({ onUpdate, onCreate, dates }: Props) {
           onUpdate(date);
         }}
         date={tempDate}
+      />
+
+      <AlertModal
+        title={t("deleteCourtDate")}
+        id={ModalIds.AlertDeleteCourtDate}
+        description={t("alert_deleteCourtDate")}
+        onDeleteClick={deleteCourtDate}
+        onClose={() => setTempDate(null)}
       />
     </section>
   );
