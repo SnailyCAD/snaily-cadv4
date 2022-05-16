@@ -107,6 +107,7 @@ export class DiscordSettingsController {
       dispatchRolePermissions: data.dispatchRolePermissions ?? [],
       towRolePermissions: data.towRolePermissions ?? [],
       taxiRolePermissions: data.taxiRolePermissions ?? [],
+      courthouseRolePermissions: data.courthouseRolePermissions ?? [],
     };
 
     const discordRoles = await prisma.discordRoles.upsert({

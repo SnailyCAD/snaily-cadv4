@@ -49,6 +49,13 @@ export const defaultValuePermissions = [
   Permissions.ManageValueQualification,
 ];
 
+export const defaultCourthousePermissions = [
+  Permissions.ViewExpungementRequests,
+  Permissions.ManageExpungementRequests,
+  Permissions.ViewNameChangeRequests,
+  Permissions.ManageNameChangeRequests,
+];
+
 export const allDefaultAdminPermissions = [
   ...defaultManagementPermissions,
   ...defaultImportPermissions,
