@@ -23,7 +23,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   waterLicenseCategory: z.array(z.any()).nullable().optional(),
   firearmLicenseCategory: z.array(z.any()).nullable().optional(),
   image: z.any().nullable().optional(),
-  socialSecurityNumber: z.string().length(9).nullable().optional(),
+  socialSecurityNumber: z.string().min(2).max(30).nullable().optional(),
 });
 
 export const TAX_STATUS_REGEX = /TAXED|UNTAXED/;
