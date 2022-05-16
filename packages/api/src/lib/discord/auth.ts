@@ -31,9 +31,9 @@ export async function updateMemberRolesLogin(
 
   const cad = await prisma.cad.findFirst();
 
-  const discordMember = (await rest.get(
-    Routes.guildMember(GUILD_ID, user.discordId),
-  )) as RESTGetAPIGuildMemberResult | null;
+  const discordMember = (await rest
+    .get(Routes.guildMember(GUILD_ID, user.discordId))
+    .catch(() => null)) as RESTGetAPIGuildMemberResult | null;
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 

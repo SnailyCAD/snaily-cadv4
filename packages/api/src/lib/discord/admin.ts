@@ -38,9 +38,9 @@ export async function updateMemberRoles(
   if (!discordRoles) return;
   const rest = getRest();
 
-  const discordMember = (await rest.get(
-    Routes.guildMember(GUILD_ID, user.discordId),
-  )) as RESTGetAPIGuildMemberResult | null;
+  const discordMember = (await rest
+    .get(Routes.guildMember(GUILD_ID, user.discordId))
+    .catch(() => null)) as RESTGetAPIGuildMemberResult | null;
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
