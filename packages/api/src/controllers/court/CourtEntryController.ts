@@ -6,11 +6,16 @@ import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import { NotFound } from "@tsed/exceptions";
+import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 @Controller("/court-entries")
 @UseBeforeEach(IsAuth)
 export class CourtEntryController {
   @Get("/")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async getCourtEntries() {
     const entries = await prisma.courtEntry.findMany({
       include: { dates: true },
@@ -20,6 +25,10 @@ export class CourtEntryController {
   }
 
   @Post("/")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async createCourtEntry(@BodyParams() body: unknown) {
     const data = validateSchema(COURT_ENTRY_SCHEMA, body);
 
@@ -47,6 +56,10 @@ export class CourtEntryController {
   }
 
   @Put("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async updateCourtEntry(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(COURT_ENTRY_SCHEMA, body);
 
@@ -88,6 +101,10 @@ export class CourtEntryController {
   }
 
   @Delete("/:id")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
   async deleteCourtEntry(@PathParams("id") id: string) {
     const entry = await prisma.courtEntry.findUnique({
       where: { id },
