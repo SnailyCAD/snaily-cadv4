@@ -52,26 +52,27 @@ model CadFeature {
 model MiscCadSettings {
   id String @id @default(cuid())
 
-  heightPrefix              String   @default("cm") @db.VarChar(255)
-  weightPrefix              String   @default("kg") @db.VarChar(255)
+  heightPrefix              String         @default("cm") @db.VarChar(255)
+  weightPrefix              String         @default("kg") @db.VarChar(255)
   maxCitizensPerUser        Int?
   maxOfficersPerUser        Int?
-  maxPlateLength            Int      @default(8)
+  maxPlateLength            Int            @default(8)
   maxBusinessesPerCitizen   Int?
   maxDivisionsPerOfficer    Int?
   /// max units a user can create with a department
   maxDepartmentsEachPerUser Int?
   maxAssignmentsToIncidents Int?
   maxAssignmentsToCalls     Int?
-  callsignTemplate          String   @default("{department}{callsign1} - {callsign2}{division}") @db.Text
-  pairedUnitTemplate        String?  @default("1A-{callsign1}") @db.Text
-  pairedUnitSymbol          String?  @default("A") @db.VarChar(255)
-  signal100Enabled          Boolean  @default(false)
-  liveMapURL                String?  @db.Text
-  roleplayEnabled           Boolean? @default(true)
+  callsignTemplate          String         @default("{department}{callsign1} - {callsign2}{division}") @db.Text
+  pairedUnitTemplate        String?        @default("1A-{callsign1}") @db.Text
+  pairedUnitSymbol          String?        @default("A") @db.VarChar(255)
+  signal100Enabled          Boolean        @default(false)
+  liveMapURL                String?        @db.Text
+  roleplayEnabled           Boolean?       @default(true)
   authScreenBgImageId       String?
   authScreenHeaderImageId   String?
   inactivityTimeout         Int?
+  jailTimeScale             JailTimeScale?
 
   /// deprecated, use `webhooks` instead
   call911WebhookId     String?
@@ -321,6 +322,21 @@ model Citizen {
   ExpungementRequest   ExpungementRequest[]
   NameChangeRequest    NameChangeRequest[]
   DLExam               DLExam[]
+  notes                Note[]
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  createdBy   Officer?           @relation(fields: [createdById], references: [id])
+  createdById String?
+  Citizen     Citizen?           @relation(fields: [citizenId], references: [id])
+  citizenId   String?
+  vehicle     RegisteredVehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId   String?
 }
 
 model RegisteredVehicle {
@@ -347,6 +363,7 @@ model RegisteredVehicle {
   impounded            Boolean                  @default(false)
   customFields         CustomFieldValue[]
   dmvStatus            WhitelistStatus?
+  notes                Note[]
 
   TruckLog         TruckLog[]
   ImpoundedVehicle ImpoundedVehicle[]
@@ -726,6 +743,7 @@ model Officer {
   lastStatusChangeTimestamp   DateTime?
   qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
+  Note                        Note[]
 }
 
 model UnitQualification {
@@ -1277,6 +1295,12 @@ enum DiscordWebhookType {
   BOLO
   CITIZEN_RECORD
   VEHICLE_IMPOUNDED
+}
+
+enum JailTimeScale {
+  HOURS
+  MINUTES
+  SECONDS
 }
 
 // other

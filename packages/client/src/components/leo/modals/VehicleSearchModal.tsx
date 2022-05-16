@@ -8,24 +8,18 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
+import { BoloType, CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import { yesOrNoText } from "lib/utils";
-import { classNames } from "lib/classNames";
-import { TruckLogsTable } from "./VehicleSearch/TruckLogsTable";
-import { Infofield } from "components/shared/Infofield";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { FullDate } from "components/shared/FullDate";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
-import { Pencil } from "react-bootstrap-icons";
 import { ManageVehicleFlagsModal } from "./VehicleSearch/ManageVehicleFlagsModal";
 import { ManageVehicleLicensesModal } from "./VehicleSearch/ManageVehicleLicensesModal";
-import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { ManageCustomFieldsModal } from "./NameSearchModal/ManageCustomFieldsModal";
-import { CustomFieldsArea } from "./CustomFieldsArea";
-import { Status } from "components/shared/Status";
 import { useNameSearch } from "state/search/nameSearchState";
+import { useBolos } from "hooks/realtime/useBolos";
+import { TabList } from "components/shared/TabList";
+import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
+import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -34,17 +28,28 @@ interface Props {
 export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const { currentResult, setCurrentResult } = useVehicleSearch();
   const nameSearchState = useNameSearch();
-  const { INSPECTION_STATUS_LABELS, TAX_STATUS_LABELS } = useVehicleLicenses();
+  const { bolos } = useBolos();
 
   const { isOpen, openModal, closeModal } = useModal();
   const common = useTranslations("Common");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
-  const { BUSINESS, DMV } = useFeatureEnabled();
   const router = useRouter();
   const isLeo = router.pathname === "/officer";
   const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
+
+  const bolo = React.useMemo(() => {
+    if (!currentResult) return null;
+    if (bolos.length <= 0) return null;
+
+    const boloWithPlate = bolos.find(
+      (v) =>
+        v.type === BoloType.VEHICLE && v.plate?.toUpperCase() === currentResult.plate.toUpperCase(),
+    );
+
+    return boloWithPlate ?? null;
+  }, [bolos, currentResult]);
 
   React.useEffect(() => {
     if (!isOpen(id)) {
@@ -64,21 +69,6 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
     } else {
       setCurrentResult(null);
     }
-  }
-
-  function handleNameClick() {
-    if (!currentResult) return;
-
-    openModal(ModalIds.NameSearch, {
-      name: `${currentResult.citizen.name} ${currentResult.citizen.surname}`,
-    });
-    closeModal(ModalIds.VehicleSearchWithinName);
-  }
-
-  function handleEditVehicleFlags() {
-    if (!currentResult) return;
-
-    openModal(ModalIds.ManageVehicleFlags);
   }
 
   function handleEditLicenses() {
@@ -170,109 +160,25 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                   </div>
                 ) : null}
 
-                <ul className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-1">
-                  <li>
-                    <Infofield className="capitalize" label={vT("owner")}>
-                      <Button
-                        title={common("openInSearch")}
-                        small
-                        type="button"
-                        onClick={handleNameClick}
-                      >
-                        {currentResult.citizen.name} {currentResult.citizen.surname}
-                      </Button>
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("plate")}>{currentResult.plate.toUpperCase()}</Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("model")}>{currentResult.model.value.value}</Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("color")}> {currentResult.color}</Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("vinNumber")}>{currentResult.vinNumber}</Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("registrationStatus")}>
-                      {currentResult.registrationStatus.value}
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("insuranceStatus")}>
-                      {currentResult.insuranceStatus?.value ?? common("none")}
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("taxStatus")}>
-                      {currentResult.taxStatus
-                        ? TAX_STATUS_LABELS[currentResult.taxStatus]
-                        : common("none")}
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={vT("inspectionStatus")}>
-                      {currentResult.inspectionStatus
-                        ? INSPECTION_STATUS_LABELS[currentResult.inspectionStatus]
-                        : common("none")}
-                    </Infofield>
-                  </li>
-                  <li>
-                    <Infofield label={common("createdAt")}>
-                      <FullDate>{currentResult.createdAt}</FullDate>
-                    </Infofield>
-                  </li>
+                {bolo ? (
+                  <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
+                    {t("vehicleBoloPlaced")}
+                  </div>
+                ) : null}
 
-                  {BUSINESS ? (
-                    <li>
-                      <Infofield className="capitalize" label={vT("business")}>
-                        {currentResult.Business[0]?.name ?? common("none")}
-                      </Infofield>
-                    </li>
-                  ) : null}
-                  <li>
-                    <Infofield className="capitalize flex items-center gap-2" label={vT("flags")}>
-                      <Button
-                        type="button"
-                        onClick={handleEditVehicleFlags}
-                        title={t("manageVehicleFlags")}
-                        aria-label={t("manageVehicleFlags")}
-                        className="px-1 mr-2"
-                      >
-                        <Pencil />
-                      </Button>
-                      {currentResult.flags?.map((v) => v.value).join(", ") || common("none")}
-                    </Infofield>
-                  </li>
-                  {DMV ? (
-                    <li>
-                      <Infofield label={vT("dmvStatus")}>
-                        <Status state={currentResult.dmvStatus}>
-                          {currentResult.dmvStatus?.toLowerCase()}
-                        </Status>
-                      </Infofield>
-                    </li>
-                  ) : null}
-                  <li>
-                    <Infofield
-                      childrenProps={{
-                        className: classNames(
-                          "capitalize",
-                          currentResult.reportedStolen && "text-red-700 font-semibold",
-                        ),
-                      }}
-                      label={t("reportedStolen")}
-                    >
-                      {common(yesOrNoText(currentResult.reportedStolen))}
-                    </Infofield>
-                  </li>
-
-                  <CustomFieldsArea currentResult={currentResult} isLeo={isLeo} />
-                </ul>
-
-                <TruckLogsTable result={currentResult} />
+                <TabList
+                  tabs={[
+                    { value: "results", name: t("results") },
+                    { value: "notes", name: t("notes") },
+                  ]}
+                >
+                  <ResultsTab />
+                  <NotesTab
+                    type="VEHICLE"
+                    currentResult={currentResult}
+                    setCurrentResult={setCurrentResult}
+                  />
+                </TabList>
               </div>
             )}
 

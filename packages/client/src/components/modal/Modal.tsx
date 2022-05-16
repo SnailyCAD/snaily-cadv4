@@ -11,6 +11,7 @@ export interface ModalProps {
   isOpen: boolean;
   className?: string;
   onClose(): void;
+  isAlert?: boolean;
 }
 
 export function Modal({
@@ -19,6 +20,7 @@ export function Modal({
   children,
   isOpen,
   className,
+  isAlert,
   onClose,
 }: ModalProps) {
   const { canBeClosed } = useModal();
@@ -34,7 +36,7 @@ export function Modal({
       <Dialog
         open={isOpen}
         as="div"
-        className="fixed inset-0 z-50 overflow-y-auto"
+        className={classNames("fixed inset-0 overflow-y-auto", isAlert ? "z-[9999]" : "z-50")}
         onClose={handleClose}
       >
         <div className="min-h-screen px-4 text-center">
@@ -67,7 +69,8 @@ export function Modal({
             <div
               style={modalStyles}
               className={classNames(
-                "z-30 max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg",
+                "max-w-[100%] inline-block p-4 px-6 my-8 text-left align-middle transition-all transform bg-white dark:bg-dark-bg dark:text-white shadow-xl rounded-lg",
+                isAlert ? "z-[9998]" : "z-30",
                 className,
               )}
             >

@@ -16,12 +16,7 @@ import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/user";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-
-const CITIZEN_SELECTS = {
-  name: true,
-  surname: true,
-  id: true,
-};
+import { towIncludes } from "./TowController";
 
 @Controller("/taxi")
 @UseBeforeEach(IsAuth)
@@ -39,14 +34,7 @@ export class TaxiController {
   })
   async getTaxiCalls() {
     const calls = await prisma.taxiCall.findMany({
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      include: towIncludes,
     });
 
     return calls;
@@ -60,9 +48,7 @@ export class TaxiController {
 
     if (data.creatorId) {
       const citizen = await prisma.citizen.findUnique({
-        where: {
-          id: data.creatorId!,
-        },
+        where: { id: data.creatorId },
       });
 
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
@@ -77,14 +63,7 @@ export class TaxiController {
         postal: data.postal ? String(data.postal) : null,
         name: data.name ?? null,
       },
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      include: towIncludes,
     });
 
     this.socket.emitCreateTaxiCall(call);
@@ -103,9 +82,7 @@ export class TaxiController {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.taxiCall.findUnique({
-      where: {
-        id: callId,
-      },
+      where: { id: callId },
     });
 
     if (!call) {
@@ -115,9 +92,7 @@ export class TaxiController {
     const rawAssignedUnitId = data.assignedUnitId;
     const assignedUnitId =
       rawAssignedUnitId === null
-        ? {
-            disconnect: true,
-          }
+        ? { disconnect: true }
         : data.assignedUnitId
         ? { connect: { id: data.assignedUnitId } }
         : undefined;
@@ -134,14 +109,7 @@ export class TaxiController {
         assignedUnit: assignedUnitId,
         name: data.name ?? null,
       },
-      include: {
-        assignedUnit: {
-          select: CITIZEN_SELECTS,
-        },
-        creator: {
-          select: CITIZEN_SELECTS,
-        },
-      },
+      include: towIncludes,
     });
 
     this.socket.emitUpdateTaxiCall(updated);
@@ -158,9 +126,7 @@ export class TaxiController {
   })
   async endTaxiCall(@PathParams("id") callId: string) {
     const call = await prisma.taxiCall.findUnique({
-      where: {
-        id: callId,
-      },
+      where: { id: callId },
     });
 
     if (!call) {

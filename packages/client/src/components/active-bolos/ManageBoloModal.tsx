@@ -165,10 +165,10 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                       setFieldValue("color", suggestion.color);
                     }}
                     Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
-                      <p>
+                      <div className="flex items-center">
                         {suggestion.plate.toUpperCase()} (
                         {suggestion.model.value.value.toUpperCase()})
-                      </p>
+                      </div>
                     )}
                   />
                 </FormField>

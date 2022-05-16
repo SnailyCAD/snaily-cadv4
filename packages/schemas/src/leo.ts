@@ -83,3 +83,9 @@ export const CUSTOM_FIELD_SEARCH_SCHEMA = z.object({
   customFieldId: z.string().min(1),
   query: z.string().min(1),
 });
+
+export const NOTE_SCHEMA = z.object({
+  type: z.string().regex(/VEHICLE|CITIZEN/),
+  text: z.string().min(1),
+  itemId: z.string().min(2),
+});

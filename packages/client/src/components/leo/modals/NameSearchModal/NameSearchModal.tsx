@@ -8,10 +8,9 @@ import { Form, Formik, useFormikContext } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { CustomFieldCategory, Citizen, RecordType } from "@snailycad/types";
+import { CustomFieldCategory, Citizen, RecordType, BoloType } from "@snailycad/types";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import format from "date-fns/format";
-// import { VehiclesAndWeaponsSection } from "./VehiclesAndWeapons";
 import { NameSearchTabsContainer } from "./tabs/TabsContainer";
 import { NameSearchResult, useNameSearch } from "state/search/nameSearchState";
 import { normalizeValue } from "context/ValuesContext";
@@ -33,6 +32,7 @@ import { ManageCitizenFlagsModal } from "./ManageCitizenFlagsModal";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
+import { useBolos } from "hooks/realtime/useBolos";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -68,12 +68,25 @@ export function NameSearchModal() {
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { bolos } = useBolos();
 
   const { openModal } = useModal();
   const isLeo = router.pathname === "/officer";
   const { results, currentResult, setCurrentResult, setResults } = useNameSearch();
 
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
+
+  const bolo = React.useMemo(() => {
+    if (!currentResult) return null;
+    if (bolos.length <= 0) return null;
+
+    const boloWithName = bolos.find((v) => {
+      const name = `${currentResult.name} ${currentResult.surname}`.toLowerCase();
+      return v.type === BoloType.PERSON && v.name?.toLowerCase() === name;
+    });
+
+    return boloWithName ?? null;
+  }, [bolos, currentResult]);
 
   React.useEffect(() => {
     if (!isOpen(ModalIds.NameSearch)) {
@@ -257,6 +270,12 @@ export function NameSearchModal() {
                           "MMMM do yyyy",
                         ),
                       })}
+                    </div>
+                  ) : null}
+
+                  {bolo ? (
+                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
+                      {t("citizenBoloPlaced")}
                     </div>
                   ) : null}
 

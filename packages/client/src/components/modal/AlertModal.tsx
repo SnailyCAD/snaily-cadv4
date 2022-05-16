@@ -1,10 +1,11 @@
+import * as React from "react";
 import { Button } from "components/Button";
 import { Loader } from "components/Loader";
 import { classNames } from "lib/classNames";
 import { useModal } from "state/modalState";
-import type { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Modal, ModalProps } from "./Modal";
+import type { ModalIds } from "types/ModalIds";
 
 type Props = Pick<ModalProps, "title" | "className"> & {
   id: ModalIds;
@@ -13,6 +14,7 @@ type Props = Pick<ModalProps, "title" | "className"> & {
   onDeleteClick(): void;
   onClose?(): void;
 
+  forceOpen?: boolean;
   deleteText?: string;
 };
 
@@ -27,10 +29,11 @@ export function AlertModal(props: Props) {
 
   return (
     <Modal
-      className={classNames("w-[550px]", props.className)}
+      className={classNames("w-[550px] z-[9999]", props.className)}
       title={props.title}
       onClose={handleClose}
-      isOpen={isOpen(props.id)}
+      isOpen={props.forceOpen ?? isOpen(props.id)}
+      isAlert
     >
       <p className="my-3">{props.description}</p>
       <div className="flex items-center justify-end gap-2 mt-2">

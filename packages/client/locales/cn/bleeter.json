@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "布利特",
+    "noPosts": "目前还没有更出色的帖子。稍后再回来查看",
+    "createBleet": "创造哔哔声",
+    "editBleet": "编辑哔哔声",
+    "deleteBleet": "删除 Bleet",
+    "viewBleet": "查看漂流",
+    "headerImage": "页眉图像",
+    "bleetTitle": "曦曦标题",
+    "bleetBody": "飘飘的身体",
+    "alert_deleteBleet": "是否确实要删除\"<span>{title}</span>\"？此操作无法撤消."
+  }
+}
