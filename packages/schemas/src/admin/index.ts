@@ -48,6 +48,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   taxiRoles: z.array(z.any()).nullable().optional(),
   adminRoleId: z.string().nullable().optional(),
   whitelistedRoleId: z.string().nullable().optional(),
+  courthouseRoles: z.array(z.any()).nullable().optional(),
 
   adminRolePermissions: z.array(z.string()).nullable().optional(),
   leoRolePermissions: z.array(z.string()).nullable().optional(),
@@ -56,6 +57,7 @@ export const DISCORD_SETTINGS_SCHEMA = z.object({
   dispatchRolePermissions: z.array(z.string()).nullable().optional(),
   towRolePermissions: z.array(z.string()).nullable().optional(),
   taxiRolePermissions: z.array(z.string()).nullable().optional(),
+  courthouseRolePermissions: z.array(z.string()).nullable().optional(),
 });
 
 /** discord webhooks */

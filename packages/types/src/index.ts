@@ -144,6 +144,7 @@ export interface DiscordRoles {
   leoSupervisorRoles?: DiscordRole[];
   towRoles?: DiscordRole[];
   taxiRoles?: DiscordRole[];
+  courthouseRoles?: DiscordRole[];
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;
@@ -157,6 +158,7 @@ export interface DiscordRoles {
   dispatchRolePermissions: Permissions[];
   towRolePermissions: Permissions[];
   taxiRolePermissions: Permissions[];
+  courthouseRolePermissions: Permissions[];
 }
 
 /**
