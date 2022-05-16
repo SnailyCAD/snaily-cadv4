@@ -1,4 +1,4 @@
-import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
+import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
 import type { CourtEntry } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -24,18 +24,19 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
   const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
 
-  const validate = handleValidate(NAME_CHANGE_REQUEST_SCHEMA);
+  const validate = handleValidate(COURT_ENTRY_SCHEMA);
   const INITIAL_VALUES = {
     descriptionData: courtEntry?.descriptionData ?? DEFAULT_EDITOR_DATA,
     title: courtEntry?.title ?? "",
     caseNumber: courtEntry?.caseNumber ?? "",
+    dates: [],
   };
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/name-change", {
+    const { json } = await execute("/court-entries", {
       method: "POST",
       data: values,
       helpers,
@@ -55,7 +56,7 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ values, errors, isValid, setFieldValue, handleChange }) => (
+        {({ values, errors, setFieldValue, handleChange }) => (
           <Form>
             <FormField label={t("title")} errorMessage={errors.title}>
               <Input name="title" value={values.title} onChange={handleChange} />
@@ -83,11 +84,7 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
               >
                 {common("cancel")}
               </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
+              <Button className="flex items-center" disabled={state === "loading"} type="submit">
                 {state === "loading" ? <Loader className="mr-2" /> : null}
                 {courtEntry ? common("save") : common("create")}
               </Button>

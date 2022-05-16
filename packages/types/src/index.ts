@@ -1025,7 +1025,7 @@ export interface CourtEntry {
 
 export interface CourtDate {
   id: string;
-  note: string;
+  note: string | null;
   date: Date;
   courtEntryId: string;
 }

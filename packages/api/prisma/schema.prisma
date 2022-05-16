@@ -1065,7 +1065,7 @@ model CourtEntry {
 
 model CourtDate {
   id           String     @id @default(uuid())
-  note         String
+  note         String?
   date         DateTime
   courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id])
   courtEntryId String

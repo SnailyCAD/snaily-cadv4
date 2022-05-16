@@ -48,11 +48,22 @@ export function CourtEntriesTab(props: Props) {
                 {common("viewDescription")}
               </Button>
             ),
+            actions: (
+              <>
+                <Button small variant="success">
+                  {common("manage")}
+                </Button>
+                <Button className="ml-2" small variant="danger">
+                  {common("delete")}
+                </Button>
+              </>
+            ),
           }))}
           columns={[
             { Header: t("title"), accessor: "title" },
             { Header: common("description"), accessor: "description" },
             { Header: common("createdAt"), accessor: "createdAt" },
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}
