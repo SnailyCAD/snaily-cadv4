@@ -75,6 +75,8 @@ export const enum ModalIds {
 
   RequestExpungement = "RequestExpungementModal",
   RequestNameChange = "RequestNameChangeModal",
+  ManageCourtEntry = "ManageCourtEntryModal",
+  ManageCourtDate = "ManageCourtDateModal",
 
   Description = "DescriptionModal",
   ManageNote = "ManageNoteModal",
@@ -112,4 +114,6 @@ export const enum ModalIds {
   AlertDeleteUnitQualification = "AlertDeleteUnitQualificationModal",
   AlertDeleteUnit = "AlertDeleteUnitModal",
   AlertDeleteNote = "AlertDeleteNoteModal",
+  AlertDeleteCourtDate = "AlertDeleteCourtDateModal",
+  AlertDeleteCourtEntry = "AlertDeleteCourtEntryModal",
 }

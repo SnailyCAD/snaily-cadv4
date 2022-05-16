@@ -1013,6 +1013,23 @@ export interface NameChangeRequest {
   updatedAt: Date;
 }
 
+export interface CourtEntry {
+  id: string;
+  title: string;
+  caseNumber: string;
+  descriptionData: DescriptionData;
+  createdAt: Date;
+  updatedAt: Date;
+  dates?: CourtDate[];
+}
+
+export interface CourtDate {
+  id: string;
+  note: string | null;
+  date: Date;
+  courtEntryId: string;
+}
+
 /**
  * Model EmsFdDeputy
  *
