@@ -1067,7 +1067,7 @@ model CourtDate {
   id           String     @id @default(uuid())
   note         String?
   date         DateTime
-  courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id])
+  courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id], onDelete: Cascade)
   courtEntryId String
 }
 

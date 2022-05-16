@@ -1,4 +1,4 @@
-import { Get, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams, UseBeforeEach } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { IsAuth } from "middlewares/IsAuth";
@@ -71,5 +71,22 @@ export class CourtEntryController {
     const dates = [];
 
     return { ...updated, dates };
+  }
+
+  @Delete("/:id")
+  async deleteCourtEntry(@PathParams("id") id: string) {
+    const entry = await prisma.courtEntry.findUnique({
+      where: { id },
+    });
+
+    if (!entry) {
+      throw new NotFound("entryNotFound");
+    }
+
+    await prisma.courtEntry.delete({
+      where: { id },
+    });
+
+    return true;
   }
 }

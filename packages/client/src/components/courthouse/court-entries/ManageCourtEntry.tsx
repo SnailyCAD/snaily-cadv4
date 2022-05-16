@@ -16,10 +16,11 @@ import { CourtEntryDates } from "./CourtEntryDates";
 
 interface Props {
   courtEntry: CourtEntry | null;
+  onClose?(): void;
   onCreate?(entry: CourtEntry): void;
 }
 
-export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
+export function ManageCourtEntry({ courtEntry, onClose, onCreate }: Props) {
   const { closeModal, isOpen } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -32,6 +33,11 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
     caseNumber: courtEntry?.caseNumber ?? "",
     dates: courtEntry?.dates ?? [],
   };
+
+  function handleClose() {
+    onClose?.();
+    closeModal(ModalIds.ManageCourtEntry);
+  }
 
   async function onSubmit(
     values: typeof INITIAL_VALUES,
@@ -51,7 +57,7 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
 
   return (
     <Modal
-      onClose={() => closeModal(ModalIds.ManageCourtEntry)}
+      onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageCourtEntry)}
       title={t("manageCourtEntry")}
       className="w-[750px]"
@@ -84,11 +90,7 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
             />
 
             <footer className="flex justify-end mt-5">
-              <Button
-                onClick={() => closeModal(ModalIds.ManageCourtEntry)}
-                variant="cancel"
-                type="reset"
-              >
+              <Button onClick={handleClose} variant="cancel" type="reset">
                 {common("cancel")}
               </Button>
               <Button className="flex items-center" disabled={state === "loading"} type="submit">
