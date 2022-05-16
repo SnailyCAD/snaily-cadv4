@@ -40,6 +40,7 @@ export function DiscordRolesTab() {
     leoSupervisorRoles: makeRoleValues(discordRoles.leoSupervisorRoles),
     towRoles: makeRoleValues(discordRoles.towRoles),
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
+    courthouseRoles: makeRoleValues(discordRoles.courthouseRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
     adminRolePermissions: makeValue(discordRoles.adminRolePermissions),
@@ -49,6 +50,7 @@ export function DiscordRolesTab() {
     dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions),
     towRolePermissions: makeValue(discordRoles.towRolePermissions),
     taxiRolePermissions: makeValue(discordRoles.taxiRolePermissions),
+    courthouseRolePermissions: makeValue(discordRoles.courthouseRolePermissions),
   };
 
   async function refreshRoles() {
@@ -270,6 +272,29 @@ export function DiscordRolesTab() {
               <SelectPermissionsField
                 name="taxiRolePermissions"
                 permissions={defaultPermissions.defaultTaxiPermissions}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="The Discord role that represents the Courthouse permission"
+              errorMessage={errors.courthouseRoles as string}
+              label="Courthouse Role"
+            >
+              <Select
+                isClearable
+                isMulti
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.courthouseRoles}
+                name="courthouseRoles"
+                onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="courthouseRolePermissions"
+                permissions={defaultPermissions.allDefaultAdminPermissions}
               />
             </SettingsFormField>
 

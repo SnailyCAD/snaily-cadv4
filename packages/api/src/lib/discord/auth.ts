@@ -23,6 +23,7 @@ export async function updateMemberRolesLogin(
       towRoles: true,
       taxiRoles: true,
       leoSupervisorRoles: true,
+      courthouseRoles: true,
     },
   });
 
@@ -43,6 +44,7 @@ export async function updateMemberRolesLogin(
   const isTow = hasRoleArr(discordRoles.towRoles, discordMember.roles);
   const isTaxi = hasRoleArr(discordRoles.taxiRoles, discordMember.roles);
   const isSupervisor = hasRoleArr(discordRoles.leoSupervisorRoles, discordMember.roles);
+  const isCourthouse = hasRoleArr(discordRoles.courthouseRoles, discordMember.roles);
   const isAdmin = hasRole(discordRoles.adminRoleId, discordMember.roles);
 
   const permissions = {
@@ -52,6 +54,7 @@ export async function updateMemberRolesLogin(
     isDispatch: discordRoles.dispatchRolePermissions,
     isTow: discordRoles.towRolePermissions,
     isTaxi: discordRoles.taxiRolePermissions,
+    isCourthouse: discordRoles.courthouseRolePermissions,
     isAdmin: discordRoles.adminRolePermissions,
   };
 
@@ -63,6 +66,7 @@ export async function updateMemberRolesLogin(
     ["isTow", isTow],
     ["isTaxi", isTaxi],
     ["isSupervisor", isSupervisor],
+    ["isCourthouse", isCourthouse],
     ["isAdmin", isAdmin],
   ] as const;
 
