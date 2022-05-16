@@ -57,7 +57,6 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
         {({ values, errors, handleChange }) => (
           <Form>
             <FormField label={t("date")} errorMessage={errors.date as string}>
-              {/* todo: set correct value */}
               <Input
                 name="date"
                 type="date"
