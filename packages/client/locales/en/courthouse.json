@@ -18,6 +18,11 @@
     "deleteCourtEntry": "Delete court entry",
     "manageCourtEntry": "Manage court entry",
     "caseNumber": "Case Number",
-    "title": "Title"
+    "title": "Title",
+    "dates": "Dates",
+    "addDate": "Add Date",
+    "manageCourtDate": "Manage court date",
+    "date": "Date",
+    "note": "Note"
   }
 }

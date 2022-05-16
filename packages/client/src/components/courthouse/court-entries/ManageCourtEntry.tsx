@@ -12,6 +12,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/Editor";
+import { CourtEntryDates } from "./CourtEntryDates";
 
 interface Props {
   courtEntry: CourtEntry | null;
@@ -29,7 +30,7 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
     descriptionData: courtEntry?.descriptionData ?? DEFAULT_EDITOR_DATA,
     title: courtEntry?.title ?? "",
     caseNumber: courtEntry?.caseNumber ?? "",
-    dates: [],
+    dates: courtEntry?.dates ?? [],
   };
 
   async function onSubmit(
@@ -75,6 +76,12 @@ export function ManageCourtEntry({ courtEntry, onCreate }: Props) {
                 onChange={(v) => setFieldValue("descriptionData", v)}
               />
             </FormField>
+
+            <CourtEntryDates
+              onCreate={(date) => setFieldValue("dates", [...values.dates, date])}
+              onUpdate={() => "TODO"}
+              dates={values.dates}
+            />
 
             <footer className="flex justify-end mt-5">
               <Button

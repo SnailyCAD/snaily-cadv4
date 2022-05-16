@@ -12,7 +12,7 @@ export const NAME_CHANGE_REQUEST_SCHEMA = z.object({
   newSurname: z.string().min(2).max(255),
 });
 
-const COURT_DATE_SCHEMA = z.object({
+export const COURT_DATE_SCHEMA = z.object({
   note: z.string().nullable().optional(),
   date: z.any(),
 });

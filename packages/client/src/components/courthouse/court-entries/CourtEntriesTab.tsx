@@ -27,6 +27,11 @@ export function CourtEntriesTab(props: Props) {
     openModal(ModalIds.Description, entry);
   }
 
+  function handleManageClick(entry: CourtEntry) {
+    setTempEntry(entry);
+    openModal(ModalIds.ManageCourtEntry);
+  }
+
   return (
     <TabsContent value="courtEntriesTab">
       <header className="flex justify-between items-center">
@@ -50,7 +55,7 @@ export function CourtEntriesTab(props: Props) {
             ),
             actions: (
               <>
-                <Button small variant="success">
+                <Button onClick={() => handleManageClick(entry)} small variant="success">
                   {common("manage")}
                 </Button>
                 <Button className="ml-2" small variant="danger">
