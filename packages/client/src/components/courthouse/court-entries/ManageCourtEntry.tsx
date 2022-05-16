@@ -18,9 +18,10 @@ interface Props {
   courtEntry: CourtEntry | null;
   onClose?(): void;
   onCreate?(entry: CourtEntry): void;
+  onUpdate?(entry: CourtEntry): void;
 }
 
-export function ManageCourtEntry({ courtEntry, onClose, onCreate }: Props) {
+export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Props) {
   const { closeModal, isOpen } = useModal();
   const common = useTranslations("Common");
   const { state, execute } = useFetch();
@@ -43,15 +44,28 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/court-entries", {
-      method: "POST",
-      data: values,
-      helpers,
-    });
+    if (courtEntry) {
+      const { json } = await execute(`/court-entries/${courtEntry.id}`, {
+        method: "PUT",
+        data: values,
+        helpers,
+      });
 
-    if (json.id) {
-      onCreate?.(json);
-      closeModal(ModalIds.ManageCourtEntry);
+      if (json.id) {
+        onUpdate?.(json);
+        closeModal(ModalIds.ManageCourtEntry);
+      }
+    } else {
+      const { json } = await execute("/court-entries", {
+        method: "POST",
+        data: values,
+        helpers,
+      });
+
+      if (json.id) {
+        onCreate?.(json);
+        closeModal(ModalIds.ManageCourtEntry);
+      }
     }
   }
 

@@ -109,7 +109,15 @@ export function CourtEntriesTab(props: Props) {
 
       <ManageCourtEntry
         courtEntry={tempEntry}
-        onCreate={(request) => setEntries((p) => [request, ...p])}
+        onCreate={(entry) => setEntries((p) => [entry, ...p])}
+        onUpdate={(entry) =>
+          tempEntry &&
+          setEntries((p) => {
+            const idx = p.indexOf(tempEntry);
+            p[idx] = entry;
+            return p;
+          })
+        }
         onClose={() => setTempEntry(null)}
       />
       {tempEntry?.descriptionData ? (
