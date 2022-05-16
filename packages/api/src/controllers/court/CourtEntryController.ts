@@ -52,11 +52,16 @@ export class CourtEntryController {
 
     const entry = await prisma.courtEntry.findUnique({
       where: { id },
+      include: { dates: true },
     });
 
     if (!entry) {
       throw new NotFound("entryNotFound");
     }
+
+    await prisma.$transaction(
+      entry.dates.map((date) => prisma.courtDate.delete({ where: { id: date.id } })),
+    );
 
     const updated = await prisma.courtEntry.update({
       where: { id: entry.id },
@@ -67,8 +72,17 @@ export class CourtEntryController {
       },
     });
 
-    // todo
-    const dates = [];
+    const dates = await prisma.$transaction(
+      data.dates.map((date) =>
+        prisma.courtDate.create({
+          data: {
+            date: new Date(date.date),
+            note: date.note,
+            courtEntryId: entry.id,
+          },
+        }),
+      ),
+    );
 
     return { ...updated, dates };
   }

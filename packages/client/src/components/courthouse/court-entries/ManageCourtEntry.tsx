@@ -1,5 +1,5 @@
 import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
-import type { CourtEntry } from "@snailycad/types";
+import type { CourtDate, CourtEntry } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -99,7 +99,13 @@ export function ManageCourtEntry({ courtEntry, onClose, onCreate, onUpdate }: Pr
 
             <CourtEntryDates
               onCreate={(date) => setFieldValue("dates", [...values.dates, date])}
-              onUpdate={() => "TODO"}
+              onUpdate={(date) => {
+                const dates = [...values.dates];
+                const idx = dates.findIndex((v) => v.id === date.id);
+                dates[idx] = date as CourtDate;
+
+                setFieldValue("dates", dates);
+              }}
               dates={values.dates}
             />
 

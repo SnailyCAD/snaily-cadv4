@@ -67,6 +67,7 @@ export function CourtEntriesTab(props: Props) {
           defaultSort={{ columnId: "createdAt", descending: true }}
           data={entries.map((entry) => ({
             title: entry.title,
+            caseNumber: entry.caseNumber,
             createdAt: <FullDate>{entry.createdAt}</FullDate>,
             description: (
               <Button small onClick={() => handleViewDescription(entry)}>
@@ -91,6 +92,7 @@ export function CourtEntriesTab(props: Props) {
           }))}
           columns={[
             { Header: t("title"), accessor: "title" },
+            { Header: t("caseNumber"), accessor: "caseNumber" },
             { Header: common("description"), accessor: "description" },
             { Header: common("createdAt"), accessor: "createdAt" },
             { Header: common("actions"), accessor: "actions" },
