@@ -46,6 +46,7 @@ const CAD_SELECT = (user?: Pick<User, "rank">) => ({
             leoSupervisorRoles: true,
             taxiRoles: true,
             towRoles: true,
+            courthouseRoles: true,
           },
         }
       : true,

@@ -40,6 +40,7 @@ export function DiscordRolesTab() {
     leoSupervisorRoles: makeRoleValues(discordRoles.leoSupervisorRoles),
     towRoles: makeRoleValues(discordRoles.towRoles),
     taxiRoles: makeRoleValues(discordRoles.taxiRoles),
+    courthouseRoles: makeRoleValues(discordRoles.courthouseRoles),
     adminRoleId: discordRoles.adminRoleId,
     whitelistedRoleId: discordRoles.whitelistedRoleId,
     adminRolePermissions: makeValue(discordRoles.adminRolePermissions),
@@ -49,6 +50,7 @@ export function DiscordRolesTab() {
     dispatchRolePermissions: makeValue(discordRoles.dispatchRolePermissions),
     towRolePermissions: makeValue(discordRoles.towRolePermissions),
     taxiRolePermissions: makeValue(discordRoles.taxiRolePermissions),
+    courthouseRolePermissions: makeValue(discordRoles.courthouseRolePermissions),
   };
 
   async function refreshRoles() {
@@ -60,23 +62,29 @@ export function DiscordRolesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
+    function toValue(arr: SelectValue<any>[]) {
+      return arr.map((v) => v.value);
+    }
+
     const { json } = await execute("/admin/manage/cad-settings/discord", {
       method: "POST",
       data: {
         ...values,
-        leoRoles: values.leoRoles.map((v) => v.value),
-        emsFdRoles: values.emsFdRoles.map((v) => v.value),
-        dispatchRoles: values.dispatchRoles.map((v) => v.value),
-        towRoles: values.towRoles.map((v) => v.value),
-        taxiRoles: values.taxiRoles.map((v) => v.value),
-        leoSupervisorRoles: values.leoSupervisorRoles.map((v) => v.value),
-        adminRolePermissions: values.adminRolePermissions.map((v) => v.value),
-        leoRolePermissions: values.leoRolePermissions.map((v) => v.value),
-        leoSupervisorRolePermissions: values.leoSupervisorRolePermissions.map((v) => v.value),
-        emsFdRolePermissions: values.emsFdRolePermissions.map((v) => v.value),
-        dispatchRolePermissions: values.dispatchRolePermissions.map((v) => v.value),
-        towRolePermissions: values.towRolePermissions.map((v) => v.value),
-        taxiRolePermissions: values.taxiRolePermissions.map((v) => v.value),
+        leoRoles: toValue(values.leoRoles),
+        emsFdRoles: toValue(values.emsFdRoles),
+        dispatchRoles: toValue(values.dispatchRoles),
+        towRoles: toValue(values.towRoles),
+        taxiRoles: toValue(values.taxiRoles),
+        courthouseRoles: toValue(values.courthouseRoles),
+        leoSupervisorRoles: toValue(values.leoSupervisorRoles),
+        adminRolePermissions: toValue(values.adminRolePermissions),
+        leoRolePermissions: toValue(values.leoRolePermissions),
+        leoSupervisorRolePermissions: toValue(values.leoSupervisorRolePermissions),
+        emsFdRolePermissions: toValue(values.emsFdRolePermissions),
+        dispatchRolePermissions: toValue(values.dispatchRolePermissions),
+        towRolePermissions: toValue(values.towRolePermissions),
+        taxiRolePermissions: toValue(values.taxiRolePermissions),
+        courthouseRolePermissions: toValue(values.courthouseRolePermissions),
       },
     });
 
@@ -270,6 +278,29 @@ export function DiscordRolesTab() {
               <SelectPermissionsField
                 name="taxiRolePermissions"
                 permissions={defaultPermissions.defaultTaxiPermissions}
+              />
+            </SettingsFormField>
+
+            <SettingsFormField
+              description="The Discord role that represents the Courthouse permission"
+              errorMessage={errors.courthouseRoles as string}
+              label="Courthouse Role"
+            >
+              <Select
+                isClearable
+                isMulti
+                values={roles.map((role) => ({
+                  value: role.id,
+                  label: role.name,
+                }))}
+                value={values.courthouseRoles}
+                name="courthouseRoles"
+                onChange={handleChange}
+              />
+
+              <SelectPermissionsField
+                name="courthouseRolePermissions"
+                permissions={defaultPermissions.defaultCourthousePermissions}
               />
             </SettingsFormField>
 

@@ -32,6 +32,7 @@ export async function updateMemberRoles(
       towRoles: true,
       taxiRoles: true,
       leoSupervisorRoles: true,
+      courthouseRoles: true,
     },
   });
 
@@ -92,6 +93,14 @@ export async function updateMemberRoles(
       permissionsToCheck: discordRoles.taxiRolePermissions,
     }),
   );
+  const courthouseRoles = makeRolesArr(
+    discordRoles.courthouseRoles,
+    hasPermissionWithFallback({
+      fallback: user.isTaxi,
+      userPermissions: user.permissions,
+      permissionsToCheck: discordRoles.courthouseRolePermissions,
+    }),
+  );
 
   const data = [
     ...leoRoles,
@@ -100,6 +109,7 @@ export async function updateMemberRoles(
     ...dispatchRoles,
     ...towRoles,
     ...taxiRoles,
+    ...courthouseRoles,
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
     {
       roleId: discordRoles.whitelistedRoleId,
