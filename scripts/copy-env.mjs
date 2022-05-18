@@ -5,21 +5,24 @@ import { join } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 
 const DEFAULT_PORT = "3000";
-const WINDOWS_PLATFORM = "win32";
 
 function addPortToClientPackageJson() {
-  if (process.env.NODE_ENV === "development") return;
-  let dir = join(process.cwd(), "package.json");
-  const isWin = process.platform === WINDOWS_PLATFORM;
-
-  if (!isWin && !dir.includes("/packages/client")) {
-    dir = join(process.cwd(), "packages/client", "package.json");
-  }
-
-  let json = readFileSync(dir, "utf8");
   const port = process.env.PORT_CLIENT;
 
-  if (port && port !== DEFAULT_PORT) {
+  if (process.env.NODE_ENV === "development") return;
+  if (DEFAULT_PORT === port) return;
+
+  let dir = join(process.cwd(), "packages", "client");
+  const includesMultipleClients = dir.split("/").filter((v) => v === "client").length >= 2;
+
+  if (includesMultipleClients) {
+    dir = dir.replaceAll("packages/client", "");
+    dir = join(dir, "packages/client");
+  }
+
+  let json = readFileSync(join(dir, "package.json"), "utf8");
+
+  if (port) {
     json = JSON.parse(json);
     json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
