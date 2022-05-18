@@ -6,6 +6,12 @@ export const SELECT_VALUE = z.object({
   label: z.any(),
 });
 
+export const INDIVIDUAL_CALLSIGN_SCHEMA = z.object({
+  callsign: z.string().max(255),
+  callsign2: z.string().max(255),
+  divisionId: z.string().min(2).max(255),
+});
+
 export const CREATE_OFFICER_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   department: z.string().min(2).max(255),
@@ -15,6 +21,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   badgeNumber: z.number().min(1),
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
   image: z.any().or(z.string()).optional(),
+  callsigns: z.array(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_SCHEMA = z.object({
@@ -28,6 +35,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
   badgeNumber: z.number().min(1),
+  callsigns: z.array(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({

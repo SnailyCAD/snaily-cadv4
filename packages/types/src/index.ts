@@ -672,6 +672,14 @@ export interface Officer {
   activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username" | "steamId">;
+  callsigns?: IndividualDivisionCallsign[];
+}
+
+export interface IndividualDivisionCallsign {
+  id: string;
+  divisionId: string;
+  callsign: string;
+  callsign2: string;
 }
 
 /**
