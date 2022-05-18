@@ -106,17 +106,6 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
   }
 
-  function makeDivisionsObjectMap() {
-    const obj = {} as Record<string, IndividualDivisionCallsign>;
-    const callsigns = officer?.callsigns ?? [];
-
-    for (const callsign of callsigns) {
-      obj[callsign.divisionId] = callsign;
-    }
-
-    return obj;
-  }
-
   const validate = handleValidate(CREATE_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
     department: getUnitDepartment(officer)?.id ?? "",
@@ -127,7 +116,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
     image: undefined,
-    callsigns: makeDivisionsObjectMap(),
+    callsigns: officer ? makeDivisionsObjectMap(officer) : {},
   };
 
   return (
@@ -253,4 +242,15 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       </Formik>
     </Modal>
   );
+}
+
+export function makeDivisionsObjectMap(officer: Officer) {
+  const obj = {} as Record<string, IndividualDivisionCallsign>;
+  const callsigns = officer.callsigns ?? [];
+
+  for (const callsign of callsigns) {
+    obj[callsign.divisionId] = callsign;
+  }
+
+  return obj;
 }

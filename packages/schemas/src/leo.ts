@@ -41,6 +41,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
