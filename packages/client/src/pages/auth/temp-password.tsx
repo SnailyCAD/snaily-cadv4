@@ -91,7 +91,9 @@ export default function TempPassword() {
           )}
         </Formik>
         {cad?.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">v{cad.version}</p>
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+            v{cad.version.currentVersion} - {cad.version.currentCommitHash}
+          </p>
         ) : null}
       </main>
     </>

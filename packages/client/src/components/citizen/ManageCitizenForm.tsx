@@ -426,7 +426,7 @@ export function ManageCitizenForm({
   );
 }
 
-function isDate(value: string | null | Date) {
+export function isDate(value: string | null | Date) {
   if (!value) return false;
 
   try {

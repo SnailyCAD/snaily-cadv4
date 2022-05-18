@@ -51,6 +51,7 @@ export function GiveTempPasswordModal({ user }: Props) {
   return (
     <Modal
       className="w-[600px]"
+      dialogClassName="z-[9999]"
       title={t("giveTempPassword")}
       onClose={() => closeModal(ModalIds.GiveTempPassword)}
       isOpen={isOpen(ModalIds.GiveTempPassword)}

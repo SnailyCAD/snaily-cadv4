@@ -159,6 +159,7 @@ model DiscordRoles {
   adminRoleId         String?
   whitelistedRoleId   String?
   whitelistedRole     DiscordRole?  @relation("whitelistedRole", fields: [whitelistedRoleId], references: [id])
+  courthouseRoles     DiscordRole[] @relation("courthouseRoles")
 
   adminRolePermissions         String[]
   leoRolePermissions           String[]
@@ -167,6 +168,7 @@ model DiscordRoles {
   dispatchRolePermissions      String[]
   towRolePermissions           String[]
   taxiRolePermissions          String[]
+  courthouseRolePermissions    String[]
 
   roles DiscordRole[]
   cad   cad[]
@@ -191,6 +193,7 @@ model DiscordRole {
   leoSupervisorRolesArr DiscordRoles[] @relation("leoSupervisorRoles")
   taxiRolesArr          DiscordRoles[] @relation("taxiRoles")
   towRolesArr           DiscordRoles[] @relation("towRoles")
+  courthouseRoles       DiscordRoles[] @relation("courthouseRoles")
 }
 
 model User {
@@ -1051,6 +1054,24 @@ model NameChangeRequest {
   status     WhitelistStatus @default(PENDING)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @default(now()) @updatedAt
+}
+
+model CourtEntry {
+  id              String      @id @default(uuid())
+  title           String
+  caseNumber      String
+  descriptionData Json?
+  dates           CourtDate[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @default(now()) @updatedAt
+}
+
+model CourtDate {
+  id           String     @id @default(uuid())
+  note         String?
+  date         DateTime
+  courtEntry   CourtEntry @relation(fields: [courtEntryId], references: [id], onDelete: Cascade)
+  courtEntryId String
 }
 
 // ems-fd

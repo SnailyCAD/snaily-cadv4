@@ -320,11 +320,10 @@ export class EmsFdController {
     return medicalRecord;
   }
 
-  @Use(ActiveDeputy)
   @Post("/declare/:citizenId")
   @UsePermissions({
-    fallback: (u) => u.isEmsFd,
-    permissions: [Permissions.EmsFd],
+    fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
+    permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
   async declareCitizenDeadOrAlive(@PathParams("citizenId") citizenId: string) {
     const citizen = await prisma.citizen.findUnique({

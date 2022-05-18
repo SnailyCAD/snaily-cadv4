@@ -81,6 +81,7 @@ export class DiscordSettingsController {
       emsFdRoles: data.emsFdRoles,
       leoSupervisorRoles: data.leoSupervisorRoles,
       dispatchRoles: data.dispatchRoles,
+      courthouseRoles: data.courthouseRoles,
       towRoles: data.towRoles,
       taxiRoles: data.taxiRoles,
       adminRoleId: data.adminRoleId,
@@ -106,6 +107,7 @@ export class DiscordSettingsController {
       dispatchRolePermissions: data.dispatchRolePermissions ?? [],
       towRolePermissions: data.towRolePermissions ?? [],
       taxiRolePermissions: data.taxiRolePermissions ?? [],
+      courthouseRolePermissions: data.courthouseRolePermissions ?? [],
     };
 
     const discordRoles = await prisma.discordRoles.upsert({
@@ -119,6 +121,7 @@ export class DiscordSettingsController {
         towRoles: true,
         taxiRoles: true,
         dispatchRoles: true,
+        courthouseRoles: true,
       },
     });
 
@@ -158,6 +161,12 @@ export class DiscordSettingsController {
         discordRoles: discordRoles.taxiRoles,
         newRoles: (data.taxiRoles as string[] | null) ?? [],
         type: "taxiRoles",
+      }),
+      this.updateRoles({
+        discordRoleId: discordRoles.id,
+        discordRoles: discordRoles.courthouseRoles,
+        newRoles: (data.courthouseRoles as string[] | null) ?? [],
+        type: "courthouseRoles",
       }),
     ]);
 
@@ -203,5 +212,6 @@ interface UpdateRolesOptions {
     | "leoSupervisorRoles"
     | "dispatchRoles"
     | "towRoles"
-    | "taxiRoles";
+    | "taxiRoles"
+    | "courthouseRoles";
 }

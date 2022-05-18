@@ -21,6 +21,18 @@ import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 
+const vehiclesInclude = {
+  model: { include: { value: true } },
+  registrationStatus: true,
+  insuranceStatus: true,
+  TruckLog: true,
+  Business: true,
+  citizen: { include: { warrants: true } },
+  flags: true,
+  customFields: { include: { field: true } },
+  notes: true,
+};
+
 const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
@@ -31,6 +43,7 @@ const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
   return {
     officers: { select: { department: { select: { isConfidential: true } } } },
     ...citizenInclude,
+    vehicles: { include: vehiclesInclude },
     businesses: true,
     medicalRecords: true,
     customFields: { include: { field: true } },
@@ -57,18 +70,6 @@ const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
     },
     dlCategory: { include: { value: true } },
   };
-};
-
-const vehiclesInclude = {
-  model: { include: { value: true } },
-  registrationStatus: true,
-  insuranceStatus: true,
-  TruckLog: true,
-  Business: true,
-  citizen: { include: { warrants: true } },
-  flags: true,
-  customFields: { include: { field: true } },
-  notes: true,
 };
 
 const weaponsInclude = {

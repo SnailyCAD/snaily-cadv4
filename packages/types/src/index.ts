@@ -144,6 +144,7 @@ export interface DiscordRoles {
   leoSupervisorRoles?: DiscordRole[];
   towRoles?: DiscordRole[];
   taxiRoles?: DiscordRole[];
+  courthouseRoles?: DiscordRole[];
   adminRoleId: string | null;
   adminRole: DiscordRole | null;
   whitelistedRoleId: string | null;
@@ -157,6 +158,7 @@ export interface DiscordRoles {
   dispatchRolePermissions: Permissions[];
   towRolePermissions: Permissions[];
   taxiRolePermissions: Permissions[];
+  courthouseRolePermissions: Permissions[];
 }
 
 /**
@@ -1011,6 +1013,23 @@ export interface NameChangeRequest {
   status: WhitelistStatus;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface CourtEntry {
+  id: string;
+  title: string;
+  caseNumber: string;
+  descriptionData: DescriptionData;
+  createdAt: Date;
+  updatedAt: Date;
+  dates?: CourtDate[];
+}
+
+export interface CourtDate {
+  id: string;
+  note: string | null;
+  date: Date;
+  courtEntryId: string;
 }
 
 /**

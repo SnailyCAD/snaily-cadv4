@@ -32,15 +32,16 @@ export async function updateMemberRoles(
       towRoles: true,
       taxiRoles: true,
       leoSupervisorRoles: true,
+      courthouseRoles: true,
     },
   });
 
   if (!discordRoles) return;
   const rest = getRest();
 
-  const discordMember = (await rest.get(
-    Routes.guildMember(GUILD_ID, user.discordId),
-  )) as RESTGetAPIGuildMemberResult | null;
+  const discordMember = (await rest
+    .get(Routes.guildMember(GUILD_ID, user.discordId))
+    .catch(() => null)) as RESTGetAPIGuildMemberResult | null;
 
   if (!discordMember?.user?.id || discordMember.pending) return;
 
@@ -92,6 +93,14 @@ export async function updateMemberRoles(
       permissionsToCheck: discordRoles.taxiRolePermissions,
     }),
   );
+  const courthouseRoles = makeRolesArr(
+    discordRoles.courthouseRoles,
+    hasPermissionWithFallback({
+      fallback: user.isTaxi,
+      userPermissions: user.permissions,
+      permissionsToCheck: discordRoles.courthouseRolePermissions,
+    }),
+  );
 
   const data = [
     ...leoRoles,
@@ -100,6 +109,7 @@ export async function updateMemberRoles(
     ...dispatchRoles,
     ...towRoles,
     ...taxiRoles,
+    ...courthouseRoles,
     { roleId: discordRoles.adminRoleId, method: createMethod(user.rank === Rank.ADMIN) },
     {
       roleId: discordRoles.whitelistedRoleId,
