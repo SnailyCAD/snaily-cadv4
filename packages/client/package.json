@@ -5,7 +5,7 @@
     "dev": "yarn rimraf .env && yarn next dev",
     "build": "yarn validate && yarn next-build",
     "next-build": "yarn next build",
-    "start": "yarn next start",
+    "start": "yarn next start -p 8083",
     "start:proxy-experimental": "yarn next start --port 80",
     "format": "yarn prettier --write \"**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "yarn eslint . --ext .ts,.js,.tsx,.jsx,",

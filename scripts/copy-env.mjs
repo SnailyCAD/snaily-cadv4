@@ -5,18 +5,16 @@ import { join } from "node:path";
 import { readFileSync, writeFileSync } from "node:fs";
 
 const DEFAULT_PORT = "3000";
-const WINDOWS_PLATFORM = "win32";
 
 function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  let dir = join(process.cwd(), "package.json");
-  const isWin = process.platform === WINDOWS_PLATFORM;
+  let filePath = join(process.cwd(), "packages", "client", "package.json");
 
-  if (!isWin && !dir.includes("/packages/client")) {
-    dir = join(process.cwd(), "packages/client", "package.json");
+  if (filePath.endsWith("/packages/client/package.json")) {
+    filePath = filePath.replace("packages/client", "");
   }
 
-  let json = readFileSync(dir, "utf8");
+  let json = readFileSync(filePath, "utf8");
   const port = process.env.PORT_CLIENT;
 
   if (port && port !== DEFAULT_PORT) {
@@ -24,7 +22,7 @@ function addPortToClientPackageJson() {
     json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
 
-    writeFileSync(dir, json, (err) => {
+    writeFileSync(filePath, json, (err) => {
       if (err) {
         console.log(err);
       }
