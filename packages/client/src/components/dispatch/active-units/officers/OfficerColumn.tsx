@@ -104,7 +104,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
       ]}
     >
       <span>
-        <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911Call} item={officer}>
+        <Draggable canDrag={canDrag} type={DndActions.MoveUnitTo911CallOrIncident} item={officer}>
           {({ isDragging }) => (
             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={officer}>
               <span

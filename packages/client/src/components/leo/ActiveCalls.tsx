@@ -45,7 +45,7 @@ export function ActiveCalls() {
   const [tempCall, setTempCall] = React.useState<Full911Call | null>(null);
 
   const { hasPermissions } = usePermission();
-  const { calls, setCalls, isDraggingUnit } = useDispatchState();
+  const { calls, setCalls, draggingUnit } = useDispatchState();
   const t = useTranslations("Calls");
   const leo = useTranslations("Leo");
   const common = useTranslations("Common");
@@ -364,7 +364,9 @@ export function ActiveCalls() {
           <div
             className={classNames(
               "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
-              isDraggingUnit ? "pointer-events-all opacity-100" : "pointer-events-none opacity-0",
+              draggingUnit === "call"
+                ? "pointer-events-all opacity-100"
+                : "pointer-events-none opacity-0",
             )}
           >
             <p>{t("dropToUnassign")}</p>
