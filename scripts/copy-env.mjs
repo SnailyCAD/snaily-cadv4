@@ -13,7 +13,7 @@ function addPortToClientPackageJson() {
   if (DEFAULT_PORT === port) return;
 
   let dir = join(process.cwd(), "packages", "client");
-  const includesMultipleClients = dir.split("client").length >= 2;
+  const includesMultipleClients = dir.split("/").filter((v) => v === "client").length >= 2;
 
   if (includesMultipleClients) {
     dir = dir.replaceAll("packages/client", "");
