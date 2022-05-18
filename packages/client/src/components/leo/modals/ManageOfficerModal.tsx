@@ -22,6 +22,7 @@ import type { Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
 import { AdvancedSettings } from "./AdvancedSettings";
+import { classNames } from "lib/classNames";
 
 interface Props {
   officer: Officer | null;
@@ -123,11 +124,15 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       title={officer ? t("editOfficer") : t("createOfficer")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageOfficer)}
-      className="w-[1000px]"
+      className={officer ? "w-[1000px]" : "w-[650px]"}
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, errors, values, isValid }) => (
-          <form className="flex flex-col md:flex-row gap-5 " ref={formRef} onSubmit={handleSubmit}>
+          <form
+            className={classNames(officer && "flex flex-col md:flex-row gap-5")}
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
             <div>
               <ImageSelectInput setImage={setImage} image={image} />
 

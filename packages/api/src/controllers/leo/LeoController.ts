@@ -138,6 +138,20 @@ export class LeoController {
 
     const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
+    await Promise.all(
+      (data.callsigns ?? []).map(async (callsign) => {
+        const existing = await prisma.individualDivisionCallsign.findFirst({
+          where: { officerId: officer.id, divisionId: callsign.divisionId },
+        });
+
+        await prisma.individualDivisionCallsign.upsert({
+          where: { id: String(existing?.id) },
+          create: { ...callsign, officerId: officer.id },
+          update: { ...callsign, officerId: officer.id },
+        });
+      }),
+    );
+
     const updated = getLastOfArray(
       await prisma.$transaction(
         disconnectConnectArr.map((v, idx) =>
@@ -242,6 +256,20 @@ export class LeoController {
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
 
+    await Promise.all(
+      (data.callsigns ?? []).map(async (callsign) => {
+        const existing = await prisma.individualDivisionCallsign.findFirst({
+          where: { officerId: officer.id, divisionId: callsign.divisionId },
+        });
+
+        await prisma.individualDivisionCallsign.upsert({
+          where: { id: String(existing?.id) },
+          create: { ...callsign, officerId: officer.id },
+          update: { ...callsign, officerId: officer.id },
+        });
+      }),
+    );
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -263,23 +291,7 @@ export class LeoController {
       },
     });
 
-    const callsigns = await Promise.all(
-      (data.callsigns ?? []).map(async (callsign) => {
-        const existing = await prisma.individualDivisionCallsign.findFirst({
-          where: { officerId: officer.id, divisionId: callsign.divisionId },
-        });
-
-        const created = await prisma.individualDivisionCallsign.upsert({
-          where: { id: String(existing?.id) },
-          create: { ...callsign, officerId: officer.id },
-          update: { ...callsign, officerId: officer.id },
-        });
-
-        return created;
-      }),
-    );
-
-    return { ...updatedOfficer, callisgns: callsigns };
+    return updatedOfficer;
   }
 
   @Delete("/:id")

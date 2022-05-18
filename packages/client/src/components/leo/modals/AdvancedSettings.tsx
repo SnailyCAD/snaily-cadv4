@@ -25,8 +25,6 @@ export function AdvancedSettings() {
     return null;
   }
 
-  console.log({ callsigns: values.callsigns });
-
   return (
     <Accordion.Root className="mt-5" collapsible type="single">
       <Accordion.Item value="advanced">
