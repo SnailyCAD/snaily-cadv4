@@ -91,9 +91,14 @@ export async function updateOfficerDivisionsCallsigns({
         where: { officerId, divisionId: callsign.divisionId },
       });
 
-      const shouldDelete = disconnectConnectArr.find(
-        (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
-      );
+      const doCallsignHaveValues =
+        Boolean(callsign.callsign.trim()) && Boolean(callsign.callsign2.trim());
+
+      const shouldDelete =
+        !doCallsignHaveValues ||
+        disconnectConnectArr.find(
+          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
+        );
 
       if (shouldDelete) {
         existing &&
