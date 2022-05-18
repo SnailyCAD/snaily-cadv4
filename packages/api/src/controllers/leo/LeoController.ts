@@ -138,17 +138,29 @@ export class LeoController {
 
     const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
+    // TODO: make it's own function
     await Promise.all(
       (data.callsigns ?? []).map(async (callsign) => {
         const existing = await prisma.individualDivisionCallsign.findFirst({
           where: { officerId: officer.id, divisionId: callsign.divisionId },
         });
 
-        await prisma.individualDivisionCallsign.upsert({
-          where: { id: String(existing?.id) },
-          create: { ...callsign, officerId: officer.id },
-          update: { ...callsign, officerId: officer.id },
-        });
+        const shouldDelete = disconnectConnectArr.find(
+          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
+        );
+
+        if (shouldDelete) {
+          existing &&
+            (await prisma.individualDivisionCallsign.delete({
+              where: { id: String(existing?.id) },
+            }));
+        } else {
+          await prisma.individualDivisionCallsign.upsert({
+            where: { id: String(existing?.id) },
+            create: { ...callsign, officerId: officer.id },
+            update: { ...callsign, officerId: officer.id },
+          });
+        }
       }),
     );
 
@@ -262,11 +274,22 @@ export class LeoController {
           where: { officerId: officer.id, divisionId: callsign.divisionId },
         });
 
-        await prisma.individualDivisionCallsign.upsert({
-          where: { id: String(existing?.id) },
-          create: { ...callsign, officerId: officer.id },
-          update: { ...callsign, officerId: officer.id },
-        });
+        const shouldDelete = disconnectConnectArr.find(
+          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
+        );
+
+        if (shouldDelete) {
+          existing &&
+            (await prisma.individualDivisionCallsign.delete({
+              where: { id: String(existing?.id) },
+            }));
+        } else {
+          await prisma.individualDivisionCallsign.upsert({
+            where: { id: String(existing?.id) },
+            create: { ...callsign, officerId: officer.id },
+            update: { ...callsign, officerId: officer.id },
+          });
+        }
       }),
     );
 
