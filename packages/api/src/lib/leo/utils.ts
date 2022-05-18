@@ -81,10 +81,12 @@ export async function updateOfficerDivisionsCallsigns({
 }: {
   officerId: string;
   disconnectConnectArr: any[];
-  callsigns: Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>[];
+  callsigns: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>>;
 }) {
+  const _callsigns = Object.values(callsigns);
+
   await Promise.all(
-    callsigns.map(async (callsign) => {
+    _callsigns.map(async (callsign) => {
       const existing = await prisma.individualDivisionCallsign.findFirst({
         where: { officerId, divisionId: callsign.divisionId },
       });

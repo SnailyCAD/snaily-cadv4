@@ -18,7 +18,7 @@ import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
-import type { Officer } from "@snailycad/types";
+import type { IndividualDivisionCallsign, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
 import { AdvancedSettings } from "./AdvancedSettings";
@@ -106,6 +106,17 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
   }
 
+  function makeDivisionsObjectMap() {
+    const obj = {} as Record<string, IndividualDivisionCallsign>;
+    const callsigns = officer?.callsigns ?? [];
+
+    for (const callsign of callsigns) {
+      obj[callsign.divisionId] = callsign;
+    }
+
+    return obj;
+  }
+
   const validate = handleValidate(CREATE_OFFICER_SCHEMA);
   const INITIAL_VALUES = {
     department: getUnitDepartment(officer)?.id ?? "",
@@ -116,7 +127,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
     image: undefined,
-    callsigns: officer?.callsigns ?? [],
+    callsigns: makeDivisionsObjectMap(),
   };
 
   return (

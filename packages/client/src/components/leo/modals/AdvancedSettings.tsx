@@ -1,4 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
+import type { IndividualDivisionCallsign } from "@snailycad/types";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
 import { Input } from "components/form/inputs/Input";
@@ -8,7 +9,7 @@ import { CaretDownFill } from "react-bootstrap-icons";
 
 export function AdvancedSettings() {
   const { values, handleChange, setFieldValue } = useFormikContext<{
-    callsigns: { divisionId: string; callsign: string; callsign2: string }[];
+    callsigns: Record<string, IndividualDivisionCallsign>;
     divisions: SelectValue<string>[];
   }>();
 
@@ -45,7 +46,7 @@ export function AdvancedSettings() {
             Set individual callsigns for each division. This is optional.
           </p>
 
-          {values.divisions.map((div, idx) => {
+          {values.divisions.map((div) => {
             return (
               <div className="flex flex-col gap-2" key={div.value}>
                 <h3 className="text-lg font-semibold">{div.label}&apos;s Callsign</h3>
@@ -54,16 +55,16 @@ export function AdvancedSettings() {
                   <FormField label={`Division callsign 1 (${div.label})`}>
                     <Input
                       onChange={(e) => _handleChange(e, div.value)}
-                      value={values.callsigns[idx]?.callsign ?? ""}
-                      name={`callsigns[${idx}].callsign`}
+                      value={values.callsigns[div.value]?.callsign ?? ""}
+                      name={`callsigns[${div.value}].callsign`}
                     />
                   </FormField>
 
                   <FormField label={`Division callsign 2 (${div.label})`}>
                     <Input
                       onChange={(e) => _handleChange(e, div.value)}
-                      value={values.callsigns[idx]?.callsign2 ?? ""}
-                      name={`callsigns[${idx}].callsign2`}
+                      value={values.callsigns[div.value]?.callsign2 ?? ""}
+                      name={`callsigns[${div.value}].callsign2`}
                     />
                   </FormField>
                 </FormRow>

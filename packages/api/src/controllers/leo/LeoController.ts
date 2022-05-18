@@ -145,7 +145,7 @@ export class LeoController {
     await updateOfficerDivisionsCallsigns({
       officerId: officer.id,
       disconnectConnectArr,
-      callsigns: data.callsigns ?? [],
+      callsigns: data.callsigns ?? {},
     });
 
     const updated = getLastOfArray(
@@ -255,33 +255,8 @@ export class LeoController {
     await updateOfficerDivisionsCallsigns({
       officerId: officer.id,
       disconnectConnectArr,
-      callsigns: data.callsigns ?? [],
+      callsigns: data.callsigns ?? {},
     });
-
-    await Promise.all(
-      (data.callsigns ?? []).map(async (callsign) => {
-        const existing = await prisma.individualDivisionCallsign.findFirst({
-          where: { officerId: officer.id, divisionId: callsign.divisionId },
-        });
-
-        const shouldDelete = disconnectConnectArr.find(
-          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
-        );
-
-        if (shouldDelete) {
-          existing &&
-            (await prisma.individualDivisionCallsign.delete({
-              where: { id: String(existing?.id) },
-            }));
-        } else {
-          await prisma.individualDivisionCallsign.upsert({
-            where: { id: String(existing?.id) },
-            create: { ...callsign, officerId: officer.id },
-            update: { ...callsign, officerId: officer.id },
-          });
-        }
-      }),
-    );
 
     const updatedOfficer = await prisma.officer.update({
       where: {

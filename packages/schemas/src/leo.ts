@@ -21,7 +21,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   badgeNumber: z.number().min(1),
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
   image: z.any().or(z.string()).optional(),
-  callsigns: z.array(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_SCHEMA = z.object({
@@ -35,7 +35,7 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
   badgeNumber: z.number().min(1),
-  callsigns: z.array(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
