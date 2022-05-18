@@ -43,7 +43,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
               <Draggable
                 canDrag={canDrag}
                 onDrag={(isDragging) => {
-                  dispatchState.setIsDraggingUnit(isDragging);
+                  dispatchState.setDraggingUnit(isDragging ? "call" : null);
                 }}
                 key={unit.id}
                 item={{ call, unit }}
