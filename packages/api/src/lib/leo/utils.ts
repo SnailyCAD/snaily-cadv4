@@ -1,4 +1,5 @@
 import { MiscCadSettings, JailTimeScale } from "@prisma/client";
+import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 
@@ -71,4 +72,39 @@ export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
   }
 
   return total * 1000;
+}
+
+export async function updateOfficerDivisionsCallsigns({
+  officerId,
+  disconnectConnectArr,
+  callsigns,
+}: {
+  officerId: string;
+  disconnectConnectArr: any[];
+  callsigns: Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>[];
+}) {
+  await Promise.all(
+    callsigns.map(async (callsign) => {
+      const existing = await prisma.individualDivisionCallsign.findFirst({
+        where: { officerId, divisionId: callsign.divisionId },
+      });
+
+      const shouldDelete = disconnectConnectArr.find(
+        (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
+      );
+
+      if (shouldDelete) {
+        existing &&
+          (await prisma.individualDivisionCallsign.delete({
+            where: { id: String(existing?.id) },
+          }));
+      } else {
+        await prisma.individualDivisionCallsign.upsert({
+          where: { id: String(existing?.id) },
+          create: { ...callsign, officerId },
+          update: { ...callsign, officerId },
+        });
+      }
+    }),
+  );
 }

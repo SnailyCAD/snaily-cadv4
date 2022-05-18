@@ -25,7 +25,11 @@ import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import {
+  getInactivityFilter,
+  updateOfficerDivisionsCallsigns,
+  validateMaxDepartmentsEachPerUser,
+} from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -138,31 +142,11 @@ export class LeoController {
 
     const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
-    // TODO: make it's own function
-    await Promise.all(
-      (data.callsigns ?? []).map(async (callsign) => {
-        const existing = await prisma.individualDivisionCallsign.findFirst({
-          where: { officerId: officer.id, divisionId: callsign.divisionId },
-        });
-
-        const shouldDelete = disconnectConnectArr.find(
-          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
-        );
-
-        if (shouldDelete) {
-          existing &&
-            (await prisma.individualDivisionCallsign.delete({
-              where: { id: String(existing?.id) },
-            }));
-        } else {
-          await prisma.individualDivisionCallsign.upsert({
-            where: { id: String(existing?.id) },
-            create: { ...callsign, officerId: officer.id },
-            update: { ...callsign, officerId: officer.id },
-          });
-        }
-      }),
-    );
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns ?? [],
+    });
 
     const updated = getLastOfArray(
       await prisma.$transaction(
@@ -267,6 +251,12 @@ export class LeoController {
     const incremental = officer.incremental
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
+
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns ?? [],
+    });
 
     await Promise.all(
       (data.callsigns ?? []).map(async (callsign) => {
