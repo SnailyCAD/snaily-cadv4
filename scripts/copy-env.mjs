@@ -8,13 +8,17 @@ const DEFAULT_PORT = "3000";
 
 function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  let filePath = join(process.cwd(), "packages", "client", "package.json");
+  let dir = join(process.cwd(), "packages", "client");
+  const includesMultipleClients = dir.split("client").length >= 2;
 
-  if (filePath.endsWith("/packages/client/package.json")) {
-    filePath = filePath.replace("packages/client", "");
+  console.log({ includesMultipleClients });
+
+  if (includesMultipleClients) {
+    dir = dir.replaceAll("packages/client", "");
+    dir = join(dir, "packages/client");
   }
 
-  let json = readFileSync(filePath, "utf8");
+  let json = readFileSync(join(dir, "package.json"), "utf8");
   const port = process.env.PORT_CLIENT;
 
   if (port && port !== DEFAULT_PORT) {
@@ -22,7 +26,7 @@ function addPortToClientPackageJson() {
     json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
 
-    writeFileSync(filePath, json, (err) => {
+    writeFileSync(dir, json, (err) => {
       if (err) {
         console.log(err);
       }
