@@ -263,7 +263,23 @@ export class LeoController {
       },
     });
 
-    return updatedOfficer;
+    const callsigns = await Promise.all(
+      (data.callsigns ?? []).map(async (callsign) => {
+        const existing = await prisma.individualDivisionCallsign.findFirst({
+          where: { officerId: officer.id, divisionId: callsign.divisionId },
+        });
+
+        const created = await prisma.individualDivisionCallsign.upsert({
+          where: { id: String(existing?.id) },
+          create: { ...callsign, officerId: officer.id },
+          update: { ...callsign, officerId: officer.id },
+        });
+
+        return created;
+      }),
+    );
+
+    return { ...updatedOfficer, callisgns: callsigns };
   }
 
   @Delete("/:id")

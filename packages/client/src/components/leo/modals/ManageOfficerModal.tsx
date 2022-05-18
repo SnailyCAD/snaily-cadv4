@@ -115,7 +115,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
     image: undefined,
-    callsigns: [],
+    callsigns: officer?.callsigns ?? [],
   };
 
   return (

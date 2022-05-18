@@ -680,6 +680,7 @@ export interface IndividualDivisionCallsign {
   divisionId: string;
   callsign: string;
   callsign2: string;
+  officerId: string;
 }
 
 /**
