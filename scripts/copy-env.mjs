@@ -11,8 +11,6 @@ function addPortToClientPackageJson() {
   let dir = join(process.cwd(), "packages", "client");
   const includesMultipleClients = dir.split("client").length >= 2;
 
-  console.log({ includesMultipleClients });
-
   if (includesMultipleClients) {
     dir = dir.replaceAll("packages/client", "");
     dir = join(dir, "packages/client");
