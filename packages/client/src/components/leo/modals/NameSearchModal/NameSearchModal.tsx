@@ -63,6 +63,7 @@ export function NameSearchModal() {
   const cT = useTranslations("Citizen");
   const vT = useTranslations("Vehicles");
   const t = useTranslations("Leo");
+  const ems = useTranslations("Ems");
   const { state, execute } = useFetch();
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
@@ -136,6 +137,18 @@ export function NameSearchModal() {
       setResults(Array.isArray(json) ? json : [json]);
     } else {
       setResults(false);
+    }
+  }
+
+  async function handleDeclare() {
+    if (!currentResult) return;
+
+    const { json } = await execute(`/ems-fd/declare/${currentResult.id}`, {
+      method: "POST",
+    });
+
+    if (json.id) {
+      setCurrentResult({ ...currentResult, ...json });
     }
   }
 
@@ -263,7 +276,7 @@ export function NameSearchModal() {
                   </header>
 
                   {currentResult?.dead && currentResult?.dateOfDead ? (
-                    <div className="p-2 mt-2 font-semibold text-black rounded-md bg-amber-500">
+                    <div className="p-2 my-2 font-semibold text-black rounded-md bg-amber-500">
                       {t("citizenDead", {
                         date: format(
                           new Date(currentResult.dateOfDead ?? new Date()),
@@ -417,6 +430,17 @@ export function NameSearchModal() {
                       {t(normalizeValue(`CREATE_${type}`))}
                     </Button>
                   ))}
+
+                  <Button
+                    small
+                    type="button"
+                    onClick={handleDeclare}
+                    disabled={state === "loading"}
+                    variant="cancel"
+                    className="px-1.5"
+                  >
+                    {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
+                  </Button>
                 </div>
               ) : null}
 
