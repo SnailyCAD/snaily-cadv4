@@ -7,7 +7,11 @@ import { readFileSync, writeFileSync } from "node:fs";
 const DEFAULT_PORT = "3000";
 
 function addPortToClientPackageJson() {
+  const port = process.env.PORT_CLIENT;
+
   if (process.env.NODE_ENV === "development") return;
+  if (DEFAULT_PORT === port) return;
+
   let dir = join(process.cwd(), "packages", "client");
   const includesMultipleClients = dir.split("client").length >= 2;
 
@@ -17,9 +21,8 @@ function addPortToClientPackageJson() {
   }
 
   let json = readFileSync(join(dir, "package.json"), "utf8");
-  const port = process.env.PORT_CLIENT;
 
-  if (port && port !== DEFAULT_PORT) {
+  if (port) {
     json = JSON.parse(json);
     json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
