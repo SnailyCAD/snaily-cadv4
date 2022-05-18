@@ -171,6 +171,13 @@ export interface DiscordRole {
   discordRolesId: string;
 }
 
+export interface CustomRole {
+  id: string;
+  name: string;
+  iconId: string | null;
+  permissions: Permissions[];
+}
+
 /**
  * Model User
  *
@@ -201,6 +208,7 @@ export interface User {
   hasTempPassword?: boolean;
   twoFactorEnabled?: boolean;
   permissions: Permissions[] | null;
+  roles?: CustomRole[];
   soundSettingsId: string | null;
   soundSettings?: UserSoundSettings | null;
   apiTokenId: string | null;

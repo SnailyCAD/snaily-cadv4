@@ -18,6 +18,7 @@ export const enum ModalIds {
   ManageCustomField = "ManageCustomFieldModal",
   ManageUnitQualifications = "ManageUnitQualificationsModal",
   ManageUnitCallsign = "ManageUnitCallsignModal",
+  ManageCustomRole = "ManageCustomRoleModal",
 
   ManageTowCall = "ManageTowCallModal",
   AssignToTowCall = "AssignToTowCallModal",
