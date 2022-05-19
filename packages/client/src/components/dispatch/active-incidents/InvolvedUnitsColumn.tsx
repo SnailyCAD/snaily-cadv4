@@ -10,6 +10,7 @@ import { Draggable } from "components/shared/dnd/Draggable";
 import { Droppable } from "components/shared/dnd/Droppable";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { classNames } from "lib/classNames";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import { useDispatchState } from "state/dispatchState";
@@ -62,7 +63,12 @@ export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }
                 {() => {
                   const comma = idx + 1 === incident.unitsInvolved.length ? "" : ", ";
                   return (
-                    <p className={canDrag ? "!cursor-move" : "cursor-default"}>
+                    <p
+                      className={classNames(
+                        "text-base",
+                        canDrag ? "!cursor-move" : "cursor-default",
+                      )}
+                    >
                       {makeAssignedUnit(unit)}
                       {comma}
                     </p>
