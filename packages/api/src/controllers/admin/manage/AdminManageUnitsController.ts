@@ -8,6 +8,7 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
 import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
+import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -161,6 +162,14 @@ export class AdminManageUnitsController {
       unitId: unit.id,
       type,
     });
+
+    if (type === "leo") {
+      await updateOfficerDivisionsCallsigns({
+        officerId: unit.id,
+        disconnectConnectArr: [],
+        callsigns: data.callsigns,
+      });
+    }
 
     // @ts-expect-error ignore
     const updated = await prisma[t].update({

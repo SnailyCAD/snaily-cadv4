@@ -3,7 +3,10 @@ import type { CombinedLeoUnit, EmsFdDeputy, MiscCadSettings, Officer } from "@sn
 import { generateCallsign } from "@snailycad/utils/callsign";
 
 type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
-type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;
+type Unit =
+  | Pick<Officer, P | "divisions" | "activeDivisionCallsign">
+  | Pick<EmsFdDeputy, P | "division">
+  | CombinedLeoUnit;
 type TemplateId = keyof Pick<MiscCadSettings, "pairedUnitTemplate" | "callsignTemplate">;
 
 export function useGenerateCallsign() {
@@ -11,6 +14,32 @@ export function useGenerateCallsign() {
   const miscCadSettings = cad?.miscCadSettings;
 
   function _generateCallsign(unit: Unit, templateId: TemplateId = "callsignTemplate") {
+    const activeDivisionCallsign =
+      "activeDivisionCallsign" in unit ? unit.activeDivisionCallsign : null;
+
+    if (activeDivisionCallsign && "divisions" in unit) {
+      const officer = { ...unit };
+      const idx = unit.divisions.findIndex((v) => v.id === activeDivisionCallsign.divisionId);
+      const division = unit.divisions.find((v) => v.id === activeDivisionCallsign.divisionId);
+
+      const [temp] = officer.divisions;
+
+      if (division && temp) {
+        officer.divisions[0] = division;
+        officer.divisions[idx] = temp;
+
+        return generateCallsign(
+          {
+            ...unit,
+            ...officer,
+            callsign: activeDivisionCallsign.callsign,
+            callsign2: activeDivisionCallsign.callsign2,
+          },
+          miscCadSettings?.[templateId] ?? null,
+        );
+      }
+    }
+
     return generateCallsign(unit, miscCadSettings?.[templateId] ?? null);
   }
 
