@@ -24,6 +24,7 @@ export function CallSignPreview({ divisions, department }: Props) {
     callsign2: values.callsign2,
     divisions,
     incremental: null,
+    activeDivisionCallsign: null,
   };
 
   return (

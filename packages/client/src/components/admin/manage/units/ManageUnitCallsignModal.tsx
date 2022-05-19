@@ -4,6 +4,8 @@ import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { CallSignPreview } from "components/leo/CallsignPreview";
+import { AdvancedSettings } from "components/leo/modals/AdvancedSettings";
+import { makeDivisionsObjectMap } from "components/leo/modals/ManageOfficerModal";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { Form, Formik } from "formik";
@@ -46,6 +48,8 @@ export function ManageUnitCallsignModal({ unit }: Props) {
     citizenId: unit.citizenId,
     callsign: unit.callsign,
     callsign2: unit.callsign2,
+    callsigns: isUnitOfficer(unit) ? makeDivisionsObjectMap(unit) : {},
+    divisions: divisions.map((d) => ({ value: d.id, label: d.value.value })),
   };
 
   return (
@@ -67,6 +71,8 @@ export function ManageUnitCallsignModal({ unit }: Props) {
             </FormField>
 
             <CallSignPreview department={unit.department} divisions={divisions} />
+
+            {isUnitOfficer(unit) ? <AdvancedSettings /> : null}
 
             <footer className="flex justify-end mt-5">
               <Button

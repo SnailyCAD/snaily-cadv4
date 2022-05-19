@@ -29,6 +29,8 @@ export const _leoProperties = {
   assignedUnit: { where: { call911: { ended: false } } },
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
   rank: true,
+  callsigns: true,
+  activeDivisionCallsign: true,
 };
 
 export const leoProperties = {

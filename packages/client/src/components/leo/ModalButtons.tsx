@@ -10,6 +10,7 @@ import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
 
 const buttons: modalButtons.ModalButton[] = [
+  modalButtons.switchDivision,
   modalButtons.nameSearchBtn,
   modalButtons.plateSearchBtn,
   modalButtons.weaponSearchBtn,
@@ -67,6 +68,7 @@ export function ModalButtons() {
               title={isButtonDisabled ? "Go on-duty before continuing" : undefined}
               key={idx}
               button={button}
+              unit={activeOfficer}
             />
           );
         })}
