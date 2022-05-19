@@ -282,7 +282,21 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === ValueType.OFFICER_RANK ? (
-              <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+              <>
+                <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+
+                <FormField optional label="Departments">
+                  <Select
+                    name="departments"
+                    onChange={handleChange}
+                    value={values.departments ?? []}
+                    values={department.values.map((department) => ({
+                      value: department.id,
+                      label: department.value.value,
+                    }))}
+                  />
+                </FormField>
+              </>
             ) : null}
 
             {type === ValueType.DRIVERSLICENSE_CATEGORY ? (

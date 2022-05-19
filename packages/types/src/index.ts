@@ -351,7 +351,7 @@ export interface MedicalRecord {
  * Model Value
  *
  */
-export interface Value<Type extends ValueType> {
+export type Value<Type extends ValueType> = {
   id: string;
   type: Type;
   value: string;
@@ -360,8 +360,12 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
-  officerRankImageId: string | null;
-}
+} & (Type extends ValueType.OFFICER_RANK
+  ? {
+      officerRankDepartments?: DepartmentValue[];
+      officerRankImageId: string | null;
+    }
+  : undefined);
 
 /**
  * Model PenalCode

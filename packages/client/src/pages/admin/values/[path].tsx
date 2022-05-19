@@ -299,6 +299,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
     division: "department",
     qualification: "department",
     codes_10: "department",
+    officer_rank: "department",
   };
 
   const paths = pathsRecord[path];
