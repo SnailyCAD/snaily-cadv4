@@ -11,6 +11,21 @@
     "noNameChangeRequests": "Запросов на смену имени нет.",
     "newName": "Новое имя",
     "newSurname": "новая фамилия",
-    "status": "Статус"
+    "status": "Статус",
+    "courtEntries": "Судебные заседания",
+    "noCourtEntries": "Нет судебных заседаний",
+    "addCourtEntry": "Доюавить судебное заседание",
+    "deleteCourtEntry": "Удалить заседание суда",
+    "manageCourtEntry": "Управлять судебными заседаниями",
+    "caseNumber": "Номер дела",
+    "title": "Название",
+    "dates": "Даты",
+    "addDate": "Добавить дату",
+    "manageCourtDate": "Изменить дату суда",
+    "date": "Дата",
+    "note": "Запись",
+    "deleteCourtDate": "Удалить дату суда",
+    "alert_deleteCourtEntry": "Вы уверены, что хотите удалить это судебное заседание? Это действие необратимо",
+    "alert_deleteCourtDate": "Вы уверены, что хотите удалить эту дату суда? Это действие необратимо"
   }
 }
