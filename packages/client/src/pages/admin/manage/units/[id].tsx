@@ -158,10 +158,17 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                   name="rank"
                   onChange={handleChange}
                   value={values.rank}
-                  values={officerRank.values.map((value) => ({
-                    label: value.value,
-                    value: value.id,
-                  }))}
+                  // todo: verify
+                  values={officerRank.values
+                    .filter((v) => {
+                      return (
+                        v.officerRankDepartments?.some((v) => v.id === values.department) ?? true
+                      );
+                    })
+                    .map((value) => ({
+                      label: value.value,
+                      value: value.id,
+                    }))}
                 />
               </FormField>
 
