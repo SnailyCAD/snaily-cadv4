@@ -52,7 +52,7 @@ export function AdvancedSettings() {
                 <h3 className="text-lg font-semibold">{div.label}&apos;s Callsign</h3>
 
                 <FormRow>
-                  <FormField label={`Division callsign 1 (${div.label})`}>
+                  <FormField label={`Callsign 1 (${div.label})`}>
                     <Input
                       onChange={(e) => _handleChange(e, div.value)}
                       value={values.callsigns[div.value]?.callsign ?? ""}
@@ -60,7 +60,7 @@ export function AdvancedSettings() {
                     />
                   </FormField>
 
-                  <FormField label={`Division callsign 2 (${div.label})`}>
+                  <FormField label={`Callsign 2 (${div.label})`}>
                     <Input
                       onChange={(e) => _handleChange(e, div.value)}
                       value={values.callsigns[div.value]?.callsign2 ?? ""}
