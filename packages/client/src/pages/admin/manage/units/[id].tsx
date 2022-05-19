@@ -158,7 +158,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                   name="rank"
                   onChange={handleChange}
                   value={values.rank}
-                  // todo: verify
                   values={officerRank.values
                     .filter((v) => {
                       if ((v.officerRankDepartments?.length ?? 0) <= 0) return true;
