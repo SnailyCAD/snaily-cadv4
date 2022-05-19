@@ -188,7 +188,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+
     officerRankImageId: "",
+    // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
+    officerRankDepartments: value ? defaultDepartments(value) : undefined,
 
     showPicker: false,
     image: "",
@@ -287,9 +290,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
                 <FormField optional label="Departments">
                   <Select
-                    name="departments"
+                    isMulti
+                    closeMenuOnSelect={false}
+                    name="officerRankDepartments"
                     onChange={handleChange}
-                    value={values.departments ?? []}
+                    value={values.officerRankDepartments ?? []}
                     values={department.values.map((department) => ({
                       value: department.id,
                       label: department.value.value,

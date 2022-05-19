@@ -320,7 +320,7 @@ export const typeHandlers = {
 
       const disconnectConnectArr = manyToManyHelper(
         updatedValue.officerRankDepartments.map((v) => v.id),
-        item.departments ?? [],
+        item.officerRankDepartments ?? [],
       );
 
       const updated = getLastOfArray(
