@@ -30,6 +30,7 @@ export const _leoProperties = {
   IncidentInvolvedUnit: { where: { incident: { isActive: true } }, select: { id: true } },
   rank: true,
   callsigns: true,
+  activeDivisionCallsign: true,
 };
 
 export const leoProperties = {

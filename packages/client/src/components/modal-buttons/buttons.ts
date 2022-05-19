@@ -1,9 +1,10 @@
-import type { EmsFdDeputy, Feature, Officer } from "@snailycad/types";
+import type { EmsFdDeputy, Feature } from "@snailycad/types";
 import { isUnitOfficer } from "@snailycad/utils";
+import type { ActiveOfficer } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 
 export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & {
-  unit: EmsFdDeputy | Officer | null;
+  unit: EmsFdDeputy | ActiveOfficer | null;
 } & T;
 export interface ModalButton<T = unknown> {
   (args: Args<T>): {

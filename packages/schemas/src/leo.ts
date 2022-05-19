@@ -98,3 +98,7 @@ export const NOTE_SCHEMA = z.object({
   text: z.string().min(1),
   itemId: z.string().min(2),
 });
+
+export const SWITCH_CALLSIGN_SCHEMA = z.object({
+  callsign: z.string().min(2).nullable().optional(),
+});

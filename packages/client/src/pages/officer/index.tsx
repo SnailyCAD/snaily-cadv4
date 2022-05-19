@@ -59,6 +59,10 @@ const Modals = {
   CreateTicketModal: dynamic(async () => {
     return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
   }),
+  SwitchDivisionCallsignModal: dynamic(async () => {
+    return (await import("components/leo/modals/SwitchDivisionCallsignModal"))
+      .SwitchDivisionCallsignModal;
+  }),
 };
 
 interface Props {
@@ -161,17 +165,23 @@ export default function OfficerDashboard({
       </div>
 
       <Modals.SelectOfficerModal />
-      <Modals.NotepadModal />
-      {/* name search have their own vehicle/weapon search modal */}
-      {isOpen(ModalIds.NameSearch) ? null : (
+
+      {activeOfficer ? (
         <>
-          <Modals.WeaponSearchModal />
-          <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+          <Modals.SwitchDivisionCallsignModal />
+          <Modals.NotepadModal />
+          {/* name search have their own vehicle/weapon search modal */}
+          {isOpen(ModalIds.NameSearch) ? null : (
+            <>
+              <Modals.WeaponSearchModal />
+              <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+            </>
+          )}
+          <Modals.NameSearchModal />
+          <Modals.CreateWarrantModal />
+          <Modals.CustomFieldSearch />
         </>
-      )}
-      <Modals.NameSearchModal />
-      <Modals.CreateWarrantModal />
-      <Modals.CustomFieldSearch />
+      ) : null}
 
       <div>
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />

@@ -7,7 +7,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -590,6 +590,53 @@ export class LeoController {
     });
 
     return data;
+  }
+
+  @Put("/callsign/:officerId")
+  @Description("Update the officer's activeDivisionCallsign")
+  @UsePermissions({
+    fallback: (u) => u.isLeo,
+    permissions: [Permissions.Leo],
+  })
+  async updateOfficerDivisionCallsign(
+    @BodyParams() body: unknown,
+    @PathParams("officerId") officerId: string,
+  ) {
+    const officer = await prisma.officer.findUnique({
+      where: { id: officerId },
+    });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
+    const data = validateSchema(SWITCH_CALLSIGN_SCHEMA, body);
+
+    let callsignId = null;
+    /**
+     * yes, !== "null" can be here, in the UI its handled that way. A bit weird I know, but it does the job!
+     */
+    if (data.callsign && data.callsign !== "null") {
+      const callsign = await prisma.individualDivisionCallsign.findFirst({
+        where: { id: data.callsign, officerId: officer.id },
+      });
+
+      if (!callsign) {
+        throw new NotFound("callsignNotFound");
+      }
+
+      callsignId = callsign.id;
+    }
+
+    const updated = await prisma.officer.update({
+      where: { id: officer.id },
+      data: { activeDivisionCallsignId: callsignId },
+      include: leoProperties,
+    });
+
+    await this.socket.emitUpdateOfficerStatus();
+
+    return updated;
   }
 }
 
