@@ -161,6 +161,8 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                   // todo: verify
                   values={officerRank.values
                     .filter((v) => {
+                      if ((v.officerRankDepartments?.length ?? 0) <= 0) return true;
+
                       return (
                         v.officerRankDepartments?.some((v) => v.id === values.department) ?? true
                       );

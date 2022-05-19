@@ -85,6 +85,10 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
+            include:
+              type === ValueType.OFFICER_RANK
+                ? { officerRankDepartments: { include: { value: true } } }
+                : undefined,
           }),
         };
       }),
