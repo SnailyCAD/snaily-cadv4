@@ -167,7 +167,7 @@ export class AdminManageUnitsController {
       await updateOfficerDivisionsCallsigns({
         officerId: unit.id,
         disconnectConnectArr: [],
-        callsigns: data.callsigns ?? {},
+        callsigns: data.callsigns,
       });
     }
 

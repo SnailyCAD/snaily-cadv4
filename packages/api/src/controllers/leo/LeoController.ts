@@ -145,7 +145,7 @@ export class LeoController {
     await updateOfficerDivisionsCallsigns({
       officerId: officer.id,
       disconnectConnectArr,
-      callsigns: data.callsigns ?? {},
+      callsigns: data.callsigns,
     });
 
     const updated = getLastOfArray(
@@ -255,7 +255,7 @@ export class LeoController {
     await updateOfficerDivisionsCallsigns({
       officerId: officer.id,
       disconnectConnectArr,
-      callsigns: data.callsigns ?? {},
+      callsigns: data.callsigns,
     });
 
     const updatedOfficer = await prisma.officer.update({

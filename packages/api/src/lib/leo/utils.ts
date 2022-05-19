@@ -81,9 +81,17 @@ export async function updateOfficerDivisionsCallsigns({
 }: {
   officerId: string;
   disconnectConnectArr: any[];
-  callsigns: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>>;
+  callsigns?: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
 }) {
+  if (!callsigns) return;
+
   const _callsigns = Object.values(callsigns);
+
+  if (_callsigns.length <= 0) {
+    await prisma.individualDivisionCallsign.deleteMany({
+      where: { officerId },
+    });
+  }
 
   await Promise.all(
     _callsigns.map(async (callsign) => {
@@ -92,7 +100,7 @@ export async function updateOfficerDivisionsCallsigns({
       });
 
       const doCallsignHaveValues =
-        Boolean(callsign.callsign.trim()) && Boolean(callsign.callsign2.trim());
+        callsign.callsign.trim() !== "" && callsign.callsign2.trim() !== "";
 
       const shouldDelete =
         !doCallsignHaveValues ||
@@ -101,10 +109,9 @@ export async function updateOfficerDivisionsCallsigns({
         );
 
       if (shouldDelete) {
-        existing &&
-          (await prisma.individualDivisionCallsign.delete({
-            where: { id: String(existing?.id) },
-          }));
+        await prisma.individualDivisionCallsign.deleteMany({
+          where: { id: String(existing?.id) },
+        });
       } else {
         await prisma.individualDivisionCallsign.upsert({
           where: { id: String(existing?.id) },

@@ -18,15 +18,7 @@ export function generateCallsign(unit: Unit, template: string | null) {
 
   const unitDivision =
     "divisions" in unit ? unit.divisions : "division" in unit ? unit.division : [];
-  let [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
-
-  const callsigns = "callsigns" in unit ? unit.callsigns : [];
-  const callsign = callsigns?.find((v) => v.divisionId === division?.id);
-
-  if (callsign && "divisions" in unit) {
-    const unitDivision = unit.divisions.find((v) => v.id === callsign.divisionId);
-    division = unitDivision;
-  }
+  const [division] = Array.isArray(unitDivision) ? unitDivision : [unitDivision];
 
   if (!_template) {
     return "";

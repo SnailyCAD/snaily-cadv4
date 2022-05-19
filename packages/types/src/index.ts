@@ -647,6 +647,8 @@ export interface Officer {
   id: string;
   departmentId: string | null;
   department: DepartmentValue | null;
+  activeDivisionCallsignId: string | null;
+  activeDivisionCallsign: IndividualDivisionCallsign | null;
   callsign: string;
   callsign2: string;
   incremental: number | null;

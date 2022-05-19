@@ -213,6 +213,7 @@
     "text": "Text",
     "deleteNote": "Delete note",
     "dropToUnassignFromIncident": "Drop to unassign from active incident",
+    "switchDivisionCallsign": "Switch callsign",
     "alert_deleteNote": "Are you sure you want to delete this note? This action cannot be undone.",
     "alert_deleteQualification": "Are you sure you want to delete this qualification? This action cannot be undone.",
     "alert_deleteDLExam": "Are you sure you want to delete this driver's license exam? This action cannot be undone.",

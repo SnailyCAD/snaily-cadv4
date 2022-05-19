@@ -1,7 +1,10 @@
-import type { Feature } from "@snailycad/types";
+import type { EmsFdDeputy, Feature, Officer } from "@snailycad/types";
+import { isUnitOfficer } from "@snailycad/utils";
 import { ModalIds } from "types/ModalIds";
 
-export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & T;
+export type Args<T> = Record<Feature | "hasActiveDispatchers" | "isDispatch", boolean> & {
+  unit: EmsFdDeputy | Officer | null;
+} & T;
 export interface ModalButton<T = unknown> {
   (args: Args<T>): {
     nameKey: [string, string];
@@ -10,6 +13,16 @@ export interface ModalButton<T = unknown> {
     isEnabled?: boolean;
   };
 }
+
+export const switchDivision: ModalButton = ({ unit }) => {
+  const isEnabled = unit ? isUnitOfficer(unit) && (unit.callsigns?.length ?? 0) >= 1 : false;
+
+  return {
+    modalId: ModalIds.SwitchDivisionCallsign,
+    nameKey: ["Leo", "switchDivisionCallsign"],
+    isEnabled,
+  };
+};
 
 export const nameSearchBtn: ModalButton = () => ({
   modalId: ModalIds.NameSearch,

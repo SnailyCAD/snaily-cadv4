@@ -709,6 +709,8 @@ model Officer {
   departmentId                String?
   callsign                    String                       @db.VarChar(255)
   callsign2                   String                       @db.VarChar(255)
+  activeDivisionCallsign            IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
+  activeDivisionCallsignId          String?
   incremental                 Int?
   // `division` is deprecated. Use `divisions` instead.
   division                    DivisionValue?               @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
@@ -759,6 +761,7 @@ model IndividualDivisionCallsign {
   officerId  String
   officer    Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
   division   DivisionValue @relation(fields: [divisionId], references: [id])
+  Officer    Officer[]     @relation("divisionCallsign")
 }
 
 model UnitQualification {
