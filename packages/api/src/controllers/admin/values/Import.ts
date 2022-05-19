@@ -319,7 +319,7 @@ export const typeHandlers = {
       });
 
       const disconnectConnectArr = manyToManyHelper(
-        updatedValue.departments.map((v) => v.id),
+        updatedValue.officerRankDepartments.map((v) => v.id),
         item.departments ?? [],
       );
 
@@ -328,10 +328,10 @@ export const typeHandlers = {
           disconnectConnectArr.map((v, idx) =>
             prisma.value.update({
               where: { id: updatedValue.id },
-              data: { departments: v },
+              data: { officerRankDepartments: v },
               include:
                 idx + 1 === disconnectConnectArr.length
-                  ? { departments: { include: { value: true } } }
+                  ? { officerRankDepartments: { include: { value: true } } }
                   : undefined,
             }),
           ),
