@@ -420,7 +420,8 @@ model Value {
   licenseType ValueLicenseType?
 
   /// OFFICER_RANK only
-  officerRankImageId String?
+  officerRankImageId     String?
+  officerRankDepartments DepartmentValue[] @relation("officerRankDepartments")
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
@@ -547,6 +548,7 @@ model DepartmentValue {
   isConfidential       Boolean              @default(false)
   Qualification        QualificationValue[]
   CombinedLeoUnit      CombinedLeoUnit[]
+  Value                Value[]              @relation("officerRankDepartments")
 }
 
 model DriversLicenseCategoryValue {
@@ -709,8 +711,8 @@ model Officer {
   departmentId                String?
   callsign                    String                       @db.VarChar(255)
   callsign2                   String                       @db.VarChar(255)
-  activeDivisionCallsign            IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
-  activeDivisionCallsignId          String?
+  activeDivisionCallsign      IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
+  activeDivisionCallsignId    String?
   incremental                 Int?
   // `division` is deprecated. Use `divisions` instead.
   division                    DivisionValue?               @relation("officerDivisionToDivision", fields: [divisionId], references: [id])

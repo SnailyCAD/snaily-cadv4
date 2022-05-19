@@ -6,6 +6,7 @@ export const BASE_VALUE_SCHEMA = z.object({
   licenseType: z.string().regex(LICENSE_TYPE_REGEX).nullable().optional(),
   isDefault: z.boolean().nullable().optional(),
   officerRankImageId: z.any().nullable().optional(),
+  officerRankDepartments: z.array(z.any()).nullable().optional(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 
