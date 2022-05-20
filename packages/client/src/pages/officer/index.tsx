@@ -9,6 +9,7 @@ import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import {
   Bolo,
+  CombinedLeoUnit,
   EmsFdDeputy,
   LeoIncident,
   Officer,
@@ -112,7 +113,7 @@ export default function OfficerDashboard({
     dispatchState.setActiveIncidents(activeIncidents);
     dispatchState.setAllOfficers(allOfficers);
 
-    function activeFilter(v: EmsFdDeputy | Officer) {
+    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
       return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
     }
 

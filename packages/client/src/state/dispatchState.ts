@@ -26,8 +26,8 @@ interface DispatchState {
   activeDeputies: EmsFdDeputy[];
   setActiveDeputies(deputies: EmsFdDeputy[]): void;
 
-  allOfficers: Officer[];
-  setAllOfficers(officers: Officer[]): void;
+  allOfficers: (Officer | CombinedLeoUnit)[];
+  setAllOfficers(officers: (Officer | CombinedLeoUnit)[]): void;
 
   allDeputies: EmsFdDeputy[];
   setAllDeputies(deputies: EmsFdDeputy[]): void;
