@@ -83,6 +83,14 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
+  function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+    if (suggestions.length >= 1) return;
+
+    inputProps?.onChange?.({ ...e, target: { ...e.target, name: e.target.name, value: "" } });
+    setLocalValue("");
+    e.target.value = "";
+  }
+
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
     setLocalValue(e.target.value);
@@ -96,6 +104,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
         onKeyDown={focusOnMenu}
         onFocus={handleFocus}
         onChange={handleChange}
+        onBlur={handleBlur}
       />
 
       {state === "loading" ? (
