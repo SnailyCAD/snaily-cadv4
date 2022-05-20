@@ -41,6 +41,7 @@
     "formik": "^2.2.9",
     "hex-color-regex": "^1.1.0",
     "is-hotkey": "^0.2.0",
+    "json2csv": "^5.0.7",
     "leaflet": "^1.7.1",
     "next": "^12.1.6",
     "next-intl": "2.7.2",
@@ -72,6 +73,7 @@
     "zustand": "^3.7.2"
   },
   "devDependencies": {
+    "@types/json2csv": "^5.0.3",
     "@types/leaflet": "^1.7.9",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",

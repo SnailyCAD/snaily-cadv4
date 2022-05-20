@@ -8,6 +8,7 @@ import { Dropdown } from "components/Dropdown";
 import { PenalCode, ValueType } from "@snailycad/types";
 import { AnyValue, isDivisionValue, isStatusValue } from "@snailycad/utils";
 import format from "date-fns/format";
+import { parseAsync } from "json2csv";
 
 interface Props {
   type: ValueType;
@@ -19,19 +20,31 @@ export function OptionsDropdown({ type, values }: Props) {
   const { openModal } = useModal();
   const download = useDownload();
 
-  function handleExport() {
+  async function handleExport(type: "csv" | "json") {
     const date = format(Date.now(), "yyyy-MM-dd-hh-ss-mm");
-    download({
-      filename: `${type.toLowerCase()}_${date}.json`,
-      data: JSON.stringify(omitUnnecessaryProperties([...values]), null, 4),
-    });
+    const filename = `${type.toLowerCase()}_${date}.${type}`;
+    const valuesData = omitUnnecessaryProperties([...values]);
+
+    if (type === "json") {
+      download({
+        filename,
+        data: JSON.stringify(valuesData, null, 4),
+      });
+    } else {
+      const data = await parseAsync(valuesData, { escapedQuote: "'", quote: "'" });
+
+      download({
+        filename,
+        data,
+      });
+    }
   }
 
   return (
     <Dropdown
       alignOffset={0}
       align="end"
-      className="dropdown-right"
+      className="dropdown-right min-w-[200px]"
       trigger={
         <Button className="flex items-center justify-center w-8 h-8">
           <ThreeDots width={15} height={15} className="text-gray-300" />
@@ -43,9 +56,15 @@ export function OptionsDropdown({ type, values }: Props) {
       </Dropdown.Item>
       <Dropdown.Item
         disabled={values.length <= 0 || type === ValueType.PENAL_CODE}
-        onClick={handleExport}
+        onClick={() => handleExport("json")}
       >
-        {t("exportValues")}
+        {t("exportValues")} (JSON)
+      </Dropdown.Item>
+      <Dropdown.Item
+        disabled={values.length <= 0 || type === ValueType.PENAL_CODE}
+        onClick={() => handleExport("csv")}
+      >
+        {t("exportValues")} (CSV)
       </Dropdown.Item>
     </Dropdown>
   );

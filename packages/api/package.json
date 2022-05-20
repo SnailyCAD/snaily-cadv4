@@ -59,6 +59,7 @@
     "discord-api-types": "0.32.1",
     "express": "4.18.1",
     "glob": "^8.0.1",
+    "json2csv": "^5.0.7",
     "jsonwebtoken": "8.5.1",
     "nanoid": "^3.3.4",
     "nodemon": "^2.0.16",
