@@ -147,7 +147,7 @@ function makeInitialValue(cad: cad, type: string) {
 interface FieldProps {
   description: string;
   label: string;
-  channels: any[];
+  channels: DiscordChannel[];
   fieldName: string;
 }
 

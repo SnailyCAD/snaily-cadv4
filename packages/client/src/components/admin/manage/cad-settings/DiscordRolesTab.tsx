@@ -62,7 +62,7 @@ export function DiscordRolesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    function toValue(arr: SelectValue<any>[]) {
+    function toValue<T>(arr: SelectValue<T>[]) {
       return arr.map((v) => v.value);
     }
 

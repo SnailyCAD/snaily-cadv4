@@ -1,4 +1,4 @@
-import { Rank, User } from "@prisma/client";
+import { Prisma, Rank, User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
@@ -90,7 +90,10 @@ export async function getActiveOfficer(
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
   const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
 
-  const filters: any[] = [{ status: { shouldDo: "SET_OFF_DUTY" } }, { status: { is: null } }];
+  const filters: Prisma.Enumerable<Prisma.OfficerWhereInput> = [
+    { status: { shouldDo: "SET_OFF_DUTY" } },
+    { status: { is: null } },
+  ];
 
   if (unitsInactivityFilter) {
     filters.push({

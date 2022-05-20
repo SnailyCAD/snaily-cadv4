@@ -641,7 +641,7 @@ export class LeoController {
 }
 
 export async function validateMaxDivisionsPerOfficer(
-  arr: any[],
+  arr: unknown[],
   cad: { miscCadSettings: MiscCadSettings } | null,
 ) {
   const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};

@@ -5,8 +5,7 @@ interface Props {
   children({ isDragging }: { isDragging: boolean }): React.ReactElement;
   canDrag?: boolean;
   type: string;
-  item: any;
-
+  item: unknown;
   onDrag?(isDragging: boolean): void;
 }
 

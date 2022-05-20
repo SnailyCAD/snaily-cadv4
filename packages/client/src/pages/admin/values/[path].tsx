@@ -292,9 +292,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req, query }) => {
-  const path = (query.path as string).replace("-", "_");
+  const path = (query.path as string).replace("-", "_") as Lowercase<ValueType>;
 
-  const pathsRecord: any = {
+  const pathsRecord: Partial<Record<Lowercase<ValueType>, string>> = {
     department: "officer_rank",
     division: "department",
     qualification: "department",

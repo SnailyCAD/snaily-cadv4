@@ -120,15 +120,13 @@ export class IncidentController {
   async assignToIncident(
     @PathParams("type") callType: "assign" | "unassign",
     @PathParams("incidentId") incidentId: string,
-    @BodyParams() body: any,
+    @BodyParams("unit") rawUnitId: string | null,
   ) {
-    const { unit: rawUnit } = body;
-
-    if (!rawUnit) {
+    if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
     }
 
-    const { unit, type } = await findUnit(rawUnit);
+    const { unit, type } = await findUnit(rawUnitId);
     if (!unit) {
       throw new NotFound("unitNotFound");
     }

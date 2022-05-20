@@ -2,6 +2,7 @@ import { MiscCadSettings, JailTimeScale } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type { DisconnectOrConnect } from "utils/manyToMany";
 
 interface MaxDepartmentOptions {
   type: "emsFdDeputy" | "officer";
@@ -80,7 +81,7 @@ export async function updateOfficerDivisionsCallsigns({
   callsigns,
 }: {
   officerId: string;
-  disconnectConnectArr: any[];
+  disconnectConnectArr: DisconnectOrConnect<string, never>[];
   callsigns?: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
 }) {
   if (!callsigns) return;

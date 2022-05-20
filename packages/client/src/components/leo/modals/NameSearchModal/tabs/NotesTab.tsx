@@ -13,13 +13,17 @@ import { ManageNoteModal } from "../ManageNoteModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 
-interface Props {
+interface Props<T extends VehicleSearchResult | NameSearchResult> {
   currentResult: VehicleSearchResult | NameSearchResult;
-  setCurrentResult: any;
+  setCurrentResult(value: T | null | undefined): void;
   type: "CITIZEN" | "VEHICLE";
 }
 
-export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
+export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
+  currentResult,
+  setCurrentResult,
+  type,
+}: Props<T>) {
   const [open, setOpen] = React.useState(false);
   const [tempNote, setTempNote] = React.useState<Note | null>(null);
   const t = useTranslations();
@@ -38,7 +42,7 @@ export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
       setCurrentResult({
         ...currentResult,
         notes: currentResult.notes?.filter((v) => v.id !== tempNote.id),
-      });
+      } as T);
       setTempNote(null);
       closeModal(ModalIds.AlertDeleteNote);
     }
@@ -125,7 +129,7 @@ export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
               setCurrentResult({
                 ...currentResult,
                 notes: [...(currentResult.notes ?? []), note],
-              });
+              } as T);
             }}
             onUpdate={(note) => {
               if (!currentResult.notes) return;
@@ -134,7 +138,7 @@ export function NotesTab({ currentResult, setCurrentResult, type }: Props) {
 
               notes[idx] = note;
 
-              setCurrentResult({ ...currentResult, notes });
+              setCurrentResult({ ...currentResult, notes } as T);
             }}
             note={tempNote}
           />
