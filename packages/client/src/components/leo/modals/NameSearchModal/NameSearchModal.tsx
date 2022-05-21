@@ -33,7 +33,6 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
-import { CreateCitizenModal } from "./CreateCitizenModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -41,6 +40,10 @@ const VehicleSearchModal = dynamic(
 
 const WeaponSearchModal = dynamic(
   async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
+);
+
+const CreateCitizenModal = dynamic(
+  async () => (await import("./CreateCitizenModal")).CreateCitizenModal,
 );
 
 function AutoSubmit() {
@@ -481,7 +484,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
-            {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
+            {showCreateCitizen && isLeo ? <CreateCitizenModal /> : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />
