@@ -1,0 +1,22 @@
+{
+  "Ems": {
+    "emsFd": "EMS/FD",
+    "createMedicalRecord": "Créer Dossier Médical",
+    "searchMedicalRecord": "Rechercher Dossier Médical",
+    "activeDeputies": "Adjoints Actifs",
+    "selectDeputy": "Sélectionner Adjoint",
+    "deputy": "Adjoint",
+    "myDeputies": "Mes Adjoints",
+    "createDeputy": "Créer Adjoint",
+    "editDeputy": "Modifier Adjoint",
+    "deputyName": "Nom de l'adjoint",
+    "deleteDeputy": "Supprimer Adjoint",
+    "noDeputies": "Vous n'avez aucun adjoint",
+    "noActiveDeputies": "Il n'y a aucun adjoint actif",
+    "citizenNoMedicalRecords": "Ce citoyen n'a aucun dossier médical.",
+    "activeDeputy": "Adjoint Actif",
+    "declareDead": "Déclarer mort",
+    "declareAlive": "Déclarer vivant",
+    "alert_deleteDeputy": "Êtes-vous sûr de vouloir supprimer <span>{deputy}</span> ? Cette action ne peut être annulée."
+  }
+}
