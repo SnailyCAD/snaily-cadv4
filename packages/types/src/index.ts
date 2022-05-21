@@ -755,6 +755,7 @@ export interface OfficerLog {
   endedAt: Date | null;
   userId: string | null;
   officerId: string;
+  emsFdDeputyId: string;
   createdAt: Date;
   updatedAt: Date;
 }

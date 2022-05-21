@@ -78,7 +78,7 @@ export class AdminManageUnitsController {
     if (!unit) {
       unit = await prisma.emsFdDeputy.findUnique({
         where: { id },
-        include: { ...unitProperties, ...extraInclude },
+        include: { ...unitProperties, ...extraInclude, logs: true },
       });
     }
 
