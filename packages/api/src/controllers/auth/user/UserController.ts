@@ -115,21 +115,33 @@ export class AccountController {
       });
 
       await handleStartEndOfficerLog({
-        officer,
+        unit: officer,
         shouldDo: "SET_OFF_DUTY",
         socket: this.socket,
         userId,
+        type: "leo",
       });
 
       await this.socket.emitUpdateOfficerStatus();
     }
 
-    await prisma.emsFdDeputy.updateMany({
-      where: { userId },
-      data: { statusId: null, activeCallId: null },
+    const emsFdDeputy = await prisma.emsFdDeputy.findFirst({
+      where: {
+        userId,
+        status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+      },
     });
 
-    await this.socket.emitUpdateDeputyStatus();
+    if (emsFdDeputy) {
+      await handleStartEndOfficerLog({
+        unit: emsFdDeputy,
+        shouldDo: "SET_OFF_DUTY",
+        socket: this.socket,
+        userId,
+        type: "ems-fd",
+      });
+      await this.socket.emitUpdateDeputyStatus();
+    }
 
     setCookie({
       res,

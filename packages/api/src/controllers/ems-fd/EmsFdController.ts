@@ -43,6 +43,21 @@ export class EmsFdController {
     return { deputies };
   }
 
+  @Get("/logs")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
+  async getDeputyLogs(@Context("user") user: User) {
+    const logs = await prisma.officerLog.findMany({
+      where: { userId: user.id, officerId: null },
+      include: { emsFdDeputy: { include: unitProperties } },
+      orderBy: { startedAt: "desc" },
+    });
+
+    return logs;
+  }
+
   @Post("/")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,

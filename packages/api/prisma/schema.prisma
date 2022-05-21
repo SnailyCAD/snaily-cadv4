@@ -822,14 +822,16 @@ model StatusValue {
 }
 
 model OfficerLog {
-  id        String    @id @default(uuid())
-  startedAt DateTime  @default(now())
-  endedAt   DateTime?
-  userId    String?
-  officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
+  id            String       @id @default(uuid())
+  startedAt     DateTime     @default(now())
+  endedAt       DateTime?
+  userId        String?
+  officer       Officer?     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id], onDelete: Cascade)
+  emsFdDeputyId String?
 }
 
 model ImpoundedVehicle {
@@ -1120,6 +1122,7 @@ model EmsFdDeputy {
   activeCallId              String?
   whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId         String?
+  logs                      OfficerLog[]
   AssignedUnit              AssignedUnit[]
   lastStatusChangeTimestamp DateTime?
   qualifications            UnitQualification[]
