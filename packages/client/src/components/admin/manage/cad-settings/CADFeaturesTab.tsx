@@ -171,6 +171,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
       </>
     ),
   },
+  CREATE_USER_CITIZEN_LEO: {
+    name: "Create non-existing citizens (LEO)",
+    description:
+      "When enabled, this will allow officers to create citizens that don't exist yet when searching for them. This citizen will not be connected to any user.",
+  },
 };
 
 export function CADFeaturesTab() {
