@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -13,15 +14,19 @@ import { Select } from "components/form/Select";
 import { ModalIds } from "types/ModalIds";
 import { CUSTOM_ROLE_SCHEMA } from "@snailycad/schemas";
 import { Permissions } from "@snailycad/permissions";
+import { formatPermissionName } from "../users/ManagePermissionsModal";
+import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 
 interface Props {
   role: CustomRole | null;
   onClose?(): void;
-  onUpdate?(old: CustomRole, newField: CustomRole): void;
-  onCreate?(newField: CustomRole): void;
+  onUpdate?(old: CustomRole, newRole: CustomRole): void;
+  onCreate?(role: CustomRole): void;
 }
 
 export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Props) {
+  const [image, setImage] = React.useState<File | string | null>(null);
+
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
@@ -36,28 +41,47 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
+    let jsonId;
+
     if (role) {
-      const { json } = await execute(`/admin/manage/custom-fields/${role.id}`, {
+      const { json } = await execute(`/admin/manage/custom-roles/${role.id}`, {
         method: "PUT",
         data: values,
         helpers,
       });
 
       if (json?.id) {
+        jsonId = json.id;
         closeModal(ModalIds.ManageCustomRole);
         onUpdate?.(role, json);
       }
     } else {
-      const { json } = await execute("/admin/manage/custom-fields", {
+      const { json } = await execute("/admin/manage/custom-roles", {
         method: "POST",
         data: values,
         helpers,
       });
 
       if (json?.id) {
+        jsonId = json.id;
         closeModal(ModalIds.ManageCustomRole);
         onCreate?.(json);
       }
+    }
+
+    const validatedImage = validateFile(image, helpers);
+
+    if (validatedImage) {
+      const fd = new FormData();
+
+      if (typeof validatedImage === "object") {
+        fd.set("image", validatedImage, validatedImage.name);
+      }
+
+      await execute(`/admin/manage/custom-roles/${jsonId}/image`, {
+        method: "POST",
+        data: fd,
+      });
     }
   }
 
@@ -91,13 +115,15 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
                 closeMenuOnSelect={false}
                 values={Object.values(Permissions).map((permission) => ({
                   value: permission,
-                  label: permission,
+                  label: formatPermissionName(permission),
                 }))}
                 value={values.permissions}
                 name="permissions"
                 onChange={handleChange}
               />
             </FormField>
+
+            <ImageSelectInput image={image} setImage={setImage} />
 
             <footer className="flex justify-end mt-5">
               <Button type="reset" onClick={handleClose} variant="cancel">
