@@ -21,7 +21,7 @@ import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 
-const vehiclesInclude = {
+export const vehicleSearchInclude = {
   model: { include: { value: true } },
   registrationStatus: true,
   insuranceStatus: true,
@@ -43,7 +43,7 @@ export const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => 
   return {
     officers: { select: { department: { select: { isConfidential: true } } } },
     ...citizenInclude,
-    vehicles: { include: vehiclesInclude },
+    vehicles: { include: vehicleSearchInclude },
     businesses: true,
     medicalRecords: true,
     customFields: { include: { field: true } },
@@ -196,7 +196,7 @@ export class SearchController {
           { vinNumber: { startsWith: plateOrVin.toUpperCase() } },
         ],
       },
-      include: vehiclesInclude,
+      include: vehicleSearchInclude,
     };
 
     if (includeMany) {
@@ -234,7 +234,7 @@ export class SearchController {
       where: { fieldId: data.customFieldId, value: { mode: "insensitive", equals: data.query } },
       include: {
         Citizens: { include: citizenSearchInclude(cad) },
-        RegisteredVehicles: { include: vehiclesInclude },
+        RegisteredVehicles: { include: vehicleSearchInclude },
         Weapons: { include: weaponsInclude },
         field: true,
       },

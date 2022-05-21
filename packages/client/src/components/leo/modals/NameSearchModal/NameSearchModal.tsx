@@ -231,7 +231,7 @@ export function NameSearchModal() {
             </FormField>
 
             {typeof results === "boolean" ? (
-              <div className="flex items-center justify-between mt-5">
+              <div className="mt-5">
                 <p>{t("nameNotFound")}</p>
               </div>
             ) : null}

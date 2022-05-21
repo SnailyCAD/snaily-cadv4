@@ -20,6 +20,8 @@ import { useBolos } from "hooks/realtime/useBolos";
 import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -36,8 +38,11 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   const t = useTranslations("Leo");
   const { state, execute } = useFetch();
   const router = useRouter();
+  const { CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
+
   const isLeo = router.pathname === "/officer";
   const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
+  const showCreateVehicle = CREATE_USER_CITIZEN_LEO && currentResult === null;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -137,6 +142,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
                   apiPath: "/search/vehicle?includeMany=true",
                   method: "POST",
                   dataKey: "plateOrVin",
+                  allowUnknown: true,
                 }}
                 inputProps={{
                   value: values.plateOrVin,
@@ -184,6 +190,12 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
             <footer className="mt-5 flex justify-between">
               <div className="flex gap-2">
+                {showCreateVehicle ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
+                    {t("createVehicle")}
+                  </Button>
+                ) : null}
+
                 {showMarkStolen ? (
                   <Button
                     type="button"
@@ -237,6 +249,16 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
       <ManageVehicleFlagsModal />
       <ManageVehicleLicensesModal />
+      {showCreateVehicle ? (
+        <RegisterVehicleModal
+          onCreate={(vehicle) => {
+            closeModal(ModalIds.RegisterVehicle);
+            setCurrentResult(vehicle as VehicleSearchResult);
+          }}
+          vehicle={null}
+          citizens={[]}
+        />
+      ) : null}
     </Modal>
   );
 }

@@ -3,6 +3,7 @@ import {
   LICENSE_SCHEMA,
   LEO_VEHICLE_LICENSE_SCHEMA,
   CREATE_CITIZEN_SCHEMA,
+  VEHICLE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
@@ -18,6 +19,7 @@ import {
   ValueType,
   VehicleInspectionStatus,
   VehicleTaxStatus,
+  WhitelistStatus,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { Description, Post, Put } from "@tsed/schema";
@@ -27,8 +29,10 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { validateCustomFields } from "lib/custom-fields";
 import { isFeatureEnabled } from "lib/cad";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { citizenSearchInclude } from "./SearchController";
+import { citizenSearchInclude, vehicleSearchInclude } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
+import { generateString } from "utils/generateString";
+import type { User } from "@snailycad/types";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -332,5 +336,90 @@ export class SearchActionsController {
     });
 
     return citizen;
+  }
+
+  @Post("/vehicle")
+  @Description("Register a new vehicle to a citizen as LEO")
+  async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
+    const data = validateSchema(VEHICLE_SCHEMA, body);
+    const user = ctx.get("user") as User;
+    const cad = ctx.get("cad") as {
+      features: CadFeature[];
+      miscCadSettings?: MiscCadSettings;
+    };
+
+    const citizen = await prisma.citizen.findUnique({
+      where: {
+        id: data.citizenId,
+      },
+    });
+
+    if (!citizen) {
+      throw new NotFound("NotFound");
+    }
+
+    const existing = await prisma.registeredVehicle.findUnique({
+      where: {
+        plate: data.plate.toUpperCase(),
+      },
+    });
+
+    if (existing) {
+      throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
+    }
+
+    const plateLength = cad.miscCadSettings?.maxPlateLength ?? 8;
+    if (data.plate.length > plateLength) {
+      throw new ExtendedBadRequest({ plate: "plateToLong" });
+    }
+
+    const isCustomEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.CUSTOM_TEXTFIELD_VALUES,
+      defaultReturn: false,
+    });
+
+    let modelId = data.model;
+
+    if (isCustomEnabled) {
+      const newModel = await prisma.vehicleValue.create({
+        data: {
+          value: {
+            create: {
+              isDefault: false,
+              type: "VEHICLE",
+              value: data.model,
+            },
+          },
+        },
+      });
+
+      modelId = newModel.id;
+    }
+
+    const isDmvEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.DMV,
+      defaultReturn: false,
+    });
+
+    const vehicle = await prisma.registeredVehicle.create({
+      data: {
+        plate: data.plate.toUpperCase(),
+        color: data.color,
+        citizenId: citizen.id,
+        modelId,
+        registrationStatusId: data.registrationStatus,
+        vinNumber: data.vinNumber || generateString(17),
+        userId: user.id || undefined,
+        insuranceStatusId: data.insuranceStatus,
+        taxStatus: data.taxStatus as VehicleTaxStatus | null,
+        inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
+        dmvStatus: isDmvEnabled ? WhitelistStatus.PENDING : WhitelistStatus.ACCEPTED,
+      },
+      include: vehicleSearchInclude,
+    });
+
+    return vehicle;
   }
 }

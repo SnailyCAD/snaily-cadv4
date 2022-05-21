@@ -31,6 +31,8 @@ import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
+import { useImageUrl } from "hooks/useImageUrl";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
@@ -63,6 +65,10 @@ export function RegisterVehicleModal({
   const validate = handleValidate(VEHICLE_SCHEMA);
   const isDisabled = router.pathname === "/citizen/[id]";
   const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
+  const isLeo = router.pathname.includes("/officer");
+
+  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { makeImageUrl } = useImageUrl();
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);
@@ -73,7 +79,7 @@ export function RegisterVehicleModal({
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    if (vehicle) {
+    if (vehicle && !isLeo) {
       const { json } = await execute(`/vehicles/${vehicle.id}`, {
         method: "PUT",
         data: values,
@@ -84,7 +90,8 @@ export function RegisterVehicleModal({
         onUpdate?.(vehicle, json);
       }
     } else {
-      const { json } = await execute("/vehicles", {
+      const path = isLeo ? "/search/actions/vehicle" : "/vehicles";
+      const { json } = await execute(path, {
         method: "POST",
         data: values,
         helpers,
@@ -110,6 +117,11 @@ export function RegisterVehicleModal({
     taxStatus: vehicle?.taxStatus ?? null,
     registrationStatus: vehicle?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : vehicle?.citizenId ?? "",
+    name: isDisabled
+      ? `${citizen.name} ${citizen.surname}`
+      : vehicle
+      ? `${vehicle.citizen.name} ${vehicle.citizen.surname}`
+      : "",
     plate: vehicle?.plate ?? "",
     vinNumber: vehicle?.vinNumber ?? "",
     reportedStolen: vehicle?.reportedStolen ?? false,
@@ -194,20 +206,60 @@ export function RegisterVehicleModal({
             )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <Select
-                values={
-                  isDisabled
-                    ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
-                    : citizens.map((citizen) => ({
-                        label: `${citizen.name} ${citizen.surname}`,
-                        value: citizen.id,
-                      }))
-                }
-                value={isDisabled ? citizen.id : values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                disabled={isDisabled}
-              />
+              {isLeo ? (
+                <InputSuggestions
+                  onSuggestionClick={(suggestion: NameSearchResult) => {
+                    setValues({
+                      ...values,
+                      citizenId: suggestion.id,
+                      name: `${suggestion.name} ${suggestion.surname}`,
+                    });
+                  }}
+                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                    <div className="flex items-center">
+                      {suggestion.imageId ? (
+                        <img
+                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                          draggable={false}
+                          src={makeImageUrl("citizens", suggestion.imageId)}
+                        />
+                      ) : null}
+                      <p>
+                        {suggestion.name} {suggestion.surname}{" "}
+                        {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                          <>(SSN: {suggestion.socialSecurityNumber})</>
+                        ) : null}
+                      </p>
+                    </div>
+                  )}
+                  options={{
+                    apiPath: "/search/name",
+                    method: "POST",
+                    dataKey: "name",
+                    allowUnknown: true,
+                  }}
+                  inputProps={{
+                    value: values.name,
+                    name: "name",
+                    onChange: handleChange,
+                  }}
+                />
+              ) : (
+                <Select
+                  values={
+                    isDisabled
+                      ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
+                      : citizens.map((citizen) => ({
+                          label: `${citizen.name} ${citizen.surname}`,
+                          value: citizen.id,
+                        }))
+                  }
+                  value={isDisabled ? citizen.id : values.citizenId}
+                  name="citizenId"
+                  onChange={handleChange}
+                  disabled={isDisabled}
+                />
+              )}
             </FormField>
 
             <FormRow>
