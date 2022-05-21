@@ -20,6 +20,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   DMV: "/leo/dmv",
   USER_API_TOKENS: "/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",
+  CREATE_USER_CITIZEN_LEO: "/v1/search/actions/citizen",
 };
 
 @Middleware()

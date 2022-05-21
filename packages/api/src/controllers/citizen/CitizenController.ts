@@ -284,7 +284,7 @@ export class CitizenController {
   @Post("/:id")
   async uploadImageToCitizen(
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
   ) {
@@ -294,8 +294,14 @@ export class CitizenController {
       },
     });
 
+    const isCreateCitizenEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CREATE_USER_CITIZEN_LEO,
+      features: cad.features,
+    });
+
     const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
-    if (checkCitizenUserId) {
+    if (checkCitizenUserId && !isCreateCitizenEnabled) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
       throw new NotFound("citizenNotFound");
