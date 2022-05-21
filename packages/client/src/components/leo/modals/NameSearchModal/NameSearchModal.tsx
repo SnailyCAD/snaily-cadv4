@@ -128,6 +128,7 @@ export function NameSearchModal() {
 
     if (Array.isArray(json) && json.length <= 0) {
       setResults(false);
+      setCurrentResult(null);
       return;
     }
 
@@ -141,6 +142,7 @@ export function NameSearchModal() {
       setResults(Array.isArray(json) ? json : [json]);
     } else {
       setResults(false);
+      setCurrentResult(null);
     }
   }
 
