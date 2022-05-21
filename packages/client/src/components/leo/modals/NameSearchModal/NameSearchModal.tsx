@@ -33,6 +33,7 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
+import { CreateCitizenModal } from "./CreateCitizenModal";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -68,7 +69,7 @@ export function NameSearchModal() {
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { bolos } = useBolos();
 
   const { openModal } = useModal();
@@ -212,6 +213,7 @@ export function NameSearchModal() {
                   apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
+                  allowUnknown: true,
                 }}
                 inputProps={{
                   value: values.name,
@@ -221,7 +223,17 @@ export function NameSearchModal() {
               />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}
+            {typeof results === "boolean" ? (
+              <div className="flex items-center justify-between mt-5">
+                <p>{t("nameNotFound")}</p>
+
+                {CREATE_USER_CITIZEN_LEO ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
+                    {t("createCitizen")}
+                  </Button>
+                ) : null}
+              </div>
+            ) : null}
 
             {Array.isArray(results) && !currentResult ? (
               <ul className="space-y-2">
@@ -466,6 +478,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
+            {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />

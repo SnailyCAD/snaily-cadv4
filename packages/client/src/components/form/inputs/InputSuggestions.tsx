@@ -15,7 +15,13 @@ interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
   onSuggestionClick?(suggestion: any): void;
   Component({ suggestion }: { suggestion: any }): JSX.Element;
-  options: { apiPath: string | ApiPathFunc; method: Method; minLength?: number; dataKey?: string };
+  options: {
+    apiPath: string | ApiPathFunc;
+    method: Method;
+    minLength?: number;
+    dataKey?: string;
+    allowUnknown?: boolean;
+  };
 }
 
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
@@ -84,7 +90,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   }
 
   function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
-    if (suggestions.length >= 1) return;
+    if (suggestions.length >= 1 || options.allowUnknown) return;
 
     inputProps?.onChange?.({ ...e, target: { ...e.target, name: e.target.name, value: "" } });
     setLocalValue("");

@@ -11,6 +11,7 @@ const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CITIZEN_RECORD_APPROVAL: { isEnabled: false },
   COMMON_CITIZEN_CARDS: { isEnabled: false },
   STEAM_OAUTH: { isEnabled: false },
+  CREATE_USER_CITIZEN_LEO: { isEnabled: false },
 };
 
 export async function disabledFeatureToCadFeature() {
