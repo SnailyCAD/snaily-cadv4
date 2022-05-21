@@ -167,7 +167,7 @@ export default function OfficerDashboard({
 
       <Modals.SelectOfficerModal />
 
-      {activeOfficer ? (
+      {leoState.activeOfficer ? (
         <>
           <Modals.SwitchDivisionCallsignModal />
           <Modals.NotepadModal />
