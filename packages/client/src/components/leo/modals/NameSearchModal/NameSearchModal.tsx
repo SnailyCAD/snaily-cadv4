@@ -168,6 +168,8 @@ export function NameSearchModal() {
     });
   }
 
+  const showCreateCitizen =
+    CREATE_USER_CITIZEN_LEO && typeof results === "boolean" && !currentResult;
   const hasWarrants =
     !currentResult?.isConfidential &&
     (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
@@ -226,12 +228,6 @@ export function NameSearchModal() {
             {typeof results === "boolean" ? (
               <div className="flex items-center justify-between mt-5">
                 <p>{t("nameNotFound")}</p>
-
-                {CREATE_USER_CITIZEN_LEO ? (
-                  <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
-                    {t("createCitizen")}
-                  </Button>
-                ) : null}
               </div>
             ) : null}
 
@@ -426,35 +422,42 @@ export function NameSearchModal() {
 
             <footer
               className={`mt-4 pt-3 flex ${
-                currentResult && isLeo ? "justify-between" : "justify-end"
+                (currentResult && isLeo) || showCreateCitizen ? "justify-between" : "justify-end"
               }`}
             >
-              {currentResult && isLeo ? (
-                <div>
-                  {Object.values(RecordType).map((type) => (
+              <div>
+                {showCreateCitizen ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
+                    {t("createCitizen")}
+                  </Button>
+                ) : null}
+                {currentResult && isLeo ? (
+                  <>
+                    {Object.values(RecordType).map((type) => (
+                      <Button
+                        key={type}
+                        type="button"
+                        onClick={() => handleOpenCreateRecord(type)}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t(normalizeValue(`CREATE_${type}`))}
+                      </Button>
+                    ))}
+
                     <Button
-                      key={type}
+                      small
                       type="button"
-                      onClick={() => handleOpenCreateRecord(type)}
+                      onClick={handleDeclare}
+                      disabled={state === "loading"}
                       variant="cancel"
                       className="px-1.5"
                     >
-                      {t(normalizeValue(`CREATE_${type}`))}
+                      {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
                     </Button>
-                  ))}
-
-                  <Button
-                    small
-                    type="button"
-                    onClick={handleDeclare}
-                    disabled={state === "loading"}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
-                  </Button>
-                </div>
-              ) : null}
+                  </>
+                ) : null}
+              </div>
 
               <div className="flex">
                 <Button
