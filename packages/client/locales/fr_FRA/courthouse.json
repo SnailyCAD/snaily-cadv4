@@ -1,0 +1,31 @@
+{
+  "Courthouse": {
+    "courthouse": "Tribunal de San Andreas",
+    "requestExpungement": "Demande de radiation",
+    "noExpungementRequests": "Vous n'avez pas de demande de radiation",
+    "request": "Demande",
+    "noPendingRequests": "Il n'y a pas de demande de radiation en cours",
+    "expungementRequests": "Demandes de radiation",
+    "nameChangeRequests": "Demandes de changement de nom",
+    "requestNameChange": "Demande de changement de nom",
+    "noNameChangeRequests": "Il n'y a pas de demandes de changement de nom.",
+    "newName": "Nouveau Nom",
+    "newSurname": "Nouveau Prénom",
+    "status": "Statut",
+    "courtEntries": "Entrées du tribunal",
+    "noCourtEntries": "Il n'y a aucune entrée.",
+    "addCourtEntry": "Ajouter un entrée",
+    "deleteCourtEntry": "Supprimer l'entrée",
+    "manageCourtEntry": "Gérer l'entrée",
+    "caseNumber": "Numéro de Dossier",
+    "title": "Titre",
+    "dates": "Dates",
+    "addDate": "Ajouter Date",
+    "manageCourtDate": "Gérer date",
+    "date": "Date",
+    "note": "Note",
+    "deleteCourtDate": "Supprimer la date",
+    "alert_deleteCourtEntry": "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut être annulée.",
+    "alert_deleteCourtDate": "Êtes-vous sûr de vouloir supprimer cette date ? Cette action ne peut être annulée."
+  }
+}
