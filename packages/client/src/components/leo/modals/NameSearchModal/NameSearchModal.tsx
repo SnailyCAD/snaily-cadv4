@@ -173,8 +173,6 @@ export function NameSearchModal() {
     });
   }
 
-  const showCreateCitizen =
-    CREATE_USER_CITIZEN_LEO && typeof results === "boolean" && !currentResult;
   const hasWarrants =
     !currentResult?.isConfidential &&
     (currentResult?.warrants.filter((v) => v.status === "ACTIVE").length ?? 0) > 0;
@@ -427,11 +425,13 @@ export function NameSearchModal() {
 
             <footer
               className={`mt-4 pt-3 flex ${
-                (currentResult && isLeo) || showCreateCitizen ? "justify-between" : "justify-end"
+                (currentResult || CREATE_USER_CITIZEN_LEO) && isLeo
+                  ? "justify-between"
+                  : "justify-end"
               }`}
             >
               <div>
-                {showCreateCitizen ? (
+                {CREATE_USER_CITIZEN_LEO ? (
                   <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
                     {t("createCitizen")}
                   </Button>
@@ -486,7 +486,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
-            {showCreateCitizen && isLeo ? <CreateCitizenModal /> : null}
+            {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />

@@ -42,7 +42,6 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
   const isLeo = router.pathname === "/officer";
   const showMarkStolen = currentResult && isLeo && !currentResult.reportedStolen;
-  const showCreateVehicle = CREATE_USER_CITIZEN_LEO && currentResult === null;
 
   const bolo = React.useMemo(() => {
     if (!currentResult) return null;
@@ -190,7 +189,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
             <footer className="mt-5 flex justify-between">
               <div className="flex gap-2">
-                {showCreateVehicle ? (
+                {CREATE_USER_CITIZEN_LEO && isLeo ? (
                   <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
                     {t("createVehicle")}
                   </Button>
@@ -249,7 +248,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
       <ManageVehicleFlagsModal />
       <ManageVehicleLicensesModal />
-      {showCreateVehicle ? (
+      {CREATE_USER_CITIZEN_LEO && isLeo ? (
         <RegisterVehicleModal
           onCreate={(vehicle) => {
             closeModal(ModalIds.RegisterVehicle);
