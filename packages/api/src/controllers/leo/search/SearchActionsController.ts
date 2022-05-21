@@ -27,9 +27,8 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { validateCustomFields } from "lib/custom-fields";
 import { isFeatureEnabled } from "lib/cad";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { validateImgurURL } from "utils/image";
-import { generateString } from "utils/generateString";
 import { citizenSearchInclude } from "./SearchController";
+import { citizenObjectFromData } from "lib/citizen";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -328,27 +327,7 @@ export class SearchActionsController {
     const defaultLicenseValueId = defaultLicenseValue?.id ?? null;
 
     const citizen = await prisma.citizen.create({
-      data: {
-        address: data.address,
-        postal: data.postal || null,
-        weight: data.weight,
-        height: data.height,
-        hairColor: data.hairColor,
-        dateOfBirth: data.dateOfBirth,
-        ethnicityId: data.ethnicity,
-        name: data.name,
-        surname: data.surname,
-        genderId: data.gender,
-        eyeColor: data.eyeColor,
-        driversLicenseId: data.driversLicense || defaultLicenseValueId,
-        weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
-        pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
-        waterLicenseId: data.waterLicense || defaultLicenseValueId,
-        phoneNumber: data.phoneNumber || null,
-        imageId: validateImgurURL(data.image),
-        socialSecurityNumber: data.socialSecurityNumber ?? generateString(9, { numbersOnly: true }),
-        occupation: data.occupation || null,
-      },
+      data: citizenObjectFromData(data, defaultLicenseValueId),
       include: citizenSearchInclude(cad),
     });
 
