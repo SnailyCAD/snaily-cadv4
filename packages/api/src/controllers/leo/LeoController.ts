@@ -7,7 +7,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -25,7 +25,11 @@ import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import {
+  getInactivityFilter,
+  updateOfficerDivisionsCallsigns,
+  validateMaxDepartmentsEachPerUser,
+} from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -138,6 +142,12 @@ export class LeoController {
 
     const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns,
+    });
+
     const updated = getLastOfArray(
       await prisma.$transaction(
         disconnectConnectArr.map((v, idx) =>
@@ -242,6 +252,12 @@ export class LeoController {
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
 
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns,
+    });
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -297,19 +313,15 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getOfficerLogs(@Context() ctx: Context) {
+  async getOfficerLogs(@Context("user") user: User) {
     const logs = await prisma.officerLog.findMany({
-      where: {
-        userId: ctx.get("user").id,
-      },
+      where: { userId: user.id, emsFdDeputyId: null },
       include: {
         officer: {
           include: leoProperties,
         },
       },
-      orderBy: {
-        startedAt: "desc",
-      },
+      orderBy: { startedAt: "desc" },
     });
 
     return logs;
@@ -575,10 +587,57 @@ export class LeoController {
 
     return data;
   }
+
+  @Put("/callsign/:officerId")
+  @Description("Update the officer's activeDivisionCallsign")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.rank !== "USER",
+    permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns],
+  })
+  async updateOfficerDivisionCallsign(
+    @BodyParams() body: unknown,
+    @PathParams("officerId") officerId: string,
+  ) {
+    const officer = await prisma.officer.findUnique({
+      where: { id: officerId },
+    });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
+    const data = validateSchema(SWITCH_CALLSIGN_SCHEMA, body);
+
+    let callsignId = null;
+    /**
+     * yes, !== "null" can be here, in the UI its handled that way. A bit weird I know, but it does the job!
+     */
+    if (data.callsign && data.callsign !== "null") {
+      const callsign = await prisma.individualDivisionCallsign.findFirst({
+        where: { id: data.callsign, officerId: officer.id },
+      });
+
+      if (!callsign) {
+        throw new NotFound("callsignNotFound");
+      }
+
+      callsignId = callsign.id;
+    }
+
+    const updated = await prisma.officer.update({
+      where: { id: officer.id },
+      data: { activeDivisionCallsignId: callsignId },
+      include: leoProperties,
+    });
+
+    await this.socket.emitUpdateOfficerStatus();
+
+    return updated;
+  }
 }
 
 export async function validateMaxDivisionsPerOfficer(
-  arr: any[],
+  arr: unknown[],
   cad: { miscCadSettings: MiscCadSettings } | null,
 ) {
   const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};

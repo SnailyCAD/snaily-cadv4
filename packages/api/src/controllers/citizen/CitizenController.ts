@@ -10,7 +10,6 @@ import { CREATE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
-import { validateImgurURL } from "utils/image";
 import { generateString } from "utils/generateString";
 import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
@@ -19,6 +18,7 @@ import { validateSchema } from "lib/validateSchema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { citizenObjectFromData } from "lib/citizen";
 
 export const citizenInclude = {
   user: { select: userProperties },
@@ -199,25 +199,7 @@ export class CitizenController {
     const citizen = await prisma.citizen.create({
       data: {
         userId: user.id || undefined,
-        address: data.address,
-        postal: data.postal || null,
-        weight: data.weight,
-        height: data.height,
-        hairColor: data.hairColor,
-        dateOfBirth: data.dateOfBirth,
-        ethnicityId: data.ethnicity,
-        name: data.name,
-        surname: data.surname,
-        genderId: data.gender,
-        eyeColor: data.eyeColor,
-        driversLicenseId: data.driversLicense || defaultLicenseValueId,
-        weaponLicenseId: data.weaponLicense || defaultLicenseValueId,
-        pilotLicenseId: data.pilotLicense || defaultLicenseValueId,
-        waterLicenseId: data.waterLicense || defaultLicenseValueId,
-        phoneNumber: data.phoneNumber || null,
-        imageId: validateImgurURL(data.image),
-        socialSecurityNumber: data.socialSecurityNumber ?? generateString(9, { numbersOnly: true }),
-        occupation: data.occupation || null,
+        ...citizenObjectFromData(data, defaultLicenseValueId),
       },
     });
 
@@ -259,18 +241,7 @@ export class CitizenController {
         id: citizen.id,
       },
       data: {
-        address: data.address,
-        postal: data.postal || null,
-        weight: data.weight,
-        height: data.height,
-        hairColor: data.hairColor,
-        dateOfBirth: data.dateOfBirth,
-        ethnicityId: data.ethnicity,
-        genderId: data.gender,
-        eyeColor: data.eyeColor,
-        phoneNumber: data.phoneNumber,
-        occupation: data.occupation,
-        imageId: validateImgurURL(data.image),
+        ...citizenObjectFromData(data),
         socialSecurityNumber:
           data.socialSecurityNumber ??
           (!citizen.socialSecurityNumber ? generateString(9, { numbersOnly: true }) : undefined),
@@ -284,7 +255,7 @@ export class CitizenController {
   @Post("/:id")
   async uploadImageToCitizen(
     @Context("user") user: User,
-    @Context("cad") cad: cad,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
     @PathParams("id") citizenId: string,
     @MultipartFile("image") file: PlatformMulterFile,
   ) {
@@ -294,8 +265,14 @@ export class CitizenController {
       },
     });
 
+    const isCreateCitizenEnabled = isFeatureEnabled({
+      defaultReturn: false,
+      feature: Feature.CREATE_USER_CITIZEN_LEO,
+      features: cad.features,
+    });
+
     const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
-    if (checkCitizenUserId) {
+    if (checkCitizenUserId && !isCreateCitizenEnabled) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
       throw new NotFound("citizenNotFound");

@@ -70,7 +70,7 @@ const BUSINESS_VALUES = [
   },
 ];
 
-const EXTRA_SCHEMAS: Partial<Record<ValueType, any>> = {
+const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> = {
   CODES_10: CODES_10_SCHEMA,
   DEPARTMENT: DEPARTMENT_SCHEMA,
   DIVISION: DIVISION_SCHEMA,
@@ -99,8 +99,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const data = {
       ...values,
       type: dlType ? dlType : values.type,
-      whatPages: values.whatPages?.map((v: any) => v.value),
-      departments: values.departments?.map((v: any) => v.value),
+      whatPages: values.whatPages?.map((v) => v.value),
+      departments: values.departments?.map((v) => v.value),
+      officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
     };
 
     if (value) {
@@ -130,7 +131,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
   }
 
-  async function handleValueImageUpload(type: string, id: string, helpers: FormikHelpers<any>) {
+  async function handleValueImageUpload(
+    type: string,
+    id: string,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const fd = new FormData();
     const validatedImage = validateFile(image, helpers);
 
@@ -188,7 +193,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+
     officerRankImageId: "",
+    // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
+    officerRankDepartments: value ? defaultDepartments(value) : undefined,
 
     showPicker: false,
     image: "",
@@ -282,7 +290,23 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === ValueType.OFFICER_RANK ? (
-              <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+              <>
+                <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+
+                <FormField optional label="Departments">
+                  <Select
+                    isMulti
+                    closeMenuOnSelect={false}
+                    name="officerRankDepartments"
+                    onChange={handleChange}
+                    value={values.officerRankDepartments ?? []}
+                    values={department.values.map((department) => ({
+                      value: department.id,
+                      label: department.value.value,
+                    }))}
+                  />
+                </FormField>
+              </>
             ) : null}
 
             {type === ValueType.DRIVERSLICENSE_CATEGORY ? (

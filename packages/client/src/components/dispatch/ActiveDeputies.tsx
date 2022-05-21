@@ -121,7 +121,7 @@ export function ActiveDeputies() {
                         <Draggable
                           canDrag={hasActiveDispatchers && isDispatch}
                           item={deputy}
-                          type={DndActions.MoveUnitTo911Call}
+                          type={DndActions.MoveUnitTo911CallOrIncident}
                         >
                           {({ isDragging }) => (
                             <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={deputy}>

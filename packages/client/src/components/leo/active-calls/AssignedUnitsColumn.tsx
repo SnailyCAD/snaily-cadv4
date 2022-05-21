@@ -30,7 +30,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
 
   return (
     <Droppable
-      accepts={[DndActions.MoveUnitTo911Call]}
+      accepts={[DndActions.MoveUnitTo911CallOrIncident]}
       onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
         void handleAssignToCall(call, item.id)
       }
@@ -43,7 +43,7 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
               <Draggable
                 canDrag={canDrag}
                 onDrag={(isDragging) => {
-                  dispatchState.setIsDraggingUnit(isDragging);
+                  dispatchState.setDraggingUnit(isDragging ? "call" : null);
                 }}
                 key={unit.id}
                 item={{ call, unit }}

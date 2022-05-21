@@ -300,6 +300,48 @@ export const typeHandlers = {
     });
   },
 
+  OFFICER_RANK: async (body: unknown, id?: string) => {
+    const data = validateSchema(BASE_ARR, body);
+
+    return handlePromiseAll(data, async (item) => {
+      const createUpdateData = {
+        officerRankImageId: validateImgurURL(item.officerRankImageId),
+        value: item.value,
+        isDefault: false,
+        type: ValueType.OFFICER_RANK,
+      };
+
+      const updatedValue = await prisma.value.upsert({
+        where: { id: String(id) },
+        create: createUpdateData,
+        update: createUpdateData,
+        include: { officerRankDepartments: true },
+      });
+
+      const disconnectConnectArr = manyToManyHelper(
+        updatedValue.officerRankDepartments.map((v) => v.id),
+        item.officerRankDepartments ?? [],
+      );
+
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.value.update({
+              where: { id: updatedValue.id },
+              data: { officerRankDepartments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { officerRankDepartments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
+    });
+  },
+
   GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
   ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
   BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
@@ -309,8 +351,6 @@ export const typeHandlers = {
     typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
   CITIZEN_FLAG: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
-  OFFICER_RANK: async (body: unknown, id?: string) =>
-    typeHandlers.GENERIC(body, "OFFICER_RANK", id),
 
   GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);

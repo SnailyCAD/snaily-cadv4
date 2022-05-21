@@ -5,19 +5,20 @@ import { useImageUrl } from "hooks/useImageUrl";
 import { makeUnitName } from "lib/utils";
 import { useTranslations } from "next-intl";
 import type { OfficerLogWithOfficer } from "src/pages/officer/my-officer-logs";
-import type { Officer, OfficerLog } from "@snailycad/types";
+import type { EmsFdDeputy, Officer, OfficerLog } from "@snailycad/types";
+import type { OfficerLogWithDeputy } from "src/pages/ems-fd/my-deputy-logs";
 
 type Props =
   | {
-      officer?: never;
-      logs: OfficerLogWithOfficer[];
+      unit?: never;
+      logs: OfficerLogWithOfficer[] | OfficerLogWithDeputy[];
     }
   | {
-      officer: Officer;
+      unit: Officer | EmsFdDeputy;
       logs: OfficerLog[];
     };
 
-export function OfficerLogsTable({ officer, logs }: Props) {
+export function OfficerLogsTable({ unit, logs }: Props) {
   const { makeImageUrl } = useImageUrl();
   const t = useTranslations("Leo");
 
@@ -26,7 +27,7 @@ export function OfficerLogsTable({ officer, logs }: Props) {
       data={logs.map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
-        const logOfficer = "officer" in log ? log.officer : (officer as Officer);
+        const logUnit = getUnitFromLog(log) ?? (unit as Officer | EmsFdDeputy);
 
         const totalTime =
           log.endedAt !== null
@@ -34,16 +35,16 @@ export function OfficerLogsTable({ officer, logs }: Props) {
             : t("notEndedYet");
 
         return {
-          officer: (
+          unit: (
             <span className="flex items-center">
-              {logOfficer.imageId ? (
+              {logUnit.imageId ? (
                 <img
                   className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                   draggable={false}
-                  src={makeImageUrl("units", logOfficer.imageId)}
+                  src={makeImageUrl("units", logUnit.imageId)}
                 />
               ) : null}
-              {makeUnitName(logOfficer)}
+              {makeUnitName(logUnit)}
             </span>
           ),
           startedAt,
@@ -52,11 +53,17 @@ export function OfficerLogsTable({ officer, logs }: Props) {
         };
       })}
       columns={[
-        { Header: t("officer"), accessor: "officer" },
+        { Header: t("unit"), accessor: "unit" },
         { Header: t("startedAt"), accessor: "startedAt" },
         { Header: t("endedAt"), accessor: "endedAt" },
         { Header: t("totalTime"), accessor: "totalTime" },
       ]}
     />
   );
+}
+
+function getUnitFromLog(log: OfficerLog | OfficerLogWithDeputy | OfficerLogWithOfficer) {
+  if ("officer" in log) return log.officer;
+  if ("emsFdDeputy" in log) return log.emsFdDeputy;
+  return null;
 }

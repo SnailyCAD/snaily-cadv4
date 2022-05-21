@@ -1,7 +1,10 @@
 import type { CombinedLeoUnit, EmsFdDeputy, Officer } from "@snailycad/types";
 
 type P = "callsign" | "callsign2" | "department" | "citizenId" | "incremental";
-type Unit = Pick<Officer, P | "divisions"> | Pick<EmsFdDeputy, P | "division"> | CombinedLeoUnit;
+type Unit =
+  | Pick<Officer, P | "divisions" | "callsigns">
+  | Pick<EmsFdDeputy, P | "division">
+  | CombinedLeoUnit;
 
 /**
  * given a unit and a template, generate a callsign for the unit

@@ -1,6 +1,6 @@
 import type { z } from "zod";
 
-type ZodSchema = z.ZodType<any, any, any>;
+type ZodSchema = z.ZodType;
 type Errors<Schema extends ZodSchema> = keyof z.infer<Schema>;
 
 export function handleValidate<Schema extends ZodSchema, Values = any>(schema: Schema) {

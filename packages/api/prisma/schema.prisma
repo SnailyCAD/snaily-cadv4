@@ -420,7 +420,8 @@ model Value {
   licenseType ValueLicenseType?
 
   /// OFFICER_RANK only
-  officerRankImageId String?
+  officerRankImageId     String?
+  officerRankDepartments DepartmentValue[] @relation("officerRankDepartments")
 
   // how to clean this up?!
   ethnicityToValue                Citizen[]                     @relation("ethnicityToValue")
@@ -513,17 +514,18 @@ model SeizedItem {
 }
 
 model DivisionValue {
-  id                         String           @id @default(cuid())
-  value                      Value            @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  id                         String                       @id @default(cuid())
+  value                      Value                        @relation("divisionToValue", fields: [valueId], references: [id], onDelete: Cascade)
   valueId                    String
-  department                 DepartmentValue? @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
+  department                 DepartmentValue?             @relation("divisionDepartmentToValue", fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId               String?
   callsign                   String?
-  officers                   Officer[]        @relation("officerDivisionToDivision")
-  officerDivisionsToDivision Officer[]        @relation("officerDivisionsToDivision")
-  deputies                   EmsFdDeputy[]    @relation("emsFdDivisionToDivision")
+  officers                   Officer[]                    @relation("officerDivisionToDivision")
+  officerDivisionsToDivision Officer[]                    @relation("officerDivisionsToDivision")
+  deputies                   EmsFdDeputy[]                @relation("emsFdDivisionToDivision")
   pairedUnitTemplate         String?
   Call911                    Call911[]
+  IndividualDivisionCallsign IndividualDivisionCallsign[]
 }
 
 model DepartmentValue {
@@ -546,6 +548,7 @@ model DepartmentValue {
   isConfidential       Boolean              @default(false)
   Qualification        QualificationValue[]
   CombinedLeoUnit      CombinedLeoUnit[]
+  Value                Value[]              @relation("officerRankDepartments")
 }
 
 model DriversLicenseCategoryValue {
@@ -703,50 +706,64 @@ model EmployeeValue {
 
 // leo
 model Officer {
-  id                          String                 @id @default(cuid())
-  department                  DepartmentValue?       @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
+  id                          String                       @id @default(cuid())
+  department                  DepartmentValue?             @relation("officerDepartmentToDepartment", fields: [departmentId], references: [id])
   departmentId                String?
-  callsign                    String                 @db.VarChar(255)
-  callsign2                   String                 @db.VarChar(255)
+  callsign                    String                       @db.VarChar(255)
+  callsign2                   String                       @db.VarChar(255)
+  activeDivisionCallsign      IndividualDivisionCallsign?  @relation("divisionCallsign", fields: [activeDivisionCallsignId], references: [id])
+  activeDivisionCallsignId    String?
   incremental                 Int?
   // `division` is deprecated. Use `divisions` instead.
-  division                    DivisionValue?         @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
+  division                    DivisionValue?               @relation("officerDivisionToDivision", fields: [divisionId], references: [id])
   divisionId                  String?
-  divisions                   DivisionValue[]        @relation("officerDivisionsToDivision")
-  rank                        Value?                 @relation("officerRankToValue", fields: [rankId], references: [id])
+  divisions                   DivisionValue[]              @relation("officerDivisionsToDivision")
+  rank                        Value?                       @relation("officerRankToValue", fields: [rankId], references: [id])
   rankId                      String?
-  position                    String?                @db.Text
-  status                      StatusValue?           @relation("officerStatusToValue", fields: [statusId], references: [id])
+  position                    String?                      @db.Text
+  status                      StatusValue?                 @relation("officerStatusToValue", fields: [statusId], references: [id])
   statusId                    String?
-  suspended                   Boolean                @default(false)
+  suspended                   Boolean                      @default(false)
   badgeNumber                 Int?
-  imageId                     String?                @db.VarChar(255)
-  citizen                     Citizen                @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  imageId                     String?                      @db.VarChar(255)
+  citizen                     Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   citizenId                   String
-  user                        User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User                         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                      String
-  createdAt                   DateTime               @default(now())
-  updatedAt                   DateTime               @default(now()) @updatedAt
-  whitelistStatus             LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @default(now()) @updatedAt
+  whitelistStatus             LeoWhitelistStatus?          @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId           String?
   radioChannelId              String?
-  bolos                       Bolo[]                 @relation("bolosToOfficer")
+  bolos                       Bolo[]                       @relation("bolosToOfficer")
   warrants                    Warrant[]
   logs                        OfficerLog[]
   Record                      Record[]
   assignedUnit                AssignedUnit[]
-  activeIncident              LeoIncident?           @relation("activeIncident", fields: [activeIncidentId], references: [id])
+  activeIncident              LeoIncident?                 @relation("activeIncident", fields: [activeIncidentId], references: [id])
   activeIncidentId            String?
-  activeCall                  Call911?               @relation("activeCall", fields: [activeCallId], references: [id])
+  activeCall                  Call911?                     @relation("activeCall", fields: [activeCallId], references: [id])
   activeCallId                String?
   LeoIncident                 LeoIncident[]
-  LeoIncidentInvolvedOfficers LeoIncident[]          @relation("involvedOfficers")
-  combinedLeoUnit             CombinedLeoUnit?       @relation(fields: [combinedLeoUnitId], references: [id])
+  LeoIncidentInvolvedOfficers LeoIncident[]                @relation("involvedOfficers")
+  combinedLeoUnit             CombinedLeoUnit?             @relation(fields: [combinedLeoUnitId], references: [id])
   combinedLeoUnitId           String?
   lastStatusChangeTimestamp   DateTime?
   qualifications              UnitQualification[]
   IncidentInvolvedUnit        IncidentInvolvedUnit[]
   Note                        Note[]
+  callsigns                   IndividualDivisionCallsign[]
+}
+
+model IndividualDivisionCallsign {
+  id         String        @id @default(uuid())
+  divisionId String
+  callsign   String
+  callsign2  String
+  officerId  String
+  officer    Officer       @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  division   DivisionValue @relation(fields: [divisionId], references: [id])
+  Officer    Officer[]     @relation("divisionCallsign")
 }
 
 model UnitQualification {
@@ -805,14 +822,16 @@ model StatusValue {
 }
 
 model OfficerLog {
-  id        String    @id @default(uuid())
-  startedAt DateTime  @default(now())
-  endedAt   DateTime?
-  userId    String?
-  officer   Officer   @relation(fields: [officerId], references: [id], onDelete: Cascade)
-  officerId String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
+  id            String       @id @default(uuid())
+  startedAt     DateTime     @default(now())
+  endedAt       DateTime?
+  userId        String?
+  officer       Officer?     @relation(fields: [officerId], references: [id], onDelete: Cascade)
+  officerId     String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+  emsFdDeputy   EmsFdDeputy? @relation(fields: [emsFdDeputyId], references: [id], onDelete: Cascade)
+  emsFdDeputyId String?
 }
 
 model ImpoundedVehicle {
@@ -1103,6 +1122,7 @@ model EmsFdDeputy {
   activeCallId              String?
   whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId         String?
+  logs                      OfficerLog[]
   AssignedUnit              AssignedUnit[]
   lastStatusChangeTimestamp DateTime?
   qualifications            UnitQualification[]
@@ -1354,4 +1374,5 @@ enum Feature {
   CITIZEN_RECORD_APPROVAL
   COMMON_CITIZEN_CARDS
   STEAM_OAUTH
+  CREATE_USER_CITIZEN_LEO
 }

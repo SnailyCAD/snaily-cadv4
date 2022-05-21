@@ -1,4 +1,4 @@
-type DisconnectOrConnect<
+export type DisconnectOrConnect<
   T extends string | object,
   Accessor extends T extends string ? never : keyof T,
 > = { disconnect?: { id: T[Accessor] | Accessor } } | { connect?: { id: T[Accessor] | Accessor } };

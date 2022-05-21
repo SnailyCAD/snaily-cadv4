@@ -85,6 +85,10 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
+            include:
+              type === ValueType.OFFICER_RANK
+                ? { officerRankDepartments: { include: { value: true } } }
+                : undefined,
           }),
         };
       }),
@@ -206,7 +210,7 @@ export class ValuesController {
   @Delete("/bulk-delete")
   @Description("Bulk-delete values by the specified ids and type")
   @UsePermissions(getPermissionsForValuesRequest)
-  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: any) {
+  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: unknown) {
     const type = getTypeFromPath(path);
     const ids = body as string[];
 

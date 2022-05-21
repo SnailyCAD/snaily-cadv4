@@ -1,4 +1,5 @@
 export enum DndActions {
-  MoveUnitTo911Call = "MoveUnitTo911Call",
+  MoveUnitTo911CallOrIncident = "MoveUnitTo911Call",
   UnassignUnitFrom911Call = "UnassignUnitFrom911Call",
+  UnassignUnitFromIncident = "UnassignUnitFromIncident",
 }

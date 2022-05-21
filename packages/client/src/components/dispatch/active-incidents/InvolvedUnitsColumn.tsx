@@ -1,0 +1,82 @@
+import type {
+  CombinedLeoUnit,
+  EmsFdDeputy,
+  IncidentInvolvedUnit,
+  LeoIncident,
+  Officer,
+} from "@snailycad/types";
+import { isUnitCombined } from "@snailycad/utils";
+import { Draggable } from "components/shared/dnd/Draggable";
+import { Droppable } from "components/shared/dnd/Droppable";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
+import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { classNames } from "lib/classNames";
+import { makeUnitName } from "lib/utils";
+import { useTranslations } from "next-intl";
+import { useDispatchState } from "state/dispatchState";
+import { DndActions } from "types/DndActions";
+
+interface Props {
+  incident: LeoIncident;
+  handleAssignUnassignToIncident(
+    incident: LeoIncident,
+    unitId: string,
+    type: "assign" | "unassign",
+  ): Promise<void>;
+}
+
+export function InvolvedUnitsColumn({ handleAssignUnassignToIncident, incident }: Props) {
+  const common = useTranslations("Common");
+  const dispatchState = useDispatchState();
+  const { generateCallsign } = useGenerateCallsign();
+  const { hasActiveDispatchers } = useActiveDispatchers();
+
+  const canDrag = hasActiveDispatchers;
+
+  function makeAssignedUnit(unit: IncidentInvolvedUnit) {
+    return isUnitCombined(unit.unit)
+      ? generateCallsign(unit.unit, "pairedUnitTemplate")
+      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+  }
+
+  return (
+    <Droppable
+      accepts={[DndActions.MoveUnitTo911CallOrIncident]}
+      onDrop={(item: Officer | EmsFdDeputy | CombinedLeoUnit) =>
+        void handleAssignUnassignToIncident(incident, item.id, "assign")
+      }
+      canDrop={(item) => !incident.unitsInvolved.some((v) => v.unit.id === item.id)}
+    >
+      <div className="flex gap-2">
+        {incident.unitsInvolved.length <= 0
+          ? common("none")
+          : incident.unitsInvolved.map((unit, idx) => (
+              <Draggable
+                canDrag={canDrag}
+                onDrag={(isDragging) => {
+                  dispatchState.setDraggingUnit(isDragging ? "incident" : null);
+                }}
+                key={unit.id}
+                item={{ incident, unit }}
+                type={DndActions.UnassignUnitFromIncident}
+              >
+                {() => {
+                  const comma = idx + 1 === incident.unitsInvolved.length ? "" : ", ";
+                  return (
+                    <p
+                      className={classNames(
+                        "text-base",
+                        canDrag ? "!cursor-move" : "cursor-default",
+                      )}
+                    >
+                      {makeAssignedUnit(unit)}
+                      {comma}
+                    </p>
+                  );
+                }}
+              </Draggable>
+            ))}
+      </div>
+    </Droppable>
+  );
+}

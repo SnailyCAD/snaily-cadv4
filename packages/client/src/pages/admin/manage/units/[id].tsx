@@ -25,8 +25,9 @@ import { isUnitOfficer } from "@snailycad/utils";
 import { Permissions } from "@snailycad/permissions";
 import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
 
-type Unit = ((Officer & { logs: OfficerLog[] }) | EmsFdDeputy) & {
+type Unit = (Officer | EmsFdDeputy) & {
   qualifications: UnitQualification[];
+  logs: OfficerLog[];
 };
 
 interface Props {
@@ -158,10 +159,18 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                   name="rank"
                   onChange={handleChange}
                   value={values.rank}
-                  values={officerRank.values.map((value) => ({
-                    label: value.value,
-                    value: value.id,
-                  }))}
+                  values={officerRank.values
+                    .filter((v) => {
+                      if ((v.officerRankDepartments?.length ?? 0) <= 0) return true;
+
+                      return (
+                        v.officerRankDepartments?.some((v) => v.id === values.department) ?? true
+                      );
+                    })
+                    .map((value) => ({
+                      label: value.value,
+                      value: value.id,
+                    }))}
                 />
               </FormField>
 
@@ -220,13 +229,11 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
         )}
       </Formik>
 
-      {"logs" in unit ? (
-        <div className="mt-3">
-          <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
+      <div className="mt-3">
+        <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
 
-          <OfficerLogsTable officer={unit} logs={unit.logs} />
-        </div>
-      ) : null}
+        <OfficerLogsTable unit={unit} logs={unit.logs} />
+      </div>
 
       <QualificationsTable setUnit={setUnit} unit={unit} />
     </AdminLayout>

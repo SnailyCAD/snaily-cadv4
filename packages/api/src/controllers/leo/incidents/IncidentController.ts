@@ -112,6 +112,91 @@ export class IncidentController {
     return corrected;
   }
 
+  @Post("/:type/:incidentId")
+  @UsePermissions({
+    fallback: (u) => u.isDispatch || u.isLeo || u.isEmsFd,
+    permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
+  })
+  async assignToIncident(
+    @PathParams("type") callType: "assign" | "unassign",
+    @PathParams("incidentId") incidentId: string,
+    @BodyParams("unit") rawUnitId: string | null,
+  ) {
+    if (!rawUnitId) {
+      throw new BadRequest("unitIsRequired");
+    }
+
+    const { unit, type } = await findUnit(rawUnitId);
+    if (!unit) {
+      throw new NotFound("unitNotFound");
+    }
+
+    const incident = await prisma.leoIncident.findUnique({
+      where: { id: incidentId },
+    });
+
+    if (!incident) {
+      throw new NotFound("incidentNotFound");
+    }
+
+    const types = {
+      combined: "combinedLeoId",
+      leo: "officerId",
+      "ems-fd": "emsFdDeputyId",
+    };
+
+    const existing = await prisma.incidentInvolvedUnit.findFirst({
+      where: {
+        incidentId,
+        [types[type]]: unit.id,
+      },
+    });
+
+    if (callType === "assign") {
+      if (existing) {
+        throw new BadRequest("alreadyAssignedToCall");
+      }
+
+      await prisma.incidentInvolvedUnit.create({
+        data: {
+          incidentId,
+          [types[type]]: unit.id,
+        },
+      });
+    } else {
+      if (!existing) {
+        throw new BadRequest("notAssignedToCall");
+      }
+
+      await prisma.incidentInvolvedUnit.delete({
+        where: { id: existing.id },
+      });
+    }
+
+    if (type === "leo") {
+      await prisma.officer.update({
+        where: { id: unit.id },
+        data: { activeIncidentId: callType === "assign" ? incidentId : null },
+      });
+
+      await Promise.all([
+        this.socket.emitUpdateOfficerStatus(),
+        this.socket.emitUpdateDeputyStatus(),
+      ]);
+    }
+
+    const updated = await prisma.leoIncident.findUnique({
+      where: {
+        id: incident.id,
+      },
+      include: incidentInclude,
+    });
+
+    this.socket.emitUpdate911Call(officerOrDeputyToUnit(updated));
+
+    return officerOrDeputyToUnit(updated);
+  }
+
   @UseBefore(ActiveOfficer)
   @Put("/:id")
   @UsePermissions({

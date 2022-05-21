@@ -42,6 +42,10 @@ const WeaponSearchModal = dynamic(
   async () => (await import("components/leo/modals/WeaponSearchModal")).WeaponSearchModal,
 );
 
+const CreateCitizenModal = dynamic(
+  async () => (await import("./CreateCitizenModal")).CreateCitizenModal,
+);
+
 function AutoSubmit() {
   const { getPayload } = useModal();
   const payloadName = getPayload<Citizen>(ModalIds.NameSearch)?.name;
@@ -68,7 +72,7 @@ export function NameSearchModal() {
   const router = useRouter();
   const { makeImageUrl } = useImageUrl();
   const { cad } = useAuth();
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, CREATE_USER_CITIZEN_LEO } = useFeatureEnabled();
   const { bolos } = useBolos();
 
   const { openModal } = useModal();
@@ -124,6 +128,7 @@ export function NameSearchModal() {
 
     if (Array.isArray(json) && json.length <= 0) {
       setResults(false);
+      setCurrentResult(null);
       return;
     }
 
@@ -137,6 +142,7 @@ export function NameSearchModal() {
       setResults(Array.isArray(json) ? json : [json]);
     } else {
       setResults(false);
+      setCurrentResult(null);
     }
   }
 
@@ -212,6 +218,7 @@ export function NameSearchModal() {
                   apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
+                  allowUnknown: true,
                 }}
                 inputProps={{
                   value: values.name,
@@ -221,7 +228,11 @@ export function NameSearchModal() {
               />
             </FormField>
 
-            {typeof results === "boolean" ? <p>{t("nameNotFound")}</p> : null}
+            {typeof results === "boolean" ? (
+              <div className="mt-5">
+                <p>{t("nameNotFound")}</p>
+              </div>
+            ) : null}
 
             {Array.isArray(results) && !currentResult ? (
               <ul className="space-y-2">
@@ -414,35 +425,44 @@ export function NameSearchModal() {
 
             <footer
               className={`mt-4 pt-3 flex ${
-                currentResult && isLeo ? "justify-between" : "justify-end"
+                (currentResult || CREATE_USER_CITIZEN_LEO) && isLeo
+                  ? "justify-between"
+                  : "justify-end"
               }`}
             >
-              {currentResult && isLeo ? (
-                <div>
-                  {Object.values(RecordType).map((type) => (
+              <div>
+                {CREATE_USER_CITIZEN_LEO ? (
+                  <Button type="button" onClick={() => openModal(ModalIds.CreateCitizen)}>
+                    {t("createCitizen")}
+                  </Button>
+                ) : null}
+                {currentResult && isLeo ? (
+                  <>
+                    {Object.values(RecordType).map((type) => (
+                      <Button
+                        key={type}
+                        type="button"
+                        onClick={() => handleOpenCreateRecord(type)}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t(normalizeValue(`CREATE_${type}`))}
+                      </Button>
+                    ))}
+
                     <Button
-                      key={type}
+                      small
                       type="button"
-                      onClick={() => handleOpenCreateRecord(type)}
+                      onClick={handleDeclare}
+                      disabled={state === "loading"}
                       variant="cancel"
                       className="px-1.5"
                     >
-                      {t(normalizeValue(`CREATE_${type}`))}
+                      {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
                     </Button>
-                  ))}
-
-                  <Button
-                    small
-                    type="button"
-                    onClick={handleDeclare}
-                    disabled={state === "loading"}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {currentResult.dead ? ems("declareAlive") : ems("declareDead")}
-                  </Button>
-                </div>
-              ) : null}
+                  </>
+                ) : null}
+              </div>
 
               <div className="flex">
                 <Button
@@ -466,6 +486,7 @@ export function NameSearchModal() {
             <AutoSubmit />
             <VehicleSearchModal id={ModalIds.VehicleSearchWithinName} />
             <WeaponSearchModal id={ModalIds.WeaponSearchWithinName} />
+            {CREATE_USER_CITIZEN_LEO && isLeo ? <CreateCitizenModal /> : null}
             {currentResult && !currentResult.isConfidential ? (
               <>
                 <ManageCitizenFlagsModal />

@@ -46,9 +46,14 @@ export class DispatchController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const officers = await prisma.officer.findMany({
-      include: leoProperties,
-    });
+    const [officers, units] = await Promise.all([
+      await prisma.officer.findMany({
+        include: leoProperties,
+      }),
+      await prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
+    ]);
 
     const deputies = await prisma.emsFdDeputy.findMany({
       include: unitProperties,
@@ -79,10 +84,13 @@ export class DispatchController {
     const deputiesWithUpdatedStatus = deputies.map((u) =>
       filterInactiveUnits({ unit: u, unitsInactivityFilter }),
     );
+    const combinedUnitsWithUpdatedStatus = units.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
 
     return {
       deputies: deputiesWithUpdatedStatus,
-      officers: officersWithUpdatedStatus,
+      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };

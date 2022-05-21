@@ -4,8 +4,7 @@ import { Button } from "components/Button";
 import compareDesc from "date-fns/compareDesc";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import { Table } from "components/shared/Table";
-import { makeUnitName, yesOrNoText } from "lib/utils";
-import { useGenerateCallsign } from "hooks/useGenerateCallsign";
+import { yesOrNoText } from "lib/utils";
 import { FullDate } from "components/shared/FullDate";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -14,8 +13,12 @@ import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModa
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
-import { isUnitCombined } from "@snailycad/utils";
 import type { LeoIncident } from "@snailycad/types";
+import { InvolvedUnitsColumn } from "./active-incidents/InvolvedUnitsColumn";
+import { DndActions } from "types/DndActions";
+import { classNames } from "lib/classNames";
+import { Droppable } from "components/shared/dnd/Droppable";
+import { useDispatchState } from "state/dispatchState";
 
 export function ActiveIncidents() {
   /**
@@ -26,15 +29,30 @@ export function ActiveIncidents() {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { generateCallsign } = useGenerateCallsign();
   const { openModal, closeModal } = useModal();
   const { activeIncidents, setActiveIncidents } = useActiveIncidents();
   const { state, execute } = useFetch();
+  const dispatchState = useDispatchState();
 
-  function makeAssignedUnit(unit: any) {
-    return isUnitCombined(unit.unit)
-      ? generateCallsign(unit.unit, "pairedUnitTemplate")
-      : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;
+  async function handleAssignUnassignToIncident(
+    incident: LeoIncident,
+    unitId: string,
+    type: "assign" | "unassign",
+  ) {
+    const { json } = await execute(`/incidents/${type}/${incident.id}`, {
+      method: "POST",
+      data: { unit: unitId },
+    });
+
+    if (json.id) {
+      const callsMapped = activeIncidents.map((incident) => {
+        if (incident.id === json.id) {
+          return { ...incident, ...json };
+        }
+        return incident;
+      });
+      setActiveIncidents(callsMapped);
+    }
   }
 
   async function handleDismissIncident() {
@@ -104,8 +122,12 @@ export function ActiveIncidents() {
             .map((incident) => {
               return {
                 caseNumber: `#${incident.caseNumber}`,
-                unitsInvolved:
-                  incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
+                unitsInvolved: (
+                  <InvolvedUnitsColumn
+                    handleAssignUnassignToIncident={handleAssignUnassignToIncident}
+                    incident={incident}
+                  />
+                ),
                 createdAt: <FullDate>{incident.createdAt}</FullDate>,
                 firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
                 injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
@@ -160,6 +182,24 @@ export function ActiveIncidents() {
           ]}
         />
       )}
+
+      <Droppable
+        onDrop={({ incident, unit }) =>
+          handleAssignUnassignToIncident(incident, unit.unit.id, "unassign")
+        }
+        accepts={[DndActions.UnassignUnitFromIncident]}
+      >
+        <div
+          className={classNames(
+            "grid place-items-center z-50 border-2 border-slate-500 bg-gray-4 fixed bottom-3 left-3 right-4 h-60 shadow-sm rounded-md transition-opacity",
+            dispatchState.draggingUnit === "incident"
+              ? "pointer-events-all opacity-100"
+              : "pointer-events-none opacity-0",
+          )}
+        >
+          <p>{t("dropToUnassignFromIncident")}</p>
+        </div>
+      </Droppable>
 
       {tempIncident?.descriptionData ? (
         <DescriptionModal

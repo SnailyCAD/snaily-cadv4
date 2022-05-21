@@ -368,6 +368,8 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+
+  officerRankDepartments?: DepartmentValue[];
   officerRankImageId: string | null;
 }
 
@@ -655,6 +657,8 @@ export interface Officer {
   id: string;
   departmentId: string | null;
   department: DepartmentValue | null;
+  activeDivisionCallsignId: string | null;
+  activeDivisionCallsign: IndividualDivisionCallsign | null;
   callsign: string;
   callsign2: string;
   incremental: number | null;
@@ -680,6 +684,15 @@ export interface Officer {
   activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username" | "steamId">;
+  callsigns?: IndividualDivisionCallsign[];
+}
+
+export interface IndividualDivisionCallsign {
+  id: string;
+  divisionId: string;
+  callsign: string;
+  callsign2: string;
+  officerId: string;
 }
 
 /**
@@ -750,6 +763,7 @@ export interface OfficerLog {
   endedAt: Date | null;
   userId: string | null;
   officerId: string;
+  emsFdDeputyId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -1162,6 +1176,7 @@ export enum Feature {
   CITIZEN_RECORD_APPROVAL = "CITIZEN_RECORD_APPROVAL",
   COMMON_CITIZEN_CARDS = "COMMON_CITIZEN_CARDS",
   STEAM_OAUTH = "STEAM_OAUTH",
+  CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
 }
 
 export enum Rank {
