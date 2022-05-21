@@ -33,7 +33,7 @@ const vehiclesInclude = {
   notes: true,
 };
 
-const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
+export const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
     features: cad.features,

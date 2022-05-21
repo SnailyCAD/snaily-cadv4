@@ -40,6 +40,14 @@ interface Context {
   >;
   impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
   qualification: ContextValue<ValueType.QUALIFICATION, QualificationValue>;
+  setValues: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: ValueType;
+        values: Value<ValueType>[];
+      }[]
+    >
+  >;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
@@ -71,7 +79,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
     }, {} as Context);
   }, [values]);
 
-  const value = data;
+  const value = { ...data, setValues };
 
   React.useEffect(() => {
     if (Array.isArray(initialData.values)) {
