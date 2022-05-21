@@ -58,7 +58,7 @@ const Modals = {
   }),
 };
 
-interface Props {
+export interface DispatchPageProps {
   calls: Full911Call[];
   bolos: Bolo[];
   officers: (Officer | CombinedLeoUnit)[];
@@ -67,7 +67,7 @@ interface Props {
   activeIncidents: LeoIncident[];
 }
 
-export default function OfficerDashboard(props: Props) {
+export default function OfficerDashboard(props: DispatchPageProps) {
   const { showAop } = useAreaOfPlay();
   const state = useDispatchState();
   const timeRef = useTime();

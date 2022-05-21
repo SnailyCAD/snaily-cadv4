@@ -2,7 +2,7 @@ import * as React from "react";
 import type { ModalIds } from "types/ModalIds";
 import create from "zustand";
 
-type Payloads = Record<string, any>;
+type Payloads = Record<string, unknown>;
 
 interface ModalState {
   canBeClosed: boolean;
@@ -45,8 +45,8 @@ export function useModal(): UseModal {
   );
 
   const getPayload = React.useCallback(
-    (id: ModalIds) => {
-      return modalState.payloads[id] ?? null;
+    <T = unknown>(id: ModalIds) => {
+      return (modalState.payloads[id] ?? null) as T | null;
     },
     [modalState.payloads],
   );
