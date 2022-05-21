@@ -1,35 +1,49 @@
-import { Officer, ShouldDoType } from "@prisma/client";
+import { EmsFdDeputy, Officer, ShouldDoType } from "@prisma/client";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { prisma } from "lib/prisma";
 import type { Socket } from "services/SocketService";
 
-interface Options {
+interface Options<Type extends "leo" | "ems-fd"> {
   shouldDo: ShouldDoType;
-  officer: Omit<Officer, "divisionId">;
+  unit: Type extends "leo" ? Omit<Officer, "divisionId"> : EmsFdDeputy;
   socket: Socket;
   userId: string;
+  type: Type;
 }
 
-export async function handleStartEndOfficerLog(options: Options) {
+function getPrismaName(type: "leo" | "ems-fd") {
+  const idPropertyNames = {
+    leo: "officerId",
+    "ems-fd": "emsFdDeputyId",
+  } as const;
+  const idPropertyName = idPropertyNames[type];
+  return idPropertyName;
+}
+
+export async function handleStartEndOfficerLog<Type extends "leo" | "ems-fd">(
+  options: Options<Type>,
+) {
+  const idPropertyName = getPrismaName(options.type);
+
   /**
    * find an officer-log that has not ended yet.
    */
   const officerLog = await prisma.officerLog.findFirst({
     where: {
-      officerId: options.officer.id,
+      [idPropertyName]: options.unit.id,
       endedAt: null,
     },
   });
 
   if (options.shouldDo === ShouldDoType.SET_ON_DUTY) {
     /**
-     * if the officer is being set on-duty, it will create the officer-log.
+     * if the unit is being set on-duty, it will create the officer-log.
      */
     if (!officerLog) {
       await prisma.officerLog.create({
         data: {
-          officerId: options.officer.id,
+          [idPropertyName]: options.unit.id,
           userId: options.userId,
           startedAt: new Date(),
         },
@@ -57,10 +71,14 @@ export async function handleStartEndOfficerLog(options: Options) {
   }
 }
 
-async function handleUnassignFromCalls(options: Pick<Options, "officer" | "socket">) {
+async function handleUnassignFromCalls<Type extends "leo" | "ems-fd">(
+  options: Pick<Options<Type>, "type" | "unit" | "socket">,
+) {
+  const idPropertyName = getPrismaName(options.type);
+
   const calls = await prisma.call911.findMany({
     where: {
-      assignedUnits: { some: { officerId: options.officer.id } },
+      assignedUnits: { some: { [idPropertyName]: options.unit.id } },
     },
     include: {
       assignedUnits: callInclude.assignedUnits,
@@ -71,21 +89,23 @@ async function handleUnassignFromCalls(options: Pick<Options, "officer" | "socke
     /**
      * remove officer from assigned units then emit via socket
      */
-    const assignedUnits = call.assignedUnits.filter((v) => v.officerId !== options.officer.id);
+    const assignedUnits = call.assignedUnits.filter((v) => v[idPropertyName] !== options.unit.id);
     options.socket.emitUpdate911Call({ ...call, assignedUnits });
   });
 
   // unassign officer from call
   await prisma.assignedUnit.deleteMany({
     where: {
-      officerId: options.officer.id,
+      [idPropertyName]: options.unit.id,
     },
   });
 }
 
-async function handleUnassignFromActiveIncident(options: Pick<Options, "officer" | "socket">) {
+async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
+  options: Pick<Options<Type>, "type" | "unit" | "socket">,
+) {
   const officer = await prisma.officer.findUnique({
-    where: { id: options.officer.id },
+    where: { id: options.unit.id },
     select: { id: true, activeIncidentId: true },
   });
 
@@ -99,6 +119,6 @@ async function handleUnassignFromActiveIncident(options: Pick<Options, "officer"
   /**
    * remove officer from involved officers then emit via socket
    */
-  const unitsInvolved = incident.unitsInvolved.filter((v) => v.id !== options.officer.id);
+  const unitsInvolved = incident.unitsInvolved.filter((v) => v.id !== options.unit.id);
   options.socket.emitUpdateActiveIncident({ ...incident, unitsInvolved });
 }

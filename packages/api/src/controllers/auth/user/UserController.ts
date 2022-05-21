@@ -115,7 +115,7 @@ export class AccountController {
       });
 
       await handleStartEndOfficerLog({
-        officer,
+        unit: officer,
         shouldDo: "SET_OFF_DUTY",
         socket: this.socket,
         userId,

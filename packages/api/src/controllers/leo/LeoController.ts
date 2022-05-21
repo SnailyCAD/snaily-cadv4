@@ -313,19 +313,15 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getOfficerLogs(@Context() ctx: Context) {
+  async getOfficerLogs(@Context("user") user: User) {
     const logs = await prisma.officerLog.findMany({
-      where: {
-        userId: ctx.get("user").id,
-      },
+      where: { userId: user.id, emsFdDeputyId: null },
       include: {
         officer: {
           include: leoProperties,
         },
       },
-      orderBy: {
-        startedAt: "desc",
-      },
+      orderBy: { startedAt: "desc" },
     });
 
     return logs;
