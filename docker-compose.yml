@@ -13,26 +13,6 @@ services:
     volumes:
       - ./.data:/var/lib/postgresql/data
 
-  client:
-    container_name: "snaily-cad-client-dev"
-
-    user: node
-    image: node:16
-    command: "yarn workspace @snailycad/client dev"
-    ports:
-      - "3000:3000"
-    expose:
-      - 3000
-    volumes:
-      - .:/srv/client
-    env_file:
-      - .env
-    working_dir: /srv/client
-    depends_on:
-      - api
-    networks:
-      - cad_web
-
   api:
     container_name: "snaily-cad-api"
 
