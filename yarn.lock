@@ -1436,11 +1436,11 @@ __metadata:
   dependencies:
     "@discordjs/rest": ^0.4.1
     "@prisma/client": ^3.14.0
-    "@snailycad/config": 1.4.0
-    "@snailycad/permissions": 1.4.0
-    "@snailycad/schemas": 1.4.0
-    "@snailycad/types": 1.4.0
-    "@snailycad/utils": 1.4.0
+    "@snailycad/config": 1.4.1
+    "@snailycad/permissions": 1.4.1
+    "@snailycad/schemas": 1.4.1
+    "@snailycad/types": 1.4.1
+    "@snailycad/utils": 1.4.1
     "@swc/core": ^1.2.182
     "@swc/helpers": ^0.3.13
     "@tsed/common": ^6.114.8
@@ -1508,11 +1508,11 @@ __metadata:
     "@react-aria/interactions": ^3.8.4
     "@react-aria/label": ^3.2.5
     "@react-aria/ssr": ^3.1.2
-    "@snailycad/config": 1.4.0
-    "@snailycad/permissions": 1.4.0
-    "@snailycad/schemas": 1.4.0
-    "@snailycad/types": 1.4.0
-    "@snailycad/utils": 1.4.0
+    "@snailycad/config": 1.4.1
+    "@snailycad/permissions": 1.4.1
+    "@snailycad/schemas": 1.4.1
+    "@snailycad/types": 1.4.1
+    "@snailycad/utils": 1.4.1
     "@types/leaflet": ^1.7.9
     "@types/react": ^17.0.43
     "@types/react-dom": ^17.0.14
@@ -1526,6 +1526,7 @@ __metadata:
     formik: ^2.2.9
     hex-color-regex: ^1.1.0
     is-hotkey: ^0.2.0
+    is-mobile: ^3.1.1
     leaflet: ^1.7.1
     next: ^12.1.6
     next-intl: 2.7.2
@@ -1565,11 +1566,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/config@1.4.0, @snailycad/config@workspace:packages/config":
+"@snailycad/config@1.4.1, @snailycad/config@workspace:packages/config":
   version: 0.0.0-use.local
   resolution: "@snailycad/config@workspace:packages/config"
   dependencies:
-    "@snailycad/types": 1.4.0
+    "@snailycad/types": 1.4.1
     tsup: ^5.12.7
     typescript: ^4.6.4
     vite: ^2.9.9
@@ -1577,7 +1578,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/permissions@1.4.0, @snailycad/permissions@workspace:packages/permissions":
+"@snailycad/permissions@1.4.1, @snailycad/permissions@workspace:packages/permissions":
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
@@ -1590,7 +1591,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/schemas@1.4.0, @snailycad/schemas@workspace:packages/schemas":
+"@snailycad/schemas@1.4.1, @snailycad/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@snailycad/schemas@workspace:packages/schemas"
   dependencies:
@@ -1605,7 +1606,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/telemetry@workspace:packages/telemetry"
   dependencies:
-    "@snailycad/utils": 1.4.0
+    "@snailycad/utils": 1.4.1
     "@types/node": ^17.0.23
     axios: ^0.26.1
     tslib: ^2.3.1
@@ -1614,11 +1615,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/types@1.4.0, @snailycad/types@workspace:packages/types":
+"@snailycad/types@1.4.1, @snailycad/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@snailycad/types@workspace:packages/types"
   dependencies:
-    "@snailycad/permissions": 1.4.0
+    "@snailycad/permissions": 1.4.1
     tsup: ^5.12.7
     type-fest: ^2.12.2
     typescript: ^4.6.4
@@ -1626,11 +1627,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/utils@1.4.0, @snailycad/utils@workspace:packages/utils":
+"@snailycad/utils@1.4.1, @snailycad/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@snailycad/utils@workspace:packages/utils"
   dependencies:
-    "@snailycad/types": 1.4.0
+    "@snailycad/types": 1.4.1
     c8: ^7.11.2
     tslib: ^2.4.0
     tsup: ^5.12.7
@@ -7118,6 +7119,13 @@ __metadata:
   version: 1.0.1
   resolution: "is-lambda@npm:1.0.1"
   checksum: 93a32f01940220532e5948538699ad610d5924ac86093fcee83022252b363eb0cc99ba53ab084a04e4fb62bf7b5731f55496257a4c38adf87af9c4d352c71c35
+  languageName: node
+  linkType: hard
+
+"is-mobile@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "is-mobile@npm:3.1.1"
+  checksum: b7c549020ac4674520378623afc4976694ff686eb3761cfad12da936ba9c2d675687bdc3c82eadf5a25147ce51c682800679bf835e31de272f05c026cd2b2f14
   languageName: node
   linkType: hard
 
