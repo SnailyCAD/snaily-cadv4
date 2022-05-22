@@ -176,6 +176,8 @@ export interface CustomRole {
   name: string;
   iconId: string | null;
   permissions: Permissions[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**

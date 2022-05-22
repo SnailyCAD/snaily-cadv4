@@ -1178,6 +1178,16 @@ model CustomFieldValue {
   Weapons            Weapon[]
 }
 
+/// custom roles
+model CustomRole {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  iconId      String?
+  permissions String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
 enum QualificationValueType {
   QUALIFICATION
   AWARD

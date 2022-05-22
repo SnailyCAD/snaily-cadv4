@@ -16,6 +16,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission } from "hooks/usePermission";
 import { ManageCustomRolesModal } from "components/admin/manage/custom-roles/ManageCustomRolesModal";
+import { FullDate } from "components/shared/FullDate";
 
 interface Props {
   customRoles: CustomRole[];
@@ -41,7 +42,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
     if (typeof json === "boolean" && json) {
       setCustomRoles((p) => p.filter((v) => v.id !== tempRole.id));
       setTempRole(null);
-      closeModal(ModalIds.AlertDeleteCustomField);
+      closeModal(ModalIds.AlertDeleteCustomRole);
     }
   }
 
@@ -52,7 +53,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 
   function handleDeleteClick(field: CustomRole) {
     setTempRole(field);
-    openModal(ModalIds.AlertDeleteCustomField);
+    openModal(ModalIds.AlertDeleteCustomRole);
   }
 
   React.useEffect(() => {
@@ -70,7 +71,10 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         <div className="flex flex-col">
           <Title className="!mb-0">{t("MANAGE_CUSTOM_ROLES")}</Title>
 
-          <p className="max-w-2xl mt-2 text-neutral-700 dark:text-gray-400">TODO</p>
+          <p className="max-w-2xl mt-2 text-neutral-700 dark:text-gray-400">
+            A list of custom roles, these roles can be given to users instead of giving a user
+            permissions one by one.
+          </p>
         </div>
 
         <div>
@@ -87,6 +91,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           data={customRoles.map((field) => ({
             name: field.name,
             permissions: field.permissions.join(", "),
+            createdAt: <FullDate>{field.createdAt}</FullDate>,
             actions: (
               <>
                 <Button small variant="success" onClick={() => handleEditClick(field)}>
@@ -106,6 +111,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
           columns={[
             { Header: common("name"), accessor: "name" },
             { Header: "Permissions", accessor: "permissions" },
+            { Header: common("createdAt"), accessor: "createdAt" },
             hasPermissions([Permissions.ViewCustomFields], true)
               ? { Header: common("actions"), accessor: "actions" }
               : null,
@@ -113,12 +119,28 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
         />
       )}
 
-      <ManageCustomRolesModal role={tempRole} />
+      <ManageCustomRolesModal
+        onCreate={(role) => {
+          setCustomRoles((p) => [role, ...p]);
+        }}
+        onUpdate={(oldRole, newRole) => {
+          setCustomRoles((p) => {
+            const idx = p.indexOf(oldRole);
+            p[idx] = newRole;
+            return p;
+          });
+        }}
+        role={tempRole}
+        onClose={() => setTempRole(null)}
+      />
 
       <AlertModal
-        id={ModalIds.AlertDeleteCustomField}
-        title={t("deleteCustomField")}
-        description={t("alert_deleteCustomField")}
+        id={ModalIds.AlertDeleteCustomRole}
+        title={t("deleteCustomRole")}
+        description={t.rich("alert_deleteCustomRole", {
+          span: (children) => <span className="font-semibold">{children}</span>,
+          role: tempRole?.name,
+        })}
         onDeleteClick={handleDelete}
         onClose={() => setTempRole(null)}
         state={state}
@@ -128,7 +150,7 @@ export default function ManageCustomRoles({ customRoles: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [customRoles] = await requestAll(req, [["/admin/manage/custom-fields", []]]);
+  const [customRoles] = await requestAll(req, [["/admin/manage/custom-roles", []]]);
 
   return {
     props: {

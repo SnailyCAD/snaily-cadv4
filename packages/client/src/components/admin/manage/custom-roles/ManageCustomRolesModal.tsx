@@ -43,10 +43,15 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
   ) {
     let jsonId;
 
+    const data = {
+      ...values,
+      permissions: values.permissions.map((v) => v.value),
+    };
+
     if (role) {
       const { json } = await execute(`/admin/manage/custom-roles/${role.id}`, {
         method: "PUT",
-        data: values,
+        data,
         helpers,
       });
 
@@ -58,7 +63,7 @@ export function ManageCustomRolesModal({ role, onClose, onCreate, onUpdate }: Pr
     } else {
       const { json } = await execute("/admin/manage/custom-roles", {
         method: "POST",
-        data: values,
+        data,
         helpers,
       });
 
