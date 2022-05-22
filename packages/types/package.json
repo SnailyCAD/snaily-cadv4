@@ -19,12 +19,11 @@
     "typecheck": "yarn tsc --noEmit"
   },
   "dependencies": {
-    "type-fest": "^2.12.2",
-    "zod": "^3.16.0"
+    "type-fest": "^2.12.2"
   },
   "devDependencies": {
     "@snailycad/permissions": "1.4.1",
-    "tsup": "^5.12.7",
+    "tsup": "^5.12.8",
     "typescript": "^4.6.4"
   },
   "tsup": {
