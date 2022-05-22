@@ -8,6 +8,7 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
+import { isMobile } from "is-mobile";
 
 type ApiPathFunc = (inputValue: string) => string;
 
@@ -35,6 +36,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
   const { state, execute } = useFetch();
   const { focusWithinProps } = useFocusWithin({
+    isDisabled: isMobile(),
     onBlurWithin: () => setOpen(false),
   });
 
