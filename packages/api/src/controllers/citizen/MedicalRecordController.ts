@@ -26,7 +26,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
@@ -70,7 +70,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(record?.userId, user, new NotFound("notFound"));
     } else if (!record) {
@@ -112,7 +112,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(medicalRecord?.userId, user, new NotFound("notFound"));
     } else if (!medicalRecord) {

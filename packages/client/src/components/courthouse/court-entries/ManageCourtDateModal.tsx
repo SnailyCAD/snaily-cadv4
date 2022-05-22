@@ -36,7 +36,7 @@ export function ManageCourtDateModal({ onCreate, onUpdate, onClose, date }: Prop
     closeModal(ModalIds.ManageCourtDate);
   }
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  function onSubmit(values: typeof INITIAL_VALUES) {
     closeModal(ModalIds.ManageCourtDate);
 
     if (date) {

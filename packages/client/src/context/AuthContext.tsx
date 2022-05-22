@@ -38,7 +38,7 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   const isEnabled = useIsRouteFeatureEnabled(cad ?? {});
 
-  const handleGetUser = React.useCallback(async () => {
+  const handleGetUser = React.useCallback(() => {
     getSessionUser()
       .then((u) => {
         if (!u && !NO_LOADING_ROUTES.includes(router.pathname)) {

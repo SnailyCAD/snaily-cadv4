@@ -23,7 +23,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
   const t = useTranslations("Courthouse");
   const { closeModal, openModal } = useModal();
 
-  async function deleteCourtDate() {
+  function deleteCourtDate() {
     if (!tempDate) return;
 
     closeModal(ModalIds.AlertDeleteCourtDate);

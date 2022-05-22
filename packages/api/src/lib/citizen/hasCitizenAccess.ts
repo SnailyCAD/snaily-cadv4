@@ -7,7 +7,7 @@ interface Options {
   cad: Partial<cad> & { features?: CadFeature[] };
 }
 
-export async function shouldCheckCitizenUserId({ cad, user }: Options) {
+export function shouldCheckCitizenUserId({ cad, user }: Options) {
   const isCommonCardsEnabled = isFeatureEnabled({
     defaultReturn: false,
     feature: Feature.COMMON_CITIZEN_CARDS,

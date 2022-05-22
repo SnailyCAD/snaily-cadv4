@@ -7,7 +7,7 @@ export const IFRAME_COOKIE_NAME = "snaily-cad-iframe-cookie" as const;
  * store cookies on the server-side to support Iframes in a non-secure environment.
  */
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method;
   const body = typeof req.body === "string" ? req.body : String(req.body);
 

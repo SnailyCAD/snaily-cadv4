@@ -56,7 +56,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     onDutyCode && handleStatusUpdate(onDutyCode);
   }
 
-  async function getActiveUnit(data: Officer[]) {
+  function getActiveUnit(data: Officer[]) {
     const unit = data.find((v) => v.id === activeUnit?.id);
 
     if (unit && shouldPlayStatusUpdateSound) {
@@ -72,7 +72,7 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     socketEvent,
     (data: Officer[] | null) => {
       if (data && Array.isArray(data)) {
-        void getActiveUnit(data);
+        getActiveUnit(data);
       }
     },
     [setActiveUnit, activeUnit],

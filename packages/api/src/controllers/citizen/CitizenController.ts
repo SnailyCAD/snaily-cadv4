@@ -72,7 +72,7 @@ export const citizenInclude = {
 export class CitizenController {
   @Get("/")
   async getCitizens(@Context("cad") cad: { features?: CadFeature[] }, @Context("user") user: User) {
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizens = await prisma.citizen.findMany({
       where: {
@@ -91,7 +91,7 @@ export class CitizenController {
     @Context("user") user: User,
     @PathParams("id") citizenId: string,
   ) {
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findFirst({
       where: {
@@ -112,7 +112,7 @@ export class CitizenController {
   async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
     const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
     const user = ctx.get("user") as User;
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({
       features: cad.features,
@@ -215,7 +215,7 @@ export class CitizenController {
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -271,7 +271,7 @@ export class CitizenController {
       features: cad.features,
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId && !isCreateCitizenEnabled) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {

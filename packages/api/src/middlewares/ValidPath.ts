@@ -25,7 +25,7 @@ const validPaths = [
 
 @Middleware()
 export class IsValidPath implements MiddlewareMethods {
-  async use(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
+  use(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 
