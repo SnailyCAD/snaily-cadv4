@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
@@ -24,6 +24,7 @@ import { Input } from "components/form/inputs/Input";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Permissions } from "@snailycad/permissions";
 import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
+import { classNames } from "lib/classNames";
 
 type Unit = (Officer | EmsFdDeputy) & {
   qualifications: UnitQualification[];
@@ -213,15 +214,16 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 
             <footer className="flex justify-end">
               <Link href="/admin/manage/units">
-                <a>
-                  <Button type="button" variant="cancel">
-                    {common("cancel")}
-                  </Button>
+                <a
+                  href="/admin/manage/units"
+                  className={classNames(buttonVariants.cancel, "p-1 px-4")}
+                >
+                  {common("cancel")}
                 </a>
               </Link>
+
               <Button type="submit" className="flex items-center">
                 {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
-
                 {common("save")}
               </Button>
             </footer>

@@ -147,7 +147,10 @@ export default function Login() {
 
                       <div className="mt-3">
                         <Link href="/auth/register">
-                          <a className="inline-block mb-3 underline dark:text-gray-200">
+                          <a
+                            href="/auth/register"
+                            className="inline-block mb-3 underline dark:text-gray-200"
+                          >
                             {t("noAccount")}
                           </a>
                         </Link>

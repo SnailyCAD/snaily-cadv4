@@ -9,7 +9,7 @@ import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll, yesOrNoText } from "lib/utils";
 import { TabList, TabsContent } from "components/shared/TabList";
 import { PendingUsersTab } from "components/admin/manage/users/PendingUsersTab";
-import { Button } from "components/Button";
+import { buttonVariants } from "components/Button";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import { Table } from "components/shared/Table";
@@ -18,6 +18,7 @@ import { Status } from "components/shared/Status";
 import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
+import { classNames } from "lib/classNames";
 
 interface Props {
   users: User[];
@@ -101,8 +102,11 @@ export default function ManageUsers({ users: data }: Props) {
                 ),
                 actions: (
                   <Link href={`/admin/manage/users/${user.id}`}>
-                    <a>
-                      <Button small>{common("manage")}</Button>
+                    <a
+                      className={classNames(buttonVariants.default, "p-0.5 px-2")}
+                      href={`/admin/manage/users/${user.id}`}
+                    >
+                      {common("manage")}
                     </a>
                   </Link>
                 ),

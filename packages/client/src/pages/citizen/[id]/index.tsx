@@ -7,7 +7,7 @@ import type { GetServerSideProps } from "next";
 import { getSessionUser } from "lib/auth";
 import { Layout } from "components/Layout";
 import { useModal } from "state/modalState";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import useFetch from "lib/useFetch";
 import { getTranslations } from "lib/getTranslation";
 import { VehiclesCard } from "components/citizen/vehicles/VehiclesCard";
@@ -25,6 +25,7 @@ import { Title } from "components/shared/Title";
 import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
+import { classNames } from "lib/classNames";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -136,11 +137,12 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => router.push(`/citizen/${citizen.id}/edit`)}>
-            <Link href={`/citizen/${citizen.id}/edit`}>
-              <a>{t("editCitizen")}</a>
-            </Link>
-          </Button>
+          <Link
+            className={classNames(buttonVariants.default, "p-1 px-4")}
+            href={`/citizen/${citizen.id}/edit`}
+          >
+            <a href={`/citizen/${citizen.id}/edit`}>{t("editCitizen")}</a>
+          </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
             <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">
               {t("deleteCitizen")}

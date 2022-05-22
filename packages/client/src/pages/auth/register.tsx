@@ -117,7 +117,9 @@ export default function Register({ cad }: Props) {
 
               <div className="mt-3">
                 <Link href="/auth/login">
-                  <a className="inline-block mb-3 underline dark:text-white">{t("hasAccount")}</a>
+                  <a href="/auth/login" className="inline-block mb-3 underline dark:text-white">
+                    {t("hasAccount")}
+                  </a>
                 </Link>
 
                 <Button

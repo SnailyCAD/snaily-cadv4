@@ -1460,7 +1460,7 @@ __metadata:
     qrcode: ^1.5.0
     regenerator-runtime: ^0.13.9
     socket.io: ^4.5.1
-    ts-node: ^10.8.0
+    ts-node: ^10.7.0
     tsconfig-paths: ^4.0.0
     typescript: ^4.6.4
     undici: ^5.2.0
@@ -10979,7 +10979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.8.0":
+"ts-node@npm:^10.7.0":
   version: 10.8.0
   resolution: "ts-node@npm:10.8.0"
   dependencies:
