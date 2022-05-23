@@ -36,11 +36,10 @@ export class AccountController {
     const { soundSettings, username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
 
     const existing = await prisma.user.findUnique({
-      where: {
-        username,
-      },
+      where: { username },
     });
 
+    // todo: verify regex of username
     if (existing && user.username !== username) {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
