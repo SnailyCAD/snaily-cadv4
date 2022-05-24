@@ -144,6 +144,9 @@ export function ManagePermissionsModal({ user }: Props) {
                     <div className="grid grid-cols-1 md:grid-cols-3">
                       {filtered.map((permission) => {
                         const formattedName = formatPermissionName(permission);
+                        const isDisabled = user.roles?.some((r) =>
+                          r.permissions.includes(permission),
+                        );
 
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
@@ -151,6 +154,7 @@ export function ManagePermissionsModal({ user }: Props) {
                               onClick={handleChange}
                               toggled={values[permission as PermissionNames]}
                               name={permission}
+                              disabled={isDisabled}
                             />
                           </FormField>
                         );

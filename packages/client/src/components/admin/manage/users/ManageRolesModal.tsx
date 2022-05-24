@@ -23,9 +23,11 @@ export function ManageRolesModal({ roles, user }: Props) {
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
-    const { json } = await execute(`/admin/manage/users/permissions/${user.id}`, {
+    const { json } = await execute(`/admin/manage/users/roles/${user.id}`, {
       method: "PUT",
-      data,
+      data: {
+        roles: data.roles.map((v) => v.value),
+      },
     });
 
     if (json.id) {
@@ -46,32 +48,57 @@ export function ManageRolesModal({ roles, user }: Props) {
       isOpen={isOpen(ModalIds.ManageRoles)}
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, values }) => (
-          <Form>
-            <FormField label={common("search")} className="my-2">
-              <Select
-                values={roles.map((role) => ({
-                  label: role.name,
-                  value: role.id,
-                }))}
-                value={values.roles}
-                onChange={handleChange}
-                name="roles"
-                isMulti
-                closeMenuOnSelect={false}
-              />
-            </FormField>
+        {({ handleChange, values }) => {
+          const _roles = values.roles.map((v) => {
+            const role = roles.find((r) => r.id === v.value);
+            return role!;
+          });
 
-            <Button
-              className="flex items-center gap-2 mt-5"
-              type="submit"
-              disabled={state === "loading"}
-            >
-              {state === "loading" ? <Loader /> : null}
-              {common("save")}
-            </Button>
-          </Form>
-        )}
+          const allRolePermissions = [...new Set(_roles.flatMap((r) => r.permissions))];
+
+          return (
+            <Form>
+              <FormField label={common("search")} className="my-2">
+                <Select
+                  values={roles.map((role) => ({
+                    label: role.name,
+                    value: role.id,
+                  }))}
+                  value={values.roles}
+                  onChange={handleChange}
+                  name="roles"
+                  isMulti
+                  closeMenuOnSelect={false}
+                />
+              </FormField>
+
+              <div className="mt-3">
+                <h3 className="text-lg font-semibold">Permissions</h3>
+
+                {allRolePermissions.length <= 0 ? (
+                  <p className="text-base mt-3">No roles selected yet.</p>
+                ) : (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {allRolePermissions.map((permission) => (
+                      <span className="bg-dark-bright px-1 p-0.5 rounded-md" key={permission}>
+                        {permission}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <Button
+                className="flex items-center gap-2 mt-5"
+                type="submit"
+                disabled={state === "loading"}
+              >
+                {state === "loading" ? <Loader /> : null}
+                {common("save")}
+              </Button>
+            </Form>
+          );
+        }}
       </Formik>
     </Modal>
   );

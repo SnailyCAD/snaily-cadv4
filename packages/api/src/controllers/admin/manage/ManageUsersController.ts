@@ -7,7 +7,12 @@ import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/user";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
-import { BAN_SCHEMA, UPDATE_USER_SCHEMA, PERMISSIONS_SCHEMA } from "@snailycad/schemas";
+import {
+  BAN_SCHEMA,
+  UPDATE_USER_SCHEMA,
+  PERMISSIONS_SCHEMA,
+  ROLES_SCHEMA,
+} from "@snailycad/schemas";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { genSaltSync, hashSync } from "bcrypt";
@@ -18,6 +23,7 @@ import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
+import { manyToManyHelper } from "utils/manyToMany";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -66,6 +72,7 @@ export class ManageUsersController {
         ...userProperties,
         ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
         apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
+        roles: true,
       },
     });
 
@@ -96,6 +103,42 @@ export class ManageUsersController {
         id: user.id,
       },
       data: { permissions },
+      select: userProperties,
+    });
+
+    return updated;
+  }
+
+  @Put("/roles/:id")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
+  async updateUserRolesById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+    const data = validateSchema(ROLES_SCHEMA, body);
+    const user = await prisma.user.findUnique({ where: { id: userId }, include: { roles: true } });
+
+    if (!user) {
+      throw new NotFound("notFound");
+    }
+
+    if (user.rank === Rank.OWNER) {
+      throw new ExtendedBadRequest({ rank: "cannotUpdateOwnerPermissions" });
+    }
+
+    const disconnectConnectArr = manyToManyHelper(
+      user.roles.map((v) => v.id),
+      data.roles as string[],
+    );
+
+    await prisma.$transaction(
+      disconnectConnectArr.map((disconnectConnectData) =>
+        prisma.user.update({ where: { id: user.id }, data: { roles: disconnectConnectData } }),
+      ),
+    );
+
+    const updated = await prisma.user.findFirst({
+      where: { id: user.id },
       select: userProperties,
     });
 
