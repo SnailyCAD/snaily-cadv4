@@ -89,6 +89,7 @@ export class IsAuth implements MiddlewareMethods {
       ctx.set("user", fakeUser);
     } else {
       user = await getSessionUser(req, true);
+      ctx.set("user", user);
 
       const hasPermission = hasPermissionForReq(req, user);
       if (!hasPermission) {

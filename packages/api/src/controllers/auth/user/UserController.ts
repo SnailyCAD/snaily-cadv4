@@ -6,9 +6,9 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { ShouldDoType, User } from "@prisma/client";
+import { ShouldDoType, StatusViewMode, TableActionsAlignment, User } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
-import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
+import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 import { userProperties } from "lib/auth/user";
 import { validateSchema } from "lib/validateSchema";
@@ -33,26 +33,25 @@ export class AccountController {
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { soundSettings, username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
+    const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
-      where: { username },
+      where: { username: data.username },
     });
 
-    // todo: verify regex of username
-    if (existing && user.username !== username) {
+    if (existing && user.username !== data.username) {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
     let soundSettingsId = null;
-    if (soundSettings) {
+    if (data.soundSettings) {
       const updateCreateData = {
-        panicButton: soundSettings.panicButton,
-        signal100: soundSettings.signal100,
-        addedToCall: soundSettings.addedToCall,
-        stopRoleplay: soundSettings.stopRoleplay,
-        statusUpdate: soundSettings.statusUpdate,
-        incomingCall: soundSettings.incomingCall,
+        panicButton: data.soundSettings.panicButton,
+        signal100: data.soundSettings.signal100,
+        addedToCall: data.soundSettings.addedToCall,
+        stopRoleplay: data.soundSettings.stopRoleplay,
+        statusUpdate: data.soundSettings.statusUpdate,
+        incomingCall: data.soundSettings.incomingCall,
       };
 
       const updated = await prisma.userSoundSettings.upsert({
@@ -69,10 +68,10 @@ export class AccountController {
         id: user.id,
       },
       data: {
-        username,
-        isDarkTheme,
-        statusViewMode,
-        tableActionsAlignment,
+        username: data.username,
+        isDarkTheme: data.isDarkTheme,
+        statusViewMode: data.statusViewMode as StatusViewMode,
+        tableActionsAlignment: data.tableActionsAlignment as TableActionsAlignment,
         soundSettingsId,
       },
       select: userProperties,

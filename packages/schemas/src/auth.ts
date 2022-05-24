@@ -11,7 +11,11 @@ export const AUTH_SCHEMA = z.object({
   totpCode: z.string().optional(),
 });
 
-export const CHANGE_USERNAME_SCHEMA = z.object({
+export const CHANGE_USER_SCHEMA = z.object({
+  soundSettings: z.any(),
+  isDarkTheme: z.boolean(),
+  statusViewMode: z.string(),
+  tableActionsAlignment: z.string(),
   username: z
     .string()
     .min(3)
