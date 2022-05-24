@@ -225,7 +225,7 @@ model User {
   soundSettingsId          String?
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
-
+  roles                    CustomRole[]
 
   // relational data
   citizens             Citizen[]
@@ -1186,6 +1186,8 @@ model CustomRole {
   permissions String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 enum QualificationValueType {
