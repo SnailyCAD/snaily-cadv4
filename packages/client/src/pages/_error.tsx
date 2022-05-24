@@ -1,4 +1,5 @@
 import { Button } from "components/Button";
+import type { NextPageContext } from "next";
 
 function ErrorPage({ statusCode }: any) {
   function handleReload() {
@@ -21,7 +22,7 @@ function ErrorPage({ statusCode }: any) {
   );
 }
 
-ErrorPage.getInitialProps = ({ res, err }: any) => {
+ErrorPage.getInitialProps = ({ res, err }: NextPageContext) => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
 
   return { statusCode };
