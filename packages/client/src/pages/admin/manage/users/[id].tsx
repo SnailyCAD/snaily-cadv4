@@ -259,8 +259,8 @@ export default function ManageCitizens(props: Props) {
           )}
         </Formik>
 
-        <ManagePermissionsModal user={user} />
-        <ManageRolesModal roles={props.roles} user={user} />
+        <ManagePermissionsModal onUpdate={(user) => setUser(user)} user={user} />
+        <ManageRolesModal onUpdate={(user) => setUser(user)} roles={props.roles} user={user} />
 
         {USER_API_TOKENS ? <ApiTokenArea user={user} /> : null}
 

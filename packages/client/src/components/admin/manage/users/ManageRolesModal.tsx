@@ -14,9 +14,10 @@ import { Select } from "components/form/Select";
 interface Props {
   user: User;
   roles: CustomRole[];
+  onUpdate?(user: User): void;
 }
 
-export function ManageRolesModal({ roles, user }: Props) {
+export function ManageRolesModal({ roles, user, onUpdate }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { closeModal, isOpen } = useModal();
@@ -32,7 +33,7 @@ export function ManageRolesModal({ roles, user }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.ManageRoles);
-      user.permissions = json.permissions;
+      onUpdate?.(json);
     }
   }
 
@@ -58,7 +59,7 @@ export function ManageRolesModal({ roles, user }: Props) {
 
           return (
             <Form>
-              <FormField label={common("search")} className="my-2">
+              <FormField label={t("roles")} className="my-2">
                 <Select
                   values={roles.map((role) => ({
                     label: role.name,

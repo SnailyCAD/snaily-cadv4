@@ -19,12 +19,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn tsup",
+    "build": "rm -rf ./dist && yarn tsup",
     "typecheck": "yarn tsc --noEmit",
     "test:watch": "yarn vitest --watch",
     "test": "yarn vitest run"
   },
   "devDependencies": {
+    "@snailycad/types": "1.4.3",
     "tsup": "^5.12.8",
     "typescript": "^4.6.4",
     "vite": "^2.9.9",

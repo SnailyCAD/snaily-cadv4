@@ -20,6 +20,7 @@ import { Input } from "components/form/inputs/Input";
 
 interface Props {
   user: User;
+  onUpdate?(user: User): void;
 }
 
 const groups = [
@@ -52,7 +53,7 @@ const groups = [
   },
 ];
 
-export function ManagePermissionsModal({ user }: Props) {
+export function ManagePermissionsModal({ user, onUpdate }: Props) {
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
@@ -69,7 +70,7 @@ export function ManagePermissionsModal({ user }: Props) {
 
     if (json.id) {
       closeModal(ModalIds.ManagePermissions);
-      user.permissions = json.permissions;
+      onUpdate?.(json);
     }
   }
 

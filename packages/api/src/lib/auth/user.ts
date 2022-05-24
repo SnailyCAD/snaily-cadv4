@@ -35,6 +35,7 @@ export const userProperties = {
   permissions: true,
   apiToken: true,
   apiTokenId: true,
+  roles: true,
 };
 
 export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
