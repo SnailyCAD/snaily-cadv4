@@ -8,16 +8,17 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { IsAuth, setDiscordAUth } from "middlewares/IsAuth";
+import { CAD_SELECT, IsAuth, setDiscordAUth as setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
-import { UseBefore } from "@tsed/common";
+import { UseBeforeEach } from "@tsed/common";
 import { Socket } from "services/SocketService";
 import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
-import type { cad, Feature, JailTimeScale } from "@prisma/client";
+import type { cad, Feature, JailTimeScale, User } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
 
 @Controller("/admin/manage/cad-settings")
+@UseBeforeEach(IsAuth)
 export class ManageCitizensController {
   private socket: Socket;
   constructor(socket: Socket) {
@@ -25,22 +26,16 @@ export class ManageCitizensController {
   }
 
   @Get("/")
-  async getCadSettings() {
+  async getCadSettings(@Context("user") user: User) {
     const version = await getCADVersion();
+
     const cad = await prisma.cad.findFirst({
-      select: {
-        name: true,
-        areaOfPlay: true,
-        registrationCode: true,
-        miscCadSettings: true,
-        features: true,
-      },
+      select: CAD_SELECT(user),
     });
 
-    return { ...setDiscordAUth(cad), registrationCode: !!cad?.registrationCode, version };
+    return { ...setDiscordAuth(cad), registrationCode: !!cad?.registrationCode, version };
   }
 
-  @UseBefore(IsAuth)
   @Put("/")
   async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
@@ -73,7 +68,6 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth)
   @Put("/features")
   async updateCadFeatures(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(DISABLED_FEATURES_SCHEMA, body);
@@ -100,7 +94,6 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth)
   @Put("/misc")
   async updateMiscSettings(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
@@ -133,7 +126,6 @@ export class ManageCitizensController {
     return updated;
   }
 
-  @UseBefore(IsAuth)
   @Put("/auto-set-properties")
   async updateAutoSetProperties(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
@@ -158,7 +150,6 @@ export class ManageCitizensController {
     return autoSetProperties;
   }
 
-  @UseBefore(IsAuth)
   @Put("/api-token")
   async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
     const cad = ctx.get("cad") as cad;
@@ -206,7 +197,6 @@ export class ManageCitizensController {
     return apiToken;
   }
 
-  @UseBefore(IsAuth)
   @Delete("/api-token")
   async regenerateApiToken(@Context() ctx: Context) {
     const cad = ctx.get("cad");

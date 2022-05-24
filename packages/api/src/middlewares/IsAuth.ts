@@ -15,7 +15,7 @@ import { getCADVersion } from "@snailycad/utils/version";
 import { allPermissions } from "@snailycad/permissions";
 
 const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
-const CAD_SELECT = (user?: Pick<User, "rank">) => ({
+export const CAD_SELECT = (user?: Pick<User, "rank">) => ({
   id: true,
   name: true,
   areaOfPlay: true,
@@ -89,7 +89,6 @@ export class IsAuth implements MiddlewareMethods {
       ctx.set("user", fakeUser);
     } else {
       user = await getSessionUser(req, true);
-      ctx.set("user", user);
 
       const hasPermission = hasPermissionForReq(req, user);
       if (!hasPermission) {
