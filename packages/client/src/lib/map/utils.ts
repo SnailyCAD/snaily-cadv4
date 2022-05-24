@@ -36,8 +36,8 @@ export function convertToMap(rawX: XYZ["x"], rawY: XYZ["y"], map: L.Map) {
 
 function stringCoordToFloat(coord: XYZ<string | number | undefined>) {
   return {
-    x: parseFloat(`${coord.x}`),
-    y: parseFloat(`${coord.y}`),
-    z: parseFloat(`${coord.z}`),
+    x: parseFloat(String(coord.x)),
+    y: parseFloat(String(coord.y)),
+    z: parseFloat(String(coord.z)),
   };
 }

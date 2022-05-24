@@ -46,7 +46,7 @@ export function BusinessCard({ employee }: Props) {
       </div>
 
       <Link href={isDisabled ? "#" : `/business/${employee.businessId}/${employee.id}`}>
-        <a>
+        <a href={isDisabled ? "#" : `/business/${employee.businessId}/${employee.id}`}>
           <Button title={disabledMessage} disabled={isDisabled}>
             {common("view")}
           </Button>

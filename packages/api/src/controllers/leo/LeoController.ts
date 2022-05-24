@@ -35,6 +35,7 @@ import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -73,10 +74,11 @@ export class LeoController {
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -209,10 +211,11 @@ export class LeoController {
       unitId: officer.id,
     });
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 

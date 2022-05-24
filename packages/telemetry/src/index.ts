@@ -50,7 +50,7 @@ export async function sendErrorReport(errorReport: ErrorReport) {
   }
 }
 
-async function getBinaryVersions(command: "yarn" | "node" | "npm") {
+function getBinaryVersions(command: "yarn" | "node" | "npm") {
   const cache = get(command);
 
   if (cache) {

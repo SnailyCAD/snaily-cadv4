@@ -12,7 +12,7 @@ export async function getCADVersion() {
   if (!packageJson) return null;
 
   const json = JSON.parse(packageJson);
-  const localCommitHash = await getCurrentGitHash();
+  const localCommitHash = getCurrentGitHash();
 
   currentVersionCached ??= json.version;
   currentCommitHash = localCommitHash;
@@ -20,7 +20,7 @@ export async function getCADVersion() {
   return { currentVersion: currentVersionCached, currentCommitHash };
 }
 
-async function getCurrentGitHash() {
+function getCurrentGitHash() {
   const command = "git";
 
   const outputBuffer = spawnSync(command, ["rev-parse", "--short=7", "HEAD"]);

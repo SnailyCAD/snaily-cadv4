@@ -39,7 +39,7 @@ export class LicensesController {
       include: { dlCategory: true },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {

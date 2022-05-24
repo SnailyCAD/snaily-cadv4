@@ -49,7 +49,7 @@ export class AdminManageCustomRolesController {
       data: {
         name: data.name,
         permissions: data.permissions,
-        icon: validateImgurURL(data.icon),
+        iconId: validateImgurURL(data.icon),
       },
     });
 
@@ -77,7 +77,7 @@ export class AdminManageCustomRolesController {
       data: {
         name: data.name,
         permissions: data.permissions,
-        icon: validateImgurURL(data.icon),
+        iconId: validateImgurURL(data.icon),
       },
     });
 
@@ -132,8 +132,8 @@ export class AdminManageCustomRolesController {
 
     const data = await prisma.customRole.update({
       where: { id: customRole.id },
-      data: { icon: `${customRole.id}.${extension}` },
-      select: { icon: true },
+      data: { iconId: `${customRole.id}.${extension}` },
+      select: { iconId: true },
     });
 
     return data;

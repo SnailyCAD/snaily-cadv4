@@ -5,7 +5,7 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User } from "@prisma/client";
+import { type MiscCadSettings, ShouldDoType, type User, CadFeature } from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
@@ -20,6 +20,7 @@ import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
@@ -66,7 +67,7 @@ export class EmsFdController {
   async createEmsFdDeputy(
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
@@ -93,10 +94,11 @@ export class EmsFdController {
       type: "ems-fd",
     });
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -145,7 +147,7 @@ export class EmsFdController {
     @PathParams("id") deputyId: string,
     @BodyParams() body: unknown,
     @Context("user") user: User,
-    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
   ) {
     const data = validateSchema(EMS_FD_DEPUTY_SCHEMA, body);
 
@@ -186,10 +188,11 @@ export class EmsFdController {
       unitId: deputy.id,
     });
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 

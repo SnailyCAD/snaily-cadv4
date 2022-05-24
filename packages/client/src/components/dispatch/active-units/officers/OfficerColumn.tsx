@@ -70,7 +70,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
 
   const canDrag = hasActiveDispatchers && isDispatch;
 
-  async function handleMerge(officer: ActiveOfficer | CombinedLeoUnit) {
+  function handleMerge(officer: ActiveOfficer | CombinedLeoUnit) {
     setTempUnit(officer);
     openModal(ModalIds.MergeUnit);
   }

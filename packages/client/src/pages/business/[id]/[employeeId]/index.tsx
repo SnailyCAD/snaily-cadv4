@@ -3,7 +3,7 @@ import { Star } from "react-bootstrap-icons";
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -16,6 +16,7 @@ import useFetch from "lib/useFetch";
 import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
+import { classNames } from "lib/classNames";
 
 interface Props {
   employee: FullEmployee | null;
@@ -110,8 +111,11 @@ export default function BusinessId(props: Props) {
           ) : null}
           {owner?.citizenId === currentEmployee.citizenId ? (
             <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}>
-              <a>
-                <Button>{common("manage")}</Button>
+              <a
+                href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
+                className={classNames(buttonVariants.default, "p-1 px-4")}
+              >
+                {common("manage")}
               </a>
             </Link>
           ) : null}
