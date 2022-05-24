@@ -18,11 +18,18 @@ import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
-import { Officer, ShouldDoType, User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
+import {
+  CombinedLeoUnit,
+  Officer,
+  ShouldDoType,
+  User,
+  MiscCadSettings,
+  Feature,
+  CadFeature,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import {

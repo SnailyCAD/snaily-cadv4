@@ -10,9 +10,8 @@ import {
 } from "@snailycad/schemas";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from "@prisma/client";
+import { type User, EmployeeAsEnum, MiscCadSettings, WhitelistStatus } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import type { User } from "@snailycad/types";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 
 const businessInclude = {

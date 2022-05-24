@@ -138,7 +138,7 @@ export default function CitizenId() {
 
         <div className="flex gap-2">
           <Link
-            className={classNames(buttonVariants.default, "p-1 px-4")}
+            className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
             href={`/citizen/${citizen.id}/edit`}
           >
             <a href={`/citizen/${citizen.id}/edit`}>{t("editCitizen")}</a>

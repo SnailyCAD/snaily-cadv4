@@ -103,7 +103,7 @@ export default function ManageUsers({ users: data }: Props) {
                 actions: (
                   <Link href={`/admin/manage/users/${user.id}`}>
                     <a
-                      className={classNames(buttonVariants.default, "p-0.5 px-2")}
+                      className={classNames(buttonVariants.default, "p-0.5 px-2 rounded-md")}
                       href={`/admin/manage/users/${user.id}`}
                     >
                       {common("manage")}

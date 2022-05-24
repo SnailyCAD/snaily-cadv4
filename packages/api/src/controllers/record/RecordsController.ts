@@ -22,6 +22,7 @@ import {
   Warrant,
   WarrantStatus,
   WhitelistStatus,
+  DiscordWebhookType,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -29,7 +30,6 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
-import { DiscordWebhookType } from "@snailycad/types";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)

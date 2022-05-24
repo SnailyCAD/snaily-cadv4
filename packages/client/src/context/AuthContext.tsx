@@ -75,8 +75,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       setUser(initialData.session);
     }
 
-    if (initialData.session?.cad ?? initialData.cad) {
-      setCad(initialData.session?.cad ?? initialData.cad ?? null);
+    if (initialData.cad ?? initialData.session?.cad) {
+      setCad(initialData.cad ?? initialData.session?.cad ?? null);
     }
   }, [initialData]);
 

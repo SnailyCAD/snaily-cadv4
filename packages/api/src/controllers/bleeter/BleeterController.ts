@@ -19,7 +19,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import type { User } from "@snailycad/types";
+import type { User } from "@prisma/client";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")

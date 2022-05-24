@@ -11,11 +11,12 @@ import { useDebounce } from "react-use";
 import { isMobile } from "is-mobile";
 
 type ApiPathFunc = (inputValue: string) => string;
+type Suggestion = { id: string } & Record<string, unknown>;
 
 interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?(suggestion: any): void;
-  Component({ suggestion }: { suggestion: any }): JSX.Element;
+  onSuggestionClick?(suggestion: unknown): void;
+  Component({ suggestion }: { suggestion: unknown }): JSX.Element;
   options: {
     apiPath: string | ApiPathFunc;
     method: Method;
@@ -27,7 +28,7 @@ interface Props {
 
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
-  const [suggestions, setSuggestions] = React.useState<any[]>([]);
+  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
 
   const [localValue, setLocalValue] = React.useState("");
   useDebounce(async () => onSearch(localValue), 150, [localValue]);
@@ -71,7 +72,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
-  function handleSuggestionClick(suggestion: any) {
+  function handleSuggestionClick(suggestion: unknown) {
     onSuggestionClick?.(suggestion);
     setOpen(false);
   }
@@ -147,7 +148,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 }
 
 type SuggestionProps = Pick<Props, "Component" | "onSuggestionClick"> & {
-  suggestion: any;
+  suggestion: Suggestion;
 };
 
 const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(

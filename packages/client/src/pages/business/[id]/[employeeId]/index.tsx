@@ -113,7 +113,7 @@ export default function BusinessId(props: Props) {
             <Link href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}>
               <a
                 href={`/business/${currentBusiness.id}/${currentEmployee.id}/manage`}
-                className={classNames(buttonVariants.default, "p-1 px-4")}
+                className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
               >
                 {common("manage")}
               </a>

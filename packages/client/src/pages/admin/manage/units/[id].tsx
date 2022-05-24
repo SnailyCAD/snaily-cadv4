@@ -216,7 +216,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
               <Link href="/admin/manage/units">
                 <a
                   href="/admin/manage/units"
-                  className={classNames(buttonVariants.cancel, "p-1 px-4")}
+                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
                 >
                   {common("cancel")}
                 </a>

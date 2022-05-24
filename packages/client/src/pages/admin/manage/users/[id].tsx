@@ -211,7 +211,7 @@ export default function ManageCitizens(props: Props) {
                 <Link href="/admin/manage/users">
                   <a
                     href="/admin/manage/users"
-                    className={classNames(buttonVariants.cancel, "p-1 px-4")}
+                    className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
                   >
                     {common("cancel")}
                   </a>

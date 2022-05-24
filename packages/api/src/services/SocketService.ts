@@ -1,8 +1,17 @@
 import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
-import { LeoIncident, Call911, TowCall, Bolo, TaxiCall, ShouldDoType } from "@prisma/client";
-import type { IncidentEvent } from "@snailycad/types";
+import {
+  LeoIncident,
+  Call911,
+  TowCall,
+  Bolo,
+  TaxiCall,
+  ShouldDoType,
+  Officer,
+  CombinedLeoUnit,
+  IncidentEvent,
+} from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
@@ -118,7 +127,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(officer: any, type?: "ON" | "OFF") {
+  emitPanicButtonLeo(officer: CombinedLeoUnit | Officer | null, type?: "ON" | "OFF") {
     if (type === "OFF") {
       this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, officer);
     } else {

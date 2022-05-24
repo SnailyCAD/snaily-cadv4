@@ -20,6 +20,7 @@ import {
   VehicleInspectionStatus,
   VehicleTaxStatus,
   WhitelistStatus,
+  User,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { Description, Post, Put } from "@tsed/schema";
@@ -32,7 +33,6 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { citizenSearchInclude, vehicleSearchInclude } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generateString";
-import type { User } from "@snailycad/types";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
