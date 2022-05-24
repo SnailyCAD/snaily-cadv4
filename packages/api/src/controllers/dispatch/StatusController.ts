@@ -233,13 +233,11 @@ export class StatusController {
     if (shouldEnablePanicMode) {
       this.socket.emitPanicButtonLeo(options.unit, "ON");
 
-      if (options.cad?.miscCadSettings.panicButtonWebhookId) {
-        try {
-          const embed = createPanicButtonEmbed(options.cad, options.unit);
-          await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
-        } catch (error) {
-          console.error("[cad_panicButton]: Could not send Discord webhook.", error);
-        }
+      try {
+        const embed = createPanicButtonEmbed(options.cad, options.unit);
+        await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
+      } catch (error) {
+        console.error("[cad_panicButton]: Could not send Discord webhook.", error);
       }
     } else {
       this.socket.emitPanicButtonLeo(options.unit, "OFF");
@@ -252,7 +250,7 @@ interface HandlePanicButtonPressedOptions {
   unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
     status?: StatusValue | null;
   };
-  cad: any;
+  cad: cad & { miscCadSettings: MiscCadSettings };
 }
 
 type V<T> = T & { value: Value };
