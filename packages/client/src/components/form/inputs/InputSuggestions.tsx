@@ -72,7 +72,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
-  function handleSuggestionClick(suggestion: any) {
+  function handleSuggestionClick(suggestion: unknown) {
     onSuggestionClick?.(suggestion);
     setOpen(false);
   }
@@ -148,7 +148,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 }
 
 type SuggestionProps = Pick<Props, "Component" | "onSuggestionClick"> & {
-  suggestion: any;
+  suggestion: Suggestion;
 };
 
 const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(
