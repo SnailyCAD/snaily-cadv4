@@ -43,6 +43,8 @@ export default function Register({ cad }: Props) {
     }
   }, [ALLOW_REGULAR_LOGIN, router]);
 
+  console.log({ cad });
+
   async function onSubmit(
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
