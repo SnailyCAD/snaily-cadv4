@@ -15,7 +15,7 @@ import { getCADVersion } from "@snailycad/utils/version";
 import { allPermissions } from "@snailycad/permissions";
 
 const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
-export const CAD_SELECT = (user?: Pick<User, "rank">) => ({
+export const CAD_SELECT = (user?: Pick<User, "rank"> | null) => ({
   id: true,
   name: true,
   areaOfPlay: true,
