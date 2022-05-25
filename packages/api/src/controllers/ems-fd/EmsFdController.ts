@@ -396,19 +396,14 @@ export class EmsFdController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/units/${deputy.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.emsFdDeputy.update({
-      where: {
-        id: deputyId,
-      },
-      data: {
-        imageId: `${deputy.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.emsFdDeputy.update({
+        where: { id: deputy.id },
+        data: { imageId: `${deputy.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }

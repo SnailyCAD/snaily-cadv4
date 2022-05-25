@@ -26,19 +26,14 @@ export class ManageCitizensController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/cad/${cad.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.cad.update({
-      where: {
-        id: cad.id,
-      },
-      data: {
-        logoId: `${cad.id}.${extension}`,
-      },
-      select: {
-        logoId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.cad.update({
+        where: { id: cad.id },
+        data: { logoId: `${cad.id}.${extension}` },
+        select: { logoId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }
@@ -65,16 +60,13 @@ export class ManageCitizensController {
         const id = randomUUID();
         const path = `${process.cwd()}/public/cad/${id}.${extension}`;
 
-        await fs.writeFileSync(path, file.buffer);
-
-        const data = await prisma.miscCadSettings.update({
-          where: {
-            id: cad.miscCadSettingsId!,
-          },
-          data: {
-            [file.fieldname]: `${id}.${extension}`,
-          },
-        });
+        const [data] = await Promise.all([
+          prisma.miscCadSettings.update({
+            where: { id: cad.miscCadSettingsId! },
+            data: { [file.fieldname]: `${id}.${extension}` },
+          }),
+          fs.writeFileSync(path, file.buffer),
+        ]);
 
         return data;
       }),

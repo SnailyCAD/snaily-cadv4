@@ -415,19 +415,14 @@ export class LeoController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/units/${officer.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.officer.update({
-      where: {
-        id: officerId,
-      },
-      data: {
-        imageId: `${officer.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.officer.update({
+        where: { id: officer.id },
+        data: { imageId: `${officer.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }

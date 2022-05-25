@@ -286,19 +286,14 @@ export class CitizenController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/citizens/${citizen.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.citizen.update({
-      where: {
-        id: citizenId,
-      },
-      data: {
-        imageId: `${citizen.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.citizen.update({
+        where: { id: citizen.id },
+        data: { imageId: `${citizen.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }
