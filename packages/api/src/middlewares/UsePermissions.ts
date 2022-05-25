@@ -34,6 +34,10 @@ export class UsePermissionsMiddleware implements MiddlewareMethods {
       hasPerm = true;
     }
 
+    if (user.roles && user.roles.length >= 1) {
+      user.permissions = user.roles.flatMap((r) => r.permissions);
+    }
+
     if (!hasPerm) {
       throw new Forbidden("Invalid permissions");
     }

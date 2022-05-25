@@ -1561,7 +1561,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snailycad/permissions@workspace:packages/permissions"
   dependencies:
-    "@snailycad/types": 1.4.3
     tsup: ^5.12.8
     type-fest: ^2.12.2
     typescript: ^4.6.4

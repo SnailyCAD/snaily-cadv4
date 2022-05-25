@@ -30,6 +30,11 @@ export function usePermission() {
 
   function _getPermissions(userToCheck: User | null = user) {
     if (!userToCheck) return false;
+
+    if (userToCheck.roles && userToCheck.roles.length >= 1) {
+      userToCheck.permissions = userToCheck.roles.flatMap((r) => r.permissions);
+    }
+
     return getPermissions(userToCheck.permissions ?? []);
   }
 
