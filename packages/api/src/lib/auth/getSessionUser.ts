@@ -9,6 +9,16 @@ import { Feature, Rank, WhitelistStatus, type User } from "@prisma/client";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 
+enum GetSessionUserErrors {
+  InvalidAPIToken = "invalid user API token",
+  InvalidPermissionsForUserAPIToken = "invalid permissions for user API Token",
+  Unauthorized = "Unauthorized",
+  NotFound = "NotFound",
+  UserBanned = "userBanned",
+  WhitelistPending = "whitelistPending",
+  WhitelistDeclined = "whitelistDeclined",
+}
+
 export const userProperties = {
   id: true,
   username: true,
@@ -37,10 +47,10 @@ export const userProperties = {
   apiTokenId: true,
 };
 
-export async function getSessionUser(req: Req, throwErrors?: true): Promise<User>;
-export async function getSessionUser(req: Req, throwErrors?: false): Promise<User | null>;
-export async function getSessionUser(req: Req, throwErrors = false): Promise<User | null> {
-  let header = req.cookies[Cookie.Session] || parse(`${req.headers.session}`)[Cookie.Session];
+export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<User>;
+export async function getSessionUser(req: Req, returnNullOnError?: true): Promise<User | null>;
+export async function getSessionUser(req: Req, returnNullOnError = false): Promise<User | null> {
+  let header = req.cookies[Cookie.Session] || parse(String(req.headers.session))[Cookie.Session];
 
   const cad = await prisma.cad.findFirst({ select: { features: true } });
   const isUserAPITokensEnabled = isFeatureEnabled({
@@ -57,7 +67,7 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
 
   if (process.env.IFRAME_SUPPORT_ENABLED === "true" && !header) {
     const name = "snaily-cad-iframe-cookie";
-    header = req.cookies[name] || parse(`${req.headers.session}`)[name];
+    header = req.cookies[name] || parse(String(req.headers.session))[name];
   }
 
   let user;
@@ -68,7 +78,7 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
     });
 
     if (!token) {
-      throw new Forbidden("invalid user API token");
+      throw new Forbidden(GetSessionUserErrors.InvalidAPIToken);
     }
 
     apiTokenUsed = token;
@@ -85,48 +95,45 @@ export async function getSessionUser(req: Req, throwErrors = false): Promise<Use
       }
 
       if (!hasPerms) {
-        throw new Forbidden("Invalid permissions for user API Token");
+        throw new Forbidden(GetSessionUserErrors.InvalidPermissionsForUserAPIToken);
       }
     }
   } else {
-    if (throwErrors && !header) {
-      throw new Unauthorized("Unauthorized");
+    if (!header) {
+      if (returnNullOnError) return null;
+      throw new Unauthorized(GetSessionUserErrors.Unauthorized);
     }
 
     const jwtPayload = verifyJWT(header);
-
-    if (throwErrors && !jwtPayload) {
-      throw new Unauthorized("Unauthorized");
+    if (!jwtPayload) {
+      if (returnNullOnError) return null;
+      throw new Unauthorized(GetSessionUserErrors.Unauthorized);
     }
 
-    user = jwtPayload
-      ? await prisma.user.findUnique({
-          where: {
-            id: jwtPayload.userId,
-          },
-          select: userProperties,
-        })
-      : null;
+    user = await prisma.user.findUnique({
+      where: { id: jwtPayload.userId },
+      select: userProperties,
+    });
   }
 
-  if (!throwErrors && !user) {
-    return null as unknown as User;
+  if (!user) {
+    if (returnNullOnError) return null;
+    throw new Unauthorized(GetSessionUserErrors.NotFound);
   }
 
-  if (throwErrors && !user) {
-    throw new NotFound("notFound");
+  if (user.banned) {
+    if (returnNullOnError) return null;
+    throw new NotFound(GetSessionUserErrors.UserBanned);
   }
 
-  if (throwErrors && user?.banned) {
-    throw new NotFound("userBanned");
+  if (user.whitelistStatus === WhitelistStatus.PENDING) {
+    if (returnNullOnError) return null;
+    throw new NotFound(GetSessionUserErrors.WhitelistPending);
   }
 
-  if (throwErrors && user?.whitelistStatus === WhitelistStatus.PENDING) {
-    throw new NotFound("whitelistPending");
-  }
-
-  if (throwErrors && user?.whitelistStatus === WhitelistStatus.DECLINED) {
-    throw new NotFound("whitelistDeclined");
+  if (user.whitelistStatus === WhitelistStatus.DECLINED) {
+    if (returnNullOnError) return null;
+    throw new NotFound(GetSessionUserErrors.WhitelistDeclined);
   }
 
   if (apiTokenUsed) {

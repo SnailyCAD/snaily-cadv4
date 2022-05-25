@@ -137,11 +137,13 @@ export default function CitizenId() {
         </div>
 
         <div className="flex gap-2">
-          <Link
-            className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
-            href={`/citizen/${citizen.id}/edit`}
-          >
-            <a href={`/citizen/${citizen.id}/edit`}>{t("editCitizen")}</a>
+          <Link href={`/citizen/${citizen.id}/edit`}>
+            <a
+              className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+              href={`/citizen/${citizen.id}/edit`}
+            >
+              {t("editCitizen")}
+            </a>
           </Link>
           {ALLOW_CITIZEN_DELETION_BY_NON_ADMIN ? (
             <Button onClick={() => openModal(ModalIds.AlertDeleteCitizen)} variant="danger">

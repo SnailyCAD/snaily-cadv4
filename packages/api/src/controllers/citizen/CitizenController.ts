@@ -13,7 +13,7 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generateString";
 import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { canManageInvariant, userProperties } from "lib/auth/user";
+import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/validateSchema";
 import { updateCitizenLicenseCategories } from "lib/citizen/licenses";
 import { isFeatureEnabled } from "lib/cad";

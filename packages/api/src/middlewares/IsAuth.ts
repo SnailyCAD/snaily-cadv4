@@ -8,7 +8,7 @@ import {
 } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
-import { getSessionUser, userProperties } from "lib/auth/user";
+import { getSessionUser, userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { updateMemberRolesLogin } from "lib/discord/auth";
 import { getCADVersion } from "@snailycad/utils/version";
@@ -88,7 +88,7 @@ export class IsAuth implements MiddlewareMethods {
       };
       ctx.set("user", fakeUser);
     } else {
-      user = await getSessionUser(req, true);
+      user = await getSessionUser(req, false);
       ctx.set("user", user);
 
       const hasPermission = hasPermissionForReq(req, user);

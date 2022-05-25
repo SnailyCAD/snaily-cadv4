@@ -16,7 +16,7 @@ import { nanoid } from "nanoid";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, Feature, JailTimeScale } from "@prisma/client";
 import { getCADVersion } from "@snailycad/utils/version";
-import { getSessionUser } from "lib/auth/user";
+import { getSessionUser } from "lib/auth/getSessionUser";
 
 @Controller("/admin/manage/cad-settings")
 export class ManageCitizensController {
@@ -27,7 +27,7 @@ export class ManageCitizensController {
 
   @Get("/")
   async getCadSettings(@Req() request: Req) {
-    const user = await getSessionUser(request, false);
+    const user = await getSessionUser(request, true);
     const version = await getCADVersion();
 
     const cad = await prisma.cad.findFirst({
