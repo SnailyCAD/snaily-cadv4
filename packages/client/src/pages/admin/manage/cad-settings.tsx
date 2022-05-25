@@ -32,7 +32,8 @@ const Tabs = {
   ),
   DiscordWebhooksTab: dynamic(
     async () =>
-      (await import("components/admin/manage/cad-settings/DiscordWebhooksTab")).DiscordWebhooksTab,
+      (await import("components/admin/manage/cad-settings/webhooks/DiscordWebhooksTab"))
+        .DiscordWebhooksTab,
   ),
 };
 

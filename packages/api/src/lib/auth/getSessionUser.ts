@@ -99,8 +99,7 @@ export async function getSessionUser(req: Req, returnNullOnError = false): Promi
       }
     }
   } else {
-    if (!header) {
-      if (returnNullOnError) return null;
+    if (!header && !returnNullOnError) {
       throw new Unauthorized(GetSessionUserErrors.Unauthorized);
     }
 
