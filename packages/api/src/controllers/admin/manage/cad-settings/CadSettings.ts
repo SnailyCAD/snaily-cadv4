@@ -8,7 +8,7 @@ import { Controller } from "@tsed/di";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Delete, Get, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { CAD_SELECT, IsAuth, setDiscordAUth as setDiscordAuth } from "middlewares/IsAuth";
+import { CAD_SELECT, IsAuth, setDiscordAuth } from "middlewares/IsAuth";
 import { BadRequest } from "@tsed/exceptions";
 import { Req, UseBefore } from "@tsed/common";
 import { Socket } from "services/SocketService";
@@ -39,13 +39,11 @@ export class ManageCitizensController {
 
   @Put("/")
   @UseBefore(IsAuth)
-  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateCadSettings(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.cad.update({
-      where: {
-        id: ctx.get("cad").id,
-      },
+      where: { id: cad.id },
       data: {
         name: data.name,
         areaOfPlay: data.areaOfPlay,
@@ -56,11 +54,7 @@ export class ManageCitizensController {
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
         logoId: data.image,
-        miscCadSettings: {
-          update: {
-            roleplayEnabled: data.roleplayEnabled,
-          },
-        },
+        miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
       },
     });
 
