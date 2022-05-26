@@ -39,13 +39,11 @@ export class ManageCitizensController {
 
   @Put("/")
   @UseBefore(IsAuth)
-  async updateCadSettings(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async updateCadSettings(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.cad.update({
-      where: {
-        id: ctx.get("cad").id,
-      },
+      where: { id: cad.id },
       data: {
         name: data.name,
         areaOfPlay: data.areaOfPlay,
@@ -56,11 +54,7 @@ export class ManageCitizensController {
         businessWhitelisted: data.businessWhitelisted,
         registrationCode: data.registrationCode,
         logoId: data.image,
-        miscCadSettings: {
-          update: {
-            roleplayEnabled: data.roleplayEnabled,
-          },
-        },
+        miscCadSettings: { update: { roleplayEnabled: data.roleplayEnabled } },
       },
     });
 
