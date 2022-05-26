@@ -201,8 +201,7 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const arr = await handler([body]);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body]);
 
     return value;
   }
@@ -238,8 +237,7 @@ export class ValuesController {
     const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
-    const arr = await handler([body], valueId);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body], valueId);
 
     return value;
   }

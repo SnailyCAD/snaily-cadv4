@@ -451,6 +451,7 @@ model Value {
   DLExam                          DLExam[]                      @relation("dlExamToLicense")
   DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
   QualificationValue              QualificationValue[]
+  CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
 }
 
 model PenalCode {
@@ -575,6 +576,14 @@ model WeaponValue {
   value   Value    @relation("weaponValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
   hash    String?
   weapon  Weapon[] @relation("weaponModelToValue")
+}
+
+model CallTypeValue {
+  id       String    @id @default(cuid())
+  priority Int?
+  valueId  String
+  value    Value     @relation("callTypeValueToValue", fields: [valueId], references: [id], onDelete: Cascade)
+  Call911  Call911[]
 }
 
 // notifications
@@ -928,6 +937,8 @@ model Call911 {
   departments     DepartmentValue[]
   events          Call911Event[]
   incidents       LeoIncident[]
+  type            CallTypeValue?    @relation(fields: [typeId], references: [id])
+  typeId          String?
   Officer         Officer[]         @relation("activeCall")
   EmsFdDeputy     EmsFdDeputy[]     @relation("emsFdActiveCall")
   CombinedLeoUnit CombinedLeoUnit[] @relation("CombinedLeoUnitActiveCall")
@@ -1252,6 +1263,7 @@ enum ValueType {
   VEHICLE_FLAG
   CITIZEN_FLAG
   QUALIFICATION
+  CALL_TYPE
 }
 
 enum DriversLicenseCategoryType {

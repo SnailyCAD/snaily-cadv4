@@ -456,6 +456,17 @@ export interface DivisionValue {
 }
 
 /**
+ * Model CallTypeValue
+ *
+ */
+export interface CallTypeValue {
+  id: string;
+  valueId: string;
+  value: Value<ValueType.CALL_TYPE>;
+  priority: number | null;
+}
+
+/**
  * Model DepartmentValue
  *
  */
@@ -864,6 +875,8 @@ export interface Call911 {
   divisions?: DivisionValue[];
   incidents?: LeoIncident[];
   viaDispatch: boolean | null;
+  type: CallTypeValue | null;
+  typeId: string;
 }
 
 /**
@@ -1212,6 +1225,7 @@ export enum ValueType {
   VEHICLE_FLAG = "VEHICLE_FLAG",
   CITIZEN_FLAG = "CITIZEN_FLAG",
   QUALIFICATION = "QUALIFICATION",
+  CALL_TYPE = "CALL_TYPE",
 }
 
 export enum ValueLicenseType {

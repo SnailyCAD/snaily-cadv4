@@ -364,10 +364,6 @@ export const typeHandlers = {
             value: { set: item.value },
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
           },
           create: {
             isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
@@ -375,10 +371,6 @@ export const typeHandlers = {
             value: item.value,
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
           },
         };
 
@@ -414,11 +406,7 @@ function createValueObj(
   };
 }
 
-async function handlePromiseAll<T, R>(
-  data: T[],
-  handler: (item: T) => Promise<R>,
-): Promise<{ success: R[]; failed: number }> {
-  let failed = 0;
+async function handlePromiseAll<T, R>(data: T[], handler: (item: T) => Promise<R>): Promise<R[]> {
   const success: R[] = [];
 
   await Promise.all(
@@ -428,10 +416,9 @@ async function handlePromiseAll<T, R>(
         success.push(data);
       } catch (e) {
         console.error(e);
-        failed += 1;
       }
     }),
   );
 
-  return { success, failed };
+  return success;
 }
