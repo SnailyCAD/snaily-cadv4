@@ -12,6 +12,7 @@ import {
   WhatPages,
   ShouldDoType,
   QualificationValue,
+  CallTypeValue,
 } from "@snailycad/types";
 import {
   SHOULD_DO_LABELS,
@@ -140,6 +141,13 @@ export function useTableDataOfType(type: ValueType) {
           departments: departments.map((v) => v.label).join(", "),
         };
       }
+      case ValueType.CALL_TYPE: {
+        const v = value as CallTypeValue;
+
+        return {
+          priority: v.priority ?? common("none"),
+        };
+      }
       default: {
         return {};
       }
@@ -202,6 +210,9 @@ export function useTableHeadersOfType(type: ValueType) {
         { Header: common("image"), accessor: "image" },
         { Header: t("departments"), accessor: "departments" },
       ];
+    }
+    case ValueType.CALL_TYPE: {
+      return [{ Header: t("priority"), accessor: "priority" }];
     }
     default: {
       return [];

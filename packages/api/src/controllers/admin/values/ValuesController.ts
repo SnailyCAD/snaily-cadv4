@@ -37,6 +37,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "divisionValue",
     include: { department: { include: { value: true } } },
   },
+  CALL_TYPE: { name: "callTypeValue" },
 };
 
 @Controller("/admin/values/:path")
@@ -201,8 +202,7 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const arr = await handler([body]);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body]);
 
     return value;
   }
@@ -238,8 +238,7 @@ export class ValuesController {
     const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
-    const arr = await handler([body], valueId);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body], valueId);
 
     return value;
   }
