@@ -21,6 +21,7 @@ const validPaths = [
   "citizen_flag",
   "penal_code_group",
   "qualification",
+  "call_type",
 ];
 
 @Middleware()

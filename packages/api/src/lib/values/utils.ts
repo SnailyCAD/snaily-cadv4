@@ -24,7 +24,8 @@ export type ValuesSelect =
   | ({ name: "driversLicenseCategoryValue" } & Prisma.DriversLicenseCategoryValueFindManyArgs)
   | ({ name: "departmentValue" } & Prisma.DepartmentValueFindManyArgs)
   | ({ name: "divisionValue" } & Prisma.DivisionValueFindManyArgs)
-  | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs);
+  | ({ name: "qualificationValue" } & Prisma.QualificationValueFindManyArgs)
+  | ({ name: "callTypeValue" } & Prisma.CallTypeValueFindManyArgs);
 
 export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   BLOOD_GROUP: [Permissions.ManageValueBloodGroup],
@@ -44,6 +45,7 @@ export const permissionsForRouteType: Record<ValueType, Permissions[]> = {
   VEHICLE_FLAG: [Permissions.ManageValueVehicleFlag],
   WEAPON: [Permissions.ManageValueWeapon],
   QUALIFICATION: [Permissions.ManageValueQualification],
+  CALL_TYPE: [Permissions.ManageValueCallType],
 };
 
 export function getTypeFromPath(path: string) {

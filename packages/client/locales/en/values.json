@@ -128,5 +128,11 @@
     "ADD": "Add Unit Qualification",
     "DELETE": "Delete Unit Qualification",
     "EDIT": "Edit Unit Qualification"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Manage Call Types",
+    "ADD": "Add Call Type",
+    "DELETE": "Delete Call Type",
+    "EDIT": "Edit Call Type"
   }
 }

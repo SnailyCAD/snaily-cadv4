@@ -65,6 +65,10 @@ export const valueRoutes: SidebarRoute[] = [
     permissions: [Permissions.ManageValueBusinessRole],
   },
   {
+    type: ValueType.CALL_TYPE,
+    permissions: [Permissions.ManageValueCallType],
+  },
+  {
     type: ValueType.CITIZEN_FLAG,
     permissions: [Permissions.ManageValueCitizenFlag],
   },
