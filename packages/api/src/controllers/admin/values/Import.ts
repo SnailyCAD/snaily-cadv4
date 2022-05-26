@@ -21,6 +21,7 @@ import {
   DIVISION_ARR,
   PENAL_CODE_ARR,
   QUALIFICATION_ARR,
+  CALL_TYPE_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -341,7 +342,22 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
+  CALL_TYPE: async (body: unknown, id?: string) => {
+    const data = validateSchema(CALL_TYPE_ARR, body);
 
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.callTypeValue.upsert({
+          include: { value: true },
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.CALL_TYPE, {
+            priority: item.priority,
+            value: item.value,
+          }),
+        });
+      }),
+    );
+  },
   GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
   ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
   BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),

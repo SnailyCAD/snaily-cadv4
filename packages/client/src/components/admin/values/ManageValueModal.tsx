@@ -6,6 +6,7 @@ import {
   CODES_10_SCHEMA,
   BUSINESS_ROLE_SCHEMA,
   BASE_VALUE_SCHEMA,
+  CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -41,6 +42,7 @@ import {
   isWeaponValue,
   isUnitQualification,
   isDLCategoryValue,
+  isCallTypeValue,
   AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
@@ -77,6 +79,7 @@ const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> 
   VEHICLE: HASH_SCHEMA,
   WEAPON: HASH_SCHEMA,
   BUSINESS_ROLE: BUSINESS_ROLE_SCHEMA,
+  CALL_TYPE: CALL_TYPE_SCHEMA,
 };
 
 export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
@@ -193,6 +196,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
 
     officerRankImageId: "",
     // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
@@ -286,6 +290,17 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {["VEHICLE", "WEAPON"].includes(type) ? (
               <FormField optional label="Game Hash">
                 <Input name="hash" onChange={handleChange} value={values.hash} />
+              </FormField>
+            ) : null}
+
+            {type === ValueType.CALL_TYPE ? (
+              <FormField errorMessage={errors.priority} optional label="Priority">
+                <Input
+                  type="number"
+                  name="priority"
+                  onChange={handleChange}
+                  value={values.priority}
+                />
               </FormField>
             ) : null}
 

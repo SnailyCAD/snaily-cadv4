@@ -37,6 +37,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "divisionValue",
     include: { department: { include: { value: true } } },
   },
+  CALL_TYPE: { name: "callTypeValue" },
 };
 
 @Controller("/admin/values/:path")
