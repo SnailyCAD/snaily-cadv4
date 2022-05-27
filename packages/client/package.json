@@ -18,7 +18,7 @@
   "dependencies": {
     "@casper124578/use-socket.io": "4.1.0",
     "@casper124578/useful": "^2.0.1",
-    "@headlessui/react": "^1.6.2",
+    "@headlessui/react": "^1.6.3",
     "@radix-ui/react-accordion": "^0.1.6",
     "@radix-ui/react-context-menu": "^0.1.6",
     "@radix-ui/react-dropdown-menu": "^0.1.6",
