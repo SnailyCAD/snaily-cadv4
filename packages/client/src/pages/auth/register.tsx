@@ -18,6 +18,7 @@ import { handleRequest } from "lib/fetch";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { LocalhostDetector } from "components/auth/LocalhostDetector";
 
 const INITIAL_VALUES = {
   username: "",
@@ -91,6 +92,7 @@ export default function Register({ cad }: Props) {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
+        <LocalhostDetector />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, isValid }) => (
