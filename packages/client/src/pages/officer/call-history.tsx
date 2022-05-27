@@ -17,7 +17,6 @@ import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import dynamic from "next/dynamic";
 import { FullDate } from "components/shared/FullDate";
@@ -47,7 +46,6 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   const hasManagePermissions = hasPermissions([Permissions.ManageCallHistory], true);
 
   const { state, execute } = useFetch();
-  const router = useRouter();
   const tableSelect = useTableSelect(calls);
 
   const { openModal, closeModal } = useModal();
@@ -73,8 +71,10 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
     });
 
     if (json) {
-      router.replace({ pathname: router.pathname, query: router.query });
-      tableSelect.resetRows();
+      const selectedRows = tableSelect.selectedRows;
+      const updatedCalls = calls.filter((call) => !selectedRows.includes(call.id));
+      setCalls(updatedCalls);
+
       closeModal(ModalIds.AlertPurgeCalls);
     }
   }
