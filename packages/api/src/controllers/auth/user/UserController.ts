@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { ShouldDoType, StatusViewMode, TableActionsAlignment, User } from "@prisma/client";
+import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment, User } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -26,8 +26,8 @@ export class AccountController {
 
   @Post("/")
   @Description("Get the authenticated user's information")
-  async getAuthUser(@Context() ctx: Context) {
-    return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
+  async getAuthUser(@Context("cad") cad: cad, @Context("user") user: User) {
+    return { ...user, cad };
   }
 
   @Patch("/")
@@ -94,7 +94,6 @@ export class AccountController {
   @Description("Logout the authenticated user")
   async logoutUser(@Res() res: Res, @Context() ctx: Context) {
     const userId = ctx.get("user").id;
-
     ctx.delete("user");
 
     const officer = await prisma.officer.findFirst({

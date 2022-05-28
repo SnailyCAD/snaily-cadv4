@@ -109,9 +109,11 @@ export class CitizenController {
   }
 
   @Delete("/:id")
-  async deleteCitizen(@Context() ctx: Context, @PathParams("id") citizenId: string) {
-    const cad = ctx.get("cad") as cad & { features?: CadFeature[] };
-    const user = ctx.get("user") as User;
+  async deleteCitizen(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @PathParams("id") citizenId: string,
+  ) {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const allowDeletion = isFeatureEnabled({

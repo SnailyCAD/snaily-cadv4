@@ -17,10 +17,12 @@ import { generateString } from "utils/generateString";
 export class WeaponController {
   @Post("/")
   @Description("Register a new weapon")
-  async registerWeapon(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async registerWeapon(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(WEAPON_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features: CadFeature[] };
 
     const citizen = await prisma.citizen.findUnique({
       where: {
