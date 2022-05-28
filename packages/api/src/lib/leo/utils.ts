@@ -125,7 +125,7 @@ export async function updateOfficerDivisionsCallsigns({
 }
 
 interface GetFirstOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
-  activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer;
+  activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer | null;
   allowDispatch?: AllowDispatch;
 }
 
@@ -136,7 +136,7 @@ export function getFirstOfficerFromActiveOfficer<AllowDispatch extends boolean =
   activeOfficer,
   allowDispatch,
 }: GetFirstOfficerFromActiveOfficerOptions<AllowDispatch>): GetFirstOfficerFromActiveOfficerReturn<AllowDispatch> {
-  const isCombined = "officers" in activeOfficer;
+  const isCombined = activeOfficer && "officers" in activeOfficer;
   const officer = isCombined ? activeOfficer.officers[0] : activeOfficer;
 
   if (allowDispatch && !officer) {
