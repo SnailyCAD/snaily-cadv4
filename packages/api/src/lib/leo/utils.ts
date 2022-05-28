@@ -1,4 +1,4 @@
-import { MiscCadSettings, JailTimeScale } from "@prisma/client";
+import { MiscCadSettings, JailTimeScale, CombinedLeoUnit, Officer } from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
@@ -122,4 +122,26 @@ export async function updateOfficerDivisionsCallsigns({
       }
     }),
   );
+}
+
+interface GetFirstOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
+  activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer;
+  allowDispatch?: AllowDispatch;
+}
+
+type GetFirstOfficerFromActiveOfficerReturn<AllowDispatch extends boolean = false> =
+  AllowDispatch extends true ? Officer | null : Officer;
+
+export function getFirstOfficerFromActiveOfficer<AllowDispatch extends boolean = false>({
+  activeOfficer,
+  allowDispatch,
+}: GetFirstOfficerFromActiveOfficerOptions<AllowDispatch>): GetFirstOfficerFromActiveOfficerReturn<AllowDispatch> {
+  const isCombined = "officers" in activeOfficer;
+  const officer = isCombined ? activeOfficer.officers[0] : activeOfficer;
+
+  if (allowDispatch && !officer) {
+    return null as GetFirstOfficerFromActiveOfficerReturn<AllowDispatch>;
+  }
+
+  return officer as Officer;
 }

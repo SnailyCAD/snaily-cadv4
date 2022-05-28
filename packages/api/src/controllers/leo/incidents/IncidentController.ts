@@ -7,7 +7,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { LEO_INCIDENT_SCHEMA } from "@snailycad/schemas";
 import { ActiveOfficer } from "middlewares/ActiveOfficer";
-import { Officer, ShouldDoType, MiscCadSettings } from "@prisma/client";
+import { Officer, ShouldDoType, MiscCadSettings, CombinedLeoUnit } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
@@ -15,6 +15,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -70,15 +71,15 @@ export class IncidentController {
   async createIncident(
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-    @Context("activeOfficer") officer: Officer | null,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ) {
     const data = validateSchema(LEO_INCIDENT_SCHEMA, body);
-    const officerId = officer?.id ?? null;
+    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
     const maxAssignmentsToIncidents = cad.miscCadSettings.maxAssignmentsToIncidents ?? Infinity;
 
     const incident = await prisma.leoIncident.create({
       data: {
-        creatorId: officerId,
+        creatorId: officer?.id ?? null,
         description: data.description,
         arrestsMade: data.arrestsMade,
         firearmsInvolved: data.firearmsInvolved,

@@ -10,10 +10,11 @@ import { ActiveOfficer } from "middlewares/ActiveOfficer";
 import { Socket } from "services/SocketService";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { Bolo, BoloType, DiscordWebhookType } from "@prisma/client";
+import { Bolo, BoloType, CombinedLeoUnit, DiscordWebhookType, Officer } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { APIEmbed } from "discord-api-types/v10";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 
 @Controller("/bolos")
 @UseBeforeEach(IsAuth)
@@ -48,8 +49,12 @@ export class BoloController {
     fallback: (u) => u.isDispatch || u.isLeo,
     permissions: [Permissions.Dispatch, Permissions.Leo],
   })
-  async createBolo(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createBolo(
+    @BodyParams() body: unknown,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
     const data = validateSchema(CREATE_BOLO_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ allowDispatch: true, activeOfficer });
 
     const bolo = await prisma.bolo.create({
       data: {
@@ -59,7 +64,7 @@ export class BoloController {
         name: data.name ?? null,
         plate: data.plate ?? null,
         model: data.model ?? null,
-        officerId: ctx.get("activeOfficer")?.id ?? null,
+        officerId: officer?.id ?? null,
       },
       include: {
         officer: {
