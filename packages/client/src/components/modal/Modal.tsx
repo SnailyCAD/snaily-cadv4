@@ -65,10 +65,10 @@ export function Modal({
 
           <Transition.Child
             as={React.Fragment}
-            enter="ease-out duration-100"
+            enter="ease-out duration-75"
             enterFrom="opacity-0 scale-95"
             enterTo="opacity-100 scale-100"
-            leave="ease-in duration-100"
+            leave="ease-in duration-75"
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >

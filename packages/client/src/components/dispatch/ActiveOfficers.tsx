@@ -138,7 +138,7 @@ export function ActiveOfficers() {
                     </span>
                   ),
                   incident: <ActiveIncidentColumn incident={activeIncident} />,
-                  activeCall: <ActiveCallColumn call={activeCall} />,
+                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <Button

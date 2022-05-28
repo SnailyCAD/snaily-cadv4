@@ -5,18 +5,25 @@ import { ModalIds } from "types/ModalIds";
 import { ManageIncidentModal } from "components/leo/incidents/ManageIncidentModal";
 import { useModal } from "state/modalState";
 import { Button } from "components/Button";
+import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {
   incident: LeoIncident | null;
+  isDispatch: boolean;
 }
 
-export function ActiveIncidentColumn({ incident }: Props) {
+export function ActiveIncidentColumn({ incident, isDispatch }: Props) {
   const [tempIncident, setTempIncident] = React.useState<LeoIncident | null>(null);
 
   const common = useTranslations("Common");
   const { openModal } = useModal();
 
+  const { hasActiveDispatchers } = useActiveDispatchers();
+  const isBtnDisabled = !hasActiveDispatchers && isDispatch;
+
   function handleIncidentOpen(incident: LeoIncident) {
+    if (isBtnDisabled) return;
+
     setTempIncident(incident);
     openModal(ModalIds.ManageIncident);
   }
@@ -28,6 +35,7 @@ export function ActiveIncidentColumn({ incident }: Props) {
   return (
     <>
       <Button
+        disabled={isBtnDisabled}
         onClick={() =>
           handleIncidentOpen({
             ...incident,
