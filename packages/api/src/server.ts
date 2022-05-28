@@ -121,13 +121,13 @@ export class ErrorFilter implements ExceptionFilterMethods {
     };
   }
 
-  protected getErrors(error: Exception) {
+  private getErrors(error: Exception) {
     return [error, error.origin].filter(Boolean).reduce((errs, { errors }: ResponseErrorObject) => {
       return [...errs, ...(errors || [])];
     }, []);
   }
 
-  protected getHeaders(error: Exception) {
+  private getHeaders(error: Exception) {
     return [error, error.origin].filter(Boolean).reduce((obj, { headers }: ResponseErrorObject) => {
       return {
         ...obj,

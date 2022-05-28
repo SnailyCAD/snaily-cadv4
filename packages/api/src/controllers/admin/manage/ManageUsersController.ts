@@ -342,7 +342,7 @@ export class ManageUsersController {
     return true;
   }
 
-  protected parsePermissions(data: Record<string, string>) {
+  private parsePermissions(data: Record<string, string>) {
     const permissions: string[] = [];
     const values = Object.values(Permissions);
 

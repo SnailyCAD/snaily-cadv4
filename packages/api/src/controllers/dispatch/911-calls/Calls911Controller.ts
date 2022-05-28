@@ -456,7 +456,7 @@ export class Calls911Controller {
     return officerOrDeputyToUnit(updated);
   }
 
-  protected async endInactiveCalls(updatedAt: Date) {
+  private async endInactiveCalls(updatedAt: Date) {
     await prisma.call911.updateMany({
       where: { updatedAt: { not: { gte: updatedAt } } },
       data: {

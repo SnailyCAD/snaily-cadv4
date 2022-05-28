@@ -42,7 +42,7 @@ export class SearchController {
     return citizen;
   }
 
-  protected async findCitizenByName(fullName: string) {
+  private async findCitizenByName(fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {

@@ -336,7 +336,7 @@ export class RecordsController {
     return true;
   }
 
-  protected async handleDiscordWebhook(ticket: any) {
+  private async handleDiscordWebhook(ticket: any) {
     try {
       const data = createWebhookData(ticket);
       await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);

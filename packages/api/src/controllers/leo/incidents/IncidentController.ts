@@ -296,7 +296,7 @@ export class IncidentController {
     return true;
   }
 
-  protected async connectUnitsInvolved(
+  private async connectUnitsInvolved(
     incidentId: string,
     data: Pick<z.infer<typeof LEO_INCIDENT_SCHEMA>, "unitsInvolved" | "isActive">,
     maxAssignmentsToIncidents: number,

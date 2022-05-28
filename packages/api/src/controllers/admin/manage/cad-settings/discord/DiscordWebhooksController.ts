@@ -123,11 +123,11 @@ export class DiscordWebhooksController {
     return updatedCadSettings;
   }
 
-  protected doesChannelExist(arr: { id: string }[], id: string) {
+  private doesChannelExist(arr: { id: string }[], id: string) {
     return arr.some((v) => v.id === id);
   }
 
-  protected async makeWebhookForChannel(
+  private async makeWebhookForChannel(
     channelId: string | null | undefined,
     prevId: string | null,
     name: string,

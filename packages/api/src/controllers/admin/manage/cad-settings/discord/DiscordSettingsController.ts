@@ -192,13 +192,13 @@ export class DiscordSettingsController {
     return updated.discordRoles;
   }
 
-  protected doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
+  private doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
     return roles.some((v) =>
       typeof roleId === "string" ? v.id === roleId : roleId.includes(v.id),
     );
   }
 
-  protected async updateRoles(options: UpdateRolesOptions) {
+  private async updateRoles(options: UpdateRolesOptions) {
     const disconnectConnectArr = manyToManyHelper(
       options.discordRoles.map((v) => v.id),
       options.newRoles,
