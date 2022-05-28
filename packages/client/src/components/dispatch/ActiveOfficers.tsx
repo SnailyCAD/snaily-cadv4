@@ -137,7 +137,9 @@ export function ActiveOfficers() {
                       {officer.status?.value?.value}
                     </span>
                   ),
-                  incident: <ActiveIncidentColumn incident={activeIncident} />,
+                  incident: (
+                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                  ),
                   activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
