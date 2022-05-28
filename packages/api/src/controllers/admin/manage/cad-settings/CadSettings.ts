@@ -93,12 +93,12 @@ export class ManageCitizensController {
 
   @Put("/misc")
   @UseBefore(IsAuth)
-  async updateMiscSettings(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
+  async updateMiscSettings(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_MISC_SETTINGS_SCHEMA, body);
 
     const updated = await prisma.miscCadSettings.update({
       where: {
-        id: ctx.miscCadSettingsId ?? "null",
+        id: cad.miscCadSettingsId ?? "null",
       },
       data: {
         heightPrefix: data.heightPrefix,
@@ -126,15 +126,15 @@ export class ManageCitizensController {
 
   @Put("/auto-set-properties")
   @UseBefore(IsAuth)
-  async updateAutoSetProperties(@Context("cad") ctx: cad, @BodyParams() body: unknown) {
+  async updateAutoSetProperties(@Context("cad") cad: cad, @BodyParams() body: unknown) {
     const data = validateSchema(CAD_AUTO_SET_PROPERTIES, body);
 
     const autoSetProperties = await prisma.autoSetUserProperties.upsert({
       where: {
-        id: ctx.autoSetUserPropertiesId ?? "null",
+        id: cad.autoSetUserPropertiesId ?? "null",
       },
       create: {
-        cad: { connect: { id: ctx.id } },
+        cad: { connect: { id: cad.id } },
         dispatch: data.dispatch,
         emsFd: data.emsFd,
         leo: data.leo,
@@ -151,9 +151,7 @@ export class ManageCitizensController {
 
   @Put("/api-token")
   @UseBefore(IsAuth)
-  async updateApiToken(@Context() ctx: Context, @BodyParams() body: any) {
-    const cad = ctx.get("cad") as cad;
-
+  async updateApiToken(@Context("cad") cad: cad, @BodyParams() body: any) {
     const existing =
       cad.apiTokenId &&
       (await prisma.apiToken.findFirst({
@@ -199,9 +197,7 @@ export class ManageCitizensController {
 
   @Delete("/api-token")
   @UseBefore(IsAuth)
-  async regenerateApiToken(@Context() ctx: Context) {
-    const cad = ctx.get("cad");
-
+  async regenerateApiToken(@Context("cad") cad: cad) {
     if (!cad.apiTokenId) {
       throw new BadRequest("noApiTokenId");
     }
