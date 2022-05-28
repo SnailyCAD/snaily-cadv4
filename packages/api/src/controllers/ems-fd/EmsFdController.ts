@@ -5,7 +5,13 @@ import { EMS_FD_DEPUTY_SCHEMA, MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas"
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
-import { type MiscCadSettings, ShouldDoType, type User, CadFeature } from "@prisma/client";
+import {
+  type MiscCadSettings,
+  ShouldDoType,
+  type User,
+  CadFeature,
+  EmsFdDeputy,
+} from "@prisma/client";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { IsAuth } from "middlewares/IsAuth";
 import { ActiveDeputy } from "middlewares/ActiveDeputy";
@@ -245,10 +251,10 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd,
     permissions: [Permissions.EmsFd],
   })
-  async deleteDeputy(@PathParams("id") id: string, @Context() ctx: Context) {
+  async deleteDeputy(@PathParams("id") id: string, @Context("user") user: User) {
     const deputy = await prisma.emsFdDeputy.findFirst({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
         id,
       },
     });
@@ -272,8 +278,8 @@ export class EmsFdController {
     fallback: (u) => u.isEmsFd || u.isLeo || u.isDispatch,
     permissions: [Permissions.EmsFd, Permissions.Leo, Permissions.Dispatch],
   })
-  async getActiveDeputy(@Context() ctx: Context) {
-    return ctx.get("activeDeputy");
+  async getActiveDeputy(@Context("activeDeputy") activeDeputy: EmsFdDeputy) {
+    return activeDeputy;
   }
 
   @Get("/active-deputies")

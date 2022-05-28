@@ -297,10 +297,10 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async deleteOfficer(@PathParams("id") officerId: string, @Context() ctx: Context) {
+  async deleteOfficer(@PathParams("id") officerId: string, @Context("user") user: User) {
     const officer = await prisma.officer.findFirst({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
         id: officerId,
       },
     });
@@ -343,8 +343,10 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficer(@Context() ctx: Context) {
-    return ctx.get("activeOfficer");
+  async getActiveOfficer(
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
+    return activeOfficer;
   }
 
   @Get("/active-officers")
