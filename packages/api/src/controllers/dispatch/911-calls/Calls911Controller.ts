@@ -9,7 +9,15 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { type cad, User, MiscCadSettings, Call911, DiscordWebhookType, Rank } from "@prisma/client";
+import {
+  type cad,
+  User,
+  MiscCadSettings,
+  Call911,
+  DiscordWebhookType,
+  Rank,
+  ShouldDoType,
+} from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
@@ -433,10 +441,16 @@ export class Calls911Controller {
       combined: "combinedLeoUnit",
     };
 
+    const assignedToStatus = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: callType === "assign" ? ShouldDoType.SET_ASSIGNED : ShouldDoType.SET_ON_DUTY,
+      },
+    });
+
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId: callType === "assign" ? callId : null },
+      data: { activeCallId: callType === "assign" ? callId : null, statusId: assignedToStatus?.id },
     });
 
     await Promise.all([
