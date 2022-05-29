@@ -118,7 +118,7 @@ export function omit<Obj extends object, Properties extends keyof Obj>(
   obj: Obj,
   properties: Properties[],
 ): Omit<Obj, Properties> {
-  const newObj = {} as any;
+  const newObj = {} as Record<string, unknown>;
   const entries = Object.entries(obj);
 
   for (const [name, value] of entries) {
@@ -129,5 +129,5 @@ export function omit<Obj extends object, Properties extends keyof Obj>(
     newObj[name] = value;
   }
 
-  return newObj;
+  return newObj as Omit<Obj, Properties>;
 }

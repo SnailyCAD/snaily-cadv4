@@ -7,11 +7,12 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import type { BleeterPost, User } from "@snailycad/types";
 import { handleRequest } from "lib/fetch";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import dynamic from "next/dynamic";
 import { Title } from "components/shared/Title";
+import { classNames } from "lib/classNames";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -49,8 +50,11 @@ export default function Bleeter({ posts }: Props) {
 
               <div>
                 <Link href={`/bleeter/${post.id}`}>
-                  <a>
-                    <Button className="bg-gray-500/80">{t("viewBleet")}</Button>
+                  <a
+                    className={classNames(buttonVariants.default, "p-1 px-4 rounded-md")}
+                    href={`/bleeter/${post.id}`}
+                  >
+                    {t("viewBleet")}
                   </a>
                 </Link>
               </div>

@@ -1,0 +1,14 @@
+{
+  "Bleeter": {
+    "bleeter": "Twitter",
+    "noPosts": "Il n'y a pas de tweet pour le moment. Revenez plus tard.",
+    "createBleet": "Poster un tweet",
+    "editBleet": "Modifier le tweet",
+    "deleteBleet": "Supprimer le tweet",
+    "viewBleet": "Voir le tweet",
+    "headerImage": "Image d'en-tête",
+    "bleetTitle": "Titre du tweet",
+    "bleetBody": "Corps du tweet",
+    "alert_deleteBleet": "Êtes-vous sûr de vouloir supprimer \"<span>{title}</span>\" ? Cette action ne peut être annulée."
+  }
+}

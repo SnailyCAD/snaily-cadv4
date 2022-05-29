@@ -8,6 +8,7 @@ import {
   Inject,
   PlatformApplication,
   PlatformContext,
+  Request,
   Response,
   ResponseErrorObject,
 } from "@tsed/common";
@@ -70,7 +71,7 @@ export class Server {
       app.set("trust proxy", 1);
     }
 
-    this.app.get("/", async (_: any, res: Response) => {
+    this.app.get("/", async (_: Request, res: Response) => {
       const versions = await getCADVersion();
 
       res.setHeader("content-type", "text/html");
@@ -111,7 +112,7 @@ export class ErrorFilter implements ExceptionFilterMethods {
       .body(error);
   }
 
-  mapError(error: any) {
+  mapError(error: Exception) {
     return {
       name: error.origin?.name || error.name,
       message: error.message,
@@ -120,13 +121,13 @@ export class ErrorFilter implements ExceptionFilterMethods {
     };
   }
 
-  protected getErrors(error: any) {
+  private getErrors(error: Exception) {
     return [error, error.origin].filter(Boolean).reduce((errs, { errors }: ResponseErrorObject) => {
       return [...errs, ...(errors || [])];
     }, []);
   }
 
-  protected getHeaders(error: any) {
+  private getHeaders(error: Exception) {
     return [error, error.origin].filter(Boolean).reduce((obj, { headers }: ResponseErrorObject) => {
       return {
         ...obj,

@@ -14,7 +14,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { Socket } from "services/SocketService";
 import { validateSchema } from "lib/validateSchema";
 import type { User } from "@prisma/client";
-import { canManageInvariant } from "lib/auth/user";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { towIncludes } from "./TowController";
 

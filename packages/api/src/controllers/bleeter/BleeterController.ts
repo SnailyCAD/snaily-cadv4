@@ -19,7 +19,7 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import type { User } from "@snailycad/types";
+import type { User } from "@prisma/client";
 
 @UseBeforeEach(IsAuth)
 @Controller("/bleeter")
@@ -130,19 +130,14 @@ export class BleeterController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/bleeter/${post.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.bleeterPost.update({
-      where: {
-        id: postId,
-      },
-      data: {
-        imageId: `${post.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.bleeterPost.update({
+        where: { id: post.id },
+        data: { imageId: `${post.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }

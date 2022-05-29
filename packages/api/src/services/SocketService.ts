@@ -1,8 +1,17 @@
 import * as SocketIO from "socket.io";
 import { Nsp, SocketService } from "@tsed/socketio";
 import { SocketEvents } from "@snailycad/config";
-import { LeoIncident, Call911, TowCall, Bolo, TaxiCall, ShouldDoType } from "@prisma/client";
-import type { IncidentEvent } from "@snailycad/types";
+import {
+  LeoIncident,
+  Call911,
+  TowCall,
+  Bolo,
+  TaxiCall,
+  ShouldDoType,
+  Officer,
+  CombinedLeoUnit,
+  IncidentEvent,
+} from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 
@@ -17,7 +26,7 @@ export class Socket {
     this.io = io;
   }
 
-  async emit911Call(call: Call911) {
+  emit911Call(call: Call911) {
     this.io.sockets.emit(SocketEvents.Create911Call, call);
   }
 
@@ -29,35 +38,35 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.CreateActiveIncident, incident);
   }
 
-  async emitUpdate911Call(call: Call911 & Record<string, any>) {
+  emitUpdate911Call(call: Call911 & Record<string, any>) {
     this.io.sockets.emit(SocketEvents.Update911Call, call);
   }
 
-  async emit911CallDelete(call: Call911) {
+  emit911CallDelete(call: Call911) {
     this.io.sockets.emit(SocketEvents.End911Call, call);
   }
 
-  async emitTowCall(call: TowCall) {
+  emitTowCall(call: TowCall) {
     this.io.sockets.emit(SocketEvents.CreateTowCall, call);
   }
 
-  async emitUpdateTowCall(call: TowCall) {
+  emitUpdateTowCall(call: TowCall) {
     this.io.sockets.emit(SocketEvents.UpdateTowCall, call);
   }
 
-  async emitTowCallEnd(call: TowCall) {
+  emitTowCallEnd(call: TowCall) {
     this.io.sockets.emit(SocketEvents.EndTowCall, call);
   }
 
-  async emitCreateBolo(bolo: Bolo) {
+  emitCreateBolo(bolo: Bolo) {
     this.io.sockets.emit(SocketEvents.CreateBolo, bolo);
   }
 
-  async emitUpdateBolo(bolo: Bolo) {
+  emitUpdateBolo(bolo: Bolo) {
     this.io.sockets.emit(SocketEvents.UpdateBolo, bolo);
   }
 
-  async emitDeleteBolo(bolo: Bolo) {
+  emitDeleteBolo(bolo: Bolo) {
     this.io.sockets.emit(SocketEvents.DeleteBolo, bolo);
   }
 
@@ -118,7 +127,7 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(officer: any, type?: "ON" | "OFF") {
+  emitPanicButtonLeo(officer: CombinedLeoUnit | Officer | null, type?: "ON" | "OFF") {
     if (type === "OFF") {
       this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, officer);
     } else {

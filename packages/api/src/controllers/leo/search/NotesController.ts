@@ -64,7 +64,7 @@ export class NotesController {
     return true;
   }
 
-  protected getPrismaName(data: Zod.infer<typeof NOTE_SCHEMA>) {
+  private getPrismaName(data: Zod.infer<typeof NOTE_SCHEMA>) {
     const prismaNames = {
       CITIZEN: "citizen",
       VEHICLE: "registeredVehicle",
@@ -74,7 +74,7 @@ export class NotesController {
     return name;
   }
 
-  protected async findItem<T extends Citizen | RegisteredVehicle>(
+  private async findItem<T extends Citizen | RegisteredVehicle>(
     data: Zod.infer<typeof NOTE_SCHEMA>,
   ) {
     const name = this.getPrismaName(data);

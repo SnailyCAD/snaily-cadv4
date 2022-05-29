@@ -1,6 +1,6 @@
 version = 1
 test_patterns = [
-  "tests/*.test.ts*",
+  "**/tests/*.test.*",
 ]
 
 
@@ -18,3 +18,7 @@ enabled = true
 
   [analyzers.meta]
   plugins = ["react"]
+
+[[transformers]]
+name = "prettier"
+enabled = true

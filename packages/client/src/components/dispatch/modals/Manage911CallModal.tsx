@@ -49,7 +49,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { hasPermissions } = usePermission();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
-  const { department, division, codes10 } = useValues();
+  const { department, division, codes10, callType } = useValues();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
   const { hasActiveDispatchers } = useActiveDispatchers();
@@ -62,7 +62,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
   const isCitizen = router.pathname.includes("/citizen");
-  const isDisabled = hasActiveDispatchers ? !isCitizen && !isDispatch : isCitizen;
+  const isDisabled = isCitizen ? false : hasActiveDispatchers ? !isDispatch : isCitizen;
   const isEndDisabled = isDispatch
     ? false
     : hasActiveDispatchers
@@ -123,7 +123,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
       });
 
       if (json.id) {
-        setCalls(calls.map((c) => (c.id === json.id ? json : call)));
+        setCalls(calls.map((c) => (c.id === json.id ? json : c)));
         closeModal(ModalIds.Manage911Call);
       }
     } else {
@@ -157,6 +157,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
     departments: call?.departments?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     divisions: call?.divisions?.map((dep) => ({ value: dep.id, label: dep.value.value })) ?? [],
     situationCode: call?.situationCodeId ?? null,
+    callType: call?.typeId ?? null,
     assignedUnits:
       call?.assignedUnits.map((unit) => ({
         label: makeLabel(unit.unit.id),
@@ -275,21 +276,37 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
                     </FormField>
                   </FormRow>
 
-                  <FormField errorMessage={errors.situationCode} label={t("situationCode")}>
-                    <Select
-                      isClearable
-                      name="situationCode"
-                      value={values.situationCode}
-                      values={codes10.values
-                        .filter((v) => v.type === StatusValueType.SITUATION_CODE)
-                        .map((division) => ({
-                          label: division.value.value,
-                          value: division.id,
+                  <FormRow>
+                    <FormField errorMessage={errors.situationCode} label={t("situationCode")}>
+                      <Select
+                        isClearable
+                        name="situationCode"
+                        value={values.situationCode}
+                        values={codes10.values
+                          .filter((v) => v.type === StatusValueType.SITUATION_CODE)
+                          .map((division) => ({
+                            label: division.value.value,
+                            value: division.id,
+                          }))}
+                        onChange={handleChange}
+                        disabled={isDisabled}
+                      />
+                    </FormField>
+
+                    <FormField errorMessage={errors.callType} label={t("type")}>
+                      <Select
+                        isClearable
+                        name="callType"
+                        value={values.callType}
+                        values={callType.values.map((callType) => ({
+                          label: callType.value.value,
+                          value: callType.id,
                         }))}
-                      onChange={handleChange}
-                      disabled={isDisabled}
-                    />
-                  </FormField>
+                        onChange={handleChange}
+                        disabled={isDisabled}
+                      />
+                    </FormField>
+                  </FormRow>
                 </>
               )}
 

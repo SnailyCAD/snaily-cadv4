@@ -7,13 +7,14 @@ import {
   VehicleTaxStatus,
   WhitelistStatus,
   ValueType,
+  cad,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Post, Put } from "@tsed/schema";
-import { canManageInvariant } from "lib/auth/user";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/prisma";
@@ -27,13 +28,12 @@ import { generateString } from "utils/generateString";
 export class VehiclesController {
   @Post("/")
   @Description("Register a new vehicle")
-  async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async registerVehicle(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(VEHICLE_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as {
-      features: CadFeature[];
-      miscCadSettings?: MiscCadSettings;
-    };
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -41,7 +41,7 @@ export class VehiclesController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
@@ -118,7 +118,7 @@ export class VehiclesController {
         where: {
           id: data.employeeId,
           businessId: data.businessId,
-          userId: ctx.get("user").id,
+          userId: user.id,
         },
         include: {
           role: true,
@@ -174,7 +174,7 @@ export class VehiclesController {
         throw new NotFound("employeeNotFoundOrInvalidPermissions");
       }
     } else {
-      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+      const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId) {
         canManageInvariant(vehicle?.userId, user, new NotFound("notFound"));
       } else if (!vehicle) {
@@ -291,7 +291,7 @@ export class VehiclesController {
 
       // registered vehicles may not have `userId`
       // therefore we should use `citizen`
-      const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+      const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
       if (checkCitizenUserId) {
         canManageInvariant(owner?.userId, user, new NotFound("notFound"));
       } else if (!owner) {

@@ -408,7 +408,9 @@ export function ManageCitizenForm({
 
           <div className="flex items-center justify-end">
             <Link href={citizen ? cancelURL : "/citizen"}>
-              <a className="mr-2 underline">{common("cancel")}</a>
+              <a href={citizen ? cancelURL : "/citizen"} className="mr-2 underline">
+                {common("cancel")}
+              </a>
             </Link>
 
             <Button

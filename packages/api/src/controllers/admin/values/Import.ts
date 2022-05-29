@@ -21,6 +21,7 @@ import {
   DIVISION_ARR,
   PENAL_CODE_ARR,
   QUALIFICATION_ARR,
+  CALL_TYPE_ARR,
 } from "@snailycad/schemas";
 import {
   type DepartmentType,
@@ -300,6 +301,63 @@ export const typeHandlers = {
     });
   },
 
+  OFFICER_RANK: async (body: unknown, id?: string) => {
+    const data = validateSchema(BASE_ARR, body);
+
+    return handlePromiseAll(data, async (item) => {
+      const createUpdateData = {
+        officerRankImageId: validateImgurURL(item.officerRankImageId),
+        value: item.value,
+        isDefault: false,
+        type: ValueType.OFFICER_RANK,
+      };
+
+      const updatedValue = await prisma.value.upsert({
+        where: { id: String(id) },
+        create: createUpdateData,
+        update: createUpdateData,
+        include: { officerRankDepartments: true },
+      });
+
+      const disconnectConnectArr = manyToManyHelper(
+        updatedValue.officerRankDepartments.map((v) => v.id),
+        item.officerRankDepartments ?? [],
+      );
+
+      const updated = getLastOfArray(
+        await prisma.$transaction(
+          disconnectConnectArr.map((v, idx) =>
+            prisma.value.update({
+              where: { id: updatedValue.id },
+              data: { officerRankDepartments: v },
+              include:
+                idx + 1 === disconnectConnectArr.length
+                  ? { officerRankDepartments: { include: { value: true } } }
+                  : undefined,
+            }),
+          ),
+        ),
+      );
+
+      return updated || updatedValue;
+    });
+  },
+  CALL_TYPE: async (body: unknown, id?: string) => {
+    const data = validateSchema(CALL_TYPE_ARR, body);
+
+    return prisma.$transaction(
+      data.map((item) => {
+        return prisma.callTypeValue.upsert({
+          include: { value: true },
+          where: { id: String(id) },
+          ...makePrismaData(ValueType.CALL_TYPE, {
+            priority: item.priority,
+            value: item.value,
+          }),
+        });
+      }),
+    );
+  },
   GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
   ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
   BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
@@ -309,8 +367,6 @@ export const typeHandlers = {
     typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
   CITIZEN_FLAG: async (body: unknown, id?: string) =>
     typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
-  OFFICER_RANK: async (body: unknown, id?: string) =>
-    typeHandlers.GENERIC(body, "OFFICER_RANK", id),
 
   GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);
@@ -324,10 +380,6 @@ export const typeHandlers = {
             value: { set: item.value },
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
           },
           create: {
             isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
@@ -335,10 +387,6 @@ export const typeHandlers = {
             value: item.value,
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
-            officerRankImageId:
-              type === ValueType.OFFICER_RANK
-                ? validateImgurURL(item.officerRankImageId)
-                : undefined,
           },
         };
 
@@ -374,11 +422,7 @@ function createValueObj(
   };
 }
 
-async function handlePromiseAll<T, R>(
-  data: T[],
-  handler: (item: T) => Promise<R>,
-): Promise<{ success: R[]; failed: number }> {
-  let failed = 0;
+async function handlePromiseAll<T, R>(data: T[], handler: (item: T) => Promise<R>): Promise<R[]> {
   const success: R[] = [];
 
   await Promise.all(
@@ -388,10 +432,9 @@ async function handlePromiseAll<T, R>(
         success.push(data);
       } catch (e) {
         console.error(e);
-        failed += 1;
       }
     }),
   );
 
-  return { success, failed };
+  return success;
 }

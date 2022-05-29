@@ -21,6 +21,7 @@ import { Title } from "components/shared/Title";
 import {
   ActiveDispatchers,
   Bolo,
+  CombinedLeoUnit,
   EmsFdDeputy,
   LeoIncident,
   Officer,
@@ -57,16 +58,16 @@ const Modals = {
   }),
 };
 
-interface Props {
+export interface DispatchPageProps {
   calls: Full911Call[];
   bolos: Bolo[];
-  officers: Officer[];
+  officers: (Officer | CombinedLeoUnit)[];
   deputies: EmsFdDeputy[];
   activeDispatchers: ActiveDispatchers[];
   activeIncidents: LeoIncident[];
 }
 
-export default function OfficerDashboard(props: Props) {
+export default function OfficerDashboard(props: DispatchPageProps) {
   const { showAop } = useAreaOfPlay();
   const state = useDispatchState();
   const timeRef = useTime();
@@ -85,7 +86,7 @@ export default function OfficerDashboard(props: Props) {
     state.setActiveDispatchers(props.activeDispatchers);
     state.setActiveIncidents(props.activeIncidents);
 
-    function activeFilter(v: EmsFdDeputy | Officer) {
+    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
       return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
     }
 
@@ -153,7 +154,7 @@ export default function OfficerDashboard(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag";
+    "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag,call_type";
 
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [

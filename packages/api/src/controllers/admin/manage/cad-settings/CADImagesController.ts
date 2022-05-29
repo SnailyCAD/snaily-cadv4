@@ -15,9 +15,10 @@ import { randomUUID } from "node:crypto";
 export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/")
-  async uploadLogoToCAD(@Context() ctx: Context, @MultipartFile("image") file: PlatformMulterFile) {
-    const cad = ctx.get("cad");
-
+  async uploadLogoToCAD(
+    @Context("cad") cad: cad,
+    @MultipartFile("image") file: PlatformMulterFile,
+  ) {
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
       throw new BadRequest("invalidImageType");
     }
@@ -26,19 +27,14 @@ export class ManageCitizensController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/cad/${cad.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.cad.update({
-      where: {
-        id: cad.id,
-      },
-      data: {
-        logoId: `${cad.id}.${extension}`,
-      },
-      select: {
-        logoId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.cad.update({
+        where: { id: cad.id },
+        data: { logoId: `${cad.id}.${extension}` },
+        select: { logoId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }
@@ -46,12 +42,10 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/auth")
   async uploadAuthImagesToCAD(
-    @Context() ctx: Context,
+    @Context("cad") cad: cad,
     @MultipartFile("authScreenHeaderImageId") header?: PlatformMulterFile,
     @MultipartFile("authScreenBgImageId") background?: PlatformMulterFile,
   ) {
-    const cad = ctx.get("cad") as cad;
-
     await Promise.all(
       [header, background].map(async (file) => {
         if (!file) return;
@@ -65,16 +59,13 @@ export class ManageCitizensController {
         const id = randomUUID();
         const path = `${process.cwd()}/public/cad/${id}.${extension}`;
 
-        await fs.writeFileSync(path, file.buffer);
-
-        const data = await prisma.miscCadSettings.update({
-          where: {
-            id: cad.miscCadSettingsId!,
-          },
-          data: {
-            [file.fieldname]: `${id}.${extension}`,
-          },
-        });
+        const [data] = await Promise.all([
+          prisma.miscCadSettings.update({
+            where: { id: cad.miscCadSettingsId! },
+            data: { [file.fieldname]: `${id}.${extension}` },
+          }),
+          fs.writeFileSync(path, file.buffer),
+        ]);
 
         return data;
       }),

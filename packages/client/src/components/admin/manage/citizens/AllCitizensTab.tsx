@@ -4,7 +4,7 @@ import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { ModalIds } from "types/ModalIds";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import type { Citizen, User } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { FormField } from "components/form/FormField";
@@ -14,6 +14,7 @@ import { Select } from "components/form/Select";
 import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { classNames } from "lib/classNames";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -116,10 +117,11 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
                   <>
                     {hasPermissions([Permissions.ManageCitizens], true) ? (
                       <Link href={`/admin/manage/citizens/${citizen.id}`}>
-                        <a>
-                          <Button variant="success" small>
-                            {common("edit")}
-                          </Button>
+                        <a
+                          href={`/admin/manage/citizens/${citizen.id}`}
+                          className={classNames(buttonVariants.success, "p-0.5 px-2 rounded-md")}
+                        >
+                          {common("edit")}
                         </a>
                       </Link>
                     ) : null}

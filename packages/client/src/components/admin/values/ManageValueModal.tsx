@@ -6,6 +6,7 @@ import {
   CODES_10_SCHEMA,
   BUSINESS_ROLE_SCHEMA,
   BASE_VALUE_SCHEMA,
+  CALL_TYPE_SCHEMA,
 } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -41,6 +42,7 @@ import {
   isWeaponValue,
   isUnitQualification,
   isDLCategoryValue,
+  isCallTypeValue,
   AnyValue,
 } from "@snailycad/utils/typeguards";
 import { QualificationFields } from "./manage-modal/QualificationFields";
@@ -70,13 +72,14 @@ const BUSINESS_VALUES = [
   },
 ];
 
-const EXTRA_SCHEMAS: Partial<Record<ValueType, any>> = {
+const EXTRA_SCHEMAS: Partial<Record<ValueType, Zod.ZodObject<Zod.ZodRawShape>>> = {
   CODES_10: CODES_10_SCHEMA,
   DEPARTMENT: DEPARTMENT_SCHEMA,
   DIVISION: DIVISION_SCHEMA,
   VEHICLE: HASH_SCHEMA,
   WEAPON: HASH_SCHEMA,
   BUSINESS_ROLE: BUSINESS_ROLE_SCHEMA,
+  CALL_TYPE: CALL_TYPE_SCHEMA,
 };
 
 export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, value }: Props) {
@@ -99,8 +102,9 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     const data = {
       ...values,
       type: dlType ? dlType : values.type,
-      whatPages: values.whatPages?.map((v: any) => v.value),
-      departments: values.departments?.map((v: any) => v.value),
+      whatPages: values.whatPages?.map((v) => v.value),
+      departments: values.departments?.map((v) => v.value),
+      officerRankDepartments: values.officerRankDepartments?.map((v) => v.value),
     };
 
     if (value) {
@@ -130,7 +134,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
     }
   }
 
-  async function handleValueImageUpload(type: string, id: string, helpers: FormikHelpers<any>) {
+  async function handleValueImageUpload(
+    type: string,
+    id: string,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     const fd = new FormData();
     const validatedImage = validateFile(image, helpers);
 
@@ -188,7 +196,11 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
 
     licenseType: value && isBaseValue(value) ? value.licenseType : null,
     isDefault: value && isBaseValue(value) ? value.isDefault : undefined,
+    priority: value && isCallTypeValue(value) ? value.priority ?? undefined : undefined,
+
     officerRankImageId: "",
+    // @ts-expect-error todo: add typeguard for `OFFICER_RANK`
+    officerRankDepartments: value ? defaultDepartments(value) : undefined,
 
     showPicker: false,
     image: "",
@@ -281,8 +293,35 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
               </FormField>
             ) : null}
 
+            {type === ValueType.CALL_TYPE ? (
+              <FormField errorMessage={errors.priority} optional label="Priority">
+                <Input
+                  type="number"
+                  name="priority"
+                  onChange={handleChange}
+                  value={values.priority}
+                />
+              </FormField>
+            ) : null}
+
             {type === ValueType.OFFICER_RANK ? (
-              <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+              <>
+                <ImageSelectInput valueKey="officerRankImageId" image={image} setImage={setImage} />
+
+                <FormField optional label="Departments">
+                  <Select
+                    isMulti
+                    closeMenuOnSelect={false}
+                    name="officerRankDepartments"
+                    onChange={handleChange}
+                    value={values.officerRankDepartments ?? []}
+                    values={department.values.map((department) => ({
+                      value: department.id,
+                      label: department.value.value,
+                    }))}
+                  />
+                </FormField>
+              </>
             ) : null}
 
             {type === ValueType.DRIVERSLICENSE_CATEGORY ? (

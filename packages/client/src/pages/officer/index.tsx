@@ -9,6 +9,7 @@ import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
 import {
   Bolo,
+  CombinedLeoUnit,
   EmsFdDeputy,
   LeoIncident,
   Officer,
@@ -59,6 +60,10 @@ const Modals = {
   CreateTicketModal: dynamic(async () => {
     return (await import("components/leo/modals/ManageRecordModal")).ManageRecordModal;
   }),
+  SwitchDivisionCallsignModal: dynamic(async () => {
+    return (await import("components/leo/modals/SwitchDivisionCallsignModal"))
+      .SwitchDivisionCallsignModal;
+  }),
 };
 
 interface Props {
@@ -108,7 +113,7 @@ export default function OfficerDashboard({
     dispatchState.setActiveIncidents(activeIncidents);
     dispatchState.setAllOfficers(allOfficers);
 
-    function activeFilter(v: EmsFdDeputy | Officer) {
+    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
       return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
     }
 
@@ -161,17 +166,23 @@ export default function OfficerDashboard({
       </div>
 
       <Modals.SelectOfficerModal />
-      <Modals.NotepadModal />
-      {/* name search have their own vehicle/weapon search modal */}
-      {isOpen(ModalIds.NameSearch) ? null : (
+
+      {leoState.activeOfficer ? (
         <>
-          <Modals.WeaponSearchModal />
-          <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+          <Modals.SwitchDivisionCallsignModal />
+          <Modals.NotepadModal />
+          {/* name search have their own vehicle/weapon search modal */}
+          {isOpen(ModalIds.NameSearch) ? null : (
+            <>
+              <Modals.WeaponSearchModal />
+              <Modals.VehicleSearchModal id={ModalIds.VehicleSearch} />
+            </>
+          )}
+          <Modals.NameSearchModal />
+          <Modals.CreateWarrantModal />
+          <Modals.CustomFieldSearch />
         </>
-      )}
-      <Modals.NameSearchModal />
-      <Modals.CreateWarrantModal />
-      <Modals.CustomFieldSearch />
+      ) : null}
 
       <div>
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
@@ -184,7 +195,7 @@ export default function OfficerDashboard({
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag";
+    "/admin/values/codes_10?paths=penal_code,impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag,call_type";
 
   const [
     activeOfficer,

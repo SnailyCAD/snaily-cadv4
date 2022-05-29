@@ -18,7 +18,7 @@ import {
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { incidentInclude } from "controllers/leo/incidents/IncidentController";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getInactivityFilter } from "lib/leo/utils";
@@ -46,9 +46,14 @@ export class DispatchController {
       setInactiveUnitsOffDuty(unitsInactivityFilter.lastStatusChangeTimestamp);
     }
 
-    const officers = await prisma.officer.findMany({
-      include: leoProperties,
-    });
+    const [officers, units] = await Promise.all([
+      await prisma.officer.findMany({
+        include: leoProperties,
+      }),
+      await prisma.combinedLeoUnit.findMany({
+        include: combinedUnitProperties,
+      }),
+    ]);
 
     const deputies = await prisma.emsFdDeputy.findMany({
       include: unitProperties,
@@ -79,10 +84,13 @@ export class DispatchController {
     const deputiesWithUpdatedStatus = deputies.map((u) =>
       filterInactiveUnits({ unit: u, unitsInactivityFilter }),
     );
+    const combinedUnitsWithUpdatedStatus = units.map((u) =>
+      filterInactiveUnits({ unit: u, unitsInactivityFilter }),
+    );
 
     return {
       deputies: deputiesWithUpdatedStatus,
-      officers: officersWithUpdatedStatus,
+      officers: [...officersWithUpdatedStatus, ...combinedUnitsWithUpdatedStatus],
       activeIncidents: correctedIncidents,
       activeDispatchers,
     };
@@ -258,7 +266,7 @@ export class DispatchController {
     return { ...user, unit };
   }
 
-  protected async endInactiveIncidents(updatedAt: Date) {
+  private async endInactiveIncidents(updatedAt: Date) {
     const incidents = await prisma.leoIncident.findMany({
       where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
       include: { unitsInvolved: true },

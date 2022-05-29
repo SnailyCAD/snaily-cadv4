@@ -13,7 +13,7 @@ import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 
 @Controller("/incidents/events")
 @UseBeforeEach(IsAuth)
-export class IncidentController {
+export class IncidentEventsController {
   private socket: Socket;
   constructor(socket: Socket) {
     this.socket = socket;

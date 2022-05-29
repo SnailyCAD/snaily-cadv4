@@ -5,7 +5,7 @@ import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { type CustomField, Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll, yesOrNoText } from "lib/utils";
+import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import { Button } from "components/Button";
@@ -90,7 +90,6 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           data={customFields.map((field) => ({
             name: field.name,
             category: field.category,
-            citizenEditable: common(yesOrNoText(field.citizenEditable)),
             actions: (
               <>
                 <Button small variant="success" onClick={() => handleEditClick(field)}>
@@ -110,7 +109,6 @@ export default function ManageCustomFields({ customFields: data }: Props) {
           columns={[
             { Header: common("name"), accessor: "name" },
             { Header: "Category", accessor: "category" },
-            { Header: "Citizen Editable", accessor: "citizenEditable" },
             hasPermissions([Permissions.ViewCustomFields], true)
               ? { Header: common("actions"), accessor: "actions" }
               : null,

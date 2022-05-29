@@ -52,10 +52,10 @@ export function AssignedUnitsColumn({ handleAssignToCall, isDispatch, call }: Pr
                 {() => {
                   const comma = idx + 1 === call.assignedUnits.length ? "" : ", ";
                   return (
-                    <p className={canDrag ? "!cursor-move" : "cursor-default"}>
+                    <span className={canDrag ? "!cursor-move" : "cursor-default"}>
                       {makeAssignedUnit(unit)}
                       {comma}
-                    </p>
+                    </span>
                   );
                 }}
               </Draggable>

@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { EmsFdDeputy, LeoIncident, Officer } from "@snailycad/types";
+import type { EmsFdDeputy, IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -80,7 +80,7 @@ export default function LeoIncidents({
     setTempIncident(incident);
   }
 
-  function makeAssignedUnit(unit: any) {
+  function makeAssignedUnit(unit: IncidentInvolvedUnit) {
     return isUnitCombined(unit.unit)
       ? generateCallsign(unit.unit, "pairedUnitTemplate")
       : `${generateCallsign(unit.unit)} ${makeUnitName(unit.unit)}`;

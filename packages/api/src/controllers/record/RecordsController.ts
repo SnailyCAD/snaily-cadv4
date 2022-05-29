@@ -22,6 +22,9 @@ import {
   Warrant,
   WarrantStatus,
   WhitelistStatus,
+  DiscordWebhookType,
+  CombinedLeoUnit,
+  Officer,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -29,8 +32,8 @@ import { leoProperties } from "lib/leo/activeOfficer";
 import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
-import { DiscordWebhookType } from "@snailycad/types";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -41,8 +44,12 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createWarrant(
+    @BodyParams() body: unknown,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -57,7 +64,7 @@ export class RecordsController {
     const warrant = await prisma.warrant.create({
       data: {
         citizenId: citizen.id,
-        officerId: ctx.get("activeOfficer").id,
+        officerId: officer.id,
         description: data.description,
         status: data.status as WarrantStatus,
       },
@@ -113,10 +120,11 @@ export class RecordsController {
   })
   async createTicket(
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
     @Context("cad") cad: { features?: CadFeature[] },
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -139,7 +147,7 @@ export class RecordsController {
       data: {
         type: data.type as RecordType,
         citizenId: citizen.id,
-        officerId: ctx.get("activeOfficer").id,
+        officerId: officer.id,
         notes: data.notes,
         postal: String(data.postal),
         status: recordStatus,
@@ -328,7 +336,7 @@ export class RecordsController {
     return true;
   }
 
-  protected async handleDiscordWebhook(ticket: any) {
+  private async handleDiscordWebhook(ticket: any) {
     try {
       const data = createWebhookData(ticket);
       await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);

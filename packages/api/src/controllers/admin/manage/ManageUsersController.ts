@@ -1,10 +1,10 @@
-import { Rank, type cad, WhitelistStatus, Feature, CadFeature } from "@prisma/client";
+import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BAN_SCHEMA, UPDATE_USER_SCHEMA, PERMISSIONS_SCHEMA } from "@snailycad/schemas";
@@ -199,7 +199,7 @@ export class ManageUsersController {
     permissions: [Permissions.BanUsers],
   })
   async banUserById(
-    @Context() ctx: Context,
+    @Context("user") authUser: User,
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
     @BodyParams() body: unknown,
@@ -210,18 +210,18 @@ export class ManageUsersController {
 
     const data = banType === "ban" ? validateSchema(BAN_SCHEMA, body) : null;
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
+    const userToManage = await prisma.user.findUnique({ where: { id: userId } });
+    if (!userToManage) {
       throw new NotFound("notFound");
     }
 
-    if (user.rank === Rank.OWNER || ctx.get("user").id === user.id) {
+    if (userToManage.rank === Rank.OWNER || authUser.id === userToManage.id) {
       throw new BadRequest("cannotBanSelfOrOwner");
     }
 
     const updated = await prisma.user.update({
       where: {
-        id: user.id,
+        id: userToManage.id,
       },
       data: {
         banReason: banType === "ban" ? data?.reason : null,
@@ -231,7 +231,7 @@ export class ManageUsersController {
     });
 
     if (banType === "ban") {
-      this.socket.emitUserBanned(user.id);
+      this.socket.emitUserBanned(userToManage.id);
     }
 
     return updated;
@@ -342,7 +342,7 @@ export class ManageUsersController {
     return true;
   }
 
-  protected parsePermissions(data: Record<string, string>) {
+  private parsePermissions(data: Record<string, string>) {
     const permissions: string[] = [];
     const values = Object.values(Permissions);
 

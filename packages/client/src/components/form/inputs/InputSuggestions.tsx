@@ -8,19 +8,27 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Input } from "./Input";
 import { useTranslations } from "next-intl";
 import { useDebounce } from "react-use";
+import { isMobile } from "is-mobile";
 
 type ApiPathFunc = (inputValue: string) => string;
+type Suggestion = { id: string } & Record<string, unknown>;
 
 interface Props {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?(suggestion: any): void;
-  Component({ suggestion }: { suggestion: any }): JSX.Element;
-  options: { apiPath: string | ApiPathFunc; method: Method; minLength?: number; dataKey?: string };
+  onSuggestionClick?(suggestion: unknown): void;
+  Component({ suggestion }: { suggestion: unknown }): JSX.Element;
+  options: {
+    apiPath: string | ApiPathFunc;
+    method: Method;
+    minLength?: number;
+    dataKey?: string;
+    allowUnknown?: boolean;
+  };
 }
 
 export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
   const [isOpen, setOpen] = React.useState(false);
-  const [suggestions, setSuggestions] = React.useState<any[]>([]);
+  const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
 
   const [localValue, setLocalValue] = React.useState("");
   useDebounce(async () => onSearch(localValue), 150, [localValue]);
@@ -29,6 +37,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 
   const { state, execute } = useFetch();
   const { focusWithinProps } = useFocusWithin({
+    isDisabled: isMobile(),
     onBlurWithin: () => setOpen(false),
   });
 
@@ -63,7 +72,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
-  function handleSuggestionClick(suggestion: any) {
+  function handleSuggestionClick(suggestion: unknown) {
     onSuggestionClick?.(suggestion);
     setOpen(false);
   }
@@ -83,6 +92,14 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
+  function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+    if (suggestions.length >= 1 || options.allowUnknown) return;
+
+    inputProps?.onChange?.({ ...e, target: { ...e.target, name: e.target.name, value: "" } });
+    setLocalValue("");
+    e.target.value = "";
+  }
+
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     inputProps?.onChange?.(e);
     setLocalValue(e.target.value);
@@ -96,6 +113,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
         onKeyDown={focusOnMenu}
         onFocus={handleFocus}
         onChange={handleChange}
+        onBlur={handleBlur}
       />
 
       {state === "loading" ? (
@@ -130,7 +148,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
 }
 
 type SuggestionProps = Pick<Props, "Component" | "onSuggestionClick"> & {
-  suggestion: any;
+  suggestion: Suggestion;
 };
 
 const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(

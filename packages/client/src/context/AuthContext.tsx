@@ -29,27 +29,27 @@ const PERMISSIONS: Record<string, (user: User) => boolean> = {
 const NO_LOADING_ROUTES = ["/403", "/404", "/auth/login", "/auth/register"];
 
 export function AuthProvider({ initialData, children }: ProviderProps) {
+  const [isForbidden, setForbidden] = React.useState(false);
   const [user, setUser] = React.useState<User | null>(initialData.session ?? null);
   const [cad, setCad] = React.useState<CAD | null>(
     initialData.session?.cad ?? initialData.cad ?? null,
   );
-  const [isForbidden, setForbidden] = React.useState(false);
-  const router = useRouter();
 
+  const router = useRouter();
   const isEnabled = useIsRouteFeatureEnabled(cad ?? {});
 
   const handleGetUser = React.useCallback(async () => {
-    getSessionUser()
-      .then((u) => {
-        if (!u && !NO_LOADING_ROUTES.includes(router.pathname)) {
-          const from = router.asPath;
-          router.push(`/auth/login?from=${from}`);
-        }
+    const user = await getSessionUser();
 
-        setUser(u);
-      })
-      .catch(() => void 0);
-  }, [router]);
+    if (!user && !NO_LOADING_ROUTES.includes(router.pathname)) {
+      const from = router.asPath;
+      router.push(`/auth/login?from=${from}`);
+    }
+
+    setUser(user);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.pathname, router.asPath]);
 
   React.useEffect(() => {
     _setBodyTheme(user?.isDarkTheme ?? true);
@@ -57,14 +57,15 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
 
   React.useEffect(() => {
     if (user) {
-      const p = hasPermissionForCurrentRoute(router.pathname, user);
+      const hasPermission = hasPermissionForCurrentRoute(router.pathname, user);
 
-      if (!p) {
+      if (!hasPermission) {
         setForbidden(true);
         router.push("/403");
       }
     }
-  }, [user, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, router.pathname]);
 
   React.useEffect(() => {
     handleGetUser();
@@ -75,8 +76,8 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
       setUser(initialData.session);
     }
 
-    if (initialData.session?.cad ?? initialData.cad) {
-      setCad(initialData.session?.cad ?? initialData.cad ?? null);
+    if (initialData.cad ?? initialData.session?.cad) {
+      setCad(initialData.cad ?? initialData.session?.cad ?? null);
     }
   }, [initialData]);
 
@@ -131,11 +132,12 @@ export function useAuth() {
 }
 
 function _setBodyTheme(isDarkTheme: boolean) {
+  if (typeof window === "undefined") return;
+
   if (!isDarkTheme) {
     window.document.body.classList.remove("dark");
     return;
   }
-  if (typeof window === "undefined") return;
 
   window.document.body.classList.add("dark");
 }

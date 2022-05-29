@@ -51,7 +51,7 @@ export async function assignUnitsToCall({
 
       const t = type === "leo" ? "officer" : type === "ems-fd" ? "emsFdDeputy" : "combinedLeoUnit";
 
-      if (status) {
+      if (status && assignmentCount <= 0) {
         // @ts-expect-error ignore
         await prisma[t].update({
           where: { id: unit.id },

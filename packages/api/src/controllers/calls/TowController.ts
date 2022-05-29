@@ -22,7 +22,7 @@ import {
   Value,
   VehicleValue,
 } from "@prisma/client";
-import { canManageInvariant } from "lib/auth/user";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";

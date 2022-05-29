@@ -10,13 +10,17 @@ import type { GetServerSideProps } from "next";
 import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
+import type { DispatchPageProps } from ".";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
   loading: () => <p>loading map..</p>,
 });
 
-export default function MapPage(props: any) {
+type Props = Pick<DispatchPageProps, "bolos" | "calls" | "deputies" | "officers">;
+
+export default function MapPage(props: Props) {
   const { cad, user } = useAuth();
   const state = useDispatchState();
 
@@ -24,9 +28,18 @@ export default function MapPage(props: any) {
     state.setCalls(props.calls);
     state.setBolos(props.bolos);
     state.setAllOfficers(props.officers);
-    state.setActiveDeputies(props.activeDeputies);
-    state.setActiveOfficers(props.activeOfficers);
     state.setAllDeputies(props.deputies);
+
+    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
+      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
+    }
+
+    const activeOfficers = [...props.officers].filter(activeFilter);
+    const activeDeputies = [...props.deputies].filter(activeFilter);
+
+    state.setActiveDeputies(activeDeputies);
+    state.setActiveOfficers(activeOfficers);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     state.setCalls,
@@ -66,15 +79,12 @@ export default function MapPage(props: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const [values, calls, bolos, { officers, deputies }, activeDeputies, activeOfficers] =
-    await requestAll(req, [
-      ["/admin/values/codes_10?paths=penal_code,impound_lot,department,division", []],
-      ["/911-calls", []],
-      ["/bolos", []],
-      ["/dispatch", { deputies: [], officers: [] }],
-      ["/ems-fd/active-deputies", []],
-      ["/leo/active-officers", []],
-    ]);
+  const [values, calls, bolos, { officers, deputies }] = await requestAll(req, [
+    ["/admin/values/codes_10?paths=penal_code,impound_lot,department,division", []],
+    ["/911-calls", []],
+    ["/bolos", []],
+    ["/dispatch", { deputies: [], officers: [] }],
+  ]);
 
   return {
     props: {
@@ -84,8 +94,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       values,
       officers,
       deputies,
-      activeDeputies,
-      activeOfficers,
       messages: {
         ...(await getTranslations(["citizen", "ems-fd", "leo", "calls", "common"], locale)),
       },

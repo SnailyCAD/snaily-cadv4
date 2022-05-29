@@ -81,7 +81,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       expungementRequests,
       session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["admin", "courthouse", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "courthouse", "values", "common", "leo"], locale)),
       },
     },
   };

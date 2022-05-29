@@ -9,9 +9,16 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { User, MiscCadSettings, Call911, DiscordWebhookType, Rank } from "@prisma/client";
+import {
+  type cad,
+  User,
+  MiscCadSettings,
+  Call911,
+  DiscordWebhookType,
+  Rank,
+  ShouldDoType,
+} from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
-import type { cad } from "@snailycad/types";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
@@ -46,6 +53,7 @@ export const callInclude = {
   departments: { include: _leoProperties.department.include },
   divisions: { include: _leoProperties.division.include },
   situationCode: { include: { value: true } },
+  type: { include: { value: true } },
 };
 
 @Controller("/911-calls")
@@ -119,6 +127,7 @@ export class Calls911Controller {
         userId: user.id || undefined,
         situationCodeId: data.situationCode ?? null,
         viaDispatch: isFromDispatch,
+        typeId: data.type,
       },
       include: callInclude,
     });
@@ -245,6 +254,7 @@ export class Calls911Controller {
         positionId: shouldRemovePosition ? null : position?.id ?? call.positionId,
         descriptionData: data.descriptionData,
         situationCodeId: data.situationCode === null ? null : data.situationCode,
+        typeId: data.type,
       },
     });
 
@@ -372,15 +382,13 @@ export class Calls911Controller {
   async assignToCall(
     @PathParams("type") callType: "assign" | "unassign",
     @PathParams("callId") callId: string,
-    @BodyParams() body: any,
+    @BodyParams("unit") rawUnitId: string | null,
   ) {
-    const { unit: rawUnit } = body;
-
-    if (!rawUnit) {
+    if (!rawUnitId) {
       throw new BadRequest("unitIsRequired");
     }
 
-    const { unit, type } = await findUnit(rawUnit);
+    const { unit, type } = await findUnit(rawUnitId);
     if (!unit) {
       throw new NotFound("unitNotFound");
     }
@@ -433,10 +441,16 @@ export class Calls911Controller {
       combined: "combinedLeoUnit",
     };
 
+    const assignedToStatus = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: callType === "assign" ? ShouldDoType.SET_ASSIGNED : ShouldDoType.SET_ON_DUTY,
+      },
+    });
+
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId: callType === "assign" ? callId : null },
+      data: { activeCallId: callType === "assign" ? callId : null, statusId: assignedToStatus?.id },
     });
 
     await Promise.all([
@@ -456,7 +470,7 @@ export class Calls911Controller {
     return officerOrDeputyToUnit(updated);
   }
 
-  protected async endInactiveCalls(updatedAt: Date) {
+  private async endInactiveCalls(updatedAt: Date) {
     await prisma.call911.updateMany({
       where: { updatedAt: { not: { gte: updatedAt } } },
       data: {

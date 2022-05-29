@@ -11,6 +11,18 @@ export const AUTH_SCHEMA = z.object({
   totpCode: z.string().optional(),
 });
 
+export const CHANGE_USER_SCHEMA = z.object({
+  soundSettings: z.any(),
+  isDarkTheme: z.boolean(),
+  statusViewMode: z.string(),
+  tableActionsAlignment: z.string(),
+  username: z
+    .string()
+    .min(3)
+    .max(255)
+    .regex(/^([a-z_.\d]+)*[a-z\d]+$/i),
+});
+
 export const CHANGE_PASSWORD_SCHEMA = z.object({
   // when using Discord Oauth, the password is set to an empty string; allow nullable to be sent.
   // gets double validated in the API.

@@ -6,6 +6,12 @@ export const SELECT_VALUE = z.object({
   label: z.any(),
 });
 
+export const INDIVIDUAL_CALLSIGN_SCHEMA = z.object({
+  callsign: z.string().max(255),
+  callsign2: z.string().max(255),
+  divisionId: z.string().min(2).max(255),
+});
+
 export const CREATE_OFFICER_SCHEMA = z.object({
   citizenId: z.string().min(2).max(255),
   department: z.string().min(2).max(255),
@@ -15,6 +21,7 @@ export const CREATE_OFFICER_SCHEMA = z.object({
   badgeNumber: z.number().min(1),
   divisions: z.array(z.string().min(2).max(255).or(SELECT_VALUE)).min(1),
   image: z.any().or(z.string()).optional(),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_SCHEMA = z.object({
@@ -28,11 +35,13 @@ export const UPDATE_UNIT_SCHEMA = z.object({
   status: z.string().max(255).nullable(),
   suspended: z.boolean().nullable(),
   badgeNumber: z.number().min(1),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_UNIT_CALLSIGN_SCHEMA = z.object({
   callsign: z.string().min(1).max(255),
   callsign2: z.string().min(1).max(255),
+  callsigns: z.record(INDIVIDUAL_CALLSIGN_SCHEMA).optional().nullable(),
 });
 
 export const UPDATE_OFFICER_STATUS_SCHEMA = z.object({
@@ -88,4 +97,8 @@ export const NOTE_SCHEMA = z.object({
   type: z.string().regex(/VEHICLE|CITIZEN/),
   text: z.string().min(1),
   itemId: z.string().min(2),
+});
+
+export const SWITCH_CALLSIGN_SCHEMA = z.object({
+  callsign: z.string().min(2).nullable().optional(),
 });

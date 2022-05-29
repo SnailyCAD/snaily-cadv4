@@ -1,6 +1,8 @@
-import { MiscCadSettings, JailTimeScale } from "@prisma/client";
+import { MiscCadSettings, JailTimeScale, CombinedLeoUnit, Officer } from "@prisma/client";
+import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
+import type { DisconnectOrConnect } from "utils/manyToMany";
 
 interface MaxDepartmentOptions {
   type: "emsFdDeputy" | "officer";
@@ -71,4 +73,75 @@ export function convertToJailTimeScale(total: number, scale: JailTimeScale) {
   }
 
   return total * 1000;
+}
+
+export async function updateOfficerDivisionsCallsigns({
+  officerId,
+  disconnectConnectArr,
+  callsigns,
+}: {
+  officerId: string;
+  disconnectConnectArr: DisconnectOrConnect<string, never>[];
+  callsigns?: Record<string, Zod.infer<typeof INDIVIDUAL_CALLSIGN_SCHEMA>> | null;
+}) {
+  if (!callsigns) return;
+
+  const _callsigns = Object.values(callsigns);
+
+  if (_callsigns.length <= 0) {
+    await prisma.individualDivisionCallsign.deleteMany({
+      where: { officerId },
+    });
+  }
+
+  await Promise.all(
+    _callsigns.map(async (callsign) => {
+      const existing = await prisma.individualDivisionCallsign.findFirst({
+        where: { officerId, divisionId: callsign.divisionId },
+      });
+
+      const doCallsignHaveValues =
+        callsign.callsign.trim() !== "" && callsign.callsign2.trim() !== "";
+
+      const shouldDelete =
+        !doCallsignHaveValues ||
+        disconnectConnectArr.find(
+          (v) => "disconnect" in v && v.disconnect?.id === existing?.divisionId,
+        );
+
+      if (shouldDelete) {
+        await prisma.individualDivisionCallsign.deleteMany({
+          where: { id: String(existing?.id) },
+        });
+      } else {
+        await prisma.individualDivisionCallsign.upsert({
+          where: { id: String(existing?.id) },
+          create: { ...callsign, officerId },
+          update: { ...callsign, officerId },
+        });
+      }
+    }),
+  );
+}
+
+interface GetFirstOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
+  activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer | null;
+  allowDispatch?: AllowDispatch;
+}
+
+type GetFirstOfficerFromActiveOfficerReturn<AllowDispatch extends boolean = false> =
+  AllowDispatch extends true ? Officer | null : Officer;
+
+export function getFirstOfficerFromActiveOfficer<AllowDispatch extends boolean = false>({
+  activeOfficer,
+  allowDispatch,
+}: GetFirstOfficerFromActiveOfficerOptions<AllowDispatch>): GetFirstOfficerFromActiveOfficerReturn<AllowDispatch> {
+  const isCombined = activeOfficer && "officers" in activeOfficer;
+  const officer = isCombined ? activeOfficer.officers[0] : activeOfficer;
+
+  if (allowDispatch && !officer) {
+    return null as GetFirstOfficerFromActiveOfficerReturn<AllowDispatch>;
+  }
+
+  return officer as Officer;
 }

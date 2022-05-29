@@ -158,6 +158,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                       apiPath: "/search/vehicle?includeMany=true",
                       method: "POST",
                       dataKey: "plateOrVin",
+                      allowUnknown: true,
                     }}
                     onSuggestionClick={(suggestion: RegisteredVehicle) => {
                       setFieldValue("plate", suggestion.plate);
@@ -199,6 +200,7 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
                     method: "POST",
                     dataKey: "name",
                     minLength: 2,
+                    allowUnknown: true,
                   }}
                   onSuggestionClick={(suggestion: Citizen) => {
                     setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);

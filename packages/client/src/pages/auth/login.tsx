@@ -19,6 +19,7 @@ import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { useAuth } from "context/AuthContext";
+import { LocalhostDetector } from "components/auth/LocalhostDetector";
 
 const INITIAL_VALUES = {
   username: "",
@@ -114,6 +115,7 @@ export default function Login() {
 
       <main className="flex flex-col items-center justify-center pt-20">
         <AuthScreenImages />
+        <LocalhostDetector />
 
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, values, isValid }) => (
@@ -147,7 +149,10 @@ export default function Login() {
 
                       <div className="mt-3">
                         <Link href="/auth/register">
-                          <a className="inline-block mb-3 underline dark:text-gray-200">
+                          <a
+                            href="/auth/register"
+                            className="inline-block mb-3 underline dark:text-gray-200"
+                          >
                             {t("noAccount")}
                           </a>
                         </Link>

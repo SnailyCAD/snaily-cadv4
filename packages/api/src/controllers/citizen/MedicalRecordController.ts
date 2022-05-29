@@ -1,10 +1,10 @@
-import type { CadFeature, User } from "@prisma/client";
+import type { cad, CadFeature, User } from "@prisma/client";
 import { MEDICAL_RECORD_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Description, Post, Put } from "@tsed/schema";
-import { canManageInvariant } from "lib/auth/user";
+import { canManageInvariant } from "lib/auth/getSessionUser";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
@@ -15,9 +15,11 @@ import { IsAuth } from "middlewares/IsAuth";
 export class MedicalRecordsController {
   @Post("/")
   @Description("Create a medical records for a citizen")
-  async createMedicalRecord(@Context() ctx: Context, @BodyParams() body: unknown) {
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features?: CadFeature[] };
+  async createMedicalRecord(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(MEDICAL_RECORD_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -26,7 +28,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(citizen?.userId, user, new NotFound("notFound"));
     } else if (!citizen) {
@@ -36,7 +38,7 @@ export class MedicalRecordsController {
     const medicalRecord = await prisma.medicalRecord.create({
       data: {
         citizenId: citizen.id,
-        userId: ctx.get("user").id || undefined,
+        userId: user.id || undefined,
         type: data.type,
         description: data.description,
         bloodGroupId: data.bloodGroup || null,
@@ -70,7 +72,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(record?.userId, user, new NotFound("notFound"));
     } else if (!record) {
@@ -112,7 +114,7 @@ export class MedicalRecordsController {
       },
     });
 
-    const checkCitizenUserId = await shouldCheckCitizenUserId({ cad, user });
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     if (checkCitizenUserId) {
       canManageInvariant(medicalRecord?.userId, user, new NotFound("notFound"));
     } else if (!medicalRecord) {

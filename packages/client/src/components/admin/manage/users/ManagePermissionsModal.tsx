@@ -75,22 +75,26 @@ export function ManagePermissionsModal({ user }: Props) {
 
   function handleToggleAll(
     group: typeof groups[number],
-    values: Record<string, any>,
+    values: Record<Permissions, boolean>,
     setValues: any,
   ) {
-    const shouldSetFalse = group.permissions.every((v) => v === values[v]);
+    const groupPermissionValues = Object.entries(values).filter(([permission]) => {
+      return group.permissions.includes(permission as Permissions);
+    });
+    const areAllChecked = groupPermissionValues.every(([, b]) => b);
 
-    if (shouldSetFalse) {
-      const filtered = Object.values(values)
-        .filter((v) => !group.permissions.includes(v))
-        .reduce((ac, cv) => ({ ...ac, [cv]: cv }), {});
+    if (areAllChecked) {
+      const obj = groupPermissionValues.reduce(
+        (ac, [permission]) => ({ ...ac, [permission]: false }),
+        {},
+      );
 
-      setValues({ ...filtered });
+      setValues({ ...values, ...obj });
     } else {
       const obj = group.permissions.reduce(
         (ac, cv) => ({
           ...ac,
-          [cv]: cv,
+          [cv]: true,
         }),
         {},
       );

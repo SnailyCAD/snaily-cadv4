@@ -104,7 +104,7 @@ export class LeoController {
     return true;
   }
 
-  protected async handleReleaseCitizen(
+  private async handleReleaseCitizen(
     citizenId: string,
     data: Zod.infer<typeof RELEASE_CITIZEN_SCHEMA>,
   ) {

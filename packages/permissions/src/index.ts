@@ -17,16 +17,11 @@ export function hasPermission(
     return false;
   }
 
-  const invalids = [];
-
   for (const perm of toCheck) {
-    if (!userPermissions.includes(perm)) {
-      invalids.push(perm);
-      continue;
-    }
+    if (userPermissions.includes(perm)) return true;
   }
 
-  return invalids.length !== toCheck.length;
+  return false;
 }
 
 export type PermissionNames = keyof typeof Permissions;

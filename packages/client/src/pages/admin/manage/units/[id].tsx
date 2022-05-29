@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
 import Link from "next/link";
@@ -24,9 +24,11 @@ import { Input } from "components/form/inputs/Input";
 import { isUnitOfficer } from "@snailycad/utils";
 import { Permissions } from "@snailycad/permissions";
 import { QualificationsTable } from "components/admin/manage/units/QualificationsTable";
+import { classNames } from "lib/classNames";
 
-type Unit = ((Officer & { logs: OfficerLog[] }) | EmsFdDeputy) & {
+type Unit = (Officer | EmsFdDeputy) & {
   qualifications: UnitQualification[];
+  logs: OfficerLog[];
 };
 
 interface Props {
@@ -158,10 +160,18 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                   name="rank"
                   onChange={handleChange}
                   value={values.rank}
-                  values={officerRank.values.map((value) => ({
-                    label: value.value,
-                    value: value.id,
-                  }))}
+                  values={officerRank.values
+                    .filter((v) => {
+                      if ((v.officerRankDepartments?.length ?? 0) <= 0) return true;
+
+                      return (
+                        v.officerRankDepartments?.some((v) => v.id === values.department) ?? true
+                      );
+                    })
+                    .map((value) => ({
+                      label: value.value,
+                      value: value.id,
+                    }))}
                 />
               </FormField>
 
@@ -204,15 +214,16 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 
             <footer className="flex justify-end">
               <Link href="/admin/manage/units">
-                <a>
-                  <Button type="button" variant="cancel">
-                    {common("cancel")}
-                  </Button>
+                <a
+                  href="/admin/manage/units"
+                  className={classNames(buttonVariants.cancel, "p-1 px-4 rounded-md")}
+                >
+                  {common("cancel")}
                 </a>
               </Link>
+
               <Button type="submit" className="flex items-center">
                 {state === "loading" ? <Loader className="mr-2 border-red-200" /> : null}
-
                 {common("save")}
               </Button>
             </footer>
@@ -220,13 +231,11 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
         )}
       </Formik>
 
-      {"logs" in unit ? (
-        <div className="mt-3">
-          <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
+      <div className="mt-3">
+        <h1 className="text-xl font-semibold">{t("officerLogs")}</h1>
 
-          <OfficerLogsTable officer={unit} logs={unit.logs} />
-        </div>
-      ) : null}
+        <OfficerLogsTable unit={unit} logs={unit.logs} />
+      </div>
 
       <QualificationsTable setUnit={setUnit} unit={unit} />
     </AdminLayout>

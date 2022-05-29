@@ -6,11 +6,11 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { ShouldDoType, User } from "@prisma/client";
+import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment, User } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
-import { CHANGE_PASSWORD_SCHEMA } from "@snailycad/schemas";
+import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
-import { userProperties } from "lib/auth/user";
+import { userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
@@ -26,34 +26,32 @@ export class AccountController {
 
   @Post("/")
   @Description("Get the authenticated user's information")
-  async getAuthUser(@Context() ctx: Context) {
-    return { ...ctx.get("user"), cad: ctx.get("cad") ?? null };
+  async getAuthUser(@Context("cad") cad: cad, @Context("user") user: User) {
+    return { ...user, cad };
   }
 
   @Patch("/")
   @Description("Update the authenticated user's settings")
   async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
-    const { soundSettings, username, isDarkTheme, statusViewMode, tableActionsAlignment } = body;
+    const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
-      where: {
-        username,
-      },
+      where: { username: data.username },
     });
 
-    if (existing && user.username !== username) {
+    if (existing && user.username !== data.username) {
       throw new ExtendedBadRequest({ username: "userAlreadyExists" });
     }
 
     let soundSettingsId = null;
-    if (soundSettings) {
+    if (data.soundSettings) {
       const updateCreateData = {
-        panicButton: soundSettings.panicButton,
-        signal100: soundSettings.signal100,
-        addedToCall: soundSettings.addedToCall,
-        stopRoleplay: soundSettings.stopRoleplay,
-        statusUpdate: soundSettings.statusUpdate,
-        incomingCall: soundSettings.incomingCall,
+        panicButton: data.soundSettings.panicButton,
+        signal100: data.soundSettings.signal100,
+        addedToCall: data.soundSettings.addedToCall,
+        stopRoleplay: data.soundSettings.stopRoleplay,
+        statusUpdate: data.soundSettings.statusUpdate,
+        incomingCall: data.soundSettings.incomingCall,
       };
 
       const updated = await prisma.userSoundSettings.upsert({
@@ -70,10 +68,10 @@ export class AccountController {
         id: user.id,
       },
       data: {
-        username,
-        isDarkTheme,
-        statusViewMode,
-        tableActionsAlignment,
+        username: data.username,
+        isDarkTheme: data.isDarkTheme,
+        statusViewMode: data.statusViewMode as StatusViewMode,
+        tableActionsAlignment: data.tableActionsAlignment as TableActionsAlignment,
         soundSettingsId,
       },
       select: userProperties,
@@ -96,7 +94,6 @@ export class AccountController {
   @Description("Logout the authenticated user")
   async logoutUser(@Res() res: Res, @Context() ctx: Context) {
     const userId = ctx.get("user").id;
-
     ctx.delete("user");
 
     const officer = await prisma.officer.findFirst({
@@ -115,21 +112,33 @@ export class AccountController {
       });
 
       await handleStartEndOfficerLog({
-        officer,
+        unit: officer,
         shouldDo: "SET_OFF_DUTY",
         socket: this.socket,
         userId,
+        type: "leo",
       });
 
       await this.socket.emitUpdateOfficerStatus();
     }
 
-    await prisma.emsFdDeputy.updateMany({
-      where: { userId },
-      data: { statusId: null, activeCallId: null },
+    const emsFdDeputy = await prisma.emsFdDeputy.findFirst({
+      where: {
+        userId,
+        status: { NOT: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+      },
     });
 
-    await this.socket.emitUpdateDeputyStatus();
+    if (emsFdDeputy) {
+      await handleStartEndOfficerLog({
+        unit: emsFdDeputy,
+        shouldDo: "SET_OFF_DUTY",
+        socket: this.socket,
+        userId,
+        type: "ems-fd",
+      });
+      await this.socket.emitUpdateDeputyStatus();
+    }
 
     setCookie({
       res,

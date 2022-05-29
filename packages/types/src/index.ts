@@ -360,6 +360,8 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+
+  officerRankDepartments?: DepartmentValue[];
   officerRankImageId: string | null;
 }
 
@@ -451,6 +453,17 @@ export interface DivisionValue {
   department: DepartmentValue;
   callsign: string | null;
   pairedUnitTemplate: string | null;
+}
+
+/**
+ * Model CallTypeValue
+ *
+ */
+export interface CallTypeValue {
+  id: string;
+  valueId: string;
+  value: Value<ValueType.CALL_TYPE>;
+  priority: number | null;
 }
 
 /**
@@ -647,6 +660,8 @@ export interface Officer {
   id: string;
   departmentId: string | null;
   department: DepartmentValue | null;
+  activeDivisionCallsignId: string | null;
+  activeDivisionCallsign: IndividualDivisionCallsign | null;
   callsign: string;
   callsign2: string;
   incremental: number | null;
@@ -672,6 +687,15 @@ export interface Officer {
   activeCallId: string | null;
   radioChannelId: string | null;
   user: Pick<User, "id" | "username" | "steamId">;
+  callsigns?: IndividualDivisionCallsign[];
+}
+
+export interface IndividualDivisionCallsign {
+  id: string;
+  divisionId: string;
+  callsign: string;
+  callsign2: string;
+  officerId: string;
 }
 
 /**
@@ -742,6 +766,7 @@ export interface OfficerLog {
   endedAt: Date | null;
   userId: string | null;
   officerId: string;
+  emsFdDeputyId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -850,6 +875,8 @@ export interface Call911 {
   divisions?: DivisionValue[];
   incidents?: LeoIncident[];
   viaDispatch: boolean | null;
+  type: CallTypeValue | null;
+  typeId: string;
 }
 
 /**
@@ -1154,6 +1181,7 @@ export enum Feature {
   CITIZEN_RECORD_APPROVAL = "CITIZEN_RECORD_APPROVAL",
   COMMON_CITIZEN_CARDS = "COMMON_CITIZEN_CARDS",
   STEAM_OAUTH = "STEAM_OAUTH",
+  CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
 }
 
 export enum Rank {
@@ -1197,6 +1225,7 @@ export enum ValueType {
   VEHICLE_FLAG = "VEHICLE_FLAG",
   CITIZEN_FLAG = "CITIZEN_FLAG",
   QUALIFICATION = "QUALIFICATION",
+  CALL_TYPE = "CALL_TYPE",
 }
 
 export enum ValueLicenseType {

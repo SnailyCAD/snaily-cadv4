@@ -160,7 +160,7 @@ export function ActiveDeputies() {
                     </span>
                   ),
                   radioChannel: <UnitRadioChannelModal unit={deputy} />,
-                  activeCall: <ActiveCallColumn call={activeCall} />,
+                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   actions: isDispatch ? (
                     <Button
                       disabled={!hasActiveDispatchers}

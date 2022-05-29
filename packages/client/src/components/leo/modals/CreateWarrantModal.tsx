@@ -14,6 +14,7 @@ import type { Citizen } from "@snailycad/types";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { toastMessage } from "lib/toastMessage";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
@@ -67,7 +68,7 @@ export function CreateWarrantModal() {
                   name: "citizenName",
                   onChange: handleChange,
                 }}
-                onSuggestionClick={(suggestion) => {
+                onSuggestionClick={(suggestion: NameSearchResult) => {
                   setFieldValue("citizenId", suggestion.id);
                   setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
                 }}

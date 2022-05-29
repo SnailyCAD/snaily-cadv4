@@ -37,6 +37,7 @@ const GET_VALUES: Partial<Record<ValueType, ValuesSelect>> = {
     name: "divisionValue",
     include: { department: { include: { value: true } } },
   },
+  CALL_TYPE: { name: "callTypeValue" },
 };
 
 @Controller("/admin/values/:path")
@@ -85,6 +86,10 @@ export class ValuesController {
           values: await prisma.value.findMany({
             where: { type },
             orderBy: { position: "asc" },
+            include:
+              type === ValueType.OFFICER_RANK
+                ? { officerRankDepartments: { include: { value: true } } }
+                : undefined,
           }),
         };
       }),
@@ -197,8 +202,7 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const arr = await handler([body]);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body]);
 
     return value;
   }
@@ -206,7 +210,7 @@ export class ValuesController {
   @Delete("/bulk-delete")
   @Description("Bulk-delete values by the specified ids and type")
   @UsePermissions(getPermissionsForValuesRequest)
-  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: any) {
+  async bulkDeleteByPathAndIds(@PathParams("path") path: string, @BodyParams() body: unknown) {
     const type = getTypeFromPath(path);
     const ids = body as string[];
 
@@ -234,8 +238,7 @@ export class ValuesController {
     const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
-    const arr = await handler([body], valueId);
-    const [value] = "success" in arr ? arr.success : arr;
+    const [value] = await handler([body], valueId);
 
     return value;
   }
@@ -276,7 +279,7 @@ export class ValuesController {
     );
   }
 
-  protected async deleteById(type: ValueType, id: string) {
+  private async deleteById(type: ValueType, id: string) {
     const data = GET_VALUES[type];
 
     if (data) {

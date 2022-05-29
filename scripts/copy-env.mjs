@@ -26,8 +26,9 @@ function addPortToClientPackageJson() {
     json = JSON.parse(json);
     json.scripts.start = `yarn next start -p ${port}`;
     json = JSON.stringify(json, null, 2);
+    const jsonFilePath = join(dir, "package.json");
 
-    writeFileSync(dir, json, (err) => {
+    writeFileSync(jsonFilePath, json, (err) => {
       if (err) {
         console.log(err);
       }

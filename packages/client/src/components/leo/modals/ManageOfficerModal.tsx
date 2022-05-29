@@ -18,9 +18,11 @@ import { FormRow } from "components/form/FormRow";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { getUnitDepartment } from "lib/utils";
 import { CallSignPreview } from "../CallsignPreview";
-import type { Officer } from "@snailycad/types";
+import type { IndividualDivisionCallsign, Officer } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
+import { AdvancedSettings } from "./AdvancedSettings";
+import { classNames } from "lib/classNames";
 
 interface Props {
   officer: Officer | null;
@@ -114,6 +116,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
     image: undefined,
+    callsigns: officer ? makeDivisionsObjectMap(officer) : {},
   };
 
   return (
@@ -121,110 +124,133 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       title={officer ? t("editOfficer") : t("createOfficer")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageOfficer)}
-      className="w-[600px]"
+      className={officer ? "w-[1000px]" : "w-[650px]"}
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit, errors, values, isValid }) => (
-          <form ref={formRef} onSubmit={handleSubmit}>
-            <ImageSelectInput setImage={setImage} image={image} />
+          <form
+            className={classNames(officer && "flex flex-col md:flex-row gap-5")}
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
+            <div>
+              <ImageSelectInput setImage={setImage} image={image} />
 
-            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <Select
-                isClearable
-                value={values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens.map((value) => ({
-                  label: `${value.name} ${value.surname}`,
-                  value: value.id,
-                }))}
-              />
-            </FormField>
-
-            {BADGE_NUMBERS ? (
-              <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
-                <Input
-                  type="number"
-                  value={values.badgeNumber}
-                  name="badgeNumber"
-                  onChange={(e) =>
-                    handleChange({
-                      ...e,
-                      target: {
-                        ...e.target,
-                        id: "badgeNumber",
-                        value: e.target.valueAsNumber,
-                      },
-                    })
-                  }
+              <FormField errorMessage={errors.citizenId} label={t("citizen")}>
+                <Select
+                  isClearable
+                  value={values.citizenId}
+                  name="citizenId"
+                  onChange={handleChange}
+                  values={citizens.map((value) => ({
+                    label: `${value.name} ${value.surname}`,
+                    value: value.id,
+                  }))}
                 />
               </FormField>
-            ) : null}
 
-            <FormRow>
-              <FormField errorMessage={errors.callsign} label={t("callsign1")}>
-                <Input value={values.callsign} name="callsign" onChange={handleChange} />
+              {BADGE_NUMBERS ? (
+                <FormField errorMessage={errors.badgeNumber} label={t("badgeNumber")}>
+                  <Input
+                    type="number"
+                    value={values.badgeNumber}
+                    name="badgeNumber"
+                    onChange={(e) =>
+                      handleChange({
+                        ...e,
+                        target: {
+                          ...e.target,
+                          id: "badgeNumber",
+                          value: e.target.valueAsNumber,
+                        },
+                      })
+                    }
+                  />
+                </FormField>
+              ) : null}
+
+              <FormRow>
+                <FormField errorMessage={errors.callsign} label={t("callsign1")}>
+                  <Input value={values.callsign} name="callsign" onChange={handleChange} />
+                </FormField>
+
+                <FormField errorMessage={errors.callsign2} label={t("callsign2")}>
+                  <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
+                </FormField>
+              </FormRow>
+
+              <FormField errorMessage={errors.department as string} label={t("department")}>
+                <Select
+                  value={values.department}
+                  name="department"
+                  onChange={handleChange}
+                  values={department.values
+                    .filter((v) => v.type === "LEO")
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
               </FormField>
 
-              <FormField errorMessage={errors.callsign2} label={t("callsign2")}>
-                <Input value={values.callsign2} name="callsign2" onChange={handleChange} />
+              <FormField errorMessage={errors.divisions as string} label={t("division")}>
+                <Select
+                  isMulti
+                  value={values.divisions}
+                  name="divisions"
+                  onChange={handleChange}
+                  values={division.values
+                    .filter((v) =>
+                      values.department ? v.departmentId === values.department : true,
+                    )
+                    .map((value) => ({
+                      label: value.value.value,
+                      value: value.id,
+                    }))}
+                />
               </FormField>
-            </FormRow>
 
-            <FormField errorMessage={errors.department as string} label={t("department")}>
-              <Select
-                value={values.department}
-                name="department"
-                onChange={handleChange}
-                values={department.values
-                  .filter((v) => v.type === "LEO")
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
-                  }))}
+              <CallSignPreview
+                divisions={division.values.filter((v) =>
+                  values.divisions.some((d) => d.value === v.id),
+                )}
+                department={department.values.find((v) => v.id === values.department) ?? null}
               />
-            </FormField>
 
-            <FormField errorMessage={errors.divisions as string} label={t("division")}>
-              <Select
-                isMulti
-                value={values.divisions}
-                name="divisions"
-                onChange={handleChange}
-                values={division.values
-                  .filter((v) => (values.department ? v.departmentId === values.department : true))
-                  .map((value) => ({
-                    label: value.value.value,
-                    value: value.id,
-                  }))}
-              />
-            </FormField>
+              <AdvancedSettings />
 
-            <CallSignPreview
-              divisions={division.values.filter((v) =>
-                values.divisions.some((d) => d.value === v.id),
-              )}
-              department={department.values.find((v) => v.id === values.department) ?? null}
-            />
+              <footer className="flex justify-end mt-5">
+                <Button type="reset" onClick={handleClose} variant="cancel">
+                  {common("cancel")}
+                </Button>
+                <Button
+                  className="flex items-center"
+                  disabled={!isValid || state === "loading"}
+                  type="submit"
+                >
+                  {state === "loading" ? <Loader className="mr-2" /> : null}
+                  {officer ? common("save") : common("create")}
+                </Button>
+              </footer>
+            </div>
 
-            {officer ? <UnitQualificationsTable unit={officer as any} /> : null}
-
-            <footer className="flex justify-end mt-5">
-              <Button type="reset" onClick={handleClose} variant="cancel">
-                {common("cancel")}
-              </Button>
-              <Button
-                className="flex items-center"
-                disabled={!isValid || state === "loading"}
-                type="submit"
-              >
-                {state === "loading" ? <Loader className="mr-2" /> : null}
-                {officer ? common("save") : common("create")}
-              </Button>
-            </footer>
+            <div className="md:min-w-[400px]">
+              {officer ? <UnitQualificationsTable unit={officer as any} /> : null}
+            </div>
           </form>
         )}
       </Formik>
     </Modal>
   );
+}
+
+export function makeDivisionsObjectMap(officer: Officer) {
+  const obj = {} as Record<string, IndividualDivisionCallsign>;
+  const callsigns = officer.callsigns ?? [];
+
+  for (const callsign of callsigns) {
+    obj[callsign.divisionId] = callsign;
+  }
+
+  return obj;
 }

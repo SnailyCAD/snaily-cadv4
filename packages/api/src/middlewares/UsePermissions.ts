@@ -12,7 +12,7 @@ interface RouteData {
 
 @Middleware()
 export class UsePermissionsMiddleware implements MiddlewareMethods {
-  async use(@Context() ctx: Context, @Req() req: Req) {
+  use(@Context() ctx: Context, @Req() req: Req) {
     const routeDataOrFunc = ctx.endpoint.get<RouteData | UsePermissionsFunc>(
       UsePermissionsMiddleware,
     );

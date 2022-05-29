@@ -1,19 +1,17 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import { Select } from "components/form/Select";
+
 import { Loader } from "components/Loader";
 import { TabsContent } from "components/shared/TabList";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useAuth } from "context/AuthContext";
-import { SettingsFormField } from "components/form/SettingsFormField";
 import { cad, DiscordWebhookType } from "@snailycad/types";
-import { Textarea } from "components/form/Textarea";
-import { FormField } from "components/form/FormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { WebhookSettingsField } from "./WebhookSettingsField";
 
-interface DiscordChannel {
+export interface DiscordChannel {
   name: string;
   id: string;
 }
@@ -80,42 +78,42 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {() => (
           <Form className="mt-5 space-y-5">
-            <WebhookField
+            <WebhookSettingsField
               fieldName="call911Webhook"
               channels={channels}
               description="The Discord channel where 911 calls will be sent to."
               label="911 calls channel"
             />
 
-            <WebhookField
+            <WebhookSettingsField
               fieldName="statusesWebhook"
               channels={channels}
               description="The Discord channel where unit status updates will be sent to."
               label="Status updates channel"
             />
 
-            <WebhookField
+            <WebhookSettingsField
               fieldName="panicButtonWebhook"
               channels={channels}
               description="The Discord channel where panic button triggers will be sent to."
               label="Panic button channel"
             />
 
-            <WebhookField
+            <WebhookSettingsField
               fieldName="boloWebhook"
               channels={channels}
               description="The Discord channel where new BOLO's will be sent to."
               label="BOLO's channel"
             />
 
-            <WebhookField
+            <WebhookSettingsField
               fieldName="vehicleImpoundedWebhook"
               channels={channels}
               description="The Discord channel where impounded vehicle notifications will be sent to."
               label="Impounded vehicles channel"
             />
 
-            <WebhookField
+            <WebhookSettingsField
               fieldName="citizenRecordsWebhook"
               channels={channels}
               description="The Discord channel where new arrest reports, tickets and written warnings will be sent to."
@@ -142,42 +140,4 @@ function makeInitialValue(cad: cad, type: string) {
     extraMessage: webhook.extraMessage ?? "",
     type,
   };
-}
-
-interface FieldProps {
-  description: string;
-  label: string;
-  channels: any[];
-  fieldName: string;
-}
-
-function WebhookField({ description, label, channels, fieldName }: FieldProps) {
-  const { errors, values, handleChange } = useFormikContext<any>();
-
-  return (
-    <SettingsFormField
-      description={description}
-      errorMessage={(errors[fieldName] as any)?.id}
-      label={label}
-    >
-      <Select
-        isClearable
-        values={channels.map((role) => ({
-          value: role.id,
-          label: role.name,
-        }))}
-        value={values[fieldName]?.id}
-        name={`${fieldName}.id`}
-        onChange={handleChange}
-      />
-
-      <FormField optional className="mt-2" label="Extra message">
-        <Textarea
-          value={values[fieldName]?.extraMessage}
-          name={`${fieldName}.extraMessage`}
-          onChange={handleChange}
-        />
-      </FormField>
-    </SettingsFormField>
-  );
 }

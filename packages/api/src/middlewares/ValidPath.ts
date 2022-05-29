@@ -21,11 +21,12 @@ const validPaths = [
   "citizen_flag",
   "penal_code_group",
   "qualification",
+  "call_type",
 ];
 
 @Middleware()
 export class IsValidPath implements MiddlewareMethods {
-  async use(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
+  use(@PathParams("path") path: string, @QueryParams("paths") rawPaths: string) {
     const paths =
       typeof rawPaths === "string" ? [...new Set([path, ...rawPaths.split(",")])] : [path];
 

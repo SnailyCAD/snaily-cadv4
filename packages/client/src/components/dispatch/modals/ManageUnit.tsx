@@ -62,7 +62,9 @@ export function ManageUnitModal({ type = "leo", unit, onClose }: Props) {
     if (!unit) return;
 
     const status = codes10.values.find((s) => s.id === values.status);
-    const { json } = await setStatus(unit.id, status!);
+    if (!status) return;
+
+    const { json } = await setStatus(unit.id, status);
 
     if (json.id) {
       handleClose();

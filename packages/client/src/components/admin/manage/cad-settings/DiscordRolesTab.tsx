@@ -54,7 +54,7 @@ export function DiscordRolesTab() {
   };
 
   async function refreshRoles() {
-    const { json } = await execute("/admin/manage/cad-settings/discord", {});
+    const { json } = await execute("/admin/manage/cad-settings/discord/roles", {});
 
     if (Array.isArray(json)) {
       setRoles(json);
@@ -62,11 +62,11 @@ export function DiscordRolesTab() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    function toValue(arr: SelectValue<any>[]) {
+    function toValue<T>(arr: SelectValue<T>[]) {
       return arr.map((v) => v.value);
     }
 
-    const { json } = await execute("/admin/manage/cad-settings/discord", {
+    const { json } = await execute("/admin/manage/cad-settings/discord/roles", {
       method: "POST",
       data: {
         ...values,

@@ -7,7 +7,7 @@ import {
   UseBefore,
 } from "@tsed/common";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { CREATE_OFFICER_SCHEMA } from "@snailycad/schemas";
+import { CREATE_OFFICER_SCHEMA, SWITCH_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
@@ -18,19 +18,31 @@ import { Socket } from "services/SocketService";
 import fs from "node:fs";
 import { combinedUnitProperties, leoProperties } from "lib/leo/activeOfficer";
 import { validateImgurURL } from "utils/image";
-import { Officer, ShouldDoType, User, MiscCadSettings, Feature, CadFeature } from "@prisma/client";
+import {
+  CombinedLeoUnit,
+  Officer,
+  ShouldDoType,
+  User,
+  MiscCadSettings,
+  Feature,
+  CadFeature,
+} from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
-import type { CombinedLeoUnit } from "@snailycad/types";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
-import { getInactivityFilter, validateMaxDepartmentsEachPerUser } from "lib/leo/utils";
+import {
+  getInactivityFilter,
+  updateOfficerDivisionsCallsigns,
+  validateMaxDepartmentsEachPerUser,
+} from "lib/leo/utils";
 import { isFeatureEnabled } from "lib/cad";
 import { findUnit } from "lib/leo/findUnit";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
 import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncremental";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 @Controller("/leo")
 @UseBeforeEach(IsAuth)
@@ -69,10 +81,11 @@ export class LeoController {
   ) {
     const data = validateSchema(CREATE_OFFICER_SCHEMA, body);
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -138,6 +151,12 @@ export class LeoController {
 
     const disconnectConnectArr = manyToManyHelper([], data.divisions as string[]);
 
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns,
+    });
+
     const updated = getLastOfArray(
       await prisma.$transaction(
         disconnectConnectArr.map((v, idx) =>
@@ -199,10 +218,11 @@ export class LeoController {
       unitId: officer.id,
     });
 
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
       where: {
         id: data.citizenId,
-        userId: user.id,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
     });
 
@@ -242,6 +262,12 @@ export class LeoController {
       ? undefined
       : await findNextAvailableIncremental({ type: "leo" });
 
+    await updateOfficerDivisionsCallsigns({
+      officerId: officer.id,
+      disconnectConnectArr,
+      callsigns: data.callsigns,
+    });
+
     const updatedOfficer = await prisma.officer.update({
       where: {
         id: officer.id,
@@ -271,10 +297,10 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async deleteOfficer(@PathParams("id") officerId: string, @Context() ctx: Context) {
+  async deleteOfficer(@PathParams("id") officerId: string, @Context("user") user: User) {
     const officer = await prisma.officer.findFirst({
       where: {
-        userId: ctx.get("user").id,
+        userId: user.id,
         id: officerId,
       },
     });
@@ -297,19 +323,15 @@ export class LeoController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async getOfficerLogs(@Context() ctx: Context) {
+  async getOfficerLogs(@Context("user") user: User) {
     const logs = await prisma.officerLog.findMany({
-      where: {
-        userId: ctx.get("user").id,
-      },
+      where: { userId: user.id, emsFdDeputyId: null },
       include: {
         officer: {
           include: leoProperties,
         },
       },
-      orderBy: {
-        startedAt: "desc",
-      },
+      orderBy: { startedAt: "desc" },
     });
 
     return logs;
@@ -321,8 +343,10 @@ export class LeoController {
     fallback: (u) => u.isLeo || u.isDispatch || u.isEmsFd,
     permissions: [Permissions.Leo, Permissions.Dispatch, Permissions.EmsFd],
   })
-  async getActiveOfficer(@Context() ctx: Context) {
-    return ctx.get("activeOfficer");
+  async getActiveOfficer(
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
+    return activeOfficer;
   }
 
   @Get("/active-officers")
@@ -393,19 +417,14 @@ export class LeoController {
     const extension = file.mimetype.split("/")[file.mimetype.split("/").length - 1];
     const path = `${process.cwd()}/public/units/${officer.id}.${extension}`;
 
-    await fs.writeFileSync(path, file.buffer);
-
-    const data = await prisma.officer.update({
-      where: {
-        id: officerId,
-      },
-      data: {
-        imageId: `${officer.id}.${extension}`,
-      },
-      select: {
-        imageId: true,
-      },
-    });
+    const [data] = await Promise.all([
+      prisma.officer.update({
+        where: { id: officer.id },
+        data: { imageId: `${officer.id}.${extension}` },
+        select: { imageId: true },
+      }),
+      fs.writeFileSync(path, file.buffer),
+    ]);
 
     return data;
   }
@@ -575,10 +594,57 @@ export class LeoController {
 
     return data;
   }
+
+  @Put("/callsign/:officerId")
+  @Description("Update the officer's activeDivisionCallsign")
+  @UsePermissions({
+    fallback: (u) => u.isLeo || u.rank !== "USER",
+    permissions: [Permissions.Leo, Permissions.ManageUnitCallsigns],
+  })
+  async updateOfficerDivisionCallsign(
+    @BodyParams() body: unknown,
+    @PathParams("officerId") officerId: string,
+  ) {
+    const officer = await prisma.officer.findUnique({
+      where: { id: officerId },
+    });
+
+    if (!officer) {
+      throw new NotFound("officerNotFound");
+    }
+
+    const data = validateSchema(SWITCH_CALLSIGN_SCHEMA, body);
+
+    let callsignId = null;
+    /**
+     * yes, !== "null" can be here, in the UI its handled that way. A bit weird I know, but it does the job!
+     */
+    if (data.callsign && data.callsign !== "null") {
+      const callsign = await prisma.individualDivisionCallsign.findFirst({
+        where: { id: data.callsign, officerId: officer.id },
+      });
+
+      if (!callsign) {
+        throw new NotFound("callsignNotFound");
+      }
+
+      callsignId = callsign.id;
+    }
+
+    const updated = await prisma.officer.update({
+      where: { id: officer.id },
+      data: { activeDivisionCallsignId: callsignId },
+      include: leoProperties,
+    });
+
+    await this.socket.emitUpdateOfficerStatus();
+
+    return updated;
+  }
 }
 
 export async function validateMaxDivisionsPerOfficer(
-  arr: any[],
+  arr: unknown[],
   cad: { miscCadSettings: MiscCadSettings } | null,
 ) {
   const { maxDivisionsPerOfficer } = cad?.miscCadSettings ?? {};

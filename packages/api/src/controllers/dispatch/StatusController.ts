@@ -22,7 +22,6 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Description, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
-import { callInclude } from "./911-calls/Calls911Controller";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import { Socket } from "services/SocketService";
@@ -177,32 +176,20 @@ export class StatusController {
 
     if (type === "leo") {
       await handleStartEndOfficerLog({
-        officer: unit as Officer,
+        unit: unit as Officer,
         shouldDo: code.shouldDo,
         socket: this.socket,
         userId: user.id,
+        type: "leo",
       });
     } else if (type === "ems-fd") {
-      // unassign deputy from call
-      if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
-        const calls = await prisma.call911.findMany({
-          where: {
-            assignedUnits: { some: { emsFdDeputyId: unit.id } },
-          },
-          include: callInclude,
-        });
-
-        calls.forEach((call) => {
-          const assignedUnits = call.assignedUnits.filter((v) => v.emsFdDeputyId !== unit.id);
-          this.socket.emitUpdate911Call({ ...call, assignedUnits });
-        });
-
-        await prisma.assignedUnit.deleteMany({
-          where: {
-            emsFdDeputyId: unit.id,
-          },
-        });
-      }
+      await handleStartEndOfficerLog({
+        unit,
+        shouldDo: code.shouldDo,
+        socket: this.socket,
+        userId: user.id,
+        type: "ems-fd",
+      });
     } else {
       if (code.shouldDo === ShouldDoType.SET_OFF_DUTY) {
         await prisma.combinedLeoUnit.delete({
@@ -229,15 +216,15 @@ export class StatusController {
     return updatedUnit;
   }
 
-  protected isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
+  private isUnitCurrentlyInPanicMode(unit: HandlePanicButtonPressedOptions["unit"]) {
     return unit.status?.shouldDo === ShouldDoType.PANIC_BUTTON;
   }
 
-  protected isStatusPanicButton(status: StatusValue) {
+  private isStatusPanicButton(status: StatusValue) {
     return status.shouldDo === ShouldDoType.PANIC_BUTTON;
   }
 
-  protected async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
+  private async handlePanicButtonPressed(options: HandlePanicButtonPressedOptions) {
     const isCurrentlyPanicMode = this.isUnitCurrentlyInPanicMode(options.unit);
     const isPanicButton = this.isStatusPanicButton(options.status);
 
@@ -246,13 +233,11 @@ export class StatusController {
     if (shouldEnablePanicMode) {
       this.socket.emitPanicButtonLeo(options.unit, "ON");
 
-      if (options.cad?.miscCadSettings.panicButtonWebhookId) {
-        try {
-          const embed = createPanicButtonEmbed(options.cad, options.unit);
-          await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
-        } catch (error) {
-          console.error("[cad_panicButton]: Could not send Discord webhook.", error);
-        }
+      try {
+        const embed = createPanicButtonEmbed(options.cad, options.unit);
+        await sendDiscordWebhook(DiscordWebhookType.PANIC_BUTTON, embed);
+      } catch (error) {
+        console.error("[cad_panicButton]: Could not send Discord webhook.", error);
       }
     } else {
       this.socket.emitPanicButtonLeo(options.unit, "OFF");
@@ -265,7 +250,7 @@ interface HandlePanicButtonPressedOptions {
   unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
     status?: StatusValue | null;
   };
-  cad: any;
+  cad: cad & { miscCadSettings: MiscCadSettings };
 }
 
 type V<T> = T & { value: Value };

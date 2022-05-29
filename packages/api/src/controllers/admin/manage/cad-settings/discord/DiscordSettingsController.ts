@@ -13,8 +13,8 @@ import { manyToManyHelper } from "utils/manyToMany";
 
 const guildId = process.env.DISCORD_SERVER_ID;
 
-@Controller("/admin/manage/cad-settings/discord")
 @UseBeforeEach(IsAuth)
+@Controller("/admin/manage/cad-settings/discord/roles")
 export class DiscordSettingsController {
   @Get("/")
   async getGuildRoles(@Context("cad") cad: cad) {
@@ -173,19 +173,32 @@ export class DiscordSettingsController {
     const updated = await prisma.cad.update({
       where: { id: cad.id },
       data: { discordRolesId: discordRoles.id },
-      include: { discordRoles: { include: { roles: true, leoRoles: true, emsFdRoles: true } } },
+      include: {
+        discordRoles: {
+          include: {
+            roles: true,
+            leoRoles: true,
+            emsFdRoles: true,
+            leoSupervisorRoles: true,
+            towRoles: true,
+            taxiRoles: true,
+            dispatchRoles: true,
+            courthouseRoles: true,
+          },
+        },
+      },
     });
 
     return updated.discordRoles;
   }
 
-  protected doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
+  private doesRoleExist(roles: { id: string }[], roleId: string | string[]) {
     return roles.some((v) =>
       typeof roleId === "string" ? v.id === roleId : roleId.includes(v.id),
     );
   }
 
-  protected async updateRoles(options: UpdateRolesOptions) {
+  private async updateRoles(options: UpdateRolesOptions) {
     const disconnectConnectArr = manyToManyHelper(
       options.discordRoles.map((v) => v.id),
       options.newRoles,

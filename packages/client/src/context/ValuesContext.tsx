@@ -11,6 +11,7 @@ import {
   ValueType,
   type VehicleValue,
   QualificationValue,
+  CallTypeValue,
 } from "@snailycad/types";
 
 interface ContextValue<T extends ValueType, Custom = Value<T>> {
@@ -40,6 +41,15 @@ interface Context {
   >;
   impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
   qualification: ContextValue<ValueType.QUALIFICATION, QualificationValue>;
+  setValues: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: ValueType;
+        values: Value<ValueType>[];
+      }[]
+    >
+  >;
+  callType: ContextValue<ValueType.IMPOUND_LOT, CallTypeValue>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
@@ -71,7 +81,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
     }, {} as Context);
   }, [values]);
 
-  const value = data;
+  const value = { ...data, setValues };
 
   React.useEffect(() => {
     if (Array.isArray(initialData.values)) {
