@@ -262,7 +262,7 @@ model UserSoundSettings {
 model User2FA {
   id     String @id @default(uuid())
   secret String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }
 
@@ -591,7 +591,7 @@ model Notification {
   id          String   @id @default(uuid())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  executor    User     @relation("executor", fields: [executorId], references: [id])
+  executor    User     @relation("executor", fields: [executorId], references: [id], onDelete: Cascade)
   executorId  String
   title       String
   description String
