@@ -17,6 +17,7 @@
     "activeDeputy": "Активный сотрудник",
     "declareDead": "Объявить мёртвым",
     "declareAlive": "Объявить живым",
+    "myDeputyLogs": "Журнал сотрудников",
     "alert_deleteDeputy": "Вы уверены, что хотите удалить <span>{deputy}</span>? Это действие необратимо."
   }
 }
