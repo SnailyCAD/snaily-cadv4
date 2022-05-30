@@ -222,7 +222,7 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(ticket);
+    await this.handleDiscordWebhook({ ...ticket, violations, seizedItems });
 
     return { ...ticket, violations, seizedItems };
   }
@@ -362,10 +362,16 @@ async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
   );
 }
 
-function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; officer: any }) {
+function createWebhookData(
+  data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen; officer: any },
+) {
   const isWarrant = !("notes" in data);
   const citizen = `${data.citizen.name} ${data.citizen.surname}`;
   const description = !isWarrant ? data.notes : "";
+
+  const totalJailTime = getTotal("jailTime");
+  const totalBail = getTotal("bail");
+  const totalFines = getTotal("fine");
 
   const fields = [
     {
@@ -381,6 +387,9 @@ function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; office
     fields.push(
       { name: "Postal", value: data.postal, inline: true },
       { name: "Record Type", value: data.type.toLowerCase(), inline: true },
+      { name: "Total Bail", value: totalBail, inline: true },
+      { name: "Total Fine amount", value: totalFines, inline: true },
+      { name: "Total Jail Time", value: totalJailTime, inline: true },
     );
   }
 
@@ -393,4 +402,9 @@ function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; office
       },
     ],
   };
+
+  function getTotal(name: "jailTime" | "fine" | "bail") {
+    const total = !isWarrant ? data.violations.reduce((ac, cv) => ac + (cv[name] || 0), 0) : null;
+    return String(total);
+  }
 }
