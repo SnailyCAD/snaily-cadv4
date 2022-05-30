@@ -53,7 +53,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
       "When enabled, this will allow users to create citizens with the same name (name and surname)",
   },
   DISCORD_AUTH: {
-    name: "Allow users to authenticate with Discord.",
+    name: "Allow users to authenticate with Discord",
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
