@@ -6,8 +6,10 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { appendConfidential } from "controllers/leo/search/SearchController";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 const citizenSearchInclude = {
+  ...citizenInclude,
   medicalRecords: { include: { bloodGroup: true } },
   officers: { include: { department: true } },
 };
