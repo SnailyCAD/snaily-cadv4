@@ -276,7 +276,7 @@ export function ActiveCalls() {
                   },
                   caseNumber: `#${call.caseNumber}`,
                   name: `${call.name} ${call.viaDispatch ? `(${leo("dispatch")})` : ""}`,
-                  location: call.location,
+                  location: `${call.location} ${call.postal ? `(${call.postal})` : ""}`,
                   description:
                     call.description && !call.descriptionData ? (
                       <span className="max-w-4xl text-base min-w-[250px] break-words whitespace-pre-wrap">
