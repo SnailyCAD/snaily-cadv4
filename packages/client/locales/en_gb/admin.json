@@ -10,6 +10,7 @@
     "MANAGE_NAME_CHANGE_REQUESTS": "Manage Deed Poll Requests",
     "MANAGE_CAD_SETTINGS": "CAD Settings",
     "MANAGE_CUSTOM_FIELDS": "Manage Custom Fields",
+    "MANAGE_COURTHOUSE": "Manage Courthouse",
     "import": "Import",
     "IMPORT_CITIZENS": "Import Civilians",
     "IMPORT_VEHICLES": "Import Vehicles",
@@ -49,6 +50,9 @@
     "editCustomField": "Edit custom field",
     "noCustomFields": "There are no custom fields yet",
     "deleteCustomField": "Delete Custom Field",
+    "deleteUnit": "Delete Unit",
+    "callsignManagement": "Callsign Management",
+    "alert_deleteUnit": "Are you sure you want to delete <span>{unit}</span>? This action cannot be undone!",
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
     "alert_deleteBusiness": "Are you sure you want to delete this <span>{name}</span>? All it's data will be lost. This action cannot be undone."

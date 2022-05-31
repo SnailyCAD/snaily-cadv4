@@ -17,6 +17,7 @@
     "activeDeputy": "Active Service Member",
     "declareDead": "Declare dead",
     "declareAlive": "Declare alive",
+    "myDeputyLogs": "My member logs",
     "alert_deleteDeputy": "Are you sure you want to delete <span>{deputy}</span>? This action cannot be undone."
   }
 }
