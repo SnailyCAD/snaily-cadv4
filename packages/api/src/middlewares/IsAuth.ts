@@ -15,7 +15,7 @@ export class IsAuth implements MiddlewareMethods {
 
     let user;
     if (apiTokenHeader) {
-      const fakeUser = getUserFromCADAPIToken({ req, apiTokenHeader });
+      const fakeUser = await getUserFromCADAPIToken({ req, apiTokenHeader });
       ctx.set("user", fakeUser);
     } else {
       user = await getUserFromSession({ req });
