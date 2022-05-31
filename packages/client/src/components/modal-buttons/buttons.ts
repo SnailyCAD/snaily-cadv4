@@ -81,8 +81,7 @@ export const notepadBtn: ModalButton = () => ({
   nameKey: ["Leo", "notepad"],
 });
 
-export const create911CallBtn: ModalButton = ({ isDispatch, hasActiveDispatchers }) => ({
+export const create911CallBtn: ModalButton = () => ({
   modalId: ModalIds.Manage911Call,
   nameKey: ["Calls", "create911Call"],
-  isEnabled: isDispatch ? true : !hasActiveDispatchers,
 });
