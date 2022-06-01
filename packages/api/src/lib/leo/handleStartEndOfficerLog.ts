@@ -104,14 +104,17 @@ async function handleUnassignFromCalls<Type extends "leo" | "ems-fd">(
 async function handleUnassignFromActiveIncident<Type extends "leo" | "ems-fd">(
   options: Pick<Options<Type>, "type" | "unit" | "socket">,
 ) {
-  const officer = await prisma.officer.findUnique({
+  const prismaName = getPrismaName(options.type).replace("Id", "") as "officer" | "emsFdDeputy";
+
+  // @ts-expect-error method has same
+  const unit = await prisma[prismaName].findUnique({
     where: { id: options.unit.id },
     select: { id: true, activeIncidentId: true },
   });
 
-  if (!officer?.activeIncidentId) return;
+  if (!unit?.activeIncidentId) return;
   const incident = await prisma.leoIncident.findUnique({
-    where: { id: officer.activeIncidentId },
+    where: { id: unit.activeIncidentId },
     include: incidentInclude,
   });
   if (!incident) return;
