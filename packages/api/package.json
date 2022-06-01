@@ -42,7 +42,7 @@
     "@snailycad/types": "1.6.1",
     "@snailycad/utils": "1.6.1",
     "@tsed/common": "^6.114.14",
-    "@tsed/core": "^6.114.14",
+    "@tsed/core": "^6.114.15",
     "@tsed/di": "^6.114.14",
     "@tsed/exceptions": "^6.114.14",
     "@tsed/json-mapper": "^6.114.14",
