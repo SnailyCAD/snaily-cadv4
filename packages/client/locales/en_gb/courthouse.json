@@ -11,6 +11,21 @@
     "noNameChangeRequests": "There are no deed poll requests.",
     "newName": "New Name",
     "newSurname": "New surname",
-    "status": "Status"
+    "status": "Status",
+    "courtEntries": "Court Entries",
+    "noCourtEntries": "There are no court entries.",
+    "addCourtEntry": "Add court entry",
+    "deleteCourtEntry": "Delete court entry",
+    "manageCourtEntry": "Manage court entry",
+    "caseNumber": "Case Number",
+    "title": "Title",
+    "dates": "Dates",
+    "addDate": "Add Date",
+    "manageCourtDate": "Manage court date",
+    "date": "Date",
+    "note": "Note",
+    "deleteCourtDate": "Delete court date",
+    "alert_deleteCourtEntry": "Are you sure you want to delete this entry? This action cannot be undone.",
+    "alert_deleteCourtDate": "Are you sure you want to delete this court date? This action cannot be undone."
   }
 }
