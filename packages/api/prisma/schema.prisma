@@ -875,6 +875,8 @@ model LeoIncident {
   events               IncidentEvent[]
   calls                Call911[]
   Officer              Officer[]              @relation("activeIncident")
+  CombinedLeoUnit      CombinedLeoUnit[]      @relation("combinedActiveIncident")
+  EmsFdDeputy          EmsFdDeputy[]          @relation("emsfdActiveIncident")
 }
 
 model IncidentEvent {
@@ -900,6 +902,8 @@ model CombinedLeoUnit {
   pairedUnitTemplate        String?
   activeCall                Call911?               @relation("CombinedLeoUnitActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
+  activeIncident            LeoIncident?           @relation("combinedActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId          String?
   lastStatusChangeTimestamp DateTime?
   AssignedUnit              AssignedUnit[]
   IncidentInvolvedUnit      IncidentInvolvedUnit[]
@@ -1131,6 +1135,8 @@ model EmsFdDeputy {
   radioChannelId            String?
   activeCall                Call911?               @relation("emsFdActiveCall", fields: [activeCallId], references: [id])
   activeCallId              String?
+  activeIncident            LeoIncident?           @relation("emsfdActiveIncident", fields: [activeIncidentId], references: [id])
+  activeIncidentId          String?
   whitelistStatus           LeoWhitelistStatus?    @relation(fields: [whitelistStatusId], references: [id])
   whitelistStatusId         String?
   logs                      OfficerLog[]
@@ -1387,4 +1393,5 @@ enum Feature {
   COMMON_CITIZEN_CARDS
   STEAM_OAUTH
   CREATE_USER_CITIZEN_LEO
+  LEO_TICKETS
 }

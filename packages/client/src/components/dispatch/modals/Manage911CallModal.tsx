@@ -28,7 +28,6 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
-import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 
 interface Props {
   call: Full911Call | null;
@@ -52,7 +51,6 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { department, division, codes10, callType } = useValues();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
-  const { hasActiveDispatchers } = useActiveDispatchers();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -62,10 +60,9 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const activeUnit = router.pathname.includes("/officer") ? activeOfficer : activeDeputy;
   const isDispatch = router.pathname.includes("/dispatch") && hasDispatchPermissions;
   const isCitizen = router.pathname.includes("/citizen");
-  const isDisabled = isCitizen ? false : hasActiveDispatchers ? !isDispatch : isCitizen;
-  const isEndDisabled = isDispatch
+  const isDisabled = isDispatch
     ? false
-    : hasActiveDispatchers
+    : call
     ? !call?.assignedUnits.some((u) => u.unit.id === activeUnit?.id)
     : false;
 
@@ -82,7 +79,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   );
 
   function handleEndClick() {
-    if (!call || isEndDisabled) return;
+    if (!call || isDisabled) return;
 
     setShowAlert(true);
   }
@@ -95,7 +92,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   }
 
   async function handleDelete() {
-    if (!call || isEndDisabled) return;
+    if (!call || isDisabled) return;
 
     const { json } = await execute(`/911-calls/${call.id}`, {
       method: "DELETE",
@@ -324,7 +321,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
                     onClick={handleEndClick}
                     type="button"
                     variant="danger"
-                    disabled={isEndDisabled}
+                    disabled={isDisabled}
                   >
                     {t("endCall")}
                   </Button>
@@ -353,7 +350,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
           <CallEventsArea
             onCreate={handleAddUpdateCallEvent}
             onUpdate={handleAddUpdateCallEvent}
-            disabled={isEndDisabled}
+            disabled={isDisabled}
             call={call}
           />
         ) : null}

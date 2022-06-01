@@ -5,7 +5,7 @@
     "shouldDo": "Should Do",
     "color": "Color",
     "callsign": "Callsign",
-    "department": "Force",
+    "department": "Department",
     "gameHash": "Game Hash",
     "file": "file",
     "importValues": "Import via file",
@@ -16,11 +16,14 @@
     "licenseType": "License Type",
     "whitelisted": "Whitelisted",
     "whatPages": "What Pages",
-    "departments": "Forces",
+    "departments": "Departments",
     "isDefaultDepartment": "Default Department",
     "deleteSelectedValues": "Delete Selected Values",
     "isDefault": "Is Default",
-    "defaultOfficerRank": "Default Rank",
+    "defaultOfficerRank": "Default Officer Rank",
+    "pairedUnitTemplate": "Paired Unit Template",
+    "isConfidential": "Is Confidential",
+    "priority": "Priority",
     "alert_deletePenalCodeGroup": "Are you sure you want to delete <span>{group}</span>? This action cannot be undone.",
     "alert_deleteValue": "Are you sure you want to delete <span>{value}</span>? This action cannot be undone!",
     "alert_deleteSelectedValues": "Are you sure you want to delete {length} items? This action cannot be undone"
@@ -68,16 +71,16 @@
     "EDIT": "Edit Business Role"
   },
   "DEPARTMENT": {
-    "MANAGE": "Manage Forces",
-    "ADD": "Add Force",
-    "DELETE": "Delete Force",
-    "EDIT": "Edit Force"
+    "MANAGE": "Manage Departments",
+    "ADD": "Add Department",
+    "DELETE": "Delete Department",
+    "EDIT": "Edit Department"
   },
   "CODES_10": {
-    "MANAGE": "Manage State Codes",
-    "ADD": "Add State Code",
-    "DELETE": "Delete State Code",
-    "EDIT": "Edit State Code"
+    "MANAGE": "Manage 10 Codes",
+    "ADD": "Add 10 Code",
+    "DELETE": "Delete 10 Code",
+    "EDIT": "Edit 10 Code"
   },
   "OFFICER_RANK": {
     "MANAGE": "Manage Officer Ranks",
@@ -86,10 +89,10 @@
     "EDIT": "Edit Officer Rank"
   },
   "PENAL_CODE": {
-    "MANAGE": "Manage Charges",
-    "ADD": "Add Charges",
-    "DELETE": "Delete Charges",
-    "EDIT": "Edit Charges"
+    "MANAGE": "Manage Penal Codes",
+    "ADD": "Add Penal Code",
+    "DELETE": "Delete Penal Code",
+    "EDIT": "Edit Penal Code"
   },
   "DIVISION": {
     "MANAGE": "Manage Divisions",
@@ -98,16 +101,16 @@
     "EDIT": "Edit Division"
   },
   "DRIVERSLICENSE_CATEGORY": {
-    "MANAGE": "Manage DVLA Categories",
+    "MANAGE": "Manage DL Categories",
     "ADD": "Add Category",
     "DELETE": "Delete Category",
     "EDIT": "Edit Category"
   },
   "IMPOUND_LOT": {
-    "MANAGE": "Manage Vehicle Pounds",
-    "ADD": "Add Pound",
-    "DELETE": "Delete Pound",
-    "EDIT": "Edit Pound"
+    "MANAGE": "Manage Impound Lots",
+    "ADD": "Add Impound Lot",
+    "DELETE": "Delete Impound Lot",
+    "EDIT": "Edit Impound Lot"
   },
   "VEHICLE_FLAG": {
     "MANAGE": "Manage Vehicle flags",
@@ -116,9 +119,21 @@
     "EDIT": "Edit vehicle flag"
   },
   "CITIZEN_FLAG": {
-    "MANAGE": "Manage Civilian flags",
+    "MANAGE": "Manage civilian flags",
     "ADD": "Add civilian flag",
     "DELETE": "Delete civilian flag",
     "EDIT": "Edit civilian flag"
+  },
+  "QUALIFICATION": {
+    "MANAGE": "Manage Unit Qualifications",
+    "ADD": "Add Unit Qualification",
+    "DELETE": "Delete Unit Qualification",
+    "EDIT": "Edit Unit Qualification"
+  },
+  "CALL_TYPE": {
+    "MANAGE": "Manage Call Types",
+    "ADD": "Add Call Type",
+    "DELETE": "Delete Call Type",
+    "EDIT": "Edit Call Type"
   }
 }

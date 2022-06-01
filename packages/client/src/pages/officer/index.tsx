@@ -33,6 +33,7 @@ import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
 import { useAuth } from "context/AuthContext";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -92,6 +93,7 @@ export default function OfficerDashboard({
   const { unit, audio, PanicButton } = usePanicButton();
   const { isOpen } = useModal();
   const { user } = useAuth();
+  const { LEO_TICKETS } = useFeatureEnabled();
 
   const { currentResult, setCurrentResult } = useNameSearch();
 
@@ -185,7 +187,9 @@ export default function OfficerDashboard({
       ) : null}
 
       <div>
-        <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+        {LEO_TICKETS ? (
+          <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.TICKET} />
+        ) : null}
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.ARREST_REPORT} />
         <Modals.CreateTicketModal onCreate={handleRecordCreate} type={RecordType.WRITTEN_WARNING} />
       </div>

@@ -176,6 +176,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     description:
       "When enabled, this will allow officers to create citizens and vehicles that don't exist yet when searching for them. This citizen/vehicle will not be connected to any user.",
   },
+  LEO_TICKETS: {
+    name: "LEO Tickets",
+    description: "When enabled, this will allow officers to write tickets to citizens",
+  },
 };
 
 export function CADFeaturesTab() {

@@ -6,7 +6,7 @@ import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
-import { leoProperties, unitProperties } from "lib/leo/activeOfficer";
+import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
 import { validateDuplicateCallsigns } from "lib/leo/validateDuplicateCallsigns";
@@ -79,6 +79,13 @@ export class AdminManageUnitsController {
       unit = await prisma.emsFdDeputy.findUnique({
         where: { id },
         include: { ...unitProperties, ...extraInclude, logs: true },
+      });
+    }
+
+    if (!unit) {
+      unit = await prisma.combinedLeoUnit.findUnique({
+        where: { id },
+        include: combinedUnitProperties,
       });
     }
 

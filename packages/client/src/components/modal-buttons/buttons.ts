@@ -56,7 +56,8 @@ export const createWrittenWarningBtn: ModalButton = () => ({
   nameKey: ["Leo", "createWrittenWarning"],
 });
 
-export const createTicketBtn: ModalButton = () => ({
+export const createTicketBtn: ModalButton = ({ LEO_TICKETS }) => ({
+  isEnabled: LEO_TICKETS,
   modalId: ModalIds.CreateTicket,
   nameKey: ["Leo", "createTicket"],
 });
@@ -81,8 +82,7 @@ export const notepadBtn: ModalButton = () => ({
   nameKey: ["Leo", "notepad"],
 });
 
-export const create911CallBtn: ModalButton = ({ isDispatch, hasActiveDispatchers }) => ({
+export const create911CallBtn: ModalButton = () => ({
   modalId: ModalIds.Manage911Call,
   nameKey: ["Calls", "create911Call"],
-  isEnabled: isDispatch ? true : !hasActiveDispatchers,
 });

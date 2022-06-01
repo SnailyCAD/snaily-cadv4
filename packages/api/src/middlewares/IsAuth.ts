@@ -15,7 +15,7 @@ export class IsAuth implements MiddlewareMethods {
 
     let user;
     if (apiTokenHeader) {
-      const fakeUser = getUserFromCADAPIToken({ req, apiTokenHeader });
+      const fakeUser = await getUserFromCADAPIToken({ req, apiTokenHeader });
       ctx.set("user", fakeUser);
     } else {
       user = await getUserFromSession({ req });
@@ -70,7 +70,7 @@ export function setDiscordAuth(cad: { features?: CadFeature[] } | null) {
   return cad;
 }
 
-export function CAD_SELECT(user?: Pick<User, "rank"> | null) {
+export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {
   return {
     id: true,
     name: true,
@@ -91,5 +91,19 @@ export function CAD_SELECT(user?: Pick<User, "rank"> | null) {
     miscCadSettingsId: true,
     logoId: true,
     discordRolesId: true,
+    discordRoles: includeDiscordRoles
+      ? {
+          include: {
+            roles: true,
+            leoRoles: true,
+            emsFdRoles: true,
+            leoSupervisorRoles: true,
+            towRoles: true,
+            taxiRoles: true,
+            dispatchRoles: true,
+            courthouseRoles: true,
+          },
+        }
+      : undefined,
   };
 }

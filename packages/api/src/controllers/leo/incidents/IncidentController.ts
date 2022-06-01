@@ -15,7 +15,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -118,7 +118,7 @@ export class IncidentController {
     permissions: [Permissions.Dispatch, Permissions.Leo, Permissions.EmsFd],
   })
   async assignToIncident(
-    @PathParams("type") callType: "assign" | "unassign",
+    @PathParams("type") assignType: "assign" | "unassign",
     @PathParams("incidentId") incidentId: string,
     @BodyParams("unit") rawUnitId: string | null,
   ) {
@@ -152,7 +152,7 @@ export class IncidentController {
       },
     });
 
-    if (callType === "assign") {
+    if (assignType === "assign") {
       if (existing) {
         throw new BadRequest("alreadyAssignedToCall");
       }
@@ -173,17 +173,23 @@ export class IncidentController {
       });
     }
 
-    if (type === "leo") {
-      await prisma.officer.update({
-        where: { id: unit.id },
-        data: { activeIncidentId: callType === "assign" ? incidentId : null },
-      });
+    const prismaNames = {
+      leo: "officer",
+      "ems-fd": "emsFdDeputy",
+      combined: "combinedLeoUnit",
+    } as const;
+    const prismaName = prismaNames[type];
 
-      await Promise.all([
-        this.socket.emitUpdateOfficerStatus(),
-        this.socket.emitUpdateDeputyStatus(),
-      ]);
-    }
+    // @ts-expect-error method has same properties
+    await prisma[prismaName].update({
+      where: { id: unit.id },
+      data: { activeIncidentId: assignType === "assign" ? incidentId : null },
+    });
+
+    await Promise.all([
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     const updated = await prisma.leoIncident.findUnique({
       where: {
@@ -230,12 +236,13 @@ export class IncidentController {
 
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
-        if (unit.officerId) {
-          await prisma.officer.update({
-            where: { id: unit.officerId },
-            data: { activeIncidentId: null },
-          });
-        }
+        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+
+        // @ts-expect-error method has the same properties
+        await prisma[prismaName].update({
+          where: { id: unitId },
+          data: { activeIncidentId: null },
+        });
       }),
     );
 
@@ -270,6 +277,7 @@ export class IncidentController {
 
     this.socket.emitUpdateActiveIncident(corrected);
     await this.socket.emitUpdateOfficerStatus();
+    await this.socket.emitUpdateDeputyStatus();
 
     return corrected;
   }
@@ -315,7 +323,7 @@ export class IncidentController {
           combined: "combinedLeoId",
           leo: "officerId",
           "ems-fd": "emsFdDeputyId",
-        };
+        } as const;
 
         const assignmentCount = await prisma.incidentInvolvedUnit.count({
           where: {
@@ -347,12 +355,16 @@ export class IncidentController {
           },
         });
 
-        if (type === "leo") {
-          await prisma.officer.update({
-            where: { id: unit.id },
-            data: { activeIncidentId: incidentId },
-          });
-        }
+        const prismaName =
+          type === "combined"
+            ? "combinedLeoUnit"
+            : (types[type].replace("Id", "") as "officer" | "emsFdDeputy");
+
+        // @ts-expect-error method has the same properties
+        await prisma[prismaName].update({
+          where: { id: unit.id },
+          data: { activeIncidentId: incidentId },
+        });
 
         await prisma.leoIncident.update({
           where: { id: incidentId },

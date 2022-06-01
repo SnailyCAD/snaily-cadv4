@@ -14,6 +14,7 @@ import { ManageRecordModal } from "../modals/ManageRecordModal";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
+import { HoverCard } from "components/shared/HoverCard";
 
 interface Props {
   search: string;
@@ -83,7 +84,17 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               officer: `${callsign} ${officerName}`,
               postal: record.postal || common("none"),
-              notes: record.notes || common("none"),
+              notes: (
+                <HoverCard
+                  trigger={
+                    <span className="block max-w-[300px] truncate cursor-help">
+                      {record.notes || common("none")}
+                    </span>
+                  }
+                >
+                  {record.notes}
+                </HoverCard>
+              ),
               violations:
                 record.violations.map((v) => v.penalCode.title).join(", ") || common("none"),
               createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",

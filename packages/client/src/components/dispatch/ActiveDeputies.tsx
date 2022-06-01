@@ -29,9 +29,12 @@ import { DndActions } from "types/DndActions";
 import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
+import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
+import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
 
 export function ActiveDeputies() {
   const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { activeIncidents } = useActiveIncidents();
   const { setStatus } = useUnitStatusChange({ setUnits: setActiveDeputies, units: activeDeputies });
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -41,7 +44,7 @@ export function ActiveDeputies() {
   const { makeImageUrl } = useImageUrl();
   const { hasActiveDispatchers } = useActiveDispatchers();
   const { codes10 } = useValues();
-  const { RADIO_CHANNEL_MANAGEMENT } = useFeatureEnabled();
+  const { RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
   const { calls } = useDispatchState();
@@ -95,6 +98,8 @@ export function ActiveDeputies() {
                 const color = deputy.status?.color;
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
 
+                const activeIncident =
+                  activeIncidents.find((v) => v.id === deputy.activeIncidentId) ?? null;
                 const activeCall = calls.find((v) => v.id === deputy.activeCallId) ?? null;
 
                 const codesMapped = codes10.values
@@ -160,6 +165,9 @@ export function ActiveDeputies() {
                     </span>
                   ),
                   radioChannel: <UnitRadioChannelModal unit={deputy} />,
+                  incident: (
+                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                  ),
                   activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   actions: isDispatch ? (
                     <Button
@@ -183,6 +191,7 @@ export function ActiveDeputies() {
               RADIO_CHANNEL_MANAGEMENT
                 ? { Header: t("Leo.radioChannel"), accessor: "radioChannel" }
                 : null,
+              ACTIVE_INCIDENTS ? { Header: t("Leo.incident"), accessor: "incident" } : null,
               { Header: t("Leo.activeCall"), accessor: "activeCall" },
               isDispatch ? { Header: common("actions"), accessor: "actions" } : null,
             ]}
