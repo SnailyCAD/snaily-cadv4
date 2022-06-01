@@ -29,7 +29,7 @@
     "@react-aria/focus": "^3.5.5",
     "@react-aria/interactions": "^3.8.4",
     "@react-aria/label": "^3.2.5",
-    "@react-aria/ssr": "^3.1.2",
+    "@react-aria/ssr": "^3.2.0",
     "@snailycad/config": "1.6.1",
     "@snailycad/permissions": "1.6.1",
     "@snailycad/schemas": "1.6.1",
