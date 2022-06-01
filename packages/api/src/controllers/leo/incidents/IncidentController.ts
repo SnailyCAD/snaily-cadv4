@@ -15,7 +15,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
+import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 
 export const incidentInclude = {
   creator: { include: leoProperties },
@@ -236,26 +236,13 @@ export class IncidentController {
 
     await Promise.all(
       incident.unitsInvolved.map(async (unit) => {
-        const prismaNames = {
-          officerId: "officer",
-          combinedLeoId: "combinedLeoUnit",
-          emsFdDeputyId: "emsFdDeputy",
-        } as const;
+        const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
 
-        let prismaName: typeof prismaNames[keyof typeof prismaNames];
-        for (const name in prismaNames) {
-          const unitId = unit[name as keyof typeof prismaNames];
-          if (unitId) {
-            prismaName = prismaNames[name as keyof typeof prismaNames];
-
-            // @ts-expect-error method has the same properties
-            await prisma[prismaName].update({
-              where: { id: unitId },
-              data: { activeIncidentId: null },
-            });
-            break;
-          }
-        }
+        // @ts-expect-error method has the same properties
+        await prisma[prismaName].update({
+          where: { id: unitId },
+          data: { activeIncidentId: null },
+        });
       }),
     );
 

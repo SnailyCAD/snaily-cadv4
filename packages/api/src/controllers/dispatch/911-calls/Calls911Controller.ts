@@ -24,7 +24,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter } from "lib/leo/utils";
+import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
 import { hasPermission } from "@snailycad/permissions";
@@ -318,22 +318,39 @@ export class Calls911Controller {
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
       where: { id },
+      include: { assignedUnits: true },
     });
 
     if (!call || call.ended) {
       throw new NotFound("callNotFound");
     }
 
-    await prisma.call911.update({
-      where: {
-        id: call.id,
-      },
-      data: {
-        ended: true,
-      },
+    const unitPromises = call.assignedUnits.map(async (unit) => {
+      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+
+      // @ts-expect-error method has the same properties
+      return prisma[prismaName].update({
+        where: { id: unitId },
+        data: { activeCallId: null },
+      });
     });
 
-    this.socket.emit911CallDelete(call);
+    await Promise.all([
+      ...unitPromises,
+      prisma.assignedUnit.deleteMany({
+        where: { call911Id: call.id },
+      }),
+      prisma.call911.update({
+        where: { id: call.id },
+        data: { ended: true },
+      }),
+    ]);
+
+    await Promise.all([
+      this.socket.emit911CallDelete(call),
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     return true;
   }
