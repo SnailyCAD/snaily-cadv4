@@ -19,6 +19,7 @@ import { NameChangeRequestTab } from "components/courthouse/name-change/NameChan
 import { CourtEntriesTab } from "components/courthouse/court-entries/CourtEntriesTab";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
@@ -60,7 +61,7 @@ export default function Courthouse(props: Props) {
         <ExpungementRequestsTab requests={props.requests} />
         <NameChangeRequestTab requests={props.nameChangeRequests} />
         {hasEntriesPerms ? <CourtEntriesTab entries={props.courtEntries} /> : null}
-        {COURTHOUSE_POSTS ? null : null}
+        {COURTHOUSE_POSTS ? <CourthousePostsTab posts={[]} /> : null}
       </TabList>
     </Layout>
   );

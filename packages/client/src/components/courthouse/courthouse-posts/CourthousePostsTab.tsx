@@ -7,10 +7,11 @@ import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import type { CourthousePost } from "@snailycad/types";
 import { FullDate } from "components/shared/FullDate";
-import { ManageCourtEntry } from "./ManageCourtEntry";
+import { ManageCourtPostModal } from "./ManageCourtPostModal";
 import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { usePermission, Permissions } from "hooks/usePermission";
 
 interface Props {
   posts: CourthousePost[];
@@ -24,6 +25,8 @@ export function CourthousePostsTab(props: Props) {
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
+  const { hasPermissions } = usePermission();
+  const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts], true);
 
   async function deleteCourtEntry() {
     if (!tempPost) return;
@@ -44,7 +47,7 @@ export function CourthousePostsTab(props: Props) {
 
   function handleManageClick(post: CourthousePost) {
     setTempPost(post);
-    openModal(ModalIds.ManageCourtEntry);
+    openModal(ModalIds.ManageCourthousePost);
   }
 
   function handleDeleteClick(post: CourthousePost) {
@@ -57,7 +60,9 @@ export function CourthousePostsTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("courtEntries")}</h3>
 
-        <Button onClick={() => openModal(ModalIds.ManageCourtEntry)}>{t("addCourtEntry")}</Button>
+        <Button onClick={() => openModal(ModalIds.ManageCourthousePost)}>
+          {t("addCourtEntry")}
+        </Button>
       </header>
 
       {posts.length <= 0 ? (
@@ -93,33 +98,36 @@ export function CourthousePostsTab(props: Props) {
             { Header: t("title"), accessor: "title" },
             { Header: common("description"), accessor: "description" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            { Header: common("actions"), accessor: "actions" },
+            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
           ]}
         />
       )}
+      {hasManagePermissions ? (
+        <>
+          <AlertModal
+            id={ModalIds.AlertDeleteCourtEntry}
+            title={t("deleteCourtEntry")}
+            description={t("alert_deleteCourtEntry")}
+            onDeleteClick={deleteCourtEntry}
+            onClose={() => setTempPost(null)}
+            state={state}
+          />
+          <ManageCourtPostModal
+            post={tempPost}
+            onCreate={(entry) => setPosts((p) => [entry, ...p])}
+            onUpdate={(entry) =>
+              tempPost &&
+              setPosts((p) => {
+                const idx = p.indexOf(tempPost);
+                p[idx] = entry;
+                return p;
+              })
+            }
+            onClose={() => setTempPost(null)}
+          />
+        </>
+      ) : null}
 
-      <AlertModal
-        id={ModalIds.AlertDeleteCourtEntry}
-        title={t("deleteCourtEntry")}
-        description={t("alert_deleteCourtEntry")}
-        onDeleteClick={deleteCourtEntry}
-        onClose={() => setTempPost(null)}
-        state={state}
-      />
-
-      <ManageCourtEntry
-        courtEntry={tempPost}
-        onCreate={(entry) => setPosts((p) => [entry, ...p])}
-        onUpdate={(entry) =>
-          tempPost &&
-          setPosts((p) => {
-            const idx = p.indexOf(tempPost);
-            p[idx] = entry;
-            return p;
-          })
-        }
-        onClose={() => setTempPost(null)}
-      />
       {tempPost?.descriptionData ? (
         <DescriptionModal onClose={() => setTempPost(null)} value={tempPost.descriptionData} />
       ) : null}

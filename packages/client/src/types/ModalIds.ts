@@ -79,6 +79,7 @@ export const enum ModalIds {
   RequestNameChange = "RequestNameChangeModal",
   ManageCourtEntry = "ManageCourtEntryModal",
   ManageCourtDate = "ManageCourtDateModal",
+  ManageCourthousePost = "ManageCourthousePostModal",
 
   Description = "DescriptionModal",
   ManageNote = "ManageNoteModal",
