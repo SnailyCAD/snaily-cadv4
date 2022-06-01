@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@swc/core": "^1.2.194",
-    "@swc/helpers": "^0.3.16",
+    "@swc/helpers": "^0.3.17",
     "@types/bcrypt": "^5.0.0",
     "@types/compression": "^1.7.2",
     "@types/cookie": "^0.5.1",
