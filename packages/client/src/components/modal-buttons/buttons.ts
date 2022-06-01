@@ -56,7 +56,8 @@ export const createWrittenWarningBtn: ModalButton = () => ({
   nameKey: ["Leo", "createWrittenWarning"],
 });
 
-export const createTicketBtn: ModalButton = () => ({
+export const createTicketBtn: ModalButton = ({ LEO_TICKETS }) => ({
+  isEnabled: LEO_TICKETS,
   modalId: ModalIds.CreateTicket,
   nameKey: ["Leo", "createTicket"],
 });
