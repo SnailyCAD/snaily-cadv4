@@ -246,6 +246,7 @@ model User {
   ActiveDispatchers    ActiveDispatchers[]
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
+  CourthousePost       CourthousePost[]
 }
 
 model UserSoundSettings {
@@ -1195,6 +1196,17 @@ model CustomFieldValue {
   Weapons            Weapon[]
 }
 
+// courthouse posts
+model CourthousePost {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  title           String   @db.VarChar(255)
+  descriptionData Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
 enum QualificationValueType {
   QUALIFICATION
   AWARD
@@ -1394,4 +1406,5 @@ enum Feature {
   STEAM_OAUTH
   CREATE_USER_CITIZEN_LEO
   LEO_TICKETS
+  COURTHOUSE_POSTS
 }

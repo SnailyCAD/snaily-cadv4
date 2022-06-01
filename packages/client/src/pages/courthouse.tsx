@@ -18,6 +18,7 @@ import { ExpungementRequestsTab } from "components/courthouse/expungement-reques
 import { NameChangeRequestTab } from "components/courthouse/name-change/NameChangeRequestTab";
 import { CourtEntriesTab } from "components/courthouse/court-entries/CourtEntriesTab";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
@@ -33,6 +34,7 @@ interface Props {
 
 export default function Courthouse(props: Props) {
   const t = useTranslations("Courthouse");
+  const { COURTHOUSE_POSTS } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
   const hasEntriesPerms = hasPermissions([Permissions.Leo], (u) => u.isLeo);
 
@@ -45,6 +47,11 @@ export default function Courthouse(props: Props) {
     TABS[2] = { name: t("courtEntries"), value: "courtEntriesTab" };
   }
 
+  if (COURTHOUSE_POSTS) {
+    const idx = hasEntriesPerms ? 3 : 2;
+    TABS[idx] = { name: "courthousePosts", value: "courthousePosts" };
+  }
+
   return (
     <Layout className="dark:text-white">
       <Title className="mb-3">{t("courthouse")}</Title>
@@ -53,6 +60,7 @@ export default function Courthouse(props: Props) {
         <ExpungementRequestsTab requests={props.requests} />
         <NameChangeRequestTab requests={props.nameChangeRequests} />
         {hasEntriesPerms ? <CourtEntriesTab entries={props.courtEntries} /> : null}
+        {COURTHOUSE_POSTS ? null : null}
       </TabList>
     </Layout>
   );
