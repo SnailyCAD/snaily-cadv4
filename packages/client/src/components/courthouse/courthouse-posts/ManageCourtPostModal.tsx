@@ -16,8 +16,8 @@ import { DEFAULT_EDITOR_DATA, Editor } from "components/modal/DescriptionModal/E
 interface Props {
   post: CourthousePost | null;
   onClose?(): void;
-  onCreate?(entry: CourthousePost): void;
-  onUpdate?(entry: CourthousePost): void;
+  onCreate?(post: CourthousePost): void;
+  onUpdate?(post: CourthousePost): void;
 }
 
 export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Props) {

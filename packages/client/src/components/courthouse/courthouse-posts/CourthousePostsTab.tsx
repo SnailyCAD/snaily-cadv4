@@ -28,15 +28,15 @@ export function CourthousePostsTab(props: Props) {
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageCourthousePosts], true);
 
-  async function deleteCourtEntry() {
+  async function deleteCourthousePost() {
     if (!tempPost) return;
 
-    const { json } = await execute(`/court-entries/${tempPost.id}`, { method: "DELETE" });
+    const { json } = await execute(`/courthouse-posts/${tempPost.id}`, { method: "DELETE" });
 
     if (typeof json === "boolean") {
       setPosts((p) => p.filter((v) => v.id !== tempPost.id));
       setTempPost(null);
-      closeModal(ModalIds.AlertDeleteCourtEntry);
+      closeModal(ModalIds.AlertDeleteCourthousePost);
     }
   }
 
@@ -52,7 +52,7 @@ export function CourthousePostsTab(props: Props) {
 
   function handleDeleteClick(post: CourthousePost) {
     setTempPost(post);
-    openModal(ModalIds.AlertDeleteCourtEntry);
+    openModal(ModalIds.AlertDeleteCourthousePost);
   }
 
   return (
@@ -71,27 +71,27 @@ export function CourthousePostsTab(props: Props) {
         <p className="mt-5">{t("noCourthousePosts")}</p>
       ) : (
         <Table
-          data={posts.map((entry) => ({
-            title: entry.title,
-            createdAt: <FullDate>{entry.createdAt}</FullDate>,
+          data={posts.map((post) => ({
+            title: post.title,
+            createdAt: <FullDate>{post.createdAt}</FullDate>,
 
             actions: (
               <>
-                <Button small onClick={() => handleViewDescription(entry)}>
+                <Button small onClick={() => handleViewDescription(post)}>
                   {common("viewDescription")}
                 </Button>
                 {hasManagePermissions ? (
                   <>
                     <Button
                       className="ml-2"
-                      onClick={() => handleManageClick(entry)}
+                      onClick={() => handleManageClick(post)}
                       small
                       variant="success"
                     >
                       {common("manage")}
                     </Button>
                     <Button
-                      onClick={() => handleDeleteClick(entry)}
+                      onClick={() => handleDeleteClick(post)}
                       className="ml-2"
                       small
                       variant="danger"
@@ -114,21 +114,21 @@ export function CourthousePostsTab(props: Props) {
       {hasManagePermissions ? (
         <>
           <AlertModal
-            id={ModalIds.AlertDeleteCourtEntry}
-            title={t("deleteCourtEntry")}
-            description={t("alert_deleteCourtEntry")}
-            onDeleteClick={deleteCourtEntry}
+            id={ModalIds.AlertDeleteCourthousePost}
+            title={t("deleteCourthousePost")}
+            description={t("alert_deleteCourthousePost")}
+            onDeleteClick={deleteCourthousePost}
             onClose={() => setTempPost(null)}
             state={state}
           />
           <ManageCourtPostModal
             post={tempPost}
-            onCreate={(entry) => setPosts((p) => [entry, ...p])}
-            onUpdate={(entry) =>
+            onCreate={(post) => setPosts((p) => [post, ...p])}
+            onUpdate={(post) =>
               tempPost &&
               setPosts((p) => {
                 const idx = p.indexOf(tempPost);
-                p[idx] = entry;
+                p[idx] = post;
                 return p;
               })
             }
