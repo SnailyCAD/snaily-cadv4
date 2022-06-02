@@ -258,7 +258,10 @@ export class StatusController {
 
 interface HandlePanicButtonPressedOptions {
   status: StatusValue;
-  unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
+  unit: (
+    | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
+    | CombinedLeoUnit
+  ) & {
     status?: StatusValue | null;
   };
   cad: cad & { miscCadSettings: MiscCadSettings };
