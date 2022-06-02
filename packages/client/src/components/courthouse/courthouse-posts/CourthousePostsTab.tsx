@@ -60,9 +60,11 @@ export function CourthousePostsTab(props: Props) {
       <header className="flex justify-between items-center">
         <h3 className="text-2xl font-semibold">{t("courthousePosts")}</h3>
 
-        <Button onClick={() => openModal(ModalIds.ManageCourthousePost)}>
-          {t("addCourthousePost")}
-        </Button>
+        {hasManagePermissions ? (
+          <Button onClick={() => openModal(ModalIds.ManageCourthousePost)}>
+            {t("addCourthousePost")}
+          </Button>
+        ) : null}
       </header>
 
       {posts.length <= 0 ? (
