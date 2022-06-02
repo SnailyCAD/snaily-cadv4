@@ -180,6 +180,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "LEO Tickets",
     description: "When enabled, this will allow officers to write tickets to citizens",
   },
+  COURTHOUSE_POSTS: {
+    name: "Courthouse Posts",
+    description:
+      "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
+  },
 };
 
 export function CADFeaturesTab() {
