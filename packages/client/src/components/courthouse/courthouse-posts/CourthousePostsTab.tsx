@@ -56,52 +56,59 @@ export function CourthousePostsTab(props: Props) {
   }
 
   return (
-    <TabsContent value="courtEntriesTab">
+    <TabsContent value="courthousePosts">
       <header className="flex justify-between items-center">
-        <h3 className="text-2xl font-semibold">{t("courtEntries")}</h3>
+        <h3 className="text-2xl font-semibold">{t("courthousePosts")}</h3>
 
         <Button onClick={() => openModal(ModalIds.ManageCourthousePost)}>
-          {t("addCourtEntry")}
+          {t("addCourthousePost")}
         </Button>
       </header>
 
       {posts.length <= 0 ? (
-        <p className="mt-5">{t("noCourtEntries")}</p>
+        <p className="mt-5">{t("noCourthousePosts")}</p>
       ) : (
         <Table
-          defaultSort={{ columnId: "createdAt", descending: true }}
           data={posts.map((entry) => ({
             title: entry.title,
             createdAt: <FullDate>{entry.createdAt}</FullDate>,
-            description: (
-              <Button small onClick={() => handleViewDescription(entry)}>
-                {common("viewDescription")}
-              </Button>
-            ),
+
             actions: (
               <>
-                <Button onClick={() => handleManageClick(entry)} small variant="success">
-                  {common("manage")}
+                <Button small onClick={() => handleViewDescription(entry)}>
+                  {common("viewDescription")}
                 </Button>
-                <Button
-                  onClick={() => handleDeleteClick(entry)}
-                  className="ml-2"
-                  small
-                  variant="danger"
-                >
-                  {common("delete")}
-                </Button>
+                {hasManagePermissions ? (
+                  <>
+                    <Button
+                      className="ml-2"
+                      onClick={() => handleManageClick(entry)}
+                      small
+                      variant="success"
+                    >
+                      {common("manage")}
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteClick(entry)}
+                      className="ml-2"
+                      small
+                      variant="danger"
+                    >
+                      {common("delete")}
+                    </Button>
+                  </>
+                ) : null}
               </>
             ),
           }))}
           columns={[
             { Header: t("title"), accessor: "title" },
-            { Header: common("description"), accessor: "description" },
             { Header: common("createdAt"), accessor: "createdAt" },
-            hasManagePermissions ? { Header: common("actions"), accessor: "actions" } : null,
+            { Header: common("actions"), accessor: "actions" },
           ]}
         />
       )}
+
       {hasManagePermissions ? (
         <>
           <AlertModal

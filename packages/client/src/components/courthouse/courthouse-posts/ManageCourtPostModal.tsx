@@ -1,4 +1,4 @@
-import { COURT_ENTRY_SCHEMA } from "@snailycad/schemas";
+import { COURTHOUSE_POST_SCHEMA } from "@snailycad/schemas";
 import type { CourthousePost } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -26,7 +26,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
   const { state, execute } = useFetch();
   const t = useTranslations("Courthouse");
 
-  const validate = handleValidate(COURT_ENTRY_SCHEMA);
+  const validate = handleValidate(COURTHOUSE_POST_SCHEMA);
   const INITIAL_VALUES = {
     descriptionData: post?.descriptionData ?? DEFAULT_EDITOR_DATA,
     title: post?.title ?? "",
@@ -42,7 +42,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
     if (post) {
-      const { json } = await execute(`/court-posts/${post.id}`, {
+      const { json } = await execute(`/courthouse-posts/${post.id}`, {
         method: "PUT",
         data: values,
         helpers,
@@ -53,7 +53,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
         closeModal(ModalIds.ManageCourthousePost);
       }
     } else {
-      const { json } = await execute("/court-posts", {
+      const { json } = await execute("/courthouse-posts", {
         method: "POST",
         data: values,
         helpers,
@@ -70,7 +70,7 @@ export function ManageCourtPostModal({ post, onClose, onCreate, onUpdate }: Prop
     <Modal
       onClose={handleClose}
       isOpen={isOpen(ModalIds.ManageCourthousePost)}
-      title={t("manageCourthousePost")}
+      title={post ? t("manageCourthousePost") : t("addCourthousePost")}
       className="w-[750px]"
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
