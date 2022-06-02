@@ -27,10 +27,16 @@ import { findNextAvailableIncremental } from "lib/leo/findNextAvailableIncrement
 import { handleWhitelistStatus } from "lib/leo/handleWhitelistStatus";
 import { filterInactiveUnits, setInactiveUnitsOffDuty } from "lib/leo/setInactiveUnitsOffDuty";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
+import { Socket } from "services/SocketService";
 
 @Controller("/ems-fd")
 @UseBeforeEach(IsAuth)
 export class EmsFdController {
+  private socket: Socket;
+  constructor(socket: Socket) {
+    this.socket = socket;
+  }
+
   @Get("/")
   @UsePermissions({
     fallback: (u) => u.isEmsFd,
@@ -371,6 +377,70 @@ export class EmsFdController {
     });
 
     return updated;
+  }
+
+  @Post("/panic-button")
+  @Description("Set the panic button for an ems-fd deputy by their id")
+  @UsePermissions({
+    fallback: (u) => u.isEmsFd,
+    permissions: [Permissions.EmsFd],
+  })
+  async panicButton(@Context("user") user: User, @BodyParams("deputyId") deputyId: string) {
+    let deputy = await prisma.emsFdDeputy.findFirst({
+      where: {
+        id: deputyId,
+        // @ts-expect-error `API_TOKEN` is a rank that gets appended in `IsAuth`
+        userId: user.rank === "API_TOKEN" ? undefined : user.id,
+      },
+      include: unitProperties,
+    });
+
+    if (!deputy) {
+      throw new NotFound("deputyNotFound");
+    }
+
+    const code = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: ShouldDoType.PANIC_BUTTON,
+      },
+    });
+
+    let panicType: "ON" | "OFF" = "ON";
+    if (code) {
+      /**
+       * deputy is already in panic-mode -> set status back to `ON_DUTY`
+       */
+      if (deputy.statusId === code?.id) {
+        const onDutyCode = await prisma.statusValue.findFirst({
+          where: {
+            shouldDo: ShouldDoType.SET_ON_DUTY,
+          },
+        });
+
+        if (!onDutyCode) {
+          throw new BadRequest("mustHaveOnDutyCode");
+        }
+
+        panicType = "OFF";
+        deputy = await prisma.emsFdDeputy.update({
+          where: { id: deputy.id },
+          data: { statusId: onDutyCode?.id },
+          include: unitProperties,
+        });
+      } else {
+        /**
+         * deputy is not yet in panic-mode -> set status to panic button status
+         */
+        deputy = await prisma.emsFdDeputy.update({
+          where: { id: deputy.id },
+          data: { statusId: code.id },
+          include: unitProperties,
+        });
+      }
+    }
+
+    await this.socket.emitUpdateDeputyStatus();
+    this.socket.emitPanicButtonLeo(deputy, panicType);
   }
 
   @Post("/image/:id")
