@@ -11,6 +11,7 @@ import {
   Officer,
   CombinedLeoUnit,
   IncidentEvent,
+  EmsFdDeputy,
 } from "@prisma/client";
 import { prisma } from "lib/prisma";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
@@ -127,11 +128,11 @@ export class Socket {
     this.io.sockets.emit(SocketEvents.Signal100, value);
   }
 
-  emitPanicButtonLeo(officer: CombinedLeoUnit | Officer | null, type?: "ON" | "OFF") {
+  emitPanicButtonLeo(unit: CombinedLeoUnit | Officer | EmsFdDeputy | null, type?: "ON" | "OFF") {
     if (type === "OFF") {
-      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, officer);
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_OFF, unit);
     } else {
-      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, officer);
+      this.io.sockets.emit(SocketEvents.PANIC_BUTTON_ON, unit);
     }
   }
 

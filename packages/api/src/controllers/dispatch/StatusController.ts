@@ -129,6 +129,17 @@ export class StatusController {
         status: code,
         unit,
       });
+    } else if (type === "ems-fd") {
+      const fullDeputy = await prisma.emsFdDeputy.findUnique({
+        where: { id: unit.id },
+        include: unitProperties,
+      });
+
+      await this.handlePanicButtonPressed({
+        cad,
+        status: code,
+        unit: fullDeputy!,
+      });
     }
 
     // reset all units for user
