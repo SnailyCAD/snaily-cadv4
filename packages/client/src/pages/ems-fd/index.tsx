@@ -18,6 +18,7 @@ import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
+import { usePanicButton } from "hooks/shared/usePanicButton";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -43,6 +44,7 @@ const SearchMedicalRecordModal = dynamic(async () => {
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
   const { signal100Enabled, audio, Component } = useSignal100();
+  const { unit, audio: panicAudio, PanicButton } = usePanicButton();
 
   const state = useEmsFdState();
   const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
@@ -63,6 +65,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
     >
       <Title renderLayoutTitle={false}>{t("Ems.emsFd")}</Title>
 
+      <PanicButton audio={panicAudio} unit={unit} />
       <Component enabled={signal100Enabled} audio={audio} />
 
       <UtilityPanel>
@@ -89,10 +92,14 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         <ActiveDeputies />
       </div>
 
-      <SelectDeputyModal />
-      <NotepadModal />
-      <CreateMedicalRecordModal />
-      <SearchMedicalRecordModal />
+      {state.activeDeputy ? (
+        <>
+          <SelectDeputyModal />
+          <NotepadModal />
+          <CreateMedicalRecordModal />
+          <SearchMedicalRecordModal />
+        </>
+      ) : null}
     </Layout>
   );
 }

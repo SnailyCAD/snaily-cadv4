@@ -9,14 +9,22 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import { unitProperties, _leoProperties } from "lib/leo/activeOfficer";
 import { validateSchema } from "lib/validateSchema";
-import { type cad, User, MiscCadSettings, Call911, DiscordWebhookType, Rank } from "@prisma/client";
+import {
+  type cad,
+  User,
+  MiscCadSettings,
+  Call911,
+  DiscordWebhookType,
+  Rank,
+  ShouldDoType,
+} from "@prisma/client";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
 import type { APIEmbed } from "discord-api-types/v10";
 import { manyToManyHelper } from "utils/manyToMany";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
-import { getInactivityFilter } from "lib/leo/utils";
+import { getInactivityFilter, getPrismaNameActiveCallIncident } from "lib/leo/utils";
 import { assignUnitsToCall } from "lib/calls/assignUnitsToCall";
 import { linkOrUnlinkCallDepartmentsAndDivisions } from "lib/calls/linkOrUnlinkCallDepartmentsAndDivisions";
 import { hasPermission } from "@snailycad/permissions";
@@ -310,22 +318,39 @@ export class Calls911Controller {
   async end911Call(@PathParams("id") id: string) {
     const call = await prisma.call911.findUnique({
       where: { id },
+      include: { assignedUnits: true },
     });
 
     if (!call || call.ended) {
       throw new NotFound("callNotFound");
     }
 
-    await prisma.call911.update({
-      where: {
-        id: call.id,
-      },
-      data: {
-        ended: true,
-      },
+    const unitPromises = call.assignedUnits.map(async (unit) => {
+      const { prismaName, unitId } = getPrismaNameActiveCallIncident({ unit });
+
+      // @ts-expect-error method has the same properties
+      return prisma[prismaName].update({
+        where: { id: unitId },
+        data: { activeCallId: null },
+      });
     });
 
-    this.socket.emit911CallDelete(call);
+    await Promise.all([
+      ...unitPromises,
+      prisma.assignedUnit.deleteMany({
+        where: { call911Id: call.id },
+      }),
+      prisma.call911.update({
+        where: { id: call.id },
+        data: { ended: true },
+      }),
+    ]);
+
+    await Promise.all([
+      this.socket.emit911CallDelete(call),
+      this.socket.emitUpdateOfficerStatus(),
+      this.socket.emitUpdateDeputyStatus(),
+    ]);
 
     return true;
   }
@@ -433,10 +458,16 @@ export class Calls911Controller {
       combined: "combinedLeoUnit",
     };
 
+    const assignedToStatus = await prisma.statusValue.findFirst({
+      where: {
+        shouldDo: callType === "assign" ? ShouldDoType.SET_ASSIGNED : ShouldDoType.SET_ON_DUTY,
+      },
+    });
+
     // @ts-expect-error they have the same properties for updating
     await prisma[prismaNames[type]].update({
       where: { id: unit.id },
-      data: { activeCallId: callType === "assign" ? callId : null },
+      data: { activeCallId: callType === "assign" ? callId : null, statusId: assignedToStatus?.id },
     });
 
     await Promise.all([
@@ -456,7 +487,7 @@ export class Calls911Controller {
     return officerOrDeputyToUnit(updated);
   }
 
-  protected async endInactiveCalls(updatedAt: Date) {
+  private async endInactiveCalls(updatedAt: Date) {
     await prisma.call911.updateMany({
       where: { updatedAt: { not: { gte: updatedAt } } },
       data: {

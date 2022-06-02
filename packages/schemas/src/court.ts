@@ -23,3 +23,8 @@ export const COURT_ENTRY_SCHEMA = z.object({
   descriptionData: z.any().nullable().optional(),
   dates: z.array(COURT_DATE_SCHEMA),
 });
+
+export const COURTHOUSE_POST_SCHEMA = z.object({
+  title: z.string().min(2),
+  descriptionData: z.any().nullable().optional(),
+});

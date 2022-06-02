@@ -53,7 +53,7 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
       "When enabled, this will allow users to create citizens with the same name (name and surname)",
   },
   DISCORD_AUTH: {
-    name: "Allow users to authenticate with Discord.",
+    name: "Allow users to authenticate with Discord",
     description: (
       <>
         When enabled, this will allow users to login and register with Discord.{" "}
@@ -175,6 +175,15 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Create non-existing citizens/vehicles (LEO)",
     description:
       "When enabled, this will allow officers to create citizens and vehicles that don't exist yet when searching for them. This citizen/vehicle will not be connected to any user.",
+  },
+  LEO_TICKETS: {
+    name: "LEO Tickets",
+    description: "When enabled, this will allow officers to write tickets to citizens",
+  },
+  COURTHOUSE_POSTS: {
+    name: "Courthouse Posts",
+    description:
+      "When enabled, this will allow users with the correct permissions to create posts in the courthouse. These posts will be visible to anyone.",
   },
 };
 

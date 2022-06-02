@@ -1,4 +1,11 @@
-import { MiscCadSettings, JailTimeScale } from "@prisma/client";
+import {
+  MiscCadSettings,
+  JailTimeScale,
+  CombinedLeoUnit,
+  Officer,
+  AssignedUnit,
+  IncidentInvolvedUnit,
+} from "@prisma/client";
 import type { INDIVIDUAL_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { prisma } from "lib/prisma";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
@@ -122,4 +129,52 @@ export async function updateOfficerDivisionsCallsigns({
       }
     }),
   );
+}
+
+interface GetPrismaNameActiveCallIncidentOptions {
+  unit: AssignedUnit | IncidentInvolvedUnit;
+}
+
+export function getPrismaNameActiveCallIncident(options: GetPrismaNameActiveCallIncidentOptions) {
+  const prismaNames = {
+    officerId: "officer",
+    combinedLeoId: "combinedLeoUnit",
+    emsFdDeputyId: "emsFdDeputy",
+  } as const;
+
+  let prismaName: typeof prismaNames[keyof typeof prismaNames] | null = null;
+  let unitId = null;
+  for (const name in prismaNames) {
+    const _unitId = options.unit[name as keyof typeof prismaNames];
+    if (_unitId) {
+      unitId = _unitId;
+      prismaName = prismaNames[name as keyof typeof prismaNames];
+    }
+
+    continue;
+  }
+
+  return { prismaName, unitId };
+}
+
+interface GetFirstOfficerFromActiveOfficerOptions<AllowDispatch extends boolean = false> {
+  activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer | null;
+  allowDispatch?: AllowDispatch;
+}
+
+type GetFirstOfficerFromActiveOfficerReturn<AllowDispatch extends boolean = false> =
+  AllowDispatch extends true ? Officer | null : Officer;
+
+export function getFirstOfficerFromActiveOfficer<AllowDispatch extends boolean = false>({
+  activeOfficer,
+  allowDispatch,
+}: GetFirstOfficerFromActiveOfficerOptions<AllowDispatch>): GetFirstOfficerFromActiveOfficerReturn<AllowDispatch> {
+  const isCombined = activeOfficer && "officers" in activeOfficer;
+  const officer = isCombined ? activeOfficer.officers[0] : activeOfficer;
+
+  if (allowDispatch && !officer) {
+    return null as GetFirstOfficerFromActiveOfficerReturn<AllowDispatch>;
+  }
+
+  return officer as Officer;
 }

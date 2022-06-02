@@ -266,7 +266,7 @@ export class DispatchController {
     return { ...user, unit };
   }
 
-  protected async endInactiveIncidents(updatedAt: Date) {
+  private async endInactiveIncidents(updatedAt: Date) {
     const incidents = await prisma.leoIncident.findMany({
       where: { isActive: true, updatedAt: { not: { gte: updatedAt } } },
       include: { unitsInvolved: true },

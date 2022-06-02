@@ -23,7 +23,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
   const router = useRouter();
 
   const isDispatch = router.pathname === "/dispatch";
-  const btnArgs = { features, hasActiveDispatchers, isDispatch, unit };
+  const btnArgs = { ...features, hasActiveDispatchers, isDispatch, unit };
   const button = buttonFn(btnArgs as Args<any>);
   const isEnabled = button.isEnabled ?? true;
 

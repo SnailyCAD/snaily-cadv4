@@ -26,6 +26,10 @@ test("Should allow a user to manage/delete/ban a user", () => {
   ).toBe(true);
 });
 
+test("Should NOT be allowed to manage/delete/ban a user", () => {
+  expect(hasPermission(manageUsers, defaultPermissions.defaultTowPermissions)).toBe(false);
+});
+
 test("Should not allow a user to manage/delete/ban a user", () => {
   expect(
     hasPermission(

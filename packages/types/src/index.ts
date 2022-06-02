@@ -838,6 +838,7 @@ export interface CombinedLeoUnit {
   pairedUnitTemplate: string | null;
   officers: Officer[];
   activeCallId: string | null;
+  activeIncidentId: string | null;
 }
 
 /**
@@ -1088,6 +1089,7 @@ export interface EmsFdDeputy {
   radioChannelId: string | null;
   user: Pick<User, "id" | "username" | "steamId">;
   activeCallId: string | null;
+  activeIncidentId: string | null;
   whitelistStatusId: string | null;
   whitelistStatus?: LeoWhitelistStatus | null;
 }
@@ -1151,6 +1153,19 @@ export interface CustomFieldValue {
 }
 
 /**
+ * Model CourthousePost
+ *
+ */
+export interface CourthousePost {
+  id: string;
+  userId: string;
+  title: string;
+  descriptionData: DescriptionData | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
  * Enums
  */
 
@@ -1182,6 +1197,8 @@ export enum Feature {
   COMMON_CITIZEN_CARDS = "COMMON_CITIZEN_CARDS",
   STEAM_OAUTH = "STEAM_OAUTH",
   CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
+  LEO_TICKETS = "LEO_TICKETS",
+  COURTHOUSE_POSTS = "COURTHOUSE_POSTS",
 }
 
 export enum Rank {

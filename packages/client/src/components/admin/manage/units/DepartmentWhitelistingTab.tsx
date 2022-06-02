@@ -3,7 +3,7 @@ import type { Unit } from "src/pages/admin/manage/units";
 import useFetch from "lib/useFetch";
 import { formatUnitDivisions, makeUnitName, formatOfficerDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button, buttonVariants } from "components/Button";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
@@ -11,6 +11,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertDeclineOfficerModal } from "./AlertDeclineOfficerModal";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -59,6 +60,16 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             badgeNumber: officer.badgeNumber,
             department: formatOfficerDepartment(officer) ?? common("none"),
             division: formatUnitDivisions(officer),
+            user: (
+              <Link href={`/admin/manage/users/${officer.userId}`}>
+                <a
+                  href={`/admin/manage/users/${officer.userId}`}
+                  className={`rounded-md transition-all p-1 px-1.5 ${buttonVariants.default}`}
+                >
+                  {officer.user.username}
+                </a>
+              </Link>
+            ),
             actions: (
               <>
                 <Button
@@ -88,6 +99,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             { Header: t("Leo.badgeNumber"), accessor: "badgeNumber" },
             { Header: t("Leo.department"), accessor: "department" },
             { Header: t("Leo.division"), accessor: "division" },
+            { Header: common("user"), accessor: "user" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />

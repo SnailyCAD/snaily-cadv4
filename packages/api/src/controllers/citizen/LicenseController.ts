@@ -1,4 +1,4 @@
-import { CadFeature, Feature, User } from "@prisma/client";
+import { cad, CadFeature, Feature, User } from "@prisma/client";
 import { LICENSE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -19,12 +19,11 @@ export class LicensesController {
   @Description("Update the licenses of a citizen")
   async updateCitizenLicenses(
     @PathParams("id") citizenId: string,
-    @Context() ctx: Context,
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { features?: CadFeature[] },
     @BodyParams() body: unknown,
   ) {
     const data = validateSchema(LICENSE_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as { features?: CadFeature[] };
 
     const isDLExamEnabled = isFeatureEnabled({
       features: cad.features,

@@ -23,6 +23,8 @@ import {
   WarrantStatus,
   WhitelistStatus,
   DiscordWebhookType,
+  CombinedLeoUnit,
+  Officer,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { validateRecordData } from "lib/records/validateRecordData";
@@ -31,6 +33,7 @@ import { ExtendedNotFound } from "src/exceptions/ExtendedNotFound";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import { getFirstOfficerFromActiveOfficer } from "lib/leo/utils";
 
 @UseBeforeEach(IsAuth, ActiveOfficer)
 @Controller("/records")
@@ -41,8 +44,12 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async createWarrant(@BodyParams() body: unknown, @Context() ctx: Context) {
+  async createWarrant(
+    @BodyParams() body: unknown,
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
+  ) {
     const data = validateSchema(CREATE_WARRANT_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -57,7 +64,7 @@ export class RecordsController {
     const warrant = await prisma.warrant.create({
       data: {
         citizenId: citizen.id,
-        officerId: ctx.get("activeOfficer").id,
+        officerId: officer.id,
         description: data.description,
         status: data.status as WarrantStatus,
       },
@@ -113,10 +120,11 @@ export class RecordsController {
   })
   async createTicket(
     @BodyParams() body: unknown,
-    @Context() ctx: Context,
     @Context("cad") cad: { features?: CadFeature[] },
+    @Context("activeOfficer") activeOfficer: (CombinedLeoUnit & { officers: Officer[] }) | Officer,
   ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
+    const officer = getFirstOfficerFromActiveOfficer({ activeOfficer });
 
     const citizen = await prisma.citizen.findUnique({
       where: {
@@ -139,7 +147,7 @@ export class RecordsController {
       data: {
         type: data.type as RecordType,
         citizenId: citizen.id,
-        officerId: ctx.get("activeOfficer").id,
+        officerId: officer.id,
         notes: data.notes,
         postal: String(data.postal),
         status: recordStatus,
@@ -214,7 +222,7 @@ export class RecordsController {
       },
     });
 
-    await this.handleDiscordWebhook(ticket);
+    await this.handleDiscordWebhook({ ...ticket, violations, seizedItems });
 
     return { ...ticket, violations, seizedItems };
   }
@@ -328,7 +336,7 @@ export class RecordsController {
     return true;
   }
 
-  protected async handleDiscordWebhook(ticket: any) {
+  private async handleDiscordWebhook(ticket: any) {
     try {
       const data = createWebhookData(ticket);
       await sendDiscordWebhook(DiscordWebhookType.CITIZEN_RECORD, data);
@@ -354,10 +362,16 @@ async function unlinkSeizedItems(items: Pick<SeizedItem, "id">[]) {
   );
 }
 
-function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; officer: any }) {
+function createWebhookData(
+  data: ((Record & { violations: Violation[] }) | Warrant) & { citizen: Citizen; officer: any },
+) {
   const isWarrant = !("notes" in data);
   const citizen = `${data.citizen.name} ${data.citizen.surname}`;
   const description = !isWarrant ? data.notes : "";
+
+  const totalJailTime = getTotal("jailTime");
+  const totalBail = getTotal("bail");
+  const totalFines = getTotal("fine");
 
   const fields = [
     {
@@ -373,6 +387,9 @@ function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; office
     fields.push(
       { name: "Postal", value: data.postal, inline: true },
       { name: "Record Type", value: data.type.toLowerCase(), inline: true },
+      { name: "Total Bail", value: totalBail, inline: true },
+      { name: "Total Fine amount", value: totalFines, inline: true },
+      { name: "Total Jail Time", value: totalJailTime, inline: true },
     );
   }
 
@@ -385,4 +402,9 @@ function createWebhookData(data: (Record | Warrant) & { citizen: Citizen; office
       },
     ],
   };
+
+  function getTotal(name: "jailTime" | "fine" | "bail") {
+    const total = !isWarrant ? data.violations.reduce((ac, cv) => ac + (cv[name] || 0), 0) : null;
+    return String(total);
+  }
 }

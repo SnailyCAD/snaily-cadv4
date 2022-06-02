@@ -43,7 +43,7 @@ export function useRoleplayStopped() {
   return { roleplayStopped, audio, Component };
 }
 
-function Component({ audio, enabled }: { audio: any; enabled: boolean }) {
+function Component({ audio, enabled }: { audio: React.ReactElement; enabled: boolean }) {
   const t = useTranslations("Common");
 
   return (

@@ -92,10 +92,9 @@ export function ActiveOfficers() {
               .filter((officer) => handleFilter(officer, leoSearch))
               .map((officer) => {
                 const color = officer.status?.color;
-                const activeIncidentId = isUnitOfficer(officer) ? officer.activeIncidentId : null;
 
                 const activeIncident =
-                  activeIncidents.find((v) => v.id === activeIncidentId) ?? null;
+                  activeIncidents.find((v) => v.id === officer.activeIncidentId) ?? null;
                 const activeCall = calls.find((v) => v.id === officer.activeCallId) ?? null;
 
                 const useDot = user?.statusViewMode === StatusViewMode.DOT_COLOR;
@@ -137,8 +136,10 @@ export function ActiveOfficers() {
                       {officer.status?.value?.value}
                     </span>
                   ),
-                  incident: <ActiveIncidentColumn incident={activeIncident} />,
-                  activeCall: <ActiveCallColumn call={activeCall} />,
+                  incident: (
+                    <ActiveIncidentColumn isDispatch={isDispatch} incident={activeIncident} />
+                  ),
+                  activeCall: <ActiveCallColumn isDispatch={isDispatch} call={activeCall} />,
                   radioChannel: <UnitRadioChannelModal unit={officer} />,
                   actions: isDispatch ? (
                     <Button

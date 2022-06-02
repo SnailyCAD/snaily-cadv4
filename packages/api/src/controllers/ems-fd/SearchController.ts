@@ -6,8 +6,10 @@ import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { appendConfidential } from "controllers/leo/search/SearchController";
+import { citizenInclude } from "controllers/citizen/CitizenController";
 
 const citizenSearchInclude = {
+  ...citizenInclude,
   medicalRecords: { include: { bloodGroup: true } },
   officers: { include: { department: true } },
 };
@@ -42,7 +44,7 @@ export class SearchController {
     return citizen;
   }
 
-  protected async findCitizenByName(fullName: string) {
+  private async findCitizenByName(fullName: string) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
     if ((!name || name.length <= 3) && !surname) {

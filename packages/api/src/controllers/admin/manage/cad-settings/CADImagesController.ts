@@ -15,9 +15,10 @@ import { randomUUID } from "node:crypto";
 export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/")
-  async uploadLogoToCAD(@Context() ctx: Context, @MultipartFile("image") file: PlatformMulterFile) {
-    const cad = ctx.get("cad");
-
+  async uploadLogoToCAD(
+    @Context("cad") cad: cad,
+    @MultipartFile("image") file: PlatformMulterFile,
+  ) {
     if (!allowedFileExtensions.includes(file.mimetype as AllowedFileExtension)) {
       throw new BadRequest("invalidImageType");
     }
@@ -41,12 +42,10 @@ export class ManageCitizensController {
   @UseBefore(IsAuth)
   @Post("/auth")
   async uploadAuthImagesToCAD(
-    @Context() ctx: Context,
+    @Context("cad") cad: cad,
     @MultipartFile("authScreenHeaderImageId") header?: PlatformMulterFile,
     @MultipartFile("authScreenBgImageId") background?: PlatformMulterFile,
   ) {
-    const cad = ctx.get("cad") as cad;
-
     await Promise.all(
       [header, background].map(async (file) => {
         if (!file) return;

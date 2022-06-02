@@ -279,7 +279,7 @@ export class ValuesController {
     );
   }
 
-  protected async deleteById(type: ValueType, id: string) {
+  private async deleteById(type: ValueType, id: string) {
     const data = GET_VALUES[type];
 
     if (data) {

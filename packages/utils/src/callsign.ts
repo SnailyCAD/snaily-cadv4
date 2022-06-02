@@ -32,7 +32,15 @@ export function generateCallsign(unit: Unit, template: string | null) {
     incremental: unit.incremental,
   };
 
-  const templateArr: (string | null)[] = _template.split(/[{}]/);
+  return replaceTemplateVariables(_template, replacers);
+}
+
+function replaceTemplateVariables(
+  template: string,
+  replacers: Record<string, string | number | null | undefined>,
+) {
+  const templateArr: (string | null)[] = template.split(/[{}]/);
+
   Object.entries(replacers).forEach(([replacer, value]) => {
     const idx = templateArr.indexOf(replacer);
 

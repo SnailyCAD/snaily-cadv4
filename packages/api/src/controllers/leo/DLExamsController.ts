@@ -139,7 +139,7 @@ export class DLExamsController {
     return true;
   }
 
-  protected getExamStatus(data: ExamData) {
+  private getExamStatus(data: ExamData) {
     if (!data.theoryExam || !data.practiceExam) {
       return DLExamStatus.IN_PROGRESS;
     }
@@ -154,7 +154,7 @@ export class DLExamsController {
     return DLExamStatus.PASSED;
   }
 
-  protected async grantLicenseToCitizen(
+  private async grantLicenseToCitizen(
     exam: DLExam & { categories: DriversLicenseCategoryValue[] },
   ) {
     const citizen = await prisma.citizen.findUnique({

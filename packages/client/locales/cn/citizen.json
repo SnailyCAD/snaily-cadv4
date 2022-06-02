@@ -78,7 +78,7 @@
     "yourWeapons": "你的武器",
     "addWeapon": "添加武器",
     "noWeapons": "你还没有注册任何武器。",
-    "deleteWeapon":"删除武器",
+    "deleteWeapon": "删除武器",
     "registeredWeapons": "注册武器",
     "successWeaponRegistered": "已成功注册武器",
     "alert_deleteWeapon": "你确定要删除这把武器吗？此操作无法撤消。"

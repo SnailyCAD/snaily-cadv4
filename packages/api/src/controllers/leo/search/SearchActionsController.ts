@@ -340,13 +340,12 @@ export class SearchActionsController {
 
   @Post("/vehicle")
   @Description("Register a new vehicle to a citizen as LEO")
-  async registerVehicle(@Context() ctx: Context, @BodyParams() body: unknown) {
+  async registerVehicle(
+    @Context("user") user: User,
+    @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(VEHICLE_SCHEMA, body);
-    const user = ctx.get("user") as User;
-    const cad = ctx.get("cad") as {
-      features: CadFeature[];
-      miscCadSettings?: MiscCadSettings;
-    };
 
     const citizen = await prisma.citizen.findUnique({
       where: {

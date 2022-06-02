@@ -11,7 +11,7 @@ export function TwoFactorAuthArea() {
   const is2faEnabled = user?.twoFactorEnabled;
 
   return (
-    <section className="mt-5">
+    <section className="mt-7">
       <h3 className="text-2xl font-semibold">{t("2fa")}</h3>
 
       <Button
