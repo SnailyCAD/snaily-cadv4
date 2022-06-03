@@ -1153,6 +1153,19 @@ export interface CustomFieldValue {
 }
 
 /**
+ * Model CourthousePost
+ *
+ */
+export interface CourthousePost {
+  id: string;
+  userId: string;
+  title: string;
+  descriptionData: DescriptionData | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+/**
  * Enums
  */
 
@@ -1185,6 +1198,7 @@ export enum Feature {
   STEAM_OAUTH = "STEAM_OAUTH",
   CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
   LEO_TICKETS = "LEO_TICKETS",
+  COURTHOUSE_POSTS = "COURTHOUSE_POSTS",
 }
 
 export enum Rank {

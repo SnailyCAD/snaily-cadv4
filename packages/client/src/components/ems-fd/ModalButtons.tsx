@@ -6,6 +6,7 @@ import { useTranslations } from "use-intl";
 import { useEmsFdState } from "state/emsFdState";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
+import useFetch from "lib/useFetch";
 
 interface MButton {
   nameKey: [string, string];
@@ -32,11 +33,21 @@ export function ModalButtons() {
   const { openModal } = useModal();
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
+  const { execute } = useFetch();
 
   const isButtonDisabled =
     !activeDeputy ||
     activeDeputy.status?.shouldDo === ShouldDoType.SET_OFF_DUTY ||
     activeDeputy.statusId === null;
+
+  async function handlePanic() {
+    if (!activeDeputy) return;
+
+    await execute("/ems-fd/panic-button", {
+      method: "POST",
+      data: { deputyId: activeDeputy.id },
+    });
+  }
 
   return (
     <div className="py-2">
@@ -59,6 +70,15 @@ export function ModalButtons() {
             {t(button.nameKey.join("."))}
           </Button>
         ))}
+
+        <Button
+          id="panicButton"
+          disabled={isButtonDisabled}
+          title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
+          onClick={handlePanic}
+        >
+          {t("Leo.panicButton")}
+        </Button>
       </ul>
     </div>
   );

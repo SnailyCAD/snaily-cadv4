@@ -129,6 +129,17 @@ export class StatusController {
         status: code,
         unit,
       });
+    } else if (type === "ems-fd") {
+      const fullDeputy = await prisma.emsFdDeputy.findUnique({
+        where: { id: unit.id },
+        include: unitProperties,
+      });
+
+      await this.handlePanicButtonPressed({
+        cad,
+        status: code,
+        unit: fullDeputy!,
+      });
     }
 
     // reset all units for user
@@ -247,7 +258,10 @@ export class StatusController {
 
 interface HandlePanicButtonPressedOptions {
   status: StatusValue;
-  unit: ((Officer & { citizen: Pick<Citizen, "name" | "surname"> }) | CombinedLeoUnit) & {
+  unit: (
+    | ((Officer | EmsFdDeputy) & { citizen: Pick<Citizen, "name" | "surname"> })
+    | CombinedLeoUnit
+  ) & {
     status?: StatusValue | null;
   };
   cad: cad & { miscCadSettings: MiscCadSettings };

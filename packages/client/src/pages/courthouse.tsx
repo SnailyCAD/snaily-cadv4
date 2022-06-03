@@ -9,6 +9,7 @@ import type {
   Citizen,
   Record,
   CourtEntry,
+  CourthousePost,
 } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { requestAll } from "lib/utils";
@@ -18,6 +19,8 @@ import { ExpungementRequestsTab } from "components/courthouse/expungement-reques
 import { NameChangeRequestTab } from "components/courthouse/name-change/NameChangeRequestTab";
 import { CourtEntriesTab } from "components/courthouse/court-entries/CourtEntriesTab";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";
 
 export type FullRequest = ExpungementRequest & {
   warrants: Warrant[];
@@ -29,10 +32,12 @@ interface Props {
   requests: FullRequest[];
   nameChangeRequests: NameChangeRequest[];
   courtEntries: CourtEntry[];
+  courthousePosts: CourthousePost[];
 }
 
 export default function Courthouse(props: Props) {
   const t = useTranslations("Courthouse");
+  const { COURTHOUSE_POSTS } = useFeatureEnabled();
   const { hasPermissions } = usePermission();
   const hasEntriesPerms = hasPermissions([Permissions.Leo], (u) => u.isLeo);
 
@@ -45,6 +50,11 @@ export default function Courthouse(props: Props) {
     TABS[2] = { name: t("courtEntries"), value: "courtEntriesTab" };
   }
 
+  if (COURTHOUSE_POSTS) {
+    const idx = hasEntriesPerms ? 3 : 2;
+    TABS[idx] = { name: t("courthousePosts"), value: "courthousePosts" };
+  }
+
   return (
     <Layout className="dark:text-white">
       <Title className="mb-3">{t("courthouse")}</Title>
@@ -53,18 +63,23 @@ export default function Courthouse(props: Props) {
         <ExpungementRequestsTab requests={props.requests} />
         <NameChangeRequestTab requests={props.nameChangeRequests} />
         {hasEntriesPerms ? <CourtEntriesTab entries={props.courtEntries} /> : null}
+        {COURTHOUSE_POSTS ? <CourthousePostsTab posts={props.courthousePosts} /> : null}
       </TabList>
     </Layout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [data, nameChangeRequests, courtEntries, citizens] = await requestAll(req, [
-    ["/expungement-requests", []],
-    ["/name-change", []],
-    ["/court-entries", []],
-    ["/citizen", []],
-  ]);
+  const [data, nameChangeRequests, courtEntries, courthousePosts, citizens] = await requestAll(
+    req,
+    [
+      ["/expungement-requests", []],
+      ["/name-change", []],
+      ["/court-entries", []],
+      ["/courthouse-posts", []],
+      ["/citizen", []],
+    ],
+  );
 
   return {
     props: {
@@ -72,6 +87,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       nameChangeRequests,
       citizens,
       courtEntries,
+      courthousePosts,
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["courthouse", "leo", "common"], locale)),
