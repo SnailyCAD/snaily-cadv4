@@ -14,6 +14,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import { Textarea } from "components/form/Textarea";
 
 interface Props {
   log: TruckLog | null;
@@ -70,6 +71,7 @@ export function ManageTruckLogModal({
     startedAt: log?.startedAt ?? "",
     vehicleId: log?.vehicleId ?? "",
     citizenId: log?.citizenId ?? "",
+    notes: log?.notes ?? "",
   };
 
   const validate = handleValidate(CREATE_TRUCK_LOG_SCHEMA);
@@ -116,6 +118,10 @@ export function ManageTruckLogModal({
                 }))}
                 value={values.vehicleId}
               />
+            </FormField>
+
+            <FormField optional errorMessage={errors.notes} label={t("notes")}>
+              <Textarea name="notes" onChange={handleChange} value={values.notes} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

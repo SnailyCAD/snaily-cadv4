@@ -1109,6 +1109,7 @@ export interface TruckLog {
   endedAt: string;
   createdAt: Date;
   updatedAt: Date;
+  notes: string | null;
 }
 
 /**
