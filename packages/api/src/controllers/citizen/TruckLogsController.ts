@@ -78,6 +78,7 @@ export class TruckLogsController {
         endedAt: data.endedAt,
         startedAt: data.startedAt,
         vehicleId: data.vehicleId,
+        notes: data.notes,
       },
       include: {
         citizen: true,
@@ -145,6 +146,7 @@ export class TruckLogsController {
         citizenId: data.citizenId,
         endedAt: data.endedAt,
         vehicleId: data.vehicleId,
+        notes: data.notes,
       },
       include: {
         citizen: true,

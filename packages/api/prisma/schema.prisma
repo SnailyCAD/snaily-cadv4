@@ -1160,6 +1160,7 @@ model TruckLog {
   endedAt   String             @db.VarChar(255)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @default(now()) @updatedAt
+  notes     String?
 }
 
 // DL Exams
