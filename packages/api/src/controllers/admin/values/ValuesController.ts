@@ -7,6 +7,7 @@ import {
   QueryParams,
   MultipartFile,
   PlatformMulterFile,
+  Context,
 } from "@tsed/common";
 import process from "node:process";
 import fs from "node:fs";
@@ -184,7 +185,11 @@ export class ValuesController {
   @Post("/")
   @Description("Create a new value by the specified type")
   @UsePermissions(getPermissionsForValuesRequest)
-  async createValueByPath(@BodyParams() body: any, @PathParams("path") path: string) {
+  async createValueByPath(
+    @Context() context: Context,
+    @BodyParams() body: any,
+    @PathParams("path") path: string,
+  ) {
     const type = getTypeFromPath(path);
 
     if (type === ValueType.DEPARTMENT) {
@@ -202,7 +207,7 @@ export class ValuesController {
     }
 
     const handler = typeHandlers[type];
-    const [value] = await handler([body]);
+    const [value] = await handler({ body: [body], context });
 
     return value;
   }
@@ -234,11 +239,12 @@ export class ValuesController {
     @BodyParams() body: unknown,
     @PathParams("id") valueId: string,
     @PathParams("path") path: string,
+    @Context() context: Context,
   ) {
     const type = getTypeFromPath(path);
 
     const handler = typeHandlers[type];
-    const [value] = await handler([body], valueId);
+    const [value] = await handler({ body: [body], id: valueId, context });
 
     return value;
   }

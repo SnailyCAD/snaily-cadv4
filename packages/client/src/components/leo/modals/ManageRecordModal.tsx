@@ -21,6 +21,7 @@ import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   record?: Record | null;
@@ -44,6 +45,7 @@ export function ManageRecordModal({
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const { LEO_BAIL } = useFeatureEnabled();
 
   const data = {
     [RecordType.TICKET]: {
@@ -87,7 +89,7 @@ export function ManageRecordModal({
       type,
       violations: values.violations.map(({ value }: { value: any }) => ({
         penalCodeId: value.id,
-        bail: value.jailTime?.enabled ? value.bail?.value : null,
+        bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
         fine: value.fine?.enabled ? value.fine?.value : null,
       })),
@@ -141,7 +143,7 @@ export function ManageRecordModal({
           ...v.penalCode,
           fine: { enabled: !!v.fine, value: v.fine },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
-          bail: { enabled: !!v.jailTime, value: v.bail },
+          bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },
       })) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",

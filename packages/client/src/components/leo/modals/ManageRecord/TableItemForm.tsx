@@ -5,6 +5,7 @@ import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import type React from "react";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   penalCode: PenalCode;
@@ -13,6 +14,8 @@ interface Props {
 
 export function TableItemForm({ penalCode, isReadOnly }: Props) {
   const t = useTranslations("Leo");
+  const { LEO_BAIL } = useFeatureEnabled();
+
   const [minFine, maxFine] =
     penalCode.warningNotApplicable?.fines ?? penalCode.warningApplicable?.fines ?? [];
   const [minJailTime, maxJailTime] = penalCode.warningNotApplicable?.prisonTerm ?? [];
@@ -120,21 +123,23 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
             className="max-w-[125px] min-w-[125px] ml-5 py-0.5"
             value={!isNaN(currentValue.jailTime?.value) ? currentValue.jailTime?.value : ""}
           />
-          <div className="flex flex-row items-center mb-0 ml-5">
-            <label>{t("bail")}</label>
-            <Input
-              type="number"
-              onChange={handleValueChange.bind(null, "bail", undefined)}
-              name="bail.value"
-              disabled={
-                isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
-              }
-              className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
-              value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
-              min={minBail}
-              max={maxBail}
-            />
-          </div>
+          {LEO_BAIL ? (
+            <div className="flex flex-row items-center mb-0 ml-5">
+              <label>{t("bail")}</label>
+              <Input
+                type="number"
+                onChange={handleValueChange.bind(null, "bail", undefined)}
+                name="bail.value"
+                disabled={
+                  isReadOnly || warningNotApplicableDisabled || !currentValue.jailTime?.enabled
+                }
+                className="py-0.5 min-w-[125px] max-w-[125px] ml-5"
+                value={!isNaN(currentValue.bail?.value) ? currentValue.bail?.value : ""}
+                min={minBail}
+                max={maxBail}
+              />
+            </div>
+          ) : null}
         </div>
       </FieldWrapper>
     </div>

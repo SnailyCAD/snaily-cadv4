@@ -4,6 +4,7 @@ import {
   UseBeforeEach,
   MultipartFile,
   PlatformMulterFile,
+  Context,
 } from "@tsed/common";
 import { Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -34,6 +35,8 @@ import {
   WhatPages,
   ValueType,
   Value,
+  CadFeature,
+  cad,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { upsertWarningApplicable } from "lib/records/penal-code";
@@ -50,6 +53,7 @@ export class ImportValuesViaFileController {
   async importValueByPath(
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
+    @Context() context: Context,
   ) {
     const type = this.getTypeFromPath(path);
 
@@ -75,7 +79,7 @@ export class ImportValuesViaFileController {
     }
 
     const handler = typeHandlers[type as keyof typeof typeHandlers];
-    const data = await handler(body, type);
+    const data = await handler({ body, context }, type);
     return data;
   }
 
@@ -84,8 +88,14 @@ export class ImportValuesViaFileController {
   }
 }
 
+interface HandlerOptions {
+  body: unknown;
+  id?: string;
+  context: Context;
+}
+
 export const typeHandlers = {
-  VEHICLE: async (body: unknown, id?: string) => {
+  VEHICLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return prisma.$transaction(
@@ -101,7 +111,7 @@ export const typeHandlers = {
       }),
     );
   },
-  WEAPON: async (body: unknown, id?: string) => {
+  WEAPON: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(HASH_SCHEMA_ARR, body);
 
     return prisma.$transaction(
@@ -117,7 +127,7 @@ export const typeHandlers = {
       }),
     );
   },
-  BUSINESS_ROLE: async (body: unknown, id?: string) => {
+  BUSINESS_ROLE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BUSINESS_ROLE_ARR, body);
 
     return prisma.$transaction(
@@ -133,7 +143,7 @@ export const typeHandlers = {
       }),
     );
   },
-  DRIVERSLICENSE_CATEGORY: async (body: unknown, id?: string) => {
+  DRIVERSLICENSE_CATEGORY: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DLC_ARR, body);
 
     return prisma.$transaction(
@@ -150,7 +160,7 @@ export const typeHandlers = {
       }),
     );
   },
-  DEPARTMENT: async (body: unknown, id?: string) => {
+  DEPARTMENT: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DEPARTMENT_ARR, body);
 
     return prisma.$transaction(
@@ -173,7 +183,7 @@ export const typeHandlers = {
       }),
     );
   },
-  DIVISION: async (body: unknown, id?: string) => {
+  DIVISION: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(DIVISION_ARR, body);
 
     return prisma.$transaction(
@@ -191,7 +201,7 @@ export const typeHandlers = {
       }),
     );
   },
-  CODES_10: async (body: unknown, id?: string) => {
+  CODES_10: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(CODES_10_ARR, body);
     const DEFAULT_WHAT_PAGES = [WhatPages.LEO, WhatPages.DISPATCH, WhatPages.EMS_FD];
 
@@ -233,9 +243,10 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
-  PENAL_CODE: async (body: unknown, id?: string) => {
+  PENAL_CODE: async ({ body, id, context }: HandlerOptions) => {
     const data = validateSchema(PENAL_CODE_ARR, body);
     const penalCode = id && (await prisma.penalCode.findUnique({ where: { id: String(id) } }));
+    const cad = context.get("cad") as cad & { features?: CadFeature[] };
 
     return handlePromiseAll(data, async (item) => {
       const data = {
@@ -244,14 +255,21 @@ export const typeHandlers = {
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await upsertWarningApplicable(item, penalCode || undefined)),
+          ...(await upsertWarningApplicable({
+            body: item,
+            cad,
+            penalCode: penalCode || undefined,
+          })),
         },
         create: {
           title: item.title,
           description: item.description,
           descriptionData: item.descriptionData ?? [],
           groupId: item.groupId,
-          ...(await upsertWarningApplicable(item)),
+          ...(await upsertWarningApplicable({
+            body: item,
+            cad,
+          })),
         },
       };
 
@@ -262,7 +280,7 @@ export const typeHandlers = {
       });
     });
   },
-  QUALIFICATION: async (body: unknown, id?: string) => {
+  QUALIFICATION: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(QUALIFICATION_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
@@ -301,7 +319,7 @@ export const typeHandlers = {
     });
   },
 
-  OFFICER_RANK: async (body: unknown, id?: string) => {
+  OFFICER_RANK: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(BASE_ARR, body);
 
     return handlePromiseAll(data, async (item) => {
@@ -342,7 +360,7 @@ export const typeHandlers = {
       return updated || updatedValue;
     });
   },
-  CALL_TYPE: async (body: unknown, id?: string) => {
+  CALL_TYPE: async ({ body, id }: HandlerOptions) => {
     const data = validateSchema(CALL_TYPE_ARR, body);
 
     return prisma.$transaction(
@@ -358,14 +376,16 @@ export const typeHandlers = {
       }),
     );
   },
-  GENDER: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "GENDER", id),
-  ETHNICITY: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "ETHNICITY", id),
-  BLOOD_GROUP: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
-  IMPOUND_LOT: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "IMPOUND_LOT", id),
-  LICENSE: async (body: unknown, id?: string) => typeHandlers.GENERIC(body, "LICENSE", id),
-  VEHICLE_FLAG: async (body: unknown, id?: string) =>
+  GENDER: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "GENDER", id),
+  ETHNICITY: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "ETHNICITY", id),
+  BLOOD_GROUP: async ({ body, id }: HandlerOptions) =>
+    typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
+  IMPOUND_LOT: async ({ body, id }: HandlerOptions) =>
+    typeHandlers.GENERIC(body, "IMPOUND_LOT", id),
+  LICENSE: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "LICENSE", id),
+  VEHICLE_FLAG: async ({ body, id }: HandlerOptions) =>
     typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
-  CITIZEN_FLAG: async (body: unknown, id?: string) =>
+  CITIZEN_FLAG: async ({ body, id }: HandlerOptions) =>
     typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
 
   GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {

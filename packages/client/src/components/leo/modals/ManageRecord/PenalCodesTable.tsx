@@ -3,6 +3,7 @@ import { useFormikContext } from "formik";
 import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import { TableItemForm } from "./TableItemForm";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   penalCodes: PenalCode[];
@@ -14,6 +15,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const currency = common("currency");
+  const { LEO_BAIL } = useFeatureEnabled();
 
   if (penalCodes.length <= 0) {
     return <p className="mb-3">{t("noPenalCodesSelected")}</p>;
@@ -61,10 +63,12 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
           {totalJailTime || 0}
         </span>
         <span>{"/"}</span>
-        <span className="ml-2">
-          <span className="font-semibold select-none">{t("bail")}: </span> {currency}
-          {totalBail || 0}
-        </span>
+        {LEO_BAIL ? (
+          <span className="ml-2">
+            <span className="font-semibold select-none">{t("bail")}: </span> {currency}
+            {totalBail || 0}
+          </span>
+        ) : null}
       </p>
     </div>
   );
