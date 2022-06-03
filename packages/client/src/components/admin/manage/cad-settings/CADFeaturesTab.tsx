@@ -180,6 +180,10 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "LEO Tickets",
     description: "When enabled, this will allow officers to write tickets to citizens",
   },
+  LEO_BAIL: {
+    name: "Bails",
+    description: "When enabled, this will allow officers to add bails to arrest reports",
+  },
   COURTHOUSE_POSTS: {
     name: "Courthouse Posts",
     description:
