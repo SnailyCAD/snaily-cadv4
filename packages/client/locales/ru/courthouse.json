@@ -25,6 +25,12 @@
     "date": "Дата",
     "note": "Запись",
     "deleteCourtDate": "Удалить дату суда",
+    "courthousePosts": "Публикации суда",
+    "manageCourthousePost": "Управлять публикациями",
+    "deleteCourthousePost": "Удалить публикацию",
+    "addCourthousePost": "Добавить публикацию",
+    "noCourthousePosts": "Публикаций нет",
+    "alert_deleteCourthousePost": "Вы уверены, что хотите удалить эту публикацию? Это действие необратимо",
     "alert_deleteCourtEntry": "Вы уверены, что хотите удалить это судебное заседание? Это действие необратимо",
     "alert_deleteCourtDate": "Вы уверены, что хотите удалить эту дату суда? Это действие необратимо"
   }
