@@ -14,7 +14,7 @@
     "status": "Статус",
     "courtEntries": "Судебные заседания",
     "noCourtEntries": "Нет судебных заседаний",
-    "addCourtEntry": "Доюавить судебное заседание",
+    "addCourtEntry": "Добавить судебное заседание",
     "deleteCourtEntry": "Удалить заседание суда",
     "manageCourtEntry": "Управлять судебными заседаниями",
     "caseNumber": "Номер дела",
