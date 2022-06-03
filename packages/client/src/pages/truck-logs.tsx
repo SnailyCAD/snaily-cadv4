@@ -72,6 +72,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             vehicle: log.vehicle?.model.value.value,
             startedAt: log.startedAt,
             endedAt: log.endedAt,
+            notes: log.notes ?? common("none"),
             actions: (
               <>
                 <Button onClick={() => handleEditClick(log)} small variant="success">
@@ -93,6 +94,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             { Header: t("vehicle"), accessor: "vehicle" },
             { Header: t("startedAt"), accessor: "startedAt" },
             { Header: t("endedAt"), accessor: "endedAt" },
+            { Header: t("notes"), accessor: "notes" },
             { Header: common("actions"), accessor: "actions" },
           ]}
         />
