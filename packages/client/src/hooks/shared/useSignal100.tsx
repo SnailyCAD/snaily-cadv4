@@ -8,7 +8,7 @@ import { useAudio } from "react-use";
 const SIGNAL_100_SRC = "/sounds/signal100.mp3";
 export function useSignal100() {
   const { cad } = useAuth();
-  const [signal100Enabled, setSign100] = React.useState<boolean>(
+  const [enabled, setSign100] = React.useState<boolean>(
     cad?.miscCadSettings?.signal100Enabled ?? false,
   );
 
@@ -39,7 +39,7 @@ export function useSignal100() {
     setSign100(cad?.miscCadSettings?.signal100Enabled ?? false);
   }, [cad?.miscCadSettings?.signal100Enabled]);
 
-  return { signal100Enabled, audio, Component };
+  return { enabled, audio, Component };
 }
 
 function Component({ audio, enabled }: { audio: any; enabled: boolean }) {

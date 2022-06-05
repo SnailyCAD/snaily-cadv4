@@ -7,6 +7,9 @@ import { useAuth } from "context/AuthContext";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
+import { ModalIds } from "types/ModalIds";
+import { useModal } from "state/modalState";
+import { TonesModal } from "./modals/TonesModal";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.nameSearchBtn,
@@ -22,11 +25,12 @@ const buttons: modalButtons.ModalButton[] = [
 export function DispatchModalButtons() {
   const t = useTranslations();
   const { execute } = useFetch();
-  const { signal100Enabled } = useSignal100();
+  const { enabled: signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
   const { activeDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
+  const { openModal } = useModal();
 
   const isActive = ACTIVE_DISPATCHERS ? activeDispatchers.some((v) => v.userId === user?.id) : true;
 
@@ -52,6 +56,10 @@ export function DispatchModalButtons() {
     });
   }
 
+  function handleOpenTonesModal() {
+    openModal(ModalIds.Tones);
+  }
+
   return (
     <ul className="modal-buttons-grid">
       {buttons.map((button, idx) => (
@@ -62,11 +70,17 @@ export function DispatchModalButtons() {
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
+      <Button disabled={!isActive} onClick={handleOpenTonesModal}>
+        {t("Leo.tones")}
+      </Button>
+
       {features.ACTIVE_DISPATCHERS ? (
         <Button onClick={handleStateChangeDispatcher}>
           {isActive ? t("Leo.goOffDuty") : t("Leo.goOnDuty")}
         </Button>
       ) : null}
+
+      <TonesModal />
     </ul>
   );
 }

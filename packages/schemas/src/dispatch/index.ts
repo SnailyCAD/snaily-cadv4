@@ -10,3 +10,9 @@ export const UPDATE_AOP_SCHEMA = z.object({
 export const UPDATE_RADIO_CHANNEL_SCHEMA = z.object({
   radioChannel: z.string().nullable(),
 });
+
+export const TONES_SCHEMA = z.object({
+  leoTone: z.boolean(),
+  emsFdTone: z.boolean(),
+  description: z.string().max(355).nullable().optional(),
+});
