@@ -20,7 +20,7 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
   const [channels, setChannels] = React.useState<DiscordChannel[]>([]);
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
-  const { cad } = useAuth();
+  const { cad, setCad } = useAuth();
 
   const INITIAL_VALUES = {
     call911Webhook: makeInitialValue(cad!, DiscordWebhookType.CALL_911),
@@ -53,8 +53,8 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
       data: values,
     });
 
-    if (Array.isArray(json)) {
-      setChannels(json);
+    if (json.id && cad) {
+      setCad({ ...cad, miscCadSettingsId: json.id, miscCadSettings: json });
     }
   }
 
