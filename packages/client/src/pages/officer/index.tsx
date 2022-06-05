@@ -34,6 +34,7 @@ import { Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useTones } from "hooks/global/useTones";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -89,8 +90,9 @@ export default function OfficerDashboard({
   const leoState = useLeoState();
   const dispatchState = useDispatchState();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
-  const { unit, audio, PanicButton } = usePanicButton();
+  const signal100 = useSignal100();
+  const tones = useTones("leo");
+  const panic = usePanicButton();
   const { isOpen } = useModal();
   const { user } = useAuth();
   const { LEO_TICKETS } = useFeatureEnabled();
@@ -143,8 +145,9 @@ export default function OfficerDashboard({
     >
       <Title renderLayoutTitle={false}>{t("officer")}</Title>
 
-      <Component enabled={signal100Enabled} audio={signal100Audio} />
-      <PanicButton audio={audio} unit={unit} />
+      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      <panic.Component audio={panic.audio} unit={panic.unit} />
+      <tones.Component audio={tones.audio} description={tones.description} />
 
       <UtilityPanel>
         <div className="px-4">

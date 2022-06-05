@@ -25,7 +25,7 @@ const buttons: modalButtons.ModalButton[] = [
 export function DispatchModalButtons() {
   const t = useTranslations();
   const { execute } = useFetch();
-  const { signal100Enabled } = useSignal100();
+  const { enabled: signal100Enabled } = useSignal100();
   const features = useFeatureEnabled();
   const { activeDispatchers, setActiveDispatchers } = useActiveDispatchers();
   const { user } = useAuth();

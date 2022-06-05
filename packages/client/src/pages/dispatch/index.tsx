@@ -72,8 +72,9 @@ export default function OfficerDashboard(props: DispatchPageProps) {
   const state = useDispatchState();
   const timeRef = useTime();
   const t = useTranslations("Leo");
-  const { signal100Enabled, Component, audio: signal100Audio } = useSignal100();
-  const { unit, audio, PanicButton } = usePanicButton();
+  const signal100 = useSignal100();
+  const panic = usePanicButton();
+
   const { ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { isOpen } = useModal();
 
@@ -106,8 +107,8 @@ export default function OfficerDashboard(props: DispatchPageProps) {
     >
       <Title renderLayoutTitle={false}>{t("dispatch")}</Title>
 
-      <Component enabled={signal100Enabled} audio={signal100Audio} />
-      <PanicButton audio={audio} unit={unit} />
+      <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
+      <panic.Component audio={panic.audio} unit={panic.unit} />
 
       <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
         <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
