@@ -79,7 +79,7 @@ export class ImportValuesViaFileController {
     }
 
     const handler = typeHandlers[type as keyof typeof typeHandlers];
-    const data = await handler({ body, context }, type);
+    const data = await handler({ body, context, type });
     return data;
   }
 
@@ -376,19 +376,20 @@ export const typeHandlers = {
       }),
     );
   },
-  GENDER: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "GENDER", id),
-  ETHNICITY: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "ETHNICITY", id),
-  BLOOD_GROUP: async ({ body, id }: HandlerOptions) =>
-    typeHandlers.GENERIC(body, "BLOOD_GROUP", id),
-  IMPOUND_LOT: async ({ body, id }: HandlerOptions) =>
-    typeHandlers.GENERIC(body, "IMPOUND_LOT", id),
-  LICENSE: async ({ body, id }: HandlerOptions) => typeHandlers.GENERIC(body, "LICENSE", id),
-  VEHICLE_FLAG: async ({ body, id }: HandlerOptions) =>
-    typeHandlers.GENERIC(body, "VEHICLE_FLAG", id),
-  CITIZEN_FLAG: async ({ body, id }: HandlerOptions) =>
-    typeHandlers.GENERIC(body, "CITIZEN_FLAG", id),
+  GENDER: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "GENDER" }),
+  ETHNICITY: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "ETHNICITY" }),
+  BLOOD_GROUP: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "BLOOD_GROUP" }),
+  IMPOUND_LOT: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "IMPOUND_LOT" }),
+  LICENSE: async (options: HandlerOptions) => typeHandlers.GENERIC({ ...options, type: "LICENSE" }),
+  VEHICLE_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "VEHICLE_FLAG" }),
+  CITIZEN_FLAG: async (options: HandlerOptions) =>
+    typeHandlers.GENERIC({ ...options, type: "CITIZEN_FLAG" }),
 
-  GENERIC: async (body: unknown, type: ValueType, id?: string): Promise<Value[]> => {
+  GENERIC: async ({ body, type, id }: HandlerOptions & { type: ValueType }): Promise<Value[]> => {
     const data = validateSchema(BASE_ARR, body);
 
     return prisma.$transaction(

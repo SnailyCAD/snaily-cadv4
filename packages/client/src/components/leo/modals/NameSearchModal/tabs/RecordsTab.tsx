@@ -17,6 +17,7 @@ import { FullDate } from "components/shared/FullDate";
 import { HoverCard } from "components/shared/HoverCard";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { TabsContent } from "components/shared/TabList";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -126,8 +127,18 @@ function RecordsTable({ data }: { data: Record[] }) {
   const isCitizen = router.pathname.startsWith("/citizen");
   const { generateCallsign } = useGenerateCallsign();
   const { currentResult } = useNameSearch();
+  const { hasPermissions } = usePermission();
+  const hasDeletePermissions = hasPermissions(
+    [
+      Permissions.ManageExpungementRequests,
+      Permissions.ManageNameChangeRequests,
+      Permissions.DeleteCitizenRecords,
+    ],
+    (u) => u.isSupervisor,
+  );
 
   function handleDeleteClick(record: Record) {
+    if (!hasDeletePermissions) return;
     openModal(ModalIds.AlertDeleteRecord, record);
   }
 
@@ -179,15 +190,17 @@ function RecordsTable({ data }: { data: Record[] }) {
                   {common("edit")}
                 </Button>
 
-                <Button
-                  className="ml-2"
-                  type="button"
-                  onClick={() => handleDeleteClick(record)}
-                  small
-                  variant="danger"
-                >
-                  {common("delete")}
-                </Button>
+                {hasDeletePermissions ? (
+                  <Button
+                    className="ml-2"
+                    type="button"
+                    onClick={() => handleDeleteClick(record)}
+                    small
+                    variant="danger"
+                  >
+                    {common("delete")}
+                  </Button>
+                ) : null}
               </>
             ),
           }))}
