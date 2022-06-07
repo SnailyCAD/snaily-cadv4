@@ -54,7 +54,7 @@ export const WEAPON_SCHEMA = z.object({
   model: z.string().min(2),
   registrationStatus: z.string().min(2).max(255),
   citizenId: z.string().min(2).max(255),
-  serialNumber: z.string().max(10).optional(),
+  serialNumber: z.string().max(255).optional(),
 });
 
 export const LICENSE_SCHEMA = CREATE_CITIZEN_SCHEMA.pick({
