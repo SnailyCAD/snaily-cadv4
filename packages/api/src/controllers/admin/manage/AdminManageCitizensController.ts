@@ -12,7 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, User, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import {
   ACCEPT_DECLINE_TYPES,
@@ -38,9 +38,27 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens(@QueryParams("skip") skip = "0") {
-    const count = await prisma.citizen.count();
+  async getCitizens(@QueryParams("skip") skip = "0", @QueryParams("query") query = "") {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    const where = query
+      ? {
+          OR: [
+            {
+              name: { equals: name, mode: Prisma.QueryMode.insensitive },
+              surname: { equals: surname, mode: Prisma.QueryMode.insensitive },
+            },
+            {
+              name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+              surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+            },
+          ],
+        }
+      : undefined;
+
+    const count = await prisma.citizen.count({ where });
     const citizens = await prisma.citizen.findMany({
+      where,
       include: citizenInclude,
       take: 50,
       skip: Number(skip),
@@ -119,31 +137,6 @@ export class AdminManageCitizensController {
     });
 
     return updated;
-  }
-
-  @Post("/search")
-  async searchCitizenByName(@QueryParams("query") query: string) {
-    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
-    const citizens = await prisma.citizen.findMany({
-      where: {
-        OR: [
-          {
-            name: { contains: name, mode: "insensitive" },
-            surname: { contains: surname, mode: "insensitive" },
-          },
-          {
-            name: { contains: surname, mode: "insensitive" },
-            surname: { contains: name, mode: "insensitive" },
-          },
-          { name: { startsWith: name, mode: "insensitive" } },
-          { surname: { startsWith: surname, mode: "insensitive" } },
-        ],
-      },
-      take: 25,
-    });
-
-    return citizens;
   }
 
   @Put("/:id")

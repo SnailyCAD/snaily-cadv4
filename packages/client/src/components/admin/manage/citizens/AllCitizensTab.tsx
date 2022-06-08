@@ -15,7 +15,7 @@ import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
-import { useTablePagination } from "hooks/shared/useTablePagination";
+import { useAsyncTable } from "hooks/shared/table/useTablePagination";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -28,12 +28,19 @@ interface Props {
 }
 
 export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
-  const { data: citizens, paginationFetch, paginationState } = useTablePagination(initialData);
-  const [search, setSearch] = React.useState("");
+  const asyncTable = useAsyncTable({
+    initialData,
+    totalCount,
+    fetchOptions: {
+      path: "/admin/manage/citizens",
+      onResponse: (json) => ({ totalCount: json.totalCount, data: json.citizens }),
+    },
+  });
+
   const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
-  const users = React.useMemo(() => makeUsersList(citizens), [citizens]);
+  const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
   const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
@@ -71,7 +78,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
 
   return (
     <>
-      {citizens.length <= 0 ? (
+      {initialData.length <= 0 ? (
         <p className="mt-5">{t("noCitizens")}</p>
       ) : (
         <ul className="mt-5">
@@ -79,9 +86,8 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             <FormField label={common("search")} className="w-full">
               <Input
                 placeholder="john doe"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                className=""
+                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+                value={asyncTable.search.search}
               />
             </FormField>
 
@@ -99,21 +105,12 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
           </div>
 
           <Table
-            filter={search}
             pagination={{
-              totalCount,
               enabled: true,
-              fetchData: {
-                fetch: (data) =>
-                  paginationFetch({
-                    ...data,
-                    path: "/admin/manage/citizens",
-                    onResponse: (json) => json.citizens,
-                  }),
-                state: paginationState,
-              },
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
             }}
-            data={citizens
+            data={asyncTable.data
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 name: `${citizen.name} ${citizen.surname}`,
