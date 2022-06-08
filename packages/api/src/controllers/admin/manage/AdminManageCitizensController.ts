@@ -121,6 +121,31 @@ export class AdminManageCitizensController {
     return updated;
   }
 
+  @Post("/search")
+  async searchCitizenByName(@QueryParams("query") query: string) {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    const citizens = await prisma.citizen.findMany({
+      where: {
+        OR: [
+          {
+            name: { contains: name, mode: "insensitive" },
+            surname: { contains: surname, mode: "insensitive" },
+          },
+          {
+            name: { contains: surname, mode: "insensitive" },
+            surname: { contains: name, mode: "insensitive" },
+          },
+          { name: { startsWith: name, mode: "insensitive" } },
+          { surname: { startsWith: surname, mode: "insensitive" } },
+        ],
+      },
+      take: 25,
+    });
+
+    return citizens;
+  }
+
   @Put("/:id")
   @Description("Update a citizen by its id")
   @UsePermissions({
