@@ -15,7 +15,7 @@ import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
-import { useAsyncTable } from "hooks/shared/table/useTablePagination";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
