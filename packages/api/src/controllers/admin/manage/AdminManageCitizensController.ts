@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
@@ -38,12 +38,15 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens() {
+  async getCitizens(@QueryParams("skip") skip = "0") {
+    const count = await prisma.citizen.count();
     const citizens = await prisma.citizen.findMany({
       include: citizenInclude,
+      take: 50,
+      skip: Number(skip),
     });
 
-    return citizens;
+    return { totalCount: count, citizens };
   }
 
   @Get("/records-logs")
