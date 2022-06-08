@@ -60,7 +60,7 @@ export class AdminManageCitizensController {
     const citizens = await prisma.citizen.findMany({
       where,
       include: citizenInclude,
-      take: 50,
+      take: 35,
       skip: Number(skip),
     });
 

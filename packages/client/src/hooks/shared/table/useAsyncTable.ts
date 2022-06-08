@@ -34,6 +34,8 @@ export function useAsyncTable<T>(options: Options<T>) {
         const jsonData = options.fetchOptions.onResponse(json);
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
+
+        window.scrollTo({ behavior: "smooth", top: 0 });
       }
     },
     [search], // eslint-disable-line
@@ -55,7 +57,7 @@ export function useAsyncTable<T>(options: Options<T>) {
     setTotalCount(jsonData.totalCount);
   }, [search]); // eslint-disable-line
 
-  useDebounce(handleSearch, 150, [search, handleSearch]);
+  useDebounce(handleSearch, 250, [search, handleSearch]);
 
   const pagination = {
     fetch: paginationFetch,
