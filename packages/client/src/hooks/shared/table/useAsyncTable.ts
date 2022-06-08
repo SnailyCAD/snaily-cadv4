@@ -19,7 +19,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [totalCount, setTotalCount] = React.useState(options.totalCount);
   const [data, setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
-
   const { state, execute } = useFetch();
 
   const paginationFetch = React.useCallback(

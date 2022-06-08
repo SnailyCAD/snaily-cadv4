@@ -83,12 +83,17 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
       ) : (
         <ul className="mt-5">
           <div className="flex items-center gap-2">
-            <FormField label={common("search")} className="w-full">
+            <FormField label={common("search")} className="w-full relative">
               <Input
                 placeholder="john doe"
                 onChange={(e) => asyncTable.search.setSearch(e.target.value)}
                 value={asyncTable.search.search}
               />
+              {asyncTable.state === "loading" ? (
+                <span className="absolute top-[2.4rem] right-2.5">
+                  <Loader />
+                </span>
+              ) : null}
             </FormField>
 
             <FormField className="w-40" label="Filter">
