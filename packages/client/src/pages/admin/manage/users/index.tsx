@@ -19,28 +19,38 @@ import { useAuth } from "context/AuthContext";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { classNames } from "lib/classNames";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import { Loader } from "components/Loader";
 
 interface Props {
-  users: User[];
+  data: { users: User[]; pendingCount: number; totalCount: number };
 }
 
-export default function ManageUsers({ users: data }: Props) {
-  const [users, setUsers] = React.useState<User[]>(data);
-  const [search, setSearch] = React.useState("");
+export default function ManageUsers({ data }: Props) {
+  const [users, setUsers] = React.useState<User[]>(data.users);
   const { cad } = useAuth();
   const { hasPermissions } = usePermission();
+
+  const asyncTable = useAsyncTable({
+    initialData: data.users,
+    totalCount: data.totalCount,
+    fetchOptions: {
+      path: "/admin/manage/users",
+      onResponse: (json) => ({ totalCount: json.totalCount, data: json.users }),
+    },
+  });
 
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const pending = users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
 
   React.useEffect(() => {
-    setUsers(data);
+    setUsers(data.users);
   }, [data]);
 
   const tabs = [
-    { name: `${t("allUsers")} (${users.length})`, value: "allUsers" },
-    { name: `${t("pendingUsers")} (${pending.length})`, value: "pendingUsers" },
+    { name: `${t("allUsers")} (${data.totalCount})`, value: "allUsers" },
+    { name: `${t("pendingUsers")} (${data.pendingCount})`, value: "pendingUsers" },
   ];
 
   return (
@@ -57,15 +67,34 @@ export default function ManageUsers({ users: data }: Props) {
     >
       <Title>{t("MANAGE_USERS")}</Title>
 
-      <FormField label={common("search")} className="my-2">
-        <Input placeholder="john doe" onChange={(e) => setSearch(e.target.value)} value={search} />
+      <FormField label={common("search")} className="my-2 relative">
+        <Input
+          placeholder="john doe"
+          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+          value={asyncTable.search.search}
+        />
+        {asyncTable.state === "loading" ? (
+          <span className="absolute top-[2.4rem] right-2.5">
+            <Loader />
+          </span>
+        ) : null}
       </FormField>
 
       <TabList tabs={tabs}>
         <TabsContent aria-label={t("allUsers")} value="allUsers" className="mt-5">
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
-            filter={search}
-            data={users.map((user) => {
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
+            }}
+            data={asyncTable.data.map((user) => {
               const hasAdminPermissions = hasPermissions(
                 defaultPermissions.allDefaultAdminPermissions,
                 user.rank !== Rank.USER,
@@ -130,18 +159,23 @@ export default function ManageUsers({ users: data }: Props) {
           />
         </TabsContent>
 
-        <PendingUsersTab setUsers={setUsers} users={pending} search={search} />
+        <PendingUsersTab
+          pendingCount={data.pendingCount}
+          setUsers={setUsers}
+          users={pending}
+          search={asyncTable.search.search}
+        />
       </TabList>
     </AdminLayout>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [users] = await requestAll(req, [["/admin/manage/users", []]]);
+  const [usersData] = await requestAll(req, [["/admin/manage/users", []]]);
 
   return {
     props: {
-      users,
+      data: usersData,
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),

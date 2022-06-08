@@ -45,8 +45,8 @@ export class AdminManageCitizensController {
       ? {
           OR: [
             {
-              name: { equals: name, mode: Prisma.QueryMode.insensitive },
-              surname: { equals: surname, mode: Prisma.QueryMode.insensitive },
+              name: { contains: name, mode: Prisma.QueryMode.insensitive },
+              surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
             },
             {
               name: { equals: surname, mode: Prisma.QueryMode.insensitive },

@@ -109,6 +109,12 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
             </FormField>
           </div>
 
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
             pagination={{
               enabled: true,
