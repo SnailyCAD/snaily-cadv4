@@ -42,12 +42,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   );
 
   const handleSearch = React.useCallback(async () => {
-    if (!search.trim()) {
-      setData(options.initialData);
-      setTotalCount(options.totalCount);
-      return;
-    }
-
     const { json } = await execute(options.fetchOptions.path, {
       params: { query: search.trim() },
     });
