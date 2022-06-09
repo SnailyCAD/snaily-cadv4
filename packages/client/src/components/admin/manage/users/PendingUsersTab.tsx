@@ -12,10 +12,9 @@ interface Props {
 
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-  search: string;
 }
 
-export function PendingUsersTab({ setUsers, pendingCount, search }: Props) {
+export function PendingUsersTab({ setUsers, pendingCount }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const { execute } = useFetch();
@@ -24,7 +23,7 @@ export function PendingUsersTab({ setUsers, pendingCount, search }: Props) {
     initialData: [],
     totalCount: pendingCount,
     fetchOptions: {
-      path: "/admin/manage/users",
+      path: "/admin/manage/users?pendingOnly=true",
       onResponse: (json) => ({ totalCount: json.totalCount, data: json.users }),
     },
   });
@@ -57,7 +56,6 @@ export function PendingUsersTab({ setUsers, pendingCount, search }: Props) {
         <p>There are no users pending access.</p>
       ) : (
         <Table
-          filter={search}
           data={asyncTable.data.map((user) => ({
             username: user.username,
 
