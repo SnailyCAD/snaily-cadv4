@@ -7,7 +7,7 @@ import { Rank, User, WhitelistStatus } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { TabList } from "components/shared/TabList";
-import { PendingUsersTab } from "components/admin/manage/users/PendingUsersTab";
+import { PendingUsersTab } from "components/admin/manage/users/tabs/PendingUsersTab";
 import { Title } from "components/shared/Title";
 import { Permissions } from "hooks/usePermission";
 import { AllUsersTab } from "components/admin/manage/users/tabs/AllUsersTab";
@@ -17,14 +17,8 @@ interface Props {
 }
 
 export default function ManageUsers({ data }: Props) {
-  const [users, setUsers] = React.useState<User[]>(data.users);
-
   const t = useTranslations("Management");
-  const pending = users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
-
-  React.useEffect(() => {
-    setUsers(data.users);
-  }, [data]);
+  const pending = data.users.filter((v) => v.whitelistStatus === WhitelistStatus.PENDING);
 
   const tabs = [
     { name: `${t("allUsers")} (${data.totalCount})`, value: "allUsers" },
@@ -47,8 +41,7 @@ export default function ManageUsers({ data }: Props) {
 
       <TabList tabs={tabs}>
         <AllUsersTab {...data} />
-
-        <PendingUsersTab pendingCount={data.pendingCount} setUsers={setUsers} users={pending} />
+        <PendingUsersTab {...data} users={pending} />
       </TabList>
     </AdminLayout>
   );
