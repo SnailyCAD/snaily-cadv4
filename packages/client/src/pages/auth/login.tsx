@@ -107,7 +107,7 @@ export default function Login() {
   const showSteamOAuth = STEAM_OAUTH && useThirdPartyConnectionsAbility;
   const showDiscordOAuth = DISCORD_AUTH && useThirdPartyConnectionsAbility;
 
-  const showHorizontalLine = !ALLOW_REGULAR_LOGIN || showSteamOAuth || showDiscordOAuth || !!user;
+  const showHorizontalLine = ALLOW_REGULAR_LOGIN && (showSteamOAuth || showDiscordOAuth || !!user);
 
   return (
     <>
