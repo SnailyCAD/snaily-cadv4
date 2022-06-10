@@ -138,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: await getSessionUser(req),
       data: jailData,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], locale)),
+        ...(await getTranslations(["leo", "ems-fd", "citizen", "common"], locale)),
       },
     },
   };

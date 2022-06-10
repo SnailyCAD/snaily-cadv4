@@ -37,7 +37,13 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
     });
 
     if (json) {
-      asyncTable.setData(asyncTable.data.filter((v) => v.id !== user.id));
+      const filtered = asyncTable.data.filter((v) => v.id !== user.id);
+      asyncTable.setData(filtered);
+
+      if (filtered.length <= 0) {
+        await asyncTable.pagination.fetch({ pageSize: 35, pageIndex: 0 });
+      }
+
       router.replace({ pathname: router.pathname, query: router.query });
     }
   }

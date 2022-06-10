@@ -51,8 +51,6 @@ export class ManageUsersController {
           }
         : undefined;
 
-    console.log({ where });
-
     const [totalCount, pendingCount] = await Promise.all([
       prisma.user.count({ where }),
       prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
@@ -61,7 +59,7 @@ export class ManageUsersController {
     const users = await prisma.user.findMany({
       select: userProperties,
       where,
-      take: 35,
+      take: 7,
       skip: Number(skip),
     });
 
