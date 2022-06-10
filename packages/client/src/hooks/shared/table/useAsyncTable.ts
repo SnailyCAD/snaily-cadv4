@@ -12,6 +12,7 @@ interface FetchOptions {
 interface Options<T> {
   totalCount: number;
   initialData: T[];
+  setDataOnInitialDataChange?: boolean;
   fetchOptions: Pick<FetchOptions, "onResponse" | "path">;
 }
 
@@ -20,6 +21,12 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [data, setData] = React.useState(options.initialData);
   const [search, setSearch] = React.useState("");
   const { state, execute } = useFetch();
+
+  React.useEffect(() => {
+    if (options.setDataOnInitialDataChange) {
+      setData(options.initialData);
+    }
+  }, [options.initialData, options.setDataOnInitialDataChange]);
 
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {

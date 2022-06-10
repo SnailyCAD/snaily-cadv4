@@ -23,7 +23,7 @@ import { makeColumns } from "lib/table/makeColumns";
 import { dndArrowHook } from "lib/table/dndArrowHook";
 
 export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
-export const MAX_ITEMS_PER_PAGE = 7 as const;
+export const MAX_ITEMS_PER_PAGE = 35 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
   const isMounted = useMounted();

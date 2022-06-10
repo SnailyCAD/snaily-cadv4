@@ -59,7 +59,7 @@ export class ManageUsersController {
     const users = await prisma.user.findMany({
       select: userProperties,
       where,
-      take: 7,
+      take: 35,
       skip: Number(skip),
     });
 
