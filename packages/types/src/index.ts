@@ -688,7 +688,6 @@ export interface Officer {
   radioChannelId: string | null;
   user: Pick<User, "id" | "username" | "steamId">;
   callsigns?: IndividualDivisionCallsign[];
-  lastStatusChangeTimestamp: Date;
 }
 
 export interface IndividualDivisionCallsign {
@@ -1093,7 +1092,6 @@ export interface EmsFdDeputy {
   activeIncidentId: string | null;
   whitelistStatusId: string | null;
   whitelistStatus?: LeoWhitelistStatus | null;
-  lastStatusChangeTimestamp: Date;
 }
 
 /**
