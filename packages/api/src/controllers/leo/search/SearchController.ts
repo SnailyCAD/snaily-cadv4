@@ -84,7 +84,7 @@ const weaponsInclude = {
 @Header("content-type", "application/json")
 export class SearchController {
   @Post("/name")
-  @Description("Search citizens by their name, surname or fullname")
+  @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")
   @UsePermissions({
     fallback: (u) => u.isLeo || u.isDispatch,
     permissions: [Permissions.Leo, Permissions.Dispatch],
@@ -105,6 +105,7 @@ export class SearchController {
         surname: { contains: surname, mode: "insensitive" },
       },
       include: citizenSearchInclude(cad),
+      take: 35,
     });
 
     if (citizen.length <= 0) {
@@ -113,6 +114,7 @@ export class SearchController {
           socialSecurityNumber: name,
         },
         include: citizenSearchInclude(cad),
+        take: 35,
       });
     }
 
@@ -123,6 +125,7 @@ export class SearchController {
           surname: { contains: name, mode: "insensitive" },
         },
         include: citizenSearchInclude(cad),
+        take: 35,
       });
     }
 
@@ -132,6 +135,7 @@ export class SearchController {
           name: { startsWith: name, mode: "insensitive" },
         },
         include: citizenSearchInclude(cad),
+        take: 35,
       });
     }
 
@@ -141,6 +145,7 @@ export class SearchController {
           surname: { startsWith: name, mode: "insensitive" },
         },
         include: citizenSearchInclude(cad),
+        take: 35,
       });
     }
 
