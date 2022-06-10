@@ -16,8 +16,6 @@ export function useUnitLastStatusChange({ unit }: Options) {
   function isUnitInactive() {
     if (!cad || !unit || isUnitCombined(unit)) return;
 
-    console.log({ unit });
-
     const inactivityTimeout = cad.miscCadSettings?.inactivityTimeout ?? null;
     if (!inactivityTimeout) {
       return;
