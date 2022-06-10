@@ -94,9 +94,10 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         <ActiveDeputies />
       </div>
 
+      <SelectDeputyModal />
+
       {state.activeDeputy ? (
         <>
-          <SelectDeputyModal />
           <NotepadModal />
           <CreateMedicalRecordModal />
           <SearchMedicalRecordModal />
