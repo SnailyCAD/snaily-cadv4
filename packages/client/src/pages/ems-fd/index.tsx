@@ -20,6 +20,7 @@ import type { EmsFdDeputy } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/useTones";
+import { useUnitLastStatusChange } from "hooks/shared/useUnitLastStatusChange";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -47,15 +48,16 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const signal100 = useSignal100();
   const tones = useTones("ems-fd");
   const panic = usePanicButton();
-  const state = useEmsFdState();
+  const emsFdState = useEmsFdState();
+  const unitLastStatusChange = useUnitLastStatusChange({ unit: emsFdState.activeDeputy });
   const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
 
   React.useEffect(() => {
-    state.setActiveDeputy(activeDeputy);
-    state.setDeputies(deputies);
+    emsFdState.setActiveDeputy(activeDeputy);
+    emsFdState.setDeputies(deputies);
     setCalls(calls);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.setActiveDeputy, state.setDeputies, setCalls, calls, deputies, activeDeputy]);
+  }, [emsFdState.setActiveDeputy, emsFdState.setDeputies, setCalls, calls, deputies, activeDeputy]);
 
   const t = useTranslations();
 
@@ -69,6 +71,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
       <tones.Component audio={tones.audio} description={tones.description} />
+      <unitLastStatusChange.Component isInactive={unitLastStatusChange.isInactive} />
 
       <UtilityPanel>
         <div className="px-4">
@@ -78,8 +81,8 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         <StatusesArea
           setUnits={setActiveDeputies}
           units={activeDeputies}
-          setActiveUnit={state.setActiveDeputy}
-          activeUnit={state.activeDeputy}
+          setActiveUnit={emsFdState.setActiveDeputy}
+          activeUnit={emsFdState.activeDeputy}
         />
       </UtilityPanel>
 
@@ -96,7 +99,7 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
 
       <SelectDeputyModal />
 
-      {state.activeDeputy ? (
+      {emsFdState.activeDeputy ? (
         <>
           <NotepadModal />
           <CreateMedicalRecordModal />
