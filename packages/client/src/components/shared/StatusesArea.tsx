@@ -105,7 +105,9 @@ export function StatusesArea<T extends ActiveOfficer | ActiveDeputy>({
     });
 
     if (json.id) {
-      setActiveUnit({ ...activeUnit, ...json });
+      console.log({ json });
+
+      setActiveUnit({ ...activeUnit, ...json, lastStatusChangeTimestamp: new Date() });
     }
   }
 
