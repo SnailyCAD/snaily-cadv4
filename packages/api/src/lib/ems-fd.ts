@@ -1,4 +1,4 @@
-import { Rank, User } from "@prisma/client";
+import { Prisma, Rank, ShouldDoType, User } from "@prisma/client";
 import { hasPermission, Permissions } from "@snailycad/permissions";
 import type { Req, Context } from "@tsed/common";
 import { BadRequest, Forbidden, Unauthorized } from "@tsed/exceptions";
@@ -44,17 +44,21 @@ export async function getActiveDeputy(
   const cad = await prisma.cad.findFirst({ include: { miscCadSettings: true } });
   const unitsInactivityFilter = getInactivityFilter(cad!, "lastStatusChangeTimestamp");
 
+  const filters: Prisma.Enumerable<Prisma.EmsFdDeputyWhereInput> = [
+    { status: { shouldDo: ShouldDoType.SET_OFF_DUTY } },
+    { status: { is: null } },
+  ];
+
+  if (unitsInactivityFilter) {
+    filters.push({
+      lastStatusChangeTimestamp: { lte: unitsInactivityFilter.lastStatusChangeTimestamp },
+    });
+  }
+
   const deputy = await prisma.emsFdDeputy.findFirst({
     where: {
       userId: user.id,
-      lastStatusChangeTimestamp: unitsInactivityFilter
-        ? { lte: unitsInactivityFilter.lastStatusChangeTimestamp }
-        : undefined,
-      NOT: {
-        status: {
-          shouldDo: "SET_OFF_DUTY",
-        },
-      },
+      NOT: { OR: filters },
     },
     include: unitProperties,
   });
