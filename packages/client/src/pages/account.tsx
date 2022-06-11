@@ -15,6 +15,7 @@ import { Title } from "components/shared/Title";
 import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -32,7 +33,11 @@ const UserApiTokenTab = dynamic(async () => {
   return (await import("components/account/UserApiToken")).UserApiTokenTab;
 });
 
-export default function Account() {
+interface Props {
+  availableSounds: Record<Sounds, boolean>;
+}
+
+export default function Account({ availableSounds }: Props) {
   const mounted = useMounted();
   const { user } = useAuth();
   const t = useTranslations("Account");
@@ -99,7 +104,7 @@ export default function Account() {
               </div>
             </TabsContent>
             <AccountSettingsTab />
-            <AppearanceTab />
+            <AppearanceTab availableSounds={availableSounds} />
             {showConnectionsTab ? <ConnectionsTab /> : null}
             {USER_API_TOKENS && hasApiTokenPermissions ? <UserApiTokenTab /> : null}
           </TabList>
@@ -110,8 +115,11 @@ export default function Account() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const availableSounds = await getAvailableSounds();
+
   return {
     props: {
+      availableSounds,
       session: await getSessionUser(req),
       messages: {
         ...(await getTranslations(["account", "auth", "common"], locale)),

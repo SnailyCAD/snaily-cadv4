@@ -14,6 +14,7 @@ import type { IncomingMessage } from "connect";
 import type { NextApiRequestCookies } from "next/dist/server/api-utils";
 import format from "date-fns/format";
 import differenceInYears from "date-fns/differenceInYears";
+import type { Sounds } from "./server/getAvailableSounds";
 
 export function calculateAge(dateOfBirth: string | Date): string {
   const difference = differenceInYears(new Date(), new Date(dateOfBirth));
@@ -130,4 +131,17 @@ export function omit<Obj extends object, Properties extends keyof Obj>(
   }
 
   return newObj as Omit<Obj, Properties>;
+}
+
+export function soundCamelCaseToKebabCase(sound: string) {
+  const obj: Record<string, Sounds> = {
+    panicButton: "panic-button",
+    signal100: "signal100",
+    addedToCall: "added-to-call",
+    stopRoleplay: "stop-roleplay",
+    statusUpdate: "status-update",
+    incomingCall: "incoming-call",
+  };
+
+  return obj[sound] as Sounds;
 }

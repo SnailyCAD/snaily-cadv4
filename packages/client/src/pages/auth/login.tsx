@@ -12,7 +12,7 @@ import { useTranslations } from "use-intl";
 import type { GetServerSideProps } from "next";
 import { getTranslations } from "lib/getTranslation";
 import { Button } from "components/Button";
-import { findUrl, handleRequest } from "lib/fetch";
+import { findAPIUrl, handleRequest } from "lib/fetch";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
@@ -85,14 +85,14 @@ export default function Login() {
   }
 
   function handleDiscordLogin() {
-    const url = findUrl();
+    const url = findAPIUrl();
 
     const fullUrl = `${url}/auth/discord`;
     window.location.href = fullUrl;
   }
 
   function handleSteamLogin() {
-    const url = findUrl();
+    const url = findAPIUrl();
 
     const fullUrl = `${url}/auth/steam`;
     window.location.href = fullUrl;
