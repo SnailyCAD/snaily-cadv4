@@ -1,4 +1,4 @@
-import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User } from "@prisma/client";
+import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User, Prisma } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -37,13 +37,33 @@ export class ManageUsersController {
       Permissions.DeleteUsers,
     ],
   })
-  @Description("Get all the users in the CAD")
-  async getUsers() {
+  @Description("Get all the users in the CAD.")
+  async getUsers(
+    @QueryParams("skip") skip = "0",
+    @QueryParams("query") query = "",
+    @QueryParams("pendingOnly") pendingOnly = "false",
+  ) {
+    const where =
+      query || pendingOnly
+        ? {
+            ...(query ? { username: { contains: query, mode: Prisma.QueryMode.insensitive } } : {}),
+            ...(pendingOnly === "true" ? { whitelistStatus: WhitelistStatus.PENDING } : {}),
+          }
+        : undefined;
+
+    const [totalCount, pendingCount] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
+    ]);
+
     const users = await prisma.user.findMany({
       select: userProperties,
+      where,
+      take: 35,
+      skip: Number(skip),
     });
 
-    return users;
+    return { totalCount, pendingCount, users };
   }
 
   @Get("/:id")

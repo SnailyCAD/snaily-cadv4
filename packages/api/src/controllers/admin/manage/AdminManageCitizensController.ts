@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
@@ -12,7 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, User, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import {
   ACCEPT_DECLINE_TYPES,
@@ -38,12 +38,35 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens() {
-    const citizens = await prisma.citizen.findMany({
-      include: citizenInclude,
-    });
+  async getCitizens(@QueryParams("skip") skip = "0", @QueryParams("query") query = "") {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    return citizens;
+    const where = query
+      ? {
+          OR: [
+            {
+              name: { contains: name, mode: Prisma.QueryMode.insensitive },
+              surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+            },
+            {
+              name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+              surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+            },
+          ],
+        }
+      : undefined;
+
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+        take: 35,
+        skip: Number(skip),
+      }),
+    ]);
+
+    return { totalCount, citizens };
   }
 
   @Get("/records-logs")

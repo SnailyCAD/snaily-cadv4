@@ -37,6 +37,7 @@ export async function handleRequest<T = any>(
     method,
     data: data ?? undefined,
     withCredentials: true,
+    params: options?.params,
     headers: {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       Session: parsedCookie ?? "",

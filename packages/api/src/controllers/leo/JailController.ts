@@ -38,17 +38,22 @@ export class LeoController {
     fallback: (u) => u.isLeo,
   })
   async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
-    const citizens = await prisma.citizen.findMany({
-      where: {
-        OR: [
-          {
-            arrested: true,
-          },
-          { Record: { some: { release: { isNot: null } } } },
-        ],
-      },
-      include: citizenInclude,
-    });
+    const where = {
+      OR: [
+        {
+          arrested: true,
+        },
+        { Record: { some: { release: { isNot: null } } } },
+      ],
+    };
+
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+      }),
+    ]);
 
     const jailTimeScale = cad.miscCadSettings.jailTimeScale;
     if (jailTimeScale) {
@@ -87,7 +92,7 @@ export class LeoController {
       ).catch(console.error);
     }
 
-    return citizens;
+    return { totalCount, jailedCitizens: citizens };
   }
 
   @Delete("/:id")
