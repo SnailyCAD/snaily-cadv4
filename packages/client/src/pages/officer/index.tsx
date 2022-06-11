@@ -35,7 +35,6 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
-import { useUnitLastStatusChange } from "hooks/shared/useUnitLastStatusChange";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -94,7 +93,6 @@ export default function OfficerDashboard({
   const signal100 = useSignal100();
   const tones = useTones("leo");
   const panic = usePanicButton();
-  const unitLastStatusChange = useUnitLastStatusChange({ unit: leoState.activeOfficer });
   const { isOpen } = useModal();
   const { user } = useAuth();
   const { LEO_TICKETS } = useFeatureEnabled();
@@ -150,7 +148,6 @@ export default function OfficerDashboard({
       <signal100.Component enabled={signal100.enabled} audio={signal100.audio} />
       <panic.Component audio={panic.audio} unit={panic.unit} />
       <tones.Component audio={tones.audio} description={tones.description} />
-      <unitLastStatusChange.Component isInactive={unitLastStatusChange.isInactive} />
 
       <UtilityPanel>
         <div className="px-4">
