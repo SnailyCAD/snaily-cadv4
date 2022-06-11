@@ -56,15 +56,17 @@ export class AdminManageCitizensController {
         }
       : undefined;
 
-    const count = await prisma.citizen.count({ where });
-    const citizens = await prisma.citizen.findMany({
-      where,
-      include: citizenInclude,
-      take: 35,
-      skip: Number(skip),
-    });
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+        take: 35,
+        skip: Number(skip),
+      }),
+    ]);
 
-    return { totalCount: count, citizens };
+    return { totalCount, citizens };
   }
 
   @Get("/records-logs")

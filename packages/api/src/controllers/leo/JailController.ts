@@ -47,11 +47,13 @@ export class LeoController {
       ],
     };
 
-    const totalCount = await prisma.citizen.count({ where });
-    const citizens = await prisma.citizen.findMany({
-      where,
-      include: citizenInclude,
-    });
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+      }),
+    ]);
 
     const jailTimeScale = cad.miscCadSettings.jailTimeScale;
     if (jailTimeScale) {
