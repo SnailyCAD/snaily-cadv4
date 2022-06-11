@@ -19,7 +19,7 @@ interface Props {
 export function PendingUsersTab({ users, pendingCount }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
   const router = useRouter();
 
   const asyncTable = useAsyncTable<User>({
@@ -89,6 +89,7 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
                   onClick={() => handleAcceptOrDecline(user, "accept")}
                   className="mr-2"
                   variant="success"
+                  disabled={state === "loading"}
                 >
                   {common("accept")}
                 </Button>
@@ -96,6 +97,7 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
                   small
                   onClick={() => handleAcceptOrDecline(user, "decline")}
                   variant="danger"
+                  disabled={state === "loading"}
                 >
                   {common("decline")}
                 </Button>
