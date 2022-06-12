@@ -59,20 +59,20 @@ export default function CitizenPage({ citizens }: Props) {
           <Link href="/citizen/create">
             <a
               href="/citizen/create"
-              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default}`}
+              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
             >
               {t("createCitizen")}
             </a>
           </Link>
         </li>
         <li>
-          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left w-full">
             {t("registerVehicle")}
           </Button>
         </li>
         {WEAPON_REGISTRATION ? (
           <li>
-            <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
+            <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left w-full">
               {t("registerWeapon")}
             </Button>
           </li>
@@ -85,7 +85,7 @@ export default function CitizenPage({ citizens }: Props) {
                 setModal("tow");
                 openModal(ModalIds.ManageTowCall);
               }}
-              className="text-left"
+              className="text-left w-full"
             >
               {t("createTowCall")}
             </Button>
@@ -98,7 +98,7 @@ export default function CitizenPage({ citizens }: Props) {
                 setModal("taxi");
                 openModal(ModalIds.ManageTowCall);
               }}
-              className="text-left"
+              className="text-left w-full"
             >
               {t("createTaxiCall")}
             </Button>
@@ -106,7 +106,7 @@ export default function CitizenPage({ citizens }: Props) {
         ) : null}
         {CALLS_911 ? (
           <li>
-            <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
+            <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left w-full">
               {t("create911Call")}
             </Button>
           </li>
