@@ -60,7 +60,7 @@ export class AdminManageUnitsController {
   }
 
   @Get("/:id")
-  @Description("Get a unit by their id")
+  @Description("Get a unit by their `id`, `discordId` or `steamId` ")
   @UsePermissions({
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.ViewUnits, Permissions.DeleteUnits, Permissions.ManageUnits],
@@ -70,14 +70,18 @@ export class AdminManageUnitsController {
       qualifications: { include: { qualification: { include: { value: true } } } },
     };
 
-    let unit: any = await prisma.officer.findUnique({
-      where: { id },
+    let unit: any = await prisma.officer.findFirst({
+      where: {
+        OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
+      },
       include: { ...leoProperties, ...extraInclude, logs: true },
     });
 
     if (!unit) {
-      unit = await prisma.emsFdDeputy.findUnique({
-        where: { id },
+      unit = await prisma.emsFdDeputy.findFirst({
+        where: {
+          OR: [{ id }, { user: { discordId: id } }, { user: { steamId: id } }],
+        },
         include: { ...unitProperties, ...extraInclude, logs: true },
       });
     }
