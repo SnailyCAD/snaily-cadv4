@@ -94,15 +94,23 @@ export class AdminManageCitizensController {
   }
 
   @Get("/:id")
-  @Description("Get a citizen by its id")
+  @Description(
+    "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
+  )
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string) {
-    const citizen = await prisma.citizen.findUnique({
-      where: { id },
+    const isCitizenId = id.startsWith("cl");
+
+    const functionName = isCitizenId ? "findFirst" : "findMany";
+    // @ts-expect-error same properties
+    const citizen = await prisma.citizen[functionName]({
       include: citizenInclude,
+      where: {
+        OR: [{ user: { discordId: id } }, { user: { steamId: id } }, { id }],
+      },
     });
 
     return citizen;

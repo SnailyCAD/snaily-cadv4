@@ -1,7 +1,7 @@
 import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Description, Get, Post, Put } from "@tsed/schema";
+import { Delete, Get, Post, Put } from "@tsed/schema";
 import { BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -86,23 +86,19 @@ export class CitizenController {
   }
 
   @Get("/:id")
-  @Description("Get a citizen by the `id`, `discordId` or `steamId`")
   async getCitizen(
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @Context("user") user: User,
-    @PathParams("id") id: string,
+    @PathParams("id") citizenId: string,
   ) {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
 
     const citizen = await prisma.citizen.findFirst({
-      include: citizenInclude,
       where: {
-        OR: [
-          { id, userId: checkCitizenUserId ? user.id : undefined },
-          { user: { discordId: id } },
-          { user: { steamId: id } },
-        ],
+        id: citizenId,
+        userId: checkCitizenUserId ? user.id : undefined,
       },
+      include: citizenInclude,
     });
 
     if (!citizen) {
