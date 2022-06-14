@@ -171,6 +171,7 @@ export class AdminManageCitizensController {
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
         imageId: validateImgurURL(data.image),
+        userId: data.userId || undefined,
       },
       include: citizenInclude,
     });

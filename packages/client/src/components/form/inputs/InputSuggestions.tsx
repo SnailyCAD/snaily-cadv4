@@ -13,10 +13,10 @@ import { isMobile } from "is-mobile";
 type ApiPathFunc = (inputValue: string) => string;
 type Suggestion = { id: string } & Record<string, unknown>;
 
-interface Props {
+interface Props<Suggestion extends { id: string }> {
   inputProps?: Omit<JSX.IntrinsicElements["input"], "ref"> & { errorMessage?: string };
-  onSuggestionClick?(suggestion: unknown): void;
-  Component({ suggestion }: { suggestion: unknown }): JSX.Element;
+  onSuggestionClick?(suggestion: Suggestion): void;
+  Component({ suggestion }: { suggestion: Suggestion }): JSX.Element;
   options: {
     apiPath: string | ApiPathFunc;
     method: Method;
@@ -26,7 +26,12 @@ interface Props {
   };
 }
 
-export function InputSuggestions({ Component, onSuggestionClick, options, inputProps }: Props) {
+export function InputSuggestions<Suggestion extends { id: string }>({
+  Component,
+  onSuggestionClick,
+  options,
+  inputProps,
+}: Props<Suggestion>) {
   const [isOpen, setOpen] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState<Suggestion[]>([]);
 
@@ -72,7 +77,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
     }
   }
 
-  function handleSuggestionClick(suggestion: unknown) {
+  function handleSuggestionClick(suggestion: Suggestion) {
     onSuggestionClick?.(suggestion);
     setOpen(false);
   }
@@ -147,7 +152,7 @@ export function InputSuggestions({ Component, onSuggestionClick, options, inputP
   );
 }
 
-type SuggestionProps = Pick<Props, "Component" | "onSuggestionClick"> & {
+type SuggestionProps = Pick<Props<any>, "Component" | "onSuggestionClick"> & {
   suggestion: Suggestion;
 };
 

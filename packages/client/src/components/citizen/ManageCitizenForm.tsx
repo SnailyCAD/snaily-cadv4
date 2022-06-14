@@ -12,17 +12,19 @@ import { useAuth } from "context/AuthContext";
 import { useValues } from "context/ValuesContext";
 import { handleValidate } from "lib/handleValidate";
 import { Form, Formik, FormikHelpers } from "formik";
-import { Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
+import { User, Citizen, DriversLicenseCategoryType, ValueLicenseType } from "@snailycad/types";
 import { useTranslations } from "next-intl";
 import { Textarea } from "components/form/Textarea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
-  citizen: Citizen | null;
+  citizen: (Citizen & { user?: User }) | null;
   state: "error" | "loading" | null;
   showLicenseFields?: boolean;
   allowEditingName?: boolean;
+  allowEditingUser?: boolean;
   cancelURL?: string;
   onSubmit(arg0: {
     data: any;
@@ -37,6 +39,7 @@ export function ManageCitizenForm({
   citizen,
   allowEditingName,
   showLicenseFields,
+  allowEditingUser,
   cancelURL = `/citizen/${citizen?.id}`,
 }: Props) {
   const [image, setImage] = React.useState<File | string | null>(null);
@@ -58,6 +61,8 @@ export function ManageCitizenForm({
     : "";
 
   const INITIAL_VALUES = {
+    userId: citizen?.userId ?? "",
+    username: citizen?.user?.username ?? "",
     name: citizen?.name ?? "",
     surname: citizen?.surname ?? "",
     dateOfBirth: citizen?.dateOfBirth ?? new Date(),
@@ -131,8 +136,29 @@ export function ManageCitizenForm({
 
   return (
     <Formik validate={validate} onSubmit={handleSubmit} initialValues={INITIAL_VALUES}>
-      {({ handleChange, values, errors, isValid }) => (
+      {({ handleChange, setValues, values, errors, isValid }) => (
         <Form>
+          {allowEditingUser ? (
+            <FormField errorMessage={errors.userId} label="User">
+              <InputSuggestions<User>
+                options={{
+                  apiPath: "/admin/manage/users/search",
+                  method: "POST",
+                  dataKey: "username",
+                }}
+                inputProps={{
+                  value: values.username,
+                  name: "username",
+                  onChange: handleChange,
+                }}
+                onSuggestionClick={(suggestion) => {
+                  setValues({ ...values, userId: suggestion.id, username: suggestion.username });
+                }}
+                Component={({ suggestion }) => <p className="flex ">{suggestion.username}</p>}
+              />
+            </FormField>
+          ) : null}
+
           <ImageSelectInput image={image} setImage={setImage} />
 
           <FormRow>
