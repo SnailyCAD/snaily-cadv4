@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { BoloType, CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
+import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
