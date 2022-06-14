@@ -70,8 +70,8 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: Citizen) => {
+              <InputSuggestions<Citizen>
+                onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,
@@ -80,7 +80,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
 
                   setValues(newValues, true);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img

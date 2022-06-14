@@ -125,12 +125,12 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: VehicleSearchResult) => {
+              <InputSuggestions<VehicleSearchResult>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
                   setCurrentResult(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <p>
                       {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})

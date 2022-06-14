@@ -61,12 +61,12 @@ export function AddressSearchModal() {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.address} label={t("enterAddress")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: AddressSearchResult[0]) => {
+              <InputSuggestions<AddressSearchResult[number]>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("address", suggestion.address);
                   setResults([suggestion]);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.address} ({suggestion.name} {suggestion.surname})
                   </div>

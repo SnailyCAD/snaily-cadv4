@@ -179,15 +179,15 @@ export function RegisterVehicleModal({
               </FormField>
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: VehicleValue) => {
+                <InputSuggestions<VehicleValue>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
                       model: suggestion.id,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: VehicleValue }) => (
+                  Component={({ suggestion }) => (
                     <p className="w-full text-left">{suggestion.value.value}</p>
                   )}
                   options={{
@@ -207,15 +207,15 @@ export function RegisterVehicleModal({
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
               {isLeo ? (
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: NameSearchResult) => {
+                <InputSuggestions<NameSearchResult>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       citizenId: suggestion.id,
                       name: `${suggestion.name} ${suggestion.surname}`,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                  Component={({ suggestion }) => (
                     <div className="flex items-center">
                       {suggestion.imageId ? (
                         <img

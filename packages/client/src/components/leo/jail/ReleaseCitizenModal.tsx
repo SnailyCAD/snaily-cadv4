@@ -78,15 +78,15 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
 
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: Citizen) => {
+                <InputSuggestions<Citizen>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       releasedById: suggestion.id,
                       releasedByName: `${suggestion.name} ${suggestion.surname}`,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                  Component={({ suggestion }) => (
                     <div className="flex items-center">
                       {suggestion.imageId ? (
                         <img

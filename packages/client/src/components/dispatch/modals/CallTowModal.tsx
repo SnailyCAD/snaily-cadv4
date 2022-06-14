@@ -20,7 +20,6 @@ import { useLeoState } from "state/leoState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { RegisteredVehicle } from "@snailycad/types";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 
 interface Props {
@@ -130,12 +129,12 @@ export function DispatchCallTowModal({ call }: Props) {
                 </FormField>
 
                 <FormField optional errorMessage={errors.plate} label={t("Vehicles.plate")}>
-                  <InputSuggestions
-                    onSuggestionClick={(suggestion: VehicleSearchResult) => {
+                  <InputSuggestions<VehicleSearchResult>
+                    onSuggestionClick={(suggestion) => {
                       setFieldValue("plate", suggestion.plate);
                       setFieldValue("model", suggestion.model.value.value);
                     }}
-                    Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                    Component={({ suggestion }) => (
                       <div className="flex items-center">
                         <p>
                           {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})
