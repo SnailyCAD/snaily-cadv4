@@ -38,7 +38,11 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens(@QueryParams("skip") skip = "0", @QueryParams("query") query = "") {
+  async getCitizens(
+    @QueryParams("includeAll") includeAll = "false",
+    @QueryParams("skip") skip = "0",
+    @QueryParams("query") query = "",
+  ) {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
     const where = query
@@ -61,8 +65,8 @@ export class AdminManageCitizensController {
       prisma.citizen.findMany({
         where,
         include: citizenInclude,
-        take: 35,
-        skip: Number(skip),
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : Number(skip),
       }),
     ]);
 

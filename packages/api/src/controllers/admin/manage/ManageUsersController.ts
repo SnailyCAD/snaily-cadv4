@@ -42,6 +42,7 @@ export class ManageUsersController {
     @QueryParams("skip") skip = "0",
     @QueryParams("query") query = "",
     @QueryParams("pendingOnly") pendingOnly = "false",
+    @QueryParams("includeAll") includeAll = "false",
   ) {
     const where =
       query || pendingOnly
@@ -56,11 +57,12 @@ export class ManageUsersController {
       prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
     ]);
 
+    const shouldIncludeAll = includeAll === "true";
     const users = await prisma.user.findMany({
       select: userProperties,
       where,
-      take: 35,
-      skip: Number(skip),
+      take: shouldIncludeAll ? undefined : 35,
+      skip: shouldIncludeAll ? undefined : Number(skip),
     });
 
     return { totalCount, pendingCount, users };
