@@ -152,11 +152,14 @@ export function InputSuggestions<Suggestion extends { id: string }>({
   );
 }
 
-type SuggestionProps = Pick<Props<any>, "Component" | "onSuggestionClick"> & {
+type SuggestionProps<Suggestion extends { id: string }> = Pick<
+  Props<Suggestion>,
+  "Component" | "onSuggestionClick"
+> & {
   suggestion: Suggestion;
 };
 
-const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps>(
+const Suggestion = React.forwardRef<HTMLButtonElement, SuggestionProps<Suggestion>>(
   ({ suggestion, onSuggestionClick, Component }, ref) => {
     const focusManager = useFocusManager();
 
