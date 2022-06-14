@@ -24,6 +24,8 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   firearmLicenseCategory: z.array(z.any()).nullable().optional(),
   image: z.any().nullable().optional(),
   socialSecurityNumber: z.string().min(2).max(30).nullable().optional(),
+  /** can only be used when updating a citizen via `PUT /admin/manage/citizens/:id` */
+  userId: z.string().nullable().optional(),
 });
 
 export const TAX_STATUS_REGEX = /TAXED|UNTAXED/;

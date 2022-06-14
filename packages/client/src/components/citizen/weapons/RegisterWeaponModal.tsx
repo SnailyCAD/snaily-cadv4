@@ -111,15 +111,15 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
               </FormField>
             ) : (
               <FormField errorMessage={errors.model} label={tVehicle("model")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: WeaponValue) => {
+                <InputSuggestions<WeaponValue>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       modelName: suggestion.value.value,
                       model: suggestion.id,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: WeaponValue }) => (
+                  Component={({ suggestion }) => (
                     <p className="w-full text-left">{suggestion.value.value}</p>
                   )}
                   options={{

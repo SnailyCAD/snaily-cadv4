@@ -78,6 +78,7 @@ export default function ManageCitizens({ citizen }: Props) {
       <div className="mt-5">
         <ManageCitizenForm
           allowEditingName
+          allowEditingUser
           showLicenseFields
           citizen={citizen}
           onSubmit={handleSubmit}

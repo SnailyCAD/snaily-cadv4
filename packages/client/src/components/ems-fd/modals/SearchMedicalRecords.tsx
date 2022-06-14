@@ -90,12 +90,12 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
         {({ setFieldValue, handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.name} label={t("MedicalRecords.citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: SearchResult) => {
+              <InputSuggestions<SearchResult>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   handleFoundName(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img

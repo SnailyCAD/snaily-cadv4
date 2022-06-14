@@ -162,7 +162,7 @@ export function ManageRecordModal({
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenName} label={t("citizen")}>
-              <InputSuggestions
+              <InputSuggestions<Citizen>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
@@ -185,7 +185,7 @@ export function ManageRecordModal({
                   method: "POST",
                   minLength: 2,
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (
