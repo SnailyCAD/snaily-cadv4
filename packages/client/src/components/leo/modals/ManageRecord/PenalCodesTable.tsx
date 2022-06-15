@@ -17,7 +17,7 @@ export function PenalCodesTable({ isReadOnly, penalCodes }: Props) {
   const currency = common("currency");
   const { LEO_BAIL } = useFeatureEnabled();
 
-  function sumOf(type: "fine" | "jailTime" | "bail") {
+  function sumOf(type: "fine" | "jailTime" | "bail"): number {
     return values.violations.reduce((ac, cv) => ac + (parseInt(cv.value[type]?.value) || 0), 0);
   }
 
