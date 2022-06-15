@@ -19,7 +19,7 @@ import { Title } from "components/shared/Title";
 
 const RegisterVehicleModal = dynamic(
   async () =>
-    (await import("components/citizen/vehicles/RegisterVehicleModal")).RegisterVehicleModal,
+    (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
 );
 const RegisterWeaponModal = dynamic(
   async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,

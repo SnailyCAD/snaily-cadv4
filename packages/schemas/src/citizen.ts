@@ -48,6 +48,10 @@ export const VEHICLE_SCHEMA = z.object({
   reApplyForDmv: z.boolean().nullable().optional(),
 });
 
+export const TRANSFER_VEHICLE_SCHEMA = z.object({
+  ownerId: z.string().min(2).max(255),
+});
+
 export const DELETE_VEHICLE_SCHEMA = z.object({
   businessId: z.string().max(255).optional().nullable(),
   employeeId: z.string().max(255).optional().nullable(),
