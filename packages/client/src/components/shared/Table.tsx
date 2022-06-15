@@ -72,7 +72,7 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     usePagination,
     useRowState,
     useRowSelect,
-    (hooks) => dndArrowHook(hooks, props.dragDrop?.enabled),
+    (hooks) => dndArrowHook(hooks, props.dragDrop),
   );
 
   const {
@@ -120,17 +120,6 @@ export function Table<T extends object, RowProps extends object>(props: TablePro
     props.defaultSort &&
       toggleSortBy(props.defaultSort.columnId as string, props.defaultSort.descending);
   }, [props.defaultSort, toggleSortBy]);
-
-  React.useEffect(() => {
-    if (!props.dragDrop?.enabled) return;
-
-    props.dragDrop.disabledIndices?.forEach((i) => {
-      const row = instance.rows[i];
-      if (!row) return;
-
-      row.setState({ ...row, disabled: true });
-    });
-  }, [instance.rows, props.dragDrop]);
 
   const containerProps = {
     ...props.containerProps,

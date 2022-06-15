@@ -1,4 +1,4 @@
-import type { TableData } from "components/shared/Table/TableProps";
+import type { TableData, TableProps } from "components/shared/Table/TableProps";
 import { classNames } from "lib/classNames";
 import { DRAGGABLE_TABLE_HANDLE } from "components/shared/Table";
 import { ArrowDownUp, ArrowsExpand } from "react-bootstrap-icons";
@@ -6,16 +6,16 @@ import type { Hooks, Cell } from "react-table";
 
 export function dndArrowHook<T extends object, RowProps extends object>(
   hooks: Hooks<TableData<T, RowProps>>,
-  dndEnabled?: boolean,
+  dragDropProps?: TableProps["dragDrop"],
 ) {
-  if (!dndEnabled) return;
+  if (!dragDropProps?.enabled) return;
 
   hooks.visibleColumns.push((columns) => [
     {
       id: "move",
       Header: () => <ArrowDownUp />,
       Cell: (props: Cell<TableData<T, RowProps>>) => {
-        const isDisabled = props.row.state.disabled;
+        const isDisabled = dragDropProps.disabledIndices?.includes(props.row.index);
 
         return (
           <span
