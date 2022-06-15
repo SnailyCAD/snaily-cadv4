@@ -50,8 +50,8 @@ export function ManageCitizenForm({
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
 
-  const isFieldDisabled = typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
-
+  const isNamesFieldDisabled =
+    typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
@@ -77,6 +77,7 @@ export function ManageCitizenForm({
     phoneNumber: citizen?.phoneNumber ?? "",
     postal: citizen?.postal ?? "",
     occupation: citizen?.occupation ?? "",
+    socialSecurityNumber: citizen?.socialSecurityNumber ?? "",
 
     driversLicense: citizen?.driversLicenseId ?? null,
     pilotLicense: citizen?.pilotLicenseId ?? null,
@@ -167,7 +168,7 @@ export function ManageCitizenForm({
                 value={values.name}
                 onChange={handleChange}
                 name="name"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
 
@@ -176,28 +177,38 @@ export function ManageCitizenForm({
                 value={values.surname}
                 onChange={handleChange}
                 name="surname"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
           </FormRow>
 
-          <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
-            <Input
-              type="date"
-              value={
-                isDate(values.dateOfBirth)
-                  ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
-                  : String(values.dateOfBirth)
-              }
-              onChange={(e) =>
-                handleChange({
-                  ...e,
-                  target: { name: "dateOfBirth", value: e.target.valueAsDate },
-                })
-              }
-              name="dateOfBirth"
-            />
-          </FormField>
+          <FormRow>
+            <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
+              <Input
+                type="date"
+                value={
+                  isDate(values.dateOfBirth)
+                    ? new Date(values.dateOfBirth.toString()).toISOString().slice(0, 10)
+                    : String(values.dateOfBirth)
+                }
+                onChange={(e) =>
+                  handleChange({
+                    ...e,
+                    target: { name: "dateOfBirth", value: e.target.valueAsDate },
+                  })
+                }
+                name="dateOfBirth"
+              />
+            </FormField>
+
+            <FormField errorMessage={errors.socialSecurityNumber} label={t("socialSecurityNumber")}>
+              <Input
+                value={values.socialSecurityNumber}
+                onChange={handleChange}
+                name="socialSecurityNumber"
+              />
+            </FormField>
+          </FormRow>
 
           <FormRow>
             <FormField errorMessage={errors.gender} label={t("gender")}>
