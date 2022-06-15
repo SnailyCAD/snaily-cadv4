@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -33,6 +34,8 @@ interface Props {
   onCreate?(data: Record): void;
 }
 
+let hasFetchedPenalCodes = false;
+
 export function ManageRecordModal({
   onUpdate,
   onCreate,
@@ -46,6 +49,16 @@ export function ManageRecordModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
+  const { setValues } = useValues();
+
+  const fetchOnOpen = React.useCallback(async () => {
+    const { json } = await execute("/admin/values/penal_code", {});
+
+    if (Array.isArray(json)) {
+      setValues((prev) => [...prev, ...json]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const data = {
     [RecordType.TICKET]: {
@@ -150,6 +163,13 @@ export function ManageRecordModal({
     notes: record?.notes ?? "",
     seizedItems: record?.seizedItems ?? [],
   };
+
+  React.useEffect(() => {
+    if (!hasFetchedPenalCodes) {
+      fetchOnOpen();
+      hasFetchedPenalCodes = true;
+    }
+  }, [fetchOnOpen, isOpen]);
 
   return (
     <Modal
