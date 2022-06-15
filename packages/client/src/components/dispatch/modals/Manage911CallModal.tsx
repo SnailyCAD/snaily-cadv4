@@ -16,7 +16,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { CallEventsArea } from "../911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { EmsFdDeputy, StatusValueType, ValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
@@ -28,6 +28,7 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   call: Full911Call | null;
@@ -36,7 +37,6 @@ interface Props {
   onClose?(): void;
 }
 
-let hasFetchedCallData = false;
 export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props) {
   const [showAlert, setShowAlert] = React.useState(false);
 
@@ -49,7 +49,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { hasPermissions } = usePermission();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
-  const { department, division, codes10, callType, setValues } = useValues();
+  const { department, division, codes10, callType } = useValues();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
 
@@ -70,21 +70,10 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
-  const fetchOnOpen = React.useCallback(async () => {
-    const { json } = await execute("/admin/values/division?paths=department,call_type", {});
-
-    if (Array.isArray(json)) {
-      setValues((prev) => [...prev, ...json]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (!hasFetchedCallData) {
-      fetchOnOpen();
-      hasFetchedCallData = true;
-    }
-  }, [fetchOnOpen, isOpen]);
+  useAsyncValues({
+    id: "ManageRecordModalPenalCodes",
+    valueTypes: [ValueType.DIVISION, ValueType.DEPARTMENT, ValueType.CALL_TYPE],
+  });
 
   const handleAddUpdateCallEvent = React.useCallback(
     (call: Full911Call) => {

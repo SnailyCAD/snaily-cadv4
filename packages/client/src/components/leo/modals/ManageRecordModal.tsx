@@ -14,7 +14,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode, Record } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, Record, ValueType } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -23,6 +23,7 @@ import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   record?: Record | null;
@@ -33,8 +34,6 @@ interface Props {
   onUpdate?(data: Record): void;
   onCreate?(data: Record): void;
 }
-
-let hasFetchedPenalCodes = false;
 
 export function ManageRecordModal({
   onUpdate,
@@ -49,16 +48,7 @@ export function ManageRecordModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
-  const { setValues } = useValues();
-
-  const fetchOnOpen = React.useCallback(async () => {
-    const { json } = await execute("/admin/values/penal_code", {});
-
-    if (Array.isArray(json)) {
-      setValues((prev) => [...prev, ...json]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useAsyncValues({ id: "ManageRecordModalPenalCodes", valueTypes: [ValueType.PENAL_CODE] });
 
   const data = {
     [RecordType.TICKET]: {
@@ -163,13 +153,6 @@ export function ManageRecordModal({
     notes: record?.notes ?? "",
     seizedItems: record?.seizedItems ?? [],
   };
-
-  React.useEffect(() => {
-    if (!hasFetchedPenalCodes) {
-      fetchOnOpen();
-      hasFetchedPenalCodes = true;
-    }
-  }, [fetchOnOpen, isOpen]);
 
   return (
     <Modal
