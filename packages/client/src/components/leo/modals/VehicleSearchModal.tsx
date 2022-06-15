@@ -21,7 +21,7 @@ import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
+import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
