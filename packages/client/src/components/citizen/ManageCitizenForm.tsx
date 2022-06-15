@@ -50,8 +50,8 @@ export function ManageCitizenForm({
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
 
-  const isFieldDisabled = typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
-
+  const isNamesFieldDisabled =
+    typeof allowEditingName !== "undefined" ? !allowEditingName : !!citizen;
   const weightPrefix = cad?.miscCadSettings?.weightPrefix
     ? `(${cad.miscCadSettings.weightPrefix})`
     : "";
@@ -168,7 +168,7 @@ export function ManageCitizenForm({
                 value={values.name}
                 onChange={handleChange}
                 name="name"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
 
@@ -177,7 +177,7 @@ export function ManageCitizenForm({
                 value={values.surname}
                 onChange={handleChange}
                 name="surname"
-                disabled={isFieldDisabled}
+                disabled={isNamesFieldDisabled}
               />
             </FormField>
           </FormRow>
@@ -206,7 +206,6 @@ export function ManageCitizenForm({
                 value={values.socialSecurityNumber}
                 onChange={handleChange}
                 name="socialSecurityNumber"
-                disabled={isFieldDisabled}
               />
             </FormField>
           </FormRow>
