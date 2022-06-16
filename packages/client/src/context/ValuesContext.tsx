@@ -79,7 +79,8 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
     return {
       ...values,
       values: values.values.filter((value) => {
-        return !(isBaseValue(value) ? value.isDisabled : value.value.isDisabled);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        return !(isBaseValue(value) ? value.isDisabled : value.value?.isDisabled);
       }),
     };
   }
