@@ -9,7 +9,10 @@ interface Options {
   id: string;
 }
 
-/** this will check against the store's `valuesToFetch`, this is wacky, but works for now. */
+/** this will check against the store's `valuesToFetch` length
+ * if the length equals the amount below, it will fetch the values with the respective value types.
+ * this is wacky, but works for now.
+ */
 const AMOUNT_OF_LOADABLE_VALUES = 7;
 let hasFetched = false;
 
