@@ -22,7 +22,7 @@ export function ManageVehicleFlagsModal() {
   const nameSearchState = useNameSearch();
   const { vehicleFlag } = useValues();
   const { state, execute } = useFetch();
-  useAsyncValues({ id: "ManageVehicleFlagsModal", valueTypes: [ValueType.VEHICLE_FLAG] });
+  useAsyncValues({ valueTypes: [ValueType.VEHICLE_FLAG] });
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;

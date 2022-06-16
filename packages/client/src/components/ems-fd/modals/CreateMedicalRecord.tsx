@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
+import { Citizen, MedicalRecord, ValueType } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
@@ -17,6 +17,7 @@ import { useValues } from "context/ValuesContext";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -31,6 +32,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
   const { bloodGroup } = useValues();
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  useAsyncValues({ valueTypes: [ValueType.BLOOD_GROUP] });
 
   const validate = handleValidate(MEDICAL_RECORD_SCHEMA);
 

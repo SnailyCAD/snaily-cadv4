@@ -71,7 +71,6 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
 
   useAsyncValues({
-    id: "ManageRecordModalPenalCodes",
     valueTypes: [ValueType.DIVISION, ValueType.DEPARTMENT, ValueType.CALL_TYPE],
   });
 

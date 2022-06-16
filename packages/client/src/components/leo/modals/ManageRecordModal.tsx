@@ -48,7 +48,7 @@ export function ManageRecordModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
-  useAsyncValues({ id: "ManageRecordModalPenalCodes", valueTypes: [ValueType.PENAL_CODE] });
+  useAsyncValues({ valueTypes: [ValueType.PENAL_CODE] });
 
   const data = {
     [RecordType.TICKET]: {

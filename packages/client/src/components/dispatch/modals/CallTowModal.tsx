@@ -37,7 +37,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
-  useAsyncValues({ id: "DispatchCallTowModal", valueTypes: [ValueType.IMPOUND_LOT] });
+  useAsyncValues({ valueTypes: [ValueType.IMPOUND_LOT] });
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";

@@ -1,5 +1,11 @@
 import * as React from "react";
-import { EmsFdDeputy, Officer, QualificationValueType, UnitQualification } from "@snailycad/types";
+import {
+  EmsFdDeputy,
+  Officer,
+  QualificationValueType,
+  UnitQualification,
+  ValueType,
+} from "@snailycad/types";
 import { Button } from "components/Button";
 import { AlertModal } from "components/modal/AlertModal";
 import { Table } from "components/shared/Table";
@@ -10,6 +16,7 @@ import { ModalIds } from "types/ModalIds";
 import { AddQualificationsModal } from "./AddQualificationsModal";
 import { FullDate } from "components/shared/FullDate";
 import { QualificationsHoverCard } from "./QualificationHoverCard";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   unit: (EmsFdDeputy | Officer) & { qualifications: UnitQualification[] };
@@ -19,6 +26,7 @@ interface Props {
 export function QualificationsTable({ setUnit, unit }: Props) {
   const t = useTranslations("Leo");
   const { openModal } = useModal();
+  useAsyncValues({ valueTypes: [ValueType.QUALIFICATION] });
 
   const awards = unit.qualifications.filter(
     (v) => v.qualification.qualificationType === QualificationValueType.AWARD,

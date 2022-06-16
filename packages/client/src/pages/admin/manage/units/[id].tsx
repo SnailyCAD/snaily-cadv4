@@ -245,7 +245,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ query, req, locale }) => {
   const [unit, values] = await requestAll(req, [
     [`/admin/manage/units/${query.id}`, null],
-    ["/admin/values/codes_10?paths=department,division,officer_rank,qualification", []],
+    ["/admin/values/codes_10?paths=department,division,officer_rank", []],
   ]);
 
   if (!unit) {

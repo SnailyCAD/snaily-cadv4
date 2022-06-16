@@ -6,27 +6,25 @@ import { useValues } from "context/ValuesContext";
 
 interface Options {
   valueTypes: ValueType[];
-  id: string;
 }
 
-/** this will check against the store's `valuesToFetch` length
- * if the length equals the amount below, it will fetch the values with the respective value types.
- * this is wacky, but works for now.
- */
-const AMOUNT_OF_LOADABLE_VALUES = 7;
-let hasFetched = false;
-
 interface Store {
+  fetched: boolean;
+  setFetched(fetched: boolean): void;
+
   valuesToFetch: ValueType[];
   addValuesToFetch(...values: ValueType[]): void;
 }
 
 const useStore = create<Store>((set, get) => ({
+  fetched: false,
+  setFetched: (fetched) => set({ fetched }),
+
   valuesToFetch: [],
   addValuesToFetch: (...values) => {
     const state = get();
     return set({
-      valuesToFetch: [...state.valuesToFetch, ...values],
+      valuesToFetch: [...new Set<ValueType>([...state.valuesToFetch, ...values])],
     });
   },
 }));
@@ -40,15 +38,21 @@ export function useAsyncValues(options: Options) {
     store.addValuesToFetch(...options.valueTypes);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  console.log({ store });
+
   React.useEffect(() => {
-    if (store.valuesToFetch.length === AMOUNT_OF_LOADABLE_VALUES && !hasFetched) {
+    if (!store.fetched) {
       fetchValues();
-      hasFetched = true;
+      store.setFetched(true);
     }
-  }, [store.valuesToFetch.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    return () => {
+      store.setFetched(false);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function transformValueTypesToString() {
-    return [...new Set(store.valuesToFetch)]
+    return store.valuesToFetch
       .slice(1, store.valuesToFetch.length)
       .map((type) => type.toLowerCase())
       .join(",");

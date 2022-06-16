@@ -20,7 +20,7 @@ export function ManageCitizenFlagsModal() {
   const { currentResult, setCurrentResult } = useNameSearch();
   const { citizenFlag } = useValues();
   const { state, execute } = useFetch();
-  useAsyncValues({ id: "ManageCitizenFlagsModal", valueTypes: [ValueType.CITIZEN_FLAG] });
+  useAsyncValues({ valueTypes: [ValueType.CITIZEN_FLAG] });
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
