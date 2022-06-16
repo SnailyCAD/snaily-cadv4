@@ -7,6 +7,7 @@ export const BASE_VALUE_SCHEMA = z.object({
   isDefault: z.boolean().nullable().optional(),
   officerRankImageId: z.any().nullable().optional(),
   officerRankDepartments: z.array(z.any()).nullable().optional(),
+  isDisabled: z.boolean().nullable().optional(),
 });
 export const BASE_ARR = z.array(BASE_VALUE_SCHEMA).min(1);
 

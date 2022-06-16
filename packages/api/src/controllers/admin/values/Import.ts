@@ -105,6 +105,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.VEHICLE, {
             hash: item.hash,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
           include: { value: true },
         });
@@ -122,6 +123,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.WEAPON, {
             hash: item.hash,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
         });
       }),
@@ -137,6 +139,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.BUSINESS_ROLE, {
             as: item.as as EmployeeAsEnum,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
           include: { value: true },
         });
@@ -153,6 +156,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.DRIVERSLICENSE_CATEGORY, {
             type: item.type as DriversLicenseCategoryType,
             value: item.value,
+            isDisabled: item.isDisabled,
             description: item.description,
           }),
           include: { value: true },
@@ -171,6 +175,7 @@ export const typeHandlers = {
             type: item.type as DepartmentType,
             callsign: item.callsign,
             value: item.value,
+            isDisabled: item.isDisabled,
             isDefaultDepartment: item.isDefaultDepartment ?? false,
             isConfidential: item.isConfidential ?? false,
             whitelisted: item.whitelisted ?? false,
@@ -194,6 +199,7 @@ export const typeHandlers = {
             callsign: item.callsign,
             department: { connect: { id: item.departmentId } },
             value: item.value,
+            isDisabled: item.isDisabled,
             pairedUnitTemplate: item.pairedUnitTemplate || null,
           }),
           include: { value: true, department: { include: { value: true } } },
@@ -216,6 +222,7 @@ export const typeHandlers = {
           shouldDo: item.shouldDo as ShouldDoType,
           whatPages: whatPages as WhatPages[],
           value: item.value,
+          isDisabled: item.isDisabled,
         }),
         include: { value: true, departments: { include: { value: true } } },
       });
@@ -290,6 +297,7 @@ export const typeHandlers = {
           description: item.description,
           imageId: validateImgurURL(item.image),
           value: item.value,
+          isDisabled: item.isDisabled,
           qualificationType: item.qualificationType as QualificationValueType,
         }),
         include: { value: true, departments: { include: { value: true } } },
@@ -326,6 +334,7 @@ export const typeHandlers = {
       const createUpdateData = {
         officerRankImageId: validateImgurURL(item.officerRankImageId),
         value: item.value,
+        isDisabled: item.isDisabled ?? false,
         isDefault: false,
         type: ValueType.OFFICER_RANK,
       };
@@ -371,6 +380,7 @@ export const typeHandlers = {
           ...makePrismaData(ValueType.CALL_TYPE, {
             priority: item.priority,
             value: item.value,
+            isDisabled: item.isDisabled,
           }),
         });
       }),
@@ -401,11 +411,13 @@ export const typeHandlers = {
             value: { set: item.value },
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
+            isDisabled: item.isDisabled ?? false,
           },
           create: {
             isDefault: type === ValueType.LICENSE ? item.isDefault ?? false : false,
             type: type as ValueType,
             value: item.value,
+            isDisabled: item.isDisabled ?? false,
             licenseType:
               type === ValueType.LICENSE ? (item.licenseType as ValueLicenseType) : undefined,
           },
@@ -420,24 +432,40 @@ export const typeHandlers = {
   },
 };
 
-function makePrismaData<T extends { value: string }>(type: ValueType, data: T) {
-  const { value, ...rest } = data;
+function makePrismaData<T extends { value: string; isDisabled: boolean | null | undefined }>(
+  type: ValueType,
+  data: T,
+) {
+  const { value, isDisabled, ...rest } = data;
 
   return {
-    update: { ...rest, value: createValueObj(value, type, "update") },
-    create: { ...rest, value: createValueObj(value, type, "create") },
+    update: {
+      ...rest,
+      value: createValueObj({ value, type, isDisabled, updateType: "update" }),
+    },
+    create: {
+      ...rest,
+      value: createValueObj({ value, type, isDisabled, updateType: "create" }),
+    },
   };
 }
 
-function createValueObj(
-  value: string,
-  type: ValueType,
-  updateType: "update" | "create" = "create",
-) {
+function createValueObj({
+  value,
+  type,
+  updateType = "create",
+  isDisabled,
+}: {
+  value: string;
+  type: ValueType;
+  updateType: "update" | "create";
+  isDisabled: boolean | null | undefined;
+}) {
   return {
     [updateType]: {
       isDefault: false,
       type,
+      isDisabled: isDisabled ?? false,
       value: updateType === "update" ? { set: value } : value,
     },
   };
