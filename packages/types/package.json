@@ -16,6 +16,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "yarn tsup",
+    "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit"
   },
   "dependencies": {

@@ -3,6 +3,7 @@
   "version": "1.11.1",
   "scripts": {
     "dev": "yarn rimraf .env && yarn next dev",
+    "watch": "npm run dev",
     "build": "yarn validate && yarn next-build",
     "next-build": "yarn next build",
     "start": "yarn next start",

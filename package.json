@@ -7,6 +7,7 @@
     "packages/**"
   ],
   "scripts": {
+    "dev": "yarn turbo run watch --parallel",
     "format:quick": "pretty-quick --staged --pattern \"packages/**/*.{js,jsx,ts,tsx,md,css,json}\"",
     "format": "prettier --write \"./packages/**/**/*.{js,jsx,ts,tsx,md,css,json}\" --ignore-path .gitignore",
     "lint": "yarn run eslint . --ext .ts,.js,.tsx,.jsx,.mjs",
