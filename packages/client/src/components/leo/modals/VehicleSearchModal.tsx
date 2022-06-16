@@ -187,34 +187,44 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
               </div>
             )}
 
-            <footer className="mt-5 flex justify-between">
-              <div className="flex gap-2">
-                {CREATE_USER_CITIZEN_LEO && isLeo ? (
-                  <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
-                    {t("createVehicle")}
-                  </Button>
-                ) : null}
+            <footer
+              className={`mt-4 flex ${
+                (currentResult || CREATE_USER_CITIZEN_LEO) && isLeo
+                  ? "justify-between"
+                  : "justify-end"
+              }`}
+            >
+              <div>
+                {currentResult && isLeo ? (
+                  <>
+                    {CREATE_USER_CITIZEN_LEO ? (
+                      <Button type="button" onClick={() => openModal(ModalIds.RegisterVehicle)}>
+                        {t("createVehicle")}
+                      </Button>
+                    ) : null}
 
-                {showMarkStolen ? (
-                  <Button
-                    type="button"
-                    onClick={() => handleMarkStolen()}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {vT("reportAsStolen")}
-                  </Button>
-                ) : null}
+                    {showMarkStolen ? (
+                      <Button
+                        type="button"
+                        onClick={() => handleMarkStolen()}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {vT("reportAsStolen")}
+                      </Button>
+                    ) : null}
 
-                {isLeo && currentResult ? (
-                  <Button
-                    type="button"
-                    onClick={() => handleEditLicenses()}
-                    variant="cancel"
-                    className="px-1.5"
-                  >
-                    {t("editLicenses")}
-                  </Button>
+                    {currentResult ? (
+                      <Button
+                        type="button"
+                        onClick={() => handleEditLicenses()}
+                        variant="cancel"
+                        className="px-1.5"
+                      >
+                        {t("editLicenses")}
+                      </Button>
+                    ) : null}
+                  </>
                 ) : null}
               </div>
 
