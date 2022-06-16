@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/api",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "scripts": {
     "dev": "yarn prisma migrate dev && yarn  prisma generate && yarn nodemon --watch \"src/**/*.ts\" --ignore \"node_modules/**/*\" --exec yarn ts-node -r tsconfig-paths/register src/main.ts",
     "start": "yarn prisma migrate deploy && yarn prisma generate && yarn ts-node -r tsconfig-paths/register src/main.ts",
@@ -36,11 +36,11 @@
   "dependencies": {
     "@discordjs/rest": "^0.5.0",
     "@prisma/client": "^3.15.1",
-    "@snailycad/config": "1.11.0",
-    "@snailycad/permissions": "1.11.0",
-    "@snailycad/schemas": "1.11.0",
-    "@snailycad/types": "1.11.0",
-    "@snailycad/utils": "1.11.0",
+    "@snailycad/config": "1.11.1",
+    "@snailycad/permissions": "1.11.1",
+    "@snailycad/schemas": "1.11.1",
+    "@snailycad/types": "1.11.1",
+    "@snailycad/utils": "1.11.1",
     "@tsed/common": "^6.114.17",
     "@tsed/core": "^6.114.17",
     "@tsed/di": "^6.114.17",
