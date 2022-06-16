@@ -118,6 +118,7 @@ export class DiscordWebhooksController {
 
     const updatedCadSettings = await prisma.miscCadSettings.findUnique({
       where: { id: cad.miscCadSettingsId! },
+      include: { webhooks: true },
     });
 
     return updatedCadSettings;

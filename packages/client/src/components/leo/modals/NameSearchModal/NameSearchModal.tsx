@@ -192,12 +192,12 @@ export function NameSearchModal() {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.name} label={cT("fullName")}>
-              <InputSuggestions
+              <InputSuggestions<NameSearchResult>
                 onSuggestionClick={(suggestion: NameSearchResult) => {
                   setFieldValue("name", `${suggestion.name} ${suggestion.surname}`);
                   setCurrentResult(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img

@@ -21,7 +21,7 @@ class CustomDocument extends Document {
           />
         </Head>
 
-        <body>
+        <body className="antialiased">
           <Main />
           <NextScript />
         </body>

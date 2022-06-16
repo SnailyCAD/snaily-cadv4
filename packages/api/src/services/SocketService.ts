@@ -139,4 +139,8 @@ export class Socket {
   emitActiveDispatchers() {
     this.io.sockets.emit(SocketEvents.UpdateDispatchersState);
   }
+
+  emitTones(data: any) {
+    this.io.sockets.emit(SocketEvents.Tones, data);
+  }
 }

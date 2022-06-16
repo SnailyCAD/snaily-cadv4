@@ -41,7 +41,7 @@ export function usePanicButton() {
     [controls],
   );
 
-  return { unit, audio, PanicButton: Component };
+  return { unit, audio, Component };
 }
 
 function Component({

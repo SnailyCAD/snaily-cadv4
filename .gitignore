@@ -23,7 +23,10 @@ packages/api/public/**/*.jpeg
 tsconfig.tsbuildinfo
 
 packages/client/public/favicon.png
+packages/client/public/sounds/*.mp3
 
 .husky/_
 .turbo
 packages/**/coverage
+
+test.mjs

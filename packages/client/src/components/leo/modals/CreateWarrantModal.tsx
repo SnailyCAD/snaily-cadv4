@@ -10,7 +10,6 @@ import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { Citizen } from "@snailycad/types";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { toastMessage } from "lib/toastMessage";
@@ -62,13 +61,13 @@ export function CreateWarrantModal() {
         {({ handleChange, setFieldValue, values, errors, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenName} label={t("citizen")}>
-              <InputSuggestions
+              <InputSuggestions<NameSearchResult>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
                   onChange: handleChange,
                 }}
-                onSuggestionClick={(suggestion: NameSearchResult) => {
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("citizenId", suggestion.id);
                   setFieldValue("citizenName", `${suggestion.name} ${suggestion.surname}`);
                 }}
@@ -78,7 +77,7 @@ export function CreateWarrantModal() {
                   method: "POST",
                   minLength: 2,
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (

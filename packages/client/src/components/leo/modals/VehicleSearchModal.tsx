@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
-import { BoloType, CustomFieldCategory, RegisteredVehicle } from "@snailycad/types";
+import { BoloType, CustomFieldCategory } from "@snailycad/types";
 import { useRouter } from "next/router";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useVehicleSearch, VehicleSearchResult } from "state/search/vehicleSearchState";
@@ -21,7 +21,7 @@ import { TabList } from "components/shared/TabList";
 import { ResultsTab } from "./VehicleSearch/tabs/ResultsTab";
 import { NotesTab } from "./NameSearchModal/tabs/NotesTab";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { RegisterVehicleModal } from "components/citizen/vehicles/RegisterVehicleModal";
+import { RegisterVehicleModal } from "components/citizen/vehicles/modals/RegisterVehicleModal";
 
 interface Props {
   id?: ModalIds.VehicleSearch | ModalIds.VehicleSearchWithinName;
@@ -125,12 +125,12 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
         {({ handleChange, setFieldValue, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.plateOrVin} label={t("plateOrVin")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: VehicleSearchResult) => {
+              <InputSuggestions<VehicleSearchResult>
+                onSuggestionClick={(suggestion) => {
                   setFieldValue("plateOrVin", suggestion.vinNumber);
                   setCurrentResult(suggestion);
                 }}
-                Component={({ suggestion }: { suggestion: RegisteredVehicle }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <p>
                       {suggestion.plate.toUpperCase()} ({suggestion.vinNumber})

@@ -173,6 +173,7 @@ export class RecordsController {
         const item = await validateRecordData({
           ...rawItem,
           ticketId: ticket.id,
+          cad,
         });
 
         const violation = await prisma.violation.create({
@@ -233,7 +234,11 @@ export class RecordsController {
     fallback: (u) => u.isLeo,
     permissions: [Permissions.Leo],
   })
-  async updateRecordById(@BodyParams() body: unknown, @PathParams("id") recordId: string) {
+  async updateRecordById(
+    @Context("cad") cad: { features?: CadFeature[] },
+    @BodyParams() body: unknown,
+    @PathParams("id") recordId: string,
+  ) {
     const data = validateSchema(CREATE_TICKET_SCHEMA, body);
 
     const record = await prisma.record.findUnique({
@@ -246,7 +251,7 @@ export class RecordsController {
     }
 
     const validatedViolations = await Promise.all(
-      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: record.id })),
+      data.violations.map(async (v) => validateRecordData({ ...v, ticketId: record.id, cad })),
     );
 
     await unlinkViolations(record.violations);

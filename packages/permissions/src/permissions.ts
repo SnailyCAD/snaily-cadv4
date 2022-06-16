@@ -16,6 +16,7 @@ export enum Permissions {
   ViewCustomFields = "ViewCustomFields",
   ManageCustomFields = "ManageCustomFields",
   ManageDMV = "ManageDMV",
+  DeleteCitizenRecords = "DeleteCitizenRecords",
 
   Dispatch = "Dispatch",
   EmsFd = "EmsFd",

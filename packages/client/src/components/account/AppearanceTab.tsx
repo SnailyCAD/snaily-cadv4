@@ -9,8 +9,14 @@ import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
+import type { Sounds } from "lib/server/getAvailableSounds";
+import { soundCamelCaseToKebabCase } from "lib/utils";
 
-export function AppearanceTab() {
+interface Props {
+  availableSounds: Record<Sounds, boolean>;
+}
+
+export function AppearanceTab({ availableSounds }: Props) {
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
@@ -44,6 +50,7 @@ export function AppearanceTab() {
       incomingCall: false,
     },
   };
+  const sounds = Object.keys(INITIAL_VALUES.soundSettings);
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
     const { json } = await execute("/user", {
@@ -93,53 +100,37 @@ export function AppearanceTab() {
             <div className="mb-5">
               <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
 
-              <FormField label={t("panicButton")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.panicButton}
-                  onClick={handleChange}
-                  name="soundSettings.panicButton"
-                />
-              </FormField>
+              {sounds.map((_name) => {
+                const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
+                const kebabCase = soundCamelCaseToKebabCase(fieldName);
+                const soundEnabled = !!availableSounds[kebabCase];
 
-              <FormField label={t("signal100")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.signal100}
-                  onClick={handleChange}
-                  name="soundSettings.signal100"
-                />
-              </FormField>
-
-              <FormField label={t("addedToCall")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.addedToCall}
-                  onClick={handleChange}
-                  name="soundSettings.addedToCall"
-                />
-              </FormField>
-
-              <FormField label={t("stopRoleplay")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.stopRoleplay}
-                  onClick={handleChange}
-                  name="soundSettings.stopRoleplay"
-                />
-              </FormField>
-
-              <FormField label={t("statusUpdate")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.statusUpdate}
-                  onClick={handleChange}
-                  name="soundSettings.statusUpdate"
-                />
-              </FormField>
-
-              <FormField label={t("incomingCall")} checkbox>
-                <Toggle
-                  toggled={values.soundSettings.incomingCall}
-                  onClick={handleChange}
-                  name="soundSettings.incomingCall"
-                />
-              </FormField>
+                return (
+                  <div className="mb-3" key={fieldName}>
+                    <FormField className="!mb-0" label={t(fieldName)} checkbox>
+                      <Toggle
+                        toggled={values.soundSettings[fieldName]}
+                        onClick={handleChange}
+                        name={`soundSettings.${fieldName}`}
+                        disabled={!soundEnabled}
+                      />
+                    </FormField>
+                    {!soundEnabled ? (
+                      <p className="text-base">
+                        This sound is unavailable.
+                        <a
+                          className="ml-1 underline"
+                          rel="noreferrer"
+                          target="_blank"
+                          href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
+                        >
+                          This sound must be added by an admin
+                        </a>
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
 
             <Button

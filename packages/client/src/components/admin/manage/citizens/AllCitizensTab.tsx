@@ -15,6 +15,7 @@ import Link from "next/link";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { classNames } from "lib/classNames";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 type CitizenWithUser = Citizen & {
   user: User | null;
@@ -22,15 +23,24 @@ type CitizenWithUser = Citizen & {
 
 interface Props {
   citizens: CitizenWithUser[];
+  totalCount: number;
   setCitizens: React.Dispatch<React.SetStateAction<CitizenWithUser[]>>;
 }
 
-export function AllCitizensTab({ citizens, setCitizens }: Props) {
-  const [search, setSearch] = React.useState("");
+export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens }: Props) {
+  const asyncTable = useAsyncTable({
+    initialData,
+    totalCount,
+    fetchOptions: {
+      path: "/admin/manage/citizens",
+      onResponse: (json) => ({ totalCount: json.totalCount, data: json.citizens }),
+    },
+  });
+
   const [tempValue, setTempValue] = React.useState<CitizenWithUser | null>(null);
   const [reason, setReason] = React.useState("");
   const [userFilter, setUserFilter] = React.useState<string | null>(null);
-  const users = React.useMemo(() => makeUsersList(citizens), [citizens]);
+  const users = React.useMemo(() => makeUsersList(asyncTable.data), [asyncTable.data]);
   const { hasPermissions } = usePermission();
 
   const reasonRef = React.useRef<HTMLInputElement>(null);
@@ -68,18 +78,22 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
 
   return (
     <>
-      {citizens.length <= 0 ? (
+      {initialData.length <= 0 ? (
         <p className="mt-5">{t("noCitizens")}</p>
       ) : (
         <ul className="mt-5">
           <div className="flex items-center gap-2">
-            <FormField label={common("search")} className="w-full">
+            <FormField label={common("search")} className="w-full relative">
               <Input
                 placeholder="john doe"
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                className=""
+                onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+                value={asyncTable.search.search}
               />
+              {asyncTable.state === "loading" ? (
+                <span className="absolute top-[2.4rem] right-2.5">
+                  <Loader />
+                </span>
+              ) : null}
             </FormField>
 
             <FormField className="w-40" label="Filter">
@@ -95,9 +109,19 @@ export function AllCitizensTab({ citizens, setCitizens }: Props) {
             </FormField>
           </div>
 
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
-            filter={search}
-            data={citizens
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
+            }}
+            data={asyncTable.data
               .filter((v) => (userFilter ? String(v.userId) === userFilter : true))
               .map((citizen) => ({
                 name: `${citizen.name} ${citizen.surname}`,

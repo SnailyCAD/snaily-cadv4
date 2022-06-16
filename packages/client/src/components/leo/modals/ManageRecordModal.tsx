@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -21,6 +22,7 @@ import { PenalCodesTable } from "./ManageRecord/PenalCodesTable";
 import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   record?: Record | null;
@@ -31,6 +33,8 @@ interface Props {
   onUpdate?(data: Record): void;
   onCreate?(data: Record): void;
 }
+
+let hasFetchedPenalCodes = false;
 
 export function ManageRecordModal({
   onUpdate,
@@ -44,6 +48,17 @@ export function ManageRecordModal({
   const { isOpen, closeModal, getPayload } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
+  const { LEO_BAIL } = useFeatureEnabled();
+  const { setValues } = useValues();
+
+  const fetchOnOpen = React.useCallback(async () => {
+    const { json } = await execute("/admin/values/penal_code", {});
+
+    if (Array.isArray(json)) {
+      setValues((prev) => [...prev, ...json]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const data = {
     [RecordType.TICKET]: {
@@ -87,7 +102,7 @@ export function ManageRecordModal({
       type,
       violations: values.violations.map(({ value }: { value: any }) => ({
         penalCodeId: value.id,
-        bail: value.jailTime?.enabled ? value.bail?.value : null,
+        bail: LEO_BAIL && value.jailTime?.enabled ? value.bail?.value : null,
         jailTime: value.jailTime?.enabled ? value.jailTime?.value : null,
         fine: value.fine?.enabled ? value.fine?.value : null,
       })),
@@ -141,13 +156,20 @@ export function ManageRecordModal({
           ...v.penalCode,
           fine: { enabled: !!v.fine, value: v.fine },
           jailTime: { enabled: !!v.jailTime, value: v.jailTime },
-          bail: { enabled: !!v.jailTime, value: v.bail },
+          bail: { enabled: LEO_BAIL ? !!v.jailTime : false, value: v.bail },
         },
       })) ?? ([] as SelectValue<PenalCode>[]),
     postal: record?.postal ?? "",
     notes: record?.notes ?? "",
     seizedItems: record?.seizedItems ?? [],
   };
+
+  React.useEffect(() => {
+    if (!hasFetchedPenalCodes) {
+      fetchOnOpen();
+      hasFetchedPenalCodes = true;
+    }
+  }, [fetchOnOpen, isOpen]);
 
   return (
     <Modal
@@ -160,7 +182,7 @@ export function ManageRecordModal({
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenName} label={t("citizen")}>
-              <InputSuggestions
+              <InputSuggestions<Citizen>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
@@ -183,7 +205,7 @@ export function ManageRecordModal({
                   method: "POST",
                   minLength: 2,
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (

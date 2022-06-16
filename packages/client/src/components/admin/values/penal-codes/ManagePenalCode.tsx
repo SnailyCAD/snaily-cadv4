@@ -14,6 +14,7 @@ import { FormRow } from "components/form/FormRow";
 import { Select } from "components/form/Select";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { ModalIds } from "types/ModalIds";
+import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 
 interface Props {
   type: ValueType;
@@ -28,6 +29,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
   const { isOpen, closeModal } = useModal();
   const t = useTranslations(type);
   const common = useTranslations("Common");
+  const { LEO_BAIL } = useFeatureEnabled();
 
   const title = !penalCode ? t("ADD") : t("EDIT");
   const footerTitle = !penalCode ? t("ADD") : common("save");
@@ -41,7 +43,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       warningFines: values.warningApplicable ? values.fines1.values : null,
       warningNotFines: values.warningNotApplicable ? values.fines2.values : null,
       prisonTerm: values.warningNotApplicable ? values.prisonTerm.values : null,
-      bail: values.warningNotApplicable ? values.bail.values : null,
+      bail: LEO_BAIL && values.warningNotApplicable ? values.bail.values : null,
       groupId: values.group === "ungrouped" || !values.group ? null : values.group,
     };
 
@@ -88,8 +90,8 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
       values: penalCode?.warningNotApplicable?.prisonTerm ?? [],
     },
     bail: {
-      enabled: (penalCode?.warningNotApplicable?.bail.length ?? 0) > 0,
-      values: penalCode?.warningNotApplicable?.bail ?? [],
+      enabled: ((LEO_BAIL && penalCode?.warningNotApplicable?.bail.length) ?? 0) > 0,
+      values: (LEO_BAIL && penalCode?.warningNotApplicable?.bail) ?? [],
     },
   };
 
@@ -157,7 +159,7 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
                 <div>
                   <FieldsRow keyValue="fines2" />
                   <FieldsRow keyValue="prisonTerm" />
-                  <FieldsRow keyValue="bail" />
+                  {LEO_BAIL ? <FieldsRow keyValue="bail" /> : null}
                 </div>
               </div>
             </FormRow>

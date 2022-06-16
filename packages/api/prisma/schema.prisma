@@ -321,6 +321,7 @@ model Citizen {
   truckLogs            TruckLog[]
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @default(now()) @updatedAt
+  appearance           String?
   RecordRelease        RecordRelease[]
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
@@ -1160,6 +1161,7 @@ model TruckLog {
   endedAt   String             @db.VarChar(255)
   createdAt DateTime           @default(now())
   updatedAt DateTime           @default(now()) @updatedAt
+  notes     String?
 }
 
 // DL Exams
@@ -1406,5 +1408,6 @@ enum Feature {
   STEAM_OAUTH
   CREATE_USER_CITIZEN_LEO
   LEO_TICKETS
+  LEO_BAIL
   COURTHOUSE_POSTS
 }

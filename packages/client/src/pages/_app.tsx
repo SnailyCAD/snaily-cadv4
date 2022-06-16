@@ -8,13 +8,13 @@ import { ValuesProvider } from "context/ValuesContext";
 import { CitizenProvider } from "context/CitizenContext";
 import "styles/globals.scss";
 import { SocketProvider } from "@casper124578/use-socket.io";
-import { findUrl } from "lib/fetch";
+import { findAPIUrl } from "lib/fetch";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 export default function App({ Component, router, pageProps }: AppProps) {
-  const { hostname, protocol, port } = new URL(findUrl());
+  const { hostname, protocol, port } = new URL(findAPIUrl());
   const url = `${protocol}//${hostname}:${port}`;
 
   return (

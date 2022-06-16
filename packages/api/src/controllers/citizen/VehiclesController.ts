@@ -9,7 +9,7 @@ import {
   ValueType,
   cad,
 } from "@prisma/client";
-import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
@@ -247,6 +247,40 @@ export class VehiclesController {
     });
 
     return updated;
+  }
+
+  @Post("/transfer/:vehicleId")
+  @Description("Transfer a vehicle to a new owner")
+  async transferVehicle(@BodyParams() body: unknown, @PathParams("vehicleId") vehicleId: string) {
+    const data = validateSchema(TRANSFER_VEHICLE_SCHEMA, body);
+
+    const vehicle = await prisma.registeredVehicle.findUnique({
+      where: { id: vehicleId },
+    });
+
+    if (!vehicle) {
+      throw new NotFound("vehicleNotFound");
+    }
+
+    const newOwner = await prisma.citizen.findFirst({
+      where: {
+        AND: [{ id: data.ownerId }, { NOT: { id: vehicle.citizenId } }],
+      },
+    });
+
+    if (!newOwner) {
+      throw new NotFound("newOwnerNotFound");
+    }
+
+    const updatedVehicle = await prisma.registeredVehicle.update({
+      where: { id: vehicle.id },
+      data: {
+        citizenId: newOwner.id,
+        userId: newOwner.userId,
+      },
+    });
+
+    return updatedVehicle;
   }
 
   @Delete("/:id")

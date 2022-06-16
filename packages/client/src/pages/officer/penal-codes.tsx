@@ -45,18 +45,20 @@ export default function PenalCodesPage() {
             <Input onChange={(e) => setSearch(e.target.value)} value={search} />
           </FormField>
 
-          <ul className="flex flex-col mt-3">
-            {filtered.map((penalCode) => {
-              const description = dataToSlate(penalCode);
+          <ul className="flex flex-col mt-3 gap-y-2">
+            {filtered
+              .sort((a, b) => Number(a.position) - Number(b.position))
+              .map((penalCode) => {
+                const description = dataToSlate(penalCode);
 
-              return (
-                <li className="card p-4" key={penalCode.id}>
-                  <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
+                return (
+                  <li className="card p-4" key={penalCode.id}>
+                    <h3 className="text-2xl font-semibold">{penalCode.title}</h3>
 
-                  <Editor isReadonly value={description} />
-                </li>
-              );
-            })}
+                    <Editor isReadonly value={description} />
+                  </li>
+                );
+              })}
           </ul>
         </>
       )}

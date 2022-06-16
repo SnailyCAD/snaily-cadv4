@@ -8,7 +8,7 @@ import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { IsAuth } from "middlewares/IsAuth";
 import type { cad, MiscCadSettings, User } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
-import { UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
+import { TONES_SCHEMA, UPDATE_AOP_SCHEMA, UPDATE_RADIO_CHANNEL_SCHEMA } from "@snailycad/schemas";
 import {
   leoProperties,
   unitProperties,
@@ -264,6 +264,19 @@ export class DispatchController {
     }
 
     return { ...user, unit };
+  }
+
+  @Post("/tones")
+  @UsePermissions({
+    permissions: [Permissions.Dispatch],
+    fallback: (u) => u.isDispatch,
+  })
+  async handleTones(@BodyParams() body: unknown) {
+    const data = validateSchema(TONES_SCHEMA, body);
+
+    this.socket.emitTones(data);
+
+    return true;
   }
 
   private async endInactiveIncidents(updatedAt: Date) {

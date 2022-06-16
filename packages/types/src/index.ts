@@ -1109,6 +1109,7 @@ export interface TruckLog {
   endedAt: string;
   createdAt: Date;
   updatedAt: Date;
+  notes: string | null;
 }
 
 /**
@@ -1198,6 +1199,7 @@ export enum Feature {
   STEAM_OAUTH = "STEAM_OAUTH",
   CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
   LEO_TICKETS = "LEO_TICKETS",
+  LEO_BAIL = "LEO_BAIL",
   COURTHOUSE_POSTS = "COURTHOUSE_POSTS",
 }
 
