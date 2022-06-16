@@ -201,8 +201,7 @@ export default function OfficerDashboard({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag,call_type";
+  const adminValuesURL = "/admin/values/codes_10?paths=license,driverslicense_category";
 
   const [
     activeOfficer,

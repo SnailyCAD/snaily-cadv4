@@ -1,4 +1,4 @@
-import type { Value, ValueType } from "@snailycad/types";
+import { Value, ValueType } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
 import { useNameSearch } from "state/search/nameSearchState";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -21,6 +22,7 @@ export function ManageVehicleFlagsModal() {
   const nameSearchState = useNameSearch();
   const { vehicleFlag } = useValues();
   const { state, execute } = useFetch();
+  useAsyncValues({ id: "ManageVehicleFlagsModal", valueTypes: [ValueType.VEHICLE_FLAG] });
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;

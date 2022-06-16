@@ -154,8 +154,7 @@ export default function OfficerDashboard(props: DispatchPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,vehicle_flag,driverslicense_category,citizen_flag";
+  const adminValuesURL = "/admin/values/codes_10?paths=license,driverslicense_category";
 
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [

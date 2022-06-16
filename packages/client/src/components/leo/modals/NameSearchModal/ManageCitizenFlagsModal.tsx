@@ -1,4 +1,4 @@
-import type { Value, ValueType } from "@snailycad/types";
+import { Value, ValueType } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
+import { useAsyncValues } from "hooks/useAsyncValues";
 
 export function ManageCitizenFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -19,6 +20,7 @@ export function ManageCitizenFlagsModal() {
   const { currentResult, setCurrentResult } = useNameSearch();
   const { citizenFlag } = useValues();
   const { state, execute } = useFetch();
+  useAsyncValues({ id: "ManageCitizenFlagsModal", valueTypes: [ValueType.CITIZEN_FLAG] });
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;

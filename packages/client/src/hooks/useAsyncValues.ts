@@ -22,7 +22,7 @@ export function useAsyncValues(options: Options) {
       .join(",");
   }
 
-  const fetchOnOpen = React.useCallback(async () => {
+  const fetchValues = React.useCallback(async () => {
     const [first, ...rest] = options.valueTypes;
     const hasMore = rest.length >= 1;
 
@@ -43,10 +43,10 @@ export function useAsyncValues(options: Options) {
 
   React.useEffect(() => {
     if (fetchCount <= ASYNC_VALUES_HOOK_USED_TIMES - 1) {
-      fetchOnOpen();
+      fetchValues();
       fetchCount += 1;
     }
-  }, [fetchOnOpen]);
+  }, [fetchValues]);
 
   return { state };
 }
