@@ -184,6 +184,7 @@ export class AdminManageCitizensController {
         occupation: data.occupation || null,
         imageId: validateImgurURL(data.image),
         userId: data.userId || undefined,
+        appearance: data.appearance || undefined,
       },
       include: citizenInclude,
     });
