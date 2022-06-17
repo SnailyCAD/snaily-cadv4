@@ -79,7 +79,8 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
     return {
       ...values,
       values: values.values.filter((value) => {
-        return !(isBaseValue(value) ? value.isDisabled : value.value.isDisabled);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        return !(isBaseValue(value) ? value?.isDisabled : value?.value?.isDisabled);
       }),
     };
   }
@@ -97,7 +98,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
 
       return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
     }, {} as Context);
-  }, [values]);
+  }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };
 
