@@ -1,4 +1,5 @@
 import { TabsContent } from "components/shared/TabList";
+import * as Accordion from "@radix-ui/react-accordion";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Toggle } from "components/form/Toggle";
@@ -11,6 +12,7 @@ import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import type { Sounds } from "lib/server/getAvailableSounds";
 import { soundCamelCaseToKebabCase } from "lib/utils";
+import { CaretDownFill } from "react-bootstrap-icons";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -63,6 +65,9 @@ export function AppearanceTab({ availableSounds }: Props) {
     }
   }
 
+  const availableSoundsArr = sounds.filter((v) => availableSounds[soundCamelCaseToKebabCase(v)]);
+  const unAvailableSoundsArr = sounds.filter((v) => !availableSounds[soundCamelCaseToKebabCase(v)]);
+
   return (
     <TabsContent aria-label={t("appearanceSettings")} value="appearanceSettings">
       <h3 className="text-2xl font-semibold">{t("appearanceSettings")}</h3>
@@ -100,10 +105,12 @@ export function AppearanceTab({ availableSounds }: Props) {
             <div className="mb-5">
               <h3 className="text-2xl font-semibold mb-3">{t("sounds")}</h3>
 
-              {sounds.map((_name) => {
+              {availableSoundsArr.map((_name) => {
                 const fieldName = _name as keyof typeof INITIAL_VALUES.soundSettings;
                 const kebabCase = soundCamelCaseToKebabCase(fieldName);
-                const soundEnabled = !!availableSounds[kebabCase];
+                const soundAvailable = !!availableSounds[kebabCase];
+
+                if (!soundAvailable) return null;
 
                 return (
                   <div className="mb-3" key={fieldName}>
@@ -112,25 +119,49 @@ export function AppearanceTab({ availableSounds }: Props) {
                         toggled={values.soundSettings[fieldName]}
                         onClick={handleChange}
                         name={`soundSettings.${fieldName}`}
-                        disabled={!soundEnabled}
+                        disabled={!soundAvailable}
                       />
                     </FormField>
-                    {!soundEnabled ? (
-                      <p className="text-base">
-                        This sound is unavailable.
+                  </div>
+                );
+              })}
+
+              {unAvailableSoundsArr.length <= 0 ? null : (
+                <Accordion.Root className="mt-4" type="multiple">
+                  <Accordion.Item value="unavailable-sounds">
+                    <Accordion.Trigger
+                      title="Click to expand"
+                      className="accordion-state gap-2 flex items-center justify-between pt-1 text-lg font-semibold text-left"
+                    >
+                      <p>Unavailable Sounds</p>
+
+                      <CaretDownFill
+                        width={16}
+                        height={16}
+                        className="transform w-4 h-4 transition-transform accordion-state-transform"
+                      />
+                    </Accordion.Trigger>
+
+                    <Accordion.Content className="mt-3">
+                      {unAvailableSoundsArr.map((sound) => {
+                        return <p key={sound}>{t(sound)}</p>;
+                      })}
+
+                      <p className="mt-2">
+                        These sounds are unavailable.
                         <a
                           className="ml-1 underline"
                           rel="noreferrer"
                           target="_blank"
                           href="https://cad-docs.caspertheghost.me/docs/guides/how-set-custom-sounds"
                         >
-                          This sound must be added by an admin
+                          They must be added by an admin.
                         </a>
                       </p>
-                    ) : null}
-                  </div>
-                );
-              })}
+                    </Accordion.Content>
+                  </Accordion.Item>
+                </Accordion.Root>
+              )}
             </div>
 
             <Button
