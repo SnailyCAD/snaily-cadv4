@@ -5,7 +5,7 @@ import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
-import { validateMaxDivisionsPerOfficer } from "controllers/leo/LeoController";
+import { validateMaxDivisionsPerUnit } from "controllers/leo/my-officers/MyOfficersController";
 import { combinedUnitProperties, leoProperties, unitProperties } from "lib/leo/activeOfficer";
 import { findUnit } from "lib/leo/findUnit";
 import { updateOfficerDivisionsCallsigns } from "lib/leo/utils";
@@ -238,7 +238,7 @@ export class AdminManageUnitsController {
         throw new ExtendedBadRequest({ divisions: "Must have at least 1 item" });
       }
 
-      await validateMaxDivisionsPerOfficer(data.divisions, cad);
+      await validateMaxDivisionsPerUnit(data.divisions, cad);
 
       const disconnectConnectArr = manyToManyHelper(
         (unit.divisions as { id: string }[]).map((v) => v.id),
