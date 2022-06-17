@@ -44,6 +44,11 @@
     "test": {
       "dependsOn": ["^test"],
       "outputs": []
+    },
+    "watch": {
+      "cache": false,
+      "outputs": [".next/**", "dist/**"],
+      "dependsOn": ["^watch"]
     }
   },
   "globalDependencies": ["**/.env"]

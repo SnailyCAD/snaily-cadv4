@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/schemas",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "yarn tsup",
+    "watch": "yarn tsup --watch --silent=false",
     "typecheck": "yarn tsc --noEmit"
   },
   "devDependencies": {
