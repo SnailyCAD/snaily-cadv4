@@ -5,6 +5,7 @@ import { useValues } from "context/ValuesContext";
 
 interface Options {
   valueTypes: ValueType[];
+  enabled?: boolean;
 }
 
 /**
@@ -12,8 +13,10 @@ interface Options {
  */
 export function useLoadValuesClientSide(options: Options) {
   const fetched = React.useRef<boolean>(false);
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
   const { setValues } = useValues();
+
+  const enabled = options.enabled ?? true;
 
   function transformValueTypesToString() {
     return options.valueTypes
@@ -23,6 +26,8 @@ export function useLoadValuesClientSide(options: Options) {
   }
 
   const fetchValues = React.useCallback(async () => {
+    if (!enabled) return;
+
     if (options.valueTypes.length <= 0) {
       throw new Error("Must provide at least 1 value type");
     }
@@ -43,7 +48,7 @@ export function useLoadValuesClientSide(options: Options) {
     if (Array.isArray(json)) {
       setValues((prev) => [...prev, ...json]);
     }
-  }, [options.valueTypes]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [options.valueTypes, enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     if (!fetched.current) {
@@ -51,4 +56,6 @@ export function useLoadValuesClientSide(options: Options) {
       fetched.current = true;
     }
   }, [fetchValues]);
+
+  return { isLoading: state === "loading" };
 }

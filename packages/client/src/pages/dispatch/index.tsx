@@ -170,11 +170,9 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL = "/admin/values/codes_10";
-
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [
-      [adminValuesURL, []],
+      ["/admin/values/codes_10", []],
       ["/911-calls", []],
       ["/bolos", []],
       ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],
