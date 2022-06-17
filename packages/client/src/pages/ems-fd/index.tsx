@@ -16,10 +16,11 @@ import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { Title } from "components/shared/Title";
 import { UtilityPanel } from "components/shared/UtilityPanel";
-import type { EmsFdDeputy } from "@snailycad/types";
+import { EmsFdDeputy, ValueType } from "@snailycad/types";
 import { Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/useTones";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
@@ -44,6 +45,10 @@ const SearchMedicalRecordModal = dynamic(async () => {
 });
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [ValueType.BLOOD_GROUP, ValueType.PENAL_CODE, ValueType.IMPOUND_LOT],
+  });
+
   const signal100 = useSignal100();
   const tones = useTones("ems-fd");
   const panic = usePanicButton();

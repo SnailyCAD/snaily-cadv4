@@ -14,7 +14,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode, Record, ValueType } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, type Record } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -23,7 +23,6 @@ import { SelectPenalCode } from "./ManageRecord/SelectPenalCode";
 import { SeizedItemsTable } from "./ManageRecord/seized-items/SeizedItemsTable";
 import { toastMessage } from "lib/toastMessage";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
-import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   record?: Record | null;
@@ -48,7 +47,6 @@ export function ManageRecordModal({
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const { LEO_BAIL } = useFeatureEnabled();
-  useAsyncValues({ valueTypes: [ValueType.PENAL_CODE] });
 
   const data = {
     [RecordType.TICKET]: {

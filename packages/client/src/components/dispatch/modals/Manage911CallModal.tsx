@@ -28,7 +28,6 @@ import { usePermission } from "hooks/usePermission";
 import { defaultPermissions } from "@snailycad/permissions";
 import { useLeoState } from "state/leoState";
 import { useEmsFdState } from "state/emsFdState";
-import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   call: Full911Call | null;
@@ -69,10 +68,6 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-
-  useAsyncValues({
-    valueTypes: [ValueType.DIVISION, ValueType.DEPARTMENT, ValueType.CALL_TYPE],
-  });
 
   const handleAddUpdateCallEvent = React.useCallback(
     (call: Full911Call) => {

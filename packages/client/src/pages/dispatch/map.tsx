@@ -11,7 +11,8 @@ import { useDispatchState } from "state/dispatchState";
 import { Title } from "components/shared/Title";
 import { Permissions } from "@snailycad/permissions";
 import type { DispatchPageProps } from ".";
-import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType } from "@snailycad/types";
+import { CombinedLeoUnit, EmsFdDeputy, Officer, ShouldDoType, ValueType } from "@snailycad/types";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Map, {
   ssr: false,
@@ -21,6 +22,18 @@ const Map = dynamic(async () => (await import("components/dispatch/map/Map")).Ma
 type Props = Pick<DispatchPageProps, "bolos" | "calls" | "deputies" | "officers">;
 
 export default function MapPage(props: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CALL_TYPE,
+      ValueType.CITIZEN_FLAG,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+      ValueType.IMPOUND_LOT,
+      ValueType.LICENSE,
+      ValueType.PENAL_CODE,
+      ValueType.VEHICLE_FLAG,
+    ],
+  });
+
   const { cad, user } = useAuth();
   const state = useDispatchState();
 

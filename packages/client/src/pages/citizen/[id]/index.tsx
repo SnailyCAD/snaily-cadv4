@@ -26,6 +26,8 @@ import { ModalIds } from "types/ModalIds";
 import { FullDate } from "components/shared/FullDate";
 import { RecordsTab } from "components/leo/modals/NameSearchModal/tabs/RecordsTab";
 import { classNames } from "lib/classNames";
+import { ValueType } from "@snailycad/types";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const CitizenImageModal = dynamic(
@@ -33,6 +35,8 @@ const CitizenImageModal = dynamic(
 );
 
 export default function CitizenId() {
+  useLoadValuesClientSide({ valueTypes: [ValueType.BLOOD_GROUP] });
+
   const { execute, state } = useFetch();
   const { openModal, closeModal } = useModal();
   const t = useTranslations("Citizen");

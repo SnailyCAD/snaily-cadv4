@@ -8,14 +8,13 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { MedicalRecord, ValueType } from "@snailycad/types";
+import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { useCitizen } from "context/CitizenContext";
 import { Textarea } from "components/form/Textarea";
 import { Select } from "components/form/Select";
 import { useValues } from "context/ValuesContext";
-import { useAsyncValues } from "hooks/useAsyncValues";
 
 interface Props {
   medicalRecord: MedicalRecord | null;
@@ -31,7 +30,6 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
   const common = useTranslations("Common");
   const t = useTranslations("MedicalRecords");
   const { bloodGroup } = useValues();
-  useAsyncValues({ valueTypes: [ValueType.BLOOD_GROUP] });
 
   function handleClose() {
     closeModal(ModalIds.ManageMedicalRecords);

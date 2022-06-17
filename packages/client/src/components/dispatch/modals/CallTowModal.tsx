@@ -21,8 +21,6 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
-import { useAsyncValues } from "hooks/useAsyncValues";
-import { ValueType } from "@snailycad/types";
 
 interface Props {
   call: Full911Call | null;
@@ -37,7 +35,6 @@ export function DispatchCallTowModal({ call }: Props) {
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
-  useAsyncValues({ valueTypes: [ValueType.IMPOUND_LOT] });
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
