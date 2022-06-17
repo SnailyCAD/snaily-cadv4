@@ -16,7 +16,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { CallEventsArea } from "../911Call/EventsArea";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { makeUnitName } from "lib/utils";
-import { EmsFdDeputy, StatusValueType, ValueType, type CombinedLeoUnit } from "@snailycad/types";
+import { EmsFdDeputy, StatusValueType, type CombinedLeoUnit } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { CALL_911_SCHEMA } from "@snailycad/schemas";
