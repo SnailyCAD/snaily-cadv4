@@ -14,10 +14,9 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table } from "components/shared/Table";
 import { ManageRecordModal } from "../../ManageRecordModal";
 import { FullDate } from "components/shared/FullDate";
-import { HoverCard } from "components/shared/HoverCard";
-import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { TabsContent } from "components/shared/TabList";
 import { Permissions, usePermission } from "hooks/usePermission";
+import { ViolationsColumn } from "components/leo/ViolationsColumn";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -155,26 +154,7 @@ function RecordsTable({ data }: { data: Record[] }) {
         data={data
           .sort((a, b) => compareDesc(new Date(a.createdAt), new Date(b.createdAt)))
           .map((record) => ({
-            violations: record.violations.map((v, idx) => {
-              const comma = idx !== record.violations.length - 1 ? ", " : "";
-              return (
-                <HoverCard
-                  trigger={
-                    <span>
-                      {v.penalCode.title}
-                      {comma}
-                    </span>
-                  }
-                  key={v.id}
-                >
-                  <h3 className="text-lg font-semibold px-2">{v.penalCode.title}</h3>
-
-                  <div className="dark:text-gray-200 mt-2 text-base">
-                    <Editor isReadonly value={dataToSlate(v.penalCode)} />
-                  </div>
-                </HoverCard>
-              );
-            }),
+            violations: <ViolationsColumn violations={record.violations} />,
             postal: record.postal,
             officer: `${generateCallsign(record.officer)} ${makeUnitName(record.officer)}`,
             notes: record.notes || common("none"),
