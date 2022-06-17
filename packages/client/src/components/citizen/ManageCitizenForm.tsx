@@ -45,7 +45,8 @@ export function ManageCitizenForm({
   const [image, setImage] = React.useState<File | string | null>(null);
   const { cad } = useAuth();
   const { gender, ethnicity, license, driverslicenseCategory } = useValues();
-  const { WEAPON_REGISTRATION, ALLOW_CITIZEN_UPDATE_LICENSE } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, WEAPON_REGISTRATION, ALLOW_CITIZEN_UPDATE_LICENSE } =
+    useFeatureEnabled();
   const validate = handleValidate(CREATE_CITIZEN_SCHEMA);
   const t = useTranslations("Citizen");
   const common = useTranslations("Common");
@@ -201,13 +202,18 @@ export function ManageCitizenForm({
               />
             </FormField>
 
-            <FormField errorMessage={errors.socialSecurityNumber} label={t("socialSecurityNumber")}>
-              <Input
-                value={values.socialSecurityNumber}
-                onChange={handleChange}
-                name="socialSecurityNumber"
-              />
-            </FormField>
+            {SOCIAL_SECURITY_NUMBERS ? (
+              <FormField
+                errorMessage={errors.socialSecurityNumber}
+                label={t("socialSecurityNumber")}
+              >
+                <Input
+                  value={values.socialSecurityNumber}
+                  onChange={handleChange}
+                  name="socialSecurityNumber"
+                />
+              </FormField>
+            ) : null}
           </FormRow>
 
           <FormRow>
