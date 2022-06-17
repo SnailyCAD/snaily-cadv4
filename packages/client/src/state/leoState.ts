@@ -8,7 +8,7 @@ interface LeoState {
   setActiveOfficer(officer: ActiveOfficer | null): void;
 
   userOfficers: Officer[];
-  setUserOfficers(officers: Officer[]): void;
+  setUserOfficers(userOfficers: Officer[]): void;
 }
 
 export const useLeoState = create<LeoState>((set) => ({
@@ -16,5 +16,5 @@ export const useLeoState = create<LeoState>((set) => ({
   setActiveOfficer: (officer) => set({ activeOfficer: officer }),
 
   userOfficers: [],
-  setUserOfficers: (officers) => set({ userOfficers: officers }),
+  setUserOfficers: (userOfficers) => set({ userOfficers }),
 }));

@@ -31,14 +31,14 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, userOfficers: officers } = useLeoState();
+  const { activeOfficer, userOfficers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
-  const citizensFrom = isLeo ? officers : router.pathname === "/ems-fd" ? deputies : [];
+  const citizensFrom = isLeo ? userOfficers : router.pathname === "/ems-fd" ? deputies : [];
   const citizens = [...citizensFrom].map((v) => v.citizen);
   const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
