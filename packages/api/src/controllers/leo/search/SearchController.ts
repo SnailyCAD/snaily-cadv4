@@ -99,57 +99,27 @@ export class SearchController {
       return [];
     }
 
-    let citizen = await prisma.citizen.findMany({
+    const citizens = await prisma.citizen.findMany({
       where: {
-        name: { contains: name, mode: "insensitive" },
-        surname: { contains: surname, mode: "insensitive" },
+        OR: [
+          {
+            name: { contains: name, mode: "insensitive" },
+            surname: { contains: surname, mode: "insensitive" },
+          },
+          { socialSecurityNumber: name },
+          {
+            name: { contains: surname, mode: "insensitive" },
+            surname: { contains: name, mode: "insensitive" },
+          },
+          { name: { startsWith: name, mode: "insensitive" } },
+          { surname: { startsWith: surname, mode: "insensitive" } },
+        ],
       },
       include: citizenSearchInclude(cad),
       take: 35,
     });
 
-    if (citizen.length <= 0) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          socialSecurityNumber: name,
-        },
-        include: citizenSearchInclude(cad),
-        take: 35,
-      });
-    }
-
-    if (citizen.length <= 0) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          name: { contains: surname, mode: "insensitive" },
-          surname: { contains: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude(cad),
-        take: 35,
-      });
-    }
-
-    if (citizen.length <= 0 && (!name || !surname)) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          name: { startsWith: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude(cad),
-        take: 35,
-      });
-    }
-
-    if (citizen.length <= 0 && (!name || !surname)) {
-      citizen = await prisma.citizen.findMany({
-        where: {
-          surname: { startsWith: name, mode: "insensitive" },
-        },
-        include: citizenSearchInclude(cad),
-        take: 35,
-      });
-    }
-
-    return appendConfidential(await appendCustomFields(citizen, CustomFieldCategory.CITIZEN));
+    return appendConfidential(await appendCustomFields(citizens, CustomFieldCategory.CITIZEN));
   }
 
   @Post("/weapon")
