@@ -102,7 +102,7 @@ export default function BusinessId(props: Props) {
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
   const [business, values] = await requestAll(req, [
     [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
-    ["/admin/values/business_role?paths=vehicle,license", []],
+    ["/admin/values/business_role?paths=license", []],
   ]);
 
   const notFound =

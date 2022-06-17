@@ -36,7 +36,6 @@ interface Props {
   onClose?(): void;
 }
 
-let hasFetchedCallData = false;
 export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props) {
   const [showAlert, setShowAlert] = React.useState(false);
 
@@ -49,7 +48,7 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
   const { hasPermissions } = usePermission();
   const { allOfficers, allDeputies, activeDeputies, activeOfficers } = useDispatchState();
   const { generateCallsign } = useGenerateCallsign();
-  const { department, division, codes10, callType, setValues } = useValues();
+  const { department, division, codes10, callType } = useValues();
   const { activeOfficer } = useLeoState();
   const { activeDeputy } = useEmsFdState();
 
@@ -69,22 +68,6 @@ export function Manage911CallModal({ setCall, forceOpen, call, onClose }: Props)
 
   const allUnits = [...allOfficers, ...allDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
   const units = [...activeOfficers, ...activeDeputies] as (EmsFdDeputy | CombinedLeoUnit)[];
-
-  const fetchOnOpen = React.useCallback(async () => {
-    const { json } = await execute("/admin/values/division?paths=department,call_type", {});
-
-    if (Array.isArray(json)) {
-      setValues((prev) => [...prev, ...json]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  React.useEffect(() => {
-    if (!hasFetchedCallData) {
-      fetchOnOpen();
-      hasFetchedCallData = true;
-    }
-  }, [fetchOnOpen, isOpen]);
 
   const handleAddUpdateCallEvent = React.useCallback(
     (call: Full911Call) => {

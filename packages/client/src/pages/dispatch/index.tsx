@@ -26,11 +26,13 @@ import {
   LeoIncident,
   Officer,
   ShouldDoType,
+  ValueType,
 } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -67,7 +69,21 @@ export interface DispatchPageProps {
   activeIncidents: LeoIncident[];
 }
 
-export default function OfficerDashboard(props: DispatchPageProps) {
+export default function DispatchDashboard(props: DispatchPageProps) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CALL_TYPE,
+      ValueType.CITIZEN_FLAG,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+      ValueType.IMPOUND_LOT,
+      ValueType.LICENSE,
+      ValueType.PENAL_CODE,
+      ValueType.VEHICLE_FLAG,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
+
   const { showAop } = useAreaOfPlay();
   const state = useDispatchState();
   const timeRef = useTime();
@@ -154,12 +170,9 @@ export default function OfficerDashboard(props: DispatchPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=penal_code,impound_lot,license,vehicle_flag,driverslicense_category,citizen_flag";
-
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [
-      [adminValuesURL, []],
+      ["/admin/values/codes_10", []],
       ["/911-calls", []],
       ["/bolos", []],
       ["/dispatch", { deputies: [], officers: [], activeDispatchers: [], activeIncidents: [] }],

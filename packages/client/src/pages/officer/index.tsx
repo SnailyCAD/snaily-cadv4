@@ -16,6 +16,7 @@ import {
   Record,
   RecordType,
   ShouldDoType,
+  ValueType,
 } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, useDispatchState } from "state/dispatchState";
@@ -35,6 +36,7 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
+import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -87,6 +89,20 @@ export default function OfficerDashboard({
   allOfficers,
   allDeputies,
 }: Props) {
+  useLoadValuesClientSide({
+    valueTypes: [
+      ValueType.CITIZEN_FLAG,
+      ValueType.VEHICLE_FLAG,
+      ValueType.CALL_TYPE,
+      ValueType.LICENSE,
+      ValueType.DRIVERSLICENSE_CATEGORY,
+      ValueType.IMPOUND_LOT,
+      ValueType.PENAL_CODE,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
+  });
+
   const leoState = useLeoState();
   const dispatchState = useDispatchState();
   const t = useTranslations("Leo");
@@ -201,9 +217,6 @@ export default function OfficerDashboard({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
-  const adminValuesURL =
-    "/admin/values/codes_10?paths=impound_lot,license,driverslicense_category,vehicle_flag,citizen_flag,call_type";
-
   const [
     activeOfficer,
     values,
@@ -212,7 +225,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     { officers: allOfficers, deputies: allDeputies, activeIncidents },
   ] = await requestAll(req, [
     ["/leo/active-officer", null],
-    [adminValuesURL, []],
+    ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
     ["/dispatch", { officers: [], deputies: [], activeIncidents: [] }],
