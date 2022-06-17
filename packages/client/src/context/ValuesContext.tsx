@@ -80,7 +80,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
       ...values,
       values: values.values.filter((value) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        return !(isBaseValue(value) ? value.isDisabled : value.value?.isDisabled);
+        return !(isBaseValue(value) ? value?.isDisabled : value?.value?.isDisabled);
       }),
     };
   }
@@ -98,7 +98,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
 
       return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
     }, {} as Context);
-  }, [values]);
+  }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };
 
