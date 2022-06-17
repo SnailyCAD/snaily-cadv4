@@ -17,7 +17,7 @@ import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { isUnitDisabled, makeUnitName } from "lib/utils";
 
 export function SelectOfficerModal() {
-  const { officers, setActiveOfficer } = useLeoState();
+  const { userOfficers: officers, setActiveOfficer } = useLeoState();
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");

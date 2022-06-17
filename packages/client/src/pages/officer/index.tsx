@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import { Bolo, EmsFdDeputy, LeoIncident, Record, RecordType, ValueType } from "@snailycad/types";
+import { Bolo, EmsFdDeputy, Officer, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -63,20 +63,18 @@ interface Props {
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: Bolo[];
-  activeIncidents: LeoIncident[];
-
   activeDeputies: EmsFdDeputy[];
   activeOfficers: ActiveOfficer[];
+  userOfficers: Officer[];
 }
 
 export default function OfficerDashboard({
   bolos,
   calls,
   activeOfficer,
-  activeIncidents,
-
   activeOfficers,
   activeDeputies,
+  userOfficers,
 }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -118,10 +116,9 @@ export default function OfficerDashboard({
     dispatchState.setCalls(calls);
     dispatchState.setBolos(bolos);
 
-    dispatchState.setActiveIncidents(activeIncidents);
-
     dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
+    leoState.setUserOfficers(userOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
@@ -189,26 +186,31 @@ export default function OfficerDashboard({
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
-  const [activeOfficer, values, calls, bolos, activeOfficers, activeDeputies] = await requestAll(
-    req,
-    [
-      ["/leo/active-officer", null],
-      ["/admin/values/codes_10", []],
-      ["/911-calls", []],
-      ["/bolos", []],
-      ["/leo/active-officers", []],
-      ["/ems-fd/active-deputies", []],
-    ],
-  );
+  const [
+    activeOfficer,
+    { officers: userOfficers },
+    values,
+    calls,
+    bolos,
+    activeOfficers,
+    activeDeputies,
+  ] = await requestAll(req, [
+    ["/leo/active-officer", null],
+    ["/leo", [{ officers: [] }]],
+    ["/admin/values/codes_10", []],
+    ["/911-calls", []],
+    ["/bolos", []],
+    ["/leo/active-officers", []],
+    ["/ems-fd/active-deputies", []],
+  ]);
 
   return {
     props: {
-      // todo:
-      activeIncidents: [],
       session: await getSessionUser(req),
       activeOfficers,
       activeDeputies,
       activeOfficer,
+      userOfficers,
       calls,
       bolos,
       values,

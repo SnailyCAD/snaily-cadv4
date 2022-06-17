@@ -12,10 +12,8 @@ export function useActiveDispatchers() {
   const isCitizen = router.pathname.includes("/citizen");
 
   const { state, execute } = useFetch();
-  const dispatchState = useDispatchState((s) => ({
-    setActiveDispatchers: s.setActiveDispatchers,
-    activeDispatchers: s.activeDispatchers,
-  }));
+  const dispatchState = useDispatchState();
+
   const { ACTIVE_DISPATCHERS } = useFeatureEnabled();
 
   const getActiveDispatchers = React.useCallback(async () => {
@@ -25,6 +23,7 @@ export function useActiveDispatchers() {
 
     if (json.activeDispatchers) {
       dispatchState.setActiveDispatchers(json.activeDispatchers);
+      dispatchState.setActiveIncidents(json.activeIncidents);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -31,7 +31,7 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, officers } = useLeoState();
+  const { activeOfficer, userOfficers: officers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
