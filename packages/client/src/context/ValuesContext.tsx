@@ -80,7 +80,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
       ...values,
       values: values.values.filter((value) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        return !(isBaseValue(value) ? value.isDisabled : value.value?.isDisabled);
+        return !(isBaseValue(value) ? value?.isDisabled : value?.value?.isDisabled);
       }),
     };
   }
