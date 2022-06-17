@@ -98,7 +98,7 @@ export function ValuesProvider({ initialData, children }: ProviderProps) {
 
       return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
     }, {} as Context);
-  }, [values]);
+  }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };
 
