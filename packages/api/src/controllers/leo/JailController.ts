@@ -104,9 +104,7 @@ export class LeoController {
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
 
-    await this.handleReleaseCitizen(id, data);
-
-    return true;
+    return this.handleReleaseCitizen(id, data);
   }
 
   private async handleReleaseCitizen(
@@ -147,12 +145,20 @@ export class LeoController {
       },
     });
 
-    await prisma.record.update({
-      where: { id: recordId },
+    const updatedCitizen = await prisma.citizen.update({
+      where: { id: citizen.id },
       data: {
-        citizen: { update: { arrested: false } },
-        release: { connect: { id: release.id } },
+        arrested: true,
+        Record: {
+          update: {
+            where: { id: record.id },
+            data: { release: { connect: { id: release.id } } },
+          },
+        },
       },
+      include: citizenInclude,
     });
+
+    return updatedCitizen;
   }
 }

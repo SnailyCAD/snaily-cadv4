@@ -13,7 +13,6 @@ import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
@@ -29,7 +28,6 @@ export default function Jail({ data }: Props) {
   const asyncTable = useAsyncTable({
     initialData: data.jailedCitizens,
     totalCount: data.totalCount,
-    setDataOnInitialDataChange: true,
     fetchOptions: {
       onResponse: (json) => ({ data: json.jailedCitizens, totalCount: json.totalCount }),
       path: "/leo/jail",
@@ -40,15 +38,19 @@ export default function Jail({ data }: Props) {
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { hasPermissions } = usePermission();
-  const router = useRouter();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
     null,
   );
 
-  function handleSuccess() {
-    router.replace({ pathname: router.pathname, query: router.query });
+  function handleSuccess(citizen: Citizen & { Record: Record[] }) {
+    const newData = [...asyncTable.data];
+    const idx = newData.findIndex((v) => v.id === citizen.id);
+    newData[idx] = citizen;
+
+    asyncTable.setData(newData);
+
     setTempCitizen(null);
     closeModal(ModalIds.AlertReleaseCitizen);
   }
