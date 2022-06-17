@@ -37,7 +37,10 @@ export class LeoController {
     permissions: [Permissions.ViewJail, Permissions.ManageJail],
     fallback: (u) => u.isLeo,
   })
-  async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
+  async getImprisonedCitizens(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @PathParams("skip") skip = "0",
+  ) {
     const where = {
       OR: [
         {
@@ -52,6 +55,8 @@ export class LeoController {
       prisma.citizen.findMany({
         where,
         include: citizenInclude,
+        take: 35,
+        skip: Number(skip),
       }),
     ]);
 
