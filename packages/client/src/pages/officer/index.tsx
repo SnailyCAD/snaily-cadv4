@@ -98,6 +98,8 @@ export default function OfficerDashboard({
       ValueType.DRIVERSLICENSE_CATEGORY,
       ValueType.IMPOUND_LOT,
       ValueType.PENAL_CODE,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
     ],
   });
 

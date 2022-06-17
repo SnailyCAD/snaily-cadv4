@@ -79,6 +79,8 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       ValueType.LICENSE,
       ValueType.PENAL_CODE,
       ValueType.VEHICLE_FLAG,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
     ],
   });
 

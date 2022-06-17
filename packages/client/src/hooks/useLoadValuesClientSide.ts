@@ -23,22 +23,27 @@ export function useLoadValuesClientSide(options: Options) {
   }
 
   const fetchValues = React.useCallback(async () => {
-    const [first, ...rest] = options.valueTypes;
-    const hasMore = rest.length >= 1;
+    if (options.valueTypes.length <= 0) {
+      throw new Error("Must provide at least 1 value type");
+    }
 
-    const { json } = await execute(
-      `/admin/values/${first?.toLowerCase()}${
-        hasMore ? `?paths=${transformValueTypesToString()}` : ""
-      }`,
-      {
-        method: "GET",
-      },
-    );
+    const [first, ...rest] = options.valueTypes;
+
+    const firstType = first!.toLowerCase();
+    const params = new URLSearchParams();
+
+    if (rest.length >= 1) {
+      params.append("paths", transformValueTypesToString());
+    }
+
+    const { json } = await execute(`/admin/values/${firstType}?${params.toString()}`, {
+      method: "GET",
+    });
 
     if (Array.isArray(json)) {
       setValues((prev) => [...prev, ...json]);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [options.valueTypes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
     if (!fetched.current) {

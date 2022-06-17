@@ -46,7 +46,13 @@ const SearchMedicalRecordModal = dynamic(async () => {
 
 export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
   useLoadValuesClientSide({
-    valueTypes: [ValueType.BLOOD_GROUP, ValueType.PENAL_CODE, ValueType.IMPOUND_LOT],
+    valueTypes: [
+      ValueType.BLOOD_GROUP,
+      ValueType.PENAL_CODE,
+      ValueType.IMPOUND_LOT,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
+    ],
   });
 
   const signal100 = useSignal100();
