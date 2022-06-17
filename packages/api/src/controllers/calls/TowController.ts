@@ -53,7 +53,7 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
     fallback: (u) => u.isTow,
   })
-  async getTowCalls(@QueryParams("ended") includingEnded = false) {
+  async getTowCalls(@QueryParams("ended", Boolean) includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded ? undefined : { ended: false },
       include: towIncludes,

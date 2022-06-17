@@ -41,7 +41,6 @@ export class SteamOAuthController {
   @Get("/callback")
   @Description("Handle Steam's OAuth2 response. Authenticate user where possible.")
   async handleCallbackFromSteam(@QueryParams() query: any, @Res() res: Res, @Req() req: Req) {
-    req;
     const redirectURL = findRedirectURL();
     const identity = query["openid.identity"];
 

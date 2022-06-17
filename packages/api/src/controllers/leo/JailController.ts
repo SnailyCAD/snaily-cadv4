@@ -1,6 +1,6 @@
-import { Context, Controller, UseBeforeEach, BodyParams } from "@tsed/common";
+import { Context, Controller, UseBeforeEach } from "@tsed/common";
 import { Delete, Description, Get } from "@tsed/schema";
-import { PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -39,15 +39,10 @@ export class LeoController {
   })
   async getImprisonedCitizens(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
-    @PathParams("skip") skip = "0",
+    @QueryParams("skip", Number) skip = 0,
   ) {
     const where = {
-      OR: [
-        {
-          arrested: true,
-        },
-        { Record: { some: { release: { isNot: null } } } },
-      ],
+      OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
     };
 
     const [totalCount, citizens] = await Promise.all([
@@ -56,7 +51,7 @@ export class LeoController {
         where,
         include: citizenInclude,
         take: 35,
-        skip: Number(skip),
+        skip,
       }),
     ]);
 

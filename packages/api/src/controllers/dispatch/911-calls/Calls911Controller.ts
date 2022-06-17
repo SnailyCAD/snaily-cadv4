@@ -68,7 +68,7 @@ export class Calls911Controller {
   @Description("Get all 911 calls")
   async get911Calls(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings | null },
-    @QueryParams("includeEnded") includeEnded: boolean,
+    @QueryParams("includeEnded", Boolean) includeEnded: boolean,
   ) {
     const inactivityFilter = getInactivityFilter(cad);
     if (inactivityFilter) {

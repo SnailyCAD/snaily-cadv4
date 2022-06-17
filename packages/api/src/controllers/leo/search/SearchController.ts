@@ -188,7 +188,7 @@ export class SearchController {
   })
   async searchVehicle(
     @BodyParams("plateOrVin") plateOrVin: string,
-    @QueryParams("includeMany") includeMany: boolean,
+    @QueryParams("includeMany", Boolean) includeMany: boolean,
   ) {
     if (!plateOrVin || plateOrVin.length < 3) {
       return null;
