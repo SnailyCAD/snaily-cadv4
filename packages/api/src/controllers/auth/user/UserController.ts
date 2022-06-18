@@ -32,7 +32,7 @@ export class AccountController {
 
   @Patch("/")
   @Description("Update the authenticated user's settings")
-  async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
+  async patchAuthUser(@Res() res: Res, @BodyParams() body: any, @Context("user") user: User) {
     const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
@@ -76,6 +76,22 @@ export class AccountController {
         locale: data.locale || null,
       },
       select: userProperties,
+    });
+
+    const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+    setCookie({
+      name: "sn_locale",
+      res,
+      value: data.locale ?? "",
+      expires: data.locale ? ONE_YEAR_MS : 0,
+      httpOnly: false,
+    });
+    setCookie({
+      name: "sn_isDarkTheme",
+      res,
+      value: String(data.isDarkTheme),
+      expires: ONE_YEAR_MS,
+      httpOnly: false,
     });
 
     return updated;
