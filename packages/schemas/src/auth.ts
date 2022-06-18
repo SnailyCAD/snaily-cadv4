@@ -16,6 +16,7 @@ export const CHANGE_USER_SCHEMA = z.object({
   isDarkTheme: z.boolean(),
   statusViewMode: z.string(),
   tableActionsAlignment: z.string(),
+  locale: z.string().nullable().optional(),
   username: z
     .string()
     .min(3)

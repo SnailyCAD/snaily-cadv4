@@ -14,6 +14,7 @@ import nextConfig from "../../../next.config";
 import type { Sounds } from "lib/server/getAvailableSounds";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
+import { useRouter } from "next/router";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -25,6 +26,7 @@ export function AppearanceTab({ availableSounds }: Props) {
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
   const availableLanguages = nextConfig.i18n.locales;
+  const router = useRouter();
 
   const STATUS_VIEW_MODE_LABELS = {
     [StatusViewMode.DOT_COLOR]: t("dotColor"),
@@ -46,13 +48,13 @@ export function AppearanceTab({ availableSounds }: Props) {
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
     locale: user?.locale ?? nextConfig.i18n.defaultLocale,
-    soundSettings: user.soundSettings ?? {
-      panicButton: true,
-      signal100: true,
-      addedToCall: false,
-      stopRoleplay: false,
-      statusUpdate: false,
-      incomingCall: false,
+    soundSettings: {
+      panicButton: user.soundSettings?.panicButton ?? true,
+      signal100: user.soundSettings?.signal100 ?? true,
+      addedToCall: user.soundSettings?.addedToCall ?? false,
+      stopRoleplay: user.soundSettings?.stopRoleplay ?? false,
+      statusUpdate: user.soundSettings?.statusUpdate ?? false,
+      incomingCall: user.soundSettings?.incomingCall ?? false,
     },
   };
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
@@ -62,6 +64,10 @@ export function AppearanceTab({ availableSounds }: Props) {
       method: "PATCH",
       data: { username: user?.username, ...data },
     });
+
+    if (data.locale !== user?.locale) {
+      return router.reload();
+    }
 
     if (json.id) {
       setUser({ ...user, ...json });
@@ -155,9 +161,9 @@ export function AppearanceTab({ availableSounds }: Props) {
                     </Accordion.Trigger>
 
                     <Accordion.Content className="mt-3">
-                      {unAvailableSoundsArr.map((sound) => {
-                        return <p key={sound}>{t(sound)}</p>;
-                      })}
+                      {unAvailableSoundsArr.map((sound) => (
+                        <p key={sound}>{t(sound)}</p>
+                      ))}
 
                       <p className="mt-2">
                         These sounds are unavailable.

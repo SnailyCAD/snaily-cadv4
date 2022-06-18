@@ -45,6 +45,7 @@ export const userProperties = {
   permissions: true,
   apiToken: true,
   apiTokenId: true,
+  locale: true,
 };
 
 export async function getSessionUser(req: Req, returnNullOnError?: false): Promise<User>;

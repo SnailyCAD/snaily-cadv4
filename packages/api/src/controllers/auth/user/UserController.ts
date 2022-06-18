@@ -73,6 +73,7 @@ export class AccountController {
         statusViewMode: data.statusViewMode as StatusViewMode,
         tableActionsAlignment: data.tableActionsAlignment as TableActionsAlignment,
         soundSettingsId,
+        locale: data.locale || null,
       },
       select: userProperties,
     });
