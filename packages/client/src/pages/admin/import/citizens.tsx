@@ -44,13 +44,17 @@ export default function ImportCitizensPage() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const [values] = await requestAll(req, [["/admin/values/gender?paths=ethnicity", []]]);
+  const user = await getSessionUser(req);
 
   return {
     props: {
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

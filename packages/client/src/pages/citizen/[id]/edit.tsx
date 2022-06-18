@@ -63,6 +63,7 @@ export default function EditCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
     [`/citizen/${query.id}`, null],
     ["/admin/values/gender?paths=ethnicity", []],
@@ -78,9 +79,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     props: {
       values,
       citizen: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

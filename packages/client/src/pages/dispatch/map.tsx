@@ -79,6 +79,7 @@ export default function MapPage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [values, calls, bolos, { officers, deputies }] = await requestAll(req, [
     ["/admin/values/codes_10?paths=penal_code,impound_lot,department,division", []],
     ["/911-calls", []],
@@ -88,14 +89,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       calls,
       bolos,
       values,
       officers,
       deputies,
       messages: {
-        ...(await getTranslations(["citizen", "ems-fd", "leo", "calls", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "ems-fd", "leo", "calls", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

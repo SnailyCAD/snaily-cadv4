@@ -233,6 +233,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
     ["/911-calls?includeEnded=true", []],
     ["/incidents", { incidents: [] }],
@@ -241,13 +242,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       data: calls,
       incidents,
       deputies,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

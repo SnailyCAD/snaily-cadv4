@@ -243,6 +243,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, req, locale }) => {
+  const user = await getSessionUser(req);
   const [unit, values] = await requestAll(req, [
     [`/admin/manage/units/${query.id}`, null],
     ["/admin/values/codes_10?paths=department,division,officer_rank,qualification", []],
@@ -258,9 +259,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query, req, local
     props: {
       unit,
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "leo", "ems-fd", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["admin", "leo", "ems-fd", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

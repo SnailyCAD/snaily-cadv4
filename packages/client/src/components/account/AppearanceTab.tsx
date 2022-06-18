@@ -9,8 +9,10 @@ import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
+import nextConfig from "../../../next.config";
 
 export function AppearanceTab() {
+  const availableLanguages = nextConfig.i18n.locales;
   const { user, setUser } = useAuth();
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
@@ -35,6 +37,7 @@ export function AppearanceTab() {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
+    locale: user?.locale ?? nextConfig.i18n.defaultLocale,
     soundSettings: user.soundSettings ?? {
       panicButton: true,
       signal100: true,
@@ -64,6 +67,15 @@ export function AppearanceTab() {
           <Form className="mt-3">
             <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
+            </FormField>
+
+            <FormField errorMessage={errors.locale} label={t("locale")}>
+              <Select
+                values={availableLanguages.map((v) => ({ value: v, label: v }))}
+                value={values.locale}
+                onChange={handleChange}
+                name="locale"
+              />
             </FormField>
 
             <FormField errorMessage={errors.statusViewMode} label={t("statusView")}>

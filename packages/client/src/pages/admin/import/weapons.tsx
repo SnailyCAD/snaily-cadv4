@@ -91,6 +91,7 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [weapons, values] = await requestAll(req, [
     ["/admin/import/weapons", []],
     ["/admin/values/gender?paths=ethnicity", []],
@@ -100,9 +101,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     props: {
       values,
       weapons,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

@@ -368,14 +368,15 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [["/admin/values/penal_code", []]]);
 
   return {
     props: {
       values: values?.[0] ?? {},
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

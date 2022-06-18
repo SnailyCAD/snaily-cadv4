@@ -214,6 +214,7 @@ export default function BusinessId(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const user = await getSessionUser(req);
   const [business] = await requestAll(req, [
     [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
   ]);
@@ -223,9 +224,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     props: {
       business,
       employee: business?.employee ?? null,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["business", "common"], locale)),
+        ...(await getTranslations(["business", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -222,7 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       cad: data ?? {},
-      messages: await getTranslations(["auth"], locale),
+      messages: await getTranslations(["auth"], user?.locale ?? locale),
     },
   };
 };

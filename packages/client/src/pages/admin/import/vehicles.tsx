@@ -95,6 +95,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [vehicles, values] = await requestAll(req, [
     ["/admin/import/vehicles", []],
     ["/admin/values/gender?paths=ethnicity", []],
@@ -104,9 +105,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
     props: {
       values,
       vehicles,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

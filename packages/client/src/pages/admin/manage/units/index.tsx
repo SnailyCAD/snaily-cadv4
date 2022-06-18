@@ -135,14 +135,18 @@ export default function SupervisorPanelPage({ units }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [units] = await requestAll(req, [["/admin/manage/units", []]]);
 
   return {
     props: {
       units,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "leo", "ems-fd", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["admin", "leo", "ems-fd", "values", "common"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

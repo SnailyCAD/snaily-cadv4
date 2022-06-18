@@ -157,6 +157,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
   const adminValuesURL =
     "/admin/values/codes_10?paths=penal_code,impound_lot,license,department,division,vehicle_flag,driverslicense_category,citizen_flag,call_type";
 
+  const user = await getSessionUser(req);
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [
       [adminValuesURL, []],
@@ -167,7 +168,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       calls,
       bolos,
       values,

@@ -69,6 +69,7 @@ export default function CreateCitizen() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [
     ["/admin/values/gender?paths=ethnicity,license,driverslicense_category", []],
   ]);
@@ -76,9 +77,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       values,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "common"], locale)),
+        ...(await getTranslations(["citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

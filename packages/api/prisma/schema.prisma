@@ -225,6 +225,7 @@ model User {
   soundSettingsId          String?
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
+  locale                   String?
 
 
   // relational data
