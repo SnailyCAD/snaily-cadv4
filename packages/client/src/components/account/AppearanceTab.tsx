@@ -10,9 +10,11 @@ import { useTranslations } from "use-intl";
 import { StatusViewMode, TableActionsAlignment } from "@snailycad/types";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
+import nextConfig from "../../../next.config";
 import type { Sounds } from "lib/server/getAvailableSounds";
 import { soundCamelCaseToKebabCase } from "lib/utils";
 import { CaretDownFill } from "react-bootstrap-icons";
+import { useRouter } from "next/router";
 
 interface Props {
   availableSounds: Record<Sounds, boolean>;
@@ -23,6 +25,8 @@ export function AppearanceTab({ availableSounds }: Props) {
   const t = useTranslations("Account");
   const { execute, state } = useFetch();
   const common = useTranslations("Common");
+  const availableLanguages = nextConfig.i18n.locales;
+  const router = useRouter();
 
   const STATUS_VIEW_MODE_LABELS = {
     [StatusViewMode.DOT_COLOR]: t("dotColor"),
@@ -43,13 +47,14 @@ export function AppearanceTab({ availableSounds }: Props) {
     isDarkTheme: user.isDarkTheme ?? true,
     statusViewMode: user.statusViewMode ?? StatusViewMode.DOT_COLOR,
     tableActionsAlignment: user.tableActionsAlignment,
-    soundSettings: user.soundSettings ?? {
-      panicButton: true,
-      signal100: true,
-      addedToCall: false,
-      stopRoleplay: false,
-      statusUpdate: false,
-      incomingCall: false,
+    locale: user?.locale ?? nextConfig.i18n.defaultLocale,
+    soundSettings: {
+      panicButton: user.soundSettings?.panicButton ?? true,
+      signal100: user.soundSettings?.signal100 ?? true,
+      addedToCall: user.soundSettings?.addedToCall ?? false,
+      stopRoleplay: user.soundSettings?.stopRoleplay ?? false,
+      statusUpdate: user.soundSettings?.statusUpdate ?? false,
+      incomingCall: user.soundSettings?.incomingCall ?? false,
     },
   };
   const sounds = Object.keys(INITIAL_VALUES.soundSettings);
@@ -59,6 +64,10 @@ export function AppearanceTab({ availableSounds }: Props) {
       method: "PATCH",
       data: { username: user?.username, ...data },
     });
+
+    if (data.locale !== user?.locale) {
+      return router.reload();
+    }
 
     if (json.id) {
       setUser({ ...user, ...json });
@@ -76,6 +85,15 @@ export function AppearanceTab({ availableSounds }: Props) {
           <Form className="mt-3">
             <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
               <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
+            </FormField>
+
+            <FormField errorMessage={errors.locale} label={t("locale")}>
+              <Select
+                values={availableLanguages.map((v) => ({ value: v, label: v }))}
+                value={values.locale}
+                onChange={handleChange}
+                name="locale"
+              />
             </FormField>
 
             <FormField errorMessage={errors.statusViewMode} label={t("statusView")}>
@@ -143,9 +161,9 @@ export function AppearanceTab({ availableSounds }: Props) {
                     </Accordion.Trigger>
 
                     <Accordion.Content className="mt-3">
-                      {unAvailableSoundsArr.map((sound) => {
-                        return <p key={sound}>{t(sound)}</p>;
-                      })}
+                      {unAvailableSoundsArr.map((sound) => (
+                        <p key={sound}>{t(sound)}</p>
+                      ))}
 
                       <p className="mt-2">
                         These sounds are unavailable.

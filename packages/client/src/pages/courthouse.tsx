@@ -70,6 +70,7 @@ export default function Courthouse(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data, nameChangeRequests, courtEntries, courthousePosts, citizens] = await requestAll(
     req,
     [
@@ -88,9 +89,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       citizens,
       courtEntries,
       courthousePosts,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["courthouse", "leo", "common"], locale)),
+        ...(await getTranslations(["courthouse", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

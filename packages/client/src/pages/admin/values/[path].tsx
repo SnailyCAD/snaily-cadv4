@@ -306,15 +306,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const paths = pathsRecord[path];
   const pathsStr = paths ? `?paths=${paths}` : "";
 
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
 
   return {
     props: {
       values,
       pathValues: values?.[0] ?? { type: path, values: [] },
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

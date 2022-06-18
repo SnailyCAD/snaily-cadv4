@@ -205,6 +205,7 @@ export interface User {
   soundSettings?: UserSoundSettings | null;
   apiTokenId: string | null;
   apiToken?: ApiToken | null;
+  locale: string | null;
 }
 
 /**
