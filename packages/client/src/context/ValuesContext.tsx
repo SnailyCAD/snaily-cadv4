@@ -13,6 +13,8 @@ import {
   QualificationValue,
   CallTypeValue,
 } from "@snailycad/types";
+import { AnyValue, isBaseValue } from "@snailycad/utils";
+import { useRouter } from "next/router";
 
 interface ContextValue<T extends ValueType, Custom = Value<T>> {
   type: ValueType;
@@ -65,21 +67,38 @@ interface ProviderProps {
 }
 
 export function ValuesProvider({ initialData, children }: ProviderProps) {
+  const router = useRouter();
+  const isAdmin = router.pathname.startsWith("/admin");
   const [values, setValues] = React.useState<ProviderProps["initialData"]["values"]>(
     Array.isArray(initialData.values) ? initialData.values : [],
   );
 
+  function removeDisabledValues(values: { values: AnyValue[]; type: ValueType }) {
+    if (isAdmin) return values;
+
+    return {
+      ...values,
+      values: values.values.filter((value) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        return !(isBaseValue(value) ? value?.isDisabled : value?.value?.isDisabled);
+      }),
+    };
+  }
+
   const data = React.useMemo(() => {
     return Object.values(ValueType).reduce((obj, valueType) => {
-      const v = values.find((v) => v.type === valueType) ?? { values: [], type: valueType };
+      const valuesForType = values.find((v) => v.type === valueType) ?? {
+        values: [],
+        type: valueType,
+      };
 
-      if (v.type === "PENAL_CODE") {
-        obj["penalCodeGroups"] = (v as any).groups ?? [];
+      if (valuesForType.type === "PENAL_CODE") {
+        obj["penalCodeGroups"] = (valuesForType as any).groups ?? [];
       }
 
-      return { ...obj, [normalizeValue(valueType)]: v };
+      return { ...obj, [normalizeValue(valueType)]: removeDisabledValues(valuesForType) };
     }, {} as Context);
-  }, [values]);
+  }, [values]); // eslint-disable-line
 
   const value = { ...data, setValues };
 

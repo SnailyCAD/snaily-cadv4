@@ -361,6 +361,7 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+  isDisabled: boolean;
 
   officerRankDepartments?: DepartmentValue[];
   officerRankImageId: string | null;

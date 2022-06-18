@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CREATE_TICKET_SCHEMA } from "@snailycad/schemas";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
@@ -13,7 +14,7 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
-import { type Citizen, RecordType, type PenalCode, Record } from "@snailycad/types";
+import { type Citizen, RecordType, type PenalCode, type Record } from "@snailycad/types";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -162,7 +163,7 @@ export function ManageRecordModal({
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
             <FormField errorMessage={errors.citizenName} label={t("citizen")}>
-              <InputSuggestions
+              <InputSuggestions<Citizen>
                 inputProps={{
                   value: values.citizenName,
                   name: "citizenName",
@@ -185,7 +186,7 @@ export function ManageRecordModal({
                   method: "POST",
                   minLength: 2,
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     <div className="mr-2 min-w-[25px]">
                       {suggestion.imageId ? (

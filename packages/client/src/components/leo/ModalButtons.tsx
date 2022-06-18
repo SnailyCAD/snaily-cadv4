@@ -29,7 +29,7 @@ export function ModalButtons() {
   const t = useTranslations();
   const { generateCallsign } = useGenerateCallsign();
 
-  const { execute } = useFetch();
+  const { state, execute } = useFetch();
 
   async function handlePanic() {
     if (!activeOfficer) return;
@@ -75,7 +75,7 @@ export function ModalButtons() {
 
         <Button
           id="panicButton"
-          disabled={isButtonDisabled}
+          disabled={state === "loading" || isButtonDisabled}
           title={isButtonDisabled ? "Go on-duty before continuing" : t("Leo.panicButton")}
           onClick={handlePanic}
         >

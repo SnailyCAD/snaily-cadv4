@@ -39,6 +39,7 @@ export function ModalButton({ button: buttonFn, unit, ...buttonProps }: Props) {
       onClick={() => openModal(button.modalId)}
       type="button"
       {...buttonProps}
+      className="text-base"
     >
       {t(button.nameKey.join("."))}
     </Button>

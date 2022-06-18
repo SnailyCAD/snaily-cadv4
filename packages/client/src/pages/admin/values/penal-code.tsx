@@ -202,7 +202,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
       ) : currentGroup ? (
         <>
           <header className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold capitalize">{currentGroup.name}</h1>
+            <h1 className="text-xl font-semibold">{currentGroup.name}</h1>
 
             <Button onClick={handleViewAllGroups} className="flex items-center gap-3">
               <ArrowLeft /> View all groups

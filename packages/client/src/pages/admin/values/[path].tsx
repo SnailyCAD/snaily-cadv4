@@ -11,7 +11,7 @@ import { useModal } from "state/modalState";
 import { type PenalCode, type PenalCodeGroup, ValueType, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
-import { requestAll } from "lib/utils";
+import { requestAll, yesOrNoText } from "lib/utils";
 import { Input } from "components/form/inputs/Input";
 import { FormField } from "components/form/FormField";
 import dynamic from "next/dynamic";
@@ -25,6 +25,7 @@ import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -71,10 +72,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       },
       { Header: "Value", accessor: "value" },
       ...extraTableHeaders,
+      { Header: t("isDisabled"), accessor: "isDisabled" },
       { Header: common("createdAt"), accessor: "createdAt" },
       { Header: common("actions"), accessor: "actions" },
     ];
-  }, [extraTableHeaders, common, tableSelect]);
+  }, [extraTableHeaders, t, common, tableSelect]);
 
   async function setList(list: AnyValue[]) {
     if (!hasTableDataChanged(values, list)) return;
@@ -212,15 +214,14 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             data={values.map((value) => ({
               rowProps: { value },
               checkbox: (
-                <input
-                  className="cursor-pointer"
+                <Checkbox
                   checked={tableSelect.selectedRows.includes(value.id)}
                   onChange={() => tableSelect.handleCheckboxChange(value)}
-                  type="checkbox"
                 />
               ),
               value: getValueStrFromValue(value),
               ...extraTableData(value),
+              isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
               createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
               actions: (
                 <>
@@ -361,6 +362,11 @@ export function getValueStrFromValue(value: AnyValue) {
 export function getCreatedAtFromValue(value: AnyValue) {
   const isBase = isBaseValue(value);
   return isBase ? value.createdAt : value.value.createdAt;
+}
+
+export function getDisabledFromValue(value: AnyValue) {
+  const isBase = isBaseValue(value);
+  return isBase ? value.isDisabled : value.value.isDisabled;
 }
 
 /**

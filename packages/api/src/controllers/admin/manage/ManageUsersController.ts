@@ -1,4 +1,4 @@
-import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User } from "@prisma/client";
+import { Rank, type cad, WhitelistStatus, Feature, CadFeature, User, Prisma } from "@prisma/client";
 import { PathParams, BodyParams, Context, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
@@ -37,13 +37,35 @@ export class ManageUsersController {
       Permissions.DeleteUsers,
     ],
   })
-  @Description("Get all the users in the CAD")
-  async getUsers() {
+  @Description("Get all the users in the CAD.")
+  async getUsers(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ) {
+    const where =
+      query || pendingOnly
+        ? {
+            ...(query ? { username: { contains: query, mode: Prisma.QueryMode.insensitive } } : {}),
+            ...(pendingOnly ? { whitelistStatus: WhitelistStatus.PENDING } : {}),
+          }
+        : undefined;
+
+    const [totalCount, pendingCount] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
+    ]);
+
+    const shouldIncludeAll = includeAll;
     const users = await prisma.user.findMany({
       select: userProperties,
+      where,
+      take: shouldIncludeAll ? undefined : 35,
+      skip: shouldIncludeAll ? undefined : Number(skip),
     });
 
-    return users;
+    return { totalCount, pendingCount, users };
   }
 
   @Get("/:id")
@@ -70,6 +92,21 @@ export class ManageUsersController {
     });
 
     return user;
+  }
+
+  @Post("/search")
+  @UsePermissions({
+    fallback: (u) => u.rank !== Rank.USER,
+    permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
+  })
+  async searchUsers(@BodyParams("username") username: string) {
+    const users = await prisma.user.findMany({
+      where: { username: { contains: username, mode: "insensitive" } },
+      select: userProperties,
+      take: 35,
+    });
+
+    return users;
   }
 
   @Put("/permissions/:id")

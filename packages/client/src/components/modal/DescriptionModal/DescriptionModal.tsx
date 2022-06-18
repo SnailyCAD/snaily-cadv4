@@ -31,7 +31,7 @@ export function DescriptionModal(props: Props) {
 
   return (
     <Modal
-      className="min-w-[600px]"
+      className="min-w-[600px] max-w-[750px]"
       title={common("description")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.Description)}

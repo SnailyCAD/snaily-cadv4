@@ -10,28 +10,38 @@ import type { TableData } from "./TableProps";
 
 interface Props<T extends object, RowProps extends object> {
   instance: TableInstance<TableData<T, RowProps>>;
+  paginationState?: "error" | "loading" | null;
 }
 
 export function TablePagination<T extends object, RowProps extends object>({
   instance,
+  paginationState,
 }: Props<T, RowProps>) {
+  const isLoading = paginationState === "loading";
+
   return (
     <div className="mt-5 flex justify-center items-center gap-3">
-      <Button onClick={() => instance.gotoPage(0)} disabled={!instance.canPreviousPage}>
+      <Button
+        onClick={() => instance.gotoPage(0)}
+        disabled={isLoading || !instance.canPreviousPage}
+      >
         <ChevronDoubleLeft aria-label="Show first page" width={15} height={25} />
       </Button>
-      <Button onClick={() => instance.previousPage()} disabled={!instance.canPreviousPage}>
+      <Button
+        onClick={() => instance.previousPage()}
+        disabled={isLoading || !instance.canPreviousPage}
+      >
         <ChevronLeft aria-label="Previous page" width={15} height={25} />
       </Button>
       <span>
         {instance.state.pageIndex + 1} of {instance.pageOptions.length}
       </span>
-      <Button onClick={() => instance.nextPage()} disabled={!instance.canNextPage}>
+      <Button onClick={() => instance.nextPage()} disabled={isLoading || !instance.canNextPage}>
         <ChevronRight aria-label="Next page" width={15} height={25} />
       </Button>
       <Button
         onClick={() => instance.gotoPage(instance.pageCount - 1)}
-        disabled={!instance.canNextPage}
+        disabled={isLoading || !instance.canNextPage}
       >
         <ChevronDoubleRight aria-label="Show last page" width={15} height={25} />
       </Button>

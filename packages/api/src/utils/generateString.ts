@@ -1,3 +1,5 @@
+import { customAlphabet } from "nanoid";
+
 interface Options {
   extraChars?: string;
   numbersOnly?: boolean;
@@ -8,21 +10,12 @@ const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export function generateString(length: number, options?: Options) {
   const { numbersOnly, extraChars = "" } = options ?? {};
+  const alphabet = [...NUMBERS];
 
-  let chars = "";
-
-  if (numbersOnly) {
-    chars = NUMBERS;
-  } else {
-    chars = LETTERS + NUMBERS;
+  if (!numbersOnly) {
+    alphabet.push(...LETTERS);
   }
 
-  let result = "";
-  const allChars = chars + extraChars;
-
-  for (let i = 0; i < length; i++) {
-    result += allChars.charAt(Math.floor(Math.random() * allChars.length));
-  }
-
-  return result;
+  const generate = customAlphabet([...alphabet, extraChars].join(""));
+  return generate(length);
 }

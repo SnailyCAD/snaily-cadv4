@@ -1,7 +1,7 @@
 import { Controller } from "@tsed/di";
 import { BadRequest, NotFound } from "@tsed/exceptions";
 import { UseBeforeEach } from "@tsed/platform-middlewares";
-import { BodyParams, Context, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { userProperties } from "lib/auth/getSessionUser";
 import { leoProperties } from "lib/leo/activeOfficer";
@@ -12,7 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import { validateImgurURL } from "utils/image";
-import { Rank, User, WhitelistStatus } from "@prisma/client";
+import { Prisma, Rank, User, WhitelistStatus } from "@prisma/client";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import {
   ACCEPT_DECLINE_TYPES,
@@ -38,12 +38,41 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizens() {
-    const citizens = await prisma.citizen.findMany({
-      include: citizenInclude,
-    });
+  async getCitizens(
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+  ) {
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    return citizens;
+    console.log({ skip });
+
+    const where = query
+      ? {
+          OR: [
+            {
+              name: { contains: name, mode: Prisma.QueryMode.insensitive },
+              surname: { contains: surname, mode: Prisma.QueryMode.insensitive },
+            },
+            {
+              name: { equals: surname, mode: Prisma.QueryMode.insensitive },
+              surname: { equals: name, mode: Prisma.QueryMode.insensitive },
+            },
+          ],
+        }
+      : undefined;
+
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : Number(skip),
+      }),
+    ]);
+
+    return { totalCount, citizens };
   }
 
   @Get("/records-logs")
@@ -71,15 +100,23 @@ export class AdminManageCitizensController {
   }
 
   @Get("/:id")
-  @Description("Get a citizen by its id")
+  @Description(
+    "Get a citizen by the `id`. Or get all citizens from a user by the `discordId` or `steamId`",
+  )
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string) {
-    const citizen = await prisma.citizen.findUnique({
-      where: { id },
+    const isCitizenId = id.startsWith("cl");
+
+    const functionName = isCitizenId ? "findFirst" : "findMany";
+    // @ts-expect-error same properties
+    const citizen = await prisma.citizen[functionName]({
       include: citizenInclude,
+      where: {
+        OR: [{ user: { discordId: id } }, { user: { steamId: id } }, { id }],
+      },
     });
 
     return citizen;
@@ -148,6 +185,8 @@ export class AdminManageCitizensController {
         socialSecurityNumber: generateString(9, { numbersOnly: true }),
         occupation: data.occupation || null,
         imageId: validateImgurURL(data.image),
+        userId: data.userId || undefined,
+        appearance: data.appearance || undefined,
       },
       include: citizenInclude,
     });

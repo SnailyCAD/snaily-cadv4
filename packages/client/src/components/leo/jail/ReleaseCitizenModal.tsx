@@ -1,7 +1,7 @@
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { Citizen, ReleaseType } from "@snailycad/types";
+import { Citizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
@@ -15,7 +15,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   citizen: (Citizen & { recordId: string }) | null;
-  onSuccess(): void;
+  onSuccess(entry: Citizen & { Record: Record[] }): void;
 }
 
 const LABELS = {
@@ -49,8 +49,8 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
       helpers,
     });
 
-    if (typeof json === "boolean") {
-      onSuccess();
+    if (json) {
+      onSuccess(json);
     }
   }
 
@@ -78,15 +78,15 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
 
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
-                <InputSuggestions
-                  onSuggestionClick={(suggestion: Citizen) => {
+                <InputSuggestions<Citizen>
+                  onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,
                       releasedById: suggestion.id,
                       releasedByName: `${suggestion.name} ${suggestion.surname}`,
                     });
                   }}
-                  Component={({ suggestion }: { suggestion: Citizen }) => (
+                  Component={({ suggestion }) => (
                     <div className="flex items-center">
                       {suggestion.imageId ? (
                         <img

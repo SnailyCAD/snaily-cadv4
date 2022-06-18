@@ -103,15 +103,15 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
         {({ handleChange, setValues, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
-              <InputSuggestions
-                onSuggestionClick={(suggestion: Citizen) => {
+              <InputSuggestions<Citizen>
+                onSuggestionClick={(suggestion) => {
                   setValues({
                     ...values,
                     citizenName: `${suggestion.name} ${suggestion.surname}`,
                     citizenId: suggestion.id,
                   });
                 }}
-                Component={({ suggestion }: { suggestion: Citizen }) => (
+                Component={({ suggestion }) => (
                   <div className="flex items-center">
                     {suggestion.imageId ? (
                       <img

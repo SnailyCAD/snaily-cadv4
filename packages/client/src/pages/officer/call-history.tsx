@@ -25,6 +25,7 @@ import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -137,10 +138,9 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
               return {
                 checkbox: (
-                  <input
+                  <Checkbox
                     checked={tableSelect.selectedRows.includes(call.id)}
                     onChange={() => tableSelect.handleCheckboxChange(call)}
-                    type="checkbox"
                   />
                 ),
                 rowProps: { call },

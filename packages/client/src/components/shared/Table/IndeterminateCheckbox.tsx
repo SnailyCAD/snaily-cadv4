@@ -1,17 +1,19 @@
+import { Checkbox } from "components/form/inputs/Checkbox";
 import * as React from "react";
 
-type Props = JSX.IntrinsicElements["input"] & { indeterminate?: boolean };
+type Props = JSX.IntrinsicElements["input"] & {
+  indeterminate?: boolean;
+  ref?: React.RefObject<HTMLInputElement>;
+};
 
-export const IndeterminateCheckbox = React.forwardRef<HTMLInputElement, Props>(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef<HTMLInputElement>(null);
-    const resolvedRef = ref ?? defaultRef;
+export function IndeterminateCheckbox({ indeterminate, ...props }: Props) {
+  const ref = React.useRef<HTMLInputElement>(null!);
 
-    React.useEffect(() => {
-      // @ts-expect-error ignore
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
+  React.useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !props.checked && indeterminate;
+    }
+  }, [ref, indeterminate, props.checked]);
 
-    return <input className="cursor-pointer" type="checkbox" ref={resolvedRef} {...rest} />;
-  },
-);
+  return <Checkbox ref={ref} {...props} />;
+}

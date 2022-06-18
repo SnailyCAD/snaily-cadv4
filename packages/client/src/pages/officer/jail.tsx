@@ -13,32 +13,44 @@ import { Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import compareDesc from "date-fns/compareDesc";
 import { ReleaseCitizenModal } from "components/leo/jail/ReleaseCitizenModal";
-import { useRouter } from "next/router";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { NameSearchModal } from "components/leo/modals/NameSearchModal/NameSearchModal";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 interface Props {
-  data: (Citizen & { Record: Record[] })[];
+  data: { jailedCitizens: (Citizen & { Record: Record[] })[]; totalCount: number };
 }
 
-export default function Jail({ data: jailedCitizens }: Props) {
+export default function Jail({ data }: Props) {
+  const asyncTable = useAsyncTable({
+    initialData: data.jailedCitizens,
+    totalCount: data.totalCount,
+    fetchOptions: {
+      onResponse: (json) => ({ data: json.jailedCitizens, totalCount: json.totalCount }),
+      path: "/leo/jail",
+    },
+  });
   const t = useTranslations("Leo");
   const common = useTranslations("Common");
   const { openModal, closeModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { hasPermissions } = usePermission();
-  const router = useRouter();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const [tempCitizen, setTempCitizen] = React.useState<(Citizen & { recordId: string }) | null>(
     null,
   );
 
-  function handleSuccess() {
-    router.replace({ pathname: router.pathname, query: router.query });
+  function handleSuccess(citizen: Citizen & { Record: Record[] }) {
+    const newData = [...asyncTable.data];
+    const idx = newData.findIndex((v) => v.id === citizen.id);
+    newData[idx] = citizen;
+
+    asyncTable.setData(newData);
+
     setTempCitizen(null);
     closeModal(ModalIds.AlertReleaseCitizen);
   }
@@ -62,12 +74,17 @@ export default function Jail({ data: jailedCitizens }: Props) {
     >
       <Title>{t("jail")}</Title>
 
-      {jailedCitizens.length <= 0 ? (
+      {data.jailedCitizens.length <= 0 ? (
         <p className="mt-5">{t("noImprisonedCitizens")}</p>
       ) : (
         <Table
+          pagination={{
+            enabled: true,
+            totalCount: asyncTable.pagination.totalCount,
+            fetchData: asyncTable.pagination,
+          }}
           defaultSort={{ columnId: "createdAt", descending: true }}
-          data={jailedCitizens.map((item) => {
+          data={asyncTable.data.map((item) => {
             const [record] = item.Record.sort((a, b) =>
               compareDesc(new Date(a.createdAt), new Date(b.createdAt)),
             ).filter((v) => v.type === "ARREST_REPORT");
@@ -139,7 +156,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: user,
       data: jailData,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], user?.locale ?? locale)),
+        ...(await getTranslations(["leo", "ems-fd", "citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

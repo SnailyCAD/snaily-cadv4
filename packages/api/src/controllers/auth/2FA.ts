@@ -15,7 +15,7 @@ import { validateUser2FA } from "lib/auth/2fa";
 
 @Controller("/2fa")
 @UseBeforeEach(IsAuth)
-export class User2FA {
+export class UserTwoFactorAuthenticationController {
   @Post("/verify")
   @Description("Verify a totpCode for the authenticated user's account")
   async verify2FA(@Context("user") user: User, @BodyParams("totpCode") totpCode: string) {

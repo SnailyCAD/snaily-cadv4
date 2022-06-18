@@ -58,5 +58,5 @@ function parsePenalCodeValues(arr: unknown): [number, number] | [] {
   }
 
   const [min, max] = arr;
-  return [parseInt(min), parseInt(max)].filter(Boolean) as [number, number];
+  return [parseInt(min), parseInt(max)].filter((v) => !isNaN(v)) as [number, number];
 }

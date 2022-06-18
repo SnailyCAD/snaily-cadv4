@@ -19,7 +19,7 @@ import { Title } from "components/shared/Title";
 
 const RegisterVehicleModal = dynamic(
   async () =>
-    (await import("components/citizen/vehicles/RegisterVehicleModal")).RegisterVehicleModal,
+    (await import("components/citizen/vehicles/modals/RegisterVehicleModal")).RegisterVehicleModal,
 );
 const RegisterWeaponModal = dynamic(
   async () => (await import("components/citizen/weapons/RegisterWeaponModal")).RegisterWeaponModal,
@@ -55,49 +55,61 @@ export default function CitizenPage({ citizens }: Props) {
       </h1>
 
       <ul className="grid grid-cols-1 gap-2 mb-3 sm:grid-cols-2 md:grid-cols-3">
-        <Link href="/citizen/create">
-          <a
-            href="/citizen/create"
-            className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default}`}
-          >
-            {t("createCitizen")}
-          </a>
-        </Link>
-        <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left">
-          {t("registerVehicle")}
-        </Button>
-        {WEAPON_REGISTRATION ? (
-          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left">
-            {t("registerWeapon")}
+        <li>
+          <Link href="/citizen/create">
+            <a
+              href="/citizen/create"
+              className={`rounded-md transition-all p-1 px-4 ${buttonVariants.default} block w-full`}
+            >
+              {t("createCitizen")}
+            </a>
+          </Link>
+        </li>
+        <li>
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} className="text-left w-full">
+            {t("registerVehicle")}
           </Button>
+        </li>
+        {WEAPON_REGISTRATION ? (
+          <li>
+            <Button onClick={() => openModal(ModalIds.RegisterWeapon)} className="text-left w-full">
+              {t("registerWeapon")}
+            </Button>
+          </li>
         ) : null}
 
         {TOW ? (
-          <Button
-            onClick={() => {
-              setModal("tow");
-              openModal(ModalIds.ManageTowCall);
-            }}
-            className="text-left"
-          >
-            {t("createTowCall")}
-          </Button>
+          <li>
+            <Button
+              onClick={() => {
+                setModal("tow");
+                openModal(ModalIds.ManageTowCall);
+              }}
+              className="text-left w-full"
+            >
+              {t("createTowCall")}
+            </Button>
+          </li>
         ) : null}
         {TAXI ? (
-          <Button
-            onClick={() => {
-              setModal("taxi");
-              openModal(ModalIds.ManageTowCall);
-            }}
-            className="text-left"
-          >
-            {t("createTaxiCall")}
-          </Button>
+          <li>
+            <Button
+              onClick={() => {
+                setModal("taxi");
+                openModal(ModalIds.ManageTowCall);
+              }}
+              className="text-left w-full"
+            >
+              {t("createTaxiCall")}
+            </Button>
+          </li>
         ) : null}
         {CALLS_911 ? (
-          <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left">
-            {t("create911Call")}
-          </Button>
+          <li>
+            <Button onClick={() => openModal(ModalIds.Manage911Call)} className="text-left w-full">
+              {t("create911Call")}
+            </Button>
+          </li>
         ) : null}
       </ul>
 

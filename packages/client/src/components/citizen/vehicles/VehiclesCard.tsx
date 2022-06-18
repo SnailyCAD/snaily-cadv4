@@ -2,7 +2,7 @@ import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import type { RegisteredVehicle } from "@snailycad/types";
-import { RegisterVehicleModal } from "./RegisterVehicleModal";
+import { RegisterVehicleModal } from "./modals/RegisterVehicleModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -11,6 +11,7 @@ import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { Status } from "components/shared/Status";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { TransferVehicleModal } from "./modals/TransferVehicleModal";
 
 export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
   const { openModal, closeModal } = useModal();
@@ -50,6 +51,11 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
     openModal(ModalIds.RegisterVehicle);
   }
 
+  function handleTransferClick(vehicle: RegisteredVehicle) {
+    setTempVehicle(vehicle);
+    openModal(ModalIds.TransferVehicle);
+  }
+
   return (
     <>
       <div className="p-4 card">
@@ -85,12 +91,21 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                 <>
                   <Button
                     disabled={vehicle.impounded}
+                    onClick={() => handleTransferClick(vehicle)}
+                    small
+                  >
+                    {t("transfer")}
+                  </Button>
+
+                  <Button
+                    disabled={vehicle.impounded}
                     onClick={() => handleEditClick(vehicle)}
                     small
-                    variant="success"
+                    className="ml-2"
                   >
                     {common("edit")}
                   </Button>
+
                   <Button
                     disabled={vehicle.impounded}
                     className="ml-2"
@@ -145,6 +160,16 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         state={state}
         onClose={() => setTempVehicle(null)}
       />
+
+      {tempVehicle ? (
+        <TransferVehicleModal
+          onTransfer={(vehicle) => {
+            setTempVehicle(null);
+            setVehicles((prev) => prev.filter((v) => v.id !== vehicle.id));
+          }}
+          vehicle={tempVehicle}
+        />
+      ) : null}
     </>
   );
 }

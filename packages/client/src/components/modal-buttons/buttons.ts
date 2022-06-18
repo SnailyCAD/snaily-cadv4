@@ -82,7 +82,8 @@ export const notepadBtn: ModalButton = () => ({
   nameKey: ["Leo", "notepad"],
 });
 
-export const create911CallBtn: ModalButton = () => ({
+export const create911CallBtn: ModalButton = ({ CALLS_911 }) => ({
   modalId: ModalIds.Manage911Call,
   nameKey: ["Calls", "create911Call"],
+  isEnabled: CALLS_911,
 });

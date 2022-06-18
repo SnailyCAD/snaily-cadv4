@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import type { PenalCode } from "@snailycad/types";
 import type React from "react";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   penalCode: PenalCode;
@@ -75,12 +76,11 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
       <FieldWrapper errorMessage={violationErrors[penalCode.id]?.fine}>
         <div className="flex items-center">
           <FormField className="mb-0" label={t("fines")} checkbox>
-            <Input
+            <Checkbox
               disabled={finesDisabled}
               onChange={() => handleValueChange("fine", !currentValue.fine?.enabled)}
               checked={currentValue.fine?.enabled ?? false}
               name="fine.enabled"
-              type="checkbox"
               style={{ width: 20 }}
             />
           </FormField>
@@ -104,11 +104,10 @@ export function TableItemForm({ penalCode, isReadOnly }: Props) {
       >
         <div className="flex items-center mt-1">
           <FormField className="mb-0" label={t("jailTime")} checkbox>
-            <Input
+            <Checkbox
               onChange={() => handleValueChange("jailTime", !currentValue.jailTime?.enabled)}
               checked={currentValue.jailTime?.enabled ?? false}
               name="jailTime.enabled"
-              type="checkbox"
               disabled={warningNotApplicableDisabled}
               style={{ width: 20 }}
             />

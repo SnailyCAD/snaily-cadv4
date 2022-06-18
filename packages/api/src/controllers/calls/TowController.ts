@@ -53,7 +53,7 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
     fallback: (u) => u.isTow,
   })
-  async getTowCalls(@QueryParams("ended") includingEnded = false) {
+  async getTowCalls(@QueryParams("ended", Boolean) includingEnded = false) {
     const calls = await prisma.towCall.findMany({
       where: includingEnded ? undefined : { ended: false },
       include: towIncludes,
@@ -168,9 +168,9 @@ export class TowController {
     });
 
     if (call.ended) {
-      await this.socket.emitTowCallEnd(call);
+      this.socket.emitTowCallEnd(call);
     } else {
-      await this.socket.emitTowCall(call);
+      this.socket.emitTowCall(call);
     }
 
     return call;
@@ -215,7 +215,7 @@ export class TowController {
       include: towIncludes,
     });
 
-    await this.socket.emitUpdateTowCall(updated);
+    this.socket.emitUpdateTowCall(updated);
 
     return updated;
   }
@@ -242,7 +242,7 @@ export class TowController {
       include: towIncludes,
     });
 
-    await this.socket.emitTowCallEnd(updated);
+    this.socket.emitTowCallEnd(updated);
 
     return true;
   }

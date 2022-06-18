@@ -322,6 +322,7 @@ model Citizen {
   truckLogs            TruckLog[]
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @default(now()) @updatedAt
+  appearance           String?
   RecordRelease        RecordRelease[]
   RecordLog            RecordLog[]
   ExpungementRequest   ExpungementRequest[]
@@ -409,13 +410,14 @@ model MedicalRecord {
 
 // values
 model Value {
-  id        String    @id @default(cuid())
-  type      ValueType
-  value     String    @db.VarChar(255)
-  isDefault Boolean
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  position  Int?
+  id         String    @id @default(cuid())
+  type       ValueType
+  value      String    @db.VarChar(255)
+  isDefault  Boolean
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  position   Int?
+  isDisabled Boolean   @default(false)
 
   // LICENSE type specific
   // this was added here since the migration of eg `LicenseValue` would be to large.

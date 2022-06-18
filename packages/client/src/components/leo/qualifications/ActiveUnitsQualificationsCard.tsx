@@ -62,7 +62,7 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
 
   return (
     <HoverCard
-      openDelay={250}
+      openDelay={500}
       showArrow={false}
       contentProps={{ sideOffset: 0, side: "bottom", className: "dark:bg-gray-2" }}
       pointerEvents

@@ -1,6 +1,6 @@
-import { Context, Controller, UseBeforeEach, BodyParams } from "@tsed/common";
+import { Context, Controller, UseBeforeEach } from "@tsed/common";
 import { Delete, Description, Get } from "@tsed/schema";
-import { PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -37,18 +37,23 @@ export class LeoController {
     permissions: [Permissions.ViewJail, Permissions.ManageJail],
     fallback: (u) => u.isLeo,
   })
-  async getImprisonedCitizens(@Context("cad") cad: { miscCadSettings: MiscCadSettings }) {
-    const citizens = await prisma.citizen.findMany({
-      where: {
-        OR: [
-          {
-            arrested: true,
-          },
-          { Record: { some: { release: { isNot: null } } } },
-        ],
-      },
-      include: citizenInclude,
-    });
+  async getImprisonedCitizens(
+    @Context("cad") cad: { miscCadSettings: MiscCadSettings },
+    @QueryParams("skip", Number) skip = 0,
+  ) {
+    const where = {
+      OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
+    };
+
+    const [totalCount, citizens] = await Promise.all([
+      prisma.citizen.count({ where }),
+      prisma.citizen.findMany({
+        where,
+        include: citizenInclude,
+        take: 35,
+        skip,
+      }),
+    ]);
 
     const jailTimeScale = cad.miscCadSettings.jailTimeScale;
     if (jailTimeScale) {
@@ -87,7 +92,7 @@ export class LeoController {
       ).catch(console.error);
     }
 
-    return citizens;
+    return { totalCount, jailedCitizens: citizens };
   }
 
   @Delete("/:id")
@@ -99,9 +104,7 @@ export class LeoController {
   async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
 
-    await this.handleReleaseCitizen(id, data);
-
-    return true;
+    return this.handleReleaseCitizen(id, data);
   }
 
   private async handleReleaseCitizen(
@@ -142,12 +145,20 @@ export class LeoController {
       },
     });
 
-    await prisma.record.update({
-      where: { id: recordId },
+    const updatedCitizen = await prisma.citizen.update({
+      where: { id: citizen.id },
       data: {
-        citizen: { update: { arrested: false } },
-        release: { connect: { id: release.id } },
+        arrested: true,
+        Record: {
+          update: {
+            where: { id: record.id },
+            data: { release: { connect: { id: release.id } } },
+          },
+        },
       },
+      include: citizenInclude,
     });
+
+    return updatedCitizen;
   }
 }

@@ -38,7 +38,7 @@ const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
-export function ActiveCalls() {
+function _ActiveCalls() {
   const { user } = useAuth();
   const { hasActiveDispatchers } = useActiveDispatchers();
 
@@ -70,7 +70,7 @@ export function ActiveCalls() {
   const { activeDeputy } = useEmsFdState();
   const { TOW, CALLS_911 } = useFeatureEnabled();
   const { setShowFilters, showFilters, search } = useCallsFilters();
-  const handleFilter = useActiveCallsFilters();
+  const handleCallsFilter = useActiveCallsFilters();
 
   const hasDispatchPermissions = hasPermissions(
     defaultPermissions.defaultDispatchPermissions,
@@ -266,7 +266,7 @@ export function ActiveCalls() {
             filter={search}
             data={calls
               .sort((a, b) => compareDesc(new Date(a.updatedAt), new Date(b.updatedAt)))
-              .filter(handleFilter)
+              .filter(handleCallsFilter)
               .map((call) => {
                 const isUnitAssigned = isUnitAssignedToCall(call);
 
@@ -383,3 +383,5 @@ export function ActiveCalls() {
     </div>
   );
 }
+
+export const ActiveCalls = React.memo(_ActiveCalls);
