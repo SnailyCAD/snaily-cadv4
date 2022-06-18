@@ -25,6 +25,7 @@ import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -213,11 +214,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             data={values.map((value) => ({
               rowProps: { value },
               checkbox: (
-                <input
-                  className="cursor-pointer"
+                <Checkbox
                   checked={tableSelect.selectedRows.includes(value.id)}
                   onChange={() => tableSelect.handleCheckboxChange(value)}
-                  type="checkbox"
                 />
               ),
               value: getValueStrFromValue(value),
