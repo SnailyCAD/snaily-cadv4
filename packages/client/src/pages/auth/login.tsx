@@ -217,8 +217,8 @@ export default function Login() {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const cookies = parseCookies({ req });
-  const userSavedLocale = cookies.sn_locale;
-  const userSavedIsDarkTheme = cookies.sn_isDarkTheme;
+  const userSavedLocale = cookies.sn_locale ?? null;
+  const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
 
   const { data } = await handleRequest("/admin/manage/cad-settings").catch(() => ({
     data: null,
