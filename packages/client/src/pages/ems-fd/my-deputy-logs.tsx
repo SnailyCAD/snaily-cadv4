@@ -74,14 +74,15 @@ export default function MyDeputyLogs({ logs: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [logs] = await requestAll(req, [["/ems-fd/logs", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       logs,
       messages: {
-        ...(await getTranslations(["ems-fd", "leo", "common"], locale)),
+        ...(await getTranslations(["ems-fd", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

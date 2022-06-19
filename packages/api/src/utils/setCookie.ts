@@ -7,6 +7,7 @@ interface SetCookieOptions {
   value: string;
   res: Response;
   expires: number;
+  httpOnly?: boolean;
 }
 
 export function setCookie(options: SetCookieOptions) {
@@ -30,7 +31,7 @@ export function setCookie(options: SetCookieOptions) {
   options.res.setHeader(
     "Set-Cookie",
     serialize(options.name, options.value, {
-      httpOnly: true,
+      httpOnly: options.httpOnly ?? false,
       expires: new Date(Date.now() + options.expires),
       path: "/",
       ...extraOptions,

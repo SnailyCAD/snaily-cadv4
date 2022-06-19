@@ -170,6 +170,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [values, calls, bolos, { officers, deputies, activeDispatchers, activeIncidents }] =
     await requestAll(req, [
       ["/admin/values/codes_10", []],
@@ -180,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       calls,
       bolos,
       values,
@@ -191,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       messages: {
         ...(await getTranslations(
           ["citizen", "truck-logs", "ems-fd", "leo", "calls", "common"],
-          locale,
+          user?.locale ?? locale,
         )),
       },
     },

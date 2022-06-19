@@ -186,6 +186,7 @@ export default function OfficerDashboard({
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [
     activeOfficer,
     { officers: userOfficers },
@@ -217,7 +218,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
       messages: {
         ...(await getTranslations(
           ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
-          locale,
+          user?.locale ?? locale,
         )),
       },
     },

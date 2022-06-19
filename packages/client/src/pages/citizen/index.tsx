@@ -177,6 +177,7 @@ export default function CitizenPage({ citizens }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
     ["/citizen", []],
     ["/admin/values/license", []],
@@ -186,9 +187,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, re
     props: {
       values,
       citizens: data ?? [],
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["citizen", "calls", "common"], locale)),
+        ...(await getTranslations(["citizen", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

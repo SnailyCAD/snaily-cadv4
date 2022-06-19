@@ -21,6 +21,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   call: Full911Call | null;
@@ -168,8 +169,7 @@ export function DispatchCallTowModal({ call }: Props) {
               checkbox
               label={t("Calls.callCountyService")}
             >
-              <Input
-                type="checkbox"
+              <Checkbox
                 name="callCountyService"
                 onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
                 checked={values.callCountyService}

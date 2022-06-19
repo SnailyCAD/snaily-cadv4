@@ -101,10 +101,11 @@ export default function TempPassword() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   return {
     props: {
-      session: await getSessionUser(req),
-      messages: await getTranslations(["auth"], locale),
+      session: user,
+      messages: await getTranslations(["auth"], user?.locale ?? locale),
     },
   };
 };

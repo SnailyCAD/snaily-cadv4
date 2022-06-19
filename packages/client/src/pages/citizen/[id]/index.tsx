@@ -186,6 +186,7 @@ export default function CitizenId() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+  const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
     [`/citizen/${query.id}`, null],
     ["/admin/values/license?paths=driverslicense_category,blood_group", []],
@@ -193,11 +194,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, query, re
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       citizen: data,
       values,
       messages: {
-        ...(await getTranslations(["citizen", "leo", "common"], locale)),
+        ...(await getTranslations(["citizen", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

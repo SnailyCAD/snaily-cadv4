@@ -25,6 +25,7 @@ import { useTableSelect } from "hooks/shared/useTableSelect";
 import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModal";
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
@@ -137,10 +138,9 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 
               return {
                 checkbox: (
-                  <input
+                  <Checkbox
                     checked={tableSelect.selectedRows.includes(call.id)}
                     onChange={() => tableSelect.handleCheckboxChange(call)}
-                    type="checkbox"
                   />
                 ),
                 rowProps: { call },
@@ -233,6 +233,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [calls, { incidents }, { deputies, officers }] = await requestAll(req, [
     ["/911-calls?includeEnded=true", []],
     ["/incidents", { incidents: [] }],
@@ -241,13 +242,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       data: calls,
       incidents,
       deputies,
       officers,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

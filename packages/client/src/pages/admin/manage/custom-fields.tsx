@@ -142,14 +142,15 @@ export default function ManageCustomFields({ customFields: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [customFields] = await requestAll(req, [["/admin/manage/custom-fields", []]]);
 
   return {
     props: {
       customFields,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

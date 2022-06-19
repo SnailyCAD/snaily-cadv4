@@ -19,6 +19,7 @@ import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { parseCookies } from "nookies";
 
 const INITIAL_VALUES = {
   username: "",
@@ -145,7 +146,11 @@ export default function Register({ cad }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const cookies = parseCookies({ req });
+  const userSavedLocale = cookies.sn_locale;
+  const userSavedIsDarkTheme = cookies.sn_isDarkTheme;
+
   const { data } = await handleRequest<cad | null>("/admin/manage/cad-settings").catch(() => ({
     data: null,
   }));
@@ -153,7 +158,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       cad: data ?? {},
-      messages: await getTranslations(["auth"], locale),
+      userSavedIsDarkTheme,
+      messages: await getTranslations(["auth"], userSavedLocale ?? locale),
     },
   };
 };

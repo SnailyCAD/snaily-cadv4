@@ -129,6 +129,7 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [{ logs, registeredVehicles }, citizens] = await requestAll(req, [
     ["/truck-logs", { logs: [], registeredVehicles: [] }],
     ["/citizen", []],
@@ -139,9 +140,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
       truckLogs: logs,
       registeredVehicles,
       citizens,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["truck-logs", "common"], locale)),
+        ...(await getTranslations(["truck-logs", "common"], user?.locale ?? locale)),
       },
     },
   };

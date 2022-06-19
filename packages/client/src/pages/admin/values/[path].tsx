@@ -25,6 +25,7 @@ import { FullDate } from "components/shared/FullDate";
 import { useTableSelect } from "hooks/shared/useTableSelect";
 import { isBaseValue, type AnyValue } from "@snailycad/utils/typeguards";
 import { valueRoutes } from "components/admin/Sidebar/routes";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 const ManageValueModal = dynamic(async () => {
   return (await import("components/admin/values/ManageValueModal")).ManageValueModal;
@@ -213,11 +214,9 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
             data={values.map((value) => ({
               rowProps: { value },
               checkbox: (
-                <input
-                  className="cursor-pointer"
+                <Checkbox
                   checked={tableSelect.selectedRows.includes(value.id)}
                   onChange={() => tableSelect.handleCheckboxChange(value)}
-                  type="checkbox"
                 />
               ),
               value: getValueStrFromValue(value),
@@ -307,15 +306,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req, quer
   const paths = pathsRecord[path];
   const pathsStr = paths ? `?paths=${paths}` : "";
 
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [[`/admin/values/${path}${pathsStr}`, []]]);
 
   return {
     props: {
       values,
       pathValues: values?.[0] ?? { type: path, values: [] },
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "values", "common"], locale)),
+        ...(await getTranslations(["admin", "values", "common"], user?.locale ?? locale)),
       },
     },
   };

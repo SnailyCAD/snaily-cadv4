@@ -19,7 +19,11 @@ const AuthContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: { session?: (User & { cad: CAD | null }) | null; cad?: CAD | null };
+  initialData: {
+    userSavedIsDarkTheme?: "false" | "true";
+    session?: (User & { cad: CAD | null }) | null;
+    cad?: CAD | null;
+  };
 }
 
 const PERMISSIONS: Record<string, (user: User) => boolean> = {
@@ -52,8 +56,13 @@ export function AuthProvider({ initialData, children }: ProviderProps) {
   }, [router.pathname, router.asPath]);
 
   React.useEffect(() => {
-    _setBodyTheme(user?.isDarkTheme ?? true);
-  }, [user?.isDarkTheme]);
+    const savedDarkTheme = initialData.userSavedIsDarkTheme
+      ? initialData.userSavedIsDarkTheme === "true"
+      : true;
+
+    const isDarkTheme = user?.isDarkTheme ?? savedDarkTheme;
+    _setBodyTheme(isDarkTheme);
+  }, [user?.isDarkTheme, initialData.userSavedIsDarkTheme]);
 
   React.useEffect(() => {
     if (user) {

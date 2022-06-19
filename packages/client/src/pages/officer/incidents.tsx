@@ -256,6 +256,7 @@ export default function LeoIncidents({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [{ incidents }, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
     ["/incidents", { incidents: [] }],
     ["/dispatch", { deputies: [], officers: [] }],
@@ -265,14 +266,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       incidents,
       activeOfficer,
       officers,
       deputies,
       values,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

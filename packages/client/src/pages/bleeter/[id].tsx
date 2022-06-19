@@ -100,6 +100,7 @@ export default function BleetPost({ post }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const user = await getSessionUser(req);
   const { data } = await handleRequest(`/bleeter/${query.id}`, {
     req,
   }).catch(() => ({ data: null }));
@@ -108,9 +109,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
     notFound: !data,
     props: {
       post: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["bleeter", "common"], locale)),
+        ...(await getTranslations(["bleeter", "common"], user?.locale ?? locale)),
       },
     },
   };

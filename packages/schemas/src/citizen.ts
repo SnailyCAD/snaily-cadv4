@@ -23,7 +23,7 @@ export const CREATE_CITIZEN_SCHEMA = z.object({
   waterLicenseCategory: z.array(z.any()).nullable().optional(),
   firearmLicenseCategory: z.array(z.any()).nullable().optional(),
   image: z.any().nullable().optional(),
-  socialSecurityNumber: z.string().min(2).max(30).nullable().optional(),
+  socialSecurityNumber: z.string().max(30).nullable().optional(),
   appearance: z.string().nullable().optional(),
   /** can only be used when updating a citizen via `PUT /admin/manage/citizens/:id` */
   userId: z.string().nullable().optional(),

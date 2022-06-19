@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { CombinedLeoUnit, EmsFdDeputy, Officer, UnitQualification } from "@snailycad/types";
-import { useHoverDirty } from "react-use";
+import { useDebounce, useHoverDirty } from "react-use";
 import { isUnitCombined } from "@snailycad/utils";
 import { HoverCard } from "components/shared/HoverCard";
 import useFetch from "lib/useFetch";
@@ -49,11 +49,15 @@ export function ActiveUnitsQualificationsCard({ canBeOpened = true, unit, childr
     }
   }, [unit, units, setUnits, execute]);
 
-  React.useEffect(() => {
-    if (hovered && state === null) {
-      handleHover();
-    }
-  }, [hovered, state, handleHover]);
+  useDebounce(
+    () => {
+      if (hovered && state === null) {
+        handleHover();
+      }
+    },
+    500,
+    [hovered, state],
+  );
 
   if (isUnitCombined(unit) || !canBeOpened) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
