@@ -24,7 +24,8 @@ import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
-  deputies: EmsFdDeputy[];
+  activeDeputies: EmsFdDeputy[];
+  userDeputies: EmsFdDeputy[];
   calls: Full911Call[];
 }
 
@@ -44,7 +45,12 @@ const SearchMedicalRecordModal = dynamic(async () => {
   return (await import("components/ems-fd/modals/SearchMedicalRecords")).SearchMedicalRecordModal;
 });
 
-export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props) {
+export default function EmsFDDashboard({
+  activeDeputy,
+  calls,
+  userDeputies,
+  activeDeputies,
+}: Props) {
   useLoadValuesClientSide({
     valueTypes: [
       ValueType.BLOOD_GROUP,
@@ -59,14 +65,15 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   const tones = useTones("ems-fd");
   const panic = usePanicButton();
   const state = useEmsFdState();
-  const { setCalls, activeDeputies, setActiveDeputies } = useDispatchState();
+  const dispatchState = useDispatchState();
 
   React.useEffect(() => {
     state.setActiveDeputy(activeDeputy);
-    state.setDeputies(deputies);
-    setCalls(calls);
+    state.setDeputies(userDeputies);
+    dispatchState.setCalls(calls);
+    dispatchState.setActiveDeputies(activeDeputies);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.setActiveDeputy, state.setDeputies, setCalls, calls, deputies, activeDeputy]);
+  }, [activeDeputies, activeDeputy, calls]);
 
   const t = useTranslations();
 
@@ -87,8 +94,8 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
         </div>
 
         <StatusesArea
-          setUnits={setActiveDeputies}
-          units={activeDeputies}
+          setUnits={dispatchState.setActiveDeputies}
+          units={dispatchState.activeDeputies}
           setActiveUnit={state.setActiveDeputy}
           activeUnit={state.activeDeputy}
         />
@@ -118,12 +125,13 @@ export default function EmsFDDashboard({ activeDeputy, calls, deputies }: Props)
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [values, calls, { deputies }, activeDeputy] = await requestAll(req, [
+  const [values, calls, { deputies }, activeDeputies, activeDeputy] = await requestAll(req, [
     ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/ems-fd", { deputies: [] }],
+    ["/ems-fd/active-deputies", []],
     ["/ems-fd/active-deputy", null],
   ]);
 
@@ -131,7 +139,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       session: user,
       activeDeputy,
-      deputies,
+      activeDeputies,
+      userDeputies: deputies,
       calls,
       values,
       messages: {
