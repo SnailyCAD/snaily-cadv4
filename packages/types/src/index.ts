@@ -57,6 +57,7 @@ export interface CadFeature {
  */
 export interface MiscCadSettings {
   id: string;
+  cadOGDescription: string | null;
   heightPrefix: string;
   weightPrefix: string;
   maxCitizensPerUser: number | null;

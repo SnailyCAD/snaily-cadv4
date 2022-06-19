@@ -51,7 +51,8 @@
     "currency": "$",
     "left": "Left",
     "right": "Right",
-    "user": "User"
+    "user": "User",
+    "savedSettingsSuccess": "Settings successfully saved."
   },
   "Nav": {
     "citizen": "Citizen",

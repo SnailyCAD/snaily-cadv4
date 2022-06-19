@@ -101,6 +101,7 @@ export class ManageCitizensController {
         id: cad.miscCadSettingsId ?? "null",
       },
       data: {
+        cadOGDescription: data.cadOGDescription || null,
         heightPrefix: data.heightPrefix,
         weightPrefix: data.weightPrefix,
         maxBusinessesPerCitizen: data.maxBusinessesPerCitizen,

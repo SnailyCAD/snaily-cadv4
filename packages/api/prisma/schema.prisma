@@ -52,6 +52,8 @@ model CadFeature {
 model MiscCadSettings {
   id String @id @default(cuid())
 
+  /// OG = open graph.
+  cadOGDescription          String?
   heightPrefix              String         @default("cm") @db.VarChar(255)
   weightPrefix              String         @default("kg") @db.VarChar(255)
   maxCitizensPerUser        Int?

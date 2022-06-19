@@ -13,6 +13,7 @@ import { Input } from "components/form/inputs/Input";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
 
 interface FeatureItem {
   name: string;
@@ -229,6 +230,11 @@ export function CADFeaturesTab() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 

@@ -10,6 +10,7 @@ import { useAuth } from "context/AuthContext";
 import { cad, DiscordWebhookType } from "@snailycad/types";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { WebhookSettingsField } from "./WebhookSettingsField";
+import { toastMessage } from "lib/toastMessage";
 
 export interface DiscordChannel {
   name: string;
@@ -55,6 +56,11 @@ export function DiscordWebhooksTab({ canWarn }: { canWarn: boolean }) {
 
     if (json.id && cad) {
       setCad({ ...cad, miscCadSettingsId: json.id, miscCadSettings: json });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 
