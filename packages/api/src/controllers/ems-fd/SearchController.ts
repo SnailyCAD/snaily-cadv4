@@ -63,8 +63,6 @@ export class SearchController {
             name: { contains: surname, mode: "insensitive" },
             surname: { contains: name, mode: "insensitive" },
           },
-          { name: { startsWith: name, mode: "insensitive" } },
-          { surname: { startsWith: surname, mode: "insensitive" } },
         ],
       },
       include: citizenSearchInclude,
