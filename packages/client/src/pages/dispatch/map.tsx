@@ -25,12 +25,9 @@ export default function MapPage(props: Props) {
   useLoadValuesClientSide({
     valueTypes: [
       ValueType.CALL_TYPE,
-      ValueType.CITIZEN_FLAG,
-      ValueType.DRIVERSLICENSE_CATEGORY,
-      ValueType.IMPOUND_LOT,
-      ValueType.LICENSE,
       ValueType.PENAL_CODE,
-      ValueType.VEHICLE_FLAG,
+      ValueType.DEPARTMENT,
+      ValueType.DIVISION,
     ],
   });
 
