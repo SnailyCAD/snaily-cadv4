@@ -2,37 +2,29 @@ import "dotenv/config";
 import process from "node:process";
 import { one } from "copy";
 import { join } from "node:path";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFile, writeFile } from "node:fs/promises";
 
-const DEFAULT_PORT = "3000";
-
-function addPortToClientPackageJson() {
-  const port = process.env.PORT_CLIENT;
-
+async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  if (DEFAULT_PORT === port) return;
+  const port = process.env.PORT_CLIENT;
+  if (!port) return;
 
-  let dir = join(process.cwd(), "packages", "client");
-  const includesMultipleClients = dir.split("/").filter((v) => v === "client").length >= 2;
+  try {
+    let dir = join(process.cwd(), "packages", "client");
+    if (process.cwd().match(/\/packages\/client/)) {
+      dir = process.cwd();
+    }
 
-  if (includesMultipleClients) {
-    dir = dir.replaceAll("packages/client", "");
-    dir = join(dir, "packages/client");
-  }
-
-  let json = readFileSync(join(dir, "package.json"), "utf8");
-
-  if (port) {
-    json = JSON.parse(json);
-    json.scripts.start = `yarn next start -p ${port}`;
-    json = JSON.stringify(json, null, 2);
     const jsonFilePath = join(dir, "package.json");
+    const json = JSON.parse(await readFile(jsonFilePath, "utf8"));
 
-    writeFileSync(jsonFilePath, json, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    if (port) {
+      json.scripts.start = `yarn next start -p ${port}`;
+      await writeFile(jsonFilePath, JSON.stringify(json, null, 2));
+    }
+  } catch (e) {
+    console.log(e);
+    console.log("Could not set the PORT_CLIENT. Continuing build...");
   }
 }
 
@@ -66,10 +58,6 @@ async function copyEnv(distDir) {
       const isApi = distDir.endsWith("api");
       const type = isClient ? "client" : isApi ? "api" : null;
 
-      if (isClient) {
-        addPortToClientPackageJson();
-      }
-
       if (type) {
         console.log(`✅ copied .env — ${type}`);
       }
@@ -81,6 +69,7 @@ async function copyEnv(distDir) {
 
 if (copyToClient) {
   const CLIENT_PACKAGE_PATH = join(process.cwd(), "packages", "client");
+  addPortToClientPackageJson();
   copyEnv(CLIENT_PACKAGE_PATH);
 }
 
