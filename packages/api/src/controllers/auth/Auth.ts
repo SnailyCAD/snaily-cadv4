@@ -72,6 +72,12 @@ export class AuthController {
       throw new ExtendedBadRequest({ password: "passwordIncorrect" });
     }
 
+    setUserPreferencesCookies({
+      isDarkTheme: user.isDarkTheme,
+      locale: user.locale ?? null,
+      res,
+    });
+
     await validateUser2FA({
       totpCode: data.totpCode ?? null,
       userId: user.id,
@@ -84,12 +90,6 @@ export class AuthController {
       name: Cookie.Session,
       expires: AUTH_TOKEN_EXPIRES_MS,
       value: jwtToken,
-    });
-
-    setUserPreferencesCookies({
-      isDarkTheme: user.isDarkTheme,
-      locale: user.locale ?? null,
-      res,
     });
 
     if (user.tempPassword) {

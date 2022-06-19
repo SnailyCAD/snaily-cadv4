@@ -31,7 +31,7 @@ export function setCookie(options: SetCookieOptions) {
   options.res.setHeader(
     "Set-Cookie",
     serialize(options.name, options.value, {
-      httpOnly: options.httpOnly ?? false,
+      httpOnly: options.httpOnly ?? true,
       expires: new Date(Date.now() + options.expires),
       path: "/",
       ...extraOptions,
