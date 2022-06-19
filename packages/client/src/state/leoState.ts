@@ -7,14 +7,14 @@ interface LeoState {
   activeOfficer: ActiveOfficer | null;
   setActiveOfficer(officer: ActiveOfficer | null): void;
 
-  officers: Officer[];
-  setOfficers(officers: Officer[]): void;
+  userOfficers: Officer[];
+  setUserOfficers(userOfficers: Officer[]): void;
 }
 
 export const useLeoState = create<LeoState>((set) => ({
   activeOfficer: null,
   setActiveOfficer: (officer) => set({ activeOfficer: officer }),
 
-  officers: [],
-  setOfficers: (officers) => set({ officers }),
+  userOfficers: [],
+  setUserOfficers: (userOfficers) => set({ userOfficers }),
 }));

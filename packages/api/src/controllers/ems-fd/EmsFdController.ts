@@ -44,9 +44,7 @@ export class EmsFdController {
   })
   async getUserDeputies(@Context("user") user: User) {
     const deputies = await prisma.emsFdDeputy.findMany({
-      where: {
-        userId: user.id,
-      },
+      where: { userId: user.id },
       include: {
         ...unitProperties,
         qualifications: { include: { qualification: { include: { value: true } } } },

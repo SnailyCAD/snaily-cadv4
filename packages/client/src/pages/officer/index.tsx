@@ -7,17 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveOfficer, useLeoState } from "state/leoState";
-import {
-  Bolo,
-  CombinedLeoUnit,
-  EmsFdDeputy,
-  LeoIncident,
-  Officer,
-  Record,
-  RecordType,
-  ShouldDoType,
-  ValueType,
-} from "@snailycad/types";
+import { Bolo, EmsFdDeputy, Officer, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { Full911Call, useDispatchState } from "state/dispatchState";
 import { ModalButtons } from "components/leo/ModalButtons";
@@ -33,7 +23,6 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { Permissions } from "@snailycad/permissions";
 import { useNameSearch } from "state/search/nameSearchState";
-import { useAuth } from "context/AuthContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
@@ -74,20 +63,18 @@ interface Props {
   activeOfficer: ActiveOfficer | null;
   calls: Full911Call[];
   bolos: Bolo[];
-  activeIncidents: LeoIncident[];
-
-  allDeputies: EmsFdDeputy[];
-  allOfficers: Officer[];
+  activeDeputies: EmsFdDeputy[];
+  activeOfficers: ActiveOfficer[];
+  userOfficers: Officer[];
 }
 
 export default function OfficerDashboard({
   bolos,
   calls,
   activeOfficer,
-  activeIncidents,
-
-  allOfficers,
-  allDeputies,
+  activeOfficers,
+  activeDeputies,
+  userOfficers,
 }: Props) {
   useLoadValuesClientSide({
     valueTypes: [
@@ -110,7 +97,6 @@ export default function OfficerDashboard({
   const tones = useTones("leo");
   const panic = usePanicButton();
   const { isOpen } = useModal();
-  const { user } = useAuth();
   const { LEO_TICKETS } = useFeatureEnabled();
 
   const { currentResult, setCurrentResult } = useNameSearch();
@@ -130,29 +116,12 @@ export default function OfficerDashboard({
     dispatchState.setCalls(calls);
     dispatchState.setBolos(bolos);
 
-    dispatchState.setActiveIncidents(activeIncidents);
-    dispatchState.setAllOfficers(allOfficers);
-
-    function activeFilter(v: EmsFdDeputy | Officer | CombinedLeoUnit) {
-      return Boolean(v.statusId && v.status?.shouldDo !== ShouldDoType.SET_OFF_DUTY);
-    }
-
-    const activeOfficers = [...allOfficers].filter(activeFilter);
-    const activeDeputies = [...allDeputies].filter(activeFilter);
-
     dispatchState.setActiveDeputies(activeDeputies);
     dispatchState.setActiveOfficers(activeOfficers);
+    leoState.setUserOfficers(userOfficers);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bolos, calls, allOfficers, allDeputies, activeOfficer]);
-
-  React.useEffect(() => {
-    if (!user) return;
-    const userOfficers = allOfficers.filter((v) => v.userId === user.id);
-
-    leoState.setOfficers(userOfficers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, allOfficers]);
+  }, [bolos, calls, activeOfficers, activeDeputies, activeOfficer]);
 
   return (
     <Layout
@@ -216,32 +185,36 @@ export default function OfficerDashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [
     activeOfficer,
+    { officers: userOfficers },
     values,
     calls,
     bolos,
-    { officers: allOfficers, deputies: allDeputies, activeIncidents },
+    activeOfficers,
+    activeDeputies,
   ] = await requestAll(req, [
     ["/leo/active-officer", null],
+    ["/leo", [{ officers: [] }]],
     ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
-    ["/dispatch", { officers: [], deputies: [], activeIncidents: [] }],
+    ["/leo/active-officers", []],
+    ["/ems-fd/active-deputies", []],
   ]);
 
   return {
     props: {
-      session: user,
-      allOfficers,
-      allDeputies,
+      session: await getSessionUser(req),
+      activeOfficers,
+      activeDeputies,
       activeOfficer,
+      userOfficers,
       calls,
       bolos,
       values,
-      activeIncidents,
       messages: {
         ...(await getTranslations(
           ["citizen", "leo", "truck-logs", "ems-fd", "calls", "common"],
