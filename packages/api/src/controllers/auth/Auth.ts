@@ -15,6 +15,7 @@ import { validateUser2FA } from "lib/auth/2fa";
 import { Description, Returns } from "@tsed/schema";
 import { User, WhitelistStatus, Rank, AutoSetUserProperties, cad, Feature } from "@prisma/client";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
+import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 
 // expire after 5 hours
 export const AUTH_TOKEN_EXPIRES_MS = 60 * 60 * 1000 * 5;
@@ -83,6 +84,12 @@ export class AuthController {
       name: Cookie.Session,
       expires: AUTH_TOKEN_EXPIRES_MS,
       value: jwtToken,
+    });
+
+    setUserPreferencesCookies({
+      isDarkTheme: user.isDarkTheme,
+      locale: user.locale ?? null,
+      res,
     });
 
     if (user.tempPassword) {

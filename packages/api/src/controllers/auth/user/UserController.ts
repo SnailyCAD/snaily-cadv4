@@ -15,6 +15,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
+import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -78,20 +79,10 @@ export class AccountController {
       select: userProperties,
     });
 
-    const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-    setCookie({
-      name: "sn_locale",
+    setUserPreferencesCookies({
+      isDarkTheme: data.isDarkTheme,
+      locale: data.locale ?? null,
       res,
-      value: data.locale ?? "",
-      expires: data.locale ? ONE_YEAR_MS : 0,
-      httpOnly: false,
-    });
-    setCookie({
-      name: "sn_isDarkTheme",
-      res,
-      value: String(data.isDarkTheme),
-      expires: ONE_YEAR_MS,
-      httpOnly: false,
     });
 
     return updated;
