@@ -68,6 +68,7 @@ export class AdminController {
     const auditLogs = await prisma.auditLog.findMany({
       take: 35,
       skip,
+      orderBy: { createdAt: "desc" },
     });
     return { totalCount, auditLogs: parseAuditLogs(auditLogs) };
   }
