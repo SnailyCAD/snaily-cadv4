@@ -206,7 +206,7 @@ export default function Login() {
           )}
         </Formik>
         {cad?.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base z-50">
             v{cad.version.currentVersion} - {cad.version.currentCommitHash}
           </p>
         ) : null}

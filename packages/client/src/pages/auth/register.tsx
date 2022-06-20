@@ -137,7 +137,7 @@ export default function Register({ cad }: Props) {
           )}
         </Formik>
         {cad.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 z-50 text-base">
             v{cad.version.currentVersion} - {cad.version.currentCommitHash}
           </p>
         ) : null}
