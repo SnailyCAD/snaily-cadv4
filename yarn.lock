@@ -1437,6 +1437,7 @@ __metadata:
   dependencies:
     "@discordjs/rest": ^0.5.0
     "@prisma/client": ^3.15.2
+    "@snailycad/audit-logger": 1.12.0
     "@snailycad/config": 1.12.0
     "@snailycad/permissions": 1.12.0
     "@snailycad/schemas": 1.12.0
@@ -1491,7 +1492,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@snailycad/audit-logger@workspace:packages/audit-logger":
+"@snailycad/audit-logger@1.12.0, @snailycad/audit-logger@workspace:packages/audit-logger":
   version: 0.0.0-use.local
   resolution: "@snailycad/audit-logger@workspace:packages/audit-logger"
   dependencies:
@@ -1500,6 +1501,7 @@ __metadata:
     tsup: ^6.1.2
     type-fest: ^2.13.0
     typescript: ^4.7.3
+    zod: 3.17.3
   languageName: unknown
   linkType: soft
 
@@ -11981,7 +11983,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.17.3":
+"zod@npm:3.17.3, zod@npm:^3.17.3":
   version: 3.17.3
   resolution: "zod@npm:3.17.3"
   checksum: f74b5d8a307cbed734e7a4a7f57a0c6b0a2d5062adee25e86eceaa1bec606621d6861804130f53342dec2d6e77fe9365f3a5118d55c81688f69f3de5fd3e59af

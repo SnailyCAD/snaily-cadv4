@@ -11,6 +11,7 @@
     "MANAGE_CAD_SETTINGS": "CAD Settings",
     "MANAGE_CUSTOM_FIELDS": "Manage Custom Fields",
     "MANAGE_COURTHOUSE": "Manage Courthouse",
+    "MANAGE_AUDIT_LOGS": "Audit Logs",
     "import": "Import",
     "IMPORT_CITIZENS": "Import Citizens",
     "IMPORT_VEHICLES": "Import Vehicles",

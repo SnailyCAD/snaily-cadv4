@@ -45,8 +45,6 @@ export class AdminManageCitizensController {
   ) {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    console.log({ skip });
-
     const where = query
       ? {
           OR: [
@@ -68,7 +66,7 @@ export class AdminManageCitizensController {
         where,
         include: citizenInclude,
         take: includeAll ? undefined : 35,
-        skip: includeAll ? undefined : Number(skip),
+        skip: includeAll ? undefined : skip,
       }),
     ]);
 

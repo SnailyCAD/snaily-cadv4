@@ -1,4 +1,4 @@
-import { Permissions } from "@snailycad/permissions";
+import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { Feature, ValueType } from "@snailycad/types";
 
 export interface SidebarRoute {
@@ -52,6 +52,10 @@ export const managementRoutes: SidebarRoute[] = [
   {
     type: "CUSTOM_FIELDS",
     permissions: [Permissions.ManageCustomFields],
+  },
+  {
+    type: "AUDIT_LOGS",
+    permissions: defaultPermissions.allDefaultAdminPermissions,
   },
 ];
 

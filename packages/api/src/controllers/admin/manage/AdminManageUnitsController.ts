@@ -1,4 +1,4 @@
-import { MiscCadSettings, Rank, WhitelistStatus } from "@prisma/client";
+import { MiscCadSettings, Rank, User, WhitelistStatus } from "@prisma/client";
 import { UPDATE_UNIT_SCHEMA, UPDATE_UNIT_CALLSIGN_SCHEMA } from "@snailycad/schemas";
 import { PathParams, BodyParams, Context } from "@tsed/common";
 import { Controller } from "@tsed/di";
@@ -17,6 +17,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -159,7 +160,11 @@ export class AdminManageUnitsController {
     permissions: [Permissions.ManageUnitCallsigns, Permissions.ManageUnits],
   })
   @Description("Update a unit's callsign by its id")
-  async updateCallsignUnit(@PathParams("unitId") unitId: string, @BodyParams() body: unknown) {
+  async updateCallsignUnit(
+    @Context("user") user: User,
+    @PathParams("unitId") unitId: string,
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(UPDATE_UNIT_CALLSIGN_SCHEMA, body);
 
     const { type, unit } = await findUnit(unitId);
@@ -197,6 +202,12 @@ export class AdminManageUnitsController {
         callsign: data.callsign,
       },
       include: type === "leo" ? leoProperties : unitProperties,
+    });
+
+    await createAuditLogEntry({
+      prisma,
+      action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
+      executorId: user.id,
     });
 
     return updated;

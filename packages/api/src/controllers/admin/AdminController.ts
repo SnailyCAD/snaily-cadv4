@@ -4,11 +4,12 @@ import { prisma } from "lib/prisma";
 import glob from "glob";
 import { join } from "node:path";
 import { statSync } from "node:fs";
-import { UseBeforeEach } from "@tsed/common";
+import { QueryParams, UseBeforeEach } from "@tsed/common";
 import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
+import { parseAuditLogs } from "@snailycad/audit-logger/server";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
@@ -59,6 +60,16 @@ export class AdminController {
         totalSize: 0,
       },
     };
+  }
+
+  @Get("/audit-logs")
+  async getAuditLogs(@QueryParams("skip", Number) skip = 0) {
+    const totalCount = await prisma.auditLog.count();
+    const auditLogs = await prisma.auditLog.findMany({
+      take: 35,
+      skip,
+    });
+    return { totalCount, auditLogs: parseAuditLogs(auditLogs) };
   }
 
   private async imageData() {

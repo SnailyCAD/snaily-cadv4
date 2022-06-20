@@ -1,5 +1,6 @@
 import type * as Types from "@snailycad/types";
 import type { AuditLogActionType } from "./actionTypes";
+import type { Officer, EmsFdDeputy } from "@prisma/client";
 
 export type AuditLogActions =
   | UserBanAction
@@ -42,8 +43,8 @@ export type CitizenDelete = BaseAuditLogAction<
 >;
 export type UnitUpdate = BaseAuditLogAction<
   AuditLogActionType.UnitUpdate,
-  Types.Officer | Types.EmsFdDeputy,
-  Types.Officer | Types.EmsFdDeputy
+  Types.Officer | Types.EmsFdDeputy | Officer | EmsFdDeputy,
+  Types.Officer | Types.EmsFdDeputy | Officer | EmsFdDeputy
 >;
 export type UnitDelete = BaseAuditLogAction<
   AuditLogActionType.UnitDelete,
