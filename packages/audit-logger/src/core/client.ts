@@ -1,4 +1,5 @@
 import type { AuditLogActions } from "./actions";
+import { hasValueObj } from "@snailycad/utils/typeguards";
 
 const EXCLUDED_KEYS = ["createdAt", "updatedAt"];
 
@@ -10,17 +11,39 @@ export function compareDifferences(action: AuditLogActions) {
 
   for (const _key of keys) {
     const key = _key as keyof typeof action.previous;
-
     if (EXCLUDED_KEYS.includes(key)) continue;
-    if (typeof action.previous[key] === "object") continue;
-    if (action.previous[key] !== action.new[key]) {
-      differences.set(key, {
-        previous: String(action.previous[key]),
-        new: String(action.new[key]),
+
+    const previousStr = getStringFromAction(action.previous[key]);
+    const newStr = getStringFromAction(action.new[key]);
+
+    if (action.previous[key] !== action.new[key] && previousStr && newStr) {
+      const nameWithoutId = key.replace("Id", "");
+
+      differences.set(nameWithoutId, {
+        previous: previousStr,
+        new: newStr,
         key,
       });
     }
   }
 
   return Array.from(differences.values());
+}
+
+function getStringFromAction(value: unknown) {
+  // eslint-disable-next-line eqeqeq
+  if (value == null) {
+    return "null";
+  }
+
+  if (["string", "number", "bigint", "boolean"].includes(typeof value)) {
+    return String(value);
+  }
+
+  // @ts-expect-error ignore
+  if (hasValueObj(value)) {
+    return value.value.value;
+  }
+
+  return null;
 }

@@ -1497,6 +1497,7 @@ __metadata:
   resolution: "@snailycad/audit-logger@workspace:packages/audit-logger"
   dependencies:
     "@snailycad/types": 1.12.0
+    "@snailycad/utils": 1.12.0
     superjson: ^1.9.1
     tsup: ^6.1.2
     type-fest: ^2.13.0

@@ -52,13 +52,10 @@ export default function ManageBusinesses({ data }: Props) {
           data={asyncTable.data.map((auditLog) => {
             const differences = compareDifferences(auditLog.action);
 
-            // todo: render these
-            console.log({ differences });
-
             return {
               type: auditLog.action.type,
               executor: auditLog.executor.username,
-              differences: differences?.map((difference) => (
+              changes: differences?.map((difference) => (
                 <p className="flex items-center gap-2" key={difference.key}>
                   <span>{difference.key}: </span>
                   <span>{difference.previous}</span>
@@ -72,7 +69,7 @@ export default function ManageBusinesses({ data }: Props) {
           columns={[
             { Header: common("type"), accessor: "type" },
             { Header: common("user"), accessor: "executor" },
-            { Header: common("user"), accessor: "differences" },
+            { Header: t("changes"), accessor: "changes" },
             { Header: common("createdAt"), accessor: "createdAt" },
           ]}
         />

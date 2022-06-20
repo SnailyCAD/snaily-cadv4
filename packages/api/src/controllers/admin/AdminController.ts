@@ -9,7 +9,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
-import { parseAuditLogs } from "@snailycad/audit-logger/server";
+import { AuditLogActionType, parseAuditLogs } from "@snailycad/audit-logger/server";
 import { userProperties } from "lib/auth/getSessionUser";
 
 @Controller("/admin")
@@ -64,7 +64,10 @@ export class AdminController {
   }
 
   @Get("/audit-logs")
-  async getAuditLogs(@QueryParams("skip", Number) skip = 0) {
+  async getAuditLogs(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("type", String) type?: AuditLogActionType,
+  ) {
     const totalCount = await prisma.auditLog.count();
     const auditLogs = await prisma.auditLog.findMany({
       take: 35,
@@ -72,6 +75,10 @@ export class AdminController {
       orderBy: { createdAt: "desc" },
       include: { executor: { select: userProperties } },
     });
+
+    // todo
+    type;
+
     return { totalCount, auditLogs: parseAuditLogs(auditLogs) };
   }
 

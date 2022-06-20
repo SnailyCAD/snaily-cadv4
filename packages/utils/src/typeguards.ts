@@ -36,6 +36,23 @@ export function hasValueObj(value: AnyValue): value is ValueWithValueObj {
   return "value" in value && typeof value.value === "object";
 }
 
+export function isValue(value: AnyValue | null): value is ValueWithValueObj {
+  if (!value) return false;
+  if (typeof value.value === "string") return true;
+
+  return (
+    isVehicleValue(value) ||
+    isWeaponValue(value) ||
+    isStatusValue(value) ||
+    isDepartmentValue(value) ||
+    isDivisionValue(value) ||
+    isEmployeeValue(value) ||
+    isUnitQualification(value) ||
+    isDLCategoryValue(value) ||
+    isCallTypeValue(value)
+  );
+}
+
 export function isVehicleValue(value: AnyValue): value is VehicleValue {
   return hasValueObj(value) && value.value.type === ValueType.VEHICLE;
 }

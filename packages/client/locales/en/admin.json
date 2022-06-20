@@ -53,6 +53,7 @@
     "deleteCustomField": "Delete Custom Field",
     "deleteUnit": "Delete Unit",
     "callsignManagement": "Callsign Management",
+    "changes": "Changes",
     "alert_deleteUnit": "Are you sure you want to delete <span>{unit}</span>? This action cannot be undone!",
     "alert_deleteCustomField": "Are you sure you want to delete this custom field? This action cannot be undone. All values created with this field will also be deleted.",
     "info_pendingBusinesses": "These are created businesses that are awaiting approval to be used. Accept or decline them.",
