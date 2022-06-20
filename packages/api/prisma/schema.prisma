@@ -250,6 +250,7 @@ model User {
   User2FA              User2FA[]
   NameChangeRequest    NameChangeRequest[]
   CourthousePost       CourthousePost[]
+  AuditLog             AuditLog[]
 }
 
 model UserSoundSettings {
@@ -1211,6 +1212,16 @@ model CourthousePost {
   descriptionData Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @default(now()) @updatedAt
+}
+
+// audit logs
+model AuditLog {
+  id         String   @id @default(uuid())
+  executor   User     @relation(fields: [executorId], references: [id])
+  executorId String
+  action     Json
+  createdAt  DateTime @default(now())
+
 }
 
 enum QualificationValueType {
