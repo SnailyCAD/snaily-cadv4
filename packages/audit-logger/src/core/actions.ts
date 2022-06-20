@@ -22,13 +22,17 @@ export interface BaseAuditLogAction<Type extends AuditLogActionType, Previous, N
   new: New;
 }
 
-export type UserBanAction = BaseAuditLogAction<AuditLogActionType.UserBan, unknown, Types.User>;
-export type UserUnBanAction = BaseAuditLogAction<AuditLogActionType.UserUnban, unknown, Types.User>;
+export type UserBanAction = BaseAuditLogAction<AuditLogActionType.UserBan, undefined, Types.User>;
+export type UserUnBanAction = BaseAuditLogAction<
+  AuditLogActionType.UserUnban,
+  undefined,
+  Types.User
+>;
 export type UserUpdate = BaseAuditLogAction<AuditLogActionType.UserUpdate, Types.User, Types.User>;
-export type UserDelete = BaseAuditLogAction<AuditLogActionType.UserUpdate, unknown, Types.User>;
+export type UserDelete = BaseAuditLogAction<AuditLogActionType.UserUpdate, undefined, Types.User>;
 export type UserTempPassword = BaseAuditLogAction<
   AuditLogActionType.UserTempPassword,
-  unknown,
+  undefined,
   Types.User
 >;
 export type CitizenUpdate = BaseAuditLogAction<
@@ -53,8 +57,8 @@ export type UnitDelete = BaseAuditLogAction<
 >;
 export type UnitsSetOffDuty = BaseAuditLogAction<
   AuditLogActionType.UnitsSetOffDuty,
-  unknown,
-  unknown
+  undefined,
+  undefined
 >;
 export type UnitQualificationAdd = BaseAuditLogAction<
   AuditLogActionType.UnitQualificationAdd,

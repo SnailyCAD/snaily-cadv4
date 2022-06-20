@@ -220,6 +220,7 @@ export class AdminManageUnitsController {
   })
   @Description("Update a unit by its id")
   async updateUnit(
+    @Context("user") user: User,
     @PathParams("id") id: string,
     @BodyParams() body: unknown,
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
@@ -278,6 +279,12 @@ export class AdminManageUnitsController {
         badgeNumber: data.badgeNumber,
       },
       include: type === "officer" ? leoProperties : unitProperties,
+    });
+
+    await createAuditLogEntry({
+      prisma,
+      action: { type: AuditLogActionType.UnitUpdate, new: updated, previous: unit },
+      executorId: user.id,
     });
 
     return updated;

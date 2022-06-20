@@ -1523,6 +1523,7 @@ __metadata:
     "@react-aria/interactions": ^3.9.1
     "@react-aria/label": ^3.3.1
     "@react-aria/ssr": ^3.2.0
+    "@snailycad/audit-logger": 1.12.0
     "@snailycad/config": 1.12.0
     "@snailycad/permissions": 1.12.0
     "@snailycad/schemas": 1.12.0

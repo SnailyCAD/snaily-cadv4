@@ -11,6 +11,8 @@ import { Title } from "components/shared/Title";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { defaultPermissions } from "@snailycad/permissions";
 import { FullDate } from "components/shared/FullDate";
+import { compareDifferences } from "@snailycad/audit-logger/client";
+import { ArrowRight } from "react-bootstrap-icons";
 
 interface Props {
   data: { auditLogs: AuditLog[]; totalCount: number };
@@ -47,12 +49,30 @@ export default function ManageBusinesses({ data }: Props) {
             totalCount: asyncTable.pagination.totalCount,
             fetchData: asyncTable.pagination,
           }}
-          data={asyncTable.data.map((auditLog) => ({
-            type: auditLog.action.type,
-            createdAt: <FullDate>{auditLog.createdAt}</FullDate>,
-          }))}
+          data={asyncTable.data.map((auditLog) => {
+            const differences = compareDifferences(auditLog.action);
+
+            // todo: render these
+            console.log({ differences });
+
+            return {
+              type: auditLog.action.type,
+              executor: auditLog.executor.username,
+              differences: differences?.map((difference) => (
+                <p className="flex items-center gap-2" key={difference.key}>
+                  <span>{difference.key}: </span>
+                  <span>{difference.previous}</span>
+                  <ArrowRight />
+                  <span>{difference.new}</span>
+                </p>
+              )),
+              createdAt: <FullDate>{auditLog.createdAt}</FullDate>,
+            };
+          })}
           columns={[
             { Header: common("type"), accessor: "type" },
+            { Header: common("user"), accessor: "executor" },
+            { Header: common("user"), accessor: "differences" },
             { Header: common("createdAt"), accessor: "createdAt" },
           ]}
         />

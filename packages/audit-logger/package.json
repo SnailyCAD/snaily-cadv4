@@ -10,6 +10,10 @@
       "require": "./dist/core/server.js",
       "import": "./dist/core/server.mjs"
     },
+    "./client": {
+      "require": "./dist/core/client.js",
+      "import": "./dist/core/client.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -52,6 +56,9 @@
     "*": {
       "server": [
         "dist/core/server.d.ts"
+      ],
+      "client": [
+        "dist/core/client.d.ts"
       ]
     }
   }

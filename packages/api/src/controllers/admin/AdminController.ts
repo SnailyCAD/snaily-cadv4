@@ -10,6 +10,7 @@ import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
 import { parseAuditLogs } from "@snailycad/audit-logger/server";
+import { userProperties } from "lib/auth/getSessionUser";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
@@ -69,6 +70,7 @@ export class AdminController {
       take: 35,
       skip,
       orderBy: { createdAt: "desc" },
+      include: { executor: { select: userProperties } },
     });
     return { totalCount, auditLogs: parseAuditLogs(auditLogs) };
   }
