@@ -16,11 +16,11 @@ import {
   Feature,
   Officer,
   WhitelistStatus,
+  User,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
-import type { User } from "@snailycad/types";
 import { hasPermission } from "@snailycad/permissions";
 
 export const vehicleSearchInclude = {
@@ -45,7 +45,7 @@ export const citizenSearchIncludeOrSelect = (
     defaultReturn: false,
   });
 
-  const hasPerms = hasPermission(user.permissions ?? [], [Permissions.Leo, Permissions.Dispatch]);
+  const hasPerms = hasPermission(user.permissions, [Permissions.Leo, Permissions.Dispatch]);
   if (hasPerms) {
     return {
       include: {

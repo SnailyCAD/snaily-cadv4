@@ -295,6 +295,7 @@ export class SearchActionsController {
   })
   async createCitizen(
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
+    @Context("user") user: User,
     @BodyParams() body: unknown,
   ) {
     const isCreateCitizensEnabled = isFeatureEnabled({
@@ -342,7 +343,7 @@ export class SearchActionsController {
 
     const citizen = await prisma.citizen.create({
       data: citizenObjectFromData(data, defaultLicenseValueId),
-      include: citizenSearchIncludeOrSelect(cad),
+      include: citizenSearchIncludeOrSelect(user, cad),
     });
 
     return citizen;
