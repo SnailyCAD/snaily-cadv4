@@ -12,6 +12,7 @@ import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 import { defaultPermissions } from "@snailycad/permissions";
 import { FullDate } from "components/shared/FullDate";
 import { compareDifferences } from "@snailycad/audit-logger/client";
+import type { AuditLog } from "@snailycad/audit-logger";
 import { ArrowRight } from "react-bootstrap-icons";
 
 interface Props {

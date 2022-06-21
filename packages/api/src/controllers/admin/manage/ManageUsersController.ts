@@ -18,6 +18,7 @@ import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -136,6 +137,16 @@ export class ManageUsersController {
       select: userProperties,
     });
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UnitDelete,
+        new: unit.unit,
+        previous: undefined,
+      },
+      prisma,
+      executorId: user.id,
+    });
+
     return updated;
   }
 
@@ -148,6 +159,7 @@ export class ManageUsersController {
     @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
+    @Context("user") sessionUser: User,
   ) {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -186,6 +198,16 @@ export class ManageUsersController {
       await updateMemberRoles(updated, cad.discordRolesId);
     }
 
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UserUpdate,
+        new: user,
+        previous: updated,
+      },
+      prisma,
+      executorId: sessionUser.id,
+    });
+
     return updated;
   }
 
@@ -194,7 +216,7 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async giveUserTempPassword(@PathParams("id") userId: string) {
+  async giveUserTempPassword(@Context("user") sessionUser: User, @PathParams("id") userId: string) {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -208,13 +230,14 @@ export class ManageUsersController {
 
     const password = nanoid();
     const salt = genSaltSync();
-    await prisma.user.update({
+    const updated = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         tempPassword: hashSync(password, salt),
       },
+      select: { ...userProperties, tempPassword: true },
     });
 
     const user2FA = await prisma.user2FA.findFirst({
@@ -226,6 +249,16 @@ export class ManageUsersController {
         where: { id: user2FA.id },
       });
     }
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UserTempPassword,
+        new: user,
+        previous: updated,
+      },
+      prisma,
+      executorId: sessionUser.id,
+    });
 
     return password;
   }

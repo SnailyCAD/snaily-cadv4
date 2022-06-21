@@ -16,7 +16,7 @@ export function compareDifferences(action: AuditLogActions) {
     const previousStr = getStringFromAction(action.previous[key]);
     const newStr = getStringFromAction(action.new[key]);
 
-    if (action.previous[key] !== action.new[key] && previousStr && newStr) {
+    if (previousStr && newStr && previousStr !== newStr) {
       const nameWithoutId = key.replace("Id", "");
 
       differences.set(nameWithoutId, {

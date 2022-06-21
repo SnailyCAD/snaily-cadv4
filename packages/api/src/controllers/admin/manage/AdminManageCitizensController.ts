@@ -18,6 +18,7 @@ import {
   ACCEPT_DECLINE_TYPES,
   type AcceptDeclineType,
 } from "controllers/admin/manage/AdminManageUnitsController";
+import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
 
 const recordsInclude = {
   officer: { include: leoProperties },
@@ -159,10 +160,22 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
-  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async updateCitizen(
+    @Context("user") user: User,
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ) {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
-    const citizen = await prisma.citizen.update({
+    const citizen = await prisma.citizen.findUnique({
+      where: { id },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const updated = await prisma.citizen.update({
       where: { id },
       data: {
         address: data.address,
@@ -189,7 +202,13 @@ export class AdminManageCitizensController {
       include: citizenInclude,
     });
 
-    return citizen;
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CitizenUpdate, previous: citizen, new: updated },
+      prisma,
+      executorId: user.id,
+    });
+
+    return updated;
   }
 
   @Delete("/:id")
@@ -228,6 +247,12 @@ export class AdminManageCitizensController {
       where: {
         id: citizenId,
       },
+    });
+
+    await createAuditLogEntry({
+      action: { type: AuditLogActionType.CitizenDelete, new: citizen, previous: undefined },
+      prisma,
+      executorId: user.id,
     });
 
     return true;

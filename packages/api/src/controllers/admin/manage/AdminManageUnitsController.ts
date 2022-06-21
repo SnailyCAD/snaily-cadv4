@@ -532,7 +532,7 @@ export class AdminManageUnitsController {
     fallback: (u) => u.isSupervisor || u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUnits],
   })
-  async deleteUnit(@PathParams("unitId") unitId: string) {
+  async deleteUnit(@Context("user") user: User, @PathParams("unitId") unitId: string) {
     const unit = await findUnit(unitId);
 
     if (unit.type === "combined") {
@@ -552,6 +552,16 @@ export class AdminManageUnitsController {
     // @ts-expect-error properties are the same for this method.
     await prisma[t].delete({
       where: { id: unit.unit.id },
+    });
+
+    await createAuditLogEntry({
+      action: {
+        type: AuditLogActionType.UnitDelete,
+        new: unit.unit,
+        previous: undefined,
+      },
+      prisma,
+      executorId: user.id,
     });
 
     return true;
