@@ -44,7 +44,8 @@
     "connectSteam": "Подключить аккаунт Steam",
     "disconnectSteam": "Отключить аккаунт Steam",
     "disconnectSteamText": "Это действие отключит возможность входить через Steam.",
-    "connectSteamText": "Это действие включит возможность входить через Steam."
+    "connectSteamText": "Это действие включит возможность входить через Steam.",
+    "locale": "Локализация"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> был удалён. Причина: {reason}"
