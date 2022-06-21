@@ -13,6 +13,8 @@ import type { RegisteredVehicle } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
 import type { NameSearchResult } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
+import { handleValidate } from "lib/handleValidate";
+import { TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
 
 interface Props {
   vehicle: RegisteredVehicle;
@@ -37,6 +39,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
     }
   }
 
+  const validate = handleValidate(TRANSFER_VEHICLE_SCHEMA);
   const INITIAL_VALUES = {
     ownerId: "",
     name: "",
@@ -49,7 +52,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
       isOpen={isOpen(ModalIds.TransferVehicle)}
       className="w-[750px]"
     >
-      <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
+      <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <p className="my-2 mb-5">
@@ -69,7 +72,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
               </FormField>
             </FormRow>
 
-            <FormField errorMessage={errors.name} label={t("owner")}>
+            <FormField errorMessage={errors.ownerId} label={t("owner")}>
               <InputSuggestions<NameSearchResult>
                 onSuggestionClick={(suggestion) => {
                   setValues({
@@ -89,12 +92,13 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
                   apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
-                  allowUnknown: true,
+                  allowUnknown: false,
                 }}
                 inputProps={{
                   value: values.name,
                   name: "name",
                   onChange: handleChange,
+                  errorMessage: errors.ownerId,
                 }}
               />
             </FormField>

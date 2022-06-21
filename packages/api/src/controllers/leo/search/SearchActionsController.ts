@@ -30,7 +30,7 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { validateCustomFields } from "lib/custom-fields";
 import { isFeatureEnabled } from "lib/cad";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { citizenSearchInclude, vehicleSearchInclude } from "./SearchController";
+import { citizenSearchIncludeOrSelect, vehicleSearchInclude } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generateString";
 
@@ -342,7 +342,7 @@ export class SearchActionsController {
 
     const citizen = await prisma.citizen.create({
       data: citizenObjectFromData(data, defaultLicenseValueId),
-      include: citizenSearchInclude(cad),
+      include: citizenSearchIncludeOrSelect(cad),
     });
 
     return citizen;
