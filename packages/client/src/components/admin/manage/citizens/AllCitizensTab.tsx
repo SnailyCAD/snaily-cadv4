@@ -152,7 +152,7 @@ export function AllCitizensTab({ citizens: initialData, totalCount, setCitizens 
                     {hasPermissions([Permissions.DeleteCitizens], true) ? (
                       <Button
                         className="ml-2"
-                        small
+                        size="xs"
                         variant="danger"
                         onClick={() => handleDeleteClick(citizen)}
                       >

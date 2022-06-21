@@ -70,19 +70,19 @@ export function CourtEntriesTab(props: Props) {
             caseNumber: entry.caseNumber,
             createdAt: <FullDate>{entry.createdAt}</FullDate>,
             description: (
-              <Button small onClick={() => handleViewDescription(entry)}>
+              <Button size="xs" onClick={() => handleViewDescription(entry)}>
                 {common("viewDescription")}
               </Button>
             ),
             actions: (
               <>
-                <Button onClick={() => handleManageClick(entry)} small variant="success">
+                <Button onClick={() => handleManageClick(entry)} size="xs" variant="success">
                   {common("manage")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(entry)}
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}

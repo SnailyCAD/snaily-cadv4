@@ -138,7 +138,7 @@ export function ManagePermissionsModal({ user }: Props) {
 
                       <Button
                         type="button"
-                        small
+                        size="xs"
                         onClick={() => handleToggleAll(group, values, setValues)}
                       >
                         Toggle all
@@ -152,8 +152,8 @@ export function ManagePermissionsModal({ user }: Props) {
                         return (
                           <FormField key={permission} className="my-1" label={formattedName}>
                             <Toggle
-                              onClick={handleChange}
-                              toggled={values[permission as PermissionNames]}
+                              onCheckedChange={handleChange}
+                              value={values[permission as PermissionNames]}
                               name={permission}
                             />
                           </FormField>

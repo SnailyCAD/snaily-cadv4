@@ -77,7 +77,7 @@ export function CourthousePostsTab(props: Props) {
 
             actions: (
               <>
-                <Button small onClick={() => handleViewDescription(post)}>
+                <Button size="xs" onClick={() => handleViewDescription(post)}>
                   {common("viewDescription")}
                 </Button>
                 {hasManagePermissions ? (
@@ -85,7 +85,7 @@ export function CourthousePostsTab(props: Props) {
                     <Button
                       className="ml-2"
                       onClick={() => handleManageClick(post)}
-                      small
+                      size="xs"
                       variant="success"
                     >
                       {common("manage")}
@@ -93,7 +93,7 @@ export function CourthousePostsTab(props: Props) {
                     <Button
                       onClick={() => handleDeleteClick(post)}
                       className="ml-2"
-                      small
+                      size="xs"
                       variant="danger"
                     >
                       {common("delete")}

@@ -120,6 +120,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                     draggable={false}
                     src={makeImageUrl("units", officer.imageId)}
+                    loading="lazy"
                   />
                 ) : null}
                 {isUnitCombined(officer) ? (

@@ -43,7 +43,7 @@ export function CustomFieldsArea({ currentResult, isLeo }: Props) {
 
       {isLeo ? (
         <Button
-          small
+          size="xs"
           type="button"
           className="mt-2"
           onClick={() => openModal(ModalIds.ManageCitizenCustomFields)}

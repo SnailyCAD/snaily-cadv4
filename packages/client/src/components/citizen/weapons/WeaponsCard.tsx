@@ -60,7 +60,7 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourWeapons")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} small>
+          <Button onClick={() => openModal(ModalIds.RegisterWeapon)} size="xs">
             {t("addWeapon")}
           </Button>
         </header>
@@ -77,13 +77,13 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
               createdAt: <FullDate>{weapon.createdAt}</FullDate>,
               actions: (
                 <>
-                  <Button onClick={() => handleEditClick(weapon)} small variant="success">
+                  <Button onClick={() => handleEditClick(weapon)} size="xs" variant="success">
                     {common("edit")}
                   </Button>
                   <Button
                     className="ml-2"
                     onClick={() => handleDeleteClick(weapon)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}

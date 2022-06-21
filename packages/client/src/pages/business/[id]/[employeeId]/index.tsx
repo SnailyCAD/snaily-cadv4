@@ -135,13 +135,13 @@ export default function BusinessId(props: Props) {
 
                     {post.employeeId === currentEmployee.id ? (
                       <div>
-                        <Button onClick={() => handleEdit(post)} small variant="success">
+                        <Button onClick={() => handleEdit(post)} size="xs" variant="success">
                           {common("edit")}
                         </Button>
                         <Button
                           onClick={() => handleDelete(post)}
                           className="ml-2"
-                          small
+                          size="xs"
                           variant="danger"
                         >
                           {common("delete")}

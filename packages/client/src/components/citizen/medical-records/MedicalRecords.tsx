@@ -59,7 +59,7 @@ export function MedicalRecords() {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourMedicalRecords")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.ManageMedicalRecords)} small>
+          <Button onClick={() => openModal(ModalIds.ManageMedicalRecords)} size="xs">
             {t("addMedicalRecord")}
           </Button>
         </header>
@@ -75,13 +75,13 @@ export function MedicalRecords() {
               description: record.description || common("none"),
               actions: (
                 <>
-                  <Button onClick={() => handleEditClick(record)} small variant="success">
+                  <Button onClick={() => handleEditClick(record)} size="xs" variant="success">
                     {common("edit")}
                   </Button>
                   <Button
                     className="ml-2"
                     onClick={() => handleDeleteClick(record)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}

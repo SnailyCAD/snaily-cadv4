@@ -154,7 +154,7 @@ export function AllUnitsTab({ search, units }: Props) {
                   ) : null}
                   {hasDeletePermissions ? (
                     <Button
-                      small
+                      size="xs"
                       className="ml-2"
                       onClick={() => handleDeleteClick(unit)}
                       variant="danger"

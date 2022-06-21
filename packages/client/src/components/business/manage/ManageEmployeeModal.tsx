@@ -98,16 +98,16 @@ export function ManageEmployeeModal({ onClose, onUpdate, employee }: Props) {
               <FormField errorMessage={errors.canCreatePosts} label={t("canCreatePosts")}>
                 <Toggle
                   name="canCreatePosts"
-                  onClick={handleChange}
-                  toggled={values.canCreatePosts}
+                  onCheckedChange={handleChange}
+                  value={values.canCreatePosts}
                 />
               </FormField>
 
               <FormField errorMessage={errors.employeeOfTheMonth} label={t("employeeOfTheMonth")}>
                 <Toggle
                   name="employeeOfTheMonth"
-                  onClick={handleChange}
-                  toggled={values.employeeOfTheMonth}
+                  onCheckedChange={handleChange}
+                  value={values.employeeOfTheMonth}
                 />
               </FormField>
             </FormRow>

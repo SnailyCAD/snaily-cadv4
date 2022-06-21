@@ -164,7 +164,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                 <Button
                   type="button"
                   onClick={() => handleEditClick(record)}
-                  small
+                  size="xs"
                   variant="success"
                 >
                   {common("edit")}
@@ -175,7 +175,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                     className="ml-2"
                     type="button"
                     onClick={() => handleDeleteClick(record)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}

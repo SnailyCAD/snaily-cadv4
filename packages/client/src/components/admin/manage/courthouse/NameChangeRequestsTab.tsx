@@ -54,7 +54,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, WhitelistStatus.ACCEPTED)}
                   variant="success"
-                  small
+                  size="xs"
                 >
                   {common("accept")}
                 </Button>
@@ -63,7 +63,7 @@ export function NameChangeRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, WhitelistStatus.DECLINED)}
                   variant="danger"
-                  small
+                  size="xs"
                 >
                   {common("decline")}
                 </Button>

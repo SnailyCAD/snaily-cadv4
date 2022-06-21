@@ -101,14 +101,14 @@ export default function MyOfficers({ officers: data }: Props) {
               position: officer.position ?? common("none"),
               actions: (
                 <>
-                  <Button small onClick={() => handleEditClick(officer)} variant="success">
+                  <Button size="xs" onClick={() => handleEditClick(officer)} variant="success">
                     {common("edit")}
                   </Button>
                   <Button
                     onClick={() => handleDeleteClick(officer)}
                     className="ml-2"
                     variant="danger"
-                    small
+                    size="xs"
                   >
                     {common("delete")}
                   </Button>

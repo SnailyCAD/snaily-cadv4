@@ -95,7 +95,7 @@ export function AddressSearchModal() {
                     citizen: `${result.name} ${result.surname}`,
                     fullAddress: formatCitizenAddress(result),
                     actions: (
-                      <Button type="button" onClick={() => handleOpen(result)} small>
+                      <Button type="button" onClick={() => handleOpen(result)} size="xs">
                         {t("viewInNameSearch")}
                       </Button>
                     ),

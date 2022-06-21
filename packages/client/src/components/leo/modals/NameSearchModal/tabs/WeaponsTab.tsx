@@ -40,7 +40,7 @@ export function NameSearchWeaponsTab() {
             model: (
               <Button
                 title={common("openInSearch")}
-                small
+                size="xs"
                 type="button"
                 onClick={() => handleWeaponClick(weapon)}
               >

@@ -75,13 +75,13 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             notes: log.notes ?? common("none"),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(log)} small variant="success">
+                <Button onClick={() => handleEditClick(log)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(log)}
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}

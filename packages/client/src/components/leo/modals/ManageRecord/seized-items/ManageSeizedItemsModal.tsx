@@ -76,7 +76,7 @@ export function ManageSeizedItemsModal({ item, onClose }: Props) {
             </FormField>
 
             <FormField className="mt-1" checkbox errorMessage={errors.illegal} label={t("illegal")}>
-              <Toggle name="illegal" onClick={handleChange} toggled={values.illegal} />
+              <Toggle name="illegal" onCheckedChange={handleChange} value={values.illegal} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

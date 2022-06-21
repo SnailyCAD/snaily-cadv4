@@ -146,7 +146,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
                   <Button
                     onClick={() => handleSuspendOrUnsuspend("unsuspend", qa)}
                     disabled={state === "loading"}
-                    small
+                    size="xs"
                     variant="success"
                   >
                     {t("unsuspend")}
@@ -155,7 +155,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
                   <Button
                     disabled={state === "loading"}
                     onClick={() => handleSuspendOrUnsuspend("suspend", qa)}
-                    small
+                    size="xs"
                     variant="amber"
                   >
                     {t("suspend")}
@@ -165,7 +165,7 @@ function QualificationAwardsTable({ unit, setUnit }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleDeleteClick(qa)}
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}

@@ -57,7 +57,7 @@ export function ActiveOfficers() {
 
   return (
     <div className="overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3 flex items-center justify-between">
+      <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3 flex items-center justify-between">
         <h3 className="text-xl font-semibold">{t("activeOfficers")}</h3>
 
         <div>
@@ -80,7 +80,7 @@ export function ActiveOfficers() {
       </header>
 
       {activeOfficers.length <= 0 ? (
-        <p className="px-4 py-2">{t("noActiveOfficers")}</p>
+        <p className="px-4 py-2 text-neutral-700 dark:text-gray-300">{t("noActiveOfficers")}</p>
       ) : (
         <>
           <ActiveUnitsSearch type="leo" />
@@ -145,7 +145,7 @@ export function ActiveOfficers() {
                     <Button
                       disabled={!hasActiveDispatchers}
                       onClick={() => handleEditClick(officer)}
-                      small
+                      size="xs"
                       variant="success"
                     >
                       {common("manage")}

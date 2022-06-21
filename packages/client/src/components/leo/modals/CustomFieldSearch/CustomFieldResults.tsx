@@ -62,7 +62,7 @@ function CitizenResults({ results }: any) {
       data={citizens.map((result) => ({
         citizen: `${result.name} ${result.surname}`,
         actions: (
-          <Button type="button" onClick={() => handleOpen(result)} small>
+          <Button type="button" onClick={() => handleOpen(result)} size="xs">
             {t("viewInNameSearch")}
           </Button>
         ),
@@ -92,7 +92,7 @@ function WeaponResults({ results }: any) {
     <Table
       data={citizens.map((result) => ({
         weapon: (
-          <Button type="button" small onClick={() => handleOpen(result)}>
+          <Button type="button" size="xs" onClick={() => handleOpen(result)}>
             {result.model.value.value}
           </Button>
         ),
@@ -125,7 +125,7 @@ function VehicleResults({ results }: any) {
     <Table
       data={citizens.map((result) => ({
         model: (
-          <Button type="button" small onClick={() => handleOpen(result)}>
+          <Button type="button" size="xs" onClick={() => handleOpen(result)}>
             {result.model.value.value}
           </Button>
         ),

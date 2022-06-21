@@ -128,7 +128,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
                   <Button
                     className="ml-2"
                     onClick={() => handleDeleteClick(business)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}

@@ -101,12 +101,12 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
               status: <Status state={record.status}>{record.status?.toLowerCase()}</Status>,
               actions: (
                 <>
-                  <Button small className="mr-2" onClick={() => handleViewClick(item)}>
+                  <Button size="xs" className="mr-2" onClick={() => handleViewClick(item)}>
                     {common("view")}
                   </Button>
                   <Button
                     variant="success"
-                    small
+                    size="xs"
                     className="mr-2"
                     onClick={() => handleAcceptDeclineClick(record, "ACCEPT")}
                     disabled={state === "loading"}
@@ -115,7 +115,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
                   </Button>
                   <Button
                     variant="danger"
-                    small
+                    size="xs"
                     onClick={() => handleAcceptDeclineClick(record, "DECLINE")}
                     disabled={state === "loading"}
                   >

@@ -13,7 +13,7 @@ interface Props {
 export function CitizenListItem({ citizen }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
-  const { COMMON_CITIZEN_CARDS } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
 
   return (
@@ -34,6 +34,11 @@ export function CitizenListItem({ citizen }: Props) {
             {citizen.name} {citizen.surname}
           </p>
 
+          {SOCIAL_SECURITY_NUMBERS ? (
+            <p className="text-neutral-600 dark:text-gray-400">
+              SSN: {citizen.socialSecurityNumber}
+            </p>
+          ) : null}
           {COMMON_CITIZEN_CARDS ? <p>{citizen.user?.username ?? common("none")}</p> : null}
         </div>
       </div>

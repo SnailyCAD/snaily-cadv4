@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { TableActionsAlignment } from "@snailycad/types";
 import { classNames } from "lib/classNames";
-import { ArrowDownShort } from "react-bootstrap-icons";
+import { ArrowDownSquareFill } from "react-bootstrap-icons";
 import type { HeaderGroup } from "react-table";
 import type { TableData, TableProps } from "./TableProps";
 
@@ -39,7 +39,7 @@ export function TableHead<T extends object, RowProps extends object>({
                 {...thProps}
                 className={classNames(
                   "m-0 top-0 sticky p-2 px-3 font-semibold bg-gray-200 dark:bg-gray-3 lg:table-cell text-left select-none",
-                  "first:rounded-tl-md last:rounded-tr-md",
+                  "uppercase text-sm text-neutral-700 dark:text-gray-400 first:rounded-tl-md last:rounded-tr-md",
                   isActions ? `${dir} z-10` : "sticky",
                 )}
               >
@@ -47,8 +47,8 @@ export function TableHead<T extends object, RowProps extends object>({
                   {column.render("Header")}
                   {column.isSorted ? (
                     <span>
-                      <ArrowDownShort
-                        className="transition-transform"
+                      <ArrowDownSquareFill
+                        className="transition-transform duration-75"
                         style={{ transform: column.isSortedDesc ? "" : "rotate(-180deg)" }}
                       />
                     </span>

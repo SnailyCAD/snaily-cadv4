@@ -121,7 +121,7 @@ export default function Jail({ data }: Props) {
                   disabled={released}
                   onClick={() => handleCheckoutClick(item, record.id)}
                   className="ml-2"
-                  small
+                  size="xs"
                 >
                   {t("release")}
                 </Button>

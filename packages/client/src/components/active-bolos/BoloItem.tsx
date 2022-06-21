@@ -68,11 +68,11 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
       </div>
 
       <div className="ml-2 min-w-fit">
-        <Button small disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
+        <Button size="xs" disabled={isDisabled} onClick={() => handleEdit(bolo)} variant="success">
           {common("edit")}
         </Button>
         <Button
-          small
+          size="xs"
           className="ml-2"
           disabled={isDisabled}
           onClick={() => handleDelete(bolo)}

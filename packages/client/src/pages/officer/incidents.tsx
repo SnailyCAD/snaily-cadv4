@@ -173,7 +173,7 @@ export default function LeoIncidents({
                   {incident.description && !incident.descriptionData ? (
                     incident.description
                   ) : (
-                    <Button small onClick={() => handleViewDescription(incident)}>
+                    <Button size="xs" onClick={() => handleViewDescription(incident)}>
                       {common("viewDescription")}
                     </Button>
                   )}
@@ -184,7 +184,7 @@ export default function LeoIncidents({
                 <>
                   {hasPermissions([Permissions.ManageIncidents], true) ? (
                     <Button
-                      small
+                      size="xs"
                       variant="success"
                       className="mr-2"
                       onClick={() => onEditClick(incident)}
@@ -195,7 +195,7 @@ export default function LeoIncidents({
                   ) : null}
 
                   {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
-                    <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
+                    <Button size="xs" variant="danger" onClick={() => onDeleteClick(incident)}>
                       {common("delete")}
                     </Button>
                   ) : null}

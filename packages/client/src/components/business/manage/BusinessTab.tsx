@@ -108,7 +108,11 @@ export function ManageBusinessTab() {
               errorMessage={errors.whitelisted}
               label={t("whitelisted")}
             >
-              <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+              <Toggle
+                name="whitelisted"
+                onCheckedChange={handleChange}
+                value={values.whitelisted}
+              />
             </SettingsFormField>
 
             <footer className="flex justify-between mt-5">

@@ -2,7 +2,7 @@ import * as React from "react";
 import { classNames } from "lib/classNames";
 
 export type ButtonProps = JSX.IntrinsicElements["button"] & {
-  small?: boolean;
+  size?: keyof typeof buttonSizes;
   variant?: keyof typeof buttonVariants | null;
 };
 
@@ -19,12 +19,17 @@ export const buttonVariants = {
     "text-black bg-orange-500 dark:bg-orange-500 hover:bg-orange-600 dark:hover:bg-orange-600 transition-all",
 };
 
+export const buttonSizes = {
+  xs: "p-0.5 px-2",
+  sm: "p-1 px-4",
+} as const;
+
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "default", small, className = "", ...rest }, ref) => (
+  ({ variant = "default", size = "sm", className = "", ...rest }, ref) => (
     <button
       className={classNames(
         "rounded-md transition-all disabled:opacity-60 disabled:cursor-not-allowed",
-        small ? "p-0.5 px-2" : "p-1 px-4",
+        buttonSizes[size],
         variant && buttonVariants[variant],
         className,
       )}

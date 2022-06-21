@@ -144,7 +144,11 @@ export function GeneralSettingsTab() {
               label="CAD Whitelist"
               description="The CAD will be whitelisted. Any user that registers will need to be reviewed, they can be accepted or denied"
             >
-              <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+              <Toggle
+                name="whitelisted"
+                onCheckedChange={handleChange}
+                value={values.whitelisted}
+              />
             </SettingsFormField>
 
             <SettingsFormField
@@ -155,8 +159,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="towWhitelisted"
-                onClick={handleChange}
-                toggled={values.towWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.towWhitelisted}
               />
             </SettingsFormField>
 
@@ -168,8 +172,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="taxiWhitelisted"
-                onClick={handleChange}
-                toggled={values.taxiWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.taxiWhitelisted}
               />
             </SettingsFormField>
 
@@ -181,8 +185,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="businessWhitelisted"
-                onClick={handleChange}
-                toggled={values.businessWhitelisted}
+                onCheckedChange={handleChange}
+                value={values.businessWhitelisted}
               />
             </SettingsFormField>
 
@@ -194,8 +198,8 @@ export function GeneralSettingsTab() {
             >
               <Toggle
                 name="roleplayEnabled"
-                onClick={handleChange}
-                toggled={values.roleplayEnabled}
+                onCheckedChange={handleChange}
+                value={values.roleplayEnabled}
               />
             </SettingsFormField>
 

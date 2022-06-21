@@ -40,7 +40,7 @@ export function ActiveMapUnits({ players, openItems, setOpenItems }: Props) {
       >
         <h1 className="text-xl font-semibold">{t("activeUnits")}</h1>
         {units.length <= 0 ? (
-          <p className="text-base mt-2">{t("noActiveUnits")}</p>
+          <p className="text-base mt-2 text-neutral-700 dark:text-gray-300">{t("noActiveUnits")}</p>
         ) : (
           <AccordionRoot value={openItems} onValueChange={setOpenItems} type="multiple">
             {units.map((player) => {

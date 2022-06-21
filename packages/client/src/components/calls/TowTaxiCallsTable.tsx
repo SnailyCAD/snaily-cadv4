@@ -97,7 +97,7 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
               call.description && !call.descriptionData ? (
                 call.description
               ) : (
-                <Button small onClick={() => handleViewDescription(call)}>
+                <Button size="xs" onClick={() => handleViewDescription(call)}>
                   {common("viewDescription")}
                 </Button>
               ),
@@ -108,10 +108,10 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
             createdAt: <FullDate>{call.createdAt}</FullDate>,
             actions: (
               <>
-                <Button onClick={() => editClick(call)} small variant="success">
+                <Button onClick={() => editClick(call)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
-                <Button className="ml-2" onClick={() => assignClick(call)} small>
+                <Button className="ml-2" onClick={() => assignClick(call)} size="xs">
                   {t("assignToCall")}
                 </Button>
               </>

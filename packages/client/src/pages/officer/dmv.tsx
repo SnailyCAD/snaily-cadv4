@@ -74,7 +74,7 @@ export default function Dmv({ data }: Props) {
                     onClick={() => handleAcceptOrDecline(vehicle.id, "ACCEPT")}
                     disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="success"
-                    small
+                    size="xs"
                   >
                     {common("accept")}
                   </Button>
@@ -83,7 +83,7 @@ export default function Dmv({ data }: Props) {
                     disabled={vehicle.dmvStatus !== WhitelistStatus.PENDING || state === "loading"}
                     variant="danger"
                     className="ml-2"
-                    small
+                    size="xs"
                   >
                     {common("decline")}
                   </Button>

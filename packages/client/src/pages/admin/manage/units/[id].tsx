@@ -219,7 +219,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
             </FormRow>
 
             <FormField label={t("suspended")}>
-              <Toggle onClick={handleChange} name="suspended" toggled={values.suspended} />
+              <Toggle onCheckedChange={handleChange} name="suspended" value={values.suspended} />
             </FormField>
 
             <footer className="flex justify-end">
