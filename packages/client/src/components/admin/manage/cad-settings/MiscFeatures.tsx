@@ -13,6 +13,8 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { Select } from "components/form/Select";
+import { toastMessage } from "lib/toastMessage";
+import { Textarea } from "components/form/Textarea";
 
 export function MiscFeatures() {
   const [headerId, setHeaderId] = React.useState<(File | string) | null>(null);
@@ -82,11 +84,17 @@ export function MiscFeatures() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 
   const miscSettings = cad?.miscCadSettings ?? ({} as MiscCadSettings);
   const INITIAL_VALUES = {
+    cadOGDescription: miscSettings.cadOGDescription ?? "",
     weightPrefix: miscSettings.weightPrefix,
     heightPrefix: miscSettings.heightPrefix,
     maxBusinessesPerCitizen: miscSettings.maxBusinessesPerCitizen ?? Infinity,
@@ -124,6 +132,18 @@ export function MiscFeatures() {
               setImage={setBgId}
               valueKey="authScreenBgImageId"
             />
+
+            <SettingsFormField
+              description="This will show on an embed when the CAD is shared on social media. Best to keep short and simple"
+              errorMessage={errors.cadOGDescription}
+              label="CAD Open Graph Description"
+            >
+              <Textarea
+                name="cadOGDescription"
+                value={values.cadOGDescription}
+                onChange={handleChange}
+              />
+            </SettingsFormField>
 
             <SettingsFormField
               description="This URL will communicate to the live_map resource in your FiveM server"

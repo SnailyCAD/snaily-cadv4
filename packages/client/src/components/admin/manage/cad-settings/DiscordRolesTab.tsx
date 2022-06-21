@@ -13,6 +13,7 @@ import { FormField } from "components/form/FormField";
 import { defaultPermissions, Permissions } from "@snailycad/permissions";
 import { formatPermissionName } from "../users/ManagePermissionsModal";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
 
 function makeRoleValues(roles?: DiscordRole[]) {
   if (!roles) return [];
@@ -89,6 +90,11 @@ export function DiscordRolesTab() {
     });
 
     if (Array.isArray(json)) {
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
       setRoles(json);
     }
   }

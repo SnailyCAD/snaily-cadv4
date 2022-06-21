@@ -140,60 +140,69 @@ export default function LeoIncidents({
             columnId: "caseNumber",
             descending: true,
           }}
-          data={incidents.map((incident) => ({
-            caseNumber: `#${incident.caseNumber}`,
-            officer: (
-              <span className="flex items-center">
-                {incident.creator?.imageId ? (
-                  <img
-                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                    draggable={false}
-                    src={makeImageUrl("units", incident.creator.imageId)}
-                  />
-                ) : null}
-                {incident.creator ? makeUnitName(incident.creator) : t("dispatch")}
-              </span>
-            ),
-            unitsInvolved:
-              incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
-            firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
-            injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
-            arrestsMade: common(yesOrNoText(incident.arrestsMade)),
-            situationCode: incident.situationCode?.value.value ?? common("none"),
-            description: (
-              <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
-                {incident.description && !incident.descriptionData ? (
-                  incident.description
-                ) : (
-                  <Button small onClick={() => handleViewDescription(incident)}>
-                    {common("viewDescription")}
-                  </Button>
-                )}
-              </span>
-            ),
-            createdAt: <FullDate>{incident.createdAt}</FullDate>,
-            actions: (
-              <>
-                {hasPermissions([Permissions.ManageIncidents], true) ? (
-                  <Button
-                    small
-                    variant="success"
-                    className="mr-2"
-                    onClick={() => onEditClick(incident)}
-                    disabled={!isOfficerOnDuty}
-                  >
-                    {common("edit")}
-                  </Button>
-                ) : null}
+          data={incidents.map((incident) => {
+            const nameAndCallsign = incident.creator
+              ? `${generateCallsign(incident.creator)} ${makeUnitName(incident.creator)}`
+              : "";
 
-                {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
-                  <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
-                    {common("delete")}
-                  </Button>
-                ) : null}
-              </>
-            ),
-          }))}
+            return {
+              caseNumber: `#${incident.caseNumber}`,
+              officer: (
+                <span // * 9 to fix overlapping issues with next table column
+                  style={{ minWidth: nameAndCallsign.length * 9 }}
+                  className="flex items-center"
+                >
+                  {incident.creator?.imageId ? (
+                    <img
+                      className="rounded-md w-[30px] h-[30px] object-cover mr-2"
+                      draggable={false}
+                      src={makeImageUrl("units", incident.creator.imageId)}
+                    />
+                  ) : null}
+                  {incident.creator ? nameAndCallsign : t("dispatch")}
+                </span>
+              ),
+              unitsInvolved:
+                incident.unitsInvolved.map(makeAssignedUnit).join(", ") || common("none"),
+              firearmsInvolved: common(yesOrNoText(incident.firearmsInvolved)),
+              injuriesOrFatalities: common(yesOrNoText(incident.injuriesOrFatalities)),
+              arrestsMade: common(yesOrNoText(incident.arrestsMade)),
+              situationCode: incident.situationCode?.value.value ?? common("none"),
+              description: (
+                <span className="block max-w-4xl min-w-[200px] break-words whitespace-pre-wrap">
+                  {incident.description && !incident.descriptionData ? (
+                    incident.description
+                  ) : (
+                    <Button small onClick={() => handleViewDescription(incident)}>
+                      {common("viewDescription")}
+                    </Button>
+                  )}
+                </span>
+              ),
+              createdAt: <FullDate>{incident.createdAt}</FullDate>,
+              actions: (
+                <>
+                  {hasPermissions([Permissions.ManageIncidents], true) ? (
+                    <Button
+                      small
+                      variant="success"
+                      className="mr-2"
+                      onClick={() => onEditClick(incident)}
+                      disabled={!isOfficerOnDuty}
+                    >
+                      {common("edit")}
+                    </Button>
+                  ) : null}
+
+                  {hasPermissions([Permissions.ManageIncidents], user?.isSupervisor ?? false) ? (
+                    <Button small variant="danger" onClick={() => onDeleteClick(incident)}>
+                      {common("delete")}
+                    </Button>
+                  ) : null}
+                </>
+              ),
+            };
+          })}
           columns={[
             { Header: t("caseNumber"), accessor: "caseNumber" },
             { Header: t("officer"), accessor: "officer" },
@@ -247,6 +256,7 @@ export default function LeoIncidents({
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [{ incidents }, { officers, deputies }, activeOfficer, values] = await requestAll(req, [
     ["/incidents", { incidents: [] }],
     ["/dispatch", { deputies: [], officers: [] }],
@@ -256,14 +266,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       incidents,
       activeOfficer,
       officers,
       deputies,
       values,
       messages: {
-        ...(await getTranslations(["leo", "calls", "common"], locale)),
+        ...(await getTranslations(["leo", "calls", "common"], user?.locale ?? locale)),
       },
     },
   };

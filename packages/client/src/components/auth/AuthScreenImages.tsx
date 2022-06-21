@@ -19,7 +19,7 @@ export function AuthScreenImages() {
       {authScreenHeaderImageId ? (
         <img
           className="z-10 mb-10 mt-10 rounded-md drop-shadow-lg object-cover"
-          style={{ minWidth: 20, maxWidth: 400, height: 200, zIndex: 999 }}
+          style={{ minWidth: 20, maxWidth: 400, maxHeight: 200, zIndex: 999 }}
           src={makeImageUrl("cad", authScreenHeaderImageId)}
         />
       ) : null}

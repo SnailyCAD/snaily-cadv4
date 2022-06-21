@@ -103,14 +103,15 @@ export default function TowLogs(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const [data] = await requestAll(req, [["/tow?ended=true", []]]);
 
   return {
     props: {
       calls: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["calls", "common"], locale)),
+        ...(await getTranslations(["calls", "common"], user?.locale ?? locale)),
       },
     },
   };

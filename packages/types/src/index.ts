@@ -57,6 +57,7 @@ export interface CadFeature {
  */
 export interface MiscCadSettings {
   id: string;
+  cadOGDescription: string | null;
   heightPrefix: string;
   weightPrefix: string;
   maxCitizensPerUser: number | null;
@@ -205,6 +206,7 @@ export interface User {
   soundSettings?: UserSoundSettings | null;
   apiTokenId: string | null;
   apiToken?: ApiToken | null;
+  locale: string | null;
 }
 
 /**
@@ -360,6 +362,7 @@ export interface Value<Type extends ValueType> {
   updatedAt: Date;
   position: number | null;
   licenseType: ValueLicenseType | null;
+  isDisabled: boolean;
 
   officerRankDepartments?: DepartmentValue[];
   officerRankImageId: string | null;

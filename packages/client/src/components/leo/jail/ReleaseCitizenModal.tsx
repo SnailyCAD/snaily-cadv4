@@ -1,7 +1,7 @@
 import { Modal } from "components/modal/Modal";
 import { Loader } from "components/Loader";
 import useFetch from "lib/useFetch";
-import { Citizen, ReleaseType } from "@snailycad/types";
+import { Citizen, Record, ReleaseType } from "@snailycad/types";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "next-intl";
@@ -15,7 +15,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 
 interface Props {
   citizen: (Citizen & { recordId: string }) | null;
-  onSuccess(): void;
+  onSuccess(entry: Citizen & { Record: Record[] }): void;
 }
 
 const LABELS = {
@@ -49,8 +49,8 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
       helpers,
     });
 
-    if (typeof json === "boolean") {
-      onSuccess();
+    if (json) {
+      onSuccess(json);
     }
   }
 

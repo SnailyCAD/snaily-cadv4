@@ -265,14 +265,18 @@ export default function ManageCitizens(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const sessionUser = await getSessionUser(req);
   const [user] = await requestAll(req, [[`/admin/manage/users/${query.id}`, null]]);
 
   return {
     props: {
       user,
-      session: await getSessionUser(req),
+      session: sessionUser,
       messages: {
-        ...(await getTranslations(["citizen", "admin", "values", "common"], locale)),
+        ...(await getTranslations(
+          ["citizen", "admin", "values", "common"],
+          sessionUser?.locale ?? locale,
+        )),
       },
     },
   };

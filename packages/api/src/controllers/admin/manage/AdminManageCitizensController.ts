@@ -39,11 +39,13 @@ export class AdminManageCitizensController {
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizens(
-    @QueryParams("includeAll") includeAll = "false",
-    @QueryParams("skip") skip = "0",
-    @QueryParams("query") query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
   ) {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
+
+    console.log({ skip });
 
     const where = query
       ? {
@@ -184,6 +186,7 @@ export class AdminManageCitizensController {
         occupation: data.occupation || null,
         imageId: validateImgurURL(data.image),
         userId: data.userId || undefined,
+        appearance: data.appearance || undefined,
       },
       include: citizenInclude,
     });

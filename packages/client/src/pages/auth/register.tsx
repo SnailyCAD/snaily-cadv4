@@ -19,6 +19,7 @@ import { Title } from "components/shared/Title";
 import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { parseCookies } from "nookies";
 
 const INITIAL_VALUES = {
   username: "",
@@ -136,7 +137,7 @@ export default function Register({ cad }: Props) {
           )}
         </Formik>
         {cad.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 z-50 text-base">
             v{cad.version.currentVersion} - {cad.version.currentCommitHash}
           </p>
         ) : null}
@@ -145,7 +146,11 @@ export default function Register({ cad }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const cookies = parseCookies({ req });
+  const userSavedLocale = cookies.sn_locale ?? null;
+  const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
+
   const { data } = await handleRequest<cad | null>("/admin/manage/cad-settings").catch(() => ({
     data: null,
   }));
@@ -153,7 +158,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       cad: data ?? {},
-      messages: await getTranslations(["auth"], locale),
+      userSavedIsDarkTheme,
+      messages: await getTranslations(["auth"], userSavedLocale ?? locale),
     },
   };
 };

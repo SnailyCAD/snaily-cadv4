@@ -22,7 +22,7 @@ import { DriversLicenseCategoryType, EmployeeAsEnum, ValueType } from "@snailyca
 import { useTranslations } from "use-intl";
 import { Select } from "components/form/Select";
 import hexColor from "hex-color-regex";
-import { getValueStrFromValue } from "src/pages/admin/values/[path]";
+import { getDisabledFromValue, getValueStrFromValue } from "src/pages/admin/values/[path]";
 import { ModalIds } from "types/ModalIds";
 import { makeDefaultWhatPages } from "lib/admin/values";
 import { DepartmentFields } from "./manage-modal/DepartmentFields";
@@ -48,6 +48,7 @@ import {
 import { QualificationFields } from "./manage-modal/QualificationFields";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { Textarea } from "components/form/Textarea";
+import { Toggle } from "components/form/Toggle";
 
 interface Props {
   type: ValueType;
@@ -158,6 +159,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
   }
 
   const INITIAL_VALUES = {
+    isDisabled: value ? getDisabledFromValue(value) : false,
     value: value ? getValueStrFromValue(value) : "",
 
     description:
@@ -331,6 +333,10 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             ) : null}
 
             {type === "CODES_10" ? <StatusValueFields /> : null}
+
+            <FormField errorMessage={errors.isDisabled} label="Disabled">
+              <Toggle name="isDisabled" onClick={handleChange} toggled={values.isDisabled} />
+            </FormField>
 
             <footer className="flex justify-end mt-5">
               <Button

@@ -109,14 +109,15 @@ export default function Dmv({ data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [dmvData] = await requestAll(req, [["/leo/dmv", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       data: dmvData,
       messages: {
-        ...(await getTranslations(["leo", "citizen", "common"], locale)),
+        ...(await getTranslations(["leo", "citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

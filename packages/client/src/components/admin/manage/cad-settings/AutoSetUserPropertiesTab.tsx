@@ -11,6 +11,7 @@ import type { AutoSetUserProperties } from "@snailycad/types";
 import { Toggle } from "components/form/Toggle";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { TabsContent } from "components/shared/TabList";
+import { toastMessage } from "lib/toastMessage";
 
 export function AutoSetUserPropertiesTab() {
   const common = useTranslations("Common");
@@ -29,6 +30,11 @@ export function AutoSetUserPropertiesTab() {
 
     if (json.id) {
       setCad({ ...cad, ...json });
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 

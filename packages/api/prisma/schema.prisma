@@ -52,6 +52,8 @@ model CadFeature {
 model MiscCadSettings {
   id String @id @default(cuid())
 
+  /// OG = open graph.
+  cadOGDescription          String?
   heightPrefix              String         @default("cm") @db.VarChar(255)
   weightPrefix              String         @default("kg") @db.VarChar(255)
   maxCitizensPerUser        Int?
@@ -225,6 +227,7 @@ model User {
   soundSettingsId          String?
   apiToken                 ApiToken?             @relation(fields: [apiTokenId], references: [id])
   apiTokenId               String?
+  locale                   String?
 
 
   // relational data
@@ -409,13 +412,14 @@ model MedicalRecord {
 
 // values
 model Value {
-  id        String    @id @default(cuid())
-  type      ValueType
-  value     String    @db.VarChar(255)
-  isDefault Boolean
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now()) @updatedAt
-  position  Int?
+  id         String    @id @default(cuid())
+  type       ValueType
+  value      String    @db.VarChar(255)
+  isDefault  Boolean
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+  position   Int?
+  isDisabled Boolean   @default(false)
 
   // LICENSE type specific
   // this was added here since the migration of eg `LicenseValue` would be to large.

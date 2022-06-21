@@ -18,6 +18,7 @@ import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import { AlertModal } from "components/modal/AlertModal";
 import { OfficerRank } from "components/leo/OfficerRank";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   units: Unit[];
@@ -111,10 +112,9 @@ export function AllUnitsTab({ search, units }: Props) {
 
             return {
               dropdown: (
-                <input
+                <Checkbox
                   checked={tableSelect.selectedRows.includes(`${unit.id}-${unit.type}`)}
                   onChange={() => tableSelect.handleCheckboxChange(unit)}
-                  type="checkbox"
                 />
               ),
               unit: LABELS[unit.type],

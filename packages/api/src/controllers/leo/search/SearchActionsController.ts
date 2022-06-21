@@ -6,7 +6,7 @@ import {
   VEHICLE_SCHEMA,
 } from "@snailycad/schemas";
 import { BodyParams, PathParams } from "@tsed/platform-params";
-import { NotFound } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { citizenInclude } from "controllers/citizen/CitizenController";
@@ -297,6 +297,16 @@ export class SearchActionsController {
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @BodyParams() body: unknown,
   ) {
+    const isCreateCitizensEnabled = isFeatureEnabled({
+      features: cad.features,
+      feature: Feature.CREATE_USER_CITIZEN_LEO,
+      defaultReturn: false,
+    });
+
+    if (!isCreateCitizensEnabled) {
+      throw new BadRequest("featureNotEnabled");
+    }
+
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const allowDuplicateCitizenNames = isFeatureEnabled({

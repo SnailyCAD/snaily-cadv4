@@ -71,6 +71,7 @@ export function Nav({ maxWidth }: Props) {
                   <>
                     <Head>
                       <link rel="shortcut icon" href={url} />
+                      <meta name="og:image" content={url} />
                     </Head>
                     <img
                       alt={cad?.name || "SnailyCAD"}

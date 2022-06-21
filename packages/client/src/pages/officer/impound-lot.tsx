@@ -112,14 +112,15 @@ export default function ImpoundLot({ vehicles: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [vehicles] = await requestAll(req, [["/leo/impounded-vehicles", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       vehicles,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
       },
     },
   };

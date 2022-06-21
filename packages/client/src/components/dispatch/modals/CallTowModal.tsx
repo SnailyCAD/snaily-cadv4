@@ -21,6 +21,7 @@ import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   call: Full911Call | null;
@@ -31,14 +32,14 @@ export function DispatchCallTowModal({ call }: Props) {
   const t = useTranslations();
   const { isOpen, closeModal, getPayload } = useModal();
   const { state, execute } = useFetch();
-  const { activeOfficer, officers } = useLeoState();
+  const { activeOfficer, userOfficers } = useLeoState();
   const { activeDeputy, deputies } = useEmsFdState();
   const router = useRouter();
   const { impoundLot } = useValues();
 
   const isLeo = router.pathname === "/officer";
   const isDispatch = router.pathname === "/dispatch";
-  const citizensFrom = isLeo ? officers : router.pathname === "/ems-fd" ? deputies : [];
+  const citizensFrom = isLeo ? userOfficers : router.pathname === "/ems-fd" ? deputies : [];
   const citizens = [...citizensFrom].map((v) => v.citizen);
   const unit = isLeo ? activeOfficer : router.pathname === "/ems-fd" ? activeDeputy : null;
 
@@ -168,8 +169,7 @@ export function DispatchCallTowModal({ call }: Props) {
               checkbox
               label={t("Calls.callCountyService")}
             >
-              <Input
-                type="checkbox"
+              <Checkbox
                 name="callCountyService"
                 onChange={() => setFieldValue("callCountyService", !values.callCountyService)}
                 checked={values.callCountyService}

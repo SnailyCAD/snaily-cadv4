@@ -15,6 +15,7 @@ import { validateSchema } from "lib/validateSchema";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
+import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -32,7 +33,7 @@ export class AccountController {
 
   @Patch("/")
   @Description("Update the authenticated user's settings")
-  async patchAuthUser(@BodyParams() body: any, @Context("user") user: User) {
+  async patchAuthUser(@Res() res: Res, @BodyParams() body: any, @Context("user") user: User) {
     const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
@@ -73,8 +74,15 @@ export class AccountController {
         statusViewMode: data.statusViewMode as StatusViewMode,
         tableActionsAlignment: data.tableActionsAlignment as TableActionsAlignment,
         soundSettingsId,
+        locale: data.locale || null,
       },
       select: userProperties,
+    });
+
+    setUserPreferencesCookies({
+      isDarkTheme: data.isDarkTheme,
+      locale: data.locale ?? null,
+      res,
     });
 
     return updated;

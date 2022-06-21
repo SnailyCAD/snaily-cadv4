@@ -116,13 +116,14 @@ export default function Account({ availableSounds }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const availableSounds = await getAvailableSounds();
+  const user = await getSessionUser(req);
 
   return {
     props: {
+      session: user,
       availableSounds,
-      session: await getSessionUser(req),
       messages: {
-        ...(await getTranslations(["account", "auth", "common"], locale)),
+        ...(await getTranslations(["account", "auth", "common"], user?.locale ?? locale)),
       },
     },
   };

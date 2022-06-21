@@ -70,6 +70,7 @@ export default function ManageCourthouse({ expungementRequests, nameChangeReques
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [nameChangeRequests, expungementRequests] = await requestAll(req, [
     ["/admin/manage/name-change-requests", []],
     ["/admin/manage/expungement-requests", []],
@@ -79,9 +80,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       nameChangeRequests,
       expungementRequests,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["admin", "courthouse", "values", "common", "leo"], locale)),
+        ...(await getTranslations(
+          ["admin", "courthouse", "values", "common", "leo"],
+          user?.locale ?? locale,
+        )),
       },
     },
   };

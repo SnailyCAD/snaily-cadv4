@@ -69,6 +69,7 @@ export default function Bleeter({ posts }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const user = await getSessionUser(req);
   const { data } = await handleRequest("/bleeter", {
     req,
   }).catch(() => ({ data: [] }));
@@ -76,9 +77,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       posts: data,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["bleeter", "common"], locale)),
+        ...(await getTranslations(["bleeter", "common"], user?.locale ?? locale)),
       },
     },
   };

@@ -39,16 +39,16 @@ export class ManageUsersController {
   })
   @Description("Get all the users in the CAD.")
   async getUsers(
-    @QueryParams("skip") skip = "0",
-    @QueryParams("query") query = "",
-    @QueryParams("pendingOnly") pendingOnly = "false",
-    @QueryParams("includeAll") includeAll = "false",
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("pendingOnly", Boolean) pendingOnly = false,
+    @QueryParams("includeAll", Boolean) includeAll = false,
   ) {
     const where =
       query || pendingOnly
         ? {
             ...(query ? { username: { contains: query, mode: Prisma.QueryMode.insensitive } } : {}),
-            ...(pendingOnly === "true" ? { whitelistStatus: WhitelistStatus.PENDING } : {}),
+            ...(pendingOnly ? { whitelistStatus: WhitelistStatus.PENDING } : {}),
           }
         : undefined;
 
@@ -57,7 +57,7 @@ export class ManageUsersController {
       prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
     ]);
 
-    const shouldIncludeAll = includeAll === "true";
+    const shouldIncludeAll = includeAll;
     const users = await prisma.user.findMany({
       select: userProperties,
       where,

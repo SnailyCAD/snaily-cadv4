@@ -157,6 +157,7 @@ export default function MyDeputies({ deputies: data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [{ deputies }, citizens, values] = await requestAll(req, [
     ["/ems-fd", { deputies: [] }],
     ["/citizen", []],
@@ -165,12 +166,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       deputies,
       values,
       citizens,
       messages: {
-        ...(await getTranslations(["ems-fd", "leo", "common"], locale)),
+        ...(await getTranslations(["ems-fd", "leo", "common"], user?.locale ?? locale)),
       },
     },
   };

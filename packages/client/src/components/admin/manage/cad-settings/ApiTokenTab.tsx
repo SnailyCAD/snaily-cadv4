@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
 
 export function ApiTokenTab() {
   const common = useTranslations("Common");
@@ -31,6 +32,11 @@ export function ApiTokenTab() {
     if (json) {
       setCad({ ...cad, apiTokenId: json?.id ?? null, apiToken: { ...json } });
       helpers.setFieldValue("token", json.token);
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
     }
   }
 

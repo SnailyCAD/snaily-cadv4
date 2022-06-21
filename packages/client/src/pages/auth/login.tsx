@@ -20,6 +20,7 @@ import { TwoFactorAuthScreen } from "components/auth/TwoFactorAuthScreen";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
+import { parseCookies } from "nookies";
 
 const INITIAL_VALUES = {
   username: "",
@@ -205,7 +206,7 @@ export default function Login() {
           )}
         </Formik>
         {cad?.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base">
+          <p className="text-gray-900 dark:text-gray-200 block mt-3 text-base z-50">
             v{cad.version.currentVersion} - {cad.version.currentCommitHash}
           </p>
         ) : null}
@@ -214,7 +215,11 @@ export default function Login() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+  const cookies = parseCookies({ req });
+  const userSavedLocale = cookies.sn_locale ?? null;
+  const userSavedIsDarkTheme = cookies.sn_isDarkTheme ?? null;
+
   const { data } = await handleRequest("/admin/manage/cad-settings").catch(() => ({
     data: null,
   }));
@@ -222,7 +227,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       cad: data ?? {},
-      messages: await getTranslations(["auth"], locale),
+      userSavedIsDarkTheme,
+      messages: await getTranslations(["auth"], userSavedLocale ?? locale),
     },
   };
 };

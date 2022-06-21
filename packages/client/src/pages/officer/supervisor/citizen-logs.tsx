@@ -53,14 +53,15 @@ export default function CitizenLogs({ logs }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [logs] = await requestAll(req, [["/admin/manage/citizens/records-logs", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       logs,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
       },
     },
   };

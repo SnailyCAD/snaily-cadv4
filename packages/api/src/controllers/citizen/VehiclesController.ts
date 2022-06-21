@@ -110,6 +110,7 @@ export class VehiclesController {
       include: {
         model: { include: { value: true } },
         registrationStatus: true,
+        citizen: Boolean(data.businessId && data.employeeId),
       },
     });
 

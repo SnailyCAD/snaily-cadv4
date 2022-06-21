@@ -7,13 +7,13 @@ import { ModalIds } from "types/ModalIds";
 import { Bolo, BoloType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
-import { BoloItem } from "./BoloItem";
+import { BoloColumn } from "./BoloColumn";
 
 const BOLO_TYPES = Object.values(BoloType);
 
 export function ActiveBolos() {
   const { state, execute } = useFetch();
-  const { openModal, closeModal } = useModal();
+  const { closeModal } = useModal();
   const { bolos, setBolos } = useBolos();
   const [tempBolo, setTempBolo] = React.useState<Bolo | null>(null);
   const t = useTranslations("Bolos");
@@ -32,16 +32,6 @@ export function ActiveBolos() {
     }
   }
 
-  function handleEditClick(bolo: Bolo) {
-    setTempBolo(bolo);
-    openModal(ModalIds.ManageBolo);
-  }
-
-  function handleDeleteClick(bolo: Bolo) {
-    setTempBolo(bolo);
-    openModal(ModalIds.AlertDeleteBolo);
-  }
-
   return (
     <div className="mt-3 overflow-hidden card">
       <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
@@ -54,34 +44,14 @@ export function ActiveBolos() {
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {BOLO_TYPES.map((boloType) => {
-              const items = bolos.filter((v) => v.type === boloType);
-
+              const bolosForType = bolos.filter((v) => v.type === boloType);
               return (
-                <div key={boloType}>
-                  <h1 className="my-2 text-xl font-semibold capitalize">
-                    {t.rich("typeBolos", { type: boloType.toLowerCase() })}
-                  </h1>
-
-                  <ul className="py-2 space-y-2 overflow-auto max-h-[30em]">
-                    {items.length <= 0 ? (
-                      <p>
-                        {t.rich("noActiveBolosForType", {
-                          type: t(boloType.toLowerCase()),
-                        })}
-                      </p>
-                    ) : (
-                      items.map((bolo, idx) => (
-                        <BoloItem
-                          key={bolo.id}
-                          bolo={bolo}
-                          idx={idx}
-                          handleEdit={handleEditClick}
-                          handleDelete={handleDeleteClick}
-                        />
-                      ))
-                    )}
-                  </ul>
-                </div>
+                <BoloColumn
+                  boloType={boloType}
+                  setTempBolo={setTempBolo}
+                  key={boloType}
+                  bolos={bolosForType}
+                />
               );
             })}
           </div>

@@ -15,6 +15,7 @@ import { Select } from "components/form/Select";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
 import { ModalIds } from "types/ModalIds";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Checkbox } from "components/form/inputs/Checkbox";
 
 interface Props {
   type: ValueType;
@@ -133,10 +134,9 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
             <FormRow>
               <div className="flex flex-col mr-2.5">
                 <FormField checkbox label="Warning applicable">
-                  <Input
+                  <Checkbox
                     checked={values.warningApplicable}
                     onChange={() => setFieldValue("warningApplicable", !values.warningApplicable)}
-                    type="checkbox"
                   />
                 </FormField>
 
@@ -147,12 +147,11 @@ export function ManagePenalCode({ onCreate, onUpdate, groups, type, penalCode }:
 
               <div className="ml-2.5">
                 <FormField checkbox label="Warning not applicable">
-                  <Input
+                  <Checkbox
                     checked={values.warningNotApplicable}
                     onChange={() =>
                       setFieldValue("warningNotApplicable", !values.warningNotApplicable)
                     }
-                    type="checkbox"
                   />
                 </FormField>
 
@@ -203,11 +202,10 @@ function FieldsRow({ keyValue }: { keyValue: `fines${number}` | "prisonTerm" | "
   return (
     <FormRow className="mb-0">
       <FormField className="mb-0" checkbox label={label}>
-        <Input
+        <Checkbox
           disabled={isBailDisabled || disabled}
           onChange={() => setFieldValue(`${keyValue}.enabled`, !values[keyValue].enabled)}
           checked={values[keyValue].enabled}
-          type="checkbox"
         />
       </FormField>
 

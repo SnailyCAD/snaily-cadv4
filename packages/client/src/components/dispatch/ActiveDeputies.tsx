@@ -11,39 +11,32 @@ import { formatUnitDivisions, makeUnitName } from "lib/utils";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { StatusViewMode } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
-import { useImageUrl } from "hooks/useImageUrl";
+
 import { Table } from "components/shared/Table";
 import { useActiveDispatchers } from "hooks/realtime/useActiveDispatchers";
-import { ContextMenu } from "components/shared/ContextMenu";
-import { useValues } from "context/ValuesContext";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitRadioChannelModal } from "./active-units/UnitRadioChannelModal";
-import { useUnitStatusChange } from "hooks/shared/useUnitsStatusChange";
 import { useActiveUnitsState } from "state/activeUnitsState";
 import { classNames } from "lib/classNames";
 import { Filter } from "react-bootstrap-icons";
 import { ActiveUnitsSearch } from "./active-units/ActiveUnitsSearch";
 import { useActiveUnitsFilter } from "hooks/shared/useActiveUnitsFilter";
-import { Draggable } from "components/shared/dnd/Draggable";
-import { DndActions } from "types/DndActions";
-import { ActiveUnitsQualificationsCard } from "components/leo/qualifications/ActiveUnitsQualificationsCard";
 import { useDispatchState } from "state/dispatchState";
 import { ActiveCallColumn } from "./active-units/officers/ActiveCallColumn";
 import { ActiveIncidentColumn } from "./active-units/officers/ActiveIncidentColumn";
 import { useActiveIncidents } from "hooks/realtime/useActiveIncidents";
+import { DeputyColumn } from "./active-units/deputies/DeputyColumn";
 
 export function ActiveDeputies() {
-  const { activeDeputies, setActiveDeputies } = useActiveDeputies();
+  const { activeDeputies } = useActiveDeputies();
   const { activeIncidents } = useActiveIncidents();
-  const { setStatus } = useUnitStatusChange({ setUnits: setActiveDeputies, units: activeDeputies });
+
   const t = useTranslations();
   const common = useTranslations("Common");
   const { openModal } = useModal();
   const { generateCallsign } = useGenerateCallsign();
   const { user } = useAuth();
-  const { makeImageUrl } = useImageUrl();
   const { hasActiveDispatchers } = useActiveDispatchers();
-  const { codes10 } = useValues();
   const { RADIO_CHANNEL_MANAGEMENT, ACTIVE_INCIDENTS } = useFeatureEnabled();
   const { emsSearch, showEmsFilters, setShowFilters } = useActiveUnitsState();
   const { handleFilter } = useActiveUnitsFilter();
@@ -102,52 +95,17 @@ export function ActiveDeputies() {
                   activeIncidents.find((v) => v.id === deputy.activeIncidentId) ?? null;
                 const activeCall = calls.find((v) => v.id === deputy.activeCallId) ?? null;
 
-                const codesMapped = codes10.values
-                  .filter((v) => v.type === "STATUS_CODE")
-                  .map((v) => ({
-                    name: v.value.value,
-                    onClick: () => setStatus(deputy.id, v),
-                    "aria-label": `Set status to ${v.value.value}`,
-                    title: `Set status to ${v.value.value}`,
-                  }));
-
                 const nameAndCallsign = `${generateCallsign(deputy)} ${makeUnitName(deputy)}`;
 
                 return {
                   rowProps: { style: { background: !useDot ? color ?? undefined : undefined } },
                   name: nameAndCallsign,
                   deputy: (
-                    <ContextMenu
-                      canBeOpened={isDispatch && hasActiveDispatchers}
-                      asChild
-                      items={codesMapped}
-                    >
-                      <span>
-                        <Draggable
-                          canDrag={hasActiveDispatchers && isDispatch}
-                          item={deputy}
-                          type={DndActions.MoveUnitTo911CallOrIncident}
-                        >
-                          {({ isDragging }) => (
-                            <ActiveUnitsQualificationsCard canBeOpened={!isDragging} unit={deputy}>
-                              <span // * 9 to fix overlapping issues with next table column
-                                style={{ minWidth: nameAndCallsign.length * 9 }}
-                                className="capitalize cursor-default"
-                              >
-                                {deputy.imageId ? (
-                                  <img
-                                    className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                                    draggable={false}
-                                    src={makeImageUrl("units", deputy.imageId)}
-                                  />
-                                ) : null}
-                                {nameAndCallsign}
-                              </span>
-                            </ActiveUnitsQualificationsCard>
-                          )}
-                        </Draggable>
-                      </span>
-                    </ContextMenu>
+                    <DeputyColumn
+                      deputy={deputy}
+                      isDispatch={isDispatch}
+                      nameAndCallsign={nameAndCallsign}
+                    />
                   ),
                   badgeNumber: deputy.badgeNumber,
                   department: deputy.department?.value.value ?? common("none"),

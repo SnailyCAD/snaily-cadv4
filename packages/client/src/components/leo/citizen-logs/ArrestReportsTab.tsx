@@ -15,6 +15,7 @@ import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
 import { useRouter } from "next/router";
 import { HoverCard } from "components/shared/HoverCard";
+import { ViolationsColumn } from "../ViolationsColumn";
 
 interface Props {
   search: string;
@@ -95,8 +96,7 @@ export function ArrestReportsTab({ search, logs: data }: Props) {
                   {record.notes}
                 </HoverCard>
               ),
-              violations:
-                record.violations.map((v) => v.penalCode.title).join(", ") || common("none"),
+              violations: <ViolationsColumn violations={record.violations} />,
               createdAt: createdAt ? <FullDate>{createdAt}</FullDate> : "—",
               status: <Status state={record.status}>{record.status?.toLowerCase()}</Status>,
               actions: (

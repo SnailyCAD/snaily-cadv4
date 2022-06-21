@@ -100,9 +100,10 @@ export default function BusinessId(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+  const user = await getSessionUser(req);
   const [business, values] = await requestAll(req, [
     [`/businesses/business/${query.id}?employeeId=${query.employeeId}`, null],
-    ["/admin/values/business_role?paths=vehicle,license", []],
+    ["/admin/values/business_role?paths=license", []],
   ]);
 
   const notFound =
@@ -114,9 +115,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query, locale, re
       business,
       values,
       employee: business?.employee ?? null,
-      session: await getSessionUser(req),
+      session: user,
       messages: {
-        ...(await getTranslations(["business", "citizen", "common"], locale)),
+        ...(await getTranslations(["business", "citizen", "common"], user?.locale ?? locale)),
       },
     },
   };

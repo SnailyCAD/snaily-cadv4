@@ -67,14 +67,15 @@ export default function PenalCodesPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+  const user = await getSessionUser(req);
   const [values] = await requestAll(req, [["/admin/values/penal_code", []]]);
 
   return {
     props: {
-      session: await getSessionUser(req),
+      session: user,
       values,
       messages: {
-        ...(await getTranslations(["leo", "common"], locale)),
+        ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),
       },
     },
   };

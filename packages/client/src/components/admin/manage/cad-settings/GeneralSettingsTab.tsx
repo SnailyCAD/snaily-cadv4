@@ -15,6 +15,7 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { Formik, FormikHelpers } from "formik";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
+import { toastMessage } from "lib/toastMessage";
 
 export function GeneralSettingsTab() {
   const [logo, setLogo] = React.useState<(File | string) | null>(null);
@@ -56,6 +57,11 @@ export function GeneralSettingsTab() {
         json.logoId = logoId;
       }
 
+      toastMessage({
+        icon: "success",
+        title: common("success"),
+        message: common("savedSettingsSuccess"),
+      });
       setCad({ ...cad, ...json });
     }
   }
