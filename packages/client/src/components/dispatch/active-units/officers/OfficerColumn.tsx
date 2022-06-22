@@ -121,6 +121,8 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                     draggable={false}
                     src={makeImageUrl("units", officer.imageId)}
                     loading="lazy"
+                    width={30}
+                    height={30}
                   />
                 ) : null}
                 {isUnitCombined(officer) ? (
