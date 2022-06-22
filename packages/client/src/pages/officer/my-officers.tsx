@@ -161,8 +161,7 @@ export default function MyOfficers({ officers: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [citizens, { officers }, values] = await requestAll(req, [
-    ["/citizen", []],
+  const [{ officers }, values] = await requestAll(req, [
     ["/leo", { officers: [] }],
     ["/admin/values/department?paths=division", []],
   ]);
@@ -171,7 +170,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       session: user,
       officers,
-      citizens,
       values,
       messages: {
         ...(await getTranslations(["leo", "common"], user?.locale ?? locale)),

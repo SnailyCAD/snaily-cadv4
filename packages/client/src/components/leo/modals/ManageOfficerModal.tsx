@@ -6,7 +6,6 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
 import { useValues } from "context/ValuesContext";
 import { Formik, FormikHelpers } from "formik";
@@ -23,6 +22,8 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTable";
 import { AdvancedSettings } from "./AdvancedSettings";
 import { classNames } from "lib/classNames";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   officer: Officer | null;
@@ -36,9 +37,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
-  const { citizens } = useCitizen();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -115,6 +115,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     divisions: officer?.divisions.map((v) => ({ value: v.id, label: v.value.value })) ?? [],
     badgeNumber: BADGE_NUMBERS ? officer?.badgeNumber ?? "" : 123,
     citizenId: officer?.citizenId ?? "",
+    name: officer ? `${officer.citizen.name} ${officer.citizen.surname}` : "",
     image: undefined,
     callsigns: officer ? makeDivisionsObjectMap(officer) : {},
   };
@@ -127,7 +128,7 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       className={officer ? "w-[1000px]" : "w-[650px]"}
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, handleSubmit, setValues, errors, values, isValid }) => (
           <form
             className={classNames(officer && "flex flex-col md:flex-row gap-5")}
             ref={formRef}
@@ -137,15 +138,36 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
               <ImageSelectInput setImage={setImage} image={image} />
 
               <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-                <Select
-                  isClearable
-                  value={values.citizenId}
-                  name="citizenId"
-                  onChange={handleChange}
-                  values={citizens.map((value) => ({
-                    label: `${value.name} ${value.surname}`,
-                    value: value.id,
-                  }))}
+                <InputSuggestions<NameSearchResult>
+                  onSuggestionClick={(suggestion) => {
+                    setValues({
+                      ...values,
+                      citizenId: suggestion.id,
+                      name: `${suggestion.name} ${suggestion.surname}`,
+                    });
+                  }}
+                  Component={({ suggestion }) => (
+                    <div className="flex items-center">
+                      <p>
+                        {suggestion.name} {suggestion.surname}{" "}
+                        {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                          <>(SSN: {suggestion.socialSecurityNumber})</>
+                        ) : null}
+                      </p>
+                    </div>
+                  )}
+                  options={{
+                    apiPath: "/search/name?fromAuthUserOnly=true",
+                    method: "POST",
+                    dataKey: "name",
+                    allowUnknown: false,
+                  }}
+                  inputProps={{
+                    value: values.name,
+                    name: "name",
+                    onChange: handleChange,
+                    errorMessage: errors.citizenId,
+                  }}
                 />
               </FormField>
 
