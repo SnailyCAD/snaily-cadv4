@@ -28,19 +28,19 @@ function useInstance({ array, totalCount }: { totalCount: number; array: any[] }
 
   async function nextPage() {
     const newPageIndex = currentPage + 1;
-    await asyncTable.pagination.fetch({ pageSize: 35, pageIndex: newPageIndex });
+    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
     setCurrentPage(newPageIndex);
   }
 
   async function previousPage() {
     const newPageIndex = currentPage - 1;
-    await asyncTable.pagination.fetch({ pageSize: 35, pageIndex: newPageIndex });
+    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
     setCurrentPage(newPageIndex);
   }
 
   async function gotoPage(pageIndex: number) {
     const newPageIndex = pageIndex;
-    await asyncTable.pagination.fetch({ pageSize: 35, pageIndex: newPageIndex });
+    await asyncTable.pagination.fetch({ pageSize: MAX_ITEMS_IN_TABLE, pageIndex: newPageIndex });
     setCurrentPage(newPageIndex);
   }
 
