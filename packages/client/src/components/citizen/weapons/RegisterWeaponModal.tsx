@@ -11,7 +11,7 @@ import useFetch from "lib/useFetch";
 import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { Citizen, ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
+import { ValueLicenseType, Weapon, WeaponValue } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { useCitizen } from "context/CitizenContext";
 import { Input } from "components/form/inputs/Input";
@@ -22,9 +22,9 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
-  weapon: (Weapon & { citizen: Citizen }) | null;
-  onCreate?(newV: Weapon & { citizen: Citizen }): void;
-  onUpdate?(old: Weapon & { citizen: Citizen }, newV: Weapon & { citizen: Citizen }): void;
+  weapon: Weapon | null;
+  onCreate?(newV: Weapon): void;
+  onUpdate?(old: Weapon, newV: Weapon): void;
   onClose?(): void;
 }
 
@@ -86,7 +86,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
     name: isDisabled
       ? `${citizen.name} ${citizen.surname}`
       : weapon
-      ? `${weapon.citizen.name} ${weapon.citizen.surname}`
+      ? `${(weapon as any).citizen?.name} ${(weapon as any).citizen?.surname}`
       : "",
   };
 

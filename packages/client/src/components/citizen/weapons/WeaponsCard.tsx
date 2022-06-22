@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button } from "components/Button";
-import type { Citizen, Weapon } from "@snailycad/types";
+import type { Weapon } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { RegisterWeaponModal } from "./RegisterWeaponModal";
@@ -11,15 +11,15 @@ import { Table } from "components/shared/Table";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { FullDate } from "components/shared/FullDate";
 
-export function WeaponsCard(props: { weapons: (Weapon & { citizen: Citizen })[] }) {
+export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Weapons");
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
 
-  const [weapons, setWeapons] = React.useState<(Weapon & { citizen: Citizen })[]>(props.weapons);
-  const [tempWeapon, setTempWeapon] = React.useState<(Weapon & { citizen: Citizen }) | null>(null);
+  const [weapons, setWeapons] = React.useState<Weapon[]>(props.weapons);
+  const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
 
   React.useEffect(() => {
     setWeapons(props.weapons);
@@ -39,12 +39,12 @@ export function WeaponsCard(props: { weapons: (Weapon & { citizen: Citizen })[] 
     }
   }
 
-  function handleEditClick(weapon: Weapon & { citizen: Citizen }) {
+  function handleEditClick(weapon: Weapon) {
     setTempWeapon(weapon);
     openModal(ModalIds.RegisterWeapon);
   }
 
-  function handleDeleteClick(weapon: Weapon & { citizen: Citizen }) {
+  function handleDeleteClick(weapon: Weapon) {
     setTempWeapon(weapon);
     openModal(ModalIds.AlertDeleteWeapon);
   }
