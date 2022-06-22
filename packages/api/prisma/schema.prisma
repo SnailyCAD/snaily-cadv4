@@ -126,7 +126,7 @@ model ApiToken {
 
 model ApiTokenLog {
   id         String   @id @default(uuid())
-  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id])
+  apiToken   ApiToken @relation(fields: [apiTokenId], references: [id], onDelete: Cascade)
   apiTokenId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt

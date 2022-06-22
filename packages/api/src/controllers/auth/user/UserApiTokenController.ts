@@ -28,7 +28,6 @@ export class AccountController {
         return { ...user, apiToken: null, apiTokenId: null };
       }
 
-      await prisma.apiTokenLog.deleteMany({ where: { apiTokenId: user.apiTokenId } });
       await prisma.apiToken.delete({ where: { id: user.apiTokenId } });
 
       return { ...user, apiToken: null, apiTokenId: null };
