@@ -1,7 +1,9 @@
+import { defaultPermissions } from "@snailycad/permissions";
 import type { Citizen, User } from "@snailycad/types";
 import { buttonVariants } from "components/Button";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
+import { usePermission } from "hooks/usePermission";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { PersonFill } from "react-bootstrap-icons";
@@ -15,6 +17,11 @@ export function CitizenListItem({ citizen }: Props) {
   const t = useTranslations("Citizen");
   const { SOCIAL_SECURITY_NUMBERS, COMMON_CITIZEN_CARDS } = useFeatureEnabled();
   const { makeImageUrl } = useImageUrl();
+  const { hasPermissions } = usePermission();
+  const hasLeoPermissions = hasPermissions(
+    defaultPermissions.defaultLeoPermissions,
+    (u) => u.isLeo,
+  );
 
   return (
     <li className="flex items-center justify-between p-3 bg-gray-200 rounded-md dark:bg-gray-2">
@@ -39,7 +46,11 @@ export function CitizenListItem({ citizen }: Props) {
               SSN: {citizen.socialSecurityNumber}
             </p>
           ) : null}
-          {COMMON_CITIZEN_CARDS ? <p>{citizen.user?.username ?? common("none")}</p> : null}
+          {COMMON_CITIZEN_CARDS && hasLeoPermissions ? (
+            <p className="text-neutral-600 dark:text-gray-400">
+              User: {citizen.user?.username ?? common("none")}
+            </p>
+          ) : null}
         </div>
       </div>
 
