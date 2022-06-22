@@ -23,8 +23,8 @@ import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   weapon: (Weapon & { citizen: Citizen }) | null;
-  onCreate?(newV: Weapon): void;
-  onUpdate?(old: Weapon, newV: Weapon): void;
+  onCreate?(newV: Weapon & { citizen: Citizen }): void;
+  onUpdate?(old: Weapon & { citizen: Citizen }, newV: Weapon & { citizen: Citizen }): void;
   onClose?(): void;
 }
 
