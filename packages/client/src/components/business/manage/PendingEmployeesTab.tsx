@@ -58,7 +58,7 @@ export function PendingEmployeesTab() {
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "accept")}
                     variant="success"
-                    small
+                    size="xs"
                   >
                     {common("accept")}
                   </Button>
@@ -66,7 +66,7 @@ export function PendingEmployeesTab() {
                     disabled={state === "loading"}
                     onClick={() => handleUpdate(employee, "decline")}
                     className="ml-2"
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("decline")}

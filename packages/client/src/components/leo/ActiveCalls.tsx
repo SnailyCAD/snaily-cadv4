@@ -234,7 +234,7 @@ function _ActiveCalls() {
     <div className="overflow-hidden rounded-md card">
       {addedToCallAudio}
       {incomingCallAudio}
-      <header className="flex items-center justify-between p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="flex items-center justify-between p-2 px-4 bg-gray-200 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("active911Calls")}</h3>
 
         <div>
@@ -259,7 +259,7 @@ function _ActiveCalls() {
         <CallsFilters calls={calls} />
 
         {calls.length <= 0 ? (
-          <p className="py-2">{t("no911Calls")}</p>
+          <p className="py-2 text-neutral-700 dark:text-gray-300">{t("no911Calls")}</p>
         ) : (
           <Table
             isWithinCard
@@ -285,7 +285,7 @@ function _ActiveCalls() {
                     ) : (
                       <Button
                         disabled={isDispatch ? false : !isUnitActive}
-                        small
+                        size="xs"
                         onClick={() => handleViewDescription(call)}
                       >
                         {common("viewDescription")}
@@ -304,7 +304,7 @@ function _ActiveCalls() {
                     <>
                       <Button
                         disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
-                        small
+                        size="xs"
                         variant="success"
                         onClick={() => handleManageClick(call)}
                       >
@@ -315,7 +315,7 @@ function _ActiveCalls() {
                         <Button
                           className="ml-2"
                           disabled={!isUnitActive}
-                          small
+                          size="xs"
                           onClick={() => handleUnassignFromCall(call)}
                         >
                           {t("unassignFromCall")}
@@ -324,7 +324,7 @@ function _ActiveCalls() {
                         <Button
                           className="ml-2"
                           disabled={!isUnitActive}
-                          small
+                          size="xs"
                           onClick={() => handleAssignToCall(call)}
                         >
                           {t("assignToCall")}
@@ -334,7 +334,7 @@ function _ActiveCalls() {
                       {TOW ? (
                         <Button
                           disabled={isDispatch ? !hasActiveDispatchers : !isUnitActive}
-                          small
+                          size="xs"
                           className="ml-2"
                           onClick={() => handleCallTow(call)}
                         >

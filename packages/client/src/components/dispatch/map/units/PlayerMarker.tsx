@@ -91,7 +91,7 @@ export function PlayerMarker({ player, handleToggle }: Props) {
 
         {"id" in player ? (
           <div className="mt-3">
-            <Button small className="!text-base" onClick={() => handleToggle(player.id)}>
+            <Button size="xs" className="!text-base" onClick={() => handleToggle(player.id)}>
               {t("togglePlayer")}
             </Button>
           </div>

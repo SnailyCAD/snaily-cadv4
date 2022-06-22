@@ -122,14 +122,14 @@ export default function CitizenLogs({ exams: data }: Props) {
                 actions: (
                   <>
                     {hasPassedOrFailed ? null : (
-                      <Button variant="success" small onClick={() => handleEditClick(exam)}>
+                      <Button variant="success" size="xs" onClick={() => handleEditClick(exam)}>
                         {common("edit")}
                       </Button>
                     )}
                     <Button
                       className="ml-2"
                       variant="danger"
-                      small
+                      size="xs"
                       onClick={() => handleDeleteClick(exam)}
                     >
                       {common("delete")}

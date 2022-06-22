@@ -46,7 +46,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
               <Button
                 onClick={() => acceptOrDecline(business, WhitelistStatus.ACCEPTED)}
                 disabled={state === "loading"}
-                small
+                size="xs"
                 variant="success"
               >
                 {common("accept")}
@@ -55,7 +55,7 @@ export function PendingBusinessesTab({ setBusinesses, businesses }: Props) {
                 className="ml-2"
                 onClick={() => acceptOrDecline(business, WhitelistStatus.DECLINED)}
                 disabled={state === "loading"}
-                small
+                size="xs"
                 variant="danger"
               >
                 {common("decline")}

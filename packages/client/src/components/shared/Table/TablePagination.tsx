@@ -8,8 +8,18 @@ import {
 import type { TableInstance } from "react-table";
 import type { TableData } from "./TableProps";
 
+type TablePicks =
+  | "canPreviousPage"
+  | "nextPage"
+  | "previousPage"
+  | "canNextPage"
+  | "gotoPage"
+  | "pageCount"
+  | "pageOptions"
+  | "state";
+
 interface Props<T extends object, RowProps extends object> {
-  instance: TableInstance<TableData<T, RowProps>>;
+  instance: Pick<TableInstance<TableData<T, RowProps>>, TablePicks>;
   paginationState?: "error" | "loading" | null;
 }
 

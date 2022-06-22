@@ -127,7 +127,7 @@ export default function DispatchDashboard(props: DispatchPageProps) {
       <panic.Component audio={panic.audio} unit={panic.unit} />
 
       <div className="w-full overflow-hidden rounded-md bg-gray-200/80 dark:bg-gray-2">
-        <header className="flex items-center justify-between px-4 py-2 bg-gray-300 dark:bg-gray-3">
+        <header className="flex items-center justify-between px-4 py-2 bg-gray-200 dark:bg-gray-3">
           <h3 className="text-xl font-semibold">
             {t("utilityPanel")}
             {showAop ? <DispatchAOP /> : null}

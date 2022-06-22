@@ -90,7 +90,7 @@ export function EmployeesTab() {
           actions: (
             <>
               <Button
-                small
+                size="xs"
                 disabled={
                   employee.role.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING
@@ -101,7 +101,7 @@ export function EmployeesTab() {
                 {common("manage")}
               </Button>
               <Button
-                small
+                size="xs"
                 disabled={
                   employee.role.as === EmployeeAsEnum.OWNER ||
                   employee.whitelistStatus === WhitelistStatus.PENDING

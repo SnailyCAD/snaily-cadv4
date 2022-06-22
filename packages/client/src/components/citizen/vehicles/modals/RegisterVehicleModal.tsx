@@ -330,18 +330,18 @@ export function RegisterVehicleModal({
               <FormRow>
                 <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
                   <Toggle
-                    onClick={handleChange}
+                    onCheckedChange={handleChange}
                     name="reportedStolen"
-                    toggled={values.reportedStolen}
+                    value={values.reportedStolen}
                   />
                 </FormField>
 
                 <FormField errorMessage={errors.reApplyForDmv} label={tVehicle("reApplyForDmv")}>
                   <Toggle
                     disabled={vehicle.dmvStatus !== WhitelistStatus.DECLINED}
-                    onClick={handleChange}
+                    onCheckedChange={handleChange}
                     name="reApplyForDmv"
-                    toggled={values.reApplyForDmv ?? false}
+                    value={values.reApplyForDmv ?? false}
                   />
                 </FormField>
               </FormRow>

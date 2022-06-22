@@ -225,11 +225,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
               createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
               actions: (
                 <>
-                  <Button small onClick={() => handleEditClick(value)} variant="success">
+                  <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
                     {common("edit")}
                   </Button>
                   <Button
-                    small
+                    size="xs"
                     onClick={() => handleDeleteClick(value)}
                     variant="danger"
                     className="ml-2"

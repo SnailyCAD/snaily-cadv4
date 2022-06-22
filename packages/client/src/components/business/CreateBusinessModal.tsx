@@ -110,7 +110,11 @@ export function CreateBusinessModal({ onCreate }: Props) {
             </FormRow>
 
             <FormField errorMessage={errors.whitelisted} label={t("whitelisted")}>
-              <Toggle name="whitelisted" onClick={handleChange} toggled={values.whitelisted} />
+              <Toggle
+                name="whitelisted"
+                onCheckedChange={handleChange}
+                value={values.whitelisted}
+              />
             </FormField>
 
             <footer className="flex justify-end mt-5">

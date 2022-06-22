@@ -202,7 +202,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                           description: record.description || t("Common.none"),
                           actions: (
                             <Button
-                              small
+                              size="xs"
                               variant={results.dead ? "success" : "danger"}
                               type="button"
                               onClick={handleDeclare}

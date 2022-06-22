@@ -103,7 +103,7 @@ export function CitizenLogsTab({ search, logs: data }: Props) {
             return {
               citizen: `${item.citizen.name} ${item.citizen.surname}`,
               actions: (
-                <Button small onClick={() => setCurrentLog(item)}>
+                <Button size="xs" onClick={() => setCurrentLog(item)}>
                   {common("view")}
                 </Button>
               ),

@@ -55,7 +55,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                 <>
                   <Button
                     disabled={isReadOnly}
-                    small
+                    size="xs"
                     type="button"
                     onClick={() => handleEditClick(v)}
                     variant="success"
@@ -64,7 +64,7 @@ export function SeizedItemsTable({ isReadOnly }: { isReadOnly?: boolean }) {
                   </Button>
                   <Button
                     className="ml-2"
-                    small
+                    size="xs"
                     type="button"
                     onClick={() => handleDeleteClick(v)}
                     variant="danger"

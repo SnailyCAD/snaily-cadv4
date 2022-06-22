@@ -271,8 +271,8 @@ export function CADFeaturesTab() {
                     label={value.name}
                   >
                     <Toggle
-                      toggled={values.features[key]?.isEnabled ?? true}
-                      onClick={(v) => {
+                      value={values.features[key]?.isEnabled ?? true}
+                      onCheckedChange={(v) => {
                         handleChange(v);
                       }}
                       name={`features.${key}.isEnabled`}

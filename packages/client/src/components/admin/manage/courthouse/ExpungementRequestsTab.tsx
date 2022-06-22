@@ -66,7 +66,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, ExpungementRequestStatus.ACCEPTED)}
                   variant="success"
-                  small
+                  size="xs"
                 >
                   {common("accept")}
                 </Button>
@@ -75,7 +75,7 @@ export function ExpungementRequestsTab({ requests: data }: Props) {
                   disabled={state === "loading"}
                   onClick={() => handleUpdate(request.id, ExpungementRequestStatus.DENIED)}
                   variant="danger"
-                  small
+                  size="xs"
                 >
                   {common("decline")}
                 </Button>

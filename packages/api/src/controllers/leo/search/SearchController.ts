@@ -16,10 +16,12 @@ import {
   Feature,
   Officer,
   WhitelistStatus,
+  User,
 } from "@prisma/client";
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
+import { hasPermission } from "@snailycad/permissions";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -33,43 +35,61 @@ export const vehicleSearchInclude = {
   notes: true,
 };
 
-export const citizenSearchInclude = (cad: cad & { features?: CadFeature[] }) => {
+export const citizenSearchIncludeOrSelect = (
+  user: User,
+  cad: cad & { features?: CadFeature[] },
+) => {
   const isEnabled = isFeatureEnabled({
     feature: Feature.CITIZEN_RECORD_APPROVAL,
     features: cad.features,
     defaultReturn: false,
   });
 
-  return {
-    officers: { select: { department: { select: { isConfidential: true } } } },
-    ...citizenInclude,
-    vehicles: { include: vehicleSearchInclude },
-    businesses: true,
-    medicalRecords: true,
-    customFields: { include: { field: true } },
-    warrants: { include: { officer: { include: leoProperties } } },
-    notes: true,
-    Record: {
-      where: isEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
+  const hasPerms = hasPermission(user.permissions, [Permissions.Leo, Permissions.Dispatch]);
+  if (hasPerms) {
+    return {
       include: {
-        officer: {
-          include: leoProperties,
-        },
-        seizedItems: true,
-        violations: {
+        officers: { select: { department: { select: { isConfidential: true } } } },
+        ...citizenInclude,
+        vehicles: { include: vehicleSearchInclude },
+        businesses: true,
+        medicalRecords: true,
+        customFields: { include: { field: true } },
+        warrants: { include: { officer: { include: leoProperties } } },
+        notes: true,
+        Record: {
+          where: isEnabled ? { status: WhitelistStatus.ACCEPTED } : undefined,
           include: {
-            penalCode: {
+            officer: {
+              include: leoProperties,
+            },
+            seizedItems: true,
+            violations: {
               include: {
-                warningApplicable: true,
-                warningNotApplicable: true,
+                penalCode: {
+                  include: {
+                    warningApplicable: true,
+                    warningNotApplicable: true,
+                  },
+                },
               },
             },
           },
         },
+        dlCategory: { include: { value: true } },
       },
+    } as any;
+  }
+
+  return {
+    select: {
+      name: true,
+      surname: true,
+      imageId: true,
+      officers: { select: { department: { select: { isConfidential: true } } } },
+      id: true,
     },
-    dlCategory: { include: { value: true } },
-  };
+  } as const;
 };
 
 const weaponsInclude = {
@@ -85,13 +105,10 @@ const weaponsInclude = {
 export class SearchController {
   @Post("/name")
   @Description("Search citizens by their name, surname or fullname. Returns the first 35 results.")
-  @UsePermissions({
-    fallback: (u) => u.isLeo || u.isDispatch,
-    permissions: [Permissions.Leo, Permissions.Dispatch],
-  })
   async searchName(
     @BodyParams("name") fullName: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("user") user: User,
   ) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
@@ -113,8 +130,8 @@ export class SearchController {
           { socialSecurityNumber: name },
         ],
       },
-      include: citizenSearchInclude(cad),
       take: 35,
+      ...citizenSearchIncludeOrSelect(user, cad),
     });
 
     return appendConfidential(await appendCustomFields(citizens, CustomFieldCategory.CITIZEN));
@@ -196,6 +213,7 @@ export class SearchController {
   async customFieldSearch(
     @BodyParams() body: unknown,
     @Context("cad") cad: cad & { features?: CadFeature[] },
+    @Context("user") user: User,
   ) {
     const data = validateSchema(CUSTOM_FIELD_SEARCH_SCHEMA, body);
 
@@ -206,7 +224,7 @@ export class SearchController {
     const _results = await prisma.customFieldValue.findMany({
       where: { fieldId: data.customFieldId, value: { mode: "insensitive", equals: data.query } },
       include: {
-        Citizens: { include: citizenSearchInclude(cad) },
+        Citizens: citizenSearchIncludeOrSelect(user, cad),
         RegisteredVehicles: { include: vehicleSearchInclude },
         Weapons: { include: weaponsInclude },
         field: true,
@@ -232,12 +250,12 @@ export class SearchController {
 }
 
 export function appendConfidential(
-  citizens: (Citizen & { officers: (Officer & { department: DepartmentValue | null })[] })[],
+  citizens: (Citizen & { officers?: (Officer & { department: DepartmentValue | null })[] })[],
 ) {
   const _citizens = [];
 
   for (const citizen of citizens) {
-    const isConfidential = citizen.officers.some((v) => v.department?.isConfidential);
+    const isConfidential = citizen.officers?.some((v) => v.department?.isConfidential);
 
     if (isConfidential) {
       _citizens.push({

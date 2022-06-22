@@ -157,9 +157,9 @@ export function ManageIncidentModal({
                   <FormField errorMessage={errors.firearmsInvolved} label={t("firearmsInvolved")}>
                     <Toggle
                       disabled={areFieldsDisabled}
-                      toggled={values.firearmsInvolved}
+                      value={values.firearmsInvolved}
                       name="firearmsInvolved"
-                      onClick={handleChange}
+                      onCheckedChange={handleChange}
                     />
                   </FormField>
                   <FormField
@@ -168,17 +168,17 @@ export function ManageIncidentModal({
                   >
                     <Toggle
                       disabled={areFieldsDisabled}
-                      toggled={values.injuriesOrFatalities}
+                      value={values.injuriesOrFatalities}
                       name="injuriesOrFatalities"
-                      onClick={handleChange}
+                      onCheckedChange={handleChange}
                     />
                   </FormField>
                   <FormField errorMessage={errors.arrestsMade} label={t("arrestsMade")}>
                     <Toggle
                       disabled={areFieldsDisabled}
-                      toggled={values.arrestsMade}
+                      value={values.arrestsMade}
                       name="arrestsMade"
-                      onClick={handleChange}
+                      onCheckedChange={handleChange}
                     />
                   </FormField>
                 </FormRow>

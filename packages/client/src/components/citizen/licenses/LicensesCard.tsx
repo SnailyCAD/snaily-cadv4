@@ -42,7 +42,7 @@ export function LicensesCard() {
         <h1 className="text-2xl font-semibold">{t("licenses")}</h1>
 
         {ALLOW_CITIZEN_UPDATE_LICENSE ? (
-          <Button onClick={() => openModal(ModalIds.ManageLicenses)} small>
+          <Button onClick={() => openModal(ModalIds.ManageLicenses)} size="xs">
             {t("manageLicenses")}
           </Button>
         ) : null}

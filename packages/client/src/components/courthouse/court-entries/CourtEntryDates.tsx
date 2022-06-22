@@ -59,7 +59,12 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
           note: date.note || common("none"),
           actions: (
             <>
-              <Button type="button" onClick={() => handleManageClick(date)} variant="success" small>
+              <Button
+                type="button"
+                onClick={() => handleManageClick(date)}
+                variant="success"
+                size="xs"
+              >
                 {common("edit")}
               </Button>
               <Button
@@ -67,7 +72,7 @@ export function CourtEntryDates({ onUpdate, onDelete, onCreate, dates }: Props) 
                 className="ml-2"
                 onClick={() => handleDeleteClick(date)}
                 variant="danger"
-                small
+                size="xs"
               >
                 {common("delete")}
               </Button>

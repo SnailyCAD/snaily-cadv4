@@ -335,7 +335,7 @@ export function ManageValueModal({ onCreate, onUpdate, clType: dlType, type, val
             {type === "CODES_10" ? <StatusValueFields /> : null}
 
             <FormField errorMessage={errors.isDisabled} label="Disabled">
-              <Toggle name="isDisabled" onClick={handleChange} toggled={values.isDisabled} />
+              <Toggle name="isDisabled" onCheckedChange={handleChange} value={values.isDisabled} />
             </FormField>
 
             <footer className="flex justify-end mt-5">

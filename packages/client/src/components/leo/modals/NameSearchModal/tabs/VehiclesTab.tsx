@@ -42,7 +42,7 @@ export function NameSearchVehiclesTab() {
             plate: (
               <Button
                 title={common("openInSearch")}
-                small
+                size="xs"
                 type="button"
                 onClick={() => handlePlateClick(vehicle as VehicleSearchResult)}
               >

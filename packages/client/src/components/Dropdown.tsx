@@ -1,7 +1,7 @@
 import type * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { classNames } from "lib/classNames";
-import { Button, ButtonProps } from "components/Button";
+import { Button, ButtonProps, buttonSizes } from "components/Button";
 import { useRouter } from "next/router";
 
 interface Props extends DropdownMenu.MenuContentProps {
@@ -43,7 +43,7 @@ Dropdown.Item = function DropdownItem({ children, ...rest }: Omit<ButtonProps, "
         {...rest}
         variant="transparent"
         className={classNames(
-          "p-1 my-1 px-1.5 rounded-md transition-colors w-full text-left bg-transparent",
+          "my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
           "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
           rest.className,
         )}
@@ -77,7 +77,9 @@ Dropdown.LinkItem = function LinkItem({ children, ...rest }: JSX.IntrinsicElemen
         {...rest}
         onClick={handleClick}
         className={classNames(
-          "text-gray-900 dark:text-gray-200 block hover:bg-gray-200 dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg rounded-md items-center w-full px-3 py-1.5 text-sm transition-all",
+          "block my-0.5 rounded-md transition-colors w-full text-left bg-transparent",
+          "dark:hover:bg-dark-bg focus:bg-gray-200 dark:focus:bg-dark-bg",
+          buttonSizes.sm,
           rest.className,
         )}
       >

@@ -385,7 +385,7 @@ export function NameSearchModal() {
 
                         {isLeo ? (
                           <Button
-                            small
+                            size="xs"
                             type="button"
                             className="mt-2"
                             onClick={() => openModal(ModalIds.ManageLicenses)}
@@ -402,7 +402,7 @@ export function NameSearchModal() {
 
                         {isLeo ? (
                           <Button
-                            small
+                            size="xs"
                             type="button"
                             className="mt-2"
                             onClick={() => openModal(ModalIds.ManageCitizenFlags)}
@@ -451,7 +451,7 @@ export function NameSearchModal() {
                     ))}
 
                     <Button
-                      small
+                      size="xs"
                       type="button"
                       onClick={handleDeclare}
                       disabled={state === "loading"}

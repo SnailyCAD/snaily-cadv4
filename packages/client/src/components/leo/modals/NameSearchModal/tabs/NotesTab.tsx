@@ -90,7 +90,12 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
               <>
-                <Button type="button" variant="success" small onClick={() => handleEditClick(note)}>
+                <Button
+                  type="button"
+                  variant="success"
+                  size="xs"
+                  onClick={() => handleEditClick(note)}
+                >
                   {t("Common.edit")}
                 </Button>
 
@@ -98,7 +103,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
                   type="button"
                   variant="danger"
                   className="ml-2"
-                  small
+                  size="xs"
                   onClick={() => handleDeleteClick(note)}
                 >
                   {t("Common.delete")}
