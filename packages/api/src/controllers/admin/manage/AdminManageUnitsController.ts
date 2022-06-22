@@ -83,7 +83,7 @@ export class AdminManageUnitsController {
       include: { ...leoProperties, ...extraInclude, logs: true },
     });
 
-    if (!unit) {
+    if (Array.isArray(unit) ? !unit.length : !unit) {
       // @ts-expect-error same function properties
       unit = await prisma.emsFdDeputy[functionName]({
         where: {
@@ -93,7 +93,7 @@ export class AdminManageUnitsController {
       });
     }
 
-    if (!unit) {
+    if (Array.isArray(unit) ? !unit.length : !unit) {
       unit = await prisma.combinedLeoUnit.findUnique({
         where: { id },
         include: combinedUnitProperties,
