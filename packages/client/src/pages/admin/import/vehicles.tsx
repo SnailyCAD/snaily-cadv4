@@ -16,19 +16,26 @@ import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 interface Props {
-  vehicles: RegisteredVehicle[];
+  data: { totalCount: number; vehicles: RegisteredVehicle[] };
 }
 
-export default function ImportVehiclesPage({ vehicles: data }: Props) {
-  const [vehicles, setVehicles] = React.useState(data);
-  const [search, setSearch] = React.useState("");
-
+export default function ImportVehiclesPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const veh = useTranslations("Vehicles");
   const { openModal } = useModal();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json) => ({ totalCount: json.totalCount, data: json.vehicles }),
+      path: "/admin/import/vehicles",
+    },
+    initialData: data.vehicles,
+    totalCount: data.totalCount,
+  });
 
   return (
     <AdminLayout
@@ -56,14 +63,24 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
         <Input
           className="w-full"
           placeholder="filter by plate, model, color, etc."
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
+          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+          value={asyncTable.search.search}
         />
       </FormField>
 
+      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+        <p className="italic text-base font-semibold">
+          Showing {asyncTable.pagination.totalCount} result(s)
+        </p>
+      ) : null}
+
       <Table
-        filter={search}
-        data={vehicles.map((vehicle) => ({
+        pagination={{
+          enabled: true,
+          totalCount: asyncTable.pagination.totalCount,
+          fetchData: asyncTable.pagination,
+        }}
+        data={asyncTable.data.map((vehicle) => ({
           plate: vehicle.plate,
           model: vehicle.model.value.value,
           color: vehicle.color,
@@ -85,7 +102,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
 
       <ImportModal
         onImport={(vehicles) => {
-          setVehicles((p) => [...vehicles, ...p]);
+          asyncTable.setData((p) => [...vehicles, ...p]);
         }}
         id={ModalIds.ImportVehicles}
         url="/admin/import/vehicles"
@@ -94,7 +111,7 @@ export default function ImportVehiclesPage({ vehicles: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [vehicles, values] = await requestAll(req, [
     ["/admin/import/vehicles", []],
@@ -104,7 +121,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       values,
-      vehicles,
+      data: vehicles,
       session: user,
       messages: {
         ...(await getTranslations(
