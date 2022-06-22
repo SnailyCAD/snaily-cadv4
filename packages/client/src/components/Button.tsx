@@ -22,6 +22,7 @@ export const buttonVariants = {
 export const buttonSizes = {
   xs: "p-0.5 px-2",
   sm: "p-1 px-4",
+  lg: "p-2 px-6",
 } as const;
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
