@@ -21,7 +21,7 @@ import {
 import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
-import { hasPermission } from "@snailycad/permissions";
+import { defaultPermissions, hasPermission } from "@snailycad/permissions";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 export const vehicleSearchInclude = {
@@ -46,8 +46,13 @@ export const citizenSearchIncludeOrSelect = (
     defaultReturn: false,
   });
 
-  const hasPerms = hasPermission(user.permissions, [Permissions.Leo, Permissions.Dispatch]);
-  if (hasPerms) {
+  const hasPerms = hasPermission(user.permissions, [
+    ...defaultPermissions.defaultLeoPermissions,
+    ...defaultPermissions.defaultDispatchPermissions,
+    ...defaultPermissions.defaultEmsFdPermissions,
+  ]);
+
+  if (hasPerms || user.isLeo || user.isDispatch || user.isEmsFd) {
     return {
       include: {
         officers: { select: { department: { select: { isConfidential: true } } } },
@@ -89,6 +94,7 @@ export const citizenSearchIncludeOrSelect = (
       imageId: true,
       officers: { select: { department: { select: { isConfidential: true } } } },
       id: true,
+      socialSecurityNumber: true,
     },
   } as const;
 };
