@@ -22,6 +22,7 @@ import { validateSchema } from "lib/validateSchema";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
 import { isFeatureEnabled } from "lib/cad";
 import { hasPermission } from "@snailycad/permissions";
+import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
 
 export const vehicleSearchInclude = {
   model: { include: { value: true } },
@@ -109,6 +110,7 @@ export class SearchController {
     @BodyParams("name") fullName: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
     @Context("user") user: User,
+    @QueryParams("fromAuthUserOnly", Boolean) fromAuthUserOnly = false,
   ) {
     const [name, surname] = fullName.toString().toLowerCase().split(/ +/g);
 
@@ -116,8 +118,10 @@ export class SearchController {
       return [];
     }
 
+    const checkUserId = shouldCheckCitizenUserId({ cad, user });
     const citizens = await prisma.citizen.findMany({
       where: {
+        userId: fromAuthUserOnly && checkUserId ? user.id : undefined,
         OR: [
           {
             name: { contains: name, mode: "insensitive" },

@@ -19,20 +19,20 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
-  weapon: Weapon | null;
-  citizens: Citizen[];
+  weapon: (Weapon & { citizen: Citizen }) | null;
   onCreate?(newV: Weapon): void;
   onUpdate?(old: Weapon, newV: Weapon): void;
   onClose?(): void;
 }
 
-export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, onUpdate }: Props) {
+export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
-  const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
+  const { SOCIAL_SECURITY_NUMBERS, CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
@@ -43,6 +43,7 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
   const { weapon: weapons, license } = useValues();
   const validate = handleValidate(WEAPON_SCHEMA);
   const isDisabled = pathname === "/citizen/[id]";
+  const isLeo = pathname.includes("/officer");
 
   function handleClose() {
     closeModal(ModalIds.RegisterWeapon);
@@ -82,6 +83,11 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
     registrationStatus: weapon?.registrationStatusId ?? "",
     citizenId: isDisabled ? citizen.id : weapon?.citizenId ?? "",
     serialNumber: weapon?.serialNumber ?? "",
+    name: isDisabled
+      ? `${citizen.name} ${citizen.surname}`
+      : weapon
+      ? `${weapon.citizen.name} ${weapon.citizen.surname}`
+      : "",
   };
 
   return (
@@ -138,19 +144,37 @@ export function RegisterWeaponModal({ citizens = [], weapon, onClose, onCreate, 
             )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <Select
-                values={
-                  isDisabled
-                    ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
-                    : citizens.map((citizen) => ({
-                        label: `${citizen.name} ${citizen.surname}`,
-                        value: citizen.id,
-                      }))
-                }
-                value={isDisabled ? citizen.id : values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                disabled={isDisabled}
+              <InputSuggestions<NameSearchResult>
+                onSuggestionClick={(suggestion) => {
+                  setValues({
+                    ...values,
+                    citizenId: suggestion.id,
+                    name: `${suggestion.name} ${suggestion.surname}`,
+                  });
+                }}
+                Component={({ suggestion }) => (
+                  <div className="flex items-center">
+                    <p>
+                      {suggestion.name} {suggestion.surname}{" "}
+                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                        <>(SSN: {suggestion.socialSecurityNumber})</>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: `/search/name${isLeo ? "" : "?fromAuthUserOnly=true"}`,
+                  method: "POST",
+                  dataKey: "name",
+                  allowUnknown: isLeo,
+                }}
+                inputProps={{
+                  value: values.name,
+                  name: "name",
+                  onChange: handleChange,
+                  disabled: isDisabled,
+                  errorMessage: errors.citizenId,
+                }}
               />
             </FormField>
 
