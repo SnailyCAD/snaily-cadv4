@@ -22,12 +22,6 @@ export function useAsyncTable<T>(options: Options<T>) {
   const [search, setSearch] = React.useState("");
   const { state, execute } = useFetch();
 
-  React.useEffect(() => {
-    if (options.setDataOnInitialDataChange) {
-      setData(options.initialData);
-    }
-  }, [options.initialData, options.setDataOnInitialDataChange]);
-
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
       const { json } = await execute(options.fetchOptions.path, {
