@@ -144,7 +144,6 @@ export function VehiclesTab() {
             }),
           });
         }}
-        citizens={[currentEmployee?.citizen]}
         vehicle={tempVehicle}
       />
     </TabsContent>
