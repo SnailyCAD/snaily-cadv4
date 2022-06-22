@@ -147,7 +147,6 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
-        citizens={[]}
         onClose={() => setTempVehicle(null)}
       />
 

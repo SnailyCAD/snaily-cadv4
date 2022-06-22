@@ -265,7 +265,6 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
             setCurrentResult(vehicle as VehicleSearchResult);
           }}
           vehicle={null}
-          citizens={[]}
         />
       ) : null}
     </Modal>

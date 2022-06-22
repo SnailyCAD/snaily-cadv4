@@ -31,7 +31,7 @@ const Manage911CallModal = dynamic(
 );
 
 interface Props {
-  citizens: (Citizen & { user?: Pick<User, "username"> })[];
+  citizens: { citizens: (Citizen & { user?: Pick<User, "username"> })[]; totalCount: number };
 }
 
 export default function CitizenPage({ citizens }: Props) {
@@ -112,17 +112,9 @@ export default function CitizenPage({ citizens }: Props) {
 
       <CitizenList citizens={citizens} />
 
-      <RegisterVehicleModal
-        onCreate={() => closeModal(ModalIds.RegisterVehicle)}
-        citizens={citizens}
-        vehicle={null}
-      />
+      <RegisterVehicleModal onCreate={() => closeModal(ModalIds.RegisterVehicle)} vehicle={null} />
 
-      <RegisterWeaponModal
-        onCreate={() => closeModal(ModalIds.RegisterWeapon)}
-        citizens={citizens}
-        weapon={null}
-      />
+      <RegisterWeaponModal onCreate={() => closeModal(ModalIds.RegisterWeapon)} weapon={null} />
       <Manage911CallModal call={null} />
       <ManageCallModal isTow={modal === "tow"} call={null} />
     </Layout>

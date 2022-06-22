@@ -2,7 +2,7 @@ import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { Delete, Get, Post, Put } from "@tsed/schema";
-import { BodyParams, PathParams } from "@tsed/platform-params";
+import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
@@ -11,7 +11,7 @@ import fs from "node:fs";
 import { AllowedFileExtension, allowedFileExtensions } from "@snailycad/config";
 import { leoProperties } from "lib/leo/activeOfficer";
 import { generateString } from "utils/generateString";
-import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings } from "@prisma/client";
+import { CadFeature, User, ValueType, Feature, cad, MiscCadSettings, Prisma } from "@prisma/client";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { canManageInvariant, userProperties } from "lib/auth/getSessionUser";
 import { validateSchema } from "lib/validateSchema";
@@ -71,18 +71,44 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
-  async getCitizens(@Context("cad") cad: { features?: CadFeature[] }, @Context("user") user: User) {
+  async getCitizens(
+    @Context("cad") cad: { features?: CadFeature[] },
+    @Context("user") user: User,
+    @QueryParams("query", String) query = "",
+    @QueryParams("skip", Number) skip = 0,
+  ) {
     const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+    const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    const citizens = await prisma.citizen.findMany({
-      where: {
-        userId: checkCitizenUserId ? user.id : undefined,
-      },
-      orderBy: { createdAt: "desc" },
-      include: { user: { select: userProperties } },
-    });
+    const where: Prisma.CitizenWhereInput = {
+      userId: checkCitizenUserId ? user.id : undefined,
+      OR: [
+        {
+          name: { contains: name, mode: "insensitive" },
+          surname: { contains: surname, mode: "insensitive" },
+        },
+        {
+          name: { contains: surname, mode: "insensitive" },
+          surname: { contains: name, mode: "insensitive" },
+        },
+        { socialSecurityNumber: name },
+      ],
+    };
 
-    return citizens;
+    const [citizensCount, citizens] = await Promise.all([
+      await prisma.citizen.count({
+        where,
+      }),
+      await prisma.citizen.findMany({
+        where,
+        orderBy: { updatedAt: "desc" },
+        include: { user: { select: userProperties } },
+        skip,
+        take: 35,
+      }),
+    ]);
+
+    return { citizens, totalCount: citizensCount };
   }
 
   @Get("/:id")

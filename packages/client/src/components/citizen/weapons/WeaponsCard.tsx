@@ -116,7 +116,6 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
           closeModal(ModalIds.RegisterWeapon);
         }}
         weapon={tempWeapon}
-        citizens={[]}
         onClose={() => setTempWeapon(null)}
       />
 
