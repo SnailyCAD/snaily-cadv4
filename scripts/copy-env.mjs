@@ -8,6 +8,7 @@ async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
   const port = process.env.PORT_CLIENT;
   if (!port) return;
+  if (port === '3000') return;
 
   try {
     let dir = join(process.cwd(), "packages", "client");
