@@ -119,7 +119,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           image: imgUrl ? (
-            <img src={imgUrl} width={50} height={50} className="object-cover" />
+            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),
@@ -134,7 +134,7 @@ export function useTableDataOfType(type: ValueType) {
 
         return {
           image: imgUrl ? (
-            <img src={imgUrl} width={50} height={50} className="object-cover" />
+            <img loading="lazy" src={imgUrl} width={50} height={50} className="object-cover" />
           ) : (
             "—"
           ),

@@ -16,19 +16,26 @@ import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 interface Props {
-  weapons: (Weapon & { citizen: Citizen })[];
+  data: { weapons: (Weapon & { citizen: Citizen })[]; totalCount: number };
 }
 
-export default function ImportWeaponsPage({ weapons: data }: Props) {
-  const [weapons, setWeapons] = React.useState(data);
-  const [search, setSearch] = React.useState("");
-
+export default function ImportWeaponsPage({ data }: Props) {
   const t = useTranslations("Management");
   const common = useTranslations("Common");
   const wep = useTranslations("Weapons");
   const { openModal } = useModal();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json) => ({ totalCount: json.totalCount, data: json.weapons }),
+      path: "/admin/import/weapons",
+    },
+    initialData: data.weapons,
+    totalCount: data.totalCount,
+  });
 
   return (
     <AdminLayout
@@ -56,14 +63,19 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
         <Input
           className="w-full"
           placeholder="filter by plate, model, color, etc."
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
+          onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+          value={asyncTable.search.search}
         />
       </FormField>
 
+      {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+        <p className="italic text-base font-semibold">
+          Showing {asyncTable.pagination.totalCount} result(s)
+        </p>
+      ) : null}
+
       <Table
-        filter={search}
-        data={weapons.map((weapon) => ({
+        data={asyncTable.data.map((weapon) => ({
           model: weapon.model.value.value,
           registrationStatus: weapon.registrationStatus.value,
           serialNumber: weapon.serialNumber,
@@ -80,8 +92,8 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
       />
 
       <ImportModal
-        onImport={(vehicles) => {
-          setWeapons((p) => [...vehicles, ...p]);
+        onImport={(weapons) => {
+          asyncTable.setData((p) => [...weapons, ...p]);
         }}
         id={ModalIds.ImportWeapons}
         url="/admin/import/weapons"
@@ -90,7 +102,7 @@ export default function ImportWeaponsPage({ weapons: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [weapons, values] = await requestAll(req, [
     ["/admin/import/weapons", []],
@@ -100,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, req }) =>
   return {
     props: {
       values,
-      weapons,
+      data: weapons,
       session: user,
       messages: {
         ...(await getTranslations(

@@ -55,10 +55,11 @@ export function Nav({ maxWidth }: Props) {
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
             className="flex flex-col nav:hidden w-7"
+            aria-label="Toggle menu"
           >
-            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
-            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
-            <span className="my-0.5 rounded-md h-0.5 w-full bg-white " />
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-neutral-800 dark:bg-white " />
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-neutral-800 dark:bg-white " />
+            <span className="my-0.5 rounded-md h-0.5 w-full bg-neutral-800 dark:bg-white " />
           </button>
 
           <div className="relative flex items-center nav:space-x-7">

@@ -14,12 +14,13 @@ import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import { useTranslations } from "use-intl";
 import { FormRow } from "components/form/FormRow";
-import { useCitizen } from "context/CitizenContext";
 import { ImageSelectInput, validateFile } from "components/form/inputs/ImageSelectInput";
 import { CallSignPreview } from "components/leo/CallsignPreview";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
+import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   deputy: EmsFdDeputy | null;
@@ -34,9 +35,8 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS, SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
-  const { citizens } = useCitizen();
   const { state, execute } = useFetch();
   const { department, division } = useValues();
 
@@ -102,6 +102,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const validate = handleValidate(EMS_FD_DEPUTY_SCHEMA);
   const INITIAL_VALUES = {
     citizenId: deputy?.citizenId ?? "",
+    name: deputy ? `${deputy.citizen.name} ${deputy.citizen.surname}` : "",
     department: deputy?.departmentId ?? "",
     rank: deputy?.rankId ?? "",
     callsign: deputy?.callsign ?? "",
@@ -119,22 +120,41 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, errors, values, isValid }) => (
+        {({ handleChange, handleSubmit, setValues, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
             <ImageSelectInput image={image} setImage={setImage} />
 
             <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
-              <Select
-                isClearable
-                value={values.citizenId}
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens
-                  .filter((v) => v)
-                  .map((value) => ({
-                    label: `${value.name} ${value.surname}`,
-                    value: value.id,
-                  }))}
+              <InputSuggestions<NameSearchResult>
+                onSuggestionClick={(suggestion) => {
+                  setValues({
+                    ...values,
+                    citizenId: suggestion.id,
+                    name: `${suggestion.name} ${suggestion.surname}`,
+                  });
+                }}
+                Component={({ suggestion }) => (
+                  <div className="flex items-center">
+                    <p>
+                      {suggestion.name} {suggestion.surname}{" "}
+                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
+                        <>(SSN: {suggestion.socialSecurityNumber})</>
+                      ) : null}
+                    </p>
+                  </div>
+                )}
+                options={{
+                  apiPath: "/search/name?fromAuthUserOnly=true",
+                  method: "POST",
+                  dataKey: "name",
+                  allowUnknown: false,
+                }}
+                inputProps={{
+                  value: values.name,
+                  name: "name",
+                  onChange: handleChange,
+                  errorMessage: errors.citizenId,
+                }}
               />
             </FormField>
 

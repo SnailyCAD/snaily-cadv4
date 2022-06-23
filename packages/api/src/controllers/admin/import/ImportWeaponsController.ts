@@ -2,20 +2,43 @@ import { Controller } from "@tsed/di";
 import { Get, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { WEAPON_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/weapons";
-import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
+import type { Prisma } from "@prisma/client";
 
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
 @Controller("/admin/import/weapons")
 export class ImportWeaponsController {
   @Get("/")
-  async getWeapons() {
-    const weapons = await prisma.weapon.findMany({ include: weaponsInclude });
-    return weapons;
+  async getWeapons(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ) {
+    const where: Prisma.WeaponWhereInput | undefined = query
+      ? {
+          OR: [
+            { serialNumber: { contains: query, mode: "insensitive" } },
+            { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+          ],
+        }
+      : undefined;
+
+    const [totalCount, weapons] = await Promise.all([
+      prisma.weapon.count({ where }),
+      prisma.weapon.findMany({
+        include: weaponsInclude,
+        where,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+      }),
+    ]);
+
+    return { totalCount, weapons };
   }
 
   @Post("/")
