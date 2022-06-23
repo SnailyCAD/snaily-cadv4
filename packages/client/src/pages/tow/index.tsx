@@ -84,15 +84,11 @@ export default function Tow(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, citizens] = await requestAll(req, [
-    ["/tow", []],
-    ["/citizen", []],
-  ]);
+  const [data] = await requestAll(req, [["/tow", []]]);
 
   return {
     props: {
       calls: data,
-      citizens,
       session: user,
       messages: {
         ...(await getTranslations(["calls", "leo", "common"], user?.locale ?? locale)),

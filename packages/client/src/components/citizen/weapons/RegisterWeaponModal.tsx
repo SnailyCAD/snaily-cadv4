@@ -19,7 +19,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { filterLicenseTypes } from "lib/utils";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   weapon: Weapon | null;
@@ -32,7 +32,7 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const { pathname } = useRouter();
-  const { SOCIAL_SECURITY_NUMBERS, CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
+  const { CUSTOM_TEXTFIELD_VALUES } = useFeatureEnabled();
 
   const t = useTranslations("Citizen");
   const tVehicle = useTranslations("Vehicles");
@@ -144,37 +144,12 @@ export function RegisterWeaponModal({ weapon, onClose, onCreate, onUpdate }: Pro
             )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
-                  setValues({
-                    ...values,
-                    citizenId: suggestion.id,
-                    name: `${suggestion.name} ${suggestion.surname}`,
-                  });
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <p>
-                      {suggestion.name} {suggestion.surname}{" "}
-                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                        <>(SSN: {suggestion.socialSecurityNumber})</>
-                      ) : null}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: `/search/name${isLeo ? "" : "?fromAuthUserOnly=true"}`,
-                  method: "POST",
-                  dataKey: "name",
-                  allowUnknown: isLeo,
-                }}
-                inputProps={{
-                  value: values.name,
-                  name: "name",
-                  onChange: handleChange,
-                  disabled: isDisabled,
-                  errorMessage: errors.citizenId,
-                }}
+              <CitizenSuggestionsField
+                fromAuthUserOnly={!isLeo}
+                allowUnknown={isLeo}
+                labelFieldName="name"
+                valueFieldName="citizenId"
+                isDisabled={isDisabled}
               />
             </FormField>
 

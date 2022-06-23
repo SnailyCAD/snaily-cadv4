@@ -95,15 +95,14 @@ export default function BusinessPage(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, citizens] = await requestAll(req, [
+  const [data] = await requestAll(req, [
     ["/businesses", { businesses: [], joinableBusinesses: [] }],
-    ["/citizen", []],
   ]);
+
   return {
     props: {
       businesses: data.businesses,
       joinableBusinesses: data.joinableBusinesses,
-      citizens,
       session: user,
       messages: {
         ...(await getTranslations(["business", "common"], user?.locale ?? locale)),

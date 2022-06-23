@@ -9,15 +9,14 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { Citizen, Record, Warrant } from "@snailycad/types";
-import { useCitizen } from "context/CitizenContext";
 import { Select, SelectValue } from "components/form/Select";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 type Result = Citizen & { Record: Record[]; warrants: Warrant[] };
 
 export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }) {
   const { state, execute } = useFetch();
   const { closeModal, isOpen } = useModal();
-  const { citizens } = useCitizen();
 
   const [result, setResult] = React.useState<false | null | Result>(null);
 
@@ -45,6 +44,7 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
 
   const INITIAL_VALUES = {
     citizenId: "",
+    citizenName: "",
   };
 
   return (
@@ -56,18 +56,13 @@ export function RequestExpungement({ onSuccess }: { onSuccess(json: any): void }
     >
       <div>
         <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-          {({ handleChange, values, errors }) => (
+          {({ values, errors }) => (
             <Form className="flex items-center gap-2">
               <FormField className="w-full" errorMessage={errors.citizenId} label={leo("citizen")}>
-                <Select
-                  values={citizens.map((v) => ({
-                    value: v.id,
-                    label: `${v.name} ${v.surname}`,
-                  }))}
-                  value={values.citizenId}
-                  autoFocus
-                  name="citizenId"
-                  onChange={handleChange}
+                <CitizenSuggestionsField
+                  fromAuthUserOnly
+                  labelFieldName="citizenName"
+                  valueFieldName="citizenId"
                 />
               </FormField>
 
