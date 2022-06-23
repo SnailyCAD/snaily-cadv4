@@ -162,7 +162,7 @@ export function ManageRecordModal({
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form autoComplete="off">
-            <FormField errorMessage={errors.citizenName} label={t("citizen")}>
+            <FormField errorMessage={errors.citizenId} label={t("citizen")}>
               <InputSuggestions<Citizen>
                 inputProps={{
                   value: values.citizenName,

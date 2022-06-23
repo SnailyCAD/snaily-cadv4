@@ -18,7 +18,6 @@ const recordTypeRegex = /ARREST_REPORT|TICKET|WRITTEN_WARNING/;
 export const CREATE_TICKET_SCHEMA = z.object({
   type: z.string().min(2).max(255).regex(recordTypeRegex),
   citizenId: z.string().min(2).max(255),
-  citizenName: z.string().min(2).max(255),
   violations: z.array(VIOLATION).min(1),
   seizedItems: z.array(SEIZED_ITEM_SCHEMA).optional(),
   postal: z.string().min(1).max(255),
