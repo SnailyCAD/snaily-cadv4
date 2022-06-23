@@ -1469,6 +1469,7 @@ __metadata:
     cookie: ^0.5.0
     cookie-parser: 1.4.6
     cors: 2.8.5
+    cuid: ^2.1.8
     discord-api-types: 0.34.0
     esbuild: ^0.14.45
     esbuild-register: ^3.3.3
@@ -4318,6 +4319,13 @@ __metadata:
   version: 3.0.11
   resolution: "csstype@npm:3.0.11"
   checksum: 95e56abfe9ca219ae065acb4e43f61771a03170eed919127f558dfa168240867aba7629c8d98a201a0dd06d9a5ce82686f0570031c928516c61816adbc7c877f
+  languageName: node
+  linkType: hard
+
+"cuid@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "cuid@npm:2.1.8"
+  checksum: 12b85b3f5150a6f0b9e4f345c8d98299d74647419151751fa1132f6702fe2b5388ceceb1c9b49bad7cab1b3ac033c7cedea8ffc034930f90005b8a4345025288
   languageName: node
   linkType: hard
 
