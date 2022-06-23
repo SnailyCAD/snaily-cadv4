@@ -24,14 +24,13 @@ export class AccountController {
     @BodyParams() body: any,
   ) {
     if (body.enabled === false) {
-      user.apiTokenId &&
-        (await prisma.apiToken.delete({
-          where: {
-            id: user.apiTokenId,
-          },
-        }));
+      if (!user.apiTokenId) {
+        return { ...user, apiToken: null, apiTokenId: null };
+      }
 
-      return { enabled: false, token: "" };
+      await prisma.apiToken.delete({ where: { id: user.apiTokenId } });
+
+      return { ...user, apiToken: null, apiTokenId: null };
     }
 
     if (user.apiToken) {

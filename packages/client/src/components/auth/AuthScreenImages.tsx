@@ -13,6 +13,7 @@ export function AuthScreenImages() {
           draggable={false}
           className="fixed inset-0 z-0 h-screen w-screen object-cover"
           src={makeImageUrl("cad", authScreenBgImageId)}
+          loading="lazy"
         />
       ) : null}
 
@@ -21,6 +22,7 @@ export function AuthScreenImages() {
           className="z-10 mb-10 mt-10 rounded-md drop-shadow-lg object-cover"
           style={{ minWidth: 20, maxWidth: 400, maxHeight: 200, zIndex: 999 }}
           src={makeImageUrl("cad", authScreenHeaderImageId)}
+          loading="lazy"
         />
       ) : null}
     </>

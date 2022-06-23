@@ -34,13 +34,13 @@ export function ActiveBolos() {
 
   return (
     <div className="mt-3 overflow-hidden card">
-      <header className="p-2 px-4 bg-gray-300/50 dark:bg-gray-3">
+      <header className="p-2 px-4 bg-gray-200 dark:bg-gray-3">
         <h3 className="text-xl font-semibold">{t("activeBolos")}</h3>
       </header>
 
       <div className="px-4">
         {bolos.length <= 0 ? (
-          <p className="py-2">{t("noActiveBolos")}</p>
+          <p className="py-2 text-neutral-700 dark:text-gray-300">{t("noActiveBolos")}</p>
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {BOLO_TYPES.map((boloType) => {

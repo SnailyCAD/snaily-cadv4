@@ -62,7 +62,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">{t("yourVehicles")}</h1>
 
-          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} small>
+          <Button onClick={() => openModal(ModalIds.RegisterVehicle)} size="xs">
             {t("addVehicle")}
           </Button>
         </header>
@@ -92,7 +92,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                   <Button
                     disabled={vehicle.impounded}
                     onClick={() => handleTransferClick(vehicle)}
-                    small
+                    size="xs"
                   >
                     {t("transfer")}
                   </Button>
@@ -100,7 +100,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                   <Button
                     disabled={vehicle.impounded}
                     onClick={() => handleEditClick(vehicle)}
-                    small
+                    size="xs"
                     className="ml-2"
                   >
                     {common("edit")}
@@ -110,7 +110,7 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
                     disabled={vehicle.impounded}
                     className="ml-2"
                     onClick={() => handleDeleteClick(vehicle)}
-                    small
+                    size="xs"
                     variant="danger"
                   >
                     {common("delete")}
@@ -147,7 +147,6 @@ export function VehiclesCard(props: { vehicles: RegisteredVehicle[] }) {
           closeModal(ModalIds.RegisterVehicle);
         }}
         vehicle={tempVehicle}
-        citizens={[]}
         onClose={() => setTempVehicle(null)}
       />
 

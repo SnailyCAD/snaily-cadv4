@@ -130,30 +130,34 @@ export default function ManageCitizens(props: Props) {
 
                   <FormRow flexLike className="mt-5">
                     <FormField errorMessage={errors.isLeo} label="Leo Access">
-                      <Toggle name="isLeo" onClick={handleChange} toggled={values.isLeo} />
+                      <Toggle name="isLeo" onCheckedChange={handleChange} value={values.isLeo} />
                     </FormField>
                     <FormField errorMessage={errors.isSupervisor} label="LEO Supervisor">
                       <Toggle
                         name="isSupervisor"
-                        onClick={handleChange}
-                        toggled={values.isSupervisor}
+                        onCheckedChange={handleChange}
+                        value={values.isSupervisor}
                       />
                     </FormField>
                     <FormField errorMessage={errors.isDispatch} label="Dispatch Access">
                       <Toggle
                         name="isDispatch"
-                        onClick={handleChange}
-                        toggled={values.isDispatch}
+                        onCheckedChange={handleChange}
+                        value={values.isDispatch}
                       />
                     </FormField>
                     <FormField errorMessage={errors.isEmsFd} label="EMS-FD Access">
-                      <Toggle name="isEmsFd" onClick={handleChange} toggled={values.isEmsFd} />
+                      <Toggle
+                        name="isEmsFd"
+                        onCheckedChange={handleChange}
+                        value={values.isEmsFd}
+                      />
                     </FormField>
                     <FormField errorMessage={errors.isTow} label="Tow Access">
-                      <Toggle name="isTow" onClick={handleChange} toggled={values.isTow} />
+                      <Toggle name="isTow" onCheckedChange={handleChange} value={values.isTow} />
                     </FormField>
                     <FormField errorMessage={errors.isTaxi} label="Taxi Access">
-                      <Toggle name="isTaxi" onClick={handleChange} toggled={values.isTaxi} />
+                      <Toggle name="isTaxi" onCheckedChange={handleChange} value={values.isTaxi} />
                     </FormField>
                   </FormRow>
 

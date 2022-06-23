@@ -182,6 +182,11 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
         </div>
 
         <div className="flex gap-2">
+          {tableSelect.selectedRows.length <= 0 ? null : (
+            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
+              {t("deleteSelectedValues")}
+            </Button>
+          )}
           <Button onClick={() => openModal(ModalIds.ManageValue)}>{typeT("ADD")}</Button>
           <OptionsDropdown type={type} values={values} />
         </div>
@@ -194,54 +199,46 @@ export default function ValuePath({ pathValues: { type, values: data } }: Props)
       {values.length <= 0 ? (
         <p className="mt-5">There are no values yet for this type.</p>
       ) : (
-        <>
-          {tableSelect.selectedRows.length <= 0 ? null : (
-            <Button onClick={() => openModal(ModalIds.AlertDeleteSelectedValues)} variant="danger">
-              {t("deleteSelectedValues")}
-            </Button>
-          )}
-
-          <Table
-            disabledColumnId={["checkbox"]}
-            containerProps={{
-              style: { overflowY: "auto", maxHeight: "75vh" },
-            }}
-            dragDrop={{
-              enabled: true,
-              handleMove: setList,
-            }}
-            filter={search}
-            data={values.map((value) => ({
-              rowProps: { value },
-              checkbox: (
-                <Checkbox
-                  checked={tableSelect.selectedRows.includes(value.id)}
-                  onChange={() => tableSelect.handleCheckboxChange(value)}
-                />
-              ),
-              value: getValueStrFromValue(value),
-              ...extraTableData(value),
-              isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
-              createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
-              actions: (
-                <>
-                  <Button small onClick={() => handleEditClick(value)} variant="success">
-                    {common("edit")}
-                  </Button>
-                  <Button
-                    small
-                    onClick={() => handleDeleteClick(value)}
-                    variant="danger"
-                    className="ml-2"
-                  >
-                    {common("delete")}
-                  </Button>
-                </>
-              ),
-            }))}
-            columns={tableHeaders}
-          />
-        </>
+        <Table
+          disabledColumnId={["checkbox"]}
+          containerProps={{
+            style: { overflowY: "auto", maxHeight: "75vh" },
+          }}
+          dragDrop={{
+            enabled: true,
+            handleMove: setList,
+          }}
+          filter={search}
+          data={values.map((value) => ({
+            rowProps: { value },
+            checkbox: (
+              <Checkbox
+                checked={tableSelect.selectedRows.includes(value.id)}
+                onChange={() => tableSelect.handleCheckboxChange(value)}
+              />
+            ),
+            value: getValueStrFromValue(value),
+            ...extraTableData(value),
+            isDisabled: common(yesOrNoText(getDisabledFromValue(value))),
+            createdAt: <FullDate>{getCreatedAtFromValue(value)}</FullDate>,
+            actions: (
+              <>
+                <Button size="xs" onClick={() => handleEditClick(value)} variant="success">
+                  {common("edit")}
+                </Button>
+                <Button
+                  size="xs"
+                  onClick={() => handleDeleteClick(value)}
+                  variant="danger"
+                  className="ml-2"
+                >
+                  {common("delete")}
+                </Button>
+              </>
+            ),
+          }))}
+          columns={tableHeaders}
+        />
       )}
 
       <AlertModal

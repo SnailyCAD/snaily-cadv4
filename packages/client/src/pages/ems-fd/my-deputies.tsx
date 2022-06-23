@@ -99,14 +99,14 @@ export default function MyDeputies({ deputies: data }: Props) {
             position: deputy.position ?? common("none"),
             actions: (
               <>
-                <Button small onClick={() => handleEditClick(deputy)} variant="success">
+                <Button size="xs" onClick={() => handleEditClick(deputy)} variant="success">
                   {common("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(deputy)}
                   className="ml-2"
                   variant="danger"
-                  small
+                  size="xs"
                 >
                   {common("delete")}
                 </Button>
@@ -158,9 +158,8 @@ export default function MyDeputies({ deputies: data }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [{ deputies }, citizens, values] = await requestAll(req, [
+  const [{ deputies }, values] = await requestAll(req, [
     ["/ems-fd", { deputies: [] }],
-    ["/citizen", []],
     ["/admin/values/department?paths=division", []],
   ]);
 
@@ -169,7 +168,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
       session: user,
       deputies,
       values,
-      citizens,
       messages: {
         ...(await getTranslations(["ems-fd", "leo", "common"], user?.locale ?? locale)),
       },

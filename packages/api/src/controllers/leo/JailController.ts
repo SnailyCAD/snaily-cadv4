@@ -52,6 +52,7 @@ export class LeoController {
         include: citizenInclude,
         take: 35,
         skip,
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 

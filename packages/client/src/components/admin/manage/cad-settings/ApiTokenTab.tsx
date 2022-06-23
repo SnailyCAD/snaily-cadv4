@@ -93,7 +93,7 @@ export function ApiTokenTab() {
               }
               label={common("enabled")}
             >
-              <Toggle toggled={values.enabled} onClick={handleChange} name="enabled" />
+              <Toggle value={values.enabled} onCheckedChange={handleChange} name="enabled" />
             </SettingsFormField>
 
             <div className="flex">

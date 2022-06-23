@@ -92,12 +92,12 @@ export default function ManageCustomFields({ customFields: data }: Props) {
             category: field.category,
             actions: (
               <>
-                <Button small variant="success" onClick={() => handleEditClick(field)}>
+                <Button size="xs" variant="success" onClick={() => handleEditClick(field)}>
                   {common("edit")}
                 </Button>
                 <Button
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                   onClick={() => handleDeleteClick(field)}
                 >

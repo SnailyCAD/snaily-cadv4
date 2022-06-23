@@ -57,11 +57,11 @@ export function TonesModal() {
 
             <FormRow>
               <FormField errorMessage={errors.emsFdTone} label={t("emsFdTone")}>
-                <Toggle name="emsFdTone" onClick={handleChange} toggled={values.emsFdTone} />
+                <Toggle name="emsFdTone" onCheckedChange={handleChange} value={values.emsFdTone} />
               </FormField>
 
               <FormField errorMessage={errors.leoTone} label={t("leoTone")}>
-                <Toggle name="leoTone" onClick={handleChange} toggled={values.leoTone} />
+                <Toggle name="leoTone" onCheckedChange={handleChange} value={values.leoTone} />
               </FormField>
             </FormRow>
 

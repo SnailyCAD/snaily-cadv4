@@ -32,7 +32,7 @@ export function BoloColumn({ bolos, boloType, setTempBolo }: Props) {
 
       <ul className="py-2 space-y-2 overflow-auto max-h-[30em]">
         {bolos.length <= 0 ? (
-          <p>
+          <p className="text-neutral-700 dark:text-gray-300">
             {t.rich("noActiveBolosForType", {
               type: t(boloType.toLowerCase()),
             })}

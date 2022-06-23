@@ -84,7 +84,11 @@ export function AppearanceTab({ availableSounds }: Props) {
         {({ handleChange, values, errors }) => (
           <Form className="mt-3">
             <FormField checkbox errorMessage={errors.isDarkTheme} label={t("darkTheme")}>
-              <Toggle toggled={values.isDarkTheme} onClick={handleChange} name="isDarkTheme" />
+              <Toggle
+                value={values.isDarkTheme}
+                onCheckedChange={handleChange}
+                name="isDarkTheme"
+              />
             </FormField>
 
             <FormField errorMessage={errors.locale} label={t("locale")}>
@@ -134,8 +138,8 @@ export function AppearanceTab({ availableSounds }: Props) {
                   <div className="mb-3" key={fieldName}>
                     <FormField className="!mb-0" label={t(fieldName)} checkbox>
                       <Toggle
-                        toggled={values.soundSettings[fieldName]}
-                        onClick={handleChange}
+                        value={values.soundSettings[fieldName]}
+                        onCheckedChange={handleChange}
                         name={`soundSettings.${fieldName}`}
                         disabled={!soundAvailable}
                       />

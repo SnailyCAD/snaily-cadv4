@@ -121,7 +121,7 @@ export default function Jail({ data }: Props) {
                   disabled={released}
                   onClick={() => handleCheckoutClick(item, record.id)}
                   className="ml-2"
-                  small
+                  size="xs"
                 >
                   {t("release")}
                 </Button>
@@ -147,7 +147,7 @@ export default function Jail({ data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [jailData] = await requestAll(req, [["/leo/jail", []]]);
 

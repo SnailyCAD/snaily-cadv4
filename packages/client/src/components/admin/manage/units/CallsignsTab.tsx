@@ -59,7 +59,7 @@ export function CallsignsTab({ search, units }: Props) {
               callsign2: unit.callsign2,
               callsign: generateCallsign(unit),
               actions: (
-                <Button small onClick={() => handleManageClick(unit)}>
+                <Button size="xs" onClick={() => handleManageClick(unit)}>
                   {common("manage")}
                 </Button>
               ),

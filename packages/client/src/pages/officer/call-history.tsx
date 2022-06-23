@@ -151,7 +151,7 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                   call.description && !call.descriptionData ? (
                     call.description
                   ) : (
-                    <Button small onClick={() => handleViewDescription(call)}>
+                    <Button size="xs" onClick={() => handleViewDescription(call)}>
                       {common("viewDescription")}
                     </Button>
                   ),
@@ -161,11 +161,11 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
                 actions: (
                   <>
                     {hasManagePermissions ? (
-                      <Button onClick={() => handleLinkClick(call)} small>
+                      <Button onClick={() => handleLinkClick(call)} size="xs">
                         {leo("linkToIncident")}
                       </Button>
                     ) : null}
-                    <Button className="ml-2" onClick={() => handleViewClick(call)} small>
+                    <Button className="ml-2" onClick={() => handleViewClick(call)} size="xs">
                       {leo("viewCall")}
                     </Button>
                   </>

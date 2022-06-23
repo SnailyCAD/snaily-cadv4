@@ -84,7 +84,7 @@ export function VehiclesTab() {
                 <Button
                   disabled={vehicle.impounded}
                   onClick={() => handleManageClick(vehicle)}
-                  small
+                  size="xs"
                   variant="success"
                 >
                   {common("edit")}
@@ -93,7 +93,7 @@ export function VehiclesTab() {
                   disabled={vehicle.impounded}
                   className="ml-2"
                   onClick={() => handleDeleteClick(vehicle)}
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}
@@ -144,7 +144,6 @@ export function VehiclesTab() {
             }),
           });
         }}
-        citizens={[currentEmployee?.citizen]}
         vehicle={tempVehicle}
       />
     </TabsContent>

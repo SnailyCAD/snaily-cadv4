@@ -80,15 +80,11 @@ export default function Taxi(props: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [data, citizens] = await requestAll(req, [
-    ["/taxi", []],
-    ["/citizen", []],
-  ]);
+  const [data] = await requestAll(req, [["/taxi", []]]);
 
   return {
     props: {
       calls: data,
-      citizens,
       session: user,
       messages: {
         ...(await getTranslations(["calls", "leo", "common"], user?.locale ?? locale)),

@@ -2,15 +2,14 @@ import { Form, Formik, FormikHelpers } from "formik";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
-import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
 import { useModal } from "state/modalState";
 import useFetch from "lib/useFetch";
 import { ModalIds } from "types/ModalIds";
 import type { TaxiCall, TowCall } from "@snailycad/types";
-import { useCitizen } from "context/CitizenContext";
 import { useRouter } from "next/router";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   call: TowCall | TaxiCall | null;
@@ -23,12 +22,14 @@ export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
   const { isOpen, closeModal } = useModal();
   const common = useTranslations("Common");
   const t = useTranslations("Calls");
-  const { citizens } = useCitizen();
   const router = useRouter();
   const isTow = router.pathname === "/tow";
 
   const INITIAL_VALUES = {
     assignedUnitId: call?.assignedUnitId ?? "",
+    assignedUnitName: call?.assignedUnit
+      ? `${call.assignedUnit.name} ${call.assignedUnit.surname}`
+      : "",
   };
 
   async function onSubmit(
@@ -67,18 +68,13 @@ export function AssignToCallModal({ call, onClose, onSuccess }: Props) {
       className="w-[500px]"
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ values, errors, isValid, handleChange }) => (
+        {({ errors, isValid }) => (
           <Form>
             <FormField errorMessage={errors.assignedUnitId} label={t("selectCitizen")}>
-              <Select
-                isClearable
-                name="assignedUnitId"
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.assignedUnitId}
-                onChange={handleChange}
+              <CitizenSuggestionsField
+                labelFieldName="assignedUnitName"
+                valueFieldName="assignedUnitId"
+                fromAuthUserOnly
               />
             </FormField>
 

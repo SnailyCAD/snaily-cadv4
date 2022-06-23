@@ -85,7 +85,7 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
             actions: (
               <>
                 <Button
-                  small
+                  size="xs"
                   onClick={() => handleAcceptOrDecline(user, "accept")}
                   className="mr-2"
                   variant="success"
@@ -94,7 +94,7 @@ export function PendingUsersTab({ users, pendingCount }: Props) {
                   {common("accept")}
                 </Button>
                 <Button
-                  small
+                  size="xs"
                   onClick={() => handleAcceptOrDecline(user, "decline")}
                   variant="danger"
                   disabled={state === "loading"}

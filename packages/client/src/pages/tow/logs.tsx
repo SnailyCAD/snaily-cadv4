@@ -76,7 +76,7 @@ export default function TowLogs(props: Props) {
               call.description && !call.descriptionData ? (
                 call.description
               ) : (
-                <Button small onClick={() => handleViewDescription(call)}>
+                <Button size="xs" onClick={() => handleViewDescription(call)}>
                   {common("viewDescription")}
                 </Button>
               ),

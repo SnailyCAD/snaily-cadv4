@@ -231,13 +231,13 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                 ),
                 actions: (
                   <>
-                    <Button onClick={() => handleEditClick(code)} small variant="success">
+                    <Button onClick={() => handleEditClick(code)} size="xs" variant="success">
                       {common("edit")}
                     </Button>
                     <Button
                       className="ml-2"
                       onClick={() => handleDeleteClick(code)}
-                      small
+                      size="xs"
                       variant="danger"
                     >
                       {common("delete")}
@@ -265,7 +265,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
             value: group.name,
             actions: (
               <>
-                <Button onClick={() => setCurrentGroup(group)} small>
+                <Button onClick={() => setCurrentGroup(group)} size="xs">
                   {common("view")}
                 </Button>
                 {group.id !== "ungrouped" ? (
@@ -273,7 +273,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     <Button
                       className="ml-2"
                       onClick={() => handleEditGroup(group)}
-                      small
+                      size="xs"
                       variant="success"
                       disabled={group.id === "ungrouped"}
                     >
@@ -282,7 +282,7 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
                     <Button
                       className="ml-2"
                       onClick={() => handleDeleteGroupClick(group)}
-                      small
+                      size="xs"
                       variant="danger"
                       disabled={group.id === "ungrouped"}
                     >

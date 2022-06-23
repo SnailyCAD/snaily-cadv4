@@ -2,12 +2,17 @@ import { Controller } from "@tsed/di";
 import { Get, Post } from "@tsed/schema";
 import { prisma } from "lib/prisma";
 import { VEHICLE_SCHEMA_ARR } from "@snailycad/schemas/dist/admin/import/vehicles";
-import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
 import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import type { RegisteredVehicle, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
+import type {
+  Prisma,
+  RegisteredVehicle,
+  VehicleInspectionStatus,
+  VehicleTaxStatus,
+} from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 
 const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
@@ -15,14 +20,38 @@ const vehiclesInclude = { ...citizenInclude.vehicles.include, citizen: true };
 @Controller("/admin/import/vehicles")
 export class ImportVehiclesController {
   @Get()
-  async getVehicles() {
-    const vehicles = await prisma.registeredVehicle.findMany({ include: vehiclesInclude });
-    return vehicles;
+  async getVehicles(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+    @QueryParams("includeAll", Boolean) includeAll = false,
+  ) {
+    const where: Prisma.RegisteredVehicleWhereInput | undefined = query
+      ? {
+          OR: [
+            { plate: { contains: query, mode: "insensitive" } },
+            { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+            { color: { contains: query, mode: "insensitive" } },
+            { vinNumber: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : undefined;
+
+    const [totalCount, vehicles] = await Promise.all([
+      prisma.registeredVehicle.count({ where }),
+      prisma.registeredVehicle.findMany({
+        include: vehiclesInclude,
+        take: includeAll ? undefined : 35,
+        skip: includeAll ? undefined : skip,
+        where,
+      }),
+    ]);
+
+    return { totalCount, vehicles };
   }
 
   @Post("/")
   async importVehicles(
-    @BodyParams() body: unknown,
+    @BodyParams() body?: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
   ) {
     const toValidateBody = file ? parseImportFile(file) : body;

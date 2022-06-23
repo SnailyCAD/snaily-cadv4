@@ -17,6 +17,7 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { Socket } from "services/SocketService";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { manyToManyHelper } from "utils/manyToMany";
+import { isCuid } from "cuid";
 
 const ACTIONS = ["SET_DEPARTMENT_DEFAULT", "SET_DEPARTMENT_NULL", "DELETE_UNIT"] as const;
 type Action = typeof ACTIONS[number];
@@ -72,7 +73,7 @@ export class AdminManageUnitsController {
       qualifications: { include: { qualification: { include: { value: true } } } },
     };
 
-    const isUnitId = id.startsWith("cl");
+    const isUnitId = isCuid(id);
     const functionName = isUnitId ? "findFirst" : "findMany";
 
     // @ts-expect-error same function properties
@@ -83,7 +84,7 @@ export class AdminManageUnitsController {
       include: { ...leoProperties, ...extraInclude, logs: true },
     });
 
-    if (!unit) {
+    if (Array.isArray(unit) ? !unit.length : !unit) {
       // @ts-expect-error same function properties
       unit = await prisma.emsFdDeputy[functionName]({
         where: {
@@ -93,7 +94,7 @@ export class AdminManageUnitsController {
       });
     }
 
-    if (!unit) {
+    if (Array.isArray(unit) ? !unit.length : !unit) {
       unit = await prisma.combinedLeoUnit.findUnique({
         where: { id },
         include: combinedUnitProperties,

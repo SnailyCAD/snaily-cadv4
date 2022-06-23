@@ -12,7 +12,6 @@ import { useValues } from "src/context/ValuesContext";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
 import {
-  Citizen,
   RegisteredVehicle,
   ValueLicenseType,
   VehicleValue,
@@ -31,24 +30,16 @@ import { FormRow } from "components/form/FormRow";
 import { useVehicleLicenses } from "hooks/locale/useVehicleLicenses";
 import { toastMessage } from "lib/toastMessage";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { NameSearchResult } from "state/search/nameSearchState";
-import { useImageUrl } from "hooks/useImageUrl";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   vehicle: RegisteredVehicle | null;
-  citizens: Pick<Citizen, "name" | "surname" | "id">[];
   onCreate?(newV: RegisteredVehicle): void;
   onUpdate?(old: RegisteredVehicle, newV: RegisteredVehicle): void;
   onClose?(): void;
 }
 
-export function RegisterVehicleModal({
-  citizens = [],
-  vehicle,
-  onClose,
-  onCreate,
-  onUpdate,
-}: Props) {
+export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: Props) {
   const { state, execute } = useFetch();
   const { isOpen, closeModal } = useModal();
   const t = useTranslations("Citizen");
@@ -66,9 +57,6 @@ export function RegisterVehicleModal({
   const isDisabled = router.pathname === "/citizen/[id]";
   const maxPlateLength = cad?.miscCadSettings?.maxPlateLength ?? 8;
   const isLeo = router.pathname.includes("/officer");
-
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
-  const { makeImageUrl } = useImageUrl();
 
   function handleClose() {
     closeModal(ModalIds.RegisterVehicle);
@@ -206,60 +194,13 @@ export function RegisterVehicleModal({
             )}
 
             <FormField errorMessage={errors.citizenId} label={tVehicle("owner")}>
-              {isLeo ? (
-                <InputSuggestions<NameSearchResult>
-                  onSuggestionClick={(suggestion) => {
-                    setValues({
-                      ...values,
-                      citizenId: suggestion.id,
-                      name: `${suggestion.name} ${suggestion.surname}`,
-                    });
-                  }}
-                  Component={({ suggestion }) => (
-                    <div className="flex items-center">
-                      {suggestion.imageId ? (
-                        <img
-                          className="rounded-md w-[30px] h-[30px] object-cover mr-2"
-                          draggable={false}
-                          src={makeImageUrl("citizens", suggestion.imageId)}
-                        />
-                      ) : null}
-                      <p>
-                        {suggestion.name} {suggestion.surname}{" "}
-                        {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                          <>(SSN: {suggestion.socialSecurityNumber})</>
-                        ) : null}
-                      </p>
-                    </div>
-                  )}
-                  options={{
-                    apiPath: "/search/name",
-                    method: "POST",
-                    dataKey: "name",
-                    allowUnknown: true,
-                  }}
-                  inputProps={{
-                    value: values.name,
-                    name: "name",
-                    onChange: handleChange,
-                  }}
-                />
-              ) : (
-                <Select
-                  values={
-                    isDisabled
-                      ? [{ value: citizen.id, label: `${citizen.name} ${citizen.surname}` }]
-                      : citizens.map((citizen) => ({
-                          label: `${citizen.name} ${citizen.surname}`,
-                          value: citizen.id,
-                        }))
-                  }
-                  value={isDisabled ? citizen.id : values.citizenId}
-                  name="citizenId"
-                  onChange={handleChange}
-                  disabled={isDisabled}
-                />
-              )}
+              <CitizenSuggestionsField
+                fromAuthUserOnly={!isLeo}
+                allowUnknown={isLeo}
+                labelFieldName="name"
+                valueFieldName="citizenId"
+                isDisabled={isDisabled}
+              />
             </FormField>
 
             <FormRow>
@@ -330,18 +271,18 @@ export function RegisterVehicleModal({
               <FormRow>
                 <FormField errorMessage={errors.reportedStolen} label={tVehicle("reportAsStolen")}>
                   <Toggle
-                    onClick={handleChange}
+                    onCheckedChange={handleChange}
                     name="reportedStolen"
-                    toggled={values.reportedStolen}
+                    value={values.reportedStolen}
                   />
                 </FormField>
 
                 <FormField errorMessage={errors.reApplyForDmv} label={tVehicle("reApplyForDmv")}>
                   <Toggle
                     disabled={vehicle.dmvStatus !== WhitelistStatus.DECLINED}
-                    onClick={handleChange}
+                    onCheckedChange={handleChange}
                     name="reApplyForDmv"
-                    toggled={values.reApplyForDmv ?? false}
+                    value={values.reApplyForDmv ?? false}
                   />
                 </FormField>
               </FormRow>

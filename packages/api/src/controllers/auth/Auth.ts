@@ -42,15 +42,15 @@ export class AuthController {
     }
 
     if (user.whitelistStatus === WhitelistStatus.PENDING) {
-      throw new BadRequest("whitelistPending");
+      throw new ExtendedBadRequest({ username: "whitelistPending" });
     }
 
     if (user.whitelistStatus === WhitelistStatus.DECLINED) {
-      throw new BadRequest("whitelistDeclined");
+      throw new ExtendedBadRequest({ username: "whitelistDeclined" });
     }
 
     if (user.banned) {
-      throw new BadRequest("userBanned");
+      throw new ExtendedBadRequest({ username: "userBanned" });
     }
 
     // only allow Discord auth (if enabled)

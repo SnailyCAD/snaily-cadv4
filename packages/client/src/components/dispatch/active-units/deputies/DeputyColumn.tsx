@@ -52,6 +52,9 @@ export function DeputyColumn({ deputy, isDispatch, nameAndCallsign }: Props) {
                     className="rounded-md w-[30px] h-[30px] object-cover mr-2"
                     draggable={false}
                     src={makeImageUrl("units", deputy.imageId)}
+                    loading="lazy"
+                    width={30}
+                    height={30}
                   />
                 ) : null}
                 {nameAndCallsign}

@@ -105,7 +105,7 @@ export function NameSearchWarrantsTab() {
                       <Button
                         type="button"
                         onClick={() => handleDeleteClick(warrant)}
-                        small
+                        size="xs"
                         variant="danger"
                       >
                         {t("Leo.revoke")}

@@ -132,7 +132,7 @@ export class RecordsController {
       },
     });
 
-    if (!citizen || `${citizen.name} ${citizen.surname}` !== data.citizenName) {
+    if (!citizen) {
       throw new ExtendedNotFound({ citizenId: "citizenNotFound" });
     }
 

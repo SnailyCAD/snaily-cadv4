@@ -101,7 +101,7 @@ export function WeaponSearchModal({ id = ModalIds.WeaponSearch }: Props) {
                     <Infofield className="capitalize" label={t("owner")}>
                       <Button
                         title={common("openInSearch")}
-                        small
+                        size="xs"
                         type="button"
                         onClick={handleNameClick}
                       >

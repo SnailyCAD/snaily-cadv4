@@ -75,13 +75,13 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
             notes: log.notes ?? common("none"),
             actions: (
               <>
-                <Button onClick={() => handleEditClick(log)} small variant="success">
+                <Button onClick={() => handleEditClick(log)} size="xs" variant="success">
                   {common("edit")}
                 </Button>
                 <Button
                   onClick={() => handleDeleteClick(log)}
                   className="ml-2"
-                  small
+                  size="xs"
                   variant="danger"
                 >
                   {common("delete")}
@@ -130,16 +130,14 @@ export default function TruckLogs({ registeredVehicles, truckLogs }: Props) {
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
   const user = await getSessionUser(req);
-  const [{ logs, registeredVehicles }, citizens] = await requestAll(req, [
+  const [{ logs, registeredVehicles }] = await requestAll(req, [
     ["/truck-logs", { logs: [], registeredVehicles: [] }],
-    ["/citizen", []],
   ]);
 
   return {
     props: {
       truckLogs: logs,
       registeredVehicles,
-      citizens,
       session: user,
       messages: {
         ...(await getTranslations(["truck-logs", "common"], user?.locale ?? locale)),

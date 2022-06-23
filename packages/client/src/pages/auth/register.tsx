@@ -20,6 +20,7 @@ import { AuthScreenImages } from "components/auth/AuthScreenImages";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { LocalhostDetector } from "components/auth/LocalhostDetector";
 import { parseCookies } from "nookies";
+import { VersionDisplay } from "components/shared/VersionDisplay";
 
 const INITIAL_VALUES = {
   username: "",
@@ -96,9 +97,22 @@ export default function Register({ cad }: Props) {
         <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
           {({ handleChange, errors, isValid }) => (
             <Form className="w-full max-w-md p-6 bg-gray-100 rounded-lg shadow-md dark:bg-gray-2 z-10">
-              <h1 className="mb-3 text-2xl font-semibold text-gray-800 dark:text-white">
-                {t("register")}
-              </h1>
+              <header className="mb-3">
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                  {t("register")}
+                </h1>
+
+                {ALLOW_REGULAR_LOGIN ? (
+                  <Link href="/auth/login">
+                    <a
+                      href="/auth/login"
+                      className="inline-block mt-2 underline text-neutral-700 dark:text-gray-200"
+                    >
+                      {t("hasAccount")}
+                    </a>
+                  </Link>
+                ) : null}
+              </header>
 
               <FormField errorMessage={errors.username} label={t("username")}>
                 <Input type="text" name="username" onChange={handleChange} />
@@ -118,29 +132,17 @@ export default function Register({ cad }: Props) {
                 </FormField>
               ) : null}
 
-              <div className="mt-3">
-                <Link href="/auth/login">
-                  <a href="/auth/login" className="inline-block mb-3 underline dark:text-white">
-                    {t("hasAccount")}
-                  </a>
-                </Link>
-
-                <Button
-                  disabled={!isValid || state === "loading"}
-                  type="submit"
-                  className="flex items-center justify-center w-full py-1.5"
-                >
-                  {state === "loading" ? <Loader className="mr-3" /> : null} {t("register")}
-                </Button>
-              </div>
+              <Button
+                disabled={!isValid || state === "loading"}
+                type="submit"
+                className="flex items-center justify-center w-full py-1.5 mt-5"
+              >
+                {state === "loading" ? <Loader className="mr-3" /> : null} {t("register")}
+              </Button>
             </Form>
           )}
         </Formik>
-        {cad.version ? (
-          <p className="text-gray-900 dark:text-gray-200 block mt-3 z-50 text-base">
-            v{cad.version.currentVersion} - {cad.version.currentCommitHash}
-          </p>
-        ) : null}
+        <VersionDisplay cad={cad} />
       </main>
     </>
   );

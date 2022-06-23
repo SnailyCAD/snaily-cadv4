@@ -197,7 +197,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ req, local
     activeDeputies,
   ] = await requestAll(req, [
     ["/leo/active-officer", null],
-    ["/leo", [{ officers: [] }]],
+    ["/leo", { officers: [] }],
     ["/admin/values/codes_10", []],
     ["/911-calls", []],
     ["/bolos", []],
