@@ -14,6 +14,7 @@ export const defaultLeoPermissions = [
   Permissions.ManageDLExams,
   Permissions.ManageDMV,
   Permissions.DeleteCitizenRecords,
+  Permissions.ViewCitizenLogs,
 ];
 
 export const defaultDispatchPermissions = [Permissions.Dispatch, Permissions.LiveMap];
