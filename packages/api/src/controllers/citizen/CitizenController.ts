@@ -91,7 +91,8 @@ export class CitizenController {
           name: { contains: surname, mode: "insensitive" },
           surname: { contains: name, mode: "insensitive" },
         },
-        { socialSecurityNumber: name },
+        { socialSecurityNumber: { contains: name, mode: "insensitive" } },
+        { phoneNumber: { contains: name, mode: "insensitive" } },
       ],
     };
 
