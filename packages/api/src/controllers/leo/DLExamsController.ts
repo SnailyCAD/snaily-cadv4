@@ -1,6 +1,12 @@
-import { DLExam, DLExamPassType, DLExamStatus, DriversLicenseCategoryValue } from "@prisma/client";
+import {
+  DLExam,
+  DLExamPassType,
+  DLExamStatus,
+  DriversLicenseCategoryValue,
+  Prisma,
+} from "@prisma/client";
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Controller, BodyParams, PathParams } from "@tsed/common";
+import { UseBeforeEach, Controller, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { NotFound } from "@tsed/exceptions";
 import { Delete, Get, Post, Put } from "@tsed/schema";
 import { prisma } from "lib/prisma";
@@ -23,12 +29,32 @@ export class DLExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ViewDLExams, Permissions.ManageDLExams],
   })
-  getAllDLExams() {
-    const exams = prisma.dLExam.findMany({
-      include: dlExamIncludes,
-    });
+  async getAllDLExams(
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query = "",
+  ) {
+    const where: Prisma.DLExamWhereInput | undefined = query
+      ? {
+          OR: [
+            { license: { value: { contains: query, mode: "insensitive" } } },
+            { citizen: { name: { contains: query, mode: "insensitive" } } },
+            { citizen: { surname: { contains: query, mode: "insensitive" } } },
+          ],
+        }
+      : undefined;
 
-    return exams;
+    const [exams, totalCount] = await Promise.all([
+      prisma.dLExam.findMany({
+        include: dlExamIncludes,
+        orderBy: { createdAt: "desc" },
+        where,
+        skip,
+        take: 35,
+      }),
+      prisma.dLExam.count({ where }),
+    ]);
+
+    return { exams, totalCount };
   }
 
   @Post("/")

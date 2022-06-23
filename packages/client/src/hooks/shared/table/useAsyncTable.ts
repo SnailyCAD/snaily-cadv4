@@ -24,14 +24,14 @@ export function useAsyncTable<T>(options: Options<T>) {
 
   const paginationFetch = React.useCallback(
     async ({ pageSize, pageIndex }: Omit<FetchOptions, "path" | "onResponse">) => {
-      const { json } = await execute(options.fetchOptions.path, {
+      const { json, error } = await execute(options.fetchOptions.path, {
         params: {
           skip: pageSize * pageIndex,
           query: search.trim() || undefined,
         },
       });
 
-      if (json) {
+      if (json && !error) {
         const jsonData = options.fetchOptions.onResponse(json);
         setData(jsonData.data);
         setTotalCount(jsonData.totalCount);
@@ -43,13 +43,15 @@ export function useAsyncTable<T>(options: Options<T>) {
   );
 
   const handleSearch = React.useCallback(async () => {
-    const { json } = await execute(options.fetchOptions.path, {
+    const { json, error } = await execute(options.fetchOptions.path, {
       params: { query: search.trim() },
     });
 
-    const jsonData = options.fetchOptions.onResponse(json);
-    setData(jsonData.data);
-    setTotalCount(jsonData.totalCount);
+    if (json && !error) {
+      const jsonData = options.fetchOptions.onResponse(json);
+      setData(jsonData.data);
+      setTotalCount(jsonData.totalCount);
+    }
   }, [search]); // eslint-disable-line
 
   useDebounce(handleSearch, 250, [search, handleSearch]);

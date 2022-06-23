@@ -34,7 +34,7 @@ export function OptionsDropdown({ type, values }: Props) {
       className="dropdown-right"
       trigger={
         <Button className="flex items-center justify-center w-8 h-8">
-          <ThreeDots width={15} height={15} className="text-gray-300" />
+          <ThreeDots width={15} height={15} className="text-neutral-800" />
         </Button>
       }
     >

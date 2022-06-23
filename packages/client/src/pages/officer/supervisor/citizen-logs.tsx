@@ -35,7 +35,10 @@ export default function CitizenLogs({ logs }: Props) {
 
   return (
     <Layout
-      permissions={{ fallback: (u) => u.isLeo, permissions: [Permissions.ViewCitizenLogs] }}
+      permissions={{
+        fallback: (u) => u.isLeo,
+        permissions: [Permissions.ViewCitizenLogs, Permissions.DeleteCitizenRecords],
+      }}
       className="dark:text-white"
     >
       <Title>{t("citizenLogs")}</Title>

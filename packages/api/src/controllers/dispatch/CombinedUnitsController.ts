@@ -142,5 +142,7 @@ export class CombinedUnitsController {
     });
 
     await this.socket.emitUpdateOfficerStatus();
+
+    return true;
   }
 }

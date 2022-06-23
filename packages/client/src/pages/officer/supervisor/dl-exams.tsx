@@ -20,14 +20,13 @@ import { ModalIds } from "types/ModalIds";
 import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
 
 interface Props {
-  exams: DLExam[];
+  data: { exams: DLExam[]; totalCount: number };
 }
 
-export default function CitizenLogs({ exams: data }: Props) {
-  const [exams, setExams] = React.useState(data);
-  const [search, setSearch] = React.useState("");
+export default function CitizenLogs({ data }: Props) {
   const [tempExam, setTempExam] = React.useState<DLExam | null>(null);
 
   const { hasPermissions } = usePermission();
@@ -36,6 +35,15 @@ export default function CitizenLogs({ exams: data }: Props) {
   const common = useTranslations("Common");
   const cT = useTranslations("Vehicles");
   const { state, execute } = useFetch();
+
+  const asyncTable = useAsyncTable({
+    fetchOptions: {
+      onResponse: (json) => ({ data: json.exams, totalCount: json.totalCount }),
+      path: "/leo/dl-exams",
+    },
+    totalCount: data.totalCount,
+    initialData: data.exams,
+  });
 
   const PASS_FAIL_LABELS = {
     PASSED: cT("passed"),
@@ -51,7 +59,7 @@ export default function CitizenLogs({ exams: data }: Props) {
 
     if (typeof json === "boolean") {
       closeModal(ModalIds.AlertDeleteDLExam);
-      setExams((p) => p.filter((v) => v.id !== tempExam.id));
+      asyncTable.setData((p) => p.filter((v) => v.id !== tempExam.id));
       setTempExam(null);
     }
   }
@@ -84,21 +92,30 @@ export default function CitizenLogs({ exams: data }: Props) {
         ) : null}
       </header>
 
-      {exams.length <= 0 ? (
+      {data.exams.length <= 0 ? (
         <p className="mt-5">{t("noDLExams")}</p>
       ) : (
         <>
           <FormField label={common("search")} className="my-2">
-            <Input onChange={(e) => setSearch(e.target.value)} value={search} />
+            <Input
+              onChange={(e) => asyncTable.search.setSearch(e.target.value)}
+              value={asyncTable.search.search}
+            />
           </FormField>
 
+          {asyncTable.search.search && asyncTable.pagination.totalCount !== data.totalCount ? (
+            <p className="italic text-base font-semibold">
+              Showing {asyncTable.pagination.totalCount} result(s)
+            </p>
+          ) : null}
+
           <Table
-            filter={search}
-            defaultSort={{
-              columnId: "createdAt",
-              descending: true,
+            pagination={{
+              enabled: true,
+              totalCount: asyncTable.pagination.totalCount,
+              fetchData: asyncTable.pagination,
             }}
-            data={exams.map((exam) => {
+            data={asyncTable.data.map((exam) => {
               const hasPassedOrFailed = exam.status !== DLExamStatus.IN_PROGRESS;
               return {
                 rowProps: {
@@ -166,10 +183,10 @@ export default function CitizenLogs({ exams: data }: Props) {
       <ManageDLExamModal
         onClose={() => setTempExam(null)}
         onCreate={(exam) => {
-          setExams((p) => [exam, ...p]);
+          asyncTable.setData((p) => [exam, ...p]);
         }}
         onUpdate={(oldExam, newExam) => {
-          setExams((prev) => {
+          asyncTable.setData((prev) => {
             const idx = prev.findIndex((v) => v.id === oldExam.id);
             prev[idx] = newExam;
 
@@ -183,7 +200,7 @@ export default function CitizenLogs({ exams: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locale }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
     ["/leo/dl-exams", []],
@@ -194,7 +211,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locale }) =>
     props: {
       values,
       session: user,
-      exams,
+      data: exams,
       messages: {
         ...(await getTranslations(["leo", "citizen", "common"], user?.locale ?? locale)),
       },

@@ -19,6 +19,7 @@ import {
   type AcceptDeclineType,
 } from "controllers/admin/manage/AdminManageUnitsController";
 import { AuditLogActionType, createAuditLogEntry } from "@snailycad/audit-logger/server";
+import { isCuid } from "cuid";
 
 const recordsInclude = {
   officer: { include: leoProperties },
@@ -107,9 +108,9 @@ export class AdminManageCitizensController {
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
   async getCitizen(@PathParams("id") id: string) {
-    const isCitizenId = id.startsWith("cl");
-
+    const isCitizenId = isCuid(id);
     const functionName = isCitizenId ? "findFirst" : "findMany";
+
     // @ts-expect-error same properties
     const citizen = await prisma.citizen[functionName]({
       include: citizenInclude,
