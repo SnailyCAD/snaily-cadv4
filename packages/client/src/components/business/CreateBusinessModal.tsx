@@ -16,9 +16,7 @@ import type { FullEmployee } from "state/businessState";
 import { FormRow } from "components/form/FormRow";
 import { toastMessage } from "lib/toastMessage";
 import { Business, WhitelistStatus } from "@snailycad/types";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { NameSearchResult } from "state/search/nameSearchState";
-import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   onCreate?(employee: FullEmployee & { business: Business }): void;
@@ -31,7 +29,6 @@ export function CreateBusinessModal({ onCreate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Business");
   const error = useTranslations("Errors");
-  const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
 
   function handleClose() {
     closeModal(ModalIds.CreateBusiness);
@@ -73,39 +70,13 @@ export function CreateBusinessModal({ onCreate }: Props) {
       onClose={handleClose}
     >
       <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ handleChange, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.ownerId} label={t("citizen")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
-                  setValues({
-                    ...values,
-                    ownerId: suggestion.id,
-                    ownerName: `${suggestion.name} ${suggestion.surname}`,
-                  });
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <p>
-                      {suggestion.name} {suggestion.surname}{" "}
-                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                        <>(SSN: {suggestion.socialSecurityNumber})</>
-                      ) : null}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/name?fromAuthUserOnly=true",
-                  method: "POST",
-                  dataKey: "name",
-                  allowUnknown: false,
-                }}
-                inputProps={{
-                  value: values.ownerName,
-                  name: "ownerName",
-                  onChange: handleChange,
-                  errorMessage: errors.ownerId,
-                }}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="ownerName"
+                valueFieldName="ownerId"
               />
             </FormField>
 

@@ -19,8 +19,7 @@ import { CallSignPreview } from "components/leo/CallsignPreview";
 import type { EmsFdDeputy } from "@snailycad/types";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { UnitQualificationsTable } from "components/leo/qualifications/UnitQualificationsTable";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
-import type { NameSearchResult } from "state/search/nameSearchState";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   deputy: EmsFdDeputy | null;
@@ -35,7 +34,7 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
   const common = useTranslations("Common");
   const t = useTranslations();
   const formRef = React.useRef<HTMLFormElement>(null);
-  const { BADGE_NUMBERS, SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
+  const { BADGE_NUMBERS } = useFeatureEnabled();
 
   const { state, execute } = useFetch();
   const { department, division } = useValues();
@@ -120,41 +119,15 @@ export function ManageDeputyModal({ deputy, onClose, onUpdate, onCreate }: Props
       className="w-[600px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, handleSubmit, setValues, errors, values, isValid }) => (
+        {({ handleChange, handleSubmit, errors, values, isValid }) => (
           <form ref={formRef} onSubmit={handleSubmit}>
             <ImageSelectInput image={image} setImage={setImage} />
 
             <FormField errorMessage={errors.citizenId} label={t("Leo.citizen")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
-                  setValues({
-                    ...values,
-                    citizenId: suggestion.id,
-                    name: `${suggestion.name} ${suggestion.surname}`,
-                  });
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <p>
-                      {suggestion.name} {suggestion.surname}{" "}
-                      {SOCIAL_SECURITY_NUMBERS && suggestion.socialSecurityNumber ? (
-                        <>(SSN: {suggestion.socialSecurityNumber})</>
-                      ) : null}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/name?fromAuthUserOnly=true",
-                  method: "POST",
-                  dataKey: "name",
-                  allowUnknown: false,
-                }}
-                inputProps={{
-                  value: values.name,
-                  name: "name",
-                  onChange: handleChange,
-                  errorMessage: errors.citizenId,
-                }}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="name"
+                valueFieldName="citizenId"
               />
             </FormField>
 

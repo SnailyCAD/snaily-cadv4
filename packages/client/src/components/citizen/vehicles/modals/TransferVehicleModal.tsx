@@ -7,14 +7,13 @@ import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "use-intl";
-import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { Input } from "components/form/inputs/Input";
 import type { RegisteredVehicle } from "@snailycad/types";
 import { FormRow } from "components/form/FormRow";
-import type { NameSearchResult } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
 import { handleValidate } from "lib/handleValidate";
 import { TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   vehicle: RegisteredVehicle;
@@ -53,7 +52,7 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
       className="w-[750px]"
     >
       <Formik validate={validate} initialValues={INITIAL_VALUES} onSubmit={onSubmit}>
-        {({ handleChange, setValues, errors, values, isValid }) => (
+        {({ errors, isValid }) => (
           <Form>
             <p className="my-2 mb-5">
               {t.rich("transferVehicleInfo", {
@@ -73,33 +72,10 @@ export function TransferVehicleModal({ onTransfer, vehicle }: Props) {
             </FormRow>
 
             <FormField errorMessage={errors.ownerId} label={t("owner")}>
-              <InputSuggestions<NameSearchResult>
-                onSuggestionClick={(suggestion) => {
-                  setValues({
-                    ...values,
-                    ownerId: suggestion.id,
-                    name: `${suggestion.name} ${suggestion.surname}`,
-                  });
-                }}
-                Component={({ suggestion }) => (
-                  <div className="flex items-center">
-                    <p>
-                      {suggestion.name} {suggestion.surname}
-                    </p>
-                  </div>
-                )}
-                options={{
-                  apiPath: "/search/name",
-                  method: "POST",
-                  dataKey: "name",
-                  allowUnknown: false,
-                }}
-                inputProps={{
-                  value: values.name,
-                  name: "name",
-                  onChange: handleChange,
-                  errorMessage: errors.ownerId,
-                }}
+              <CitizenSuggestionsField
+                fromAuthUserOnly={false}
+                labelFieldName="name"
+                valueFieldName="ownerId"
               />
             </FormField>
 

@@ -6,7 +6,6 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { Loader } from "components/Loader";
 import { Modal } from "components/modal/Modal";
-import { useCitizen } from "context/CitizenContext";
 import { useModal } from "state/modalState";
 import { Form, Formik } from "formik";
 import { handleValidate } from "lib/handleValidate";
@@ -15,6 +14,7 @@ import { ModalIds } from "types/ModalIds";
 import type { RegisteredVehicle, TruckLog } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { Textarea } from "components/form/Textarea";
+import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
 
 interface Props {
   log: TruckLog | null;
@@ -35,7 +35,6 @@ export function ManageTruckLogModal({
   const t = useTranslations("TruckLogs");
   const { isOpen, closeModal } = useModal();
   const { state, execute } = useFetch();
-  const { citizens } = useCitizen();
 
   function handleClose() {
     onClose?.();
@@ -71,6 +70,7 @@ export function ManageTruckLogModal({
     startedAt: log?.startedAt ?? "",
     vehicleId: log?.vehicleId ?? "",
     citizenId: log?.citizenId ?? "",
+    citizenName: log?.citizen ? `$${log.citizen.name} ${log.citizen.surname}` : "",
     notes: log?.notes ?? "",
   };
 
@@ -97,14 +97,10 @@ export function ManageTruckLogModal({
             </FormRow>
 
             <FormField errorMessage={errors.citizenId} label={t("driver")}>
-              <Select
-                name="citizenId"
-                onChange={handleChange}
-                values={citizens.map((citizen) => ({
-                  label: `${citizen.name} ${citizen.surname}`,
-                  value: citizen.id,
-                }))}
-                value={values.citizenId}
+              <CitizenSuggestionsField
+                fromAuthUserOnly
+                labelFieldName="citizenName"
+                valueFieldName="citizenId"
               />
             </FormField>
 
