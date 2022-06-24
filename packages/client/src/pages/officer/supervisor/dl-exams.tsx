@@ -203,7 +203,7 @@ export default function CitizenLogs({ data }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
-    ["/leo/dl-exams", []],
+    ["/leo/dl-exams", { exams: [], totalCount: 0 }],
     ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 

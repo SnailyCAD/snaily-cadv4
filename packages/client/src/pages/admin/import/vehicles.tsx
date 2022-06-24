@@ -114,7 +114,7 @@ export default function ImportVehiclesPage({ data }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [vehicles, values] = await requestAll(req, [
-    ["/admin/import/vehicles", []],
+    ["/admin/import/vehicles", { vehicles: [], totalCount: 0 }],
     ["/admin/values/gender?paths=ethnicity", []],
   ]);
 

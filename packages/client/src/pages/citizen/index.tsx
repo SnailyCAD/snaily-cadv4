@@ -124,7 +124,7 @@ export default function CitizenPage({ citizens }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [data, values] = await requestAll(req, [
-    ["/citizen", []],
+    ["/citizen", { citizens: [], totalCount: 0 }],
     ["/admin/values/license", []],
   ]);
 
