@@ -85,7 +85,8 @@
     "courthouse": "Courthouse",
     "dlExams": "Driver License Exams",
     "dmv": "Department of Motor Vehicles",
-    "penalCodes": "Penal Codes"
+    "penalCodes": "Penal Codes",
+    "weaponExams": "Weapon Exams"
   },
   "Errors": {
     "unknown": "An unexpected error occurred",
