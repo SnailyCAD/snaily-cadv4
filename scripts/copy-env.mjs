@@ -7,7 +7,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const DEFAULT_PORT = "3000";
 
 async function addPortToClientPackageJson() {
-  // if (process.env.NODE_ENV === "development") return;
+  if (process.env.NODE_ENV === "development") return;
 
   try {
     const port = process.env.PORT_CLIENT;
