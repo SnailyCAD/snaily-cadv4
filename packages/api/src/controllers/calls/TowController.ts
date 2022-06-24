@@ -57,6 +57,7 @@ export class TowController {
     const calls = await prisma.towCall.findMany({
       where: includingEnded ? undefined : { ended: false },
       include: towIncludes,
+      orderBy: { createdAt: "desc" },
     });
 
     return calls;

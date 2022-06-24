@@ -213,6 +213,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
                     value={values.weaponLicense}
                     onChange={handleChange}
                     name="weaponLicense"
+                    isClearable
                   />
                 </FormField>
 

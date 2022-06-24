@@ -21,7 +21,7 @@ export function citizenObjectFromData(
     eyeColor: data.eyeColor,
     phoneNumber: data.phoneNumber || null,
     imageId: validateImgurURL(data.image),
-    socialSecurityNumber: data.socialSecurityNumber ?? generateString(9, { numbersOnly: true }),
+    socialSecurityNumber: data.socialSecurityNumber || generateString(9, { numbersOnly: true }),
     occupation: data.occupation || null,
   };
 
