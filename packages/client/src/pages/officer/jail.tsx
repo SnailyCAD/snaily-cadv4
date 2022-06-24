@@ -149,7 +149,7 @@ export default function Jail({ data }: Props) {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
-  const [jailData] = await requestAll(req, [["/leo/jail", []]]);
+  const [jailData] = await requestAll(req, [["/leo/jail", { jailedCitizens: [], totalCount: 0 }]]);
 
   return {
     props: {

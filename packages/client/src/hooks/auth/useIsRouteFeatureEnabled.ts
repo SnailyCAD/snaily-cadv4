@@ -13,6 +13,7 @@ export function useIsRouteFeatureEnabled(cad: Partial<Pick<CAD, "features">>) {
     TRUCK_LOGS: "/truck-logs",
     BUSINESS: "/business",
     DL_EXAMS: "/officer/supervisor/dl-exams",
+    WEAPON_EXAMS: "/officer/supervisor/weapon-exams",
     DMV: "/officer/dmv",
   };
 

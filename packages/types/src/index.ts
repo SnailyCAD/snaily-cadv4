@@ -1134,6 +1134,12 @@ export interface DLExam {
 }
 
 /**
+ * Model WeaponExam
+ *
+ */
+export type WeaponExam = DLExam;
+
+/**
  * Model CustomField
  *
  */
@@ -1204,6 +1210,7 @@ export enum Feature {
   LEO_TICKETS = "LEO_TICKETS",
   LEO_BAIL = "LEO_BAIL",
   COURTHOUSE_POSTS = "COURTHOUSE_POSTS",
+  WEAPON_EXAMS = "WEAPON_EXAMS",
 }
 
 export enum Rank {
