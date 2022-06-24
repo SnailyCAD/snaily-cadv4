@@ -17,6 +17,7 @@ const featuresRoute: Partial<Record<Feature, string>> = {
   ALLOW_CITIZEN_UPDATE_LICENSE: "/v1/licenses",
   RADIO_CHANNEL_MANAGEMENT: "/v1/dispatch/radio-channel",
   DL_EXAMS: "/leo/dl-exams",
+  WEAPON_EXAMS: "/leo/weapon-exams",
   DMV: "/leo/dmv",
   USER_API_TOKENS: "/user/api-token",
   STEAM_OAUTH: "/v1/auth/steam",

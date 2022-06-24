@@ -39,7 +39,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
   const { license, driverslicenseCategory } = useValues();
   const common = useTranslations("Common");
   const t = useTranslations("Citizen");
-  const { WEAPON_REGISTRATION, DL_EXAMS } = useFeatureEnabled();
+  const { WEAPON_REGISTRATION, WEAPON_EXAMS, DL_EXAMS } = useFeatureEnabled();
 
   const validate = handleValidate(LICENSE_SCHEMA);
   const INITIAL_VALUES: LicenseInitialValues = {
@@ -200,7 +200,7 @@ export function ManageLicensesModal({ state, citizen, allowRemoval = true, onSub
               </FormField>
             </FormRow>
 
-            {WEAPON_REGISTRATION ? (
+            {WEAPON_REGISTRATION && !WEAPON_EXAMS ? (
               <FormRow>
                 <FormField errorMessage={errors.weaponLicense} label={t("weaponLicense")}>
                   <Select
