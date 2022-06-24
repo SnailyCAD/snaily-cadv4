@@ -1134,6 +1134,12 @@ export interface DLExam {
 }
 
 /**
+ * Model WeaponExam
+ *
+ */
+export type WeaponExam = DLExam;
+
+/**
  * Model CustomField
  *
  */

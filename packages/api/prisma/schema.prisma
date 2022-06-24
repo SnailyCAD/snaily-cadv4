@@ -331,6 +331,7 @@ model Citizen {
   NameChangeRequest    NameChangeRequest[]
   DLExam               DLExam[]
   notes                Note[]
+  WeaponExam           WeaponExam[]                  @relation("weaponExams")
 }
 
 model Note {
@@ -458,6 +459,7 @@ model Value {
   DepartmentValue                 DepartmentValue[]             @relation("departmentValueToOfficerRank")
   QualificationValue              QualificationValue[]
   CallTypeValue                   CallTypeValue[]               @relation("callTypeValueToValue")
+  WeaponExam                      WeaponExam[]                  @relation("weaponExamToLicense")
 }
 
 model PenalCode {
@@ -566,6 +568,7 @@ model DriversLicenseCategoryValue {
   description String?
   citizens    Citizen[]                  @relation("dlCategoryToDLCategory")
   DLExam      DLExam[]
+  WeaponExam  WeaponExam[]
 }
 
 model VehicleValue {
@@ -1168,7 +1171,7 @@ model TruckLog {
   notes     String?
 }
 
-// DL Exams
+// Exams
 model DLExam {
   id           String                        @id @default(uuid())
   citizen      Citizen                       @relation(fields: [citizenId], references: [id])
@@ -1176,6 +1179,20 @@ model DLExam {
   theoryExam   DLExamPassType?
   practiceExam DLExamPassType?
   license      Value                         @relation("dlExamToLicense", fields: [licenseId], references: [id])
+  licenseId    String
+  categories   DriversLicenseCategoryValue[]
+  status       DLExamStatus                  @default(IN_PROGRESS)
+  createdAt    DateTime                      @default(now())
+  updatedAt    DateTime                      @default(now()) @updatedAt
+}
+
+model WeaponExam {
+  id           String                        @id @default(uuid())
+  citizen      Citizen                       @relation("weaponExams", fields: [citizenId], references: [id])
+  citizenId    String
+  theoryExam   DLExamPassType?
+  practiceExam DLExamPassType?
+  license      Value                         @relation("weaponExamToLicense", fields: [licenseId], references: [id])
   licenseId    String
   categories   DriversLicenseCategoryValue[]
   status       DLExamStatus                  @default(IN_PROGRESS)
