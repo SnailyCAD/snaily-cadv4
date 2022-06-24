@@ -1,3 +1,6 @@
+-- AlterEnum
+ALTER TYPE "Feature" ADD VALUE 'WEAPON_EXAMS';
+
 -- CreateTable
 CREATE TABLE "WeaponExam" (
     "id" TEXT NOT NULL,
