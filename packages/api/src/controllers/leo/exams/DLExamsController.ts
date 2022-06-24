@@ -74,6 +74,7 @@ export class DLExamsController {
         licenseId: data.license,
         status,
       },
+      include: { categories: true },
     });
 
     const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
@@ -85,6 +86,10 @@ export class DLExamsController {
         }),
       ),
     );
+
+    if (status === DLExamStatus.PASSED) {
+      await this.grantLicenseToCitizen(exam);
+    }
 
     const updated = await prisma.dLExam.findUnique({
       where: { id: exam.id },

@@ -74,6 +74,7 @@ export class WeaponExamsController {
         licenseId: data.license,
         status,
       },
+      include: { categories: true },
     });
 
     const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
@@ -85,6 +86,10 @@ export class WeaponExamsController {
         }),
       ),
     );
+
+    if (status === DLExamStatus.PASSED) {
+      await this.grantLicenseToCitizen(exam);
+    }
 
     const updated = await prisma.weaponExam.findUnique({
       where: { id: exam.id },

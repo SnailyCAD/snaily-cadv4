@@ -225,7 +225,7 @@
     "toneSuccess": "Successfully sent out the tones to the selected forces",
     "toneNotification": "Tone Notification",
     "weaponExams": "Weapon's license exams",
-    "noWeaponExam": "There are no weapon's license exams yet.",
+    "noWeaponExams": "There are no weapon's license exams yet.",
     "editWeaponExam": "Edit Weapon's license exam",
     "createWeaponExam": "Create Weapon's license exam",
     "deleteWeaponExam": "Delete Weapon's license exam",

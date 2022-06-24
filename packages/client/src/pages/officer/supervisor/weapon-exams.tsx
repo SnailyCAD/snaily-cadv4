@@ -183,6 +183,7 @@ export default function CitizenLogs({ data }: Props) {
       />
 
       <ManageDLExamModal
+        type="weapon"
         onClose={() => setTempExam(null)}
         onCreate={(exam) => {
           asyncTable.setData((p) => [exam, ...p]);
