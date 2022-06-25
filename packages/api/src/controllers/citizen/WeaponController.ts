@@ -1,9 +1,9 @@
-import { User, CadFeature, Feature, cad } from "@prisma/client";
+import { User, CadFeature, Feature, cad, Prisma } from "@prisma/client";
 import { WEAPON_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
+import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Post, Delete, Put, Description } from "@tsed/schema";
+import { Post, Delete, Put, Description, Get } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
@@ -11,10 +11,52 @@ import { prisma } from "lib/prisma";
 import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { generateString } from "utils/generateString";
+import { citizenInclude } from "./CitizenController";
 
 @Controller("/weapons")
 @UseBeforeEach(IsAuth)
 export class WeaponController {
+  @Get("/:citizenId")
+  async getCitizenWeapons(
+    @PathParams("citizenId") citizenId: string,
+    @Context("user") user: User,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query?: string,
+  ) {
+    const citizen = await prisma.citizen.findFirst({
+      where: { id: citizenId, userId: user.id },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const where: Prisma.WeaponWhereInput = {
+      ...{ citizenId },
+      ...(query
+        ? {
+            OR: [
+              { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+              { registrationStatus: { value: { contains: query, mode: "insensitive" } } },
+              { serialNumber: { contains: query, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    const [totalCount, weapons] = await Promise.all([
+      prisma.weapon.count({ where }),
+      prisma.weapon.findMany({
+        where,
+        take: 12,
+        skip,
+        include: citizenInclude.weapons.include,
+      }),
+    ]);
+
+    return { totalCount, weapons };
+  }
+
   @Post("/")
   @Description("Register a new weapon")
   async registerWeapon(

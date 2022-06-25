@@ -37,9 +37,13 @@ export const citizenInclude = {
       // hide business vehicles
       Business: { every: { id: "null" } },
     },
+    take: 12,
+    skip: 0,
   },
   weapons: {
     orderBy: { createdAt: "desc" },
+    take: 12,
+    skip: 0,
     include: {
       model: { include: { value: true } },
       registrationStatus: true,
