@@ -46,8 +46,6 @@ export class AdminManageCitizensController {
   ) {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
 
-    console.log({ skip });
-
     const where = query
       ? {
           OR: [
@@ -127,7 +125,7 @@ export class AdminManageCitizensController {
   @Description("Accept or decline a record by it's id")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: [Permissions.ManageCitizens],
+    permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
   })
   async acceptOrDeclineArrestReport(
     @PathParams("id") id: string,
