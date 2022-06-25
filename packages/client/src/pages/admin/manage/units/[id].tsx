@@ -5,7 +5,7 @@ import { getTranslations } from "lib/getTranslation";
 import { getUnitDepartment, makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "use-intl";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { FormField } from "components/form/FormField";
 import { useValues } from "context/ValuesContext";
 import { Select } from "components/form/Select";
@@ -54,7 +54,10 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
   const { state, execute } = useFetch();
   const router = useRouter();
 
-  async function onSubmit(values: typeof INITIAL_VALUES) {
+  async function onSubmit(
+    values: typeof INITIAL_VALUES,
+    helpers: FormikHelpers<typeof INITIAL_VALUES>,
+  ) {
     if (!unit) return;
 
     const data = {
@@ -65,6 +68,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
     const { json } = await execute(`/admin/manage/units/${unit.id}`, {
       method: "PUT",
       data,
+      helpers,
     });
 
     if (json.id) {
@@ -117,6 +121,7 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
                 }))}
               />
             </FormField>
+            {console.log({ errors })}
 
             <FormField label="Department">
               <Select
@@ -130,7 +135,10 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
               />
             </FormField>
 
-            <FormField label={t("division")}>
+            <FormField
+              errorMessage={isUnitOfficer(unit) ? (errors.divisions as string) : errors.division}
+              label={t("division")}
+            >
               {isUnitOfficer(unit) ? (
                 <Select
                   isMulti

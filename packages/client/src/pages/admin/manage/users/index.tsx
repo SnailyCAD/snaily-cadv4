@@ -48,7 +48,9 @@ export default function ManageUsers({ data }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
-  const [usersData] = await requestAll(req, [["/admin/manage/users", []]]);
+  const [usersData] = await requestAll(req, [
+    ["/admin/manage/users", { users: [], totalCount: 0 }],
+  ]);
   const user = await getSessionUser(req);
 
   return {

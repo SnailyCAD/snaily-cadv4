@@ -1,5 +1,5 @@
 import {
-  DLExam,
+  WeaponExam,
   DLExamPassType,
   DLExamStatus,
   DriversLicenseCategoryValue,
@@ -21,13 +21,13 @@ const dlExamIncludes = {
   categories: { include: { value: true } },
 };
 
-@Controller("/leo/dl-exams")
+@Controller("/leo/weapon-exams")
 @UseBeforeEach(IsAuth)
-export class DLExamsController {
+export class WeaponExamsController {
   @Get("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ViewDLExams, Permissions.ManageDLExams],
+    permissions: [Permissions.ViewWeaponExams, Permissions.ManageWeaponExams],
   })
   async getAllDLExams(
     @QueryParams("skip", Number) skip = 0,
@@ -44,14 +44,14 @@ export class DLExamsController {
       : undefined;
 
     const [exams, totalCount] = await Promise.all([
-      prisma.dLExam.findMany({
+      prisma.weaponExam.findMany({
         include: dlExamIncludes,
         orderBy: { createdAt: "desc" },
         where,
         skip,
         take: 35,
       }),
-      prisma.dLExam.count({ where }),
+      prisma.weaponExam.count({ where }),
     ]);
 
     return { exams, totalCount };
@@ -60,13 +60,13 @@ export class DLExamsController {
   @Post("/")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageWeaponExams],
   })
   async createDLEXam(@BodyParams() body: unknown) {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
-    const exam = await prisma.dLExam.create({
+    const exam = await prisma.weaponExam.create({
       data: {
         citizenId: data.citizenId,
         practiceExam: data.practiceExam as DLExamPassType | null,
@@ -74,19 +74,24 @@ export class DLExamsController {
         licenseId: data.license,
         status,
       },
+      include: { categories: true },
     });
 
     const connectDisconnectArr = manyToManyHelper([], data.categories as string[]);
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
-        prisma.dLExam.update({
+        prisma.weaponExam.update({
           where: { id: exam.id },
           data: { categories: item },
         }),
       ),
     );
 
-    const updated = await prisma.dLExam.findUnique({
+    if (status === DLExamStatus.PASSED) {
+      await this.grantLicenseToCitizen(exam);
+    }
+
+    const updated = await prisma.weaponExam.findUnique({
       where: { id: exam.id },
       include: dlExamIncludes,
     });
@@ -97,12 +102,12 @@ export class DLExamsController {
   @Put("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageWeaponExams],
   })
   async updateDLEXam(@PathParams("id") examId: string, @BodyParams() body: unknown) {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
-    const exam = await prisma.dLExam.findUnique({
+    const exam = await prisma.weaponExam.findUnique({
       where: { id: examId },
       include: { categories: true },
     });
@@ -118,7 +123,7 @@ export class DLExamsController {
 
     await prisma.$transaction(
       connectDisconnectArr.map((item) =>
-        prisma.dLExam.update({
+        prisma.weaponExam.update({
           where: { id: exam.id },
           data: { categories: item },
         }),
@@ -130,7 +135,7 @@ export class DLExamsController {
       await this.grantLicenseToCitizen(exam);
     }
 
-    const updated = await prisma.dLExam.update({
+    const updated = await prisma.weaponExam.update({
       where: { id: examId },
       data: {
         practiceExam: data.practiceExam as DLExamPassType | null,
@@ -146,10 +151,10 @@ export class DLExamsController {
   @Delete("/:id")
   @UsePermissions({
     fallback: (u) => u.isSupervisor,
-    permissions: [Permissions.ManageDLExams],
+    permissions: [Permissions.ManageWeaponExams],
   })
   async deleteDLEXam(@PathParams("id") examId: string) {
-    const exam = await prisma.dLExam.findUnique({
+    const exam = await prisma.weaponExam.findUnique({
       where: { id: examId },
       include: { categories: true },
     });
@@ -158,7 +163,7 @@ export class DLExamsController {
       throw new NotFound("examNotFound");
     }
 
-    await prisma.dLExam.delete({
+    await prisma.weaponExam.delete({
       where: { id: examId },
     });
 
@@ -181,7 +186,7 @@ export class DLExamsController {
   }
 
   private async grantLicenseToCitizen(
-    exam: DLExam & { categories: DriversLicenseCategoryValue[] },
+    exam: WeaponExam & { categories: DriversLicenseCategoryValue[] },
   ) {
     const citizen = await prisma.citizen.findUnique({
       where: { id: exam.citizenId },
@@ -197,7 +202,7 @@ export class DLExamsController {
     await prisma.$transaction([
       prisma.citizen.update({
         where: { id: citizen.id },
-        data: { driversLicenseId: exam.licenseId },
+        data: { weaponLicenseId: exam.licenseId },
       }),
       ...connectDisconnectArr.map((item) =>
         prisma.citizen.update({

@@ -183,8 +183,12 @@ export function ManageCitizenForm({
             </FormField>
           </FormRow>
 
-          <FormRow>
-            <FormField errorMessage={errors.dateOfBirth as string} label={t("dateOfBirth")}>
+          <FormRow flexLike={!SOCIAL_SECURITY_NUMBERS}>
+            <FormField
+              className="w-full"
+              errorMessage={errors.dateOfBirth as string}
+              label={t("dateOfBirth")}
+            >
               <Input
                 type="date"
                 value={

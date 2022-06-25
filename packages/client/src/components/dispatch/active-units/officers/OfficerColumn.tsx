@@ -123,6 +123,7 @@ export function OfficerColumn({ officer, nameAndCallsign, setTempUnit }: Props) 
                     loading="lazy"
                     width={30}
                     height={30}
+                    alt={nameAndCallsign}
                   />
                 ) : null}
                 {isUnitCombined(officer) ? (

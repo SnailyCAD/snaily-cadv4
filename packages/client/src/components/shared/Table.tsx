@@ -23,9 +23,9 @@ import { makeColumns } from "lib/table/makeColumns";
 import { dndArrowHook } from "lib/table/dndArrowHook";
 
 export const DRAGGABLE_TABLE_HANDLE = "__TABLE_HANDLE__";
-export const MAX_ITEMS_PER_PAGE = 35 as const;
 
 export function Table<T extends object, RowProps extends object>(props: TableProps<T, RowProps>) {
+  const MAX_ITEMS_PER_PAGE = props.maxItemsPerPage ?? 35;
   const isMounted = useMounted();
   /**
    * this keeps track of the table state. If the table re-renders, re-add the state to the table so it doesn't get lost

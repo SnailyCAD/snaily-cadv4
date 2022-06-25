@@ -1,7 +1,7 @@
 import process from "node:process";
 import { UseBeforeEach, Context, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Controller } from "@tsed/di";
-import { Delete, Get, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { QueryParams, BodyParams, PathParams } from "@tsed/platform-params";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
@@ -37,9 +37,13 @@ export const citizenInclude = {
       // hide business vehicles
       Business: { every: { id: "null" } },
     },
+    take: 12,
+    skip: 0,
   },
   weapons: {
     orderBy: { createdAt: "desc" },
+    take: 12,
+    skip: 0,
     include: {
       model: { include: { value: true } },
       registrationStatus: true,
@@ -71,6 +75,7 @@ export const citizenInclude = {
 @UseBeforeEach(IsAuth)
 export class CitizenController {
   @Get("/")
+  @Description("Get all the citizens of the authenticated user")
   async getCitizens(
     @Context("cad") cad: { features?: CadFeature[] },
     @Context("user") user: User,

@@ -24,12 +24,13 @@ import { ModalIds } from "types/ModalIds";
 
 interface Props {
   exam: DLExam | null;
+  type?: "dl" | "weapon";
   onUpdate?(oldExam: DLExam, newExam: DLExam): void;
   onCreate?(exam: DLExam): void;
   onClose?(): void;
 }
 
-export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) {
+export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpdate }: Props) {
   const common = useTranslations("Common");
   const t = useTranslations("Leo");
   const cT = useTranslations("Vehicles");
@@ -38,6 +39,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
   const { makeImageUrl } = useImageUrl();
   const { SOCIAL_SECURITY_NUMBERS } = useFeatureEnabled();
   const { driverslicenseCategory, license } = useValues();
+  const apiPath = type === "dl" ? "dl-exams" : "weapon-exams";
 
   const PASS_FAIL_VALUES = [
     { label: cT("passed"), value: DLExamPassType.PASSED },
@@ -56,7 +58,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
     };
 
     if (exam) {
-      const { json } = await execute(`/leo/dl-exams/${exam.id}`, {
+      const { json } = await execute(`/leo/${apiPath}/${exam.id}`, {
         method: "PUT",
         data,
       });
@@ -66,7 +68,7 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute("/leo/dl-exams", {
+      const { json } = await execute(`/leo/${apiPath}`, {
         method: "POST",
         data,
       });
@@ -166,7 +168,11 @@ export function ManageDLExamModal({ exam, onClose, onCreate, onUpdate }: Props) 
                 onChange={handleChange}
                 name="categories"
                 values={driverslicenseCategory.values
-                  .filter((v) => v.type !== DriversLicenseCategoryType.FIREARM)
+                  .filter((v) =>
+                    type === "dl"
+                      ? v.type !== DriversLicenseCategoryType.FIREARM
+                      : v.type === DriversLicenseCategoryType.FIREARM,
+                  )
                   .map((v) => ({
                     label: v.value.value,
                     value: v.id,
