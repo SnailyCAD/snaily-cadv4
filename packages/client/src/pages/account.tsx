@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Layout } from "components/Layout";
-import { TabsContent, TabList } from "components/shared/TabList";
+import { TabList } from "components/shared/TabList";
 import type { GetServerSideProps } from "next";
 import { useTranslations } from "next-intl";
 
@@ -16,6 +16,7 @@ import { toastMessage } from "lib/toastMessage";
 import { canUseThirdPartyConnections } from "lib/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { getAvailableSounds, Sounds } from "lib/server/getAvailableSounds";
+import { AccountInfoTab } from "components/account/AccountInfoTab";
 
 const AccountSettingsTab = dynamic(async () => {
   return (await import("components/account/AccountSettingsTab")).AccountSettingsTab;
@@ -89,20 +90,7 @@ export default function Account({ availableSounds }: Props) {
       <div className="flex justify-center w-full">
         <div className="w-full max-w-4xl">
           <TabList defaultValue={discordValue} tabs={TABS_TITLES}>
-            <TabsContent aria-label={t("accountInfo")} value="accountInfo">
-              <h3 className="text-2xl font-semibold">{t("accountInfo")}</h3>
-              <div className="mt-2">
-                {Object.entries(user)
-                  .filter(([k]) => k !== "cad")
-                  .map(([key, value]) => {
-                    return (
-                      <p className="overflow-auto" key={key}>
-                        <span className="font-semibold capitalize">{key}: </span> {String(value)}
-                      </p>
-                    );
-                  })}
-              </div>
-            </TabsContent>
+            <AccountInfoTab />
             <AccountSettingsTab />
             <AppearanceTab availableSounds={availableSounds} />
             {showConnectionsTab ? <ConnectionsTab /> : null}

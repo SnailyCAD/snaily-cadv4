@@ -1,7 +1,7 @@
 import { Feature } from "@snailycad/types";
 import { useAuth } from "context/AuthContext";
 
-const DEFAULTS: Partial<Record<Feature, { isEnabled: boolean }>> = {
+export const DEFAULT_DISABLED_FEATURES: Partial<Record<Feature, { isEnabled: boolean }>> = {
   CUSTOM_TEXTFIELD_VALUES: { isEnabled: false },
   DISCORD_AUTH: { isEnabled: false },
   DL_EXAMS: { isEnabled: false },
@@ -21,7 +21,8 @@ export function useFeatureEnabled() {
 
   Object.keys(Feature).map((feature) => {
     const cadFeature = features?.find((v) => v.feature === feature);
-    const isEnabled = cadFeature?.isEnabled ?? DEFAULTS[feature as Feature]?.isEnabled ?? true;
+    const isEnabled =
+      cadFeature?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true;
 
     obj[feature as Feature] = isEnabled;
   });

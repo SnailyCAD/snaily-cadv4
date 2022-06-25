@@ -86,12 +86,11 @@ export function ConnectionsTab() {
                     onClick={() => handleUnlink(connection.key)}
                     disabled={!ALLOW_REGULAR_LOGIN || state === "loading"}
                     variant="danger"
-                    size="xs"
                   >
                     {state === "loading" ? t("disconnecting") : connection.disconnect}
                   </Button>
                 ) : (
-                  <Button size="xs" onClick={() => handleConnectClick(connection.key)}>
+                  <Button onClick={() => handleConnectClick(connection.key)}>
                     {connection.connect}
                   </Button>
                 )}
