@@ -6,7 +6,7 @@ interface FetchOptions {
   pageSize: number;
   pageIndex: number;
   path: string;
-  onResponse(json: any): { data: any; totalCount: number };
+  onResponse(json: unknown): { data: any; totalCount: number };
 }
 
 interface Options<T> {

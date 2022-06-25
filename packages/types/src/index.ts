@@ -209,6 +209,7 @@ export type User = Pick<
   Prisma.User & {
     apiToken: Prisma.ApiToken | null;
     soundSettings: Prisma.UserSoundSettings | null;
+    twoFactorEnabled?: boolean;
   },
   UserPicks
 >;

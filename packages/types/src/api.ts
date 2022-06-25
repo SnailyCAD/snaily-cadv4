@@ -128,13 +128,13 @@ export type GetManageRecordLogsData = (Prisma.RecordLog & {
  * @method GET
  * @route /admin/manage/citizens/:id
  */
-export type GetManageCitizenById = GetManageCitizensData["citizens"][number];
+export type GetManageCitizenByIdData = GetManageCitizensData["citizens"][number];
 
 /**
  * @method POST
  * @route /admin/manage/citizens/record-logs/:id
  */
-export type PostCitizenRecordLogs = Prisma.Record & {
+export type PostCitizenRecordLogsData = Prisma.Record & {
   officer: Prisma.Officer & {
     rank: Prisma.Value | null;
     whitelistStatus:
@@ -158,34 +158,101 @@ export type PostCitizenRecordLogs = Prisma.Record & {
  * @method PUT
  * @route /admin/manage/citizens/:id
  */
-export type PutManageCitizenById = GetManageCitizensData["citizens"][number];
+export type PutManageCitizenByIdData = GetManageCitizensData["citizens"][number];
 
 /**
  * @method DELETE
  * @route /admin/manage/citizens/:id
  */
-export type DeleteManageCitizenById = boolean;
+export type DeleteManageCitizenByIdData = boolean;
 
 /**
  * @method GET
  * @route /admin/manage/custom-fields
  */
-export type GetManageCustomFields = Prisma.CustomField[];
+export type GetManageCustomFieldsData = Prisma.CustomField[];
 
 /**
  * @method POST
  * @route /admin/manage/custom-fields
  */
-export type POstManageCustomFields = Prisma.CustomField;
+export type POstManageCustomFieldsData = Prisma.CustomField;
 
 /**
  * @method PUT
  * @route /admin/manage/custom-fields/:id
  */
-export type PutManageCustomFields = Prisma.CustomField;
+export type PutManageCustomFieldsData = Prisma.CustomField;
 
 /**
  * @method DELETE
  * @route /admin/manage/custom-fields/:id
  */
-export type DeleteManageCustomFields = boolean;
+export type DeleteManageCustomFieldsData = boolean;
+
+/**
+ * @method Get
+ * @route /admin/manage/users
+ */
+export interface GetManageUsersData {
+  totalCount: number;
+  pendingCount: number;
+  users: User[];
+}
+
+/**
+ * @method Get
+ * @route /admin/manage/users/:id
+ */
+export type GetManageUserByIdData = User & {
+  citizens?: Prisma.Citizen[];
+  apiToken?: (Prisma.ApiToken & { logs: Prisma.ApiTokenLog[] }) | null;
+};
+
+/**
+ * @method Post
+ * @route /admin/manage/users/search
+ */
+export type PostManageUsersSearchData = User[];
+
+/**
+ * @method Put
+ * @route /admin/manage/users/permissions/:id
+ */
+export type PutManageUserPermissionsByIdData = GetManageUserByIdData;
+
+/**
+ * @method Put
+ * @route /admin/manage/users/:id
+ */
+export type PutManageUserByIdData = GetManageUserByIdData;
+
+/**
+ * @method Post
+ * @route /admin/manage/users/temp-password/:id
+ */
+export type PostManageUsersGiveTempPasswordData = string;
+
+/**
+ * @method Post
+ * @route /admin/manage/users/:type/:id
+ */
+export type PostManageUserBanUnbanData = User;
+
+/**
+ * @method Delete
+ * @route /admin/manage/users/:id
+ */
+export type DeleteManageUsersData = boolean;
+
+/**
+ * @method Post
+ * @route /admin/manage/users/pending/:id/:type
+ */
+export type PostManageUserAcceptDeclineData = boolean;
+
+/**
+ * @method Delete
+ * @route /admin/manage/users/:userId/api-token
+ */
+export type DeleteManageUserRevokeApiTokenData = boolean;

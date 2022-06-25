@@ -18,6 +18,7 @@ import { updateMemberRoles } from "lib/discord/admin";
 import { isDiscordIdInUse } from "utils/discord";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
@@ -43,7 +44,7 @@ export class ManageUsersController {
     @QueryParams("query", String) query = "",
     @QueryParams("pendingOnly", Boolean) pendingOnly = false,
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetManageUsersData> {
     const where =
       query || pendingOnly
         ? {
@@ -81,7 +82,7 @@ export class ManageUsersController {
   async getUserById(
     @PathParams("id") userId: string,
     @QueryParams("select-citizens") selectCitizens: boolean,
-  ) {
+  ): Promise<APITypes.GetManageUserByIdData> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -91,6 +92,10 @@ export class ManageUsersController {
       },
     });
 
+    if (!user) {
+      throw new NotFound("userNotFound");
+    }
+
     return user;
   }
 
@@ -99,7 +104,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async searchUsers(@BodyParams("username") username: string) {
+  async searchUsers(
+    @BodyParams("username") username: string,
+  ): Promise<APITypes.PostManageUsersSearchData> {
     const users = await prisma.user.findMany({
       where: { username: { contains: username, mode: "insensitive" } },
       select: userProperties,
@@ -114,7 +121,10 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async updateUserPermissionsById(@PathParams("id") userId: string, @BodyParams() body: unknown) {
+  async updateUserPermissionsById(
+    @PathParams("id") userId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutManageUserPermissionsByIdData> {
     const data = validateSchema(PERMISSIONS_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -148,7 +158,7 @@ export class ManageUsersController {
     @Context("cad") cad: { discordRolesId: string | null },
     @PathParams("id") userId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutManageUserByIdData> {
     const data = validateSchema(UPDATE_USER_SCHEMA, body);
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -194,7 +204,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageUsers, Permissions.BanUsers, Permissions.DeleteUsers],
   })
-  async giveUserTempPassword(@PathParams("id") userId: string) {
+  async giveUserTempPassword(
+    @PathParams("id") userId: string,
+  ): Promise<APITypes.PostManageUsersGiveTempPasswordData> {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -240,7 +252,7 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @PathParams("type") banType: "ban" | "unban",
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostManageUserBanUnbanData> {
     if (!["ban", "unban"].includes(banType)) {
       throw new NotFound("notFound");
     }
@@ -279,7 +291,9 @@ export class ManageUsersController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.DeleteUsers],
   })
-  async deleteUserAccount(@PathParams("id") userId: string) {
+  async deleteUserAccount(
+    @PathParams("id") userId: string,
+  ): Promise<APITypes.DeleteManageUsersData> {
     const user = await prisma.user.findFirst({
       where: {
         id: userId,
@@ -311,7 +325,7 @@ export class ManageUsersController {
     @PathParams("id") userId: string,
     @PathParams("type") type: "accept" | "decline",
     @Context("cad") cad: cad & { discordRolesId: string | null },
-  ) {
+  ): Promise<APITypes.PostManageUserAcceptDeclineData> {
     if (!["accept", "decline"].includes(type)) {
       throw new BadRequest("invalidType");
     }
@@ -351,7 +365,7 @@ export class ManageUsersController {
   async revokeApiToken(
     @PathParams("userId") userId: string,
     @Context("cad") cad: cad & { features?: CadFeature[] },
-  ) {
+  ): Promise<APITypes.DeleteManageUserRevokeApiTokenData> {
     const isUserAPITokensEnabled = isFeatureEnabled({
       feature: Feature.USER_API_TOKENS,
       features: cad.features,

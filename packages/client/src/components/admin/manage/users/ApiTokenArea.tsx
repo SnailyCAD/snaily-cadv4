@@ -1,10 +1,10 @@
-import type { User } from "@snailycad/types";
+import type { GetManageUserByIdData } from "@snailycad/types/api";
 import { FullDate } from "components/shared/FullDate";
 import { Infofield } from "components/shared/Infofield";
 import { Table } from "components/shared/Table";
 
 interface Props {
-  user: User;
+  user: GetManageUserByIdData;
 }
 
 export function ApiTokenArea({ user }: Props) {

@@ -1,13 +1,12 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Form, Formik } from "formik";
 import { UPDATE_USER_SCHEMA } from "@snailycad/schemas";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -31,6 +30,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
+import type { GetManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -41,7 +41,7 @@ const BanArea = dynamic(
 );
 
 interface Props {
-  user: User | null;
+  user: GetManageUserByIdData;
 }
 
 export default function ManageCitizens(props: Props) {
@@ -49,21 +49,10 @@ export default function ManageCitizens(props: Props) {
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
   const t = useTranslations("Management");
-  const router = useRouter();
   const { user: session } = useAuth();
   const { openModal, closeModal } = useModal();
   const { hasPermissions } = usePermission();
   const { USER_API_TOKENS } = useFeatureEnabled();
-
-  React.useEffect(() => {
-    if (!user) {
-      router.push("/404");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!user) return;
@@ -268,9 +257,15 @@ export default function ManageCitizens(props: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query, locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ query, locale, req }) => {
   const sessionUser = await getSessionUser(req);
   const [user] = await requestAll(req, [[`/admin/manage/users/${query.id}`, null]]);
+
+  if (!user) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {

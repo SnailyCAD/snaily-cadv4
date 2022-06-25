@@ -7,12 +7,7 @@ import { parseImportFile } from "utils/file";
 import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
-import type {
-  Prisma,
-  RegisteredVehicle,
-  VehicleInspectionStatus,
-  VehicleTaxStatus,
-} from "@prisma/client";
+import type { Prisma, VehicleInspectionStatus, VehicleTaxStatus } from "@prisma/client";
 import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import type * as APITypes from "@snailycad/types/api";
 
@@ -82,7 +77,7 @@ export async function importVehiclesHandler(body: unknown[]) {
         include: vehiclesInclude,
       });
 
-      let last: RegisteredVehicle = vehicle;
+      let last = vehicle;
       if (data.flags) {
         const disconnectConnectArr = manyToManyHelper([], data.flags);
 
@@ -96,7 +91,7 @@ export async function importVehiclesHandler(body: unknown[]) {
               }),
             ),
           ),
-        );
+        ) as typeof vehicle;
       }
 
       return last;

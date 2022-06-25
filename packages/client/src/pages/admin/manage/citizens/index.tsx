@@ -37,7 +37,7 @@ export default function ManageCitizens({ citizens: data }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, req }) => {
   const user = await getSessionUser(req);
   const [citizens, values] = await requestAll(req, [
     ["/admin/manage/citizens", { citizens: [], totalCount: 0 }],

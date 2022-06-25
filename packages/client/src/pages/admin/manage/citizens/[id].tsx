@@ -12,10 +12,10 @@ import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
-import type { GetManageCitizenById, PutManageCitizenById } from "@snailycad/types/api";
+import type { GetManageCitizenByIdData, PutManageCitizenByIdData } from "@snailycad/types/api";
 
 interface Props {
-  citizen: GetManageCitizenById;
+  citizen: GetManageCitizenByIdData;
 }
 
 export default function ManageCitizens({ citizen }: Props) {
@@ -32,7 +32,7 @@ export default function ManageCitizens({ citizen }: Props) {
     formData?: FormData;
     helpers: FormikHelpers<any>;
   }) {
-    const { json } = await execute<PutManageCitizenById>({
+    const { json } = await execute<PutManageCitizenByIdData>({
       path: `/admin/manage/citizens/${citizen.id}`,
       method: "PUT",
       helpers,
@@ -92,7 +92,7 @@ export default function ManageCitizens({ citizen }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ locale, query, req }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, query, req }) => {
   const user = await getSessionUser(req);
   const [citizen, values] = await requestAll(req, [
     [`/admin/manage/citizens/${query.id}`, null],
