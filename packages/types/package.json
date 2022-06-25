@@ -26,9 +26,9 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "yarn tsup",
+    "build": "yarn workspace @snailycad/api generate && yarn tsup",
     "watch": "yarn tsup --watch --silent=false",
-    "typecheck": "yarn tsc --noEmit"
+    "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
   "dependencies": {
     "type-fest": "^2.13.0"
