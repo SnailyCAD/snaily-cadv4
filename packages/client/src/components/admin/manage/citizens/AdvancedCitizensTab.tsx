@@ -11,6 +11,7 @@ import { Loader } from "components/Loader";
 import { X } from "react-bootstrap-icons";
 import { ImportModal } from "components/admin/import/ImportModal";
 import { ModalIds } from "types/ModalIds";
+import type { PostImportCitizensData } from "@snailycad/types/api";
 
 export function AdvancedCitizensTab() {
   const [citizens, setCitizens] = React.useState<Record<string, any>>(createInitialCitizen());
@@ -126,7 +127,7 @@ export function AdvancedCitizensTab() {
         </div>
       </form>
 
-      <ImportModal
+      <ImportModal<PostImportCitizensData>
         id={ModalIds.ImportCitizens}
         url="/admin/import/citizens"
         onImport={() => void undefined}

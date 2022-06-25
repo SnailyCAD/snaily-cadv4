@@ -9,14 +9,20 @@ import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
+import type * as APITypes from "@snailycad/types/api";
 
-interface Props {
-  onImport(data: any[]): void;
+type ImportData =
+  | APITypes.PostImportCitizensData
+  | APITypes.PostImportVehiclesData
+  | APITypes.PostImportWeaponsData;
+
+interface Props<T extends ImportData> {
+  onImport(data: T): void;
   url: `/admin/import/${"vehicles" | "weapons" | "citizens"}`;
   id: ModalIds.ImportCitizens | ModalIds.ImportVehicles | ModalIds.ImportWeapons;
 }
 
-export function ImportModal({ onImport, id, url }: Props) {
+export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T>) {
   const [file, setFile] = React.useState<File | null>(null);
 
   const { state, execute } = useFetch();
@@ -50,7 +56,7 @@ export function ImportModal({ onImport, id, url }: Props) {
       fd.set("file", file, file.name);
     }
 
-    const { json } = await execute(url, {
+    const { json } = await execute<T>(url, {
       method: "POST",
       data: fd,
     });

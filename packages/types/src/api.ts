@@ -1,40 +1,5 @@
 import type * as Prisma from "@prisma/client";
-
-type UserPicks =
-  | "id"
-  | "username"
-  | "rank"
-  | "isLeo"
-  | "isSupervisor"
-  | "isEmsFd"
-  | "isDispatch"
-  | "isTow"
-  | "isTaxi"
-  | "banned"
-  | "banReason"
-  | "avatarUrl"
-  | "steamId"
-  | "whitelistStatus"
-  | "isDarkTheme"
-  | "tempPassword"
-  | "statusViewMode"
-  | "discordId"
-  | "tableActionsAlignment"
-  | "lastDiscordSyncTimestamp"
-  | "soundSettingsId"
-  | "soundSettings"
-  | "permissions"
-  | "apiToken"
-  | "apiTokenId"
-  | "locale";
-
-type User = Pick<
-  Prisma.User & {
-    apiToken: Prisma.ApiToken | null;
-    soundSettings: Prisma.UserSoundSettings | null;
-  },
-  UserPicks
->;
+import type { User } from "./index.js";
 
 /**
  * @method GET
@@ -81,7 +46,7 @@ export interface GetImportVehiclesData {
  * @method POST
  * @route /admin/import/vehicles
  */
-export type PostImportVehiclesData = Prisma.RegisteredVehicle[];
+export type PostImportVehiclesData = GetImportVehiclesData["vehicles"];
 
 /**
  * @method GET

@@ -2,7 +2,7 @@ import { useTranslations } from "use-intl";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Citizen, Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -12,9 +12,10 @@ import type { FormikHelpers } from "formik";
 import { useRouter } from "next/router";
 import { Permissions } from "@snailycad/permissions";
 import type { SelectValue } from "components/form/Select";
+import type { GetManageCitizenById, PutManageCitizenById } from "@snailycad/types/api";
 
 interface Props {
-  citizen: Citizen & { user: User };
+  citizen: GetManageCitizenById;
 }
 
 export default function ManageCitizens({ citizen }: Props) {
@@ -31,7 +32,8 @@ export default function ManageCitizens({ citizen }: Props) {
     formData?: FormData;
     helpers: FormikHelpers<any>;
   }) {
-    const { json } = await execute(`/admin/manage/citizens/${citizen.id}`, {
+    const { json } = await execute<PutManageCitizenById>({
+      path: `/admin/manage/citizens/${citizen.id}`,
       method: "PUT",
       helpers,
       data: {

@@ -40,13 +40,19 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
   }, [overwriteState]);
 
   async function execute<Data = any, Helpers extends object = object>(
-    path: string,
-    options: Options<Helpers>,
+    pathOrOptions:
+      | string
+      | (Options<Helpers> & {
+          path: string;
+        }),
+    options?: Options<Helpers>,
   ): Promise<Return<Data>> {
     setState("loading");
     abortControllerRef.current = new AbortController();
+    const path = typeof pathOrOptions === "string" ? pathOrOptions : pathOrOptions.path;
+    const _options = typeof pathOrOptions === "string" ? options : pathOrOptions;
 
-    const mergedOptions = { ...options, signal: abortControllerRef.current.signal };
+    const mergedOptions = { ..._options, signal: abortControllerRef.current.signal };
 
     const response = await handleRequest(path, { ...mergedOptions }).catch((e) => {
       setState("error");
@@ -75,16 +81,16 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
             ? t(translationKey, translationOptions)
             : translationKey;
 
-          if (message && options.helpers) {
-            options.helpers.setFieldError(key, message);
+          if (message && _options?.helpers) {
+            _options.helpers.setFieldError(key, message);
             hasAddedError = true;
           }
         });
       }
 
-      if (typeof options.noToast === "string" && options.noToast !== error && !hasAddedError) {
+      if (typeof _options?.noToast === "string" && _options.noToast !== error && !hasAddedError) {
         toastMessage({ message: t(key), title: errorTitle });
-      } else if (!options.noToast && !hasAddedError) {
+      } else if (!_options?.noToast && !hasAddedError) {
         toastMessage({ message: t(key), title: errorTitle });
       }
 

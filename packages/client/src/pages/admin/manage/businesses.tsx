@@ -7,7 +7,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
-import { type Business, type Citizen, type User, WhitelistStatus, Rank } from "@snailycad/types";
+import { WhitelistStatus, Rank } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { Loader } from "components/Loader";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -21,19 +21,15 @@ import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { Status } from "components/shared/Status";
 import { usePermission, Permissions } from "hooks/usePermission";
-
-export type FullBusiness = Business & {
-  user: User;
-  citizen: Pick<Citizen, "id" | "name" | "surname">;
-};
+import type { GetManageBusinessesData } from "@snailycad/types/api";
 
 interface Props {
-  businesses: FullBusiness[];
+  businesses: GetManageBusinessesData;
 }
 
 export default function ManageBusinesses({ businesses: data }: Props) {
-  const [businesses, setBusinesses] = React.useState<FullBusiness[]>(data);
-  const [tempValue, setTempValue] = React.useState<FullBusiness | null>(null);
+  const [businesses, setBusinesses] = React.useState<GetManageBusinessesData>(data);
+  const [tempValue, setTempValue] = React.useState<GetManageBusinessesData[number] | null>(null);
   const [reason, setReason] = React.useState("");
   const reasonRef = React.useRef<HTMLInputElement>(null);
   const { cad } = useAuth();
@@ -61,7 +57,7 @@ export default function ManageBusinesses({ businesses: data }: Props) {
     };
   }
 
-  function handleDeleteClick(value: FullBusiness) {
+  function handleDeleteClick(value: GetManageBusinessesData[number]) {
     setTempValue(value);
     openModal(ModalIds.AlertDeleteBusiness);
   }
@@ -73,7 +69,8 @@ export default function ManageBusinesses({ businesses: data }: Props) {
       return reasonRef.current.focus();
     }
 
-    const { json } = await execute(`/admin/manage/businesses/${tempValue.id}`, {
+    const { json } = await execute({
+      path: `/admin/manage/businesses/${tempValue.id}`,
       method: "DELETE",
       data: { reason },
     });

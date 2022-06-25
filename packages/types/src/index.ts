@@ -1,6 +1,7 @@
 /* eslint-disable capitalized-comments */
 import type { JsonArray } from "type-fest";
 import type { Permissions } from "@snailycad/permissions";
+import type * as Prisma from "@prisma/client";
 
 type DescriptionData = JsonArray;
 
@@ -172,42 +173,45 @@ export interface DiscordRole {
   discordRolesId: string;
 }
 
+type UserPicks =
+  | "id"
+  | "username"
+  | "rank"
+  | "isLeo"
+  | "isSupervisor"
+  | "isEmsFd"
+  | "isDispatch"
+  | "isTow"
+  | "isTaxi"
+  | "banned"
+  | "banReason"
+  | "avatarUrl"
+  | "steamId"
+  | "whitelistStatus"
+  | "isDarkTheme"
+  | "tempPassword"
+  | "statusViewMode"
+  | "discordId"
+  | "tableActionsAlignment"
+  | "lastDiscordSyncTimestamp"
+  | "soundSettingsId"
+  | "soundSettings"
+  | "permissions"
+  | "apiToken"
+  | "apiTokenId"
+  | "locale";
+
 /**
  * Model User
  *
  */
-export interface User {
-  id: string;
-  username: string;
-  password: string;
-  rank: Rank;
-  isLeo: boolean;
-  isSupervisor: boolean;
-  isEmsFd: boolean;
-  isDispatch: boolean;
-  isTow: boolean;
-  isTaxi: boolean;
-  banned: boolean;
-  banReason: string | null;
-  avatarUrl: string | null;
-  steamId: string | null;
-  whitelistStatus: WhitelistStatus;
-  isDarkTheme: boolean;
-  tempPassword: string | null;
-  statusViewMode: StatusViewMode;
-  tableActionsAlignment: TableActionsAlignment;
-  createdAt: Date;
-  updatedAt: Date;
-  discordId: string | null;
-  hasTempPassword?: boolean;
-  twoFactorEnabled?: boolean;
-  permissions: Permissions[] | null;
-  soundSettingsId: string | null;
-  soundSettings?: UserSoundSettings | null;
-  apiTokenId: string | null;
-  apiToken?: ApiToken | null;
-  locale: string | null;
-}
+export type User = Pick<
+  Prisma.User & {
+    apiToken: Prisma.ApiToken | null;
+    soundSettings: Prisma.UserSoundSettings | null;
+  },
+  UserPicks
+>;
 
 /**
  * Model User2FA
@@ -237,44 +241,17 @@ export interface UserSoundSettings {
  * Model Citizen
  *
  */
-export interface Citizen {
-  id: string;
-  socialSecurityNumber: string | null;
-  userId: string | null;
-  name: string;
-  surname: string;
-  dateOfBirth: Date;
-  genderId: string;
-  gender: Value<ValueType.GENDER>;
-  ethnicityId: string;
-  ethnicity: Value<ValueType.ETHNICITY>;
-  hairColor: string;
-  eyeColor: string;
-  address: string;
-  postal: string | null;
-  height: string;
-  weight: string;
-  driversLicenseId: string | null;
-  driversLicense: Value<ValueType.LICENSE> | null;
-  weaponLicenseId: string | null;
-  weaponLicense: Value<ValueType.LICENSE> | null;
-  pilotLicenseId: string | null;
-  pilotLicense: Value<ValueType.LICENSE> | null;
-  waterLicenseId: string | null;
-  waterLicense: Value<ValueType.LICENSE> | null;
-  imageId: string | null;
-  note: string | null;
-  dead: boolean | null;
-  arrested: boolean | null;
-  phoneNumber: string | null;
-  dateOfDead: Date | null;
-  occupation: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  dlCategory: DriversLicenseCategoryValue[];
-  flags?: Value<ValueType.CITIZEN_FLAG>[];
-  notes?: Note[];
-}
+export type Citizen = Prisma.Citizen & {
+  gender: Prisma.Value;
+  ethnicity: Prisma.Value;
+  driversLicense: Prisma.Value | null;
+  weaponLicense: Prisma.Value | null;
+  pilotLicense: Prisma.Value | null;
+  waterLicense: Prisma.Value | null;
+  dlCategory: (Prisma.DriversLicenseCategoryValue & { value: Prisma.Value })[];
+  flags?: Prisma.Value[];
+  notes?: Prisma.Note[];
+};
 
 export interface Note {
   id: string;
@@ -291,47 +268,25 @@ export interface Note {
  * Model RegisteredVehicle
  *
  */
-export interface RegisteredVehicle {
-  id: string;
-  userId: string | null;
-  citizenId: string;
-  citizen: Citizen;
-  vinNumber: string;
-  plate: string;
-  modelId: string;
-  model: VehicleValue;
-  color: string;
-  createdAt: Date;
-  updatedAt: Date;
-  registrationStatusId: string;
-  registrationStatus: Value<ValueType.LICENSE>;
-  insuranceStatus: Value<ValueType.LICENSE> | null;
-  insuranceStatusId: string | null;
-  inspectionStatus: VehicleInspectionStatus | null;
-  taxStatus: VehicleTaxStatus | null;
-  reportedStolen: boolean;
-  impounded: boolean;
-  flags?: Value<ValueType.VEHICLE_FLAG>[];
-  dmvStatus: WhitelistStatus | null;
-  notes?: Note[];
-}
+export type RegisteredVehicle = Prisma.RegisteredVehicle & {
+  citizen: Prisma.Citizen;
+  model: Prisma.VehicleValue & { value: Prisma.Value };
+  registrationStatus: Prisma.Value;
+  insuranceStatus: Prisma.Value | null;
+  inspectionStatus: Prisma.VehicleInspectionStatus | null;
+  flags?: Prisma.Value[];
+  notes?: Prisma.Note[];
+};
 
 /**
  * Model Weapon
  *
  */
-export interface Weapon {
-  id: string;
-  userId: string | null;
-  citizenId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  serialNumber: string;
-  registrationStatusId: string;
-  registrationStatus: Value<ValueType.LICENSE>;
-  modelId: string;
-  model: WeaponValue;
-}
+export type Weapon = Prisma.Weapon & {
+  model: Prisma.WeaponValue & { value: Prisma.Value };
+  citizen: Prisma.Citizen;
+  registrationStatus: Prisma.Value;
+};
 
 /**
  * Model MedicalRecord
@@ -346,7 +301,7 @@ export interface MedicalRecord {
   type: string | null;
   description: string | null;
   bloodGroupId: string | null;
-  bloodGroup: Value<ValueType.BLOOD_GROUP> | null;
+  bloodGroup: Prisma.Value | null;
 }
 
 /**
@@ -598,18 +553,7 @@ export interface TaxiCall {
  * Model Business
  *
  */
-export interface Business {
-  id: string;
-  userId: string;
-  citizenId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-  whitelisted: boolean;
-  address: string;
-  postal: string | null;
-  status: WhitelistStatus | null;
-}
+export type Business = Prisma.Business;
 
 /**
  * Model Employee
@@ -1219,11 +1163,12 @@ export enum Rank {
   USER = "USER",
 }
 
-export enum WhitelistStatus {
-  ACCEPTED = "ACCEPTED",
-  PENDING = "PENDING",
-  DECLINED = "DECLINED",
-}
+export const WhitelistStatus = {
+  ACCEPTED: "ACCEPTED",
+  PENDING: "PENDING",
+  DECLINED: "DECLINED",
+};
+export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
 
 export enum StatusViewMode {
   FULL_ROW_COLOR = "FULL_ROW_COLOR",

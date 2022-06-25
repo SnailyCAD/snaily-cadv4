@@ -17,6 +17,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { PostImportVehiclesData } from "@snailycad/types/api";
 
 interface Props {
   data: { totalCount: number; vehicles: RegisteredVehicle[] };
@@ -100,7 +101,7 @@ export default function ImportVehiclesPage({ data }: Props) {
         ]}
       />
 
-      <ImportModal
+      <ImportModal<PostImportVehiclesData>
         onImport={(vehicles) => {
           asyncTable.setData((p) => [...vehicles, ...p]);
         }}

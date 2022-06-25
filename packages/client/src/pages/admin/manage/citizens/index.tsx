@@ -3,26 +3,21 @@ import * as React from "react";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { Citizen, Rank, User } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { AllCitizensTab } from "components/admin/manage/citizens/AllCitizensTab";
 import { Permissions } from "@snailycad/permissions";
+import type { GetManageCitizensData } from "@snailycad/types/api";
 
 interface Props {
-  citizens: { citizens: (Citizen & { user: User })[]; totalCount: number };
+  citizens: GetManageCitizensData;
 }
 
 export default function ManageCitizens({ citizens: data }: Props) {
-  const [citizens, setCitizens] = React.useState<(Citizen & { user: User | null })[]>(
-    data.citizens,
-  );
+  const [citizens, setCitizens] = React.useState(data.citizens);
   const t = useTranslations("Management");
-
-  React.useEffect(() => {
-    setCitizens(data.citizens);
-  }, [data]);
 
   return (
     <AdminLayout

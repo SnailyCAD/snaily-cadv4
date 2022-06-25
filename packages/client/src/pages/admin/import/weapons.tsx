@@ -17,6 +17,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { PostImportWeaponsData } from "@snailycad/types/api";
 
 interface Props {
   data: { weapons: (Weapon & { citizen: Citizen })[]; totalCount: number };
@@ -91,7 +92,7 @@ export default function ImportWeaponsPage({ data }: Props) {
         ]}
       />
 
-      <ImportModal
+      <ImportModal<PostImportWeaponsData>
         onImport={(weapons) => {
           asyncTable.setData((p) => [...weapons, ...p]);
         }}
