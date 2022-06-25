@@ -5,17 +5,28 @@ import { useAuth } from "context/AuthContext";
 import { FormField } from "components/form/FormField";
 import { Input, PasswordInput } from "components/form/inputs/Input";
 import { FormRow } from "components/form/FormRow";
+import { Button } from "components/Button";
+import { useModal } from "state/modalState";
+import { ModalIds } from "types/ModalIds";
+import { ManagePermissionsModal } from "components/admin/manage/users/ManagePermissionsModal";
 
 export function AccountInfoTab() {
   const { user } = useAuth();
   const t = useTranslations();
+  const { openModal } = useModal();
 
   const INITIAL_VALUES = {
     ...(user ?? {}),
     username: user?.username ?? "",
   };
 
-  console.log({ user });
+  function handleViewPermissions() {
+    openModal(ModalIds.ManagePermissions);
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <TabsContent aria-label={t("Account.accountInfo")} value="accountInfo">
@@ -42,6 +53,12 @@ export function AccountInfoTab() {
                 <Input disabled defaultValue={String(values.steamId)} name="steamId" />
               </FormField>
             </FormRow>
+
+            <Button onClick={handleViewPermissions} className="mt-4">
+              {t("Account.viewMyPermissions")}
+            </Button>
+
+            <ManagePermissionsModal isReadOnly user={user} />
           </Form>
         )}
       </Formik>
