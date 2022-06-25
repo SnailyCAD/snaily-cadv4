@@ -11,6 +11,7 @@ import { ModalIds } from "types/ModalIds";
 import type { Citizen, Record, Warrant } from "@snailycad/types";
 import { Select, SelectValue } from "components/form/Select";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetManageExpungementRequests } from "@snailycad/types/api";
 
 type Result = Citizen & { Record: Record[]; warrants: Warrant[] };
 
@@ -216,7 +217,7 @@ function ResultsForm({ result, onSuccess, handleClose }: ResultProps) {
   );
 }
 
-export function getTitles(record: Record) {
+export function getTitles(record: GetManageExpungementRequests[number]["records"][number]) {
   const titles = record.violations.map((v) => v.penalCode.title);
   return titles.join(", ");
 }

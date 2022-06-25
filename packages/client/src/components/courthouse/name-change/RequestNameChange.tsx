@@ -1,5 +1,4 @@
 import { NAME_CHANGE_REQUEST_SCHEMA } from "@snailycad/schemas";
-import type { NameChangeRequest } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { FormRow } from "components/form/FormRow";
@@ -13,9 +12,10 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type { GetManageNameChangeRequests } from "@snailycad/types/api";
 
 interface Props {
-  onCreate?(request: NameChangeRequest): void;
+  onCreate?(request: GetManageNameChangeRequests[number]): void;
 }
 
 export function RequestNameChangeModal({ onCreate }: Props) {

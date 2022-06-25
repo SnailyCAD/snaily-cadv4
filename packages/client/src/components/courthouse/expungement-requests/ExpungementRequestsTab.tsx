@@ -2,7 +2,6 @@ import * as React from "react";
 import { Table } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
 import { useTranslations } from "next-intl";
-import type { FullRequest } from "src/pages/courthouse";
 import { ExpungementRequestStatus } from "@snailycad/types";
 import dynamic from "next/dynamic";
 import { getTitles } from "./RequestExpungement";
@@ -11,17 +10,18 @@ import { FullDate } from "components/shared/FullDate";
 import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
+import type { GetManageExpungementRequests } from "@snailycad/types/api";
 
 const RequestExpungement = dynamic(
   async () => (await import("./RequestExpungement")).RequestExpungement,
 );
 
 interface Props {
-  requests: FullRequest[];
+  requests: GetManageExpungementRequests;
 }
 
 export function ExpungementRequestsTab(props: Props) {
-  const [requests, setRequests] = React.useState<FullRequest[]>(props.requests);
+  const [requests, setRequests] = React.useState(props.requests);
   const common = useTranslations("Common");
   const t = useTranslations("Courthouse");
   const leo = useTranslations("Leo");

@@ -2,15 +2,7 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type {
-  ExpungementRequest,
-  NameChangeRequest,
-  Warrant,
-  Citizen,
-  Record,
-  CourtEntry,
-  CourthousePost,
-} from "@snailycad/types";
+import type { CourtEntry, CourthousePost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -21,16 +13,14 @@ import { CourtEntriesTab } from "components/courthouse/court-entries/CourtEntrie
 import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";
-
-export type FullRequest = ExpungementRequest & {
-  warrants: Warrant[];
-  records: Record[];
-  citizen: Citizen;
-};
+import type {
+  GetManageExpungementRequests,
+  GetManageNameChangeRequests,
+} from "@snailycad/types/api";
 
 interface Props {
-  requests: FullRequest[];
-  nameChangeRequests: NameChangeRequest[];
+  requests: GetManageExpungementRequests;
+  nameChangeRequests: GetManageNameChangeRequests;
   courtEntries: CourtEntry[];
   courthousePosts: CourthousePost[];
 }

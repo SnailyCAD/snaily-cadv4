@@ -21,7 +21,8 @@ export function AdvancedCitizensTab() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const { json } = await execute("/admin/import/citizens", {
+    const { json } = await execute<PostImportCitizensData>({
+      path: "/admin/import/citizens",
       data: Object.values(citizens),
       method: "POST",
     });

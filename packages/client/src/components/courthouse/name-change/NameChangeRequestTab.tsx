@@ -5,13 +5,14 @@ import { useModal } from "state/modalState";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
-import { NameChangeRequest, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { RequestNameChangeModal } from "./RequestNameChange";
+import type { GetManageNameChangeRequests } from "@snailycad/types/api";
 
 interface Props {
-  requests: NameChangeRequest[];
+  requests: GetManageNameChangeRequests;
 }
 
 export function NameChangeRequestTab(props: Props) {

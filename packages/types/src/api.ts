@@ -256,3 +256,35 @@ export type PostManageUserAcceptDeclineData = boolean;
  * @route /admin/manage/users/:userId/api-token
  */
 export type DeleteManageUserRevokeApiTokenData = boolean;
+
+/**
+ * @method Get
+ * @route /admin/manage/expungement-requests
+ */
+export type GetManageExpungementRequests = (Prisma.ExpungementRequest & {
+  citizen: Prisma.Citizen;
+  warrants: Prisma.Warrant[];
+  records: (Prisma.Record & {
+    violations: (Prisma.Violation & { penalCode: Prisma.PenalCode })[];
+  })[];
+})[];
+
+/**
+ * @method Put
+ * @route /admin/manage/expungement-requests/:id
+ */
+export type PutManageExpungementRequests = Prisma.ExpungementRequest;
+
+/**
+ * @method Get
+ * @route /admin/manage/name-change-requests
+ */
+export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
+  citizen: Prisma.Citizen;
+})[];
+
+/**
+ * @method Put
+ * @route /admin/manage/name-change-requests/:id
+ */
+export type PutManageNameChangeRequests = Prisma.NameChangeRequest;

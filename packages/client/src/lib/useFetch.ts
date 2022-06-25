@@ -39,7 +39,7 @@ export default function useFetch({ overwriteState }: UseFetchOptions = { overwri
     setState(overwriteState);
   }, [overwriteState]);
 
-  async function execute<Data = any, Helpers extends object = object>(
+  async function execute<Data, Helpers extends object = object>(
     pathOrOptions:
       | string
       | (Options<Helpers> & {
