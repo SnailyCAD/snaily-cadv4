@@ -9,6 +9,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { Rank, WhitelistStatus } from "@prisma/client";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { defaultPermissions } from "@snailycad/permissions";
+import type { GetAdminDashboardData } from "@snailycad/types/api";
 
 @Controller("/admin")
 @UseBeforeEach(IsAuth)
@@ -18,7 +19,7 @@ export class AdminController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: defaultPermissions.allDefaultAdminPermissions,
   })
-  async getData() {
+  async getData(): Promise<GetAdminDashboardData> {
     const [activeUsers, pendingUsers, bannedUsers] = await Promise.all([
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.ACCEPTED } }),
       await prisma.user.count({ where: { whitelistStatus: WhitelistStatus.PENDING } }),
@@ -53,7 +54,6 @@ export class AdminController {
       vehicles,
       impoundedVehicles,
       vehiclesInBOLO,
-
       imageData: imageData ?? {
         count: 0,
         totalSize: 0,

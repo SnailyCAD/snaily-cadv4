@@ -19,6 +19,7 @@ import {
   type AcceptDeclineType,
 } from "controllers/admin/manage/AdminManageUnitsController";
 import { isCuid } from "cuid";
+import type * as APITypes from "@snailycad/types/api";
 
 const recordsInclude = {
   officer: { include: leoProperties },
@@ -43,10 +44,8 @@ export class AdminManageCitizensController {
     @QueryParams("includeAll", Boolean) includeAll = false,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
-  ) {
+  ): Promise<APITypes.GetManageCitizensData> {
     const [name, surname] = query.toString().toLowerCase().split(/ +/g);
-
-    console.log({ skip });
 
     const where = query
       ? {
@@ -86,7 +85,7 @@ export class AdminManageCitizensController {
       Permissions.ViewCitizenLogs,
     ],
   })
-  async getRecordLogsForCitizen() {
+  async getRecordLogsForCitizen(): Promise<APITypes.GetManageRecordLogsData> {
     const citizens = await prisma.recordLog.findMany({
       include: {
         warrant: { include: { officer: { include: leoProperties } } },
@@ -108,7 +107,7 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ViewCitizens, Permissions.ManageCitizens, Permissions.DeleteCitizens],
   })
-  async getCitizen(@PathParams("id") id: string) {
+  async getCitizen(@PathParams("id") id: string): Promise<APITypes.GetManageCitizenById> {
     const isCitizenId = isCuid(id);
     const functionName = isCitizenId ? "findFirst" : "findMany";
 
@@ -132,7 +131,7 @@ export class AdminManageCitizensController {
   async acceptOrDeclineArrestReport(
     @PathParams("id") id: string,
     @BodyParams("type") type: AcceptDeclineType | null,
-  ) {
+  ): Promise<APITypes.PostCitizenRecordLogs> {
     if (!type || !ACCEPT_DECLINE_TYPES.includes(type)) {
       throw new BadRequest("invalidType");
     }
@@ -162,7 +161,10 @@ export class AdminManageCitizensController {
     fallback: (u) => u.rank !== Rank.USER,
     permissions: [Permissions.ManageCitizens],
   })
-  async updateCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async updateCitizen(
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutManageCitizenById> {
     const data = validateSchema(CREATE_CITIZEN_SCHEMA, body);
 
     const citizen = await prisma.citizen.update({
@@ -205,7 +207,7 @@ export class AdminManageCitizensController {
     @Context("user") user: User,
     @BodyParams("reason") reason: string,
     @PathParams("id") citizenId: string,
-  ) {
+  ): Promise<APITypes.DeleteManageCitizenById> {
     const citizen = await prisma.citizen.findUnique({
       where: {
         id: citizenId,

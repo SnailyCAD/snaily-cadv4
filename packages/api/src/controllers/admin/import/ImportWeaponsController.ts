@@ -8,6 +8,7 @@ import { validateSchema } from "lib/validateSchema";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "controllers/citizen/CitizenController";
 import type { Prisma } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 const weaponsInclude = { ...citizenInclude.weapons.include, citizen: true };
 
@@ -18,7 +19,7 @@ export class ImportWeaponsController {
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
     @QueryParams("includeAll", Boolean) includeAll = false,
-  ) {
+  ): Promise<APITypes.GetImportWeaponsData> {
     const where: Prisma.WeaponWhereInput | undefined = query
       ? {
           OR: [
@@ -45,7 +46,7 @@ export class ImportWeaponsController {
   async importWeapons(
     @BodyParams() body: unknown,
     @MultipartFile("file") file?: PlatformMulterFile,
-  ) {
+  ): Promise<APITypes.PostImportWeaponsData> {
     const toValidateBody = file ? parseImportFile(file) : body;
     return importWeaponsHandler(toValidateBody);
   }

@@ -6450,6 +6450,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"globby@npm:^13.1.2":
+  version: 13.1.2
+  resolution: "globby@npm:13.1.2"
+  dependencies:
+    dir-glob: ^3.0.1
+    fast-glob: ^3.2.11
+    ignore: ^5.2.0
+    merge2: ^1.4.1
+    slash: ^4.0.0
+  checksum: c148fcda0c981f00fb434bb94ca258f0a9d23cedbde6fb3f37098e1abde5b065019e2c63fe2aa2fad4daf2b54bf360b4d0423d85fb3a63d09ed75a2837d4de0f
+  languageName: node
+  linkType: hard
+
 "goober@npm:^2.1.1":
   version: 2.1.8
   resolution: "goober@npm:2.1.8"
@@ -10051,6 +10064,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"slash@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "slash@npm:4.0.0"
+  checksum: da8e4af73712253acd21b7853b7e0dbba776b786e82b010a5bfc8b5051a1db38ed8aba8e1e8f400dd2c9f373be91eb1c42b66e91abb407ff42b10feece5e1d2d
+  languageName: node
+  linkType: hard
+
 "slate-history@npm:^0.66.0":
   version: 0.66.0
   resolution: "slate-history@npm:0.66.0"
@@ -10113,6 +10133,7 @@ __metadata:
     copy: ^0.3.2
     dotenv: ^16.0.1
     eslint: ^8.18.0
+    globby: ^13.1.2
     husky: ^8.0.1
     prettier: ^2.7.1
     pretty-quick: ^3.1.3

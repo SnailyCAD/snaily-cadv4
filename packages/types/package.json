@@ -6,11 +6,22 @@
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
+    "./api": {
+      "require": "./dist/api.js",
+      "import": "./dist/api.mjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
+  "typesVersions": {
+    "*": {
+      "api": [
+        "dist/api.d.ts"
+      ]
+    }
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
