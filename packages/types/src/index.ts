@@ -200,7 +200,8 @@ type UserPicks =
   | "apiToken"
   | "apiTokenId"
   | "locale"
-  | "twoFactorEnabled";
+  | "twoFactorEnabled"
+  | "hasTempPassword";
 
 /**
  * Model User
@@ -211,6 +212,7 @@ export type User = Pick<
     apiToken: Prisma.ApiToken | null;
     soundSettings: Prisma.UserSoundSettings | null;
     twoFactorEnabled?: boolean;
+    hasTempPassword?: boolean;
   },
   UserPicks
 >;
