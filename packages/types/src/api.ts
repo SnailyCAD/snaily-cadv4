@@ -505,3 +505,15 @@ export type PostUserLogoutData = boolean;
  * @route /user/password
  */
 export type PostUserPasswordData = boolean;
+
+/**
+ * @method Put
+ * @route /user/api-token
+ */
+export type PutUserEnableDisableApiTokenData = User;
+
+/**
+ * @method Delete
+ * @route /user/api-token
+ */
+export type DeleteUserRegenerateApiTokenData = User;

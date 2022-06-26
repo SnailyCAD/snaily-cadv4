@@ -8,6 +8,10 @@ import { useTranslations } from "use-intl";
 import { Loader } from "components/Loader";
 import { SettingsFormField } from "components/form/SettingsFormField";
 import { PasswordInput } from "components/form/inputs/Input";
+import type {
+  DeleteUserRegenerateApiTokenData,
+  PutUserEnableDisableApiTokenData,
+} from "@snailycad/types/api";
 
 export function UserApiTokenTab() {
   const { user, setUser } = useAuth();
@@ -19,7 +23,8 @@ export function UserApiTokenTab() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/user/api-token", {
+    const { json } = await execute<PutUserEnableDisableApiTokenData>({
+      path: "/user/api-token",
       method: "PUT",
       data: values,
     });
@@ -40,7 +45,8 @@ export function UserApiTokenTab() {
   ) {
     if (!user) return;
 
-    const { json } = await execute("/user/api-token", {
+    const { json } = await execute<DeleteUserRegenerateApiTokenData>({
+      path: "/user/api-token",
       method: "DELETE",
     });
 
