@@ -1,5 +1,5 @@
 import type * as Prisma from "@prisma/client";
-import type { EmsFdDeputy, Officer, TaxiCall, TowCall, UnitQualification, User } from "./index.js";
+import type * as Types from "./index.js";
 
 /**
  * @method GET
@@ -73,7 +73,7 @@ export type PostImportWeaponsData = GetImportWeaponsData["weapons"];
  */
 export type GetManageBusinessesData = (Prisma.Business & {
   citizen: { id: string; name: string; surname: string };
-  user: User;
+  user: Types.User;
 })[];
 
 /**
@@ -98,7 +98,7 @@ export interface GetManageCitizensData {
     flags: Prisma.Value[];
     vehicles: Omit<GetImportVehiclesData["vehicles"][number], "citizen">[];
     weapons: Omit<GetImportWeaponsData["weapons"][number], "citizen">[];
-    user: User | null;
+    user: Types.User | null;
     ethnicity: Prisma.Value;
     gender: Prisma.Value;
     weaponLicense: Prisma.Value | null;
@@ -116,7 +116,7 @@ export interface GetManageCitizensData {
  */
 export type GetManageRecordLogsData = (Prisma.RecordLog & {
   citizen: Prisma.Citizen & {
-    user: User | null;
+    user: Types.User | null;
     ethnicity: Prisma.Value;
     gender: Prisma.Value;
   };
@@ -195,16 +195,16 @@ export type DeleteManageCustomFieldsData = boolean;
  * @route /admin/manage/units
  */
 export type GetManageUnitsData = (
-  | (Officer & { type: "OFFICER" })
-  | (EmsFdDeputy & { type: "DEPUTY" })
+  | (Types.Officer & { type: "OFFICER" })
+  | (Types.EmsFdDeputy & { type: "DEPUTY" })
 )[];
 
 /**
  * @method Get
  * @route /admin/manage/units/:id
  */
-export type GetManageUnitByIdData = (Officer | EmsFdDeputy) & {
-  qualifications: UnitQualification[];
+export type GetManageUnitByIdData = (Types.Officer | Types.EmsFdDeputy) & {
+  qualifications: Types.UnitQualification[];
   logs: Prisma.OfficerLog[];
 };
 
@@ -218,20 +218,20 @@ export type PutManageUnitsOffDutyData = (Prisma.Officer | Prisma.EmsFdDeputy)[];
  * @method Put
  * @route /admin/manage/units/callsign/:unitId
  */
-export type PutManageUnitCallsignData = Officer | EmsFdDeputy;
+export type PutManageUnitCallsignData = Types.Officer | Types.EmsFdDeputy;
 
 /**
  * @method Put
  * @route /admin/manage/units/:unitId
  */
-export type PutManageUnitData = Officer | EmsFdDeputy;
+export type PutManageUnitData = Types.Officer | Types.EmsFdDeputy;
 
 /**
  * @method Post
  * @route /admin/manage/units/departments/:unitId
  */
 export type PostManageUnitAcceptDeclineDepartmentData =
-  | ((Officer | EmsFdDeputy) & {
+  | ((Types.Officer | Types.EmsFdDeputy) & {
       deleted?: boolean;
     })
   | null;
@@ -240,7 +240,7 @@ export type PostManageUnitAcceptDeclineDepartmentData =
  * @method Post
  * @route /admin/manage/units/:unitId/qualifications
  */
-export type PostManageUnitAddQualificationData = UnitQualification;
+export type PostManageUnitAddQualificationData = Types.UnitQualification;
 /**
  * @method Delete
  * @route /admin/manage/units/:unitId/qualifications/:qualificationId
@@ -266,14 +266,14 @@ export type DeleteManageUnitByIdData = boolean;
 export interface GetManageUsersData {
   totalCount: number;
   pendingCount: number;
-  users: User[];
+  users: Types.User[];
 }
 
 /**
  * @method Get
  * @route /admin/manage/users/:id
  */
-export type GetManageUserByIdData = User & {
+export type GetManageUserByIdData = Types.User & {
   citizens?: Prisma.Citizen[];
   apiToken?: (Prisma.ApiToken & { logs: Prisma.ApiTokenLog[] }) | null;
 };
@@ -282,7 +282,7 @@ export type GetManageUserByIdData = User & {
  * @method Post
  * @route /admin/manage/users/search
  */
-export type PostManageUsersSearchData = User[];
+export type PostManageUsersSearchData = Types.User[];
 
 /**
  * @method Put
@@ -306,7 +306,7 @@ export type PostManageUsersGiveTempPasswordData = string;
  * @method Post
  * @route /admin/manage/users/:type/:id
  */
-export type PostManageUserBanUnbanData = User;
+export type PostManageUserBanUnbanData = Types.User;
 
 /**
  * @method Delete
@@ -363,7 +363,7 @@ export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
  * @method Get
  * @route /bleeter
  */
-export type GetBleeterData = (Prisma.BleeterPost & { user: Pick<User, "username"> })[];
+export type GetBleeterData = (Prisma.BleeterPost & { user: Pick<Types.User, "username"> })[];
 
 /**
  * @method Get
@@ -400,7 +400,7 @@ export type DeleteBleeterByIdData = boolean;
  * @method Get
  * @route /taxi
  */
-export type GetTaxiCallsData = TaxiCall[];
+export type GetTaxiCallsData = Types.TaxiCall[];
 
 /**
  * @method Post
@@ -425,7 +425,7 @@ export type DeleteTaxiCallsData = boolean;
  * @method Get
  * @route /tow
  */
-export type GetTowCallsData = TowCall[];
+export type GetTowCallsData = Types.TowCall[];
 
 /**
  * @method Post
@@ -451,7 +451,7 @@ export type DeleteTowCallsData = boolean;
  * @route /auth/login
  */
 export interface PostLoginUserData {
-  userId?: User["id"];
+  userId?: Types.User["id"];
   hasTempPassword?: boolean;
   session?: string;
 }
@@ -486,13 +486,13 @@ export type DeleteDisable2FAData = boolean;
  * @route /user
  */
 // todo: add cad properties
-export type GetUserData = User & { cad: Prisma.cad };
+export type GetUserData = Types.User & { cad: Prisma.cad };
 
 /**
  * @method Patch
  * @route /user
  */
-export type PatchUserData = User;
+export type PatchUserData = Types.User;
 
 /**
  * @method Post
@@ -510,10 +510,41 @@ export type PostUserPasswordData = boolean;
  * @method Put
  * @route /user/api-token
  */
-export type PutUserEnableDisableApiTokenData = User;
+export type PutUserEnableDisableApiTokenData = Types.User;
 
 /**
  * @method Delete
  * @route /user/api-token
  */
-export type DeleteUserRegenerateApiTokenData = User;
+export type DeleteUserRegenerateApiTokenData = Types.User;
+
+/** truck logs */
+/**
+ * @method GET
+ * @route /truck-logs
+ */
+export interface GetTruckLogsData {
+  logs: (Prisma.TruckLog & {
+    citizen: Prisma.Citizen | null;
+    vehicle: Omit<Types.RegisteredVehicle, "citizen"> | null;
+  })[];
+  registeredVehicles: Omit<Types.RegisteredVehicle, "citizen">[];
+}
+
+/**
+ * @method POST
+ * @route /truck-logs
+ */
+export type PostTruckLogsData = GetTruckLogsData["logs"][number];
+
+/**
+ * @method PUT
+ * @route /truck-logs/:id
+ */
+export type PutTruckLogsData = GetTruckLogsData["logs"][number];
+
+/**
+ * @method DELETE
+ * @route /truck-logs/:id
+ */
+export type DeleteTruckLogsData = boolean;

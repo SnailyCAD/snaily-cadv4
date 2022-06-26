@@ -1,115 +1,37 @@
-/* eslint-disable capitalized-comments */
-import type { JsonArray } from "type-fest";
 import type { Permissions } from "@snailycad/permissions";
 import type * as Prisma from "@prisma/client";
 
-type DescriptionData = JsonArray;
-
-/**
- * Model cad
- *
- */
-export interface cad {
-  id: string;
-  name: string;
-  ownerId: string;
-  areaOfPlay: string | null;
-  steamApiKey: string | null;
-  whitelisted: boolean;
-  towWhitelisted: boolean;
-  taxiWhitelisted: boolean;
-  businessWhitelisted: boolean;
-  maxPlateLength: number;
-  logoId: string | null;
-  registrationCode: string | null;
+export type cad = Prisma.cad & {
   features: CadFeature[];
-  miscCadSettingsId: string | null;
   miscCadSettings: MiscCadSettings | null;
-  apiTokenId: string | null;
   apiToken?: ApiToken | null;
-  createdAt: Date;
-  updatedAt: Date;
-  autoSetUserPropertiesId: string | null;
   autoSetUserProperties: AutoSetUserProperties | null;
-  discordRolesId: string | null;
   discordRoles: DiscordRoles | null;
   version: CADVersion | null;
-}
+};
 
 interface CADVersion {
   currentCommitHash: string;
   currentVersion: string;
 }
 
-/**
- * Model CadFeature
- *
- */
-
 export type CadFeature = Prisma.CadFeature;
 
-/**
- * Model MiscCadSettings
- *
- */
-export interface MiscCadSettings {
-  id: string;
-  cadOGDescription: string | null;
-  heightPrefix: string;
-  weightPrefix: string;
-  maxCitizensPerUser: number | null;
-  maxOfficersPerUser: number | null;
-  maxPlateLength: number;
-  maxBusinessesPerCitizen: number | null;
-  maxDivisionsPerOfficer: number | null;
-  maxDepartmentsEachPerUser: number | null;
-  maxAssignmentsToIncidents: number | null;
-  maxAssignmentsToCalls: number | null;
-  callsignTemplate: string;
-  pairedUnitTemplate: string | null;
-  signal100Enabled: boolean;
-  liveMapURL: string | null;
-  roleplayEnabled: boolean | null;
-  authScreenBgImageId: string | null;
-  authScreenHeaderImageId: string | null;
-  inactivityTimeout: number | null;
-  jailTimeScale: JailTimeScale | null;
+export type MiscCadSettings = Prisma.MiscCadSettings & {
   webhooks?: DiscordWebhook[];
-}
+};
 
-/**
- * Model DiscordWebhook
- *
- */
 export type DiscordWebhook = Prisma.DiscordWebhook;
 
-/**
- * Model AutoSetUserProperties
- *
- */
 export type AutoSetUserProperties = Prisma.AutoSetUserProperties;
 
-/**
- * Model ApiToken
- *
- */
 export type ApiToken = Prisma.ApiToken & {
   logs?: ApiTokenLog[];
 };
 
-/**
- * Model ApiTokenLog
- *
- */
 export type ApiTokenLog = Prisma.ApiTokenLog;
 
-/**
- * Model DiscordRoles
- *
- */
-export interface DiscordRoles {
-  id: string;
-  guildId: string;
+export type DiscordRoles = Prisma.DiscordRoles & {
   leoRoles?: DiscordRole[];
   emsFdRoles?: DiscordRole[];
   dispatchRoles?: DiscordRole[];
@@ -117,9 +39,7 @@ export interface DiscordRoles {
   towRoles?: DiscordRole[];
   taxiRoles?: DiscordRole[];
   courthouseRoles?: DiscordRole[];
-  adminRoleId: string | null;
   adminRole: DiscordRole | null;
-  whitelistedRoleId: string | null;
   whitelistedRole: DiscordRole | null;
   roles?: DiscordRole[];
 
@@ -131,12 +51,8 @@ export interface DiscordRoles {
   towRolePermissions: Permissions[];
   taxiRolePermissions: Permissions[];
   courthouseRolePermissions: Permissions[];
-}
+};
 
-/**
- * Model DiscordRole
- *
- */
 export type DiscordRole = Prisma.DiscordRole;
 
 type UserPicks =
@@ -169,10 +85,6 @@ type UserPicks =
   | "twoFactorEnabled"
   | "hasTempPassword";
 
-/**
- * Model User
- *
- */
 export type User = Pick<
   Prisma.User & {
     apiToken: Prisma.ApiToken | null;
@@ -183,22 +95,10 @@ export type User = Pick<
   UserPicks
 >;
 
-/**
- * Model User2FA
- *
- */
 export type User2FA = Prisma.User2FA;
 
-/**
- * Model UserSoundSettings
- *
- */
 export type UserSoundSettings = Prisma.UserSoundSettings;
 
-/**
- * Model Citizen
- *
- */
 export type Citizen = Prisma.Citizen & {
   gender: Prisma.Value;
   ethnicity: Prisma.Value;
@@ -211,269 +111,92 @@ export type Citizen = Prisma.Citizen & {
   notes?: Prisma.Note[];
 };
 
-export interface Note {
-  id: string;
-  text: string;
-  createdAt: Date;
-  updatedAt: Date;
-
+export type Note = Prisma.Note & {
   createdBy: Officer | null;
-  citizenId: string | null;
-  vehicleId: string | null;
-}
-
-/**
- * Model RegisteredVehicle
- *
- */
-export type RegisteredVehicle = Prisma.RegisteredVehicle & {
-  citizen: Prisma.Citizen;
-  model: Prisma.VehicleValue & { value: Prisma.Value };
-  registrationStatus: Prisma.Value;
-  insuranceStatus: Prisma.Value | null;
-  inspectionStatus: Prisma.VehicleInspectionStatus | null;
-  flags?: Prisma.Value[];
-  notes?: Prisma.Note[];
 };
 
-/**
- * Model Weapon
- *
- */
+export type RegisteredVehicle = Prisma.RegisteredVehicle & {
+  citizen: Prisma.Citizen;
+  model: VehicleValue;
+  registrationStatus: Prisma.Value;
+  insuranceStatus: Prisma.Value | null;
+  flags?: Prisma.Value[];
+  notes?: Prisma.Note[];
+  TruckLogs?: TruckLog[];
+  Business?: Business[];
+};
+
 export type Weapon = Prisma.Weapon & {
   model: Prisma.WeaponValue & { value: Prisma.Value };
   citizen: Prisma.Citizen;
   registrationStatus: Prisma.Value;
 };
 
-/**
- * Model MedicalRecord
- *
- */
 export type MedicalRecord = Prisma.MedicalRecord & {
   bloodGroup: Prisma.Value | null;
 };
 
-/**
- * Model Value
- *
- */
-export interface Value<Type extends ValueType> {
-  id: string;
+export type Value<Type extends ValueType> = Prisma.Value & {
   type: Type;
-  value: string;
-  isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  position: number | null;
-  licenseType: ValueLicenseType | null;
-  isDisabled: boolean;
-
   officerRankDepartments?: DepartmentValue[];
-  officerRankImageId: string | null;
-}
+};
 
-/**
- * Model PenalCode
- *
- */
-export interface PenalCode {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  description: string | null;
-  descriptionData: DescriptionData | null;
-  warningApplicableId: string | null;
+export type PenalCode = Prisma.PenalCode & {
   warningApplicable: WarningApplicable | null;
-  warningNotApplicableId: string | null;
   warningNotApplicable: WarningNotApplicable | null;
-  position: number | null;
-  groupId: string | null;
-}
+};
 
-/**
- * Model PenalCodeGroup
- *
- */
-export interface PenalCodeGroup {
-  id: string;
-  position: number | null;
-  createdAt: Date;
-  updatedAt: Date;
-  name: string;
-}
+export type PenalCodeGroup = Prisma.PenalCodeGroup;
 
-/**
- * Model WarningApplicable
- *
- */
-export interface WarningApplicable {
-  id: string;
-  fines: number[];
-}
+export type WarningApplicable = Prisma.WarningApplicable;
 
-/**
- * Model WarningNotApplicable
- *
- */
-export interface WarningNotApplicable {
-  id: string;
-  fines: number[];
-  prisonTerm: number[];
-  bail: number[];
-}
+export type WarningNotApplicable = Prisma.WarningNotApplicable;
 
-/**
- * Model Violation
- *
- */
-export interface Violation {
-  id: string;
-  fine: number | null;
-  jailTime: number | null;
-  bail: number | null;
-  penalCodeId: string;
+export type Violation = Prisma.Violation & {
   penalCode: PenalCode;
-}
+};
 
-/**
- * Model SeizedItem
- *
- */
 export type SeizedItem = Prisma.SeizedItem;
 
-/**
- * Model DivisionValue
- *
- */
 export type DivisionValue = Prisma.DivisionValue & { value: Prisma.Value };
 
-/**
- * Model CallTypeValue
- *
- */
 export type CallTypeValue = Prisma.CallTypeValue & { value: Prisma.Value };
 
-/**
- * Model DepartmentValue
- *
- */
 export type DepartmentValue = Prisma.DepartmentValue & { value: Prisma.Value };
 
-/**
- * Model DriversLicenseCategoryValue
- *
- */
 export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
   value: Prisma.Value;
 };
 
-/**
- * Model VehicleValue
- *
- */
 export type VehicleValue = Prisma.VehicleValue & { value: Prisma.Value };
 
-/**
- * Model WeaponValue
- *
- */
 export type WeaponValue = Prisma.WeaponValue & { value: Prisma.Value };
 
-/**
- * Model Notification
- *
- */
 export type Notification = Prisma.Notification;
 
-/**
- * Model BleeterPost
- *
- */
-export interface BleeterPost {
-  id: string;
-  userId: string;
-  title: string;
-  body: string | null;
-  bodyData: DescriptionData | null;
-  imageId: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type BleeterPost = Prisma.BleeterPost;
 
-/**
- * Model TowCall
- *
- */
 export type TowCall = Prisma.TowCall & {
   assignedUnit: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
   creator: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
 };
 
-/**
- * Model TaxiCall
- *
- */
 export type TaxiCall = Prisma.TaxiCall & {
   assignedUnit: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
   creator: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
 };
 
-/**
- * Model Business
- *
- */
 export type Business = Prisma.Business;
 
-/**
- * Model Employee
- *
- */
-export interface Employee {
-  id: string;
-  userId: string;
-  citizenId: string;
-  businessId: string;
-  roleId: string | null;
-  employeeOfTheMonth: boolean;
-  canCreatePosts: boolean;
-  whitelistStatus: WhitelistStatus;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Employee = Prisma.Employee;
 
-/**
- * Model BusinessPost
- *
- */
-export interface BusinessPost {
-  id: string;
-  userId: string;
-  employeeId: string;
-  businessId: string;
-  title: string;
-  body: string | null;
-  bodyData: DescriptionData | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type BusinessPost = Prisma.BusinessPost;
 
-/**
- * Model EmployeeValue
- *
- */
-export interface EmployeeValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.BUSINESS_ROLE>;
-  as: EmployeeAsEnum;
-}
+export type EmployeeValue = Prisma.EmployeeValue & {
+  value: Prisma.Value;
+  as: Prisma.EmployeeAsEnum;
+};
 
-/**
- * Model Officer
- *
- */
 export type Officer = Prisma.Officer & {
   department: DepartmentValue | null;
   divisions: DivisionValue[];
@@ -487,331 +210,106 @@ export type Officer = Prisma.Officer & {
   callsigns?: IndividualDivisionCallsign[];
 };
 
-export interface IndividualDivisionCallsign {
-  id: string;
-  divisionId: string;
-  callsign: string;
-  callsign2: string;
-  officerId: string;
-}
+export type IndividualDivisionCallsign = Prisma.IndividualDivisionCallsign;
 
-/**
- * Model UnitQualification
- *
- */
 export type UnitQualification = Prisma.UnitQualification & {
   qualification: QualificationValue;
 };
 
-/**
- * Model Qualification
- *
- */
 export type QualificationValue = Prisma.QualificationValue & {
   value: Prisma.Value;
   departments: DepartmentValue[];
 };
 
-/**
- * Model LeoWhitelistStatus
- *
- */
-export interface LeoWhitelistStatus {
-  id: string;
-  status: WhitelistStatus;
-  departmentId: string;
+export type LeoWhitelistStatus = Prisma.LeoWhitelistStatus & {
+  status: Prisma.WhitelistStatus;
   department: DepartmentValue;
-}
+};
 
-/**
- * Model StatusValue
- *
- */
 export type StatusValue = Prisma.StatusValue & { value: Prisma.Value };
 
-/**
- * Model OfficerLog
- *
- */
 export type OfficerLog = Prisma.OfficerLog;
 
-/**
- * Model ImpoundedVehicle
- *
- */
-export interface ImpoundedVehicle {
-  id: string;
-  registeredVehicleId: string;
+export type ImpoundedVehicle = Prisma.ImpoundedVehicle & {
   vehicle: RegisteredVehicle;
-  valueId: string;
-  location: Value<ValueType.IMPOUND_LOT>;
-  createdAt: Date;
-  updatedAt: Date;
-}
+  location: Prisma.Value;
+};
 
-/**
- * Model LeoIncident
- *
- */
-export interface LeoIncident {
-  id: string;
-  caseNumber: number;
-  description: string | null;
-  postal: string | null;
-  descriptionData: DescriptionData | null;
+export type LeoIncident = Prisma.LeoIncident & {
   creator?: Officer | null;
-  creatorId: string | null;
-  firearmsInvolved: boolean;
-  injuriesOrFatalities: boolean;
-  arrestsMade: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  isActive: boolean | null;
   situationCode: StatusValue | null;
-  situationCodeId: string | null;
   events?: IncidentEvent[];
   unitsInvolved: IncidentInvolvedUnit[];
-}
+};
 
-/**
- * Model IncidentEvent
- *
- */
 export type IncidentEvent = Prisma.IncidentEvent;
 
-/**
- * Model CombinedLeoUnit
- *
- */
 export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {
   status: Officer["status"];
   department: Officer["department"];
   officers: Officer[];
 };
 
-/**
- * Model ActiveDispatchers
- *
- */
-export interface ActiveDispatchers {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: string;
-}
+export type ActiveDispatchers = Prisma.ActiveDispatchers;
 
-/**
- * Model Call911
- *
- */
-export interface Call911 {
-  id: string;
-  caseNumber: number;
-  createdAt: Date;
-  updatedAt: Date;
-  positionId: string | null;
+export type Call911 = Prisma.Call911 & {
   position: Position | null;
-  userId: string | null;
-  location: string;
-  postal: string | null;
-  description: string | null;
-  descriptionData: DescriptionData | null;
-  name: string;
-  ended: boolean | null;
-  situationCodeId: string | null;
   situationCode: StatusValue | null;
   departments?: DepartmentValue[];
   divisions?: DivisionValue[];
   incidents?: LeoIncident[];
   viaDispatch: boolean | null;
   type: CallTypeValue | null;
-  typeId: string;
-}
+};
 
-/**
- * Model Position
- *
- */
-export interface Position {
-  id: string;
-  lat: number | null;
-  lng: number | null;
-}
+export type Position = Prisma.Position;
 
-/**
- * Model AssignedUnit
- *
- */
-export interface AssignedUnit {
-  id: string;
-  officerId: string | null;
-  emsFdDeputyId: string | null;
-  combinedLeoId: string | null;
-  call911Id: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+export type AssignedUnit = Prisma.AssignedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
-}
+};
 
-/**
- * Model IncidentInvolvedUnit
- *
- */
-export interface IncidentInvolvedUnit {
-  id: string;
-  officerId: string | null;
-  emsFdDeputyId: string | null;
-  combinedLeoId: string | null;
-  incidentId: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  leoIncidentId: string | null;
+export type IncidentInvolvedUnit = Prisma.IncidentInvolvedUnit & {
   unit: Officer | CombinedLeoUnit | EmsFdDeputy;
-}
+};
 
-/**
- * Model Call911Event
- *
- */
-export interface Call911Event {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  call911Id: string;
-  description: string;
-}
+export type Call911Event = Prisma.Call911Event;
 
-/**
- * Model Bolo
- *
- */
-export interface Bolo {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  type: BoloType;
-  description: string | null;
-  plate: string | null;
-  model: string | null;
-  color: string | null;
-  name: string | null;
-  officerId: string | null;
+export type Bolo = Prisma.Bolo & {
   officer: Officer | null;
-}
+};
 
-/**
- * Model Record
- *
- */
-export interface Record {
-  id: string;
-  type: RecordType;
-  citizenId: string;
-  officerId: string;
+export type Record = Prisma.Record & {
   officer: Officer;
-  createdAt: Date;
-  updatedAt: Date;
-  postal: string;
-  notes: string | null;
-  releaseId: string | null;
-  expungementRequestId: string | null;
   violations: Violation[];
-  seizedItems: SeizedItem[];
-  status?: WhitelistStatus;
-}
+  seizedItems: Prisma.SeizedItem[];
+  status?: Prisma.WhitelistStatus;
+};
 
-/**
- * Model RecordRelease
- *
- */
-export interface RecordRelease {
-  id: string;
-  type: ReleaseType;
-  citizenId: string | null;
+export type RecordRelease = Prisma.RecordRelease & {
   releasedBy: Citizen | null;
-}
+};
 
-/**
- * Model Warrant
- *
- */
-export interface Warrant {
-  id: string;
-  citizenId: string;
-  officerId: string;
+export type Warrant = Prisma.Warrant & {
   officer?: Officer;
-  description: string;
-  status: WarrantStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  expungementRequestId: string | null;
-}
+};
 
-/**
- * Model RecordLog
- *
- */
-export interface RecordLog {
-  id: string;
-  citizenId: string;
-  recordId: string | null;
+export type RecordLog = Prisma.RecordLog & {
   records: Record | null;
-  warrantId: string | null;
   warrant: Warrant | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+};
 
-/**
- * Model ExpungementRequest
- *
- */
-export interface ExpungementRequest {
-  id: string;
-  citizenId: string;
-  userId: string | null;
-  status: ExpungementRequestStatus;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type ExpungementRequest = Prisma.ExpungementRequest;
 
-/**
- * Model NameChangeRequest
- *
- */
-export interface NameChangeRequest {
-  id: string;
-  citizenId: string;
+export type NameChangeRequest = Prisma.NameChangeRequest & {
   citizen: Citizen;
-  userId: string | null;
-  newName: string;
-  newSurname: string;
-  status: WhitelistStatus;
-  createdAt: Date;
-  updatedAt: Date;
-}
+};
 
-export interface CourtEntry {
-  id: string;
-  title: string;
-  caseNumber: string;
-  descriptionData: DescriptionData;
-  createdAt: Date;
-  updatedAt: Date;
+export type CourtEntry = Prisma.CourtEntry & {
   dates?: CourtDate[];
-}
+};
 
-export interface CourtDate {
-  id: string;
-  note: string | null;
-  date: Date;
-  courtEntryId: string;
-}
+export type CourtDate = Prisma.CourtDate;
 
-/**
- * Model EmsFdDeputy
- *
- */
 export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   department: Officer["department"];
   division: Officer["divisions"][number];
@@ -822,86 +320,31 @@ export type EmsFdDeputy = Prisma.EmsFdDeputy & {
   whitelistStatus?: Officer["whitelistStatus"];
 };
 
-/**
- * Model TruckLog
- *
- */
-export interface TruckLog {
-  id: string;
-  citizenId: string | null;
-  citizen: Citizen;
-  userId: string;
-  vehicleId: string | null;
+export type TruckLog = Prisma.TruckLog & {
+  citizen: Prisma.Citizen | null;
   vehicle: RegisteredVehicle | null;
-  startedAt: string;
-  endedAt: string;
-  createdAt: Date;
-  updatedAt: Date;
-  notes: string | null;
-}
+};
 
-/**
- * Model DLExam
- *
- */
-export interface DLExam {
-  id: string;
+export type DLExam = Prisma.DLExam & {
   citizen: Citizen;
-  citizenId: string;
-  theoryExam: DLExamPassType | null;
-  practiceExam: DLExamPassType | null;
-  status: DLExamStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  licenseId: string;
-  license: Value<ValueType.LICENSE>;
+  license: Prisma.Value;
   categories?: DriversLicenseCategoryValue[];
-}
+};
 
-/**
- * Model WeaponExam
- *
- */
 export type WeaponExam = DLExam;
 
-/**
- * Model CustomField
- *
- */
-export interface CustomField {
-  id: string;
-  name: string;
-  value: string | null;
-  citizenEditable: boolean;
+export type CustomField = Prisma.CustomField & {
   category: CustomFieldCategory;
-}
+};
 
-/**
- * Model DLExam
- *
- */
-export interface CustomFieldValue {
-  id: string;
-  value: string | null;
+export type CustomFieldValue = Prisma.CustomFieldValue & {
   field: CustomField;
-  fieldId: string;
-}
+};
+
+export type CourthousePost = Prisma.CourthousePost;
 
 /**
- * Model CourthousePost
- *
- */
-export interface CourthousePost {
-  id: string;
-  userId: string;
-  title: string;
-  descriptionData: DescriptionData | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-/**
- * Enums
+ * enums
  */
 
 export enum Feature {
