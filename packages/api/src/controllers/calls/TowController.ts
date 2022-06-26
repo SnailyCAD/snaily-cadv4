@@ -140,21 +140,21 @@ export class TowController {
           include: callInclude,
         });
 
-        if (!call) return;
+        if (call) {
+          const event = await prisma.call911Event.create({
+            data: {
+              description: "Created a tow call",
+              call911Id: data.call911Id,
+            },
+          });
 
-        const event = await prisma.call911Event.create({
-          data: {
-            description: "Created a tow call",
-            call911Id: data.call911Id,
-          },
-        });
+          const normalizedCall = officerOrDeputyToUnit({
+            ...call,
+            events: [...call.events, event],
+          });
 
-        const normalizedCall = officerOrDeputyToUnit({
-          ...call,
-          events: [...call.events, event],
-        });
-
-        this.socket.emitUpdate911Call(normalizedCall);
+          this.socket.emitUpdate911Call(normalizedCall);
+        }
       }
     }
 

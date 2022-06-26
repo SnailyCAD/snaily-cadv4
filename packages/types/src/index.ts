@@ -199,7 +199,8 @@ type UserPicks =
   | "permissions"
   | "apiToken"
   | "apiTokenId"
-  | "locale";
+  | "locale"
+  | "twoFactorEnabled";
 
 /**
  * Model User

@@ -48,7 +48,7 @@ export function ConnectionsTab() {
   }
 
   async function handleUnlink(type: ConnectionKeys) {
-    const { json } = await execute(`/auth/${type}`, { method: "DELETE" });
+    const { json } = await execute({ path: `/auth/${type}`, method: "DELETE" });
 
     if (json && user) {
       const key = type === ConnectionKeys.Discord ? "discordId" : "steamId";

@@ -20,7 +20,7 @@ import type { GetManageUserByIdData, PutManageUserPermissionsByIdData } from "@s
 
 interface Props {
   isReadOnly?: boolean;
-  user: GetManageUserByIdData;
+  user: Pick<GetManageUserByIdData, "permissions" | "id">;
 }
 
 const groups = [

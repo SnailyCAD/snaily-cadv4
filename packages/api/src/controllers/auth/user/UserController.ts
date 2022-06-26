@@ -6,7 +6,7 @@ import { Cookie } from "@snailycad/config";
 import { prisma } from "lib/prisma";
 import { IsAuth } from "middlewares/IsAuth";
 import { setCookie } from "utils/setCookie";
-import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment, User } from "@prisma/client";
+import { cad, ShouldDoType, StatusViewMode, TableActionsAlignment } from "@prisma/client";
 import { NotFound } from "@tsed/exceptions";
 import { CHANGE_PASSWORD_SCHEMA, CHANGE_USER_SCHEMA } from "@snailycad/schemas";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
@@ -16,6 +16,8 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Socket } from "services/SocketService";
 import { handleStartEndOfficerLog } from "lib/leo/handleStartEndOfficerLog";
 import { setUserPreferencesCookies } from "lib/auth/setUserPreferencesCookies";
+import type * as APITypes from "@snailycad/types/api";
+import type { User } from "@snailycad/types";
 
 @Controller("/user")
 @UseBefore(IsAuth)
@@ -27,13 +29,20 @@ export class AccountController {
 
   @Post("/")
   @Description("Get the authenticated user's information")
-  async getAuthUser(@Context("cad") cad: cad, @Context("user") user: User) {
+  async getAuthUser(
+    @Context("cad") cad: cad,
+    @Context("user") user: User,
+  ): Promise<APITypes.GetUserData> {
     return { ...user, cad };
   }
 
   @Patch("/")
   @Description("Update the authenticated user's settings")
-  async patchAuthUser(@Res() res: Res, @BodyParams() body: any, @Context("user") user: User) {
+  async patchAuthUser(
+    @Res() res: Res,
+    @BodyParams() body: any,
+    @Context("user") user: User,
+  ): Promise<APITypes.PatchUserData> {
     const data = validateSchema(CHANGE_USER_SCHEMA, body);
 
     const existing = await prisma.user.findUnique({
@@ -100,7 +109,7 @@ export class AccountController {
 
   @Post("/logout")
   @Description("Logout the authenticated user")
-  async logoutUser(@Res() res: Res, @Context() ctx: Context) {
+  async logoutUser(@Res() res: Res, @Context() ctx: Context): Promise<APITypes.PostUserLogoutData> {
     const userId = ctx.get("user").id;
     ctx.delete("user");
 
@@ -160,7 +169,10 @@ export class AccountController {
 
   @Post("/password")
   @Description("Update the authenticated user's password")
-  async updatePassword(@Context("user") user: User, @BodyParams() body: unknown) {
+  async updatePassword(
+    @Context("user") user: User,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PostUserPasswordData> {
     const data = validateSchema(CHANGE_PASSWORD_SCHEMA, body);
 
     const u = await prisma.user.findUnique({ where: { id: user.id } });

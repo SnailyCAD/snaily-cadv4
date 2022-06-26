@@ -444,3 +444,64 @@ export type PutTowCallsData = GetTowCallsData[number];
  * @route /tow/:id
  */
 export type DeleteTowCallsData = boolean;
+
+/** auth */
+/**
+ * @method Post
+ * @route /auth/login
+ */
+export interface PostLoginUserData {
+  userId?: User["id"];
+  hasTempPassword?: boolean;
+  session?: string;
+}
+
+/**
+ * @method Post
+ * @route /auth/register
+ */
+export type PostRegisterUserData = PostLoginUserData & { isOwner: boolean };
+
+/**
+ * @method Post
+ * @route /2fa/verify
+ */
+export type PostVerify2FAData = boolean;
+
+/**
+ * @method Post
+ * @route /2fa/enable
+ */
+export type PostEnable2FAData = string;
+
+/**
+ * @method Delete
+ * @route /2fa
+ */
+export type DeleteDisable2FAData = boolean;
+
+/** user */
+/**
+ * @method Get
+ * @route /user
+ */
+// todo: add cad properties
+export type GetUserData = User & { cad: Prisma.cad };
+
+/**
+ * @method Patch
+ * @route /user
+ */
+export type PatchUserData = User;
+
+/**
+ * @method Post
+ * @route /user/logout
+ */
+export type PostUserLogoutData = boolean;
+
+/**
+ * @method Post
+ * @route /user/password
+ */
+export type PostUserPasswordData = boolean;
