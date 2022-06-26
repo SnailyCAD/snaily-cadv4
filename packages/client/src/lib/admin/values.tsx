@@ -106,7 +106,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.LICENSE: {
-        const v = value as Value<ValueType.LICENSE>;
+        const v = value as Value;
 
         return {
           licenseType: v.licenseType ? LICENSE_LABELS[v.licenseType] : common("none"),
@@ -128,7 +128,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.OFFICER_RANK: {
-        const v = value as Value<ValueType.OFFICER_RANK>;
+        const v = value as Value;
         const imgUrl = makeImageUrl("values", v.officerRankImageId);
         const departments = defaultDepartments(v);
 

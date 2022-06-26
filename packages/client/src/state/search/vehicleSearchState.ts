@@ -1,7 +1,6 @@
 import type {
   Citizen,
   RegisteredVehicle,
-  ValueType,
   Value,
   TruckLog,
   Business,
@@ -12,7 +11,7 @@ import create from "zustand";
 
 export interface VehicleSearchResult extends RegisteredVehicle {
   citizen: Citizen;
-  registrationStatus: Value<ValueType.LICENSE>;
+  registrationStatus: Value;
   TruckLog: TruckLog[];
   Business: Business[];
   allCustomFields?: CustomField[];

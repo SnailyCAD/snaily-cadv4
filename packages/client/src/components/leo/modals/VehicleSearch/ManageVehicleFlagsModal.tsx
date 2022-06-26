@@ -46,7 +46,7 @@ export function ManageVehicleFlagsModal() {
     }
   }
 
-  function makeValueOption(v: Value<ValueType.VEHICLE_FLAG>) {
+  function makeValueOption(v: Value) {
     return { label: v.value, value: v.id };
   }
 

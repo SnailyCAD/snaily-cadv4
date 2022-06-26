@@ -3,14 +3,7 @@ import { Input } from "components/form/inputs/Input";
 import { Select } from "components/form/Select";
 import { useFormikContext } from "formik";
 import dynamic from "next/dynamic";
-import {
-  QualificationValue,
-  ShouldDoType,
-  StatusValue,
-  Value,
-  ValueType,
-  WhatPages,
-} from "@snailycad/types";
+import { QualificationValue, ShouldDoType, StatusValue, Value, WhatPages } from "@snailycad/types";
 
 import { Eyedropper } from "react-bootstrap-icons";
 import { Button } from "components/Button";
@@ -50,9 +43,7 @@ export function useDefaultDepartments() {
     label: v.value.value,
   }));
 
-  function makeDefaultDepartments(
-    value: StatusValue | QualificationValue | Value<ValueType.OFFICER_RANK> | null,
-  ) {
+  function makeDefaultDepartments(value: StatusValue | QualificationValue | Value | null) {
     if (!value) return [];
     const departments =
       ("officerRankDepartments" in value

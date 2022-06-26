@@ -1,4 +1,4 @@
-import type { Value, ValueType } from "@snailycad/types";
+import type { Value } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -34,7 +34,7 @@ export function ManageCitizenFlagsModal() {
     }
   }
 
-  function makeValueOption(v: Value<ValueType.CITIZEN_FLAG>) {
+  function makeValueOption(v: Value) {
     return { label: v.value, value: v.id };
   }
 
