@@ -579,3 +579,140 @@ export type DeleteBolosData = boolean;
  * @route /bolos/mark-stolen/:id
  */
 export type PostMarkStolenData = Prisma.Bolo;
+
+/** citizens */
+/**
+ * @method GET
+ * @route /citizen
+ */
+export interface GetCitizensData {
+  citizens: (Prisma.Citizen & { user: Types.User | null })[];
+  totalCount: number;
+}
+
+/**
+ * @method GET
+ * @route /citizen/:id
+ */
+export type GetCitizenByIdData = Types.Citizen;
+
+/**
+ * @method DELETE
+ * @route /citizen/:id
+ */
+export type DeleteCitizenByIdData = boolean;
+
+/**
+ * @method POST
+ * @route /citizen
+ */
+export type PostCitizensData = Prisma.Citizen;
+
+/**
+ * @method PUT
+ * @route /citizen/:id
+ */
+export type PutCitizenByIdData = Prisma.Citizen & { ethnicity: Prisma.Value; gender: Prisma.Value };
+
+/**
+ * @method POST
+ * @route /citizen/:id
+ */
+export interface PostCitizenImageByIdData {
+  imageId: string | null;
+}
+
+/**
+ * @method PUT
+ * @route /licenses/:id
+ */
+export type PutCitizenLicensesByIdData = Types.Citizen;
+
+/**
+ * @method POST
+ * @route /medical-records
+ */
+export type PostCitizenMedicalRecordsData = Prisma.MedicalRecord & {
+  bloodGroup: Prisma.Value | null;
+};
+
+/**
+ * @method PUT
+ * @route /medical-records/:id
+ */
+export type PutCitizenMedicalRecordsData = Prisma.MedicalRecord & {
+  bloodGroup: Prisma.Value | null;
+};
+
+/**
+ * @method DELETE
+ * @route /medical-records/:id
+ */
+export type DeleteCitizenMedicalRecordsData = boolean;
+
+/**
+ * @method GET
+ * @route /vehicles/:citizenId
+ */
+export interface GetCitizenVehiclesData {
+  totalCount: number;
+  vehicles: Omit<Types.RegisteredVehicle, "citizen">[];
+}
+
+/**
+ * @method POST
+ * @route /vehicles
+ */
+export type PostCitizenVehicleData = Prisma.RegisteredVehicle & {
+  model: Types.VehicleValue;
+  registrationStatus: Prisma.Value;
+  citizen: Prisma.Citizen;
+};
+
+/**
+ * @method PUT
+ * @route /vehicles/:id
+ */
+export type PutCitizenVehicleData = Prisma.RegisteredVehicle & {
+  model: Types.VehicleValue;
+  registrationStatus: Prisma.Value;
+};
+
+/**
+ * @method POST
+ * @route /vehicles/:id
+ */
+export type PostCitizenTransferVehicleData = Prisma.RegisteredVehicle;
+
+/**
+ * @method DELETE
+ * @route /vehicles/:id
+ */
+export type DeleteCitizenVehicleData = boolean;
+
+/**
+ * @method GET
+ * @route /weapons/:citizenId
+ */
+export interface GetCitizenWeaponsData {
+  totalCount: number;
+  weapons: Omit<Types.Weapon, "citizen">[];
+}
+
+/**
+ * @method POST
+ * @route /weapons
+ */
+export type PostCitizenWeaponData = Omit<Types.Weapon, "citizen">;
+
+/**
+ * @method PUT
+ * @route /weapons/:id
+ */
+export type PutCitizenWeaponData = PostCitizenWeaponData;
+
+/**
+ * @method DELETE
+ * @route /weapons/:id
+ */
+export type DeleteCitizenWeaponData = boolean;

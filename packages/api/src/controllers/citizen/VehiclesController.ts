@@ -24,6 +24,7 @@ import { IsAuth } from "middlewares/IsAuth";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { generateString } from "utils/generateString";
 import { citizenInclude } from "./CitizenController";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
@@ -34,7 +35,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
-  ) {
+  ): Promise<APITypes.GetCitizenVehiclesData> {
     const citizen = await prisma.citizen.findFirst({
       where: { id: citizenId, userId: user.id },
     });
@@ -77,7 +78,7 @@ export class VehiclesController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -191,7 +192,7 @@ export class VehiclesController {
     @Context("cad") cad: { features?: CadFeature[]; miscCadSettings: MiscCadSettings },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PutCitizenVehicleData> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -297,7 +298,10 @@ export class VehiclesController {
 
   @Post("/transfer/:vehicleId")
   @Description("Transfer a vehicle to a new owner")
-  async transferVehicle(@BodyParams() body: unknown, @PathParams("vehicleId") vehicleId: string) {
+  async transferVehicle(
+    @BodyParams() body: unknown,
+    @PathParams("vehicleId") vehicleId: string,
+  ): Promise<APITypes.PostCitizenTransferVehicleData> {
     const data = validateSchema(TRANSFER_VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -336,7 +340,7 @@ export class VehiclesController {
     @Context("cad") cad: { features?: CadFeature[] },
     @PathParams("id") vehicleId: string,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.DeleteCitizenVehicleData> {
     const data = validateSchema(DELETE_VEHICLE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({

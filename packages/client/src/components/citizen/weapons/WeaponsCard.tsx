@@ -15,8 +15,9 @@ import { useCitizen } from "context/CitizenContext";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
 import { Loader } from "components/Loader";
+import type { DeleteCitizenWeaponData, GetCitizenWeaponsData } from "@snailycad/types/api";
 
-export function WeaponsCard(props: { weapons: Weapon[] }) {
+export function WeaponsCard(props: Pick<GetCitizenWeaponsData, "weapons">) {
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
   const common = useTranslations("Common");
@@ -24,10 +25,13 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
   const { WEAPON_REGISTRATION } = useFeatureEnabled();
   const { citizen } = useCitizen(false);
 
-  const [tempWeapon, setTempWeapon] = React.useState<Weapon | null>(null);
+  const [tempWeapon, setTempWeapon] = React.useState<Omit<Weapon, "citizen"> | null>(null);
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ data: json.weapons, totalCount: json.totalCount }),
+      onResponse: (json: GetCitizenWeaponsData) => ({
+        data: json.weapons,
+        totalCount: json.totalCount,
+      }),
       path: `/weapons/${citizen.id}`,
     },
     totalCount: props.weapons.length,
@@ -37,23 +41,24 @@ export function WeaponsCard(props: { weapons: Weapon[] }) {
   async function handleDelete() {
     if (!tempWeapon) return;
 
-    const { json } = await execute(`/weapons/${tempWeapon.id}`, {
+    const { json } = await execute<DeleteCitizenWeaponData>({
+      path: `/weapons/${tempWeapon.id}`,
       method: "DELETE",
     });
 
-    if (json) {
+    if (typeof json === "boolean" && json) {
       asyncTable.setData((p) => p.filter((v) => v.id !== tempWeapon.id));
       setTempWeapon(null);
       closeModal(ModalIds.AlertDeleteWeapon);
     }
   }
 
-  function handleEditClick(weapon: Weapon) {
+  function handleEditClick(weapon: Omit<Weapon, "citizen">) {
     setTempWeapon(weapon);
     openModal(ModalIds.RegisterWeapon);
   }
 
-  function handleDeleteClick(weapon: Weapon) {
+  function handleDeleteClick(weapon: Omit<Weapon, "citizen">) {
     setTempWeapon(weapon);
     openModal(ModalIds.AlertDeleteWeapon);
   }

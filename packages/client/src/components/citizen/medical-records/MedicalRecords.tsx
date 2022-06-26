@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "components/Button";
-import type { MedicalRecord, Value, ValueType } from "@snailycad/types";
+import type { MedicalRecord, Value } from "@snailycad/types";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { ManageMedicalRecordsModal } from "./ManageMedicalRecordsModal";
@@ -9,6 +9,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { Table } from "components/shared/Table";
 import { useCitizen } from "context/CitizenContext";
+import type { DeleteCitizenMedicalRecordsData } from "@snailycad/types/api";
 
 export function MedicalRecords() {
   const { state, execute } = useFetch();
@@ -22,7 +23,8 @@ export function MedicalRecords() {
   async function handleDelete() {
     if (!tempRecord) return;
 
-    const { json } = await execute(`/medical-records/${tempRecord.id}`, {
+    const { json } = await execute<DeleteCitizenMedicalRecordsData>({
+      path: `/medical-records/${tempRecord.id}`,
       method: "DELETE",
     });
 
@@ -36,10 +38,7 @@ export function MedicalRecords() {
     }
   }
 
-  function handleBloodgroupStateChange(
-    prevState: MedicalRecord[],
-    bloodGroup: Value<ValueType.BLOOD_GROUP> | null,
-  ) {
+  function handleBloodgroupStateChange(prevState: MedicalRecord[], bloodGroup: Value | null) {
     return prevState.map((med) => ({ ...med, bloodGroup, bloodGroupId: bloodGroup?.id ?? null }));
   }
 

@@ -3,7 +3,6 @@ import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useTranslations } from "use-intl";
-import type { Citizen, User } from "@snailycad/types";
 import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
@@ -15,6 +14,7 @@ import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useAreaOfPlay } from "hooks/global/useAreaOfPlay";
 import { Title } from "components/shared/Title";
 import { CitizenList } from "components/citizen/citizen-list/CitizenList";
+import type { GetCitizensData } from "@snailycad/types/api";
 
 const RegisterVehicleModal = dynamic(
   async () =>
@@ -31,7 +31,7 @@ const Manage911CallModal = dynamic(
 );
 
 interface Props {
-  citizens: { citizens: (Citizen & { user?: Pick<User, "username"> })[]; totalCount: number };
+  citizens: GetCitizensData;
 }
 
 export default function CitizenPage({ citizens }: Props) {
@@ -113,7 +113,6 @@ export default function CitizenPage({ citizens }: Props) {
       <CitizenList citizens={citizens} />
 
       <RegisterVehicleModal onCreate={() => closeModal(ModalIds.RegisterVehicle)} vehicle={null} />
-
       <RegisterWeaponModal onCreate={() => closeModal(ModalIds.RegisterWeapon)} weapon={null} />
       <Manage911CallModal call={null} />
       <ManageCallModal isTow={modal === "tow"} call={null} />

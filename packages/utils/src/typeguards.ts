@@ -26,9 +26,9 @@ export type ValueWithValueObj =
   | QualificationValue
   | CallTypeValue;
 
-export type AnyValue = Value<ValueType> | ValueWithValueObj;
+export type AnyValue = Value | ValueWithValueObj;
 
-export function isBaseValue(value: AnyValue): value is Value<ValueType> {
+export function isBaseValue(value: AnyValue): value is Value {
   return "createdAt" in value && typeof value.type === "string";
 }
 

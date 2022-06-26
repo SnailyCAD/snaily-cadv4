@@ -16,54 +16,39 @@ import {
 import { AnyValue, isBaseValue } from "@snailycad/utils";
 import { useRouter } from "next/router";
 
-interface ContextValue<T extends ValueType, Custom = Value<T>> {
+interface ContextValue<Custom = Value> {
   type: ValueType;
-  values: Custom extends undefined ? Value<T>[] : Custom[];
+  values: Custom extends undefined ? Value[] : Custom[];
 }
 
 interface Context {
-  license: ContextValue<ValueType.LICENSE>;
-  gender: ContextValue<ValueType.GENDER>;
-  ethnicity: ContextValue<ValueType.ETHNICITY>;
-  weapon: ContextValue<ValueType.WEAPON, VehicleValue>;
-  bloodGroup: ContextValue<ValueType.BLOOD_GROUP>;
-  officerRank: ContextValue<ValueType.OFFICER_RANK>;
-  division: ContextValue<ValueType.DIVISION, DivisionValue>;
-  businessRole: ContextValue<ValueType.BUSINESS_ROLE, EmployeeValue>;
-  codes10: ContextValue<ValueType.CODES_10, StatusValue>;
-  vehicle: ContextValue<ValueType.VEHICLE, VehicleValue>;
-  vehicleFlag: ContextValue<ValueType.VEHICLE_FLAG>;
-  citizenFlag: ContextValue<ValueType.CITIZEN_FLAG>;
-  penalCode: ContextValue<ValueType.PENAL_CODE, PenalCode>;
+  license: ContextValue;
+  gender: ContextValue;
+  ethnicity: ContextValue;
+  weapon: ContextValue<VehicleValue>;
+  bloodGroup: ContextValue;
+  officerRank: ContextValue;
+  division: ContextValue<DivisionValue>;
+  businessRole: ContextValue<EmployeeValue>;
+  codes10: ContextValue<StatusValue>;
+  vehicle: ContextValue<VehicleValue>;
+  vehicleFlag: ContextValue;
+  citizenFlag: ContextValue;
+  penalCode: ContextValue<PenalCode>;
   penalCodeGroups: PenalCodeGroup[];
-  department: ContextValue<ValueType.DEPARTMENT, DepartmentValue>;
-  driverslicenseCategory: ContextValue<
-    ValueType.DRIVERSLICENSE_CATEGORY,
-    DriversLicenseCategoryValue
-  >;
-  impoundLot: ContextValue<ValueType.IMPOUND_LOT>;
-  qualification: ContextValue<ValueType.QUALIFICATION, QualificationValue>;
-  setValues: React.Dispatch<
-    React.SetStateAction<
-      {
-        type: ValueType;
-        values: Value<ValueType>[];
-      }[]
-    >
-  >;
-  callType: ContextValue<ValueType.IMPOUND_LOT, CallTypeValue>;
+  department: ContextValue<DepartmentValue>;
+  driverslicenseCategory: ContextValue<DriversLicenseCategoryValue>;
+  impoundLot: ContextValue;
+  qualification: ContextValue<QualificationValue>;
+  setValues: React.Dispatch<React.SetStateAction<{ type: ValueType; values: Value[] }[]>>;
+  callType: ContextValue<CallTypeValue>;
 }
 
 const ValuesContext = React.createContext<Context | undefined>(undefined);
 
 interface ProviderProps {
   children: React.ReactChild | React.ReactChild[];
-  initialData: {
-    values: {
-      type: ValueType;
-      values: Value<ValueType>[];
-    }[];
-  };
+  initialData: { values: { type: ValueType; values: Value[] }[] };
 }
 
 export function ValuesProvider({ initialData, children }: ProviderProps) {

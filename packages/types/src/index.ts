@@ -119,7 +119,7 @@ export type RegisteredVehicle = Prisma.RegisteredVehicle & {
   citizen: Prisma.Citizen;
   model: VehicleValue;
   registrationStatus: Prisma.Value;
-  insuranceStatus: Prisma.Value | null;
+  insuranceStatus?: Prisma.Value | null;
   flags?: Prisma.Value[];
   notes?: Prisma.Note[];
   TruckLogs?: TruckLog[];
@@ -136,8 +136,7 @@ export type MedicalRecord = Prisma.MedicalRecord & {
   bloodGroup: Prisma.Value | null;
 };
 
-export type Value<Type extends ValueType> = Prisma.Value & {
-  type: Type;
+export type Value = Prisma.Value & {
   officerRankDepartments?: DepartmentValue[];
 };
 
