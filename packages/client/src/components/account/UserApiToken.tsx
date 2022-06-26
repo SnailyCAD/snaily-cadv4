@@ -50,9 +50,9 @@ export function UserApiTokenTab() {
       method: "DELETE",
     });
 
-    if (json.token) {
+    if (json.apiToken) {
       setUser({ ...user, ...json });
-      setFieldValue("token", json.token);
+      setFieldValue("token", json.apiToken.token);
     }
   }
 

@@ -46,11 +46,7 @@ interface CADVersion {
  *
  */
 
-export interface CadFeature {
-  id: string;
-  feature: Feature;
-  isEnabled: boolean;
-}
+export type CadFeature = Prisma.CadFeature;
 
 /**
  * Model MiscCadSettings
@@ -85,53 +81,27 @@ export interface MiscCadSettings {
  * Model DiscordWebhook
  *
  */
-export interface DiscordWebhook {
-  id: string;
-  type: DiscordWebhookType;
-  channelId: string;
-  extraMessage: string | null;
-  miscCadSettingsId: string | null;
-}
+export type DiscordWebhook = Prisma.DiscordWebhook;
 
 /**
  * Model AutoSetUserProperties
  *
  */
-export interface AutoSetUserProperties {
-  id: string;
-  leo: boolean | null;
-  dispatch: boolean | null;
-  emsFd: boolean | null;
-}
+export type AutoSetUserProperties = Prisma.AutoSetUserProperties;
 
 /**
  * Model ApiToken
  *
  */
-export interface ApiToken {
-  id: string;
-  enabled: boolean;
-  token: string | null;
-  routes: string[];
-
-  createdAt: Date;
-  updatedAt: Date;
-  uses: number | null;
+export type ApiToken = Prisma.ApiToken & {
   logs?: ApiTokenLog[];
-}
+};
 
 /**
  * Model ApiTokenLog
  *
  */
-export interface ApiTokenLog {
-  id: string;
-  statusCode: string | null;
-  route: string | null;
-  method: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type ApiTokenLog = Prisma.ApiTokenLog;
 
 /**
  * Model DiscordRoles
@@ -167,11 +137,7 @@ export interface DiscordRoles {
  * Model DiscordRole
  *
  */
-export interface DiscordRole {
-  id: string;
-  name: string;
-  discordRolesId: string;
-}
+export type DiscordRole = Prisma.DiscordRole;
 
 type UserPicks =
   | "id"
@@ -221,25 +187,13 @@ export type User = Pick<
  * Model User2FA
  *
  */
-export interface User2FA {
-  id: string;
-  secret: string;
-  userId: string;
-}
+export type User2FA = Prisma.User2FA;
 
 /**
  * Model UserSoundSettings
  *
  */
-export interface UserSoundSettings {
-  id: string;
-  panicButton: boolean;
-  signal100: boolean;
-  addedToCall: boolean;
-  stopRoleplay: boolean;
-  statusUpdate: boolean;
-  incomingCall: boolean;
-}
+export type UserSoundSettings = Prisma.UserSoundSettings;
 
 /**
  * Model Citizen
@@ -296,17 +250,9 @@ export type Weapon = Prisma.Weapon & {
  * Model MedicalRecord
  *
  */
-export interface MedicalRecord {
-  id: string;
-  userId: string | null;
-  citizenId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  type: string | null;
-  description: string | null;
-  bloodGroupId: string | null;
+export type MedicalRecord = Prisma.MedicalRecord & {
   bloodGroup: Prisma.Value | null;
-}
+};
 
 /**
  * Model Value
@@ -395,13 +341,7 @@ export interface Violation {
  * Model SeizedItem
  *
  */
-export interface SeizedItem {
-  id: string;
-  violationId: string;
-  item: string;
-  quantity: number;
-  illegal: boolean;
-}
+export type SeizedItem = Prisma.SeizedItem;
 
 /**
  * Model DivisionValue
@@ -413,12 +353,7 @@ export type DivisionValue = Prisma.DivisionValue & { value: Prisma.Value };
  * Model CallTypeValue
  *
  */
-export interface CallTypeValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.CALL_TYPE>;
-  priority: number | null;
-}
+export type CallTypeValue = Prisma.CallTypeValue & { value: Prisma.Value };
 
 /**
  * Model DepartmentValue
@@ -430,49 +365,27 @@ export type DepartmentValue = Prisma.DepartmentValue & { value: Prisma.Value };
  * Model DriversLicenseCategoryValue
  *
  */
-export interface DriversLicenseCategoryValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.DRIVERSLICENSE_CATEGORY>;
-  type: DriversLicenseCategoryType;
-  description: string | null;
-}
+export type DriversLicenseCategoryValue = Prisma.DriversLicenseCategoryValue & {
+  value: Prisma.Value;
+};
 
 /**
  * Model VehicleValue
  *
  */
-export interface VehicleValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.VEHICLE>;
-  hash: string | null;
-}
+export type VehicleValue = Prisma.VehicleValue & { value: Prisma.Value };
 
 /**
  * Model WeaponValue
  *
  */
-export interface WeaponValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.WEAPON>;
-  hash: string | null;
-}
+export type WeaponValue = Prisma.WeaponValue & { value: Prisma.Value };
 
 /**
  * Model Notification
  *
  */
-export interface Notification {
-  id: string;
-  userId: string;
-  executorId: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Notification = Prisma.Notification;
 
 /**
  * Model BleeterPost
