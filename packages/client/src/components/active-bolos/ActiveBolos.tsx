@@ -8,6 +8,7 @@ import { Bolo, BoloType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { ManageBoloModal } from "./ManageBoloModal";
 import { BoloColumn } from "./BoloColumn";
+import type { DeleteBolosData } from "@snailycad/types/api";
 
 const BOLO_TYPES = Object.values(BoloType);
 
@@ -21,7 +22,8 @@ export function ActiveBolos() {
   async function handleDeleteBolo() {
     if (!tempBolo) return;
 
-    const { json } = await execute(`/bolos/${tempBolo.id}`, {
+    const { json } = await execute<DeleteBolosData>({
+      path: `/bolos/${tempBolo.id}`,
       method: "DELETE",
     });
 

@@ -20,6 +20,7 @@ import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useSSRSafeId } from "@react-aria/ssr";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostBolosData, PutBolosData } from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -41,7 +42,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (bolo) {
-      const { json } = await execute(`/bolos/${bolo.id}`, {
+      const { json } = await execute<PutBolosData>({
+        path: `/bolos/${bolo.id}`,
         method: "PUT",
         data: values,
       });
@@ -59,7 +61,8 @@ export function ManageBoloModal({ onClose, bolo }: Props) {
         closeModal(ModalIds.ManageBolo);
       }
     } else {
-      const { json } = await execute("/bolos", {
+      const { json } = await execute<PostBolosData>({
+        path: "/bolos",
         method: "POST",
         data: values,
       });

@@ -548,3 +548,34 @@ export type PutTruckLogsData = GetTruckLogsData["logs"][number];
  * @route /truck-logs/:id
  */
 export type DeleteTruckLogsData = boolean;
+
+/** bolos */
+/**
+ * @method GET
+ * @route /bolos
+ */
+export type GetBolosData = Types.Bolo[];
+
+/**
+ * @method POST
+ * @route /bolos/:id
+ */
+export type PostBolosData = Types.Bolo;
+
+/**
+ * @method PUT
+ * @route /bolos/:id
+ */
+export type PutBolosData = Types.Bolo;
+
+/**
+ * @method DELETE
+ * @route /bolos/:id
+ */
+export type DeleteBolosData = boolean;
+
+/**
+ * @method POST
+ * @route /bolos/mark-stolen/:id
+ */
+export type PostMarkStolenData = Prisma.Bolo;
