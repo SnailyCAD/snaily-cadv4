@@ -1,5 +1,5 @@
 import type * as Prisma from "@prisma/client";
-import type { User } from "./index.js";
+import type { EmsFdDeputy, Officer, UnitQualification, User } from "./index.js";
 
 /**
  * @method GET
@@ -189,6 +189,75 @@ export type PutManageCustomFieldsData = Prisma.CustomField;
  * @route /admin/manage/custom-fields/:id
  */
 export type DeleteManageCustomFieldsData = boolean;
+
+/**
+ * @method Get
+ * @route /admin/manage/units
+ */
+export type GetManageUnitsData = (
+  | (Officer & { type: "OFFICER" })
+  | (EmsFdDeputy & { type: "DEPUTY" })
+)[];
+
+/**
+ * @method Get
+ * @route /admin/manage/units/:id
+ */
+export type GetManageUnitByIdData = (Officer | EmsFdDeputy) & {
+  qualifications: UnitQualification[];
+  logs: Prisma.OfficerLog[];
+};
+
+/**
+ * @method Put
+ * @route /admin/manage/units/off-duty
+ */
+export type PutManageUnitsOffDutyData = (Prisma.Officer | Prisma.EmsFdDeputy)[];
+
+/**
+ * @method Put
+ * @route /admin/manage/units/callsign/:unitId
+ */
+export type PutManageUnitCallsignData = Officer | EmsFdDeputy;
+
+/**
+ * @method Put
+ * @route /admin/manage/units/:unitId
+ */
+export type PutManageUnitData = Officer | EmsFdDeputy;
+
+/**
+ * @method Post
+ * @route /admin/manage/units/departments/:unitId
+ */
+export type PostManageUnitAcceptDeclineDepartmentData =
+  | ((Officer | EmsFdDeputy) & {
+      deleted?: boolean;
+    })
+  | null;
+
+/**
+ * @method Post
+ * @route /admin/manage/units/:unitId/qualifications
+ */
+export type PostManageUnitAddQualificationData = UnitQualification;
+/**
+ * @method Delete
+ * @route /admin/manage/units/:unitId/qualifications/:qualificationId
+ */
+export type DeleteManageUnitQualificationData = boolean;
+
+/**
+ * @method Put
+ * @route /admin/manage/units/:unitId/qualifications/:qualificationId
+ */
+export type PutManageUnitQualificationData = PostManageUnitAddQualificationData;
+
+/**
+ * @method Delete
+ * @route /admin/manage/units/:unitId
+ */
+export type DeleteManageUnitByIdData = boolean;
 
 /**
  * @method Get

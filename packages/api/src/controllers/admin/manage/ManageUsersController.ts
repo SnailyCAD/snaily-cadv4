@@ -20,6 +20,13 @@ import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { isFeatureEnabled } from "lib/cad";
 import type * as APITypes from "@snailycad/types/api";
 
+const manageUsersSelect = (selectCitizens: boolean) =>
+  ({
+    ...userProperties,
+    ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
+    apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
+  } as const);
+
 @UseBeforeEach(IsAuth)
 @Controller("/admin/manage/users")
 export class ManageUsersController {
@@ -85,11 +92,7 @@ export class ManageUsersController {
   ): Promise<APITypes.GetManageUserByIdData> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        ...userProperties,
-        ...(selectCitizens ? { citizens: { include: citizenInclude } } : {}),
-        apiToken: { include: { logs: { take: 35, orderBy: { createdAt: "desc" } } } },
-      },
+      select: manageUsersSelect(selectCitizens),
     });
 
     if (!user) {
@@ -143,7 +146,7 @@ export class ManageUsersController {
         id: user.id,
       },
       data: { permissions },
-      select: userProperties,
+      select: manageUsersSelect(false),
     });
 
     return updated;
@@ -189,7 +192,7 @@ export class ManageUsersController {
         rank: user.rank === Rank.OWNER ? Rank.OWNER : Rank[data.rank as Rank],
         discordId: data.discordId,
       },
-      select: userProperties,
+      select: manageUsersSelect(false),
     });
 
     if (updated.discordId) {

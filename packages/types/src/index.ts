@@ -404,15 +404,7 @@ export interface SeizedItem {
  * Model DivisionValue
  *
  */
-export interface DivisionValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.DIVISION>;
-  departmentId: string;
-  department: DepartmentValue;
-  callsign: string | null;
-  pairedUnitTemplate: string | null;
-}
+export type DivisionValue = Prisma.DivisionValue & { value: Prisma.Value };
 
 /**
  * Model CallTypeValue
@@ -429,18 +421,7 @@ export interface CallTypeValue {
  * Model DepartmentValue
  *
  */
-export interface DepartmentValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.DEPARTMENT>;
-  callsign: string | null;
-  whitelisted: boolean;
-  isDefaultDepartment: boolean;
-  type: DepartmentType;
-  defaultOfficerRankId: string | null;
-  defaultOfficerRank: Value<ValueType.OFFICER_RANK> | null;
-  isConfidential: boolean;
-}
+export type DepartmentValue = Prisma.DepartmentValue & { value: Prisma.Value };
 
 /**
  * Model DriversLicenseCategoryValue
@@ -604,39 +585,18 @@ export interface EmployeeValue {
  * Model Officer
  *
  */
-export interface Officer {
-  id: string;
-  departmentId: string | null;
+export type Officer = Prisma.Officer & {
   department: DepartmentValue | null;
-  activeDivisionCallsignId: string | null;
-  activeDivisionCallsign: IndividualDivisionCallsign | null;
-  callsign: string;
-  callsign2: string;
-  incremental: number | null;
   divisions: DivisionValue[];
-  rankId: string | null;
-  rank: Value<ValueType.OFFICER_RANK> | null;
-  position: string | null;
-  statusId: string | null;
+  activeDivisionCallsign: Prisma.IndividualDivisionCallsign | null;
   status: StatusValue | null;
-  suspended: boolean;
-  badgeNumber: number | null;
-  imageId: string | null;
-  citizenId: string;
-  citizen: Citizen;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  whitelistStatusId: string | null;
-  whitelistStatus?: LeoWhitelistStatus | null;
-  combinedLeoUnitId: string | null;
-  activeIncident: LeoIncident | null;
-  activeIncidentId: string | null;
-  activeCallId: string | null;
-  radioChannelId: string | null;
-  user: Pick<User, "id" | "username" | "steamId">;
+  citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
+  whitelistStatus?: (Prisma.LeoWhitelistStatus & { department: Officer["department"] }) | null;
+  user: User;
+  rank: Prisma.Value | null;
+  activeIncident: Prisma.LeoIncident | null;
   callsigns?: IndividualDivisionCallsign[];
-}
+};
 
 export interface IndividualDivisionCallsign {
   id: string;
@@ -650,33 +610,18 @@ export interface IndividualDivisionCallsign {
  * Model UnitQualification
  *
  */
-export interface UnitQualification {
-  id: string;
+export type UnitQualification = Prisma.UnitQualification & {
   qualification: QualificationValue;
-  qualificationId: string;
-
-  suspendedAt: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-
-  officerId: string | null;
-  emsFdDeputyId: string | null;
-}
+};
 
 /**
  * Model Qualification
  *
  */
-export interface QualificationValue {
-  id: string;
-  valueId: string;
-  /** name of the qualification */
-  value: Value<ValueType.QUALIFICATION>;
-  imageId: string;
+export type QualificationValue = Prisma.QualificationValue & {
+  value: Prisma.Value;
   departments: DepartmentValue[];
-  description: string | null;
-  qualificationType: QualificationValueType;
-}
+};
 
 /**
  * Model LeoWhitelistStatus
@@ -693,31 +638,13 @@ export interface LeoWhitelistStatus {
  * Model StatusValue
  *
  */
-export interface StatusValue {
-  id: string;
-  valueId: string;
-  value: Value<ValueType.CODES_10>;
-  shouldDo: ShouldDoType;
-  whatPages: WhatPages[];
-  color: string | null;
-  type: StatusValueType;
-  departments?: DepartmentValue[];
-}
+export type StatusValue = Prisma.StatusValue & { value: Prisma.Value };
 
 /**
  * Model OfficerLog
  *
  */
-export interface OfficerLog {
-  id: string;
-  startedAt: Date;
-  endedAt: Date | null;
-  userId: string | null;
-  officerId: string;
-  emsFdDeputyId: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type OfficerLog = Prisma.OfficerLog;
 
 /**
  * Model ImpoundedVehicle
@@ -761,33 +688,17 @@ export interface LeoIncident {
  * Model IncidentEvent
  *
  */
-export interface IncidentEvent {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  incidentId: string;
-  description: string;
-}
+export type IncidentEvent = Prisma.IncidentEvent;
 
 /**
  * Model CombinedLeoUnit
  *
  */
-export interface CombinedLeoUnit {
-  id: string;
-  callsign: string;
-  callsign2: string;
-  statusId: string | null;
-  status: StatusValue | null;
-  department: DepartmentValue | null;
-  departmentId: string | null;
-  radioChannelId: string | null;
-  incremental: number | null;
-  pairedUnitTemplate: string | null;
+export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {
+  status: Officer["status"];
+  department: Officer["department"];
   officers: Officer[];
-  activeCallId: string | null;
-  activeIncidentId: string | null;
-}
+};
 
 /**
  * Model ActiveDispatchers
@@ -1012,35 +923,15 @@ export interface CourtDate {
  * Model EmsFdDeputy
  *
  */
-export interface EmsFdDeputy {
-  id: string;
-  departmentId: string | null;
-  department: DepartmentValue | null;
-  callsign: string;
-  callsign2: string;
-  incremental: number | null;
-  divisionId: string;
-  division: DivisionValue;
-  rankId: string | null;
-  rank: Value<ValueType.OFFICER_RANK> | null;
-  position: string | null;
-  statusId: string | null;
-  status: StatusValue | null;
-  suspended: boolean;
-  badgeNumber: number | null;
-  imageId: string | null;
-  citizenId: string;
-  citizen: Citizen;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  radioChannelId: string | null;
-  user: Pick<User, "id" | "username" | "steamId">;
-  activeCallId: string | null;
-  activeIncidentId: string | null;
-  whitelistStatusId: string | null;
-  whitelistStatus?: LeoWhitelistStatus | null;
-}
+export type EmsFdDeputy = Prisma.EmsFdDeputy & {
+  department: Officer["department"];
+  division: Officer["divisions"][number];
+  rank: Officer["rank"];
+  status: Officer["status"];
+  citizen: Officer["citizen"];
+  user: Officer["user"];
+  whitelistStatus?: Officer["whitelistStatus"];
+};
 
 /**
  * Model TruckLog
