@@ -1,5 +1,5 @@
 import type * as Prisma from "@prisma/client";
-import type { EmsFdDeputy, Officer, UnitQualification, User } from "./index.js";
+import type { EmsFdDeputy, Officer, TaxiCall, TowCall, UnitQualification, User } from "./index.js";
 
 /**
  * @method GET
@@ -357,3 +357,90 @@ export type GetManageNameChangeRequests = (Prisma.NameChangeRequest & {
  * @route /admin/manage/name-change-requests/:id
  */
 export type PutManageNameChangeRequests = Prisma.NameChangeRequest;
+
+/** bleeter */
+/**
+ * @method Get
+ * @route /bleeter
+ */
+export type GetBleeterData = (Prisma.BleeterPost & { user: Pick<User, "username"> })[];
+
+/**
+ * @method Get
+ * @route /bleeter/:id
+ */
+export type GetBleeterByIdData = GetBleeterData[number];
+
+/**
+ * @method Post
+ * @route /bleeter/:id
+ */
+export type PostBleeterByIdData = Prisma.BleeterPost;
+
+/**
+ * @method Put
+ * @route /bleeter/:id
+ */
+export type PutBleeterByIdData = Prisma.BleeterPost;
+
+/**
+ * @method Post
+ * @route /bleeter/:id
+ */
+export type PostBleeterByIdImageData = Pick<Prisma.BleeterPost, "imageId">;
+
+/**
+ * @method Delete
+ * @route /bleeter/:id
+ */
+export type DeleteBleeterByIdData = boolean;
+
+/** taxi */
+/**
+ * @method Get
+ * @route /taxi
+ */
+export type GetTaxiCallsData = TaxiCall[];
+
+/**
+ * @method Post
+ * @route /taxi
+ */
+export type PostTaxiCallsData = GetTaxiCallsData[number];
+
+/**
+ * @method Put
+ * @route /taxi/:id
+ */
+export type PutTaxiCallsData = GetTaxiCallsData[number];
+
+/**
+ * @method Delete
+ * @route /taxi/:id
+ */
+export type DeleteTaxiCallsData = boolean;
+
+/** tow */
+/**
+ * @method Get
+ * @route /tow
+ */
+export type GetTowCallsData = TowCall[];
+
+/**
+ * @method Post
+ * @route /tow
+ */
+export type PostTowCallsData = GetTowCallsData[number];
+
+/**
+ * @method Put
+ * @route /tow/:id
+ */
+export type PutTowCallsData = GetTowCallsData[number];
+
+/**
+ * @method Delete
+ * @route /tow/:id
+ */
+export type DeleteTowCallsData = boolean;

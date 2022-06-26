@@ -17,6 +17,7 @@ import type { User } from "@prisma/client";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { towIncludes } from "./TowController";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/taxi")
 @UseBeforeEach(IsAuth)
@@ -32,7 +33,7 @@ export class TaxiController {
     permissions: [Permissions.ManageTaxiCalls, Permissions.ViewTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
-  async getTaxiCalls() {
+  async getTaxiCalls(): Promise<APITypes.GetTaxiCallsData> {
     const calls = await prisma.taxiCall.findMany({
       include: towIncludes,
     });
@@ -43,7 +44,10 @@ export class TaxiController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new taxi call")
-  async createTaxiCall(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createTaxiCall(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostTaxiCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 
     if (data.creatorId) {
@@ -78,7 +82,10 @@ export class TaxiController {
     permissions: [Permissions.ManageTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
-  async updateTaxiCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
+  async updateTaxiCall(
+    @PathParams("id") callId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutTaxiCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.taxiCall.findUnique({
@@ -124,7 +131,7 @@ export class TaxiController {
     permissions: [Permissions.ManageTaxiCalls],
     fallback: (u) => u.isTaxi,
   })
-  async endTaxiCall(@PathParams("id") callId: string) {
+  async endTaxiCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTaxiCallsData> {
     const call = await prisma.taxiCall.findUnique({
       where: { id: callId },
     });

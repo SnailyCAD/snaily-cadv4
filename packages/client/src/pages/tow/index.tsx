@@ -14,14 +14,15 @@ import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { TowTaxiCallsTable } from "components/calls/TowTaxiCallsTable";
 import { Permissions } from "@snailycad/permissions";
+import type { GetTowCallsData } from "@snailycad/types/api";
 
 interface Props {
-  calls: TowCall[];
+  calls: GetTowCallsData;
 }
 
 export default function Tow(props: Props) {
   const { openModal } = useModal();
-  const [calls, setCalls] = React.useState<TowCall[]>(props.calls);
+  const [calls, setCalls] = React.useState(props.calls);
   const t = useTranslations("Calls");
 
   useListener(SocketEvents.CreateTowCall, (data: TowCall) => {

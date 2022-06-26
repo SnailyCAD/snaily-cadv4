@@ -147,8 +147,8 @@ export function dataToSlate(
     | {
         description?: string | null;
         body?: string | null;
-        descriptionData?: JsonArray | null;
-        bodyData?: JsonArray | null;
+        descriptionData?: any;
+        bodyData?: any;
       }
     | null
     | undefined,

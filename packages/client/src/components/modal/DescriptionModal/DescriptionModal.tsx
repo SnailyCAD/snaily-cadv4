@@ -9,7 +9,7 @@ import type { Descendant } from "slate";
 import type { JsonArray } from "type-fest";
 
 interface Props {
-  value?: Descendant[] | JsonArray | null;
+  value?: any;
   onClose?(): void;
 }
 

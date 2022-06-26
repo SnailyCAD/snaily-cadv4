@@ -27,6 +27,7 @@ import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { callInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { sendDiscordWebhook } from "lib/discord/webhooks";
+import type * as APITypes from "@snailycad/types/api";
 
 const CITIZEN_SELECTS = {
   name: true,
@@ -53,7 +54,9 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls, Permissions.ViewTowCalls, Permissions.ViewTowLogs],
     fallback: (u) => u.isTow,
   })
-  async getTowCalls(@QueryParams("ended", Boolean) includingEnded = false) {
+  async getTowCalls(
+    @QueryParams("ended", Boolean) includingEnded = false,
+  ): Promise<APITypes.GetTowCallsData> {
     const calls = await prisma.towCall.findMany({
       where: includingEnded ? undefined : { ended: false },
       include: towIncludes,
@@ -66,7 +69,10 @@ export class TowController {
   @UseBefore(IsAuth)
   @Post("/")
   @Description("Create a new tow call")
-  async createTowCall(@BodyParams() body: unknown, @Context("user") user: User) {
+  async createTowCall(
+    @BodyParams() body: unknown,
+    @Context("user") user: User,
+  ): Promise<APITypes.PostTowCallsData> {
     const data = validateSchema(TOW_SCHEMA, body);
 
     if (data.creatorId) {
@@ -184,7 +190,10 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls],
     fallback: (u) => u.isTow,
   })
-  async updateCall(@PathParams("id") callId: string, @BodyParams() body: unknown) {
+  async updateCall(
+    @PathParams("id") callId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutTowCallsData> {
     const data = validateSchema(UPDATE_TOW_SCHEMA, body);
 
     const call = await prisma.towCall.findUnique({
@@ -228,7 +237,7 @@ export class TowController {
     permissions: [Permissions.ManageTowCalls],
     fallback: (u) => u.isTow,
   })
-  async endTowCall(@PathParams("id") callId: string) {
+  async endTowCall(@PathParams("id") callId: string): Promise<APITypes.DeleteTowCallsData> {
     const call = await prisma.towCall.findUnique({
       where: { id: callId },
     });

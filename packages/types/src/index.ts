@@ -490,46 +490,19 @@ export interface BleeterPost {
  * Model TowCall
  *
  */
-export interface TowCall {
-  id: string;
-  userId: string | null;
-  assignedUnitId: string | null;
-  assignedUnit: Citizen | null;
-  location: string;
-  postal: string | null;
-  deliveryAddressId: string | null;
-  plate: string | null;
-  model: string | null;
-  name: string | null;
-  description: string | null;
-  descriptionData: DescriptionData | null;
-  creatorId: string | null;
-  creator: Citizen | null;
-  ended: boolean;
-  callCountyService: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type TowCall = Prisma.TowCall & {
+  assignedUnit: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
+  creator: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
+};
 
 /**
  * Model TaxiCall
  *
  */
-export interface TaxiCall {
-  id: string;
-  userId: string | null;
-  assignedUnitId: string | null;
-  assignedUnit: Citizen | null;
-  location: string;
-  postal: string | null;
-  name: string | null;
-  description: string | null;
-  descriptionData: DescriptionData | null;
-  creatorId: string | null;
-  creator: Citizen | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type TaxiCall = Prisma.TaxiCall & {
+  assignedUnit: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
+  creator: Pick<Prisma.Citizen, "name" | "surname" | "id"> | null;
+};
 
 /**
  * Model Business
