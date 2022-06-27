@@ -20,11 +20,13 @@ export class WeaponController {
   async getCitizenWeapons(
     @PathParams("citizenId") citizenId: string,
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ) {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
-      where: { id: citizenId, userId: user.id },
+      where: { id: citizenId, userId: checkCitizenUserId ? user.id : undefined },
     });
 
     if (!citizen) {
