@@ -14,6 +14,7 @@ import { PersonFill } from "react-bootstrap-icons";
 import { useImageUrl } from "hooks/useImageUrl";
 import { toastMessage } from "lib/toastMessage";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostCreateWarrantData } from "@snailycad/types/api";
 
 export function CreateWarrantModal() {
   const { isOpen, closeModal } = useModal();
@@ -26,7 +27,8 @@ export function CreateWarrantModal() {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/records/create-warrant", {
+    const { json } = await execute<PostCreateWarrantData, typeof INITIAL_VALUES>({
+      path: "/records/create-warrant",
       method: "POST",
       data: values,
       helpers,

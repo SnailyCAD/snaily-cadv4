@@ -13,6 +13,7 @@ import { Select } from "components/form/Select";
 import { FullDate } from "components/shared/FullDate";
 import type { Warrant } from "@snailycad/types";
 import { TabsContent } from "components/shared/TabList";
+import type { DeleteRecordsByIdData, PutWarrantsData } from "@snailycad/types/api";
 
 const values = [
   { label: "Inactive", value: "inactive" },
@@ -31,7 +32,8 @@ export function NameSearchWarrantsTab() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
     if (!warrant) return;
 
-    const { json } = await execute(`/records/${warrant.id}`, {
+    const { json } = await execute<DeleteRecordsByIdData>({
+      path: `/records/${warrant.id}`,
       data: { type: "WARRANT" },
       method: "DELETE",
     });
@@ -53,7 +55,8 @@ export function NameSearchWarrantsTab() {
   }
 
   async function handleChange(value: string, warrant: Warrant) {
-    const { json } = await execute(`/records/warrant/${warrant.id}`, {
+    const { json } = await execute<PutWarrantsData>({
+      path: `/records/warrant/${warrant.id}`,
       data: { status: value.toUpperCase(), type: "WARRANT" },
       method: "PUT",
     });

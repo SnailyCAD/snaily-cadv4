@@ -17,6 +17,7 @@ import { FullDate } from "components/shared/FullDate";
 import { TabsContent } from "components/shared/TabList";
 import { Permissions, usePermission } from "hooks/usePermission";
 import { ViolationsColumn } from "components/leo/ViolationsColumn";
+import type { DeleteRecordsByIdData } from "@snailycad/types/api";
 
 export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitizen?: boolean }) {
   const t = useTranslations();
@@ -44,7 +45,8 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
   async function handleDelete() {
     if (!tempItem) return;
 
-    const { json } = await execute(`/records/${tempItem.id}`, {
+    const { json } = await execute<DeleteRecordsByIdData>({
+      path: `/records/${tempItem.id}`,
       method: "DELETE",
     });
 

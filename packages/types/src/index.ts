@@ -348,199 +348,31 @@ export type CourthousePost = Prisma.CourthousePost & {
  * enums
  */
 
-export enum Feature {
-  BLEETER = "BLEETER",
-  TOW = "TOW",
-  TAXI = "TAXI",
-  COURTHOUSE = "COURTHOUSE",
-  TRUCK_LOGS = "TRUCK_LOGS",
-  AOP = "AOP",
-  BUSINESS = "BUSINESS",
-  ALLOW_DUPLICATE_CITIZEN_NAMES = "ALLOW_DUPLICATE_CITIZEN_NAMES",
-  DISCORD_AUTH = "DISCORD_AUTH",
-  CALLS_911 = "CALLS_911",
-  WEAPON_REGISTRATION = "WEAPON_REGISTRATION",
-  SOCIAL_SECURITY_NUMBERS = "SOCIAL_SECURITY_NUMBERS",
-  CUSTOM_TEXTFIELD_VALUES = "CUSTOM_TEXTFIELD_VALUES",
-  ACTIVE_DISPATCHERS = "ACTIVE_DISPATCHERS",
-  ALLOW_CITIZEN_UPDATE_LICENSE = "ALLOW_CITIZEN_UPDATE_LICENSE",
-  ALLOW_REGULAR_LOGIN = "ALLOW_REGULAR_LOGIN",
-  ACTIVE_INCIDENTS = "ACTIVE_INCIDENTS",
-  RADIO_CHANNEL_MANAGEMENT = "RADIO_CHANNEL_MANAGEMENT",
-  ALLOW_CITIZEN_DELETION_BY_NON_ADMIN = "ALLOW_CITIZEN_DELETION_BY_NON_ADMIN",
-  DL_EXAMS = "DL_EXAMS",
-  DMV = "DMV",
-  BADGE_NUMBERS = "BADGE_NUMBERS",
-  USER_API_TOKENS = "USER_API_TOKENS",
-  CITIZEN_RECORD_APPROVAL = "CITIZEN_RECORD_APPROVAL",
-  COMMON_CITIZEN_CARDS = "COMMON_CITIZEN_CARDS",
-  STEAM_OAUTH = "STEAM_OAUTH",
-  CREATE_USER_CITIZEN_LEO = "CREATE_USER_CITIZEN_LEO",
-  LEO_TICKETS = "LEO_TICKETS",
-  LEO_BAIL = "LEO_BAIL",
-  COURTHOUSE_POSTS = "COURTHOUSE_POSTS",
-  WEAPON_EXAMS = "WEAPON_EXAMS",
-}
-
-export enum Rank {
-  OWNER = "OWNER",
-  ADMIN = "ADMIN",
-  USER = "USER",
-}
-
-export const WhitelistStatus = {
-  ACCEPTED: "ACCEPTED",
-  PENDING: "PENDING",
-  DECLINED: "DECLINED",
-};
-export type WhitelistStatus = typeof WhitelistStatus[keyof typeof WhitelistStatus];
-
-export enum StatusViewMode {
-  FULL_ROW_COLOR = "FULL_ROW_COLOR",
-  DOT_COLOR = "DOT_COLOR",
-}
-
-export enum TableActionsAlignment {
-  NONE = "NONE",
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-}
-
-export enum ValueType {
-  LICENSE = "LICENSE",
-  GENDER = "GENDER",
-  ETHNICITY = "ETHNICITY",
-  VEHICLE = "VEHICLE",
-  WEAPON = "WEAPON",
-  BLOOD_GROUP = "BLOOD_GROUP",
-  BUSINESS_ROLE = "BUSINESS_ROLE",
-  CODES_10 = "CODES_10",
-  PENAL_CODE = "PENAL_CODE",
-  DEPARTMENT = "DEPARTMENT",
-  OFFICER_RANK = "OFFICER_RANK",
-  DIVISION = "DIVISION",
-  DRIVERSLICENSE_CATEGORY = "DRIVERSLICENSE_CATEGORY",
-  IMPOUND_LOT = "IMPOUND_LOT",
-  VEHICLE_FLAG = "VEHICLE_FLAG",
-  CITIZEN_FLAG = "CITIZEN_FLAG",
-  QUALIFICATION = "QUALIFICATION",
-  CALL_TYPE = "CALL_TYPE",
-}
-
-export enum ValueLicenseType {
-  LICENSE = "LICENSE",
-  REGISTRATION_STATUS = "REGISTRATION_STATUS",
-  INSURANCE_STATUS = "INSURANCE_STATUS",
-}
-
-export enum DepartmentType {
-  LEO = "LEO",
-  EMS_FD = "EMS_FD",
-}
-
-export enum DriversLicenseCategoryType {
-  AUTOMOTIVE = "AUTOMOTIVE",
-  AVIATION = "AVIATION",
-  WATER = "WATER",
-  FIREARM = "FIREARM",
-}
-
-export enum EmployeeAsEnum {
-  OWNER = "OWNER",
-  MANAGER = "MANAGER",
-  EMPLOYEE = "EMPLOYEE",
-}
-
-export enum ShouldDoType {
-  SET_OFF_DUTY = "SET_OFF_DUTY",
-  SET_ON_DUTY = "SET_ON_DUTY",
-  SET_ASSIGNED = "SET_ASSIGNED",
-  SET_STATUS = "SET_STATUS",
-  PANIC_BUTTON = "PANIC_BUTTON",
-}
-
-export enum StatusValueType {
-  STATUS_CODE = "STATUS_CODE",
-  SITUATION_CODE = "SITUATION_CODE",
-}
-
-export enum WhatPages {
-  DISPATCH = "DISPATCH",
-  EMS_FD = "EMS_FD",
-  LEO = "LEO",
-}
-
-export enum BoloType {
-  VEHICLE = "VEHICLE",
-  PERSON = "PERSON",
-  OTHER = "OTHER",
-}
-
-export enum RecordType {
-  ARREST_REPORT = "ARREST_REPORT",
-  TICKET = "TICKET",
-  WRITTEN_WARNING = "WRITTEN_WARNING",
-}
-
-export enum ReleaseType {
-  TIME_OUT = "TIME_OUT",
-  BAIL_POSTED = "BAIL_POSTED",
-}
-
-export enum ExpungementRequestStatus {
-  ACCEPTED = "ACCEPTED",
-  DENIED = "DENIED",
-  PENDING = "PENDING",
-}
-
-export enum WarrantStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-}
-
-export enum VehicleInspectionStatus {
-  PASSED = "PASSED",
-  FAILED = "FAILED",
-}
-
-export enum VehicleTaxStatus {
-  TAXED = "TAXED",
-  UNTAXED = "UNTAXED",
-}
-
-export enum DLExamPassType {
-  PASSED = "PASSED",
-  FAILED = "FAILED",
-}
-
-export enum DLExamStatus {
-  IN_PROGRESS = "IN_PROGRESS",
-  PASSED = "PASSED",
-  FAILED = "FAILED",
-}
-
-export enum CustomFieldCategory {
-  CITIZEN = "CITIZEN",
-  WEAPON = "WEAPON",
-  VEHICLE = "VEHICLE",
-}
-
-export enum QualificationValueType {
-  QUALIFICATION = "QUALIFICATION",
-  AWARD = "AWARD",
-}
-
-export enum DiscordWebhookType {
-  CALL_911 = "CALL_911",
-  PANIC_BUTTON = "PANIC_BUTTON",
-  UNIT_STATUS = "UNIT_STATUS",
-  BOLO = "BOLO",
-  VEHICLE_IMPOUNDED = "VEHICLE_IMPOUNDED",
-  CITIZEN_RECORD = "CITIZEN_RECORD",
-}
-
-export enum JailTimeScale {
-  HOURS = "HOURS",
-  MINUTES = "MINUTES",
-  SECONDS = "SECONDS",
-}
+export {
+  RecordType,
+  WhitelistStatus,
+  Feature,
+  Rank,
+  StatusViewMode,
+  TableActionsAlignment,
+  ValueType,
+  ValueLicenseType,
+  DepartmentType,
+  DriversLicenseCategoryType,
+  EmployeeAsEnum,
+  ShouldDoType,
+  StatusValueType,
+  WhatPages,
+  BoloType,
+  ReleaseType,
+  ExpungementRequestStatus,
+  WarrantStatus,
+  VehicleInspectionStatus,
+  VehicleTaxStatus,
+  DLExamPassType,
+  DLExamStatus,
+  CustomFieldCategory,
+  QualificationValueType,
+  DiscordWebhookType,
+  JailTimeScale,
+} from "@prisma/client";
