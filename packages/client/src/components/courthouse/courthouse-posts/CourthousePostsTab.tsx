@@ -12,9 +12,10 @@ import { DescriptionModal } from "components/modal/DescriptionModal/DescriptionM
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { usePermission, Permissions } from "hooks/usePermission";
+import type { GetCourthousePostsData } from "@snailycad/types/api";
 
 interface Props {
-  posts: CourthousePost[];
+  posts: GetCourthousePostsData;
 }
 
 export function CourthousePostsTab(props: Props) {

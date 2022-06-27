@@ -802,3 +802,91 @@ export type PutBusinessPostsData = Prisma.BusinessPost;
  * @route /businesses/posts/:id
  */
 export type DeleteBusinessPostsData = boolean;
+
+/** courthouse */
+/**
+ * @method GET
+ * @route /court-entries
+ */
+export type GetCourtEntriesData = Types.CourtEntry[];
+
+/**
+ * @method POST
+ * @route /court-entries
+ */
+export type PostCourtEntriesData = Types.CourtEntry;
+
+/**
+ * @method PUT
+ * @route /court-entries/:id
+ */
+export type PutCourtEntriesData = Types.CourtEntry;
+
+/**
+ * @method DELETE
+ * @route /court-entries/:id
+ */
+export type DeleteCourtEntriesData = boolean;
+
+/**
+ * @method GET
+ * @route /courthouse-posts
+ */
+export type GetCourthousePostsData = Types.CourthousePost[];
+
+/**
+ * @method POST
+ * @route /courthouse-posts
+ */
+export type PostCourthousePostsData = Types.CourthousePost;
+
+/**
+ * @method PUT
+ * @route /courthouse-posts/:id
+ */
+export type PutCourthousePostsData = Types.CourthousePost;
+
+/**
+ * @method DELETE
+ * @route /courthouse-posts/:id
+ */
+export type DeleteCourthousePostsData = boolean;
+
+/**
+ * @method GET
+ * @route /expungement-requests
+ */
+export type GetExpungementRequestsData = (Prisma.ExpungementRequest & {
+  citizen: Prisma.Citizen;
+  warrants: Prisma.Warrant[];
+  records: Omit<Types.Record, "seizedItems" | "officer">[];
+})[];
+
+/**
+ * @method GET
+ * @route /expungement-requests/:citizenId
+ */
+export type GetExpungementRequestByCitizenIdData = Types.Citizen & {
+  warrants: Prisma.Warrant[];
+  Record: Omit<Types.Record, "seizedItems">[];
+};
+
+/**
+ * @method POST
+ * @route /expungement-requests/:citizenId
+ */
+export type PostExpungementRequestByCitizenIdData = GetExpungementRequestsData[number];
+
+/**
+ * @method GET
+ * @route /name-change-requests
+ */
+export type GetNameChangeRequestsData = (Prisma.NameChangeRequest & {
+  citizen: Prisma.Citizen;
+})[];
+
+/**
+ * @method POST
+ * @route /name-change-requests
+ */
+export type PostNameChangeRequestsData = GetNameChangeRequestsData[number];

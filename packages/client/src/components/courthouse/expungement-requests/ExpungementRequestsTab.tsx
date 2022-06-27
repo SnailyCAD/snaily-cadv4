@@ -10,14 +10,14 @@ import { FullDate } from "components/shared/FullDate";
 import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
-import type { GetManageExpungementRequests } from "@snailycad/types/api";
+import type { GetExpungementRequestsData } from "@snailycad/types/api";
 
 const RequestExpungement = dynamic(
   async () => (await import("./RequestExpungement")).RequestExpungement,
 );
 
 interface Props {
-  requests: GetManageExpungementRequests;
+  requests: GetExpungementRequestsData;
 }
 
 export function ExpungementRequestsTab(props: Props) {

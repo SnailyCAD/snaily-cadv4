@@ -2,7 +2,6 @@ import { Layout } from "components/Layout";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import type { CourtEntry, CourthousePost } from "@snailycad/types";
 import { useTranslations } from "use-intl";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
@@ -14,15 +13,17 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { CourthousePostsTab } from "components/courthouse/courthouse-posts/CourthousePostsTab";
 import type {
-  GetManageExpungementRequests,
-  GetManageNameChangeRequests,
+  GetCourtEntriesData,
+  GetCourthousePostsData,
+  GetExpungementRequestsData,
+  GetNameChangeRequestsData,
 } from "@snailycad/types/api";
 
 interface Props {
-  requests: GetManageExpungementRequests;
-  nameChangeRequests: GetManageNameChangeRequests;
-  courtEntries: CourtEntry[];
-  courthousePosts: CourthousePost[];
+  requests: GetExpungementRequestsData;
+  nameChangeRequests: GetNameChangeRequestsData;
+  courtEntries: GetCourtEntriesData;
+  courthousePosts: GetCourthousePostsData;
 }
 
 export default function Courthouse(props: Props) {

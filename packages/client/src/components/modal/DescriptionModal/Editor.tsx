@@ -9,7 +9,6 @@ import {
   withReact,
 } from "slate-react";
 import { type HistoryEditor, withHistory } from "slate-history";
-import type { JsonArray } from "type-fest";
 import { Toolbar } from "./Toolbar";
 import { toggleMark } from "lib/editor/utils";
 import isHotkey from "is-hotkey";
@@ -30,7 +29,7 @@ declare module "slate" {
 
 interface EditorProps {
   isReadonly?: boolean;
-  value: Descendant[] | JsonArray;
+  value: any;
   onChange?(value: Descendant[]): void;
 }
 

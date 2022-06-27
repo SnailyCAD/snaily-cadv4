@@ -9,10 +9,10 @@ import { WhitelistStatus } from "@snailycad/types";
 import { Status } from "components/shared/Status";
 import { FullDate } from "components/shared/FullDate";
 import { RequestNameChangeModal } from "./RequestNameChange";
-import type { GetManageNameChangeRequests } from "@snailycad/types/api";
+import type { GetNameChangeRequestsData } from "@snailycad/types/api";
 
 interface Props {
-  requests: GetManageNameChangeRequests;
+  requests: GetNameChangeRequestsData;
 }
 
 export function NameChangeRequestTab(props: Props) {

@@ -141,8 +141,8 @@ export type Value = Prisma.Value & {
 };
 
 export type PenalCode = Prisma.PenalCode & {
-  warningApplicable: WarningApplicable | null;
-  warningNotApplicable: WarningNotApplicable | null;
+  warningApplicable?: WarningApplicable | null;
+  warningNotApplicable?: WarningNotApplicable | null;
 };
 
 export type PenalCodeGroup = Prisma.PenalCodeGroup;
@@ -284,7 +284,6 @@ export type Record = Prisma.Record & {
   officer: Officer;
   violations: Violation[];
   seizedItems: Prisma.SeizedItem[];
-  status?: Prisma.WhitelistStatus;
 };
 
 export type RecordRelease = Prisma.RecordRelease & {
@@ -341,7 +340,9 @@ export type CustomFieldValue = Prisma.CustomFieldValue & {
   field: CustomField;
 };
 
-export type CourthousePost = Prisma.CourthousePost;
+export type CourthousePost = Prisma.CourthousePost & {
+  user: User;
+};
 
 /**
  * enums

@@ -12,10 +12,10 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
-import type { GetManageNameChangeRequests } from "@snailycad/types/api";
+import type { GetNameChangeRequestsData, PostNameChangeRequestsData } from "@snailycad/types/api";
 
 interface Props {
-  onCreate?(request: GetManageNameChangeRequests[number]): void;
+  onCreate?(request: GetNameChangeRequestsData[number]): void;
 }
 
 export function RequestNameChangeModal({ onCreate }: Props) {
@@ -36,7 +36,8 @@ export function RequestNameChangeModal({ onCreate }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    const { json } = await execute("/name-change", {
+    const { json } = await execute<PostNameChangeRequestsData, typeof INITIAL_VALUES>({
+      path: "/name-change",
       method: "POST",
       data: values,
       helpers,
