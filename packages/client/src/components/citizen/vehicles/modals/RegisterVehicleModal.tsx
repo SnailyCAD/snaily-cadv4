@@ -130,7 +130,6 @@ export function RegisterVehicleModal({ vehicle, onClose, onCreate, onUpdate }: P
           <Form>
             <FormField errorMessage={errors.plate} label={tVehicle("plate")}>
               <Input
-                disabled={!!vehicle}
                 onChange={handleChange}
                 name="plate"
                 value={values.plate.toUpperCase()}

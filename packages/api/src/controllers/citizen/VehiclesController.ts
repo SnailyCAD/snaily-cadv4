@@ -206,6 +206,21 @@ export class VehiclesController {
       throw new NotFound("notFound");
     }
 
+    const existing = await prisma.registeredVehicle.findFirst({
+      where: {
+        AND: [{ plate: data.plate.toUpperCase() }, { plate: { not: vehicle.plate.toUpperCase() } }],
+      },
+    });
+
+    if (existing) {
+      throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
+    }
+
+    const plateLength = cad.miscCadSettings.maxPlateLength || 8;
+    if (data.plate.length > plateLength) {
+      throw new ExtendedBadRequest({ plate: "plateToLong" });
+    }
+
     if (data.businessId && data.employeeId) {
       const employee = await prisma.employee.findFirst({
         where: {
@@ -278,6 +293,7 @@ export class VehiclesController {
         id: vehicle.id,
       },
       data: {
+        plate: data.plate,
         modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,
