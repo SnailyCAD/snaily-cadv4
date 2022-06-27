@@ -2,6 +2,8 @@ import type * as Prisma from "@prisma/client";
 import type * as Types from "./index.js";
 
 export * from "./api/admin.js";
+export * from "./api/dispatch.js";
+export * from "./api/courthouse.js";
 
 /** bleeter */
 /**
@@ -448,242 +450,59 @@ export type PutBusinessPostsData = Prisma.BusinessPost;
  */
 export type DeleteBusinessPostsData = boolean;
 
-/** courthouse */
+/** incidents */
 /**
  * @method GET
- * @route /court-entries
+ * @route /incidents
  */
-export type GetCourtEntriesData = Types.CourtEntry[];
-
-/**
- * @method POST
- * @route /court-entries
- */
-export type PostCourtEntriesData = Types.CourtEntry;
-
-/**
- * @method PUT
- * @route /court-entries/:id
- */
-export type PutCourtEntriesData = Types.CourtEntry;
-
-/**
- * @method DELETE
- * @route /court-entries/:id
- */
-export type DeleteCourtEntriesData = boolean;
-
-/**
- * @method GET
- * @route /courthouse-posts
- */
-export type GetCourthousePostsData = Types.CourthousePost[];
-
-/**
- * @method POST
- * @route /courthouse-posts
- */
-export type PostCourthousePostsData = Types.CourthousePost;
-
-/**
- * @method PUT
- * @route /courthouse-posts/:id
- */
-export type PutCourthousePostsData = Types.CourthousePost;
-
-/**
- * @method DELETE
- * @route /courthouse-posts/:id
- */
-export type DeleteCourthousePostsData = boolean;
-
-/**
- * @method GET
- * @route /expungement-requests
- */
-export type GetExpungementRequestsData = (Prisma.ExpungementRequest & {
-  citizen: Prisma.Citizen;
-  warrants: Prisma.Warrant[];
-  records: Omit<Types.Record, "seizedItems" | "officer">[];
-})[];
-
-/**
- * @method GET
- * @route /expungement-requests/:citizenId
- */
-export type GetExpungementRequestByCitizenIdData = Types.Citizen & {
-  warrants: Prisma.Warrant[];
-  Record: Omit<Types.Record, "seizedItems">[];
-};
-
-/**
- * @method POST
- * @route /expungement-requests/:citizenId
- */
-export type PostExpungementRequestByCitizenIdData = GetExpungementRequestsData[number];
-
-/**
- * @method GET
- * @route /name-change-requests
- */
-export type GetNameChangeRequestsData = (Prisma.NameChangeRequest & {
-  citizen: Prisma.Citizen;
-})[];
-
-/**
- * @method POST
- * @route /name-change-requests
- */
-export type PostNameChangeRequestsData = GetNameChangeRequestsData[number];
-
-/**
- * @method POST
- * @route /records/create-warrant
- */
-export type PostCreateWarrantData = Prisma.Warrant & {
-  citizen: Prisma.Citizen;
-};
-
-/**
- * @method PUT
- * @route /records/create-warrant/:id
- */
-export type PutWarrantsData = PostCreateWarrantData;
-
-/**
- * @method POST
- * @route /records
- */
-export type PostRecordsData = Types.Record;
-
-/**
- * @method PUT
- * @route /records/:id
- */
-export type PutRecordsByIdData = Types.Record;
-
-/**
- * @method DELETE
- * @route /records/:id
- */
-export type DeleteRecordsByIdData = boolean;
-
-/** calls */
-/**
- * @method GET
- * @route /911-calls
- */
-export type Get911CallsData = (Types.Call911 & {
-  assignedUnits: Types.AssignedUnit[];
-  events: Types.Call911Event[];
-})[];
-
-/**
- * @method GET
- * @route /911-calls/:id
- */
-export type Get911CallByIdData = Get911CallsData[number];
-
-/**
- * @method POST
- * @route /911-calls
- */
-export type Post911CallsData = Get911CallsData[number];
-
-/**
- * @method PUT
- * @route /911-calls/:id
- */
-export type Put911CallByIdData = Get911CallsData[number];
-
-/**
- * @method DELETE
- * @route /911-calls/purge
- */
-export type DeletePurge911CallsData = boolean;
-
-/**
- * @method DELETE
- * @route /911-calls/:id
- */
-export type Delete911CallByIdData = boolean;
-
-/**
- * @method POST
- * @route /911-calls/link-incident/:callId
- */
-export type PostLink911CallToIncident =
-  | (Prisma.Call911 & { incidents: Types.LeoIncident[] })
-  | null;
-
-/**
- * @method POST
- * @route /911-calls/:type/:callId
- */
-export type Post911CallAssignUnAssign = Get911CallsData[number];
-
-/**
- * @method POST
- * @route /911-calls/events
- */
-export type Post911CallEventsData = Get911CallsData[number];
-
-/**
- * @method PUT
- * @route /911-calls/events/:id
- */
-export type Put911CallEventByIdData = Get911CallsData[number];
-
-/**
- * @method DELETE
- * @route /911-calls/events/:id
- */
-export type Delete911CallEventByIdData = Get911CallsData[number];
-
-/** dispatch */
-/**
- * @method GET
- * @route /dispatch
- */
-export interface GetDispatchData {
-  deputies: Types.EmsFdDeputy[];
-  officers: (Types.Officer | Types.CombinedLeoUnit)[];
-  activeIncidents: Types.LeoIncident[];
-  activeDispatchers: (Prisma.ActiveDispatchers & {
-    user: Pick<Types.User, "id" | "rank" | "username" | "isLeo" | "isEmsFd">;
-  })[];
+export interface GetIncidentsData {
+  incidents: Types.LeoIncident[];
 }
 
 /**
- * @method POST
- * @route /dispatch/aop
+ * @method GET
+ * @route /incidents/:id
  */
-export type PostDispatchAopData = Pick<Types.cad, "areaOfPlay">;
+export type GetIncidentByIdData = Types.LeoIncident[];
 
 /**
  * @method POST
- * @route /dispatch/signal-100
+ * @route /incidents
  */
-export interface PostDispatchSignal100Data {
-  value: boolean;
-}
-
-/**
- * @method POST
- * @route /dispatch/dispatchers-state
- */
-export interface PostDispatchDispatchersStateData {
-  dispatcher: GetDispatchData["activeDispatchers"][number] | null;
-}
+export type PostIncidentsData = Types.LeoIncident;
 
 /**
  * @method PUT
- * @route /dispatch/radio-channel
+ * @route /incidents/:type/:incidentId
  */
-export type PutDispatchRadioChannelData = Types.Officer | Types.EmsFdDeputy | Types.CombinedLeoUnit;
+export type PutAssignUnassignIncidentsData = Types.LeoIncident;
+
+/**
+ * @method PUT
+ * @route /incidents/:id
+ */
+export type PutIncidentByIdData = Types.LeoIncident;
+
+/**
+ * @method DELETE
+ * @route /incidents/:id
+ */
+export type DeleteIncidentByIdData = boolean;
 
 /**
  * @method POST
- * @route /dispatch/radio-channel
+ * @route /incidents/events/:incidentId
  */
-export type PostDispatchTonesData = boolean;
+export type PostIncidentEventsData = Prisma.IncidentEvent;
+
+/**
+ * @method PUT
+ * @route /incidents/events/:incidentId/:eventId
+ */
+export type PutIncidentEventByIdData = Prisma.IncidentEvent;
+
+/**
+ * @method DELETE
+ * @route /incidents/events/:incidentId/:eventId
+ */
+export type DeleteIncidentEventByIdData = boolean;

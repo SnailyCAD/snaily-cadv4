@@ -22,10 +22,14 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { isUnitCombined } from "@snailycad/utils";
-import type { GetDispatchData } from "@snailycad/types/api";
+import type {
+  DeleteIncidentByIdData,
+  GetDispatchData,
+  GetIncidentsData,
+} from "@snailycad/types/api";
 
 interface Props extends GetDispatchData {
-  incidents: LeoIncident[];
+  incidents: GetIncidentsData;
   activeOfficer: Officer | null;
 }
 
@@ -88,7 +92,8 @@ export default function LeoIncidents({
   async function handleDelete() {
     if (!tempIncident) return;
 
-    const { json } = await execute(`/incidents/${tempIncident.id}`, {
+    const { json } = await execute<DeleteIncidentByIdData>({
+      path: `/incidents/${tempIncident.id}`,
       method: "DELETE",
     });
 

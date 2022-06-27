@@ -5,7 +5,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { makeUnitName, requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import type { AssignedUnit, LeoIncident } from "@snailycad/types";
+import type { AssignedUnit } from "@snailycad/types";
 import { IndeterminateCheckbox, Table } from "components/shared/Table";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Full911Call, useDispatchState } from "state/dispatchState";
@@ -30,6 +30,7 @@ import type {
   DeletePurge911CallsData,
   Get911CallsData,
   GetDispatchData,
+  GetIncidentsData,
 } from "@snailycad/types/api";
 
 const DescriptionModal = dynamic(
@@ -38,7 +39,7 @@ const DescriptionModal = dynamic(
 
 interface Props extends GetDispatchData {
   data: Get911CallsData;
-  incidents: LeoIncident[];
+  incidents: GetIncidentsData;
 }
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {
