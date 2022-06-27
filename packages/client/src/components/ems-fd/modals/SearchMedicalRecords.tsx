@@ -149,7 +149,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   )}
                 </div>
                 <div className="w-full overflow-y-auto">
-                  <div className="w-full grid grid-cols-2 gap-5">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-1 md:gap-y-0 md:gap-5">
                     <div>
                       <Infofield label={t("Citizen.fullName")}>
                         {results.name} {results.surname}

@@ -126,7 +126,7 @@ export class AdminManageCitizensController {
   @Description("Accept or decline a record by it's id")
   @UsePermissions({
     fallback: (u) => u.rank !== Rank.USER,
-    permissions: [Permissions.ManageCitizens],
+    permissions: [Permissions.ManageCitizens, Permissions.ViewCitizenLogs],
   })
   async acceptOrDeclineArrestReport(
     @PathParams("id") id: string,
