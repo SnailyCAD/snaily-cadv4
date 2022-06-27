@@ -33,11 +33,13 @@ export class VehiclesController {
   async getCitizenVehicles(
     @PathParams("citizenId") citizenId: string,
     @Context("user") user: User,
+    @Context("cad") cad: cad,
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query?: string,
   ): Promise<APITypes.GetCitizenVehiclesData> {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
     const citizen = await prisma.citizen.findFirst({
-      where: { id: citizenId, userId: user.id },
+      where: { id: citizenId, userId: checkCitizenUserId ? user.id : undefined },
     });
 
     if (!citizen) {
@@ -205,6 +207,21 @@ export class VehiclesController {
       throw new NotFound("notFound");
     }
 
+    const existing = await prisma.registeredVehicle.findFirst({
+      where: {
+        AND: [{ plate: data.plate.toUpperCase() }, { plate: { not: vehicle.plate.toUpperCase() } }],
+      },
+    });
+
+    if (existing) {
+      throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
+    }
+
+    const plateLength = cad.miscCadSettings.maxPlateLength || 8;
+    if (data.plate.length > plateLength) {
+      throw new ExtendedBadRequest({ plate: "plateToLong" });
+    }
+
     if (data.businessId && data.employeeId) {
       const employee = await prisma.employee.findFirst({
         where: {
@@ -277,6 +294,7 @@ export class VehiclesController {
         id: vehicle.id,
       },
       data: {
+        plate: data.plate,
         modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,
