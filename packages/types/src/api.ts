@@ -639,3 +639,51 @@ export type Put911CallEventByIdData = Get911CallsData[number];
  * @route /911-calls/events/:id
  */
 export type Delete911CallEventByIdData = Get911CallsData[number];
+
+/** dispatch */
+/**
+ * @method GET
+ * @route /dispatch
+ */
+export interface GetDispatchData {
+  deputies: Types.EmsFdDeputy[];
+  officers: (Types.Officer | Types.CombinedLeoUnit)[];
+  activeIncidents: Types.LeoIncident[];
+  activeDispatchers: (Prisma.ActiveDispatchers & {
+    user: Pick<Types.User, "id" | "rank" | "username" | "isLeo" | "isEmsFd">;
+  })[];
+}
+
+/**
+ * @method POST
+ * @route /dispatch/aop
+ */
+export type PostDispatchAopData = Pick<Types.cad, "areaOfPlay">;
+
+/**
+ * @method POST
+ * @route /dispatch/signal-100
+ */
+export interface PostDispatchSignal100Data {
+  value: boolean;
+}
+
+/**
+ * @method POST
+ * @route /dispatch/dispatchers-state
+ */
+export interface PostDispatchDispatchersStateData {
+  dispatcher: GetDispatchData["activeDispatchers"][number] | null;
+}
+
+/**
+ * @method PUT
+ * @route /dispatch/radio-channel
+ */
+export type PutDispatchRadioChannelData = Types.Officer | Types.EmsFdDeputy | Types.CombinedLeoUnit;
+
+/**
+ * @method POST
+ * @route /dispatch/radio-channel
+ */
+export type PostDispatchTonesData = boolean;

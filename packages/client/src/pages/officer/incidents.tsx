@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { EmsFdDeputy, IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
+import type { IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -22,11 +22,10 @@ import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { isUnitCombined } from "@snailycad/utils";
+import type { GetDispatchData } from "@snailycad/types/api";
 
-interface Props {
+interface Props extends GetDispatchData {
   incidents: LeoIncident[];
-  officers: Officer[];
-  deputies: EmsFdDeputy[];
   activeOfficer: Officer | null;
 }
 

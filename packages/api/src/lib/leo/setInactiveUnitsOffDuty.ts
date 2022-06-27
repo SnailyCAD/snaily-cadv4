@@ -24,11 +24,11 @@ export async function setInactiveUnitsOffDuty(lastStatusChangeTimestamp: Date) {
   ]);
 }
 
-export function filterInactiveUnits({
+export function filterInactiveUnits<Unit extends Officer | EmsFdDeputy | CombinedLeoUnit>({
   unit,
   unitsInactivityFilter,
 }: {
-  unit: Officer | EmsFdDeputy | CombinedLeoUnit;
+  unit: Unit;
   unitsInactivityFilter: any;
 }) {
   if (!unit.lastStatusChangeTimestamp || !unitsInactivityFilter?.lastStatusChangeTimestamp) {

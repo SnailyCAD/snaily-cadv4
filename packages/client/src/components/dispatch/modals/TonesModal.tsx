@@ -13,6 +13,7 @@ import { FormRow } from "components/form/FormRow";
 import { handleValidate } from "lib/handleValidate";
 import { TONES_SCHEMA } from "@snailycad/schemas";
 import { toastMessage } from "lib/toastMessage";
+import type { PostDispatchTonesData } from "@snailycad/types/api";
 
 export function TonesModal() {
   const { state, execute } = useFetch();
@@ -22,7 +23,8 @@ export function TonesModal() {
   const common = useTranslations("Common");
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/dispatch/tones", {
+    const { json } = await execute<PostDispatchTonesData>({
+      path: "/dispatch/tones",
       method: "POST",
       data: values,
     });

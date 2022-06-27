@@ -249,7 +249,7 @@ export type IncidentEvent = Prisma.IncidentEvent;
 export type CombinedLeoUnit = Prisma.CombinedLeoUnit & {
   status: Officer["status"];
   department: Officer["department"];
-  officers: Officer[];
+  officers: Omit<Officer, "activeIncident">[];
 };
 
 export type ActiveDispatchers = Prisma.ActiveDispatchers;
