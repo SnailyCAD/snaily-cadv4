@@ -1,12 +1,12 @@
 import { Button } from "components/Button";
 import { useAuth } from "context/AuthContext";
 import Link from "next/link";
-import type { FullEmployee } from "state/businessState";
-import { Business, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { useTranslations } from "use-intl";
+import type { GetBusinessesData } from "@snailycad/types/api";
 
 interface Props {
-  employee: FullEmployee & { business: Business };
+  employee: GetBusinessesData["businesses"][number];
 }
 
 export function BusinessCard({ employee }: Props) {
@@ -41,7 +41,7 @@ export function BusinessCard({ employee }: Props) {
           </span>
         </p>
         <p>
-          <span className="font-semibold">{t("role")}: </span> {employee.role?.value?.value}
+          <span className="font-semibold">{t("role")}: </span> {employee.role?.value.value}
         </p>
       </div>
 

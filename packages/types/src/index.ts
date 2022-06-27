@@ -187,7 +187,10 @@ export type TaxiCall = Prisma.TaxiCall & {
 
 export type Business = Prisma.Business;
 
-export type Employee = Prisma.Employee;
+export type Employee = Prisma.Employee & {
+  citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
+  role: EmployeeValue | null;
+};
 
 export type BusinessPost = Prisma.BusinessPost;
 
@@ -332,9 +335,7 @@ export type DLExam = Prisma.DLExam & {
 
 export type WeaponExam = DLExam;
 
-export type CustomField = Prisma.CustomField & {
-  category: CustomFieldCategory;
-};
+export type CustomField = Prisma.CustomField;
 
 export type CustomFieldValue = Prisma.CustomFieldValue & {
   field: CustomField;

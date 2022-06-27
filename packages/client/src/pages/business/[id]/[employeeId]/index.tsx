@@ -9,7 +9,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import { FullBusiness, FullEmployee, useBusinessState } from "state/businessState";
+import { useBusinessState } from "state/businessState";
 import { useTranslations } from "use-intl";
 import { BusinessPost, WhitelistStatus } from "@snailycad/types";
 import useFetch from "lib/useFetch";
@@ -17,18 +17,14 @@ import dynamic from "next/dynamic";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
 import { classNames } from "lib/classNames";
-
-interface Props {
-  employee: FullEmployee | null;
-  business: FullBusiness | null;
-}
+import type { GetBusinessByIdData } from "@snailycad/types/api";
 
 const AlertModal = dynamic(async () => (await import("components/modal/AlertModal")).AlertModal);
 const ManageBusinessPostModal = dynamic(
   async () => (await import("components/business/ManagePostModal")).ManageBusinessPostModal,
 );
 
-export default function BusinessId(props: Props) {
+export default function BusinessId(props: GetBusinessByIdData) {
   const { state: fetchState, execute } = useFetch();
   const { openModal, closeModal } = useModal();
   const { currentBusiness, currentEmployee, posts, ...state } = useBusinessState();
@@ -63,9 +59,11 @@ export default function BusinessId(props: Props) {
   }
 
   React.useEffect(() => {
-    state.setCurrentBusiness(props.business);
-    state.setCurrentEmployee(props.employee);
-    state.setPosts(props.business?.businessPosts ?? []);
+    const { employee, ...business } = props;
+
+    state.setCurrentBusiness(business);
+    state.setCurrentEmployee(employee);
+    state.setPosts(business.businessPosts);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, state.setCurrentEmployee, state.setCurrentBusiness, state.setPosts]);
 
@@ -83,7 +81,7 @@ export default function BusinessId(props: Props) {
     );
   }
 
-  if (props.business?.status === WhitelistStatus.PENDING) {
+  if (props.status === WhitelistStatus.PENDING) {
     return (
       <Layout className="dark:text-white">
         <p>

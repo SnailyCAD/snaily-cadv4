@@ -11,6 +11,7 @@ import { RegisterVehicleModal } from "components/citizen/vehicles/modals/Registe
 import { AlertModal } from "components/modal/AlertModal";
 import { FullDate } from "components/shared/FullDate";
 import { Table } from "components/shared/Table";
+import type { DeleteCitizenVehicleData } from "@snailycad/types/api";
 
 export function VehiclesTab() {
   const [tempVehicle, setTempVehicle] = React.useState<RegisteredVehicle | null>(null);
@@ -37,7 +38,8 @@ export function VehiclesTab() {
   async function handleDelete() {
     if (!tempVehicle || !currentBusiness) return;
 
-    const { json } = await execute(`/vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteCitizenVehicleData>({
+      path: `/vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 

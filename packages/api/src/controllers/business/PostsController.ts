@@ -9,6 +9,7 @@ import { prisma } from "lib/prisma";
 import { validateBusinessAcceptance } from "utils/businesses";
 import { validateSchema } from "lib/validateSchema";
 import type { cad, User } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 @UseBeforeEach(IsAuth)
 @Controller("/businesses/posts")
@@ -20,7 +21,7 @@ export class BusinessPostsController {
     @Context("user") user: User,
     @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
-  ) {
+  ): Promise<APITypes.PostBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, businessId);
@@ -60,7 +61,7 @@ export class BusinessPostsController {
     @Context("cad") cad: cad,
     @PathParams("id") businessId: string,
     @PathParams("postId") postId: string,
-  ) {
+  ): Promise<APITypes.PutBusinessPostsData> {
     const data = validateSchema(CREATE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, businessId);
@@ -114,7 +115,7 @@ export class BusinessPostsController {
     @Context("cad") cad: cad,
     @PathParams("id") id: string,
     @PathParams("postId") postId: string,
-  ) {
+  ): Promise<APITypes.DeleteBusinessPostsData> {
     const data = validateSchema(DELETE_COMPANY_POST_SCHEMA, body);
 
     await validateBusinessAcceptance(cad, id);

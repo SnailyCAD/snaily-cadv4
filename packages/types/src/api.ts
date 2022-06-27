@@ -716,3 +716,89 @@ export type PutCitizenWeaponData = PostCitizenWeaponData;
  * @route /weapons/:id
  */
 export type DeleteCitizenWeaponData = boolean;
+
+/** businesses */
+/**
+ * @method GET
+ * @route /businesses
+ */
+export interface GetBusinessesData {
+  businesses: (Types.Employee & { business: Prisma.Business })[];
+  joinableBusinesses: Prisma.Business[];
+}
+
+/**
+ * @method GET
+ * @route /businesses/:id
+ */
+export type GetBusinessByIdData = Prisma.Business & {
+  businessPosts: Prisma.BusinessPost[];
+  vehicles: Types.RegisteredVehicle[];
+  employees: Omit<GetBusinessesData["businesses"][number], "business">[];
+  citizen: Pick<Prisma.Citizen, "name" | "surname" | "id">;
+  employee: Types.Employee | null;
+};
+
+/**
+ * @method PUT
+ * @route /businesses/:id
+ */
+export type PutBusinessByIdData = Prisma.Business;
+
+/**
+ * @method DELETE
+ * @route /businesses/:id
+ */
+export type DeleteBusinessByIdData = boolean;
+
+/**
+ * @method POST
+ * @route /businesses/join
+ */
+export type PostJoinBusinessData = GetBusinessesData["businesses"][number];
+
+/**
+ * @method POST
+ * @route /businesses/create
+ */
+export interface PostCreateBusinessData {
+  business: Prisma.Business;
+  id: Prisma.Business["id"];
+  employee: GetBusinessesData["businesses"][number];
+}
+
+/**
+ * @method PUT
+ * @route /businesses/employees/:businessId/:id
+ */
+export type PutBusinessEmployeesData = GetBusinessesData["businesses"][number];
+
+/**
+ * @method DELETE
+ * @route /businesses/employees/:businessId/:id
+ */
+export type DeleteBusinessFireEmployeeData = boolean;
+
+/**
+ * @method POST
+ * @route /businesses/employees/:businessId/:id/:type
+ */
+export type PostBusinessAcceptDeclineData = Prisma.Employee;
+
+/**
+ * @method POST
+ * @route /businesses/posts/:id
+ */
+export type PostBusinessPostsData = Prisma.BusinessPost;
+
+/**
+ * @method PUT
+ * @route /businesses/posts/:id
+ */
+export type PutBusinessPostsData = Prisma.BusinessPost;
+
+/**
+ * @method DELETE
+ * @route /businesses/posts/:id
+ */
+export type DeleteBusinessPostsData = boolean;

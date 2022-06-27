@@ -13,6 +13,7 @@ import { CREATE_COMPANY_POST_SCHEMA } from "@snailycad/schemas";
 import { handleValidate } from "lib/handleValidate";
 import type { BusinessPost } from "@snailycad/types";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
+import type { PostBusinessPostsData, PutBusinessPostsData } from "@snailycad/types/api";
 
 interface Props {
   onCreate(post: BusinessPost): void;
@@ -41,7 +42,8 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
     if (!currentEmployee || !currentBusiness) return;
 
     if (post) {
-      const { json } = await execute(`/businesses/posts/${currentBusiness.id}/${post.id}`, {
+      const { json } = await execute<PutBusinessPostsData>({
+        path: `/businesses/posts/${currentBusiness.id}/${post.id}`,
         method: "PUT",
         data: { ...values, employeeId: currentEmployee.id },
       });
@@ -51,7 +53,8 @@ export function ManageBusinessPostModal({ onClose, onCreate, onUpdate, post }: P
         onUpdate(post, json);
       }
     } else {
-      const { json } = await execute(`/businesses/posts/${currentBusiness.id}`, {
+      const { json } = await execute<PostBusinessPostsData>({
+        path: `/businesses/posts/${currentBusiness.id}`,
         method: "POST",
         data: { ...values, employeeId: currentEmployee.id },
       });
