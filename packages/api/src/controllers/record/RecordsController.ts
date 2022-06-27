@@ -95,7 +95,7 @@ export class RecordsController {
   async updateWarrant(
     @BodyParams() body: unknown,
     @PathParams("id") warrantId: string,
-  ): Promise<APITypes.PutCreateWarrantData> {
+  ): Promise<APITypes.PutWarrantsData> {
     const data = validateSchema(UPDATE_WARRANT_SCHEMA, body);
 
     const warrant = await prisma.warrant.findUnique({

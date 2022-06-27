@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
 import { ActiveCalls } from "components/leo/ActiveCalls";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatchState";
 import { ActiveBolos } from "components/active-bolos/ActiveBolos";
 import { useTime } from "hooks/shared/useTime";
 import { DispatchModalButtons } from "components/dispatch/ModalButtons";
@@ -20,7 +20,6 @@ import { usePanicButton } from "hooks/shared/usePanicButton";
 import { Title } from "components/shared/Title";
 import {
   ActiveDispatchers,
-  Bolo,
   CombinedLeoUnit,
   EmsFdDeputy,
   LeoIncident,
@@ -33,6 +32,7 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type { Get911CallsData, GetBolosData } from "@snailycad/types/api";
 
 const ActiveIncidents = dynamic(async () => {
   return (await import("components/dispatch/ActiveIncidents")).ActiveIncidents;
@@ -61,8 +61,8 @@ const Modals = {
 };
 
 export interface DispatchPageProps {
-  calls: Full911Call[];
-  bolos: Bolo[];
+  calls: Get911CallsData;
+  bolos: GetBolosData;
   officers: (Officer | CombinedLeoUnit)[];
   deputies: EmsFdDeputy[];
   activeDispatchers: ActiveDispatchers[];

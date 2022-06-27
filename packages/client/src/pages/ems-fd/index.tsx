@@ -9,7 +9,7 @@ import { getTranslations } from "lib/getTranslation";
 import { useTranslations } from "use-intl";
 import { StatusesArea } from "components/shared/StatusesArea";
 import { ActiveDeputy, useEmsFdState } from "state/emsFdState";
-import { Full911Call, useDispatchState } from "state/dispatchState";
+import { useDispatchState } from "state/dispatchState";
 import { requestAll } from "lib/utils";
 import { ActiveDeputies } from "components/dispatch/ActiveDeputies";
 import { ActiveOfficers } from "components/dispatch/ActiveOfficers";
@@ -21,12 +21,13 @@ import { Permissions } from "@snailycad/permissions";
 import { usePanicButton } from "hooks/shared/usePanicButton";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
+import type { Get911CallsData } from "@snailycad/types/api";
 
 interface Props {
   activeDeputy: ActiveDeputy | null;
   activeDeputies: EmsFdDeputy[];
   userDeputies: EmsFdDeputy[];
-  calls: Full911Call[];
+  calls: Get911CallsData;
 }
 
 const NotepadModal = dynamic(async () => {

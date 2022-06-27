@@ -1,5 +1,6 @@
 import type { cad, User } from "@prisma/client";
 import { DISABLED_API_TOKEN_ROUTES, Method, PERMISSION_ROUTES } from "@snailycad/config";
+import type { GetUserData } from "@snailycad/types/api";
 import type { Req } from "@tsed/common";
 import { userProperties } from "lib/auth/getSessionUser";
 import { updateMemberRolesLogin } from "lib/discord/auth";
@@ -7,7 +8,7 @@ import { prisma } from "lib/prisma";
 
 interface Options {
   req: Req;
-  user: User;
+  user: GetUserData;
 }
 
 export function isRouteDisabled(options: Pick<Options, "req">) {
@@ -55,7 +56,7 @@ export function hasPermissionForReq(options: Options) {
 
 const THREE_MIN_TIMEOUT_MS = 60 * 1000 * 3;
 interface DiscordSyncOptions {
-  user: User;
+  user: Pick<User, "lastDiscordSyncTimestamp" | "discordId" | "id">;
   cad: Pick<cad, "discordRolesId"> | null;
 }
 

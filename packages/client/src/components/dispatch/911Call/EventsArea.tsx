@@ -7,6 +7,7 @@ import { useTranslations } from "use-intl";
 import type { Call911Event } from "@snailycad/types";
 import { EventItem } from "../events/EventItem";
 import { UpdateEventForm } from "../events/UpdateEventForm";
+import type { Post911CallEventsData, Put911CallEventByIdData } from "@snailycad/types/api";
 
 interface Props {
   call: Full911Call;
@@ -28,7 +29,8 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
     if (!call) return;
 
     if (tempEvent) {
-      const { json } = await execute(`/911-calls/events/${call.id}/${tempEvent.id}`, {
+      const { json } = await execute<Put911CallEventByIdData>({
+        path: `/911-calls/events/${call.id}/${tempEvent.id}`,
         method: "PUT",
         data: values,
       });
@@ -37,7 +39,8 @@ export function CallEventsArea({ disabled, call, onUpdate, onCreate }: Props) {
         onUpdate?.(json);
       }
     } else {
-      const { json } = await execute(`/911-calls/events/${call.id}`, {
+      const { json } = await execute<Post911CallEventsData>({
+        path: `/911-calls/events/${call.id}`,
         method: "POST",
         data: values,
       });

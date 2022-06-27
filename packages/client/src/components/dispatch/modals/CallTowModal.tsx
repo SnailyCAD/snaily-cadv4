@@ -22,6 +22,7 @@ import { useTranslations } from "use-intl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import type { VehicleSearchResult } from "state/search/vehicleSearchState";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type { PostTowCallsData } from "@snailycad/types/api";
 
 interface Props {
   call: Full911Call | null;
@@ -45,7 +46,8 @@ export function DispatchCallTowModal({ call }: Props) {
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
     const payload = getPayload<{ call911Id: string }>(ModalIds.ManageTowCall);
-    const { json } = await execute("/tow", {
+    const { json } = await execute<PostTowCallsData>({
+      path: "/tow",
       method: "POST",
       data: { ...values, ...payload, creatorId: values.creatorId || null },
     });

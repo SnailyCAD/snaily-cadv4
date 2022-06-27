@@ -26,13 +26,14 @@ import { Manage911CallModal } from "components/dispatch/modals/Manage911CallModa
 import { isUnitCombined } from "@snailycad/utils";
 import { usePermission, Permissions } from "hooks/usePermission";
 import { Checkbox } from "components/form/inputs/Checkbox";
+import type { DeletePurge911CallsData, Get911CallsData } from "@snailycad/types/api";
 
 const DescriptionModal = dynamic(
   async () => (await import("components/modal/DescriptionModal/DescriptionModal")).DescriptionModal,
 );
 
 interface Props {
-  data: Full911Call[];
+  data: Get911CallsData;
   incidents: LeoIncident[];
   officers: Officer[];
   deputies: EmsFdDeputy[];
@@ -66,7 +67,8 @@ export default function CallHistory({ data, incidents, officers, deputies }: Pro
   }
 
   async function handlePurge() {
-    const { json } = await execute("/911-calls/purge", {
+    const { json } = await execute<DeletePurge911CallsData>({
+      path: "/911-calls/purge",
       method: "DELETE",
       data: { ids: tableSelect.selectedRows },
     });

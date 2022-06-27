@@ -567,3 +567,75 @@ export type PutRecordsByIdData = Types.Record;
  * @route /records/:id
  */
 export type DeleteRecordsByIdData = boolean;
+
+/** calls */
+/**
+ * @method GET
+ * @route /911-calls
+ */
+export type Get911CallsData = (Types.Call911 & {
+  assignedUnits: Types.AssignedUnit[];
+  events: Types.Call911Event[];
+})[];
+
+/**
+ * @method GET
+ * @route /911-calls/:id
+ */
+export type Get911CallByIdData = Get911CallsData[number];
+
+/**
+ * @method POST
+ * @route /911-calls
+ */
+export type Post911CallsData = Get911CallsData[number];
+
+/**
+ * @method PUT
+ * @route /911-calls/:id
+ */
+export type Put911CallByIdData = Get911CallsData[number];
+
+/**
+ * @method DELETE
+ * @route /911-calls/purge
+ */
+export type DeletePurge911CallsData = boolean;
+
+/**
+ * @method DELETE
+ * @route /911-calls/:id
+ */
+export type Delete911CallByIdData = boolean;
+
+/**
+ * @method POST
+ * @route /911-calls/link-incident/:callId
+ */
+export type PostLink911CallToIncident =
+  | (Prisma.Call911 & { incidents: Types.LeoIncident[] })
+  | null;
+
+/**
+ * @method POST
+ * @route /911-calls/:type/:callId
+ */
+export type Post911CallAssignUnAssign = Get911CallsData[number];
+
+/**
+ * @method POST
+ * @route /911-calls/events
+ */
+export type Post911CallEventsData = Get911CallsData[number];
+
+/**
+ * @method PUT
+ * @route /911-calls/events/:id
+ */
+export type Put911CallEventByIdData = Get911CallsData[number];
+
+/**
+ * @method DELETE
+ * @route /911-calls/events/:id
+ */
+export type Delete911CallEventByIdData = Get911CallsData[number];
