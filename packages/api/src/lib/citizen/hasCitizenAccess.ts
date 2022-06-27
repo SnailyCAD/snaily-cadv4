@@ -15,8 +15,12 @@ export function shouldCheckCitizenUserId({ cad, user }: Options) {
   });
 
   const hasLeoPermissions =
-    hasPermission(user.permissions, defaultPermissions.defaultLeoPermissions) ||
+    hasPermission(user.permissions, [
+      ...defaultPermissions.defaultLeoPermissions,
+      ...defaultPermissions.defaultEmsFdPermissions,
+    ]) ||
     user.isLeo ||
+    user.isEmsFd ||
     user.rank === Rank.OWNER;
 
   if (isCommonCardsEnabled && hasLeoPermissions) return false;
