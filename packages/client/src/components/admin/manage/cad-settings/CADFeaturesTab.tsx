@@ -14,6 +14,7 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { TabsContent } from "components/shared/TabList";
 import { SettingsTabs } from "src/pages/admin/manage/cad-settings";
 import { toastMessage } from "lib/toastMessage";
+import { DEFAULT_DISABLED_FEATURES } from "hooks/useFeatureEnabled";
 
 interface FeatureItem {
   name: string;
@@ -38,6 +39,11 @@ const FEATURES_LIST: Record<Feature, FeatureItem> = {
     name: "Driver's License Exams",
     description:
       "When enabled, this will require citizens to enter a driving licenses exam to get a driver's license.",
+  },
+  WEAPON_EXAMS: {
+    name: "Weapon's License Exams",
+    description:
+      "When enabled, this will require citizens to enter a weapon licenses exam to get a weapon's license.",
   },
   AOP: {
     name: "Area Of Play",
@@ -217,7 +223,8 @@ export function CADFeaturesTab() {
       const feat = values.features[feature as Feature];
       const featObj = {
         feature,
-        isEnabled: feat?.isEnabled ?? true,
+        isEnabled:
+          feat?.isEnabled ?? DEFAULT_DISABLED_FEATURES[feature as Feature]?.isEnabled ?? true,
       };
 
       featuresArr.push(featObj);
@@ -271,7 +278,11 @@ export function CADFeaturesTab() {
                     label={value.name}
                   >
                     <Toggle
-                      value={values.features[key]?.isEnabled ?? true}
+                      value={
+                        values.features[key]?.isEnabled ??
+                        DEFAULT_DISABLED_FEATURES[key]?.isEnabled ??
+                        true
+                      }
                       onCheckedChange={(v) => {
                         handleChange(v);
                       }}

@@ -31,7 +31,7 @@ export function BoloItem({ idx, bolo, handleDelete, handleEdit }: BoloItemProps)
   return (
     <li key={bolo.id} className="flex justify-between">
       <div className="flex">
-        <span className="mr-2 text-gray-500 select-none">{idx + 1}.</span>
+        <span className="mr-2 text-neutral-700 dark:text-gray-400 select-none">{idx + 1}.</span>
 
         <div>
           {bolo.type === BoloType.PERSON ? (

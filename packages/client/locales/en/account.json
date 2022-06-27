@@ -45,7 +45,8 @@
     "disconnectSteam": "Disconnect Steam account",
     "disconnectSteamText": "This will remove the ability to login via Steam.",
     "connectSteamText": "This will add the ability to login via Steam.",
-    "locale": "Locale"
+    "locale": "Locale",
+    "viewMyPermissions": "View my permissions"
   },
   "Notifications": {
     "CITIZEN_DELETED": "<span>{citizen}</span> was deleted. Reason: {reason}"

@@ -39,7 +39,7 @@ export default function CitizenLogs({ data }: Props) {
   const asyncTable = useAsyncTable({
     fetchOptions: {
       onResponse: (json) => ({ data: json.exams, totalCount: json.totalCount }),
-      path: "/leo/dl-exams",
+      path: "/leo/weapon-exams",
     },
     totalCount: data.totalCount,
     initialData: data.exams,
@@ -53,7 +53,7 @@ export default function CitizenLogs({ data }: Props) {
 
   async function handleDelete() {
     if (!tempExam) return;
-    const { json } = await execute(`/leo/dl-exams/${tempExam.id}`, {
+    const { json } = await execute(`/leo/weapon-exams/${tempExam.id}`, {
       method: "DELETE",
     });
 
@@ -78,22 +78,24 @@ export default function CitizenLogs({ data }: Props) {
     <Layout
       permissions={{
         fallback: (u) => u.isLeo,
-        permissions: [Permissions.ViewDLExams, Permissions.ManageDLExams],
+        permissions: [Permissions.ViewWeaponExams, Permissions.ManageWeaponExams],
       }}
       className="dark:text-white"
     >
       <header className="flex items-center justify-between">
-        <Title className="!mb-0">{t("DLExams")}</Title>
+        <Title className="!mb-0">{t("weaponExams")}</Title>
 
-        {hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor) ? (
+        {hasPermissions([Permissions.ManageWeaponExams], (u) => u.isSupervisor) ? (
           <div>
-            <Button onClick={() => openModal(ModalIds.ManageDLExam)}>{t("createDLExam")}</Button>
+            <Button onClick={() => openModal(ModalIds.ManageDLExam)}>
+              {t("createWeaponExam")}
+            </Button>
           </div>
         ) : null}
       </header>
 
       {data.exams.length <= 0 ? (
-        <p className="mt-5">{t("noDLExams")}</p>
+        <p className="mt-5">{t("noWeaponExams")}</p>
       ) : (
         <>
           <FormField label={common("search")} className="my-2">
@@ -163,7 +165,7 @@ export default function CitizenLogs({ data }: Props) {
               { Header: t("categories"), accessor: "categories" },
               { Header: t("license"), accessor: "license" },
               { Header: common("createdAt"), accessor: "createdAt" },
-              hasPermissions([Permissions.ManageDLExams], (u) => u.isSupervisor)
+              hasPermissions([Permissions.ManageWeaponExams], (u) => u.isSupervisor)
                 ? { Header: common("actions"), accessor: "actions" }
                 : null,
             ]}
@@ -181,6 +183,7 @@ export default function CitizenLogs({ data }: Props) {
       />
 
       <ManageDLExamModal
+        type="weapon"
         onClose={() => setTempExam(null)}
         onCreate={(exam) => {
           asyncTable.setData((p) => [exam, ...p]);
@@ -203,7 +206,7 @@ export default function CitizenLogs({ data }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({ req, locale }) => {
   const user = await getSessionUser(req);
   const [exams, values] = await requestAll(req, [
-    ["/leo/dl-exams", { exams: [], totalCount: 0 }],
+    ["/leo/weapon-exams", { exams: [], totalCount: 0 }],
     ["/admin/values/driverslicense_category?paths=license", []],
   ]);
 

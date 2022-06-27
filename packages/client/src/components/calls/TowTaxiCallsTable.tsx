@@ -86,10 +86,6 @@ export function TowTaxiCallsTable({ type, calls, noCallsText, setCalls }: Props)
         <p className="mt-5">{noCallsText}</p>
       ) : (
         <Table
-          defaultSort={{
-            descending: true,
-            columnId: "createdAt",
-          }}
           data={calls.map((call) => ({
             location: call.location,
             postal: call.postal || common("none"),

@@ -10,6 +10,7 @@ export interface TableProps<T extends object = {}, RowProps extends object = {}>
   dragDrop?: DragDrop;
   isWithinCard?: boolean;
   pagination?: Pagination;
+  maxItemsPerPage?: number;
 }
 
 export type PaginationFetchFunc = ({

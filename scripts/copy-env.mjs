@@ -4,12 +4,15 @@ import { one } from "copy";
 import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
 
+const DEFAULT_PORT = "3000";
+
 async function addPortToClientPackageJson() {
   if (process.env.NODE_ENV === "development") return;
-  const port = process.env.PORT_CLIENT;
-  if (!port) return;
 
   try {
+    const port = process.env.PORT_CLIENT;
+    if (!port) return;
+
     let dir = join(process.cwd(), "packages", "client");
     if (process.cwd().match(/\/packages\/client/)) {
       dir = process.cwd();
@@ -18,10 +21,13 @@ async function addPortToClientPackageJson() {
     const jsonFilePath = join(dir, "package.json");
     const json = JSON.parse(await readFile(jsonFilePath, "utf8"));
 
-    if (port) {
+    if (!json.scripts.start.includes(`-p ${DEFAULT_PORT}`) && port === DEFAULT_PORT) {
+      json.scripts.start = "yarn next start"; // reset the port back to default
+    } else {
       json.scripts.start = `yarn next start -p ${port}`;
-      await writeFile(jsonFilePath, JSON.stringify(json, null, 2));
     }
+
+    await writeFile(jsonFilePath, JSON.stringify(json, null, 2));
   } catch (e) {
     console.log(e);
     console.log("Could not set the PORT_CLIENT. Continuing build...");

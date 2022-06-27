@@ -19,6 +19,7 @@ import { Loader } from "components/Loader";
 import { Input } from "components/form/inputs/Input";
 
 interface Props {
+  isReadOnly?: boolean;
   user: User;
 }
 
@@ -52,7 +53,7 @@ const groups = [
   },
 ];
 
-export function ManagePermissionsModal({ user }: Props) {
+export function ManagePermissionsModal({ user, isReadOnly }: Props) {
   const [search, setSearch] = React.useState("");
 
   const t = useTranslations("Management");
@@ -62,6 +63,8 @@ export function ManagePermissionsModal({ user }: Props) {
   const { state, execute } = useFetch();
 
   async function onSubmit(data: typeof INITIAL_VALUES) {
+    if (isReadOnly) return;
+
     const { json } = await execute(`/admin/manage/users/permissions/${user.id}`, {
       method: "PUT",
       data: makePermissionsData(data),
@@ -78,6 +81,8 @@ export function ManagePermissionsModal({ user }: Props) {
     values: Record<Permissions, boolean>,
     setValues: any,
   ) {
+    if (isReadOnly) return;
+
     const groupPermissionValues = Object.entries(values).filter(([permission]) => {
       return group.permissions.includes(permission as Permissions);
     });
@@ -136,13 +141,15 @@ export function ManagePermissionsModal({ user }: Props) {
                     <header className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold">{group.name}</h3>
 
-                      <Button
-                        type="button"
-                        size="xs"
-                        onClick={() => handleToggleAll(group, values, setValues)}
-                      >
-                        Toggle all
-                      </Button>
+                      {isReadOnly ? null : (
+                        <Button
+                          type="button"
+                          size="xs"
+                          onClick={() => handleToggleAll(group, values, setValues)}
+                        >
+                          Toggle all
+                        </Button>
+                      )}
                     </header>
 
                     <div className="grid grid-cols-1 md:grid-cols-3">
@@ -155,6 +162,7 @@ export function ManagePermissionsModal({ user }: Props) {
                               onCheckedChange={handleChange}
                               value={values[permission as PermissionNames]}
                               name={permission}
+                              disabled={isReadOnly}
                             />
                           </FormField>
                         );

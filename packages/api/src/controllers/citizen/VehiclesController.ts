@@ -8,12 +8,13 @@ import {
   WhitelistStatus,
   ValueType,
   cad,
+  Prisma,
 } from "@prisma/client";
 import { VEHICLE_SCHEMA, DELETE_VEHICLE_SCHEMA, TRANSFER_VEHICLE_SCHEMA } from "@snailycad/schemas";
-import { UseBeforeEach, Context, BodyParams, PathParams } from "@tsed/common";
+import { UseBeforeEach, Context, BodyParams, PathParams, QueryParams } from "@tsed/common";
 import { Controller } from "@tsed/di";
 import { NotFound } from "@tsed/exceptions";
-import { Delete, Description, Post, Put } from "@tsed/schema";
+import { Delete, Description, Get, Post, Put } from "@tsed/schema";
 import { canManageInvariant } from "lib/auth/getSessionUser";
 import { isFeatureEnabled } from "lib/cad";
 import { shouldCheckCitizenUserId } from "lib/citizen/hasCitizenAccess";
@@ -22,10 +23,56 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { generateString } from "utils/generateString";
+import { citizenInclude } from "./CitizenController";
 
 @Controller("/vehicles")
 @UseBeforeEach(IsAuth)
 export class VehiclesController {
+  @Get("/:citizenId")
+  async getCitizenVehicles(
+    @PathParams("citizenId") citizenId: string,
+    @Context("user") user: User,
+    @Context("cad") cad: cad,
+    @QueryParams("skip", Number) skip = 0,
+    @QueryParams("query", String) query?: string,
+  ) {
+    const checkCitizenUserId = shouldCheckCitizenUserId({ cad, user });
+    const citizen = await prisma.citizen.findFirst({
+      where: { id: citizenId, userId: checkCitizenUserId ? user.id : undefined },
+    });
+
+    if (!citizen) {
+      throw new NotFound("citizenNotFound");
+    }
+
+    const where: Prisma.RegisteredVehicleWhereInput = {
+      ...{ citizenId },
+      ...(query
+        ? {
+            OR: [
+              { color: { contains: query, mode: "insensitive" } },
+              { model: { value: { value: { contains: query, mode: "insensitive" } } } },
+              { registrationStatus: { value: { contains: query, mode: "insensitive" } } },
+              { vinNumber: { contains: query, mode: "insensitive" } },
+              { plate: { contains: query, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    const [totalCount, vehicles] = await Promise.all([
+      prisma.registeredVehicle.count({ where }),
+      prisma.registeredVehicle.findMany({
+        where,
+        take: 12,
+        skip,
+        include: citizenInclude.vehicles.include,
+      }),
+    ]);
+
+    return { totalCount, vehicles };
+  }
+
   @Post("/")
   @Description("Register a new vehicle")
   async registerVehicle(
@@ -159,6 +206,21 @@ export class VehiclesController {
       throw new NotFound("notFound");
     }
 
+    const existing = await prisma.registeredVehicle.findFirst({
+      where: {
+        AND: [{ plate: data.plate.toUpperCase() }, { plate: { not: vehicle.plate.toUpperCase() } }],
+      },
+    });
+
+    if (existing) {
+      throw new ExtendedBadRequest({ plate: "plateAlreadyInUse" });
+    }
+
+    const plateLength = cad.miscCadSettings.maxPlateLength || 8;
+    if (data.plate.length > plateLength) {
+      throw new ExtendedBadRequest({ plate: "plateToLong" });
+    }
+
     if (data.businessId && data.employeeId) {
       const employee = await prisma.employee.findFirst({
         where: {
@@ -231,6 +293,7 @@ export class VehiclesController {
         id: vehicle.id,
       },
       data: {
+        plate: data.plate,
         modelId: isCustomEnabled ? valueModel?.id : data.model,
         color: data.color,
         registrationStatusId: data.registrationStatus,

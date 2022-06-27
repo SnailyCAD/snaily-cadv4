@@ -72,7 +72,7 @@ export class ValuesController {
             type,
             groups: await prisma.penalCodeGroup.findMany({ orderBy: { position: "asc" } }),
             values: await prisma.penalCode.findMany({
-              orderBy: { position: "asc" },
+              orderBy: { title: "asc" },
               include: {
                 warningApplicable: true,
                 warningNotApplicable: true,

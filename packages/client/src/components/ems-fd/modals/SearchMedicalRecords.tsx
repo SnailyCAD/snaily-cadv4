@@ -84,7 +84,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
       title={t("Ems.searchMedicalRecord")}
       onClose={handleClose}
       isOpen={isOpen(ModalIds.SearchMedicalRecord)}
-      className="w-[750px]"
+      className="w-[850px]"
     >
       <Formik onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
         {({ setFieldValue, handleChange, errors, values, isValid }) => (
@@ -130,7 +130,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
             ) : results.isConfidential ? (
               <p className="my-5 px-2">{t("Leo.citizenIsConfidential")}</p>
             ) : (
-              <div className="flex">
+              <div className="flex w-full">
                 <div className="mr-2 min-w-[100px]">
                   {results.imageId ? (
                     <button
@@ -148,8 +148,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                     <PersonFill className="text-gray-500/60 w-[100px] h-[100px]" />
                   )}
                 </div>
-                <div>
-                  <div className="w-full grid grid-cols-2 gap-5">
+                <div className="w-full overflow-y-auto">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-y-1 md:gap-y-0 md:gap-5">
                     <div>
                       <Infofield label={t("Citizen.fullName")}>
                         {results.name} {results.surname}
