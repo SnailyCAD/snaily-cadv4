@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 import { useImageUrl } from "hooks/useImageUrl";
 import { Title } from "components/shared/Title";
 import { dataToSlate, Editor } from "components/modal/DescriptionModal/Editor";
-import type { GetBleeterByIdData } from "@snailycad/types/api";
+import type { DeleteBleeterByIdData, GetBleeterByIdData } from "@snailycad/types/api";
 
 const ManageBleetModal = dynamic(
   async () => (await import("components/bleeter/ManageBleetModal")).ManageBleetModal,
@@ -37,17 +37,14 @@ export default function BleetPost({ post }: Props) {
   const { makeImageUrl } = useImageUrl();
 
   async function handleDelete() {
-    if (!post) return;
-
-    const { json } = await execute(`/bleeter/${post.id}`, { method: "DELETE" });
+    const { json } = await execute<DeleteBleeterByIdData>({
+      path: `/bleeter/${post.id}`,
+      method: "DELETE",
+    });
 
     if (json) {
       router.push("/bleeter");
     }
-  }
-
-  if (!post) {
-    return null;
   }
 
   return (

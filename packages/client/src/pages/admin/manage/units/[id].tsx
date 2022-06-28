@@ -47,8 +47,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
     values: typeof INITIAL_VALUES,
     helpers: FormikHelpers<typeof INITIAL_VALUES>,
   ) {
-    if (!unit) return;
-
     const data = {
       ...values,
       divisions: values.divisions.map((v) => v.value),
@@ -65,10 +63,6 @@ export default function SupervisorPanelPage({ unit: data }: Props) {
       toast.success("Updated.");
       router.push("/admin/manage/units");
     }
-  }
-
-  if (!unit) {
-    return null;
   }
 
   const divisions = isUnitOfficer(unit) ? unit.divisions : [];

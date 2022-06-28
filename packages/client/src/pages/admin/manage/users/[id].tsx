@@ -30,7 +30,7 @@ import { AlertModal } from "components/modal/AlertModal";
 import { ApiTokenArea } from "components/admin/manage/users/ApiTokenArea";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { classNames } from "lib/classNames";
-import type { GetManageUserByIdData } from "@snailycad/types/api";
+import type { GetManageUserByIdData, PutManageUserByIdData } from "@snailycad/types/api";
 
 const DangerZone = dynamic(
   async () => (await import("components/admin/manage/users/DangerZone")).DangerZone,
@@ -55,9 +55,8 @@ export default function ManageCitizens(props: Props) {
   const { USER_API_TOKENS } = useFeatureEnabled();
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    if (!user) return;
-
-    const { json } = await execute(`/admin/manage/users/${user.id}`, {
+    const { json } = await execute<PutManageUserByIdData>({
+      path: `/admin/manage/users/${user.id}`,
       method: "PUT",
       data: values,
     });
