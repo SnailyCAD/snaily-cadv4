@@ -112,7 +112,7 @@ export type Citizen = Prisma.Citizen & {
 };
 
 export type Note = Prisma.Note & {
-  createdBy: Officer | null;
+  createdBy?: Officer | null;
 };
 
 export type RegisteredVehicle = Prisma.RegisteredVehicle & {

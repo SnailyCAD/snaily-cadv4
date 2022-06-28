@@ -7,6 +7,7 @@ import { prisma } from "lib/prisma";
 import { NotFound } from "@tsed/exceptions";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import type { Citizen, RegisteredVehicle } from "@prisma/client";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/notes")
 @UseBeforeEach(IsAuth)
@@ -16,7 +17,7 @@ export class NotesController {
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
     fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
-  async addNoteToItem(@BodyParams() body: unknown) {
+  async addNoteToItem(@BodyParams() body: unknown): Promise<APITypes.PostNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 
     const item = await this.findItem(data);
@@ -24,7 +25,6 @@ export class NotesController {
       data: {
         text: data.text,
         [data.type === "CITIZEN" ? "citizenId" : "vehicleId"]: item.id,
-        // createdBy todo
       },
     });
 
@@ -36,7 +36,10 @@ export class NotesController {
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
     fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
-  async editNoteFromItem(@PathParams("id") noteId: string, @BodyParams() body: unknown) {
+  async editNoteFromItem(
+    @PathParams("id") noteId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 
     await this.findItem(data);
@@ -54,7 +57,10 @@ export class NotesController {
     permissions: [Permissions.Leo, Permissions.EmsFd, Permissions.Dispatch],
     fallback: (u) => u.isLeo || u.isEmsFd || u.isDispatch,
   })
-  async deleteNoteFromItem(@PathParams("id") noteId: string, @BodyParams() body: unknown) {
+  async deleteNoteFromItem(
+    @PathParams("id") noteId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.DeleteNotesData> {
     const data = validateSchema(NOTE_SCHEMA, body);
 
     await this.findItem(data);

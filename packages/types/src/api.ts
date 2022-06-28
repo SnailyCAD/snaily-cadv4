@@ -506,3 +506,22 @@ export type PutIncidentEventByIdData = Prisma.IncidentEvent;
  * @route /incidents/events/:incidentId/:eventId
  */
 export type DeleteIncidentEventByIdData = boolean;
+
+/** notes */
+/**
+ * @method POST
+ * @route /notes
+ */
+export type PostNotesData = Types.Note;
+
+/**
+ * @method PUT
+ * @route /notes/:id
+ */
+export type PutNotesData = Types.Note;
+
+/**
+ * @method DELETE
+ * @route /notes/:id
+ */
+export type DeleteNotesData = boolean;

@@ -12,6 +12,7 @@ import { ModalIds } from "types/ModalIds";
 import { ManageNoteModal } from "../ManageNoteModal";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
+import type { DeleteNotesData } from "@snailycad/types/api";
 
 interface Props<T extends VehicleSearchResult | NameSearchResult> {
   currentResult: VehicleSearchResult | NameSearchResult;
@@ -33,7 +34,8 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
   async function handleDelete() {
     if (!currentResult || !tempNote) return;
 
-    const { json } = await execute(`/notes/${tempNote.id}`, {
+    const { json } = await execute<DeleteNotesData>({
+      path: `/notes/${tempNote.id}`,
       method: "DELETE",
       data: { type, itemId: currentResult.id, text: tempNote.text },
     });
