@@ -21,9 +21,10 @@ import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { DeleteDLExamByIdData, GetDLExamsData } from "@snailycad/types/api";
 
 interface Props {
-  data: { exams: DLExam[]; totalCount: number };
+  data: GetDLExamsData;
 }
 
 export default function CitizenLogs({ data }: Props) {
@@ -38,7 +39,7 @@ export default function CitizenLogs({ data }: Props) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ data: json.exams, totalCount: json.totalCount }),
+      onResponse: (json: GetDLExamsData) => ({ data: json.exams, totalCount: json.totalCount }),
       path: "/leo/dl-exams",
     },
     totalCount: data.totalCount,
@@ -53,7 +54,8 @@ export default function CitizenLogs({ data }: Props) {
 
   async function handleDelete() {
     if (!tempExam) return;
-    const { json } = await execute(`/leo/dl-exams/${tempExam.id}`, {
+    const { json } = await execute<DeleteDLExamByIdData>({
+      path: `/leo/dl-exams/${tempExam.id}`,
       method: "DELETE",
     });
 

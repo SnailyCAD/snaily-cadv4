@@ -11,6 +11,7 @@ import { RELEASE_CITIZEN_SCHEMA } from "@snailycad/schemas";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { Permissions, UsePermissions } from "middlewares/UsePermissions";
 import { convertToJailTimeScale } from "lib/leo/utils";
+import type * as APITypes from "@snailycad/types/api";
 
 const citizenInclude = {
   Record: {
@@ -23,7 +24,11 @@ const citizenInclude = {
       officer: {
         include: leoProperties,
       },
-      violations: true,
+      violations: {
+        include: {
+          penalCode: { include: { warningApplicable: true, warningNotApplicable: true } },
+        },
+      },
     },
   },
 };
@@ -40,7 +45,7 @@ export class LeoController {
   async getImprisonedCitizens(
     @Context("cad") cad: { miscCadSettings: MiscCadSettings },
     @QueryParams("skip", Number) skip = 0,
-  ) {
+  ): Promise<APITypes.GetJailedCitizensData> {
     const where = {
       OR: [{ arrested: true }, { Record: { some: { release: { isNot: null } } } }],
     };
@@ -102,7 +107,10 @@ export class LeoController {
     permissions: [Permissions.ManageJail],
     fallback: (u) => u.isLeo,
   })
-  async releaseCitizen(@PathParams("id") id: string, @BodyParams() body: unknown) {
+  async releaseCitizen(
+    @PathParams("id") id: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.DeleteReleaseJailedCitizenData> {
     const data = validateSchema(RELEASE_CITIZEN_SCHEMA, body);
 
     return this.handleReleaseCitizen(id, data);

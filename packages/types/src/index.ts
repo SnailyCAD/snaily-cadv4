@@ -99,6 +99,7 @@ export type User2FA = Prisma.User2FA;
 
 export type UserSoundSettings = Prisma.UserSoundSettings;
 
+export type BaseCitizen = Prisma.Citizen;
 export type Citizen = Prisma.Citizen & {
   gender: Prisma.Value;
   ethnicity: Prisma.Value;
@@ -220,7 +221,7 @@ export type UnitQualification = Prisma.UnitQualification & {
 
 export type QualificationValue = Prisma.QualificationValue & {
   value: Prisma.Value;
-  departments: DepartmentValue[];
+  departments?: DepartmentValue[];
 };
 
 export type LeoWhitelistStatus = Prisma.LeoWhitelistStatus & {
@@ -233,7 +234,7 @@ export type StatusValue = Prisma.StatusValue & { value: Prisma.Value };
 export type OfficerLog = Prisma.OfficerLog;
 
 export type ImpoundedVehicle = Prisma.ImpoundedVehicle & {
-  vehicle: RegisteredVehicle;
+  vehicle: Prisma.RegisteredVehicle & { model: VehicleValue };
   location: Prisma.Value;
 };
 
@@ -283,7 +284,7 @@ export type Bolo = Prisma.Bolo & {
 export type Record = Prisma.Record & {
   officer: Officer;
   violations: Violation[];
-  seizedItems: Prisma.SeizedItem[];
+  seizedItems?: Prisma.SeizedItem[];
 };
 
 export type RecordRelease = Prisma.RecordRelease & {
@@ -327,7 +328,7 @@ export type TruckLog = Prisma.TruckLog & {
 };
 
 export type DLExam = Prisma.DLExam & {
-  citizen: Citizen;
+  citizen: Prisma.Citizen;
   license: Prisma.Value;
   categories?: DriversLicenseCategoryValue[];
 };

@@ -15,9 +15,13 @@ import { ModalIds } from "types/ModalIds";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { usePermission, Permissions } from "hooks/usePermission";
+import type {
+  DeleteLeoCheckoutImpoundedVehicleData,
+  GetLeoImpoundedVehiclesData,
+} from "@snailycad/types/api";
 
 interface Props {
-  vehicles: ImpoundedVehicle[];
+  vehicles: GetLeoImpoundedVehiclesData;
 }
 
 export default function ImpoundLot({ vehicles: data }: Props) {
@@ -34,7 +38,8 @@ export default function ImpoundLot({ vehicles: data }: Props) {
   async function handleCheckout() {
     if (!tempVehicle) return;
 
-    const { json } = await execute(`/leo/impounded-vehicles/${tempVehicle.id}`, {
+    const { json } = await execute<DeleteLeoCheckoutImpoundedVehicleData>({
+      path: `/leo/impounded-vehicles/${tempVehicle.id}`,
       method: "DELETE",
     });
 

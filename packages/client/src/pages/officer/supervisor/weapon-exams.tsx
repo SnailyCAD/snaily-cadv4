@@ -6,7 +6,7 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { DLExam, DLExamStatus } from "@snailycad/types";
+import { DLExam, DLExamStatus, WeaponExam } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FormField } from "components/form/FormField";
 import { Input } from "components/form/inputs/Input";
@@ -21,13 +21,14 @@ import { usePermission } from "hooks/usePermission";
 import { AlertModal } from "components/modal/AlertModal";
 import useFetch from "lib/useFetch";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
+import type { DeleteWeaponExamByIdData, GetWeaponExamsData } from "@snailycad/types/api";
 
 interface Props {
-  data: { exams: DLExam[]; totalCount: number };
+  data: GetWeaponExamsData;
 }
 
 export default function CitizenLogs({ data }: Props) {
-  const [tempExam, setTempExam] = React.useState<DLExam | null>(null);
+  const [tempExam, setTempExam] = React.useState<WeaponExam | null>(null);
 
   const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
@@ -38,7 +39,7 @@ export default function CitizenLogs({ data }: Props) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ data: json.exams, totalCount: json.totalCount }),
+      onResponse: (json: GetWeaponExamsData) => ({ data: json.exams, totalCount: json.totalCount }),
       path: "/leo/weapon-exams",
     },
     totalCount: data.totalCount,
@@ -53,7 +54,8 @@ export default function CitizenLogs({ data }: Props) {
 
   async function handleDelete() {
     if (!tempExam) return;
-    const { json } = await execute(`/leo/weapon-exams/${tempExam.id}`, {
+    const { json } = await execute<DeleteWeaponExamByIdData>({
+      path: `/leo/weapon-exams/${tempExam.id}`,
       method: "DELETE",
     });
 

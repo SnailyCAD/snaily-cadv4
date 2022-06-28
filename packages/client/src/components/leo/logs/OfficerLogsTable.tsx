@@ -14,7 +14,7 @@ type Props =
       logs: OfficerLogWithOfficer[] | OfficerLogWithDeputy[];
     }
   | {
-      unit: Officer | EmsFdDeputy;
+      unit: Officer | EmsFdDeputy | null;
       logs: OfficerLog[];
     };
 
@@ -27,12 +27,14 @@ export function OfficerLogsTable({ unit, logs }: Props) {
       data={logs.map((log) => {
         const startedAt = <FullDate>{log.startedAt}</FullDate>;
         const endedAt = log.endedAt ? <FullDate>{log.endedAt}</FullDate> : t("notEndedYet");
-        const logUnit = getUnitFromLog(log) ?? (unit as Officer | EmsFdDeputy);
+        const logUnit = getUnitFromLog(log) ?? unit;
 
         const totalTime =
           log.endedAt !== null
             ? `${formatDistance(new Date(log.endedAt), new Date(log.startedAt))}`
             : t("notEndedYet");
+
+        if (!logUnit) return {};
 
         return {
           unit: (

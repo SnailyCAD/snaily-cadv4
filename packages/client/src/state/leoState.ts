@@ -1,8 +1,8 @@
-import type { CombinedLeoUnit, Officer } from "@snailycad/types";
+import type { Officer } from "@snailycad/types";
+import type { GetActiveOfficerData } from "@snailycad/types/api";
 import create from "zustand";
 
-export type ActiveOfficer = Officer | CombinedLeoUnit;
-
+export type ActiveOfficer = GetActiveOfficerData;
 interface LeoState {
   activeOfficer: ActiveOfficer | null;
   setActiveOfficer(officer: ActiveOfficer | null): void;

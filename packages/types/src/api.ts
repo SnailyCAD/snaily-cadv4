@@ -5,6 +5,7 @@ export * from "./api/admin.js";
 export * from "./api/dispatch.js";
 export * from "./api/courthouse.js";
 export * from "./api/search.js";
+export * from "./api/leo.js";
 
 /** bleeter */
 /**

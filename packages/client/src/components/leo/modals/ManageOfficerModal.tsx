@@ -23,6 +23,11 @@ import { UnitQualificationsTable } from "../qualifications/UnitQualificationsTab
 import { AdvancedSettings } from "./AdvancedSettings";
 import { classNames } from "lib/classNames";
 import { CitizenSuggestionsField } from "components/shared/CitizenSuggestionsField";
+import type {
+  PostMyOfficerByIdData,
+  PostMyOfficersData,
+  PutMyOfficerByIdData,
+} from "@snailycad/types/api";
 
 interface Props {
   officer: Officer | null;
@@ -67,7 +72,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
       divisions: values.divisions.map((v) => v.value),
     };
     if (officer) {
-      const { json } = await execute(`/leo/${officer.id}`, {
+      const { json } = await execute<PutMyOfficerByIdData, typeof INITIAL_VALUES>({
+        path: `/leo/${officer.id}`,
         method: "PUT",
         data,
         helpers,
@@ -79,7 +85,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
         onUpdate?.(officer, json);
       }
     } else {
-      const { json } = await execute("/leo", {
+      const { json } = await execute<PostMyOfficersData, typeof INITIAL_VALUES>({
+        path: "/leo",
         method: "POST",
         data,
         helpers,
@@ -93,7 +100,8 @@ export function ManageOfficerModal({ officer, onClose, onUpdate, onCreate }: Pro
     }
 
     if (validatedImage && typeof validatedImage === "object") {
-      await execute(`/leo/image/${officerId}`, {
+      await execute<PostMyOfficerByIdData, typeof INITIAL_VALUES>({
+        path: `/leo/image/${officerId}`,
         method: "POST",
         data: fd,
         helpers,

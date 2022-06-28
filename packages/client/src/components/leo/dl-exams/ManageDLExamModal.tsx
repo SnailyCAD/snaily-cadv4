@@ -21,6 +21,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import type { NameSearchResult } from "state/search/nameSearchState";
+import type { PostDLExamsData, PutDLExamByIdData } from "@snailycad/types/api";
 
 interface Props {
   exam: DLExam | null;
@@ -58,7 +59,8 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
     };
 
     if (exam) {
-      const { json } = await execute(`/leo/${apiPath}/${exam.id}`, {
+      const { json } = await execute<PutDLExamByIdData>({
+        path: `/leo/${apiPath}/${exam.id}`,
         method: "PUT",
         data,
       });
@@ -68,7 +70,8 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
         onUpdate?.(exam, json);
       }
     } else {
-      const { json } = await execute(`/leo/${apiPath}`, {
+      const { json } = await execute<PostDLExamsData>({
+        path: `/leo/${apiPath}`,
         method: "POST",
         data,
       });

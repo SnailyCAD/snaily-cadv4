@@ -9,7 +9,7 @@ import { useModal } from "state/modalState";
 import { Button } from "components/Button";
 import { ModalIds } from "types/ModalIds";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
-import type { IncidentInvolvedUnit, LeoIncident, Officer } from "@snailycad/types";
+import type { IncidentInvolvedUnit, LeoIncident } from "@snailycad/types";
 import { useDispatchState } from "state/dispatchState";
 import { useLeoState } from "state/leoState";
 import dynamic from "next/dynamic";
@@ -24,13 +24,14 @@ import { usePermission, Permissions } from "hooks/usePermission";
 import { isUnitCombined } from "@snailycad/utils";
 import type {
   DeleteIncidentByIdData,
+  GetActiveOfficerData,
   GetDispatchData,
   GetIncidentsData,
 } from "@snailycad/types/api";
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData["incidents"];
-  activeOfficer: Officer | null;
+  activeOfficer: GetActiveOfficerData;
 }
 
 const ManageIncidentModal = dynamic(async () => {

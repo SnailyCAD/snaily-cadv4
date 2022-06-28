@@ -14,6 +14,7 @@ import { validateSchema } from "lib/validateSchema";
 import { IsAuth } from "middlewares/IsAuth";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
 import { manyToManyHelper } from "utils/manyToMany";
+import type * as APITypes from "@snailycad/types/api";
 
 const dlExamIncludes = {
   citizen: true,
@@ -32,7 +33,7 @@ export class WeaponExamsController {
   async getAllDLExams(
     @QueryParams("skip", Number) skip = 0,
     @QueryParams("query", String) query = "",
-  ) {
+  ): Promise<APITypes.GetWeaponExamsData> {
     const where: Prisma.DLExamWhereInput | undefined = query
       ? {
           OR: [
@@ -62,7 +63,7 @@ export class WeaponExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageWeaponExams],
   })
-  async createDLEXam(@BodyParams() body: unknown) {
+  async createDLEXam(@BodyParams() body: unknown): Promise<APITypes.PostWeaponExamsData> {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
     const status = this.getExamStatus(data);
@@ -96,7 +97,7 @@ export class WeaponExamsController {
       include: dlExamIncludes,
     });
 
-    return updated;
+    return updated!;
   }
 
   @Put("/:id")
@@ -104,7 +105,10 @@ export class WeaponExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageWeaponExams],
   })
-  async updateDLEXam(@PathParams("id") examId: string, @BodyParams() body: unknown) {
+  async updateDLEXam(
+    @PathParams("id") examId: string,
+    @BodyParams() body: unknown,
+  ): Promise<APITypes.PutWeaponExamByIdData> {
     const data = validateSchema(DL_EXAM_SCHEMA, body);
 
     const exam = await prisma.weaponExam.findUnique({
@@ -153,7 +157,7 @@ export class WeaponExamsController {
     fallback: (u) => u.isSupervisor,
     permissions: [Permissions.ManageWeaponExams],
   })
-  async deleteDLEXam(@PathParams("id") examId: string) {
+  async deleteDLEXam(@PathParams("id") examId: string): Promise<APITypes.DeleteWeaponExamByIdData> {
     const exam = await prisma.weaponExam.findUnique({
       where: { id: examId },
       include: { categories: true },

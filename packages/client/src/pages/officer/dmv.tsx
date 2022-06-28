@@ -6,16 +6,17 @@ import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import { requestAll } from "lib/utils";
 import type { GetServerSideProps } from "next";
-import { RegisteredVehicle, WhitelistStatus } from "@snailycad/types";
+import { WhitelistStatus } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { Title } from "components/shared/Title";
 import { FullDate } from "components/shared/FullDate";
 import { Permissions } from "hooks/usePermission";
 import useFetch from "lib/useFetch";
 import { Status } from "components/shared/Status";
+import type { GetDMVPendingVehiclesData, PostDMVVehiclesData } from "@snailycad/types/api";
 
 interface Props {
-  data: RegisteredVehicle[];
+  data: GetDMVPendingVehiclesData;
 }
 
 export default function Dmv({ data }: Props) {
@@ -26,7 +27,8 @@ export default function Dmv({ data }: Props) {
   const { state, execute } = useFetch();
 
   async function handleAcceptOrDecline(id: string, type: "ACCEPT" | "DECLINE") {
-    const { json } = await execute(`/leo/dmv/${id}`, {
+    const { json } = await execute<PostDMVVehiclesData>({
+      path: `/leo/dmv/${id}`,
       method: "POST",
       data: { type },
     });

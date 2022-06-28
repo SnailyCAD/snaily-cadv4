@@ -6,7 +6,7 @@ import { StatusesArea } from "components/shared/StatusesArea";
 import { getSessionUser } from "lib/auth";
 import { getTranslations } from "lib/getTranslation";
 import type { GetServerSideProps } from "next";
-import { ActiveOfficer, useLeoState } from "state/leoState";
+import { useLeoState } from "state/leoState";
 import { EmsFdDeputy, Officer, Record, RecordType, ValueType } from "@snailycad/types";
 import { ActiveCalls } from "components/leo/ActiveCalls";
 import { useDispatchState } from "state/dispatchState";
@@ -26,7 +26,12 @@ import { useNameSearch } from "state/search/nameSearchState";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useTones } from "hooks/global/useTones";
 import { useLoadValuesClientSide } from "hooks/useLoadValuesClientSide";
-import type { Get911CallsData, GetBolosData } from "@snailycad/types/api";
+import type {
+  Get911CallsData,
+  GetActiveOfficerData,
+  GetActiveOfficersData,
+  GetBolosData,
+} from "@snailycad/types/api";
 
 const Modals = {
   CreateWarrantModal: dynamic(async () => {
@@ -61,12 +66,12 @@ const Modals = {
 };
 
 interface Props {
-  activeOfficer: ActiveOfficer | null;
+  activeOfficer: GetActiveOfficerData;
+  activeOfficers: GetActiveOfficersData;
+  userOfficers: Officer[];
   calls: Get911CallsData;
   bolos: GetBolosData;
   activeDeputies: EmsFdDeputy[];
-  activeOfficers: ActiveOfficer[];
-  userOfficers: Officer[];
 }
 
 export default function OfficerDashboard({
@@ -103,7 +108,7 @@ export default function OfficerDashboard({
   const { currentResult, setCurrentResult } = useNameSearch();
 
   function handleRecordCreate(data: Record) {
-    if (!currentResult) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     setCurrentResult({
       ...currentResult,

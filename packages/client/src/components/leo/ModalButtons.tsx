@@ -8,6 +8,7 @@ import { makeUnitName } from "lib/utils";
 import { isUnitCombined } from "@snailycad/utils";
 import * as modalButtons from "components/modal-buttons/buttons";
 import { ModalButton } from "components/modal-buttons/ModalButton";
+import type { PostLeoTogglePanicButtonData } from "@snailycad/types/api";
 
 const buttons: modalButtons.ModalButton[] = [
   modalButtons.switchDivision,
@@ -34,7 +35,8 @@ export function ModalButtons() {
   async function handlePanic() {
     if (!activeOfficer) return;
 
-    await execute("/leo/panic-button", {
+    await execute<PostLeoTogglePanicButtonData>({
+      path: "/leo/panic-button",
       method: "POST",
       data: { officerId: activeOfficer.id },
     });
