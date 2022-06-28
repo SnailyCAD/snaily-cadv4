@@ -31,7 +31,7 @@ import type {
 
 interface Props extends GetDispatchData {
   incidents: GetIncidentsData["incidents"];
-  activeOfficer: GetActiveOfficerData;
+  activeOfficer: GetActiveOfficerData | null;
 }
 
 const ManageIncidentModal = dynamic(async () => {

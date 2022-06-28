@@ -8,7 +8,7 @@ import type { WeaponSearchResult } from "state/search/weaponSearchState";
 import { ModalIds } from "types/ModalIds";
 
 interface Props {
-  currentResult: NameSearchResult | VehicleSearchResult | WeaponSearchResult;
+  currentResult: NonNullable<NameSearchResult | VehicleSearchResult | WeaponSearchResult>;
   isLeo: boolean;
 }
 

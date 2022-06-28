@@ -77,7 +77,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.DEPARTMENT: {
-        const v = value as DepartmentValue;
+        const v = value as DepartmentValue & { defaultOfficerRank: Value | null };
 
         return {
           callsign: v.callsign || common("none"),
@@ -89,7 +89,7 @@ export function useTableDataOfType(type: ValueType) {
         };
       }
       case ValueType.DIVISION: {
-        const v = value as DivisionValue;
+        const v = value as DivisionValue & { department: DepartmentValue };
 
         return {
           callsign: v.callsign || common("none"),
@@ -123,7 +123,7 @@ export function useTableDataOfType(type: ValueType) {
           ) : (
             "—"
           ),
-          departments: v.departments.map((v) => v.value.value).join(", "),
+          departments: v.departments?.map((v) => v.value.value).join(", ") || common("none"),
           type: v.qualificationType.toLowerCase(),
         };
       }

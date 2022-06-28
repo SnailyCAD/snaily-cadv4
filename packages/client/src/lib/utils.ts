@@ -37,7 +37,9 @@ export async function requestAll(
   );
 }
 
-export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit) {
+export function makeUnitName(
+  unit: Omit<Officer, "activeIncident"> | EmsFdDeputy | CombinedLeoUnit,
+) {
   if (isUnitCombined(unit)) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;
@@ -94,7 +96,7 @@ export function formatOfficerDepartment(unit: Officer | EmsFdDeputy) {
   const department = unit.department;
 
   if (whitelistStatus && whitelistStatus.status === WhitelistStatus.PENDING) {
-    return `${department?.value.value} (${whitelistStatus.department.value.value})`;
+    return `${department?.value.value} (${whitelistStatus.department?.value.value})`;
   }
 
   return getUnitDepartment(unit)?.value.value ?? null;
