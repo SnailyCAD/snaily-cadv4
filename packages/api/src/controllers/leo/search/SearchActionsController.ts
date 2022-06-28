@@ -21,6 +21,7 @@ import {
   VehicleTaxStatus,
   WhitelistStatus,
   User,
+  CustomFieldCategory,
 } from "@prisma/client";
 import { UseBeforeEach, Context } from "@tsed/common";
 import { Description, Post, Put } from "@tsed/schema";
@@ -30,7 +31,11 @@ import { manyToManyHelper } from "utils/manyToMany";
 import { validateCustomFields } from "lib/custom-fields";
 import { isFeatureEnabled } from "lib/cad";
 import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
-import { citizenSearchIncludeOrSelect, vehicleSearchInclude } from "./SearchController";
+import {
+  appendCustomFields,
+  citizenSearchIncludeOrSelect,
+  vehicleSearchInclude,
+} from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generateString";
 import type * as APITypes from "@snailycad/types/api";
@@ -114,7 +119,7 @@ export class SearchActionsController {
       include: vehicleSearchInclude,
     });
 
-    return updated;
+    return appendCustomFields(updated, CustomFieldCategory.VEHICLE);
   }
 
   @Put("/vehicle-flags/:vehicleId")
@@ -428,6 +433,6 @@ export class SearchActionsController {
       include: vehicleSearchInclude,
     });
 
-    return vehicle;
+    return appendCustomFields(vehicle, CustomFieldCategory.VEHICLE);
   }
 }

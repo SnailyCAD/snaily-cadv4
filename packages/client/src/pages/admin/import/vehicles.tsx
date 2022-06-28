@@ -6,7 +6,7 @@ import type { GetServerSideProps } from "next";
 import { AdminLayout } from "components/admin/AdminLayout";
 import { requestAll } from "lib/utils";
 import { Title } from "components/shared/Title";
-import { Rank, type RegisteredVehicle } from "@snailycad/types";
+import { Rank } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { FullDate } from "components/shared/FullDate";
 import { FormField } from "components/form/FormField";
@@ -17,10 +17,10 @@ import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { Permissions } from "@snailycad/permissions";
 import { useAsyncTable } from "hooks/shared/table/useAsyncTable";
-import type { PostImportVehiclesData } from "@snailycad/types/api";
+import type { GetImportVehiclesData, PostImportVehiclesData } from "@snailycad/types/api";
 
 interface Props {
-  data: { totalCount: number; vehicles: RegisteredVehicle[] };
+  data: GetImportVehiclesData;
 }
 
 export default function ImportVehiclesPage({ data }: Props) {
@@ -31,7 +31,10 @@ export default function ImportVehiclesPage({ data }: Props) {
 
   const asyncTable = useAsyncTable({
     fetchOptions: {
-      onResponse: (json) => ({ totalCount: json.totalCount, data: json.vehicles }),
+      onResponse: (json: GetImportVehiclesData) => ({
+        totalCount: json.totalCount,
+        data: json.vehicles,
+      }),
       path: "/admin/import/vehicles",
     },
     initialData: data.vehicles,

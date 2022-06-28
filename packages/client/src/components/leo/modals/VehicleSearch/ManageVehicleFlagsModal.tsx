@@ -1,4 +1,4 @@
-import type { Value, ValueType } from "@snailycad/types";
+import type { Value } from "@snailycad/types";
 import { Button } from "components/Button";
 import { FormField } from "components/form/FormField";
 import { Select } from "components/form/Select";
@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { useVehicleSearch } from "state/search/vehicleSearchState";
 import { ModalIds } from "types/ModalIds";
 import { useNameSearch } from "state/search/nameSearchState";
+import type { PutSearchActionsVehicleFlagsData } from "@snailycad/types/api";
 
 export function ManageVehicleFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -25,7 +26,8 @@ export function ManageVehicleFlagsModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/search/actions/vehicle-flags/${currentResult.id}`, {
+    const { json } = await execute<PutSearchActionsVehicleFlagsData>({
+      path: `/search/actions/vehicle-flags/${currentResult.id}`,
       method: "PUT",
       data: { flags: values.flags.map((v) => v.value) },
     });
@@ -35,7 +37,7 @@ export function ManageVehicleFlagsModal() {
       setCurrentResult(updatedVehicle);
       closeModal(ModalIds.ManageVehicleFlags);
 
-      if (nameSearchState.currentResult) {
+      if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
           ...nameSearchState.currentResult,
           vehicles: nameSearchState.currentResult.vehicles.map((v) =>

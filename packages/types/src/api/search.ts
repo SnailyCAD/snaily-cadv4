@@ -68,6 +68,8 @@ export type PostLeoSearchWeaponData =
 export type PostLeoSearchVehicleData =
   | (Types.RegisteredVehicle & {
       customFields: Types.CustomFieldValue[];
+      allCustomFields: Types.CustomField[];
+      TruckLog: Prisma.TruckLog[];
     })
   | null;
 

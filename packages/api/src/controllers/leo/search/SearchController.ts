@@ -287,7 +287,7 @@ export function appendConfidential(
   return _citizens;
 }
 
-async function appendCustomFields(item: any, category: CustomFieldCategory) {
+export async function appendCustomFields(item: any, category: CustomFieldCategory) {
   const allCustomFields = await prisma.customField.findMany({
     where: { category },
   });

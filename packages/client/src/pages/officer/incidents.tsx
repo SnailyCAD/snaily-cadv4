@@ -29,7 +29,7 @@ import type {
 } from "@snailycad/types/api";
 
 interface Props extends GetDispatchData {
-  incidents: GetIncidentsData;
+  incidents: GetIncidentsData["incidents"];
   activeOfficer: Officer | null;
 }
 

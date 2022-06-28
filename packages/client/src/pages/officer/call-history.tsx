@@ -39,7 +39,7 @@ const DescriptionModal = dynamic(
 
 interface Props extends GetDispatchData {
   data: Get911CallsData;
-  incidents: GetIncidentsData;
+  incidents: GetIncidentsData["incidents"];
 }
 
 export default function CallHistory({ data, incidents, officers, deputies }: Props) {

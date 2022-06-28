@@ -11,19 +11,14 @@ import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
 import { Select } from "components/form/Select";
 import { Input } from "components/form/inputs/Input";
-import type { NameSearchResult } from "state/search/nameSearchState";
-import type { VehicleSearchResult } from "state/search/vehicleSearchState";
-import type { WeaponSearchResult } from "state/search/weaponSearchState";
 import { CustomFieldResults } from "./CustomFieldResults";
 import { handleValidate } from "lib/handleValidate";
 import { CUSTOM_FIELD_SEARCH_SCHEMA } from "@snailycad/schemas";
+import type { PostSearchCustomFieldData } from "@snailycad/types/api";
 
 let cache: CustomField[] = [];
 
-export interface CustomFieldResults {
-  results: (NameSearchResult | VehicleSearchResult | WeaponSearchResult)[];
-  field: CustomField;
-}
+export type CustomFieldResults = PostSearchCustomFieldData<true>;
 
 export function CustomFieldSearch() {
   const { isOpen, closeModal } = useModal();
@@ -52,7 +47,8 @@ export function CustomFieldSearch() {
   }, [fetchOnOpen, isOpen]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/custom-field", {
+    const { json } = await execute<CustomFieldResults>({
+      path: "/search/custom-field",
       method: "POST",
       data: values,
     });
