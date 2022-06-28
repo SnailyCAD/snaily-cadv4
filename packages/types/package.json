@@ -1,6 +1,6 @@
 {
   "name": "@snailycad/types",
-  "version": "1.13.2",
+  "version": "1.14.0",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -34,7 +34,7 @@
     "type-fest": "^2.13.0"
   },
   "devDependencies": {
-    "@snailycad/permissions": "1.13.2",
+    "@snailycad/permissions": "1.14.0",
     "tsup": "^6.1.2",
     "typescript": "^4.7.3"
   },

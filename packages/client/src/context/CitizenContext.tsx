@@ -37,6 +37,8 @@ export function CitizenProvider({ initialData, children }: ProviderProps) {
 
       if (initialData.citizen) {
         setCurrentCitizen(initialData.citizen);
+      } else {
+        setCurrentCitizen(null);
       }
     }
   }, [initialData]);
