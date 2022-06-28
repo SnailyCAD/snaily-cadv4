@@ -31,6 +31,7 @@ export function NameSearchWarrantsTab() {
   async function handleDelete() {
     const warrant = getPayload<Warrant>(ModalIds.AlertRevokeWarrant);
     if (!warrant) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     const { json } = await execute<DeleteRecordsByIdData>({
       path: `/records/${warrant.id}`,
@@ -39,13 +40,10 @@ export function NameSearchWarrantsTab() {
     });
 
     if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
-        });
-      }
-
+      setCurrentResult({
+        ...currentResult,
+        warrants: currentResult.warrants.filter((v) => v.id !== warrant.id),
+      });
       closeModal(ModalIds.AlertRevokeWarrant);
     }
   }
@@ -55,13 +53,15 @@ export function NameSearchWarrantsTab() {
   }
 
   async function handleChange(value: string, warrant: Warrant) {
+    if (!currentResult || currentResult.isConfidential) return;
+
     const { json } = await execute<PutWarrantsData>({
       path: `/records/warrant/${warrant.id}`,
       data: { status: value.toUpperCase(), type: "WARRANT" },
       method: "PUT",
     });
 
-    if (json && currentResult) {
+    if (json) {
       setCurrentResult({
         ...currentResult,
         warrants: currentResult.warrants.map((v) => {
@@ -75,7 +75,7 @@ export function NameSearchWarrantsTab() {
     }
   }
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 
@@ -94,7 +94,9 @@ export function NameSearchWarrantsTab() {
                 const value = values.find((v) => v.value === warrant.status.toLowerCase());
 
                 return {
-                  officer: `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`,
+                  officer: warrant.officer
+                    ? `${generateCallsign(warrant.officer)} ${makeUnitName(warrant.officer)}`
+                    : "—",
                   description: warrant.description,
                   createdAt: <FullDate>{warrant.createdAt}</FullDate>,
                   actions: (

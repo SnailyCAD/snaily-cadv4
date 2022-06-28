@@ -1,6 +1,5 @@
 import { DL_EXAM_SCHEMA } from "@snailycad/schemas";
 import {
-  Citizen,
   DLExam,
   DLExamPassType,
   DriversLicenseCategoryType,
@@ -21,6 +20,7 @@ import { handleValidate } from "lib/handleValidate";
 import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { ModalIds } from "types/ModalIds";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   exam: DLExam | null;
@@ -105,7 +105,7 @@ export function ManageDLExamModal({ exam, type = "dl", onClose, onCreate, onUpda
         {({ handleChange, setValues, errors, values }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={common("citizen")}>
-              <InputSuggestions<Citizen>
+              <InputSuggestions<NameSearchResult>
                 onSuggestionClick={(suggestion) => {
                   setValues({
                     ...values,

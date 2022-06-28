@@ -67,7 +67,8 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
     openModal(ModalIds.ManageNote);
   }
 
-  if (!currentResult || !Array.isArray(currentResult.notes)) {
+  const isConfidential = "isConfidential" in currentResult && currentResult.isConfidential;
+  if (!currentResult || isConfidential) {
     return null;
   }
 

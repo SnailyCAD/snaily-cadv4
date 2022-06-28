@@ -18,7 +18,7 @@ export async function getSessionUser(
     }
 
     return null;
-  } catch {
+  } catch (e) {
     return null;
   }
 }

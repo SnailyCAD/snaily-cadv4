@@ -4,6 +4,7 @@ import type * as Types from "./index.js";
 export * from "./api/admin.js";
 export * from "./api/dispatch.js";
 export * from "./api/courthouse.js";
+export * from "./api/search.js";
 
 /** bleeter */
 /**

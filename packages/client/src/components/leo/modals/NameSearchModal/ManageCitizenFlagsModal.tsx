@@ -10,6 +10,7 @@ import useFetch from "lib/useFetch";
 import { useTranslations } from "next-intl";
 import { useNameSearch } from "state/search/nameSearchState";
 import { ModalIds } from "types/ModalIds";
+import type { PutSearchActionsCitizenFlagsData } from "@snailycad/types/api";
 
 export function ManageCitizenFlagsModal() {
   const { isOpen, closeModal } = useModal();
@@ -23,7 +24,8 @@ export function ManageCitizenFlagsModal() {
   async function onSubmit(values: typeof INITIAL_VALUES) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/search/actions/citizen-flags/${currentResult.id}`, {
+    const { json } = await execute<PutSearchActionsCitizenFlagsData>({
+      path: `/search/actions/citizen-flags/${currentResult.id}`,
       method: "PUT",
       data: { flags: values.flags.map((v) => v.value) },
     });
@@ -38,7 +40,7 @@ export function ManageCitizenFlagsModal() {
     return { label: v.value, value: v.id };
   }
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 

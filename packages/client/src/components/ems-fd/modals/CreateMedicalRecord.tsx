@@ -8,7 +8,7 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
+import type { MedicalRecord } from "@snailycad/types";
 import { handleValidate } from "lib/handleValidate";
 import { Input } from "components/form/inputs/Input";
 import { Textarea } from "components/form/Textarea";
@@ -17,6 +17,7 @@ import { useValues } from "context/ValuesContext";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   onCreate?(newV: MedicalRecord): void;
@@ -70,7 +71,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
         {({ handleChange, setValues, errors, values, isValid }) => (
           <Form>
             <FormField errorMessage={errors.citizenId} label={t("citizen")}>
-              <InputSuggestions<Citizen>
+              <InputSuggestions<NameSearchResult>
                 onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
@@ -98,7 +99,7 @@ export function CreateMedicalRecordModal({ onClose, onCreate }: Props) {
                   </div>
                 )}
                 options={{
-                  apiPath: "/search/medical-name",
+                  apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
                 }}

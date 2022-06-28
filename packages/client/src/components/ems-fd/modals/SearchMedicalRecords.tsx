@@ -8,7 +8,6 @@ import { Modal } from "components/modal/Modal";
 import useFetch from "lib/useFetch";
 import { useModal } from "state/modalState";
 import { ModalIds } from "types/ModalIds";
-import type { Citizen, MedicalRecord } from "@snailycad/types";
 import { Table } from "components/shared/Table";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
 import { useImageUrl } from "hooks/useImageUrl";
@@ -19,6 +18,7 @@ import { FullDate } from "components/shared/FullDate";
 import { calculateAge, formatCitizenAddress } from "lib/utils";
 import { useAuth } from "context/AuthContext";
 import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
+import type { PostEmsFdMedicalRecordsSearchData } from "@snailycad/types/api";
 
 interface Props {
   onClose?(): void;
@@ -52,7 +52,8 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/medical-records", {
+    const { json } = await execute<PostEmsFdMedicalRecordsSearchData>({
+      path: "/search/medical-records",
       method: "POST",
       data: values,
       noToast: true,
@@ -113,7 +114,7 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
                   </div>
                 )}
                 options={{
-                  apiPath: "/search/medical-name",
+                  apiPath: "/search/name",
                   method: "POST",
                   dataKey: "name",
                 }}
@@ -251,7 +252,4 @@ export function SearchMedicalRecordModal({ onClose }: Props) {
   );
 }
 
-interface SearchResult extends Citizen {
-  medicalRecords: MedicalRecord[];
-  isConfidential?: boolean;
-}
+type SearchResult = PostEmsFdMedicalRecordsSearchData;

@@ -62,7 +62,8 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
   }, [id, isOpen, setCurrentResult]);
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/vehicle", {
+    const { json } = await execute<VehicleSearchResult>({
+      path: "/search/vehicle",
       method: "POST",
       data: values,
       noToast: true,
@@ -99,7 +100,7 @@ export function VehicleSearchModal({ id = ModalIds.VehicleSearch }: Props) {
 
       setCurrentResult(updatedVehicle);
 
-      if (nameSearchState.currentResult) {
+      if (nameSearchState.currentResult && !nameSearchState.currentResult.isConfidential) {
         nameSearchState.setCurrentResult({
           ...nameSearchState.currentResult,
           vehicles: nameSearchState.currentResult.vehicles.map((v) =>

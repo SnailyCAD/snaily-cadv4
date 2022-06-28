@@ -12,6 +12,7 @@ import { Select } from "components/form/Select";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
 import { useImageUrl } from "hooks/useImageUrl";
 import { InputSuggestions } from "components/form/inputs/InputSuggestions";
+import type { NameSearchResult } from "state/search/nameSearchState";
 
 interface Props {
   citizen: (Citizen & { recordId: string }) | null;
@@ -78,7 +79,7 @@ export function ReleaseCitizenModal({ onSuccess, citizen }: Props) {
 
             {values.type === ReleaseType.BAIL_POSTED ? (
               <FormField errorMessage={errors.releasedById} label={t("bailPostedBy")}>
-                <InputSuggestions<Citizen>
+                <InputSuggestions<NameSearchResult>
                   onSuggestionClick={(suggestion) => {
                     setValues({
                       ...values,

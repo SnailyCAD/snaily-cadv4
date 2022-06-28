@@ -174,7 +174,7 @@ export function ManageRecordModal({
                   disabled: isReadOnly || !!record,
                   errorMessage: errors.citizenName,
                 }}
-                onSuggestionClick={(suggestion: Citizen) => {
+                onSuggestionClick={(suggestion) => {
                   const newValues = {
                     ...values,
                     citizenId: suggestion.id,

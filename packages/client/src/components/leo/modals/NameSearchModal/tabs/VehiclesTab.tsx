@@ -20,13 +20,13 @@ export function NameSearchVehiclesTab() {
   const { setCurrentResult: setVehicleResult } = useVehicleSearch();
 
   function handlePlateClick(vehicle: VehicleSearchResult) {
-    if (!currentResult) return;
+    if (!currentResult || currentResult.isConfidential) return;
 
     setVehicleResult({ ...vehicle, citizen: currentResult });
     openModal(ModalIds.VehicleSearchWithinName);
   }
 
-  if (!currentResult) {
+  if (!currentResult || currentResult.isConfidential) {
     return null;
   }
 

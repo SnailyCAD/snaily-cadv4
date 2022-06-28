@@ -33,6 +33,7 @@ import { ExtendedBadRequest } from "src/exceptions/ExtendedBadRequest";
 import { citizenSearchIncludeOrSelect, vehicleSearchInclude } from "./SearchController";
 import { citizenObjectFromData } from "lib/citizen";
 import { generateString } from "utils/generateString";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/search/actions")
 @UseBeforeEach(IsAuth)
@@ -46,7 +47,7 @@ export class SearchActionsController {
   async updateCitizenLicenses(
     @BodyParams() body: unknown,
     @PathParams("citizenId") citizenId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsLicensesData> {
     const data = validateSchema(LICENSE_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({
@@ -87,7 +88,7 @@ export class SearchActionsController {
   async updateVehicleLicenses(
     @BodyParams() body: unknown,
     @PathParams("vehicleId") vehicleId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsVehicleLicensesData> {
     const data = validateSchema(LEO_VEHICLE_LICENSE_SCHEMA, body);
 
     const vehicle = await prisma.registeredVehicle.findUnique({
@@ -110,10 +111,7 @@ export class SearchActionsController {
         taxStatus: data.taxStatus as VehicleTaxStatus | null,
         inspectionStatus: data.inspectionStatus as VehicleInspectionStatus | null,
       },
-      include: {
-        registrationStatus: true,
-        insuranceStatus: true,
-      },
+      include: vehicleSearchInclude,
     });
 
     return updated;
@@ -128,7 +126,7 @@ export class SearchActionsController {
   async updateVehicleFlags(
     @BodyParams("flags") flags: string[],
     @PathParams("vehicleId") vehicleId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsVehicleFlagsData> {
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id: vehicleId },
       select: { id: true, flags: true },
@@ -154,7 +152,7 @@ export class SearchActionsController {
       select: { id: true, flags: true },
     });
 
-    return updated;
+    return updated!;
   }
 
   @Put("/citizen-flags/:citizenId")
@@ -166,7 +164,7 @@ export class SearchActionsController {
   async updateCitizenFlags(
     @BodyParams("flags") flags: string[],
     @PathParams("citizenId") citizenId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsCitizenFlagsData> {
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },
       select: { id: true, flags: true },
@@ -192,7 +190,7 @@ export class SearchActionsController {
       select: { id: true, flags: true },
     });
 
-    return updated;
+    return updated!;
   }
 
   @Put("/custom-fields/citizen/:citizenId")
@@ -203,7 +201,7 @@ export class SearchActionsController {
   async updateCitizenCustomFields(
     @BodyParams("fields") fields: unknown,
     @PathParams("citizenId") citizenId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsUpdateCitizenCustomFields> {
     const citizen = await prisma.citizen.findUnique({
       where: { id: citizenId },
       select: { id: true },
@@ -234,7 +232,7 @@ export class SearchActionsController {
   async updateVehicleCustomFields(
     @BodyParams("fields") fields: unknown,
     @PathParams("vehicleId") vehicleId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsUpdateVehicleCustomFields> {
     const vehicle = await prisma.registeredVehicle.findUnique({
       where: { id: vehicleId },
       select: { id: true },
@@ -265,7 +263,7 @@ export class SearchActionsController {
   async updateWeaponCustomFields(
     @BodyParams("fields") fields: unknown,
     @PathParams("weaponId") weaponId: string,
-  ) {
+  ): Promise<APITypes.PutSearchActionsUpdateWeaponCustomFields> {
     const weapon = await prisma.weapon.findUnique({
       where: { id: weaponId },
       select: { id: true },
@@ -297,7 +295,7 @@ export class SearchActionsController {
     @Context("cad") cad: cad & { features?: CadFeature[]; miscCadSettings: MiscCadSettings | null },
     @Context("user") user: User,
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostSearchActionsCreateCitizen> {
     const isCreateCitizensEnabled = isFeatureEnabled({
       features: cad.features,
       feature: Feature.CREATE_USER_CITIZEN_LEO,
@@ -346,7 +344,7 @@ export class SearchActionsController {
       include: citizenSearchIncludeOrSelect(user, cad),
     });
 
-    return citizen;
+    return citizen as APITypes.PostSearchActionsCreateCitizen;
   }
 
   @Post("/vehicle")
@@ -355,7 +353,7 @@ export class SearchActionsController {
     @Context("user") user: User,
     @Context("cad") cad: cad & { miscCadSettings?: MiscCadSettings; features?: CadFeature[] },
     @BodyParams() body: unknown,
-  ) {
+  ): Promise<APITypes.PostSearchActionsCreateVehicle> {
     const data = validateSchema(VEHICLE_SCHEMA, body);
 
     const citizen = await prisma.citizen.findUnique({

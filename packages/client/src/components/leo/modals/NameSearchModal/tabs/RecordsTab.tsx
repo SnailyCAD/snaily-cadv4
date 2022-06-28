@@ -42,8 +42,20 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
     ["arrestReports", t("Leo.arrestReports"), t("Leo.noArrestReports"), arrestReports],
   ];
 
+  function handleRecordUpdate(data: Record) {
+    if (!currentResult || currentResult.isConfidential) return;
+
+    setCurrentResult({
+      ...currentResult,
+      Record: currentResult.Record.map((v) => {
+        if (v.id === data.id) return data;
+        return v;
+      }),
+    });
+  }
+
   async function handleDelete() {
-    if (!tempItem) return;
+    if (!tempItem || !currentResult || currentResult.isConfidential) return;
 
     const { json } = await execute<DeleteRecordsByIdData>({
       path: `/records/${tempItem.id}`,
@@ -51,12 +63,10 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
     });
 
     if (json) {
-      if (currentResult) {
-        setCurrentResult({
-          ...currentResult,
-          Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
-        });
-      }
+      setCurrentResult({
+        ...currentResult,
+        Record: currentResult.Record.filter((v) => v.id !== tempItem.id),
+      });
 
       closeModal(ModalIds.AlertDeleteRecord);
     }
@@ -100,16 +110,7 @@ export function RecordsTab({ records, isCitizen }: { records: Record[]; isCitize
 
       {tempEditRecord ? (
         <ManageRecordModal
-          onUpdate={(data) => {
-            currentResult &&
-              setCurrentResult({
-                ...currentResult,
-                Record: currentResult.Record.map((v) => {
-                  if (v.id === data.id) return data;
-                  return v;
-                }),
-              });
-          }}
+          onUpdate={handleRecordUpdate}
           id={ModalIds.ManageRecord}
           type={tempEditRecord.type}
           record={tempEditRecord}

@@ -33,6 +33,7 @@ import { CitizenImageModal } from "components/citizen/modals/CitizenImageModal";
 import { ManageCustomFieldsModal } from "./ManageCustomFieldsModal";
 import { CustomFieldsArea } from "../CustomFieldsArea";
 import { useBolos } from "hooks/realtime/useBolos";
+import type { PostLeoSearchCitizenData, PutSearchActionsLicensesData } from "@snailycad/types/api";
 
 const VehicleSearchModal = dynamic(
   async () => (await import("components/leo/modals/VehicleSearchModal")).VehicleSearchModal,
@@ -103,7 +104,8 @@ export function NameSearchModal() {
   async function handleLicensesSubmit(values: LicenseInitialValues) {
     if (!currentResult) return;
 
-    const { json } = await execute(`/search/actions/licenses/${currentResult.id}`, {
+    const { json } = await execute<PutSearchActionsLicensesData>({
+      path: `/search/actions/licenses/${currentResult.id}`,
       method: "PUT",
       data: {
         ...values,
@@ -121,7 +123,8 @@ export function NameSearchModal() {
   }
 
   async function onSubmit(values: typeof INITIAL_VALUES) {
-    const { json } = await execute("/search/name", {
+    const { json } = await execute<PostLeoSearchCitizenData>({
+      path: "/search/name",
       method: "POST",
       data: values,
     });
@@ -134,7 +137,7 @@ export function NameSearchModal() {
 
     const first = Array.isArray(json) ? json[0] : json;
 
-    if (first?.id === currentResult?.id) {
+    if (first && first?.id === currentResult?.id) {
       setCurrentResult(first);
     }
 
@@ -149,7 +152,8 @@ export function NameSearchModal() {
   async function handleDeclare() {
     if (!currentResult) return;
 
-    const { json } = await execute(`/ems-fd/declare/${currentResult.id}`, {
+    const { json } = await execute({
+      path: `/ems-fd/declare/${currentResult.id}`,
       method: "POST",
     });
 
@@ -266,7 +270,7 @@ export function NameSearchModal() {
               </ul>
             ) : null}
 
-            {typeof results !== "boolean" && currentResult ? (
+            {currentResult ? (
               currentResult.isConfidential ? (
                 <p className="my-5 px-2">{t("citizenIsConfidential")}</p>
               ) : (
@@ -436,7 +440,7 @@ export function NameSearchModal() {
                     {t("createCitizen")}
                   </Button>
                 ) : null}
-                {currentResult && isLeo ? (
+                {currentResult && !currentResult.isConfidential && isLeo ? (
                   <>
                     {Object.values(RecordType).map((type) => (
                       <Button
