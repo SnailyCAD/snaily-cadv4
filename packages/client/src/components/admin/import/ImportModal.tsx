@@ -56,7 +56,8 @@ export function ImportModal<T extends ImportData>({ onImport, id, url }: Props<T
       fd.set("file", file, file.name);
     }
 
-    const { json } = await execute<T>(url, {
+    const { json } = await execute<T>({
+      path: url,
       method: "POST",
       data: fd,
     });

@@ -52,7 +52,8 @@ export function ManageMedicalRecordsModal({ medicalRecord, onClose, onCreate, on
         onUpdate?.(medicalRecord, json);
       }
     } else {
-      const { json } = await execute<PostCitizenMedicalRecordsData>("/medical-records", {
+      const { json } = await execute<PostCitizenMedicalRecordsData>({
+        path: "/medical-records",
         method: "POST",
         data: { ...values, citizenId: citizen.id },
       });
