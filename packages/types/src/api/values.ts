@@ -52,3 +52,28 @@ export type PatchValueByIdData<Value extends AnyValue = AnyValue> = Value;
  * @route /admin/values/:path/positions
  */
 export type PutValuePositionsData = boolean;
+
+/** import  */
+/**
+ * @method GET
+ * @route /admin/values/import/:path
+ */
+export type ImportValuesData<Value extends AnyValue = AnyValue> = Value[];
+
+/**
+ * @method POST
+ * @route /admin/penal-code-group
+ */
+export type PostPenalCodeGroupsData = Types.PenalCodeGroup;
+
+/**
+ * @method PUT
+ * @route /admin/penal-code-group/:id
+ */
+export type PutPenalCodeGroupsData = Types.PenalCodeGroup;
+
+/**
+ * @method DELETE
+ * @route /admin/penal-code-group/:id
+ */
+export type DeletePenalCodeGroupsData = boolean;

@@ -26,6 +26,7 @@ import type {
   DeleteValueByIdData,
   GetValuesPenalCodesData,
   PutValuePositionsData,
+  DeletePenalCodeGroupsData,
 } from "@snailycad/types/api";
 
 const ManagePenalCode = dynamic(async () => {
@@ -86,7 +87,8 @@ export default function ValuePath({ values: { type, groups: groupData, values: d
   async function handleDeleteGroup() {
     if (!tempGroup) return;
 
-    const { json } = await execute(`/admin/penal-code-group/${tempGroup.id}`, {
+    const { json } = await execute<DeletePenalCodeGroupsData>({
+      path: `/admin/penal-code-group/${tempGroup.id}`,
       method: "DELETE",
     });
 

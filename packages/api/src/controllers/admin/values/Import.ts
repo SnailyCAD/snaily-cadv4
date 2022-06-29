@@ -44,6 +44,7 @@ import { getLastOfArray, manyToManyHelper } from "utils/manyToMany";
 import { getPermissionsForValuesRequest } from "lib/values/utils";
 import { UsePermissions } from "middlewares/UsePermissions";
 import { validateImgurURL } from "utils/image";
+import type * as APITypes from "@snailycad/types/api";
 
 @Controller("/admin/values/import/:path")
 @UseBeforeEach(IsAuth, IsValidPath)
@@ -54,7 +55,7 @@ export class ImportValuesViaFileController {
     @MultipartFile("file") file: PlatformMulterFile,
     @PathParams("path") path: string,
     @Context() context: Context,
-  ) {
+  ): Promise<APITypes.ImportValuesData> {
     const type = this.getTypeFromPath(path);
 
     if (file.mimetype !== "application/json") {
@@ -80,7 +81,7 @@ export class ImportValuesViaFileController {
 
     const handler = typeHandlers[type as keyof typeof typeHandlers];
     const data = await handler({ body, context, type });
-    return data;
+    return data as APITypes.ImportValuesData;
   }
 
   private getTypeFromPath(path: string): ValueType {

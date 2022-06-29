@@ -10,7 +10,7 @@ import { useModal } from "state/modalState";
 import { useTranslations } from "use-intl";
 import { ModalIds } from "types/ModalIds";
 import type { ValueType } from "@snailycad/types";
-import { toastMessage } from "lib/toastMessage";
+import type { ImportValuesData } from "@snailycad/types/api";
 
 interface Props {
   type: ValueType;
@@ -36,22 +36,14 @@ export function ImportValuesModal({ onImport, type }: Props) {
       fd.set("file", file, file.name);
     }
 
-    const { json } = await execute(`/admin/values/import/${type.toLowerCase()}`, {
+    const { json } = await execute<ImportValuesData>({
+      path: `/admin/values/import/${type.toLowerCase()}`,
       method: "POST",
       data: fd,
     });
 
     if (Array.isArray(json)) {
       onImport(json);
-    }
-
-    if (typeof json.failed === "number" && Array.isArray(json.success)) {
-      toastMessage({
-        icon: null,
-        message: `Successfully imported ${json.success.length}. Failed to import ${json.failed}.`,
-      });
-
-      onImport(json.success);
     }
 
     closeModal(ModalIds.ImportValues);
