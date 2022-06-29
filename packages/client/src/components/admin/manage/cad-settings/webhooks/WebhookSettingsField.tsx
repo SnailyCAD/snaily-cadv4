@@ -3,12 +3,12 @@ import { SettingsFormField } from "components/form/SettingsFormField";
 import { Textarea } from "components/form/Textarea";
 import { FormField } from "components/form/FormField";
 import { useFormikContext } from "formik";
-import type { DiscordChannel } from "./DiscordWebhooksTab";
+import type { GetCADDiscordWebhooksData } from "@snailycad/types/api";
 
 interface FieldProps {
   description: string;
   label: string;
-  channels: DiscordChannel[];
+  channels: GetCADDiscordWebhooksData;
   fieldName: string;
 }
 

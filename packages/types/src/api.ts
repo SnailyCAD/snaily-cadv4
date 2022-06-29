@@ -7,6 +7,7 @@ export * from "./api/courthouse.js";
 export * from "./api/search.js";
 export * from "./api/leo.js";
 export * from "./api/ems-fd.js";
+export * from "./api/cad-settings.js";
 
 /** bleeter */
 /**

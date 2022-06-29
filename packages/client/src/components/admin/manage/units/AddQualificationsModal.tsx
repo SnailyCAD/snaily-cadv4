@@ -71,7 +71,7 @@ export function AddQualificationsModal({ unit, setUnit }: Props) {
                 onChange={handleChange}
                 values={qualification.values
                   .filter((v) => {
-                    return !v.departments.length
+                    return !v.departments?.length
                       ? v.qualificationType === type
                       : v.departments.some((v) => unit.departmentId === v.id) &&
                           v.qualificationType === type;

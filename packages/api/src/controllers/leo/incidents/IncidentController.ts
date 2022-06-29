@@ -12,7 +12,7 @@ import { validateSchema } from "lib/validateSchema";
 import { Socket } from "services/SocketService";
 import type { z } from "zod";
 import { UsePermissions, Permissions } from "middlewares/UsePermissions";
-// import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
+import { assignedUnitsInclude } from "controllers/dispatch/911-calls/Calls911Controller";
 import { officerOrDeputyToUnit } from "lib/leo/officerOrDeputyToUnit";
 import { findUnit } from "lib/leo/findUnit";
 import { getFirstOfficerFromActiveOfficer, getPrismaNameActiveCallIncident } from "lib/leo/utils";
@@ -22,7 +22,7 @@ export const incidentInclude = {
   creator: { include: leoProperties },
   events: true,
   situationCode: { include: { value: true } },
-  // unitsInvolved: assignedUnitsInclude,
+  unitsInvolved: assignedUnitsInclude,
 };
 
 @Controller("/incidents")

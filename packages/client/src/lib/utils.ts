@@ -37,9 +37,7 @@ export async function requestAll(
   );
 }
 
-export function makeUnitName(
-  unit: Omit<Officer, "activeIncident"> | EmsFdDeputy | CombinedLeoUnit,
-) {
+export function makeUnitName(unit: Officer | EmsFdDeputy | CombinedLeoUnit) {
   if (isUnitCombined(unit)) return "";
 
   return `${unit.citizen.name} ${unit.citizen.surname}`;

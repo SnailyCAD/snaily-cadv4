@@ -31,6 +31,8 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
   const { openModal, closeModal } = useModal();
   const { state, execute } = useFetch();
 
+  const notes = getNotesFromCurrentResult(currentResult);
+
   async function handleDelete() {
     if (!currentResult || !tempNote) return;
 
@@ -43,7 +45,7 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
     if (typeof json === "boolean") {
       setCurrentResult({
         ...currentResult,
-        notes: currentResult.notes?.filter((v) => v.id !== tempNote.id),
+        notes: notes?.filter((v) => v.id !== tempNote.id),
       } as T);
       setTempNote(null);
       closeModal(ModalIds.AlertDeleteNote);
@@ -84,11 +86,11 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         </div>
       </header>
 
-      {currentResult.notes.length <= 0 ? (
+      {notes.length <= 0 ? (
         <p className="text-neutral-700 dark:text-gray-400 my-2">{t("Leo.noNotes")}</p>
       ) : (
         <Table
-          data={currentResult.notes.map((note) => ({
+          data={notes.map((note) => ({
             text: note.text,
             createdAt: <FullDate>{note.createdAt}</FullDate>,
             actions: (
@@ -136,17 +138,15 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
 
               setCurrentResult({
                 ...currentResult,
-                notes: [...(currentResult.notes ?? []), note],
+                notes: [...(notes ?? []), note],
               } as T);
             }}
             onUpdate={(note) => {
-              if (!currentResult.notes) return;
-              const notes = [...currentResult.notes];
-              const idx = notes.findIndex((v) => v.id === note.id);
+              const copiedNotes = [...notes];
+              const idx = copiedNotes.findIndex((v) => v.id === note.id);
+              copiedNotes[idx] = note;
 
-              notes[idx] = note;
-
-              setCurrentResult({ ...currentResult, notes } as T);
+              setCurrentResult({ ...currentResult, notes: copiedNotes } as T);
             }}
             note={tempNote}
           />
@@ -161,5 +161,26 @@ export function NotesTab<T extends VehicleSearchResult | NameSearchResult>({
         </>
       ) : null}
     </TabsContent>
+  );
+}
+
+function getNotesFromCurrentResult<T extends VehicleSearchResult | NameSearchResult>(
+  currentResult: Props<T>["currentResult"],
+) {
+  if (isNameSearchResult(currentResult)) {
+    if (currentResult.isConfidential) return [];
+    return currentResult.notes ?? [];
+  }
+
+  return currentResult.notes ?? [];
+}
+
+function isNameSearchResult(
+  currentResult: NameSearchResult | VehicleSearchResult,
+): currentResult is NameSearchResult {
+  return (
+    "isConfidential" in currentResult &&
+    "socialSecurityNumber" in currentResult &&
+    "name" in currentResult
   );
 }

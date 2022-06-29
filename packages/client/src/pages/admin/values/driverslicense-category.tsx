@@ -7,9 +7,9 @@ import type { GetServerSideProps } from "next";
 import { useModal } from "state/modalState";
 import {
   DriversLicenseCategoryType,
-  DriversLicenseCategoryValue,
   Rank,
-  ValueType,
+  type DriversLicenseCategoryValue,
+  type ValueType,
 } from "@snailycad/types";
 import useFetch from "lib/useFetch";
 import { AdminLayout } from "components/admin/AdminLayout";
@@ -66,11 +66,7 @@ export default function DriversLicenseCategories({ pathValues: { type, values: d
 
     await execute(`/admin/values/${type.toLowerCase()}/positions`, {
       method: "PUT",
-      data: {
-        ids: list.map((v) => {
-          return "createdAt" in v ? v.id : v.valueId;
-        }),
-      },
+      data: { ids: list.map((v) => v.valueId) },
     });
   }
 

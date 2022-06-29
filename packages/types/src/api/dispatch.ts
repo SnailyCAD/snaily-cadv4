@@ -138,3 +138,14 @@ export type PostDispatchStatusMergeOfficers = Types.CombinedLeoUnit;
  * @route /dispatch/status/unmerge/:id
  */
 export type PostDispatchStatusUnmergeUnitById = boolean;
+
+/**
+ * @method GET
+ * @route /dispatch/players/:steamId
+ */
+export type GetDispatchPlayerBySteamIdData = Pick<
+  Types.User,
+  "username" | "id" | "isEmsFd" | "isLeo" | "isDispatch" | "permissions" | "rank" | "steamId"
+> & {
+  unit: Types.Officer | Types.CombinedLeoUnit | Types.EmsFdDeputy;
+};

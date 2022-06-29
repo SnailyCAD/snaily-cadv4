@@ -1,5 +1,5 @@
 import process from "node:process";
-import { Rank, User, CadFeature, Feature } from "@prisma/client";
+import { cad, Rank, User, CadFeature, Feature } from "@prisma/client";
 import { API_TOKEN_HEADER } from "@snailycad/config";
 import { Context, Middleware, Req, MiddlewareMethods } from "@tsed/common";
 import { Unauthorized } from "@tsed/exceptions";
@@ -46,28 +46,27 @@ export class IsAuth implements MiddlewareMethods {
       await handleDiscordSync({ user, cad });
     }
 
-    ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
+    if (cad) {
+      ctx.set("cad", { ...setDiscordAuth(cad), version: await getCADVersion() });
+    }
   }
 }
 
-export function setDiscordAuth(cad: { features?: CadFeature[] } | null) {
+export function setDiscordAuth(cad: any): cad & { features?: CadFeature[] } {
+  const features = cad.features as CadFeature[] | undefined;
   const hasDiscordTokens =
     Boolean(process.env["DISCORD_CLIENT_ID"]) && Boolean(process.env["DISCORD_CLIENT_SECRET"]);
 
-  const isEnabled = !cad?.features?.some((v) => v.isEnabled && v.feature === Feature.DISCORD_AUTH);
+  const isEnabled = !features?.some((v) => v.isEnabled && v.feature === Feature.DISCORD_AUTH);
 
   const notEnabled = { isEnabled: false, feature: Feature.DISCORD_AUTH } as CadFeature;
-  const filtered = cad?.features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
-
-  if (!cad && !hasDiscordTokens) {
-    return { features: [...filtered, notEnabled] };
-  }
+  const filtered = features?.filter((v) => v.feature !== Feature.DISCORD_AUTH) ?? [];
 
   if (isEnabled && !hasDiscordTokens) {
-    return { ...cad, features: [...filtered, notEnabled] };
+    return { ...(cad as cad), features: [...filtered, notEnabled] };
   }
 
-  return cad;
+  return cad as cad;
 }
 
 export function CAD_SELECT(user?: Pick<User, "rank"> | null, includeDiscordRoles?: boolean) {

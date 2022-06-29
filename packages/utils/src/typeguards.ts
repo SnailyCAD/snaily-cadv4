@@ -73,13 +73,11 @@ export function isCallTypeValue(value: AnyValue): value is CallTypeValue {
 }
 
 export function isUnitCombined(
-  unit: Omit<Officer, "activeIncident"> | CombinedLeoUnit | EmsFdDeputy,
+  unit: Officer | CombinedLeoUnit | EmsFdDeputy,
 ): unit is CombinedLeoUnit {
   return !("citizenId" in unit) || "officers" in unit;
 }
 
-export function isUnitOfficer(
-  unit: Omit<Officer, "activeIncident"> | CombinedLeoUnit | EmsFdDeputy,
-): unit is Officer {
+export function isUnitOfficer(unit: Officer | CombinedLeoUnit | EmsFdDeputy): unit is Officer {
   return !isUnitCombined(unit) && "divisions" in unit && Array.isArray(unit.divisions);
 }
