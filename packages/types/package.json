@@ -26,7 +26,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "yarn workspace @snailycad/api generate && rm -rf ./dist && yarn tsup",
+    "build": "yarn workspace @snailycad/api generate && yarn workspace @snailycad/utils build && yarn tsup",
     "watch": "rm -rf ./dist && yarn tsup --watch --silent=false",
     "typecheck": "yarn workspace @snailycad/api generate && yarn tsc --noEmit"
   },
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@snailycad/permissions": "1.14.0",
+    "@snailycad/utils": "1.14.0",
     "discord-api-types": "0.35.0",
     "tsup": "^6.1.2",
     "typescript": "^4.7.4"

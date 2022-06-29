@@ -1,7 +1,7 @@
 import type * as Prisma from "@prisma/client";
 import type * as Types from "../index.js";
 import type { AnyValue } from "@snailycad/utils";
-import type { PenalCodeGroup } from "..";
+import type { PenalCodeGroup } from "../index.js";
 
 /**
  * @method GET
